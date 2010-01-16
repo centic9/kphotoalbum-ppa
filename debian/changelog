@@ -1,0 +1,270 @@
+kphotoalbum (4.1.1-2ubuntu1) lucid; urgency=low
+
+  * Merge from Debian Unstable, remaining change:
+    - Change build-dep on libkdcraw7-dev and libkipi6-dev to libkdcraw8-dev and
+      libkipi7-dev (KDE 4.3 -> 4.4 transition)
+    - Keep exiv2 build-dep at 0.19 for the exiv2 transition
+
+ -- Jonathan Thomas <echidnaman@kubuntu.org>  Sat, 16 Jan 2010 08:46:12 -0500
+
+kphotoalbum (4.1.1-2) unstable; urgency=low
+
+  * Add stable branch pull patch from KDE svn:
+    - Remove of some code that became dead with yesterdays bugfix
+    - fixed bug #220373: Viewer settings dialog did not load correct
+      values and had wrong defaults. (Closes: #563821)
+    - fixed bug #220376: Shortcuts in the annotation dialog was broken
+      in some translations
+    - bugfix: KPA crashes when viewing images if viewer cache size is set to
+      zero
+    - fixed bug #211907: Fix EXIF support dialog at startup.
+    - fixed bug #147891: Crashing on wrong export directory in Plugin interface
+  * Switch to dpkg-source 3.0 (quilt) format.
+  * Update debian/control:
+    - Bump Standards-Version to 3.8.3 (no changes needed).
+  * Update debian/rules:
+    - Use kde sequence addon.
+
+ -- Fathi Boudra <fabo@debian.org>  Thu, 14 Jan 2010 10:12:27 +0100
+
+kphotoalbum (4.1.1-1ubuntu2) lucid; urgency=low
+
+  * No change upload to pick up new exiv2 library (LP: #502565)
+
+ -- Luka Renko <lure@ubuntu.com>  Sun, 03 Jan 2010 23:19:23 +0100
+
+kphotoalbum (4.1.1-1ubuntu1) lucid; urgency=low
+
+  * Merge with Debian unstable, remaining changes:
+    - Change build-dep on libkdcraw7-dev and libkipi6-dev to libkdcraw8-dev and
+      libkipi7-dev (KDE 4.3 -> 4.4 transition)
+    - Version buid-dep on libmarble-dev to (>= 4:4.3.80) to prevent misbuild on
+      ports with the older version
+
+ -- Jonathan Thomas <echidnaman@kubuntu.org>  Sun, 27 Dec 2009 14:25:49 -0500
+
+kphotoalbum (4.1.1-1) unstable; urgency=low
+
+  * New upstream release
+    - Fixes "Missing EXIF support dialog" (Closes: #552236)
+    - Fixes "Picture counter on timeline" (Closes: #535094)
+  * Fixup debian/watch
+  * Fix "English help files are missing"
+    - Added missing doc/CMakeLists.txt (Closes: #557141)
+
+ -- Mark Purcell <msp@debian.org>  Sun, 27 Dec 2009 22:01:46 +1100
+
+kphotoalbum (4.0.2-1ubuntu1) lucid; urgency=low
+
+  * Change build-dep on libkdcraw7-dev and libkipi6-dev to libkdcraw8-dev and
+    libkipi7-dev (KDE 4.3 -> 4.4 transition)
+  * Version buid-dep on libmarble-dev to (>= 4:4.3.80) to prevent misbuild on
+    ports with the older version
+
+ -- Scott Kitterman <scott@kitterman.com>  Wed, 09 Dec 2009 12:52:49 -0500
+
+kphotoalbum (4.0.2-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #538061)
+  * Update debian/control:
+    - Remove cdbs build dependency
+    - Bump Standards-Version to 3.8.2 (no changes needed)
+  * Rewrite debian/rules: use dh.
+
+ -- Fathi Boudra <fabo@debian.org>  Thu, 30 Jul 2009 14:28:40 +0200
+
+kphotoalbum (4.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+    - debian/patches/00_kphotoalbum_r967963.diff & quilt obsolete
+
+ -- Mark Purcell <msp@debian.org>  Sun, 24 May 2009 16:48:14 +1000
+
+kphotoalbum (4.0-2) unstable; urgency=low
+
+  * Add branch pull patch from r967963:
+    - BUGFIX: The HTML generator did not display the available themes
+      correctly.
+    - BUGFIX: Invoke external application for multiple files did not work.
+    - BUGFIX: build failure on armel architecture.
+  * Add quilt build dependency and related CDBS include.
+
+ -- Fathi Boudra <fabo@debian.org>  Mon, 18 May 2009 12:42:48 +0200
+
+kphotoalbum (4.0-1) unstable; urgency=low
+
+  * New upstream release
+    - dialog layout code rewrite (Closes: #451330).
+    - Initial KDE 4 version (Closes: #507235).
+
+  [ Fathi Boudra ]
+  * Remove patches (not needed).
+  * Bump compat to 7.
+  * Update debian/control:
+    - Switch from kde section to graphics.
+    - Remove quilt and libkexif1-dev build dependencies.
+    - Bump debhelper to 7.
+    - Add cmake and pkg-kde-tools build dependencies.
+    - Bump libexiv2 buil dependency to 0.18.
+    - Replace libkdcraw-dev build dependency by libkdcraw7-dev.
+    - Replace libkipi0-dev build dependency by libkipi6-dev.
+    - Add libjpeg62-dev, libmarble-dev and x11proto-core-dev build
+      dependencies.
+    - Bump Standards-Version from 3.7.3 to 3.8.1 (no changes needed).
+    - Replace libqt3-mt-sqlitea nd sqlite dependencies by libqt4-sql-sqlite.
+    - Remove deprecated kimdaba conflicts/replaces/provides.
+    - Add mplayerthumbs suggests.
+  * Update debian/copyright:
+    - Remove Dave Coffin.
+    - Add Henner Zeller.
+    - Update GPL version and years.
+  * Update debian/rules:
+    - Use pkg-kde-tools kde.mk.
+    - Remove patchsys-quilt.pk (not used).
+
+  [ Mark Purcell ]
+  * Refresh debian/watch
+
+ -- Fathi Boudra <fabo@debian.org>  Tue, 12 May 2009 10:15:39 +0200
+
+kphotoalbum (3.1.1-2) unstable; urgency=low
+
+  * Add typeinfo include before using typeid. (Closes: #474355)
+
+ -- Fathi Boudra <fabo@debian.org>  Sat, 05 Apr 2008 21:00:40 +0200
+
+kphotoalbum (3.1.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Merge Ubuntu changes:
+    * Add khelpcenter recommends.
+    * Bump libexiv2-dev, libkdcraw-dev and libkexif1-dev build dependencies.
+  * Add Vcs-Browser and Vcs-Svn fields.
+
+ -- Fathi Boudra <fabo@debian.org>  Tue, 25 Mar 2008 23:10:58 +0100
+
+kphotoalbum (3.1.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update my e-mail address.
+  * Bump Standards-Version to 3.7.3.
+  * Use Homepage field.
+  * Add libkdcraw-dev build dependency.
+  * Replace Apps by Applications in menu file.
+  * Switch to quilt patch system.
+  * Build with --as-needed linker flag.
+  * Add patch to fix typo in translation. (Closes: #430702)
+
+ -- Fathi Boudra <fabo@debian.org>  Fri, 14 Dec 2007 22:42:58 +0100
+
+kphotoalbum (3.0.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Mark Purcell <msp@debian.org>  Tue, 24 Apr 2007 06:57:07 +1000
+
+kphotoalbum (3.0-2) unstable; urgency=low
+
+  * Update debian/watch
+
+ -- Mark Purcell <msp@debian.org>  Thu, 29 Mar 2007 22:17:18 +0100
+
+kphotoalbum (3.0-1) experimental; urgency=low
+
+  * New upstream release
+  * Remove autoconf 2.60 support patch, merged upstream
+  * control: add libqt3-mt-sqlite and sqlite to depends
+  * copyright: updated
+
+ -- Fathi Boudra <fboudra@free.fr>  Wed,  3 Jan 2007 08:37:00 +0100
+
+kphotoalbum (2.2-2) unstable; urgency=low
+
+  * Add version to libexiv2 dependency (Closes: #386855) 
+
+ -- Fathi Boudra <fboudra@free.fr>  Mon, 11 Sep 2006 00:07:52 +0200
+
+kphotoalbum (2.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: #370136, #351170)
+  * Convert package to cdbs (Closes: #364371, #332754)
+  * New maintainers:
+    * Maintainer: KDE Extras Team
+    * Uploaders: Mark Purcell and Fathi Boudra
+  * compat: bumped to 5
+  * control:
+    * renamed KimDaBa to KPhotoAlbum
+    * replaced Section graphics by kde
+    * removed unneeded Build-depends
+    * bumped Standards-Version to 3.7.2
+    * removed kdegraphics from recommend (Closes: #346391)
+    * updated description (Closes: #364160)
+    * added Conflicts/Replaces KimDaBa
+  * copyright: added missing copyrights
+  * manpage and menu updated according to kphotoalbum name
+  * watch file added
+
+ -- Fathi Boudra <fboudra@free.fr>  Wed, 30 Aug 2006 13:36:01 +0200
+
+kimdaba (2.1-1) unstable; urgency=low
+
+  * New upstream release, (closes: #316861, #314689).
+  * Adapted to follow new version (3.6.2) of the Debian Policy. 
+  * Build-depends cleanup. Thanks to Ubuntu developer Jonathan Riddell
+    <jr@jriddell.org> and Debian Developers Adeodato Simó <asp16@alu.ua.es> 
+    and Steve Langasek <vorlon@debian.org> (closes: #326416).
+      - Removed build-depends on libraries: kdelibs4, libqt3c102-mt, libacl1, 
+      libart-2.0-2, libattr1, libgcc1, libice6, libidn11, libncurses5, 
+      libpng12-0, libsm6, libx11-6, libxcursor1, libxext6, libxft2, libxrandr2,
+      libxrender1, libxt6, libaudio2, libexpat1, libfam0c102, libfontconfig1,
+      libfreetype6, and zlib1g.
+      - Removed build-depends on 'Priority: required' packages: base-files,
+      coreutils. 
+      - Also removed build-depends on binutils, zlib1g-dev, gettext and xutils.
+  * KIPI interface added, (closes: #306386).
+      - Added build dependency on libkipi0-dev.
+      - Added Recommends: kipi-plugins.
+  * Added Recommends: kdegraphics, as it gives EXIF support for Kimdaba.
+  * Package description extended to inform of the new plugin capability.
+  * First version after C++ ABI change. 
+ 
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Wed,  3 Sep 2005 23:23:55 +0200
+   
+kimdaba (2.0-4) unstable; urgency=low
+
+  * Broken i386 package on Sid, unnecessary dependency on kdelibs 4:4.3.0
+    removed (closes: #309752).
+  * Upstream KDE-help documentation is only in Docbook format. Only HTML,
+    DebianDoc-SGML or Text are acceptable. Removed debian/kimdaba.doc-base
+    (closes: #308985).     
+
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Thu, 19 May 2005 12:56:00 +0200
+
+kimdaba (2.0-3) unstable; urgency=low
+
+  * Explicit Build-Depends on gcc-3.3, libstdc++5, libc6-dev and libc6 removed
+    to allow build on ia64, alpha and ppc64 (closes: #300309).
+  * Corrected "a XML" typo on Description and manpage (closes: #299997).
+
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Wed, 11 May 2005 09:28:08 +0200
+
+kimdaba (2.0-2) unstable; urgency=low
+
+  * Changelog fixed, ITP bug closed (closes: #227525). 
+  * Cleaned up build dependencies on versioned libraries.
+
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Fri,  3 Dec 2004 11:44:22 +0100
+
+kimdaba (2.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Manpage updated. New option --import added. 
+
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Tue, 19 Oct 2004 09:22:37 +0200
+
+kimdaba (1.1-1) unstable; urgency=low
+
+  * Initial Release.
+  * Missing manpage added.
+
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Sun,  9 May 2004 18:00:54 +0200

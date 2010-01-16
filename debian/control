@@ -1,0 +1,34 @@
+Source: kphotoalbum
+Section: graphics
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
+Uploaders: Fathi Boudra <fabo@debian.org>, Mark Purcell <msp@debian.org>
+Build-Depends: debhelper (>= 7.4), cmake, pkg-kde-tools (>= 0.5), docbook-to-man,
+ libexiv2-dev (>= 0.18), libjpeg62-dev, libkdcraw8-dev, libkipi7-dev,
+ libmarble-dev, x11proto-core-dev
+Standards-Version: 3.8.3
+Homepage: http://kphotoalbum.org
+Vcs-Browser: http://svn.debian.org/wsvn/pkg-kde/kde-extras/kphotoalbum/trunk/?op=log
+Vcs-Svn: svn://svn.debian.org/pkg-kde/kde-extras/kphotoalbum/trunk/
+
+Package: kphotoalbum
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libqt4-sql-sqlite
+Recommends: kipi-plugins, khelpcenter
+Suggests: mplayerthumbs
+Description: tool for indexing, searching and viewing images by keywords for KDE
+ KPhotoAlbum lets you index, search, group and view images by keywords, date,
+ locations and persons. It provides a quick and elegant way to lookup groups of
+ images when you have thousands of pictures on your hard disk. 
+ .
+ The information associated with each photo is stored in an XML file. Together
+ with its keywords, KPhotoAlbum stores each picture's MD5 sum, so it will
+ recognize them even if you move them to another directory. KPhotoAlbum can
+ also create HTML galleries with the images you select.
+ .
+ KPhotoAlbum can also make use of the KIPI image handling plugins to extend its
+ capabilities. The kipi-plugins package contains many useful extensions. Among
+ others, it contains extensions for photo manipulation, importing, exporting
+ and batch processing.
