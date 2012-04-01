@@ -1,18 +1,15 @@
 #!/usr/bin/make -f
 
 %:
-	dh --with kde $@
+	dh $@ --parallel --with kde
 
 override_dh_auto_build:
 	dh_auto_build
 	/usr/bin/docbook-to-man debian/kphotoalbum.sgml > kphotoalbum.1
 
-override_dh_clean:
-	dh_clean
+override_dh_auto_clean:
+	dh_auto_clean
 	rm -f kphotoalbum.1
-
-override_dh_compress:
-	dh_compress -X.docbook
 
 get-orig-source-dpatch:
 	 @@dh_testdir
