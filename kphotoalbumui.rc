@@ -1,0 +1,111 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="kphotoalbum" version="39">
+  <MenuBar>
+    <Menu name="file">
+      <Action name="exportHTML"/>
+      <Action name="import"/>
+      <Action name="export"/>
+    </Menu>
+    <Menu name="edit" >
+      <Action name="copySelectedURLs" />
+      <Action name="deleteSelected" />
+      <Action name="removeTokens" />
+      <Action name="showListOfFiles" />
+      <Separator/>
+      <Action name="rotateLeft" />
+      <Action name="rotateRight" />
+      <Separator/>
+      <Action name="oneProp"/>
+      <Action name="allProp"/>
+      <Action name="createImageStack"/>
+      <Action name="unStackImages"/>
+      <Action name="setStackHead"/>
+    </Menu>
+    <Menu name="view" >
+      <text>&amp;View</text>
+      <Action name="viewImages" />
+      <Action name="viewImagesNewWindow" />
+      <Action name="runSlideShow"/>
+      <Action name="runRandomizedSlideShow"/>
+      <Action name="collapseAllStacks"/>
+      <Action name="expandAllStacks"/>
+      <Separator/>
+      <Action name="jumpToContext"/>
+      <Action name="limitToMarked" />
+      <Separator/>
+      <Action name="sortImages" />
+      <Action name="orderIncr"/>
+      <Action name="orderDecr"/>
+      <Menu name="privacy">
+        <text>Privacy</text>
+        <Action name="lockToDefaultScope"/>
+        <Action name="unlockFromDefaultScope"/>
+        <Action name="changeScopePasswd" />
+        <Separator/>
+        <Action name="setDefaultScopeNegative" />
+        <Action name="setDefaultScopePositive" />
+      </Menu>
+    </Menu>
+    <Menu name="maintenance">
+      <text>&amp;Maintenance</text>
+      <Action name="findUnavailableImages"/>
+      <Action name="findImagesWithInvalidDate"/>
+      <Action name="findImagesWithChangedMD5Sum"/>
+      <Separator/>
+      <Action name="rebuildMD5s"/>
+      <Action name="rescan"/>
+      <Action name="recreateExifDB" />
+      <Action name="reReadExifInfo" />
+      <Action name="convertBackend" />
+      <Separator/>
+      <Action name="removeAllThumbs"/>
+      <Action name="buildThumbs"/>
+      <Action name="statistics"/>
+    </Menu>
+    <Menu name="plugins">
+      <text>Plugins</text>
+      <Menu name="exportplugin">       
+        <text>Export</text>
+        <ActionList name="export_actions"/>
+      </Menu>
+      <Menu name="importplugin">       
+        <text>Import</text>
+        <ActionList name="import_actions"/>
+      </Menu>
+      <Menu name="imagesplugins">
+      <text>Images</text>
+         <ActionList name="image_actions"/>  
+      </Menu>
+      <Menu name="batch_plugins">
+        <text>Batch Plugins</text>
+        <ActionList name="batch_actions"/>
+      </Menu>
+      <Menu name="tool_plugins">
+        <text>Tools</text>
+        <ActionList name="tool_actions"/>
+      </Menu>
+   </Menu>
+   <Menu name="settings">
+     <Action name="readdAllMessages"/>
+     <Action name="showToolTipOnImages"/>
+     <Action name="configureView"/>
+   </Menu>
+   <Menu name="help">
+     <Action name="runDemo"/>
+     <Action name="features"/>
+     <Action name="showVideo"/>
+   </Menu>
+  </MenuBar>
+
+  <ToolBar noMerge="1"  name="mainToolBar">
+    <text>Main Toolbar</text>
+    <Action name="file_save"/>
+    <Action name="go_home"/>
+    <Action name="go_back"/>
+    <Action name="go_forward"/>
+    <Action name="view_redisplay"/>
+    <Action name="runSlideShow"/>
+  </ToolBar>
+
+
+</kpartgui>
