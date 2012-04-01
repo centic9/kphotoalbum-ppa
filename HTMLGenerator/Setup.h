@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 #include <qstring.h>
 #include <qmap.h>
 #include <QList>
-#include "DB/Result.h"
+#include "DB/IdList.h"
 
 namespace HTMLGenerator
 {
@@ -53,6 +53,9 @@ public:
     void setCopyright( const QString& copyright );
     QString copyright() const;
 
+    void setDate( bool date );
+    bool date() const;
+
     void setDescription( const QString& description );
     QString description() const;
 
@@ -71,8 +74,8 @@ public:
      void setResolutions( const QList<ImageSizeCheckBox*>& sizes );
      const QList<HTMLGenerator::ImageSizeCheckBox*>& activeResolutions() const;
 
-    void setImageList(const DB::Result& files);
-    DB::Result imageList() const;
+    void setImageList(const DB::IdList& files);
+    DB::IdList imageList() const;
 
     void setInlineMovies( bool inlineMovie );
     bool inlineMovies() const;
@@ -86,13 +89,14 @@ private:
     QString _outputDir;
     int _thumbSize;
     QString _copyright;
+    bool _date;
     QString _description;
     int _numOfCols;
     bool _generateKimFile;
     QString _theme;
     QMap<QString,bool> _includeCategory;
     QList<ImageSizeCheckBox*> _resolutions;
-    DB::Result _images;
+    DB::IdList _images;
     bool _inlineMovies;
 };
 

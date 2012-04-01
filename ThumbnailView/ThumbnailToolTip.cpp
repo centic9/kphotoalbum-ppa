@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -47,7 +47,6 @@ ThumbnailView::ThumbnailToolTip::ThumbnailToolTip( ThumbnailWidget* view )
       _widthInverse( false ), _heightInverse( false )
 {
     setAlignment( Qt::AlignLeft | Qt::AlignTop );
-    setFrameStyle( Q3Frame::Box | Q3Frame::Plain );
     setLineWidth(1);
     setMargin(1);
 
@@ -57,28 +56,36 @@ ThumbnailView::ThumbnailToolTip::ThumbnailToolTip( ThumbnailWidget* view )
     p.setColor(QPalette::Background, QColor(0,0,0,170)); // r,g,b,A
     p.setColor(QPalette::WindowText, Qt::white );
     setPalette(p);
+
+    timer = new QTimer( this );
+    connect(timer, SIGNAL(timeout()), this, SLOT(show()));
 }
 
 bool ThumbnailView::ThumbnailToolTip::eventFilter( QObject* o , QEvent* event )
 {
-    if ( o == _view->viewport() && event->type() == QEvent::Leave )
+    if ( o == _view->viewport() && event->type() == QEvent::Leave ) {
+        timer->stop();
         hide();
+    }
 
-    else if ( event->type() == QEvent::MouseMove )
+    else if ( event->type() == QEvent::MouseMove ) {
         showToolTips( false );
+        timer->start(200);
+    }
     return false;
 }
 
 void ThumbnailView::ThumbnailToolTip::showToolTips( bool force )
 {
-    DB::ResultId id = _view->mediaIdUnderCursor();
+    DB::Id id = _view->mediaIdUnderCursor();
+    hide();
     if ( id.isNull() )
         return;
 
     QString fileName = id.fetchInfo()->fileName(DB::AbsolutePath);
     if ( force || (fileName != _currentFileName) ) {
         if ( loadImage( fileName ) ) {
-            setText( QString::null );
+            setText( QString() );
             int size = Settings::SettingsData::instance()->previewSize();
             if ( size != 0 ) {
                 setText( QString::fromLatin1("<table cols=\"2\" cellpadding=\"10\"><tr><td><img src=\"%1\"></td><td>%2</td></tr>")
@@ -97,7 +104,6 @@ void ThumbnailView::ThumbnailToolTip::showToolTips( bool force )
     }
 
     placeWindow();
-    show();
 }
 
 
@@ -106,10 +112,11 @@ void ThumbnailView::ThumbnailToolTip::setActive( bool b )
     if ( b ) {
         showToolTips(true);
         _view->viewport()->installEventFilter( this );
-        show();
+        timer->start(200);
     }
     else {
         _view->viewport()->removeEventFilter( this );
+        timer->stop();
         hide();
     }
 }

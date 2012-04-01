@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 #include "MouseTrackingInteraction.h"
-#include "Cell.h"
 #include "ThumbnailModel.h"
 #include "ThumbnailWidget.h"
 #include <QMouseEvent>
@@ -27,10 +26,11 @@ ThumbnailView::MouseTrackingInteraction::MouseTrackingInteraction( ThumbnailFact
 {
 }
 
-void ThumbnailView::MouseTrackingInteraction::mouseMoveEvent( QMouseEvent* event )
+bool ThumbnailView::MouseTrackingInteraction::mouseMoveEvent( QMouseEvent* event )
 {
     updateStackingIndication( event );
-    handleCursorOverNewIcon( event );
+    handleCursorOverNewIcon();
+    return false;
 }
 
 void ThumbnailView::MouseTrackingInteraction::updateStackingIndication( QMouseEvent* event )
@@ -46,14 +46,14 @@ void ThumbnailView::MouseTrackingInteraction::updateStackingIndication( QMouseEv
 
 }
 
-void ThumbnailView::MouseTrackingInteraction::handleCursorOverNewIcon( QMouseEvent* event )
+void ThumbnailView::MouseTrackingInteraction::handleCursorOverNewIcon()
 {
-    static DB::ResultId lastIdUderCursor;
-    const DB::ResultId id = model()->imageAt( event->pos(), ViewportCoordinates );
+    static DB::Id lastIdUderCursor;
+    const DB::Id id = widget()->mediaIdUnderCursor();
     if ( id != lastIdUderCursor ) {
         emit fileIdUnderCursorChanged(id);
-        widget()->updateCell(lastIdUderCursor);
-        widget()->updateCell(id);
+        model()->updateCell(lastIdUderCursor);
+        model()->updateCell(id);
         lastIdUderCursor = id;
     }
 }

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2006-2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2006-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -739,7 +739,7 @@ QString QueryHelper::filenameForMD5Sum(const DB::MD5& md5sum) const
                      Bindings() << md5sum.toHexString()
                      ).asList<StringPair>();
     if (rows.isEmpty())
-        return QString::null;
+        return QString();
     else {
         return makeFullName(rows[0].first, rows[0].second);
     }
@@ -923,14 +923,14 @@ void QueryHelper::sortFiles(const QList<DB::RawId>& files)
     transaction.commit();
 }
 
-DB::ResultId QueryHelper::findFirstFileInTimeRange(
+DB::Id QueryHelper::findFirstFileInTimeRange(
     const DB::ImageDate& range,
     bool includeRanges) const
 {
     return findFirstFileInTimeRange(range, includeRanges, 0);
 }
 
-DB::ResultId
+DB::Id
 QueryHelper::findFirstFileInTimeRange(
     const DB::ImageDate& range,
     bool includeRanges,
@@ -939,7 +939,7 @@ QueryHelper::findFirstFileInTimeRange(
     return findFirstFileInTimeRange(range, includeRanges, &idList);
 }
 
-DB::ResultId
+DB::Id
 QueryHelper::findFirstFileInTimeRange(
     const DB::ImageDate& range,
     bool includeRanges,
@@ -967,9 +967,9 @@ QueryHelper::findFirstFileInTimeRange(
         executeQuery(query.toAscii().constData(), bindings).asList<DB::RawId>();
 
     if (resultIds.isEmpty())
-        return DB::ResultId();
+        return DB::Id();
     else {
-        return DB::ResultId::createContextless(resultIds.front());
+        return DB::Id::createContextless(resultIds.front());
     }
 }
 
@@ -1338,7 +1338,7 @@ QMap<DB::RawId, DB::ImageInfoPtr> QueryHelper::getInfosOfFiles(const QList<DB::R
         else
             info->setGeoPosition(DB::GpsCoordinates());
 
-        Q_FOREACH(Tag tag, tagMap[fileId])
+        Q_FOREACH(const Tag& tag, tagMap[fileId])
             info->addCategoryInfo(tag.first, tag.second);
 
         info->markAsNotNullAndNotDirty();

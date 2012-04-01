@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 #include "InfoBoxResizer.h"
 #include <QMouseEvent>
 #include "ViewerWidget.h"
-#include <QTextBrowser>
+#include <KTextBrowser>
 #include "config-kpa-nepomuk.h"
 #ifdef HAVE_NEPOMUK
 #   include <nepomuk/kratingwidget.h>
@@ -35,7 +35,7 @@ namespace Viewer
 {
 class VisibleOptionsMenu;
 
-class InfoBox :public QTextBrowser {
+class InfoBox :public KTextBrowser {
     Q_OBJECT
 
 public:

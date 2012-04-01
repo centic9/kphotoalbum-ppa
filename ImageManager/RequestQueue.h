@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -52,7 +52,7 @@ public:
     void removeRequest( ImageRequest* );
 
 private:
-    // A Reference to a ImageRequest withvalue semantic.
+    // A Reference to a ImageRequest with value semantic.
     // This only stores the pointer to an ImageRequest object but behaves
     // regarding the less-than and equals-operator like the object.
     // This allows to store ImageRequests with value-semantic in a Set.

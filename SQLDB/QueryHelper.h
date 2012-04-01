@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2006-2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2006-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include "DB/ImageInfo.h"
 #include "DB/ImageInfoPtr.h"
 #include "DB/RawId.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 #include <qstringlist.h>
 #include <qpair.h>
 namespace DB {
@@ -119,10 +119,10 @@ public:
     searchMediaItems(const DB::ImageSearchInfo& search,
                      DB::MediaType typemask=DB::anyMediaType) const;
 
-    DB::ResultId findFirstFileInTimeRange(
+    DB::Id findFirstFileInTimeRange(
         const DB::ImageDate& range,
         bool includeRanges) const;
-    DB::ResultId findFirstFileInTimeRange(
+    DB::Id findFirstFileInTimeRange(
         const DB::ImageDate& range,
         bool includeRanges,
         const QList<DB::RawId>& idList) const;
@@ -171,7 +171,7 @@ protected:
     QList<DB::RawId>
     getMatchingFiles(MatcherList matches,
                      DB::MediaType typemask=DB::anyMediaType) const;
-    DB::ResultId findFirstFileInTimeRange(
+    DB::Id findFirstFileInTimeRange(
         const DB::ImageDate& range,
         bool includeRanges,
         const QList<DB::RawId>* idList) const;

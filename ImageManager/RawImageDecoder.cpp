@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,6 +38,11 @@ bool RAWImageDecoder::_decode( QImage *img, const QString& imageFile, QSize* ful
 #ifdef HAVE_KDCRAW
     if ( !KDcrawIface::KDcraw::loadDcrawPreview( *img, imageFile ) )
         return false;
+
+    if ( Settings::SettingsData::instance()->useRawThumbnail() &&
+            img->width() >= Settings::SettingsData::instance()->useRawThumbnailSize().width() &&
+            img->height() >= Settings::SettingsData::instance()->useRawThumbnailSize().height() )
+        return true;
 
     KDcrawIface::DcrawInfoContainer metadata;
 
@@ -86,7 +91,7 @@ bool RAWImageDecoder::_decode( QImage *img, const QString& imageFile, QSize* ful
 #endif /* HAVE_KDCRAW */
 }
 
-void RAWImageDecoder::_initializeExtensionLists( QStringList& rawExtensions, QStringList& standardExtensions, QStringList& ignoredExtensions ) const
+void RAWImageDecoder::_initializeExtensionLists( QStringList& rawExtensions, QStringList& standardExtensions, QStringList& ignoredExtensions )
 {
     static QStringList _rawExtensions, _standardExtensions, _ignoredExtensions;
     static bool extensionListsInitialized = false;
@@ -173,7 +178,7 @@ bool RAWImageDecoder::_fileIsKnownWithExtensions( const QSet<QString>& files,
 }
 
 bool RAWImageDecoder::_fileEndsWithExtensions( const QString& fileName,
-					      const QStringList& extensionList) const
+					      const QStringList& extensionList)
 {
 	for ( QStringList::ConstIterator it = extensionList.begin();
 	      it != extensionList.end(); ++it ) {
@@ -191,6 +196,13 @@ bool RAWImageDecoder::_mightDecode( const QString& imageFile )
 	    _fileExistsWithExtensions(imageFile, _standardExtensions)) return false;
 	if (_fileEndsWithExtensions(imageFile, _rawExtensions)) return true;
 	return false;
+}
+
+bool RAWImageDecoder::isRAW( const QString& imageFile )
+{
+    QStringList _rawExtensions, _standardExtensions, _ignoredExtensions;
+    _initializeExtensionLists( _rawExtensions, _standardExtensions, _ignoredExtensions );
+    return _fileEndsWithExtensions(imageFile, _rawExtensions);
 }
 
 bool RAWImageDecoder::_skipThisFile( const QSet<QString>& loadedFiles, const QString& imageFile ) const

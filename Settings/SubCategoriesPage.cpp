@@ -1,3 +1,20 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 #include "SubCategoriesPage.h"
 #include <KMessageBox>
 #include <kinputdialog.h>
@@ -5,7 +22,7 @@
 #include <klocale.h>
 #include <QPushButton>
 #include <Q3ListBox>
-#include <QComboBox>
+#include <KComboBox>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -22,7 +39,7 @@ Settings::SubCategoriesPage::SubCategoriesPage( QWidget* parent )
 
     QLabel* label = new QLabel( i18n( "Category:" ), this );
     lay2->addWidget( label );
-    _category = new QComboBox( this );
+    _category = new KComboBox( this );
     lay2->addWidget( _category );
     lay2->addStretch(1);
 
@@ -121,7 +138,7 @@ void Settings::SubCategoriesPage::slotCategoryChanged( const QString& name, bool
     uniq.sort();
     _members->insertStringList( uniq );
 
-    _currentGroup = QString::null;
+    _currentGroup.clear();
 
     _members->clearSelection();
     _members->setEnabled(false);
@@ -139,7 +156,7 @@ void Settings::SubCategoriesPage::slotGroupSelected( Q3ListBoxItem* item )
 void Settings::SubCategoriesPage::slotAddGroup()
 {
     bool ok;
-    QString text = KInputDialog::getText( i18n( "New Group" ), i18n("Group name:"), QString::null, &ok );
+    QString text = KInputDialog::getText( i18n( "New Group" ), i18n("Group name:"), QString(), &ok );
     if ( ok ) {
         saveOldGroup();
         DB::ImageDB::instance()->categoryCollection()->categoryForName( _currentCategory )->addItem( text );
@@ -175,7 +192,7 @@ void Settings::SubCategoriesPage::slotDelGroup()
 
     _memberMap.deleteGroup( _currentCategory, _currentGroup );
     DB::ImageDB::instance()->categoryCollection()->categoryForName( _currentCategory )->removeItem( _currentGroup );
-    _currentGroup = QString::null;
+    _currentGroup.clear();
     slotCategoryChanged( _currentCategory, false );
 }
 

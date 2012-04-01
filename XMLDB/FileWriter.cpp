@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,8 +17,6 @@
 */
 #include "FileWriter.h"
 
-#include <Q3CString>
-#include <Q3ValueList>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -37,6 +35,7 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
     if ( !isAutoSave )
         NumberedBackup().makeNumberedBackup();
 
+    // prepare XML document for saving:
     _db->_categoryCollection.initIdMap();
     QDomDocument doc;
 
@@ -60,14 +59,58 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
     saveBlockList( doc, top );
     saveMemberGroups( doc, top );
 
-    QFile out( fileName );
+    // save XML document to temporary file:
+    QFile out( fileName + QString::fromAscii(".tmp") );
 
-    if ( !out.open( QIODevice::WriteOnly ) )
-        KMessageBox::sorry( messageParent(), i18n( "Could not open file '%1'." , fileName ) );
+    if ( !out.open( QIODevice::WriteOnly ) ) {
+        KMessageBox::sorry( messageParent(), 
+                i18n("<p>Could not save the image database to XML.</p>"
+                    "File %1 could not be opened because of the following error: %2"
+                    , out.fileName(), out.errorString() ) 
+                );
+        return;
+    }
     else {
-        QByteArray s = doc.toByteArray();
-        out.write( s.data(), s.size()-1 );
-        out.close();
+        QByteArray s = doc.toByteArray().append( '\n' );
+        if ( ! ( out.write( s.data(), s.size()-1 ) == s.size()-1  && out.flush() ) )
+        {
+            KMessageBox::sorry( messageParent(), 
+                    i18n("<p>Could not save the image database to XML.</p>"
+                        "<p>File %1 could not be written because of the following error: %2</p>"
+                        "<p>Your XML file still contains the previous version of the image database! "
+                        "To avoid losing your modifications to the image database, try to fix "
+                        "the mentioned error and then <b>save the file again.</b></p>"
+                        , out.fileName(), out.errorString() ) 
+                    );
+            // clean up (damaged) temporary file:
+            out.remove(); 
+        } else {
+            out.close();
+            // State: index.xml has previous DB version, index.xml.tmp has the current version.
+
+            // original file can be safely deleted
+            if ( ( ! QFile::remove( fileName ) ) && QFile::exists( fileName ) )
+            {
+                KMessageBox::sorry( messageParent(),
+                        i18n("<p>Failed to remove old version of image database.</p>"
+                            "<p>Please try again or replace the file %1 with file %2 manually!</p>",
+                            fileName, out.fileName() )
+                        );
+                return;
+            }
+            // State: index.xml doesn't exist, index.xml.tmp has the current version.
+            if ( ! out.rename( fileName ) )
+            {
+                KMessageBox::sorry( messageParent(),
+                        i18n("<p>Failed to move temporary XML file to permanent location.</p>"
+                            "<p>Please try again or rename file %1 to %2 manually!</p>",
+                            out.fileName(), fileName )
+                           );
+                // State: index.xml.tmp has the current version.
+                return;
+            }
+            // State: index.xml has the current version.
+           }
     }
 }
 
@@ -82,8 +125,7 @@ void XMLDB::FileWriter::saveCategories( QDomDocument doc, QDomElement top )
     top.appendChild( options );
 
 
-    for( QStringList::Iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
-        const QString name = *categoryIt;
+    Q_FOREACH(const QString &name, categories) {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName( name );
 
         QDomElement opt;
@@ -103,10 +145,10 @@ void XMLDB::FileWriter::saveCategories( QDomDocument doc, QDomElement top )
                 Utilities::mergeListsUniqly(category->items(),
                                             _db->_members.groups(name));
 
-            for( QStringList::Iterator it2 = list.begin(); it2 != list.end(); ++it2 ) {
+            Q_FOREACH(const QString &categoryName, list) {
                 QDomElement val = doc.createElement( QString::fromLatin1("value") );
-                val.setAttribute( QString::fromLatin1("value"), *it2 );
-                val.setAttribute( QString::fromLatin1( "id" ), static_cast<XMLCategory*>( category.data() )->idForName( *it2 ) );
+                val.setAttribute( QString::fromLatin1("value"), categoryName );
+                val.setAttribute( QString::fromLatin1( "id" ), static_cast<XMLCategory*>( category.data() )->idForName( categoryName ) );
                 opt.appendChild( val );
             }
         }
@@ -119,15 +161,15 @@ void XMLDB::FileWriter::saveImages( QDomDocument doc, QDomElement top )
     DB::ImageInfoList list = _db->_images;
 
     // Copy files from clipboard to end of overview, so we don't loose them
-    for( DB::ImageInfoListConstIterator it = _db->_clipboard.constBegin(); it != _db->_clipboard.constEnd(); ++it ) {
-        list.append( *it );
+    Q_FOREACH(const DB::ImageInfoPtr &infoPtr, _db->_clipboard) {
+        list.append(infoPtr);
     }
 
     QDomElement images = doc.createElement( QString::fromLatin1( "images" ) );
     top.appendChild( images );
 
-    for( DB::ImageInfoListIterator it = list.begin(); it != list.end(); ++it ) {
-        images.appendChild( save( doc, *it ) );
+    Q_FOREACH(const DB::ImageInfoPtr &infoPtr, list) {
+        images.appendChild( save( doc, infoPtr ) );
     }
 }
 
@@ -135,10 +177,10 @@ void XMLDB::FileWriter::saveBlockList( QDomDocument doc, QDomElement top )
 {
     QDomElement blockList = doc.createElement( QString::fromLatin1( "blocklist" ) );
     bool any=false;
-    for( QStringList::Iterator it = _db->_blockList.begin(); it != _db->_blockList.end(); ++it ) {
+    Q_FOREACH(const QString &block, _db->_blockList) {
         any=true;
         QDomElement elm = doc.createElement( QString::fromLatin1( "block" ) );
-        elm.setAttribute( QString::fromLatin1( "file" ), *it );
+        elm.setAttribute( QString::fromLatin1( "file" ), block );
         blockList.appendChild( elm );
     }
 
@@ -152,15 +194,15 @@ void XMLDB::FileWriter::saveMemberGroups( QDomDocument doc, QDomElement top )
         return;
 
     QDomElement memberNode = doc.createElement( QString::fromLatin1( "member-groups" ) );
-    for( QMap< QString,QMap<QString,StringSet> >::ConstIterator memberMapIt= _db->_members.memberMap().begin();
-         memberMapIt != _db->_members.memberMap().end(); ++memberMapIt )
+    for( QMap< QString,QMap<QString,StringSet> >::ConstIterator memberMapIt= _db->_members.memberMap().constBegin();
+         memberMapIt != _db->_members.memberMap().constEnd(); ++memberMapIt )
     {
         const QString categoryName = memberMapIt.key();
         if ( !shouldSaveCategory( categoryName ) )
             continue;
 
         QMap<QString,StringSet> groupMap = memberMapIt.value();
-        for( QMap<QString,StringSet>::Iterator groupMapIt= groupMap.begin(); groupMapIt != groupMap.end(); ++groupMapIt ) {
+        for( QMap<QString,StringSet>::ConstIterator groupMapIt= groupMap.constBegin(); groupMapIt != groupMap.constEnd(); ++groupMapIt ) {
             StringSet members = groupMapIt.value();
             if ( Settings::SettingsData::instance()->useCompressedIndexXML() &&
                  !KCmdLineArgs::parsedArgs()->isSet( "export-in-2.1-format" )) {
@@ -168,21 +210,21 @@ void XMLDB::FileWriter::saveMemberGroups( QDomDocument doc, QDomElement top )
                 elm.setAttribute( QString::fromLatin1( "category" ), categoryName );
                 elm.setAttribute( QString::fromLatin1( "group-name" ), groupMapIt.key() );
                 QStringList idList;
-                for( StringSet::const_iterator membersIt = members.begin(); membersIt != members.end(); ++membersIt ) {
+                Q_FOREACH(const QString& member, members) {
                     DB::CategoryPtr catPtr = _db->_categoryCollection.categoryForName( memberMapIt.key() );
                     XMLCategory* category = static_cast<XMLCategory*>( catPtr.data() );
-                    idList.append( QString::number( category->idForName( *membersIt ) ) );
+                    idList.append( QString::number( category->idForName( member ) ) );
                 }
                 elm.setAttribute( QString::fromLatin1( "members" ), idList.join( QString::fromLatin1( "," ) ) );
                 memberNode.appendChild( elm );
             }
             else {
-                for( StringSet::const_iterator membersIt = members.begin(); membersIt != members.end(); ++membersIt ) {
+                Q_FOREACH(const QString& member, members) {
                     QDomElement elm = doc.createElement( QString::fromLatin1( "member" ) );
                     memberNode.appendChild( elm );
                     elm.setAttribute( QString::fromLatin1( "category" ), memberMapIt.key() );
                     elm.setAttribute( QString::fromLatin1( "group-name" ), groupMapIt.key() );
-                    elm.setAttribute( QString::fromLatin1( "member" ), *membersIt );
+                    elm.setAttribute( QString::fromLatin1( "member" ), member );
                 }
             }
         }
@@ -192,7 +234,7 @@ void XMLDB::FileWriter::saveMemberGroups( QDomDocument doc, QDomElement top )
 }
 
 // This function will save an empty config element and a valid configWindowSetup element in the XML file.
-// In versions of KPhotoAlbum newer than 2.1, these informations are stored
+// In versions of KPhotoAlbum newer than 2.1, this information is stored
 // using KConfig, rather than in the database, so I need to add them like
 // this to make the file readable by KPhotoAlbum 2.1.
 void XMLDB::FileWriter::add21CompatXML( QDomElement& top )
@@ -200,7 +242,7 @@ void XMLDB::FileWriter::add21CompatXML( QDomElement& top )
     QDomDocument doc = top.ownerDocument();
     top.appendChild( doc.createElement( QString::fromLatin1( "config" ) ) );
 
-    Q3CString conf = Q3CString( "<configWindowSetup>  <dock>   <name>Label and Dates</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Places</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>People</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <splitGroup>   <firstName>Label and Dates</firstName>   <secondName>Description</secondName>   <orientation>0</orientation>   <separatorPos>31</separatorPos>   <name>Label and Dates,Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description</firstName>   <secondName>Image Preview</secondName>   <orientation>1</orientation>   <separatorPos>70</separatorPos>   <name>Label and Dates,Description,Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Places</firstName>   <secondName>Events</secondName>   <orientation>1</orientation>   <separatorPos>50</separatorPos>   <name>Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>People</firstName>   <secondName>Places,Events</secondName>   <orientation>1</orientation>   <separatorPos>34</separatorPos>   <name>People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description,Image Preview</firstName>   <secondName>People,Places,Events</secondName>   <orientation>0</orientation>   <separatorPos>0</separatorPos>   <name>Label and Dates,Description,Image Preview,People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <centralWidget>Label and Dates,Description,Image Preview,People,Places,Events</centralWidget>  <mainDockWidget>Label and Dates</mainDockWidget>  <geometry>   <x>6</x>   <y>6</y>   <width>930</width>   <height>492</height>  </geometry> </configWindowSetup>" );
+    QByteArray conf = "<configWindowSetup>  <dock>   <name>Label and Dates</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Places</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>People</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <splitGroup>   <firstName>Label and Dates</firstName>   <secondName>Description</secondName>   <orientation>0</orientation>   <separatorPos>31</separatorPos>   <name>Label and Dates,Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description</firstName>   <secondName>Image Preview</secondName>   <orientation>1</orientation>   <separatorPos>70</separatorPos>   <name>Label and Dates,Description,Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Places</firstName>   <secondName>Events</secondName>   <orientation>1</orientation>   <separatorPos>50</separatorPos>   <name>Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>People</firstName>   <secondName>Places,Events</secondName>   <orientation>1</orientation>   <separatorPos>34</separatorPos>   <name>People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description,Image Preview</firstName>   <secondName>People,Places,Events</secondName>   <orientation>0</orientation>   <separatorPos>0</separatorPos>   <name>Label and Dates,Description,Image Preview,People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <centralWidget>Label and Dates,Description,Image Preview,People,Places,Events</centralWidget>  <mainDockWidget>Label and Dates</mainDockWidget>  <geometry>   <x>6</x>   <y>6</y>   <width>930</width>   <height>492</height>  </geometry> </configWindowSetup>";
 
     QDomDocument tmpDoc;
     tmpDoc.setContent( conf );
@@ -273,19 +315,18 @@ void XMLDB::FileWriter::writeCategories( QDomDocument doc, QDomElement top, cons
 
     bool anyAtAll = false;
     QStringList grps = info->availableCategories();
-    for( QStringList::Iterator categoryIt = grps.begin(); categoryIt != grps.end(); ++categoryIt ) {
-        QString name = *categoryIt;
+    Q_FOREACH(const QString &name, grps) {
         if ( !shouldSaveCategory( name ) )
             continue;
 
         QDomElement opt = doc.createElement( QString::fromLatin1("option") );
         opt.setAttribute( QString::fromLatin1("name"),  escape( name ) );
 
-        StringSet items = info->itemsOfCategory(*categoryIt);
+        StringSet items = info->itemsOfCategory(name);
         bool any = false;
-        for( StringSet::const_iterator itemIt = items.begin(); itemIt != items.end(); ++itemIt ) {
+        Q_FOREACH(const QString& itemValue, items) {
             QDomElement val = doc.createElement( QString::fromLatin1("value") );
-            val.setAttribute( QString::fromLatin1("value"), *itemIt );
+            val.setAttribute( QString::fromLatin1("value"), itemValue );
             opt.appendChild( val );
             any = true;
             anyAtAll = true;
@@ -300,9 +341,9 @@ void XMLDB::FileWriter::writeCategories( QDomDocument doc, QDomElement top, cons
 
 void XMLDB::FileWriter::writeCategoriesCompressed( QDomElement& elm, const DB::ImageInfoPtr& info )
 {
-    Q3ValueList<DB::CategoryPtr> categoryList = DB::ImageDB::instance()->categoryCollection()->categories();
-    for( Q3ValueList<DB::CategoryPtr>::Iterator categoryIt = categoryList.begin(); categoryIt != categoryList.end(); ++categoryIt ) {
-        QString categoryName = (*categoryIt)->name();
+    QList<DB::CategoryPtr> categoryList = DB::ImageDB::instance()->categoryCollection()->categories();
+    Q_FOREACH(const DB::CategoryPtr &category, categoryList) {
+        QString categoryName = category->name();
 
         if ( !shouldSaveCategory( categoryName ) )
             continue;
@@ -310,8 +351,8 @@ void XMLDB::FileWriter::writeCategoriesCompressed( QDomElement& elm, const DB::I
         StringSet items = info->itemsOfCategory(categoryName);
         if ( !items.empty() ) {
             QStringList idList;
-            for( StringSet::const_iterator itemIt = items.begin(); itemIt != items.end(); ++itemIt ) {
-                int id = static_cast<XMLCategory*>((*categoryIt).data())->idForName( *itemIt );
+            Q_FOREACH(const QString &itemValue, items) {
+                int id = static_cast<const XMLCategory*>(category.data())->idForName(itemValue);
                 idList.append( QString::number( id ) );
             }
             elm.setAttribute( escape( categoryName ), idList.join( QString::fromLatin1( "," ) ) );
@@ -333,7 +374,21 @@ bool XMLDB::FileWriter::shouldSaveCategory( const QString& categoryName ) const
 QString XMLDB::FileWriter::escape( const QString& str )
 {
     QString tmp( str );
-    tmp.replace( QString::fromLatin1( " " ), QString::fromLatin1( "_" ) );
+    // Regex to match characters that are not allowed to start XML attribute names
+    QRegExp rx( QString::fromLatin1( "([^a-zA-Z0-9:_])" ) );
+    int pos = 0;
+    
+    // Encoding special characters if compressed XML is selected
+    if ( Settings::SettingsData::instance()->useCompressedIndexXML() && !KCmdLineArgs::parsedArgs()->isSet( "export-in-2.1-format" ) ) {
+        while ( ( pos = rx.indexIn( tmp, pos ) ) != -1 ) {
+            QString before = rx.cap( 1 );
+            QString after;
+            after.sprintf( "_.%0X", rx.cap( 1 ).data()->toAscii());
+            tmp.replace( pos, before.length(), after);
+            pos += after.length();
+        }
+    } else
+        tmp.replace( QString::fromLatin1( " " ), QString::fromLatin1( "_" ) );
     return tmp;
 }
 
@@ -343,4 +398,4 @@ QWidget *XMLDB::FileWriter::messageParent()
     return MainWindow::Window::theMainWindow();
 }
 
-
+// vi:expandtab:tabstop=4 shiftwidth=4:

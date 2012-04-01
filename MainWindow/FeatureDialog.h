@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@
 */
 #ifndef FEATUREDIALOG_H
 #define FEATUREDIALOG_H
-#include <QTextBrowser>
+#include <KTextBrowser>
 #include <kdialog.h>
 
 namespace MainWindow
@@ -39,10 +39,10 @@ protected:
     static bool hasEXIV2DBSupport();
 };
 
-class HelpBrowser :public QTextBrowser
+class HelpBrowser :public KTextBrowser
 {
 public:
-    HelpBrowser( QWidget* parent, const char* name = 0 );
+    explicit HelpBrowser( QWidget* parent, const char* name = 0 );
     virtual void setSource( const QUrl& name );
 };
 

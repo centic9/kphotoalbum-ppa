@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -94,6 +94,16 @@ QString HTMLGenerator::Setup::copyright() const
     return _copyright;
 }
 
+void HTMLGenerator::Setup::setDate( const bool date )
+{
+    _date = date;
+}
+
+bool HTMLGenerator::Setup::date() const
+{
+    return _date;
+}
+
 void HTMLGenerator::Setup::setDescription( const QString& description )
 {
     _description = description;
@@ -154,12 +164,12 @@ bool HTMLGenerator::Setup::includeCategory( const QString& category ) const
     return _resolutions;
 }
 
-void HTMLGenerator::Setup::setImageList(const DB::Result& files)
+void HTMLGenerator::Setup::setImageList(const DB::IdList& files)
 {
     _images = files;
 }
 
-DB::Result HTMLGenerator::Setup::imageList() const
+DB::IdList HTMLGenerator::Setup::imageList() const
 {
     return _images;
 }

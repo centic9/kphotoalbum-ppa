@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,13 +38,12 @@ void ThumbnailView::ThumbnailDND::contentsDragMoveEvent( QDragMoveEvent* event )
         return;
     }
 
-    int row = widget()->rowAt( event->pos().y() );
-    int col = widget()->columnAt( event->pos().x() );
-    DB::ResultId id = model()->imageAt( row, col );
+    DB::Id id = widget()->mediaIdUnderCursor();
 
     removeDropIndications();
 
-    QRect rect = widget()->cellGeometry( row, col );
+    const QRect rect = widget()->visualRect( widget()->indexUnderCursor() );
+
     bool left = ( event->pos().x() - rect.x() < rect.width()/2 );
     if ( left ) {
         if ( id.isNull() ) {
@@ -65,8 +64,8 @@ void ThumbnailView::ThumbnailDND::contentsDragMoveEvent( QDragMoveEvent* event )
             model()->setLeftDropItem( model()->imageAt(index) );
     }
 
-    widget()->updateCell( model()->leftDropItem() );
-    widget()->updateCell( model()->rightDropItem() );
+    model()->updateCell( model()->leftDropItem() );
+    model()->updateCell( model()->rightDropItem() );
 }
 
 void ThumbnailView::ThumbnailDND::contentsDragLeaveEvent( QDragLeaveEvent* )
@@ -97,8 +96,8 @@ void ThumbnailView::ThumbnailDND::realDropEvent()
                                      QString::fromLatin1( "reorder_images" ) ) == KMessageBox::Yes ) {
 
         // protect against self drop
-        if ( !model()->isSelected( model()->leftDropItem() ) && ! model()->isSelected( model()->rightDropItem() ) ) {
-            const DB::Result selected = model()->selection();
+        if ( !widget()->isSelected( model()->leftDropItem() ) && ! widget()->isSelected( model()->rightDropItem() ) ) {
+            const DB::IdList selected = widget()->selection();
             if ( model()->rightDropItem().isNull() ) {
                 // We dropped onto the first image.
                 DB::ImageDB::instance()->reorder( model()->leftDropItem(), selected, false );
@@ -114,13 +113,13 @@ void ThumbnailView::ThumbnailDND::realDropEvent()
 
 void ThumbnailView::ThumbnailDND::removeDropIndications()
 {
-    DB::ResultId left = model()->leftDropItem();
-    DB::ResultId right = model()->rightDropItem();
-    model()->setLeftDropItem( DB::ResultId::null );
-    model()->setRightDropItem( DB::ResultId::null );
+    DB::Id left = model()->leftDropItem();
+    DB::Id right = model()->rightDropItem();
+    model()->setLeftDropItem( DB::Id::null );
+    model()->setRightDropItem( DB::Id::null );
 
-    widget()->updateCell( left );
-    widget()->updateCell( right );
+    model()->updateCell( left );
+    model()->updateCell( right );
 }
 
 void ThumbnailView::ThumbnailDND::contentsDragEnterEvent( QDragEnterEvent * event )

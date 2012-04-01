@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -26,24 +26,12 @@
 #include "RequestQueue.h"
 #include "StopAction.h"
 
-class ImageRequest;
 namespace ImageManager
 {
 
+class ImageRequest;
 class ImageClient;
 class ImageLoader;
- class ThumbnailStorage;
-
-class ImageEvent :public QEvent {
-public:
-    ImageEvent( ImageRequest* request, const QImage& image );
-    ImageRequest* loadInfo();
-    QImage image();
-
-private:
-    ImageRequest* _request;
-    QImage _image;
-};
 
 // This class needs to inherit QObject to be capable of receiving events.
 class Manager :public QObject {
@@ -59,12 +47,6 @@ public:
     // Stop loading all images requested by the given client.
     void stop( ImageClient*, StopAction action = StopAll );
 
-    // Remove the thumbnail for a given file.
-    void removeThumbnail( const QString& imageFile );
-
-    // Return if downscaled thumbnails exist for the given image file.
-    bool thumbnailsExist( const QString& imageFile );
-
 protected:
     virtual void customEvent( QEvent* ev );
     void loadVideo( ImageRequest* );
@@ -72,7 +54,6 @@ protected:
 
 private:
     friend class ImageLoader;  // may call 'next()'
-    Manager();
     void init();
 
     ImageRequest* next();
@@ -83,7 +64,6 @@ private:
     QWaitCondition _sleepers;
     QMutex _lock;
     QSet<ImageRequest*> _currentLoading;
-    ThumbnailStorage* const _thumbnailStorage;
 };
 
 }

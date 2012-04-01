@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,15 +17,17 @@
 */
 
 #include "Manager.h"
-
+#include <KIcon>
+#include "ThumbnailCache.h"
 #include "ImageLoader.h"
 #include "ImageManager/ImageClient.h"
-#include "ThumbnailStorage.h"
 #include "Utilities/Util.h"
 #include "VideoManager.h"
 
 #include <kurl.h>
 #include <qpixmapcache.h>
+#include "ImageEvent.h"
+#include "CancelEvent.h"
 
 ImageManager::Manager* ImageManager::Manager::_instance = 0;
 
@@ -41,43 +43,30 @@ ImageManager::Manager* ImageManager::Manager::instance()
     return _instance;
 }
 
-/**
-   This class is responsible for loading icons in a separate thread.
-   I tried replacing this with KIO:PreviewJob, but it had a fwe drawbacks:
-   1) It stored images in one centeral directory - many would consider this
-      a feature, but I consider it a drawback, as it makes it impossible to
-      just bring your thumbnails when bringing your database, but not having
-      the capacity on say your laptop to bring all your images.
-   2) It failed to load a number of images, that this ImageManager load
-      just fine.
-   3) Most important, it did not allow loading only thumbnails when the
-      image themself weren't available.
-*/
-ImageManager::Manager::Manager()
-#ifdef TESTING_MEMORY_THUMBNAIL_CACHING
-  : _thumbnailStorage(new MemoryThumbnailStorage(Settings::SettingsData::instance()->thumbnailFormat()))
-#else
-  : _thumbnailStorage(new FileThumbnailStorage(Settings::SettingsData::instance()->thumbnailFormat()))
-#endif
-{
-}
-
 // We need this as a separate method as the _instance variable will otherwise not be initialized
 // corrected before the thread starts.
 void ImageManager::Manager::init()
 {
-    ImageLoader* imageLoader;
-    int cores = qMax( 2, QThread::idealThreadCount() );
+    // Use up to three cores for thumbnail generation. No more than three as that
+    // likely will make it less efficient due to three cores hitting the harddisk at the same time.
+    // This might limit the throughput on SSD systems, but we likely have a few years before people
+    // put all of their pictures on SSDs.
+    // We need one more core in the computer for the GUI thread, but we won't dedicate it to GUI,
+    // as that'd mean that a dual-core box would only have one core decoding images, which would be
+    // suboptimal.
+    // In case of only one core in the computer, use one core for thumbnail generation
+    const int cores = qMax( 1, qMin( 3, QThread::idealThreadCount() ) );
 
     for ( int i = 0; i < cores; ++i) {
-        imageLoader = new ImageLoader(_thumbnailStorage);
-        imageLoader->start( QThread::LowPriority );
+        ImageLoader* imageLoader = new ImageLoader();
+        // The thread is set to the lowest priority to ensure that it doesn't starve the GUI thread.
+        imageLoader->start( QThread::IdlePriority );
     }
 }
 
 void ImageManager::Manager::load( ImageRequest* request )
 {
-    if ( Utilities::isVideo( request->fileName() ) )
+    if ( Utilities::isVideo( request->fileSystemFileName() ) )
         loadVideo( request );
     else
         loadImage( request );
@@ -105,25 +94,6 @@ void ImageManager::Manager::loadImage( ImageRequest* request )
         _sleepers.wakeOne();
 }
 
-void ImageManager::Manager::removeThumbnail( const QString& imageFile )
-{
-    KUrl url;
-    url.setPath( imageFile );
-    _thumbnailStorage->remove( ImageLoader::thumbnailKey( url.url(), 256 ) );
-    _thumbnailStorage->remove( ImageLoader::thumbnailKey( url.url(), 128 ) );
-    QPixmapCache::remove( imageFile );
-}
-
-bool ImageManager::Manager::thumbnailsExist( const QString& imageFile )
-{
-    KUrl url;
-    url.setPath( imageFile );
-    QString big = ImageLoader::thumbnailKey( url.url(), 256 );
-    QString small = ImageLoader::thumbnailKey( url.url(), 128 );
-    return (_thumbnailStorage->exists(big)
-            && _thumbnailStorage->exists(small));
-}
-
 void ImageManager::Manager::stop( ImageClient* client, StopAction action )
 {
     // remove from pending map.
@@ -147,7 +117,7 @@ ImageManager::ImageRequest* ImageManager::Manager::next()
 
 void ImageManager::Manager::customEvent( QEvent* ev )
 {
-    if ( ev->type() == 1001 )  {
+    if ( ev->type() == ImageEventID )  {
         ImageEvent* iev = dynamic_cast<ImageEvent*>( ev );
         if ( !iev )  {
             Q_ASSERT( iev );
@@ -155,56 +125,36 @@ void ImageManager::Manager::customEvent( QEvent* ev )
         }
 
         ImageRequest* request = iev->loadInfo();
-        QImage image = iev->image();
-
-        ImageClient* client = 0;
-        QString fileName;
-        QSize size;
-        QSize fullSize;
-        int angle = 0;
-        bool loadedOK = false;
 
         _lock.lock();
-        if ( _loadList.isRequestStillValid( request ) )  {
-            // If it is not in the map, then it has been canceled (though ::stop) since the request.
-            client = request->client();
-            fileName = request->fileName();
-            size = QSize(request->width(), request->height() );
-            fullSize = request->fullSize();
-            angle = request->angle();
-            loadedOK = request->loadedOK();
-        }
-
+        const bool requestStillNeeded = _loadList.isRequestStillValid( request );
         _loadList.removeRequest(request);
         _currentLoading.remove( request );
-        delete request;
-
         _lock.unlock();
-        if ( client ) {
-            client->pixmapLoaded( fileName, size, fullSize, angle, image, loadedOK);
+
+        QImage image = iev->image();
+        if ( !request->loadedOK() ) {
+            // PENDING(blackie) This stinks! It looks bad, but I don't have more energy to fix it.
+            KIcon icon( QString::fromLatin1( "file-broken" ) );
+            QPixmap pix = icon.pixmap( icon.actualSize( QSize( request->width(), request->height() ) ) );
+            image = pix.toImage();
         }
+
+        if ( request->isThumbnailRequest() )
+            ImageManager::ThumbnailCache::instance()->insert( request->databaseFileName(), image );
+
+
+        if ( requestStillNeeded && request->client() ) {
+            request->client()->pixmapLoaded( request->databaseFileName(), request->size(),
+                                             request->fullSize(), request->angle(),
+                                             image, request->loadedOK());
+        }
+        delete request;
     }
-}
-
-// -- ImageEvent --
-
-ImageManager::ImageEvent::ImageEvent( ImageRequest* request, const QImage& image )
-    : QEvent( static_cast<QEvent::Type>(1001) ), _request( request ),  _image( image )
-{
-    // We would like to use QDeepCopy, but that results in multiple
-    // individual instances on the GUI thread, which is kind of real bad
-    // when  the image is like 40Mb large.
-    _image.detach();
-}
-
-ImageManager::ImageRequest* ImageManager::ImageEvent::loadInfo()
-{
-    return _request;
-}
-
-QImage ImageManager::ImageEvent::image()
-{
-    return _image;
+    else if ( ev->type() == CANCELEVENTID ) {
+        CancelEvent* cancelEvent = dynamic_cast<CancelEvent*>(ev);
+        cancelEvent->request()->client()->requestCanceled();
+    }
 }
 
 #include "Manager.moc"

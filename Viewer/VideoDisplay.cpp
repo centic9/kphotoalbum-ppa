@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,8 +17,8 @@
 */
 
 #include "VideoDisplay.h"
-#include <Phonon/VideoWidget>
-#include <Phonon/AudioOutput>
+#include <phonon/videowidget.h>
+#include <phonon/audiooutput.h>
 #include <KActionCollection>
 #include <qglobal.h>
 #include <KServiceTypeTrader>
@@ -41,8 +41,8 @@
 #include <kmenu.h>
 #include <kaction.h>
 #include <ktoolinvocation.h>
-#include <Phonon/SeekSlider>
-#include <Phonon/MediaObject>
+#include <phonon/seekslider.h>
+#include <phonon/mediaobject.h>
 
 Viewer::VideoDisplay::VideoDisplay( QWidget* parent )
     :Viewer::Display( parent ), _zoomType( FullZoom ), _zoomFactor(1)

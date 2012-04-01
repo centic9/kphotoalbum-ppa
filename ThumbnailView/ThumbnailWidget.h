@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,8 +18,8 @@
 #ifndef THUMBNAILVIEW_THUMBNAILWIDGET_H
 #define THUMBNAILVIEW_THUMBNAILWIDGET_H
 
+#include <QListView>
 #include "ThumbnailComponent.h"
-#include <q3gridview.h>
 #include "GridResizeInteraction.h"
 #include "MouseTrackingInteraction.h"
 #include "SelectionInteraction.h"
@@ -28,7 +28,7 @@
 class QTimer;
 class QDateTime;
 
-namespace DB { class ImageDate; class ResultId; }
+namespace DB { class ImageDate; class Id; }
 
 
 namespace ThumbnailView
@@ -39,85 +39,68 @@ class ThumbnailModel;
 class ThumbnailFactory;
 class KeyboardEventHandler;
 class ThumbnailDND;
-class Cell;
 
-class ThumbnailWidget : public Q3GridView, private ThumbnailComponent {
+class ThumbnailWidget : public QListView, private ThumbnailComponent {
     Q_OBJECT
 
 public:
     ThumbnailWidget( ThumbnailFactory* factory );
 
-    OVERRIDE void paintCell ( QPainter * p, int row, int col );
+    void reload( SelectionUpdateMethod method );
+    DB::Id mediaIdUnderCursor() const;
+    QModelIndex indexUnderCursor() const;
 
-    void reload( bool flushCache, bool clearSelection=true );
-    DB::ResultId mediaIdUnderCursor() const;
-
-    // Painting
-    void updateCell( const DB::ResultId& id );
-    void updateCell( int row, int col );
-    void updateCellSize();
-
-    // Cell handling methods.
-    Cell cellAtCoordinate( const QPoint& pos, CoordinateSystem ) const;
-
-    void scrollToCell( const Cell& newPos );
-
-    int firstVisibleRow( VisibleState ) const;
-    int lastVisibleRow( VisibleState ) const;
-    int numRowsPerPage() const;
-    bool isFocusAtFirstCell() const;
-    bool isFocusAtLastCell() const;
-    Cell lastCell() const;
     bool isMouseOverStackIndicator( const QPoint& point );
-    bool isGridResizing();
+    bool isGridResizing() const;
+    void setCurrentItem(  const DB::Id& id );
+    DB::Id currentItem() const;
+    void changeSingleSelection(const DB::Id& id);
 
     // Misc
-    void updateGridSize();
-    QPoint viewportToContentsAdjusted( const QPoint& coordinate, CoordinateSystem system ) const;
+    int cellWidth() const;
+    OVERRIDE void showEvent( QShowEvent* );
+    DB::IdList selection() const;
+    bool isSelected( const DB::Id& id ) const;
+    void select( const DB::IdList& );
 
 public slots:
     void gotoDate( const DB::ImageDate& date, bool includeRanges );
-    void repaintScreen();
 
 signals:
-    void showImage( const DB::ResultId& id );
+    void showImage( const DB::Id& id );
     void showSelection();
-    void fileIdUnderCursorChanged( const DB::ResultId& id );
+    void fileIdUnderCursorChanged( const DB::Id& id );
     void currentDateChanged( const QDateTime& );
-    void selectionChanged();
+    void selectionCountChanged(int numberOfItemsSelected );
 
 protected:
-    OVERRIDE void viewportPaintEvent( QPaintEvent* );
-
     // event handlers
     OVERRIDE void keyPressEvent( QKeyEvent* );
     OVERRIDE void keyReleaseEvent( QKeyEvent* );
-    OVERRIDE void showEvent( QShowEvent* );
     OVERRIDE void mousePressEvent( QMouseEvent* );
     OVERRIDE void mouseMoveEvent( QMouseEvent* );
     OVERRIDE void mouseReleaseEvent( QMouseEvent* );
     OVERRIDE void mouseDoubleClickEvent ( QMouseEvent* );
     OVERRIDE void wheelEvent( QWheelEvent* );
-    OVERRIDE void resizeEvent( QResizeEvent* );
-    OVERRIDE void dimensionChange ( int oldNumRows, int oldNumCols );
 
     // Drag and drop
-    OVERRIDE void contentsDragEnterEvent ( QDragEnterEvent * event );
-    OVERRIDE void contentsDragMoveEvent ( QDragMoveEvent * );
-    OVERRIDE void contentsDragLeaveEvent ( QDragLeaveEvent * );
-    OVERRIDE void contentsDropEvent ( QDropEvent * );
+    OVERRIDE void dragEnterEvent ( QDragEnterEvent * event );
+    OVERRIDE void dragMoveEvent ( QDragMoveEvent * );
+    OVERRIDE void dragLeaveEvent ( QDragLeaveEvent * );
+    OVERRIDE void dropEvent ( QDropEvent * );
 
-    /**
-     * For all filenames in the list, check if there are any missing
-     * thumbnails and generate these in the background.
-     */
-    void generateMissingThumbnails(const DB::Result& items) const;
-
-protected slots:
-    void emitDateChange( int, int );
-    void slotViewChanged( int, int );
+private slots:
+    void emitDateChange();
+    void scheduleDateChangeSignal();
+    void emitSelectionChangedSignal();
 
 private:
+    friend class GridResizeInteraction;
+    inline ThumbnailModel* model() { return ThumbnailComponent::model(); }
+    inline const ThumbnailModel* model() const { return ThumbnailComponent::model(); }
+    void updatePalette();
+    void setupDateChangeTimer();
+
     /**
      * When the user selects a date on the date bar the thumbnail view will
      * position itself accordingly. As a consequence, the thumbnail view
@@ -133,16 +116,21 @@ private:
      */
     bool _isSettingDate;
 
+
     GridResizeInteraction _gridResizeInteraction;
     bool _wheelResizing;
     SelectionInteraction _selectionInteraction;
     MouseTrackingInteraction _mouseTrackingHandler;
     MouseInteraction* _mouseHandler;
     ThumbnailDND* _dndHandler;
+    bool m_pressOnStackIndicator;
+
+    QTimer* m_dateChangedTimer;
 
     friend class SelectionInteraction;
     friend class KeyboardEventHandler;
     friend class ThumbnailDND;
+    friend class ThumbnailModel;
     KeyboardEventHandler* _keyboardHandler;
 };
 

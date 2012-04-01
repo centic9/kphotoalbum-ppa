@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -59,6 +59,10 @@ public:
     void addAnd( const QString& category, const QString& value );
     void setRating( short rating);
     QString toString() const;
+ 
+    void setMegaPixel( short megapixel );
+    void setSearchRAW( bool _searchRAW );
+    void setSearchMode( int index );
 
     void saveLock() const;
     static ImageSearchInfo loadLock();
@@ -84,6 +88,9 @@ private:
     QString _label;
     QString _description;
     short _rating;
+    short _megapixel;
+    int ratingSearchMode;
+    bool _searchRAW;
     bool _isNull;
     mutable bool _compiled;
     mutable QList<CategoryMatcher*> _categoryMatchers;

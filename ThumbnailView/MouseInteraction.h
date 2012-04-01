@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -33,9 +33,9 @@ namespace ThumbnailView {
 class MouseInteraction {
 public:
     virtual ~MouseInteraction() {}
-    virtual void mousePressEvent( QMouseEvent* ) {};
-    virtual void mouseMoveEvent( QMouseEvent* ) {};
-    virtual void mouseReleaseEvent( QMouseEvent* ) {};
+    virtual bool mousePressEvent( QMouseEvent* ) { return false; }
+    virtual bool mouseMoveEvent( QMouseEvent* ) { return false; }
+    virtual bool mouseReleaseEvent( QMouseEvent* ) { return false; }
     virtual bool isResizingGrid() { return false; }
 };
 

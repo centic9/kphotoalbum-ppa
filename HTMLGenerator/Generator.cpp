@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -46,8 +46,13 @@ HTMLGenerator::Generator::Generator( const Setup& setup, QWidget* parent )
 {
     setLabelText( i18n("Generating images for HTML page ") );
     _setup = setup;
+    _eventLoop = new QEventLoop;
 }
 
+HTMLGenerator::Generator::~Generator()
+{
+    delete _eventLoop;
+}
 void HTMLGenerator::Generator::generate()
 {
     // Generate .kim file
@@ -79,11 +84,11 @@ void HTMLGenerator::Generator::generate()
         bool ok = generateIndexPage( (*sizeIt)->width(), (*sizeIt)->height() );
         if ( !ok )
             return;
-        const DB::Result& imageList = _setup.imageList();
+        const DB::IdList& imageList = _setup.imageList();
         for (int index = 0; index < imageList.size(); ++index) {
-            DB::ResultId current = imageList.at(index);
-            DB::ResultId prev;
-            DB::ResultId next;
+            DB::Id current = imageList.at(index);
+            DB::Id prev;
+            DB::Id next;
             if ( index != 0 )
                 prev = imageList.at(index - 1);
             if (index != imageList.size() - 1)
@@ -96,7 +101,7 @@ void HTMLGenerator::Generator::generate()
     }
 
     // Now generate the thumbnail images
-    Q_FOREACH(DB::ResultId id, _setup.imageList()) {
+    Q_FOREACH(DB::Id id, _setup.imageList()) {
         if ( wasCanceled() )
             return;
 
@@ -108,7 +113,7 @@ void HTMLGenerator::Generator::generate()
 
     if ( _waitCounter > 0 ) {
         _hasEnteredLoop = true;
-        _eventLoop.exec();
+        _eventLoop->exec();
     }
 
     if ( wasCanceled() )
@@ -145,7 +150,7 @@ void HTMLGenerator::Generator::generate()
     KIO::CopyJob* job = KIO::move( KUrl( _tempDir.name() ), KUrl(outputDir) );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( showBrowser() ) );
 
-    _eventLoop.exec();
+    _eventLoop->exec();
     return;
 }
 
@@ -154,10 +159,19 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
     QString themeDir, themeAuthor, themeName;
     getThemeInfo( &themeDir, &themeName, &themeAuthor );
     QString content = Utilities::readFile( QString::fromLatin1( "%1mainpage.html" ).arg( themeDir ) );
-    if ( content.isNull() )
+    if ( content.isEmpty() )
         return false;
 
-    content = QString::fromLatin1("<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) + content;
+    // Adding the copyright comment after DOCTYPE not before (HTML standard requires the DOCTYPE to be first within the document)
+    QRegExp rx( QString::fromLatin1( "^(<!DOCTYPE[^>]*>)" ) );
+    int position;
+ 
+    rx.setCaseSensitivity( Qt::CaseInsensitive );
+    position = rx.indexIn( content );
+    if ( ( position += rx.matchedLength () ) < 0 )
+	content = QString::fromLatin1("<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) + content;
+    else
+	content.insert( position, QString::fromLatin1("\n<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) );
 
     content.replace( QString::fromLatin1( "**DESCRIPTION**" ), _setup.description() );
     content.replace( QString::fromLatin1( "**TITLE**" ), _setup.title() );
@@ -173,7 +187,7 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
     if ( _setup.generateKimFile() )
         content.replace( QString::fromLatin1( "**KIMFILE**" ), kimLink );
     else
-        content.replace( QString::fromLatin1( "**KIMFILE**" ), QString::null );
+        content.remove( QString::fromLatin1( "**KIMFILE**" ) );
     QDomDocument doc;
 
     QDomElement elm;
@@ -192,7 +206,7 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
     images += QString::fromLatin1( "var gallery=new Array()\nvar width=%1\nvar height=%2\nvar tsize=%3\n" ).arg( width ).arg( height ).arg( _setup.thumbSize() );
 
     minImageSize(minWidth, minHeight);
-    images += QString::fromLatin1( "var minPage=\"index-%1x%2.html \"\n" ).arg( minWidth ).arg( minHeight );
+    images += QString::fromLatin1( "var minPage=\"index-%1x%2.html\"\n" ).arg( minWidth ).arg( minHeight );
 
     QDomElement row;
     Q_FOREACH(const DB::ImageInfoPtr info, _setup.imageList().fetchInfos()) {
@@ -232,6 +246,10 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
         else
             description = QString::fromLatin1 ( "" );
 
+        description.replace( QString::fromLatin1( "\n$" ), QString::fromLatin1 ( "" ) );
+        description.replace( QString::fromLatin1( "\n" ), QString::fromLatin1 ( " " ) );
+        description.replace( QString::fromLatin1( "\"" ), QString::fromLatin1 ( "\\\"" ) );
+
         images += description;
         images += QString::fromLatin1( "\"]);\n" );
 
@@ -247,6 +265,17 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
                           nameImage( fileName, _setup.thumbSize() ) );
         href.appendChild( img );
         ++count;
+    }
+    
+    // Adding TD elements to match the selected column amount for valid HTML
+    if ( count % cols != 0 ) {
+	for ( int i = count; i % cols != 0; ++i ) {
+	    col = doc.createElement( QString::fromLatin1( "td" ) );
+	    col.setAttribute( QString::fromLatin1( "class" ), QString::fromLatin1( "thumbnail-col" ) );
+	    QDomText sp =  doc.createTextNode( QString::fromLatin1( " " ) );
+	    col.appendChild( sp );
+	    row.appendChild( col );
+	}
     }
 
     content.replace( QString::fromLatin1( "**THUMBNAIL-TABLE**" ), doc.toString() );
@@ -299,18 +328,27 @@ bool HTMLGenerator::Generator::generateIndexPage( int width, int height )
 }
 
 bool HTMLGenerator::Generator::generateContentPage( int width, int height,
-                                                    const DB::ResultId& prev, const DB::ResultId& current, const DB::ResultId& next )
+                                                    const DB::Id& prev, const DB::Id& current, const DB::Id& next )
 {
     QString themeDir, themeAuthor, themeName;
     getThemeInfo( &themeDir, &themeName, &themeAuthor );
     QString content = Utilities::readFile( QString::fromLatin1( "%1imagepage.html" ).arg( themeDir ));
-    if ( content.isNull() )
+    if ( content.isEmpty() )
         return false;
 
     DB::ImageInfoPtr info = current.fetchInfo();
     QString currentFile = info->fileName(DB::AbsolutePath);
 
-    content = QString::fromLatin1("<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) + content;
+    // Adding the copyright comment after DOCTYPE not before (HTML standard requires the DOCTYPE to be first within the document)
+    QRegExp rx( QString::fromLatin1( "^(<!DOCTYPE[^>]*>)" ) );
+    int position;
+ 
+    rx.setCaseSensitivity( Qt::CaseInsensitive );
+    position = rx.indexIn( content );
+    if ( ( position += rx.matchedLength () ) < 0 )
+	content = QString::fromLatin1("<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) + content;
+    else
+	content.insert( position, QString::fromLatin1("\n<!--\nMade with KPhotoAlbum. (http://www.kphotoalbum.org/)\nCopyright &copy; Jesper K. Pedersen\nTheme %1 by %2\n-->\n").arg( themeName ).arg( themeAuthor ) );
 
     content.replace( QString::fromLatin1( "**TITLE**" ), info->label() );
 
@@ -452,7 +490,7 @@ QString HTMLGenerator::Generator::nameImage( const QString& fileName, int size )
         return QString::fromLatin1( "%1-%2.jpg" ).arg( base ).arg( size );
 }
 
-QString HTMLGenerator::Generator::createImage( const DB::ResultId& id, int size )
+QString HTMLGenerator::Generator::createImage( const DB::Id& id, int size )
 {
     DB::ImageInfoPtr info = id.fetchInfo();
     const QString fileName = info->fileName(DB::AbsolutePath);
@@ -543,7 +581,7 @@ void HTMLGenerator::Generator::slotCancelGenerate()
     ImageManager::Manager::instance()->stop( this );
     _waitCounter = 0;
     if ( _hasEnteredLoop )
-        _eventLoop.exit();
+        _eventLoop->exit();
 }
 
 void HTMLGenerator::Generator::pixmapLoaded( const QString& fileName, const QSize& imgSize,
@@ -577,7 +615,7 @@ void HTMLGenerator::Generator::pixmapLoaded( const QString& fileName, const QSiz
 #endif
 
     if ( _waitCounter == 0 && _hasEnteredLoop) {
-        _eventLoop.exit();
+        _eventLoop->exit();
     }
 }
 
@@ -631,12 +669,15 @@ void HTMLGenerator::Generator::showBrowser()
         new KRun( KUrl(QString::fromLatin1( "%1/%2/index.html" ).arg( _setup.baseURL() ).arg( _setup.outputDir()) ),
                        MainWindow::Window::theMainWindow());
 
-    _eventLoop.exit();
+    _eventLoop->exit();
 }
 
 QString HTMLGenerator::Generator::populateDescription( QList<DB::CategoryPtr> categories, const DB::ImageInfoPtr info )
 {
      QString description;
+
+    if (_setup.includeCategory(QString::fromLatin1("**DATE**")))
+	description += QString::fromLatin1 ( "<li> <b>%1</b> %2</li>" ).arg ( i18n("Date") ).arg ( info->date().toString() );
 
      for( QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it ) {
         if ( (*it)->isSpecialCategory() )

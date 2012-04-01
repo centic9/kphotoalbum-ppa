@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -223,7 +223,7 @@ void MemberMap::addMemberToGroup( const QString& category, const QString& group,
     if (!_loading && !canAddMemberToGroup(category, group, item))
         return;
 
-    if ( item.isNull() ) {
+    if ( item.isEmpty() ) {
         qWarning( "Null item tried inserted into group %s", qPrintable(group));
         return;
     }

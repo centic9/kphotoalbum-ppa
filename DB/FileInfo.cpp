@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -53,7 +53,7 @@ bool DB::FileInfo::updateDatFromFileTimeStamp(const QString& fileName, DB::ExifM
         return false;
 
     // If we are not setting date, then we should of course not set the date
-    if ( (mode & EXIFMODE_DATE) != 0 )
+    if ( (mode & EXIFMODE_DATE) == 0 )
         return false;
 
     // If we are we already have specifies that we want to sent the date (from the ReReadExif dialog), then we of course should.
@@ -86,7 +86,9 @@ void DB::FileInfo::parseEXIV2( const QString& fileName )
     if ( map.findKey( Exiv2::ExifKey( "Exif.Image.Orientation" ) ) != map.end() ) {
         const Exiv2::Exifdatum& datum = map["Exif.Image.Orientation"];
 
-        int orientation =  datum.toLong();
+        int orientation = 0;
+        if (datum.count() > 0)
+            orientation =  datum.toLong();
         _angle = orientationToAngle( orientation );
     }
 

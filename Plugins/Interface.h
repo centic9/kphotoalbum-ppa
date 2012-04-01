@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -41,7 +41,7 @@ class KDE_EXPORT Interface :public KIPI::Interface
     Q_OBJECT
 
 public:
-    Interface( QObject *parent, const char *name=0);
+    explicit Interface( QObject *parent, const char *name=0);
     virtual KIPI::ImageCollection currentAlbum();
     virtual KIPI::ImageCollection currentSelection();
     virtual QList<KIPI::ImageCollection> allAlbums();

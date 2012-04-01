@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,6 +16,9 @@
    Boston, MA 02110-1301, USA.
 */
 
+#ifdef KDAB_TEMPORARILY_REMOVED
+#include "Threading/Test.h"
+#endif //KDAB_TEMPORARILY_REMOVED
 #include <QTemporaryFile>
 #include "Settings/SettingsData.h"
 #include "MainWindow/Window.h"
@@ -28,22 +31,23 @@
 #ifdef SQLDB_SUPPORT
 #include "SQLDB/QueryErrors.h"
 #endif
-#include "Settings/SettingsData.h"
 #include <klocale.h>
 #include <kdebug.h>
 
 extern QTemporaryFile* _tmpFileForThumbnailView;
 
 int main( int argc, char** argv ) {
-    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), "4.1.1",
+    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), "4.2",
                           ki18n("KDE Photo Album"), KAboutData::License_GPL,
                           KLocalizedString(), KLocalizedString(), "http://www.kphotoalbum.org");
     aboutData.addAuthor( ki18n("Jesper K. Pedersen"), ki18n("Development"), "blackie@kde.org" );
-    aboutData.addAuthor( ki18n("Hassan Ibraheem"),ki18n("Development"), "hasan.ibraheem@gmail.com>");
-    aboutData.addAuthor( ki18n("Miika Turkia"),ki18n("Development"), "theBro@luukku.com>");
+    aboutData.addAuthor( ki18n("Hassan Ibraheem"),ki18n("Development"), "hasan.ibraheem@gmail.com");
+    aboutData.addAuthor( ki18n("Miika Turkia"),ki18n("Development"), "miika.turkia@gmail.com");
     aboutData.addAuthor( ki18n("Tuomas Suutari"), ki18n("SQL backend and numerous features"), "thsuut@utu.fi" );
-    aboutData.addAuthor( ki18n("Jan Kundrat"),ki18n("Development"), "jkt@gentoo.org");
+    aboutData.addAuthor( ki18n("Jan Kundr&aacute;t"), ki18n("Development"), "jkt@gentoo.org");
     aboutData.addAuthor( ki18n("Henner Zeller"),ki18n("Development"), "h.zeller@acm.org");
+    aboutData.addAuthor( ki18n("Andreas Neustifter"),ki18n("Development"), "andreas.neustifter@gmail.com");
+    aboutData.addAuthor( ki18n("Johannes Zarl"),ki18n("Development"), "isilmendil@gmx.net");
 
 
     aboutData.addCredit( ki18n("Will Stephenson"), ki18n("Developing an Icon for KPhotoAlbum"), "will@stevello.free-online.co.uk" );
@@ -58,6 +62,7 @@ int main( int argc, char** argv ) {
     aboutData.addCredit( ki18n("Robert L Krawitz"), ki18n("Numerous patches plus profiling KPhotoAlbum again and again."), "rlk@alum.mit.edu" );
     aboutData.addCredit( ki18n("Christoph Moseler"), ki18n("Numerous patches for lots of bugs plus patches for a few new features"), "forums@moseler.net" );
     aboutData.addCredit( ki18n("Clytie Siddall"), ki18n("Tremendous help with the English text in the application."), "clytie@riverland.net.au" );
+    aboutData.addCredit( ki18n("Wes Hardaker"),ki18n("Some very useful features to improve workflow"), "kpa@capturedonearth.com");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
 
@@ -76,7 +81,7 @@ int main( int argc, char** argv ) {
 
     // FIXME: There is no point in using try here, because exceptions
     // and Qt event loop don't mix. Rather exceptions should be
-    // catched earlier and not passed through Qt code.
+    // caught earlier and not passed through Qt code.
     try {
         MainWindow::Window* view = new MainWindow::Window( 0 );
 
@@ -91,7 +96,7 @@ int main( int argc, char** argv ) {
     }
 #ifdef SQLDB_SUPPORT
     catch (SQLDB::Error& e) {
-        qFatal("Exception occured in SQLDB:\n%s", e.what());
+        qFatal("Exception occurred in SQLDB:\n%s", e.what());
     }
 #endif
     catch (...) {

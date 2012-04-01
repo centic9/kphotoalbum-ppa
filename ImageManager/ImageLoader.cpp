@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,12 +17,12 @@
 */
 
 #include "ImageLoader.h"
+#include "ThumbnailCache.h"
 
 #include "ImageDecoder.h"
 #include "Manager.h"
 #include "RawImageDecoder.h"
 #include "Utilities/Util.h"
-#include "ThumbnailStorage.h"
 
 #include <qapplication.h>
 #include <qfileinfo.h>
@@ -30,7 +30,6 @@
 extern "C" {
  #include <limits.h>
  #include <setjmp.h>
- #include <stdio.h>
  #include <stdio.h>
  #include <stdlib.h>
  #include <sys/stat.h>
@@ -41,6 +40,7 @@ extern "C" {
 #include <kcodecs.h>
 #include <kurl.h>
 #include <qmatrix.h>
+#include "ImageEvent.h"
 
 namespace ImageManager
 {
@@ -50,11 +50,6 @@ namespace ImageManager
 
 
 
-ImageManager::ImageLoader::ImageLoader(ThumbnailStorage* storage)
-    : _storage(storage) {
-    /* nop */
-}
-
 void ImageManager::ImageLoader::run()
 {
     while ( true ) {
@@ -62,13 +57,7 @@ void ImageManager::ImageLoader::run()
         Q_ASSERT( request );
         bool ok;
 
-        QImage img = tryLoadThumbnail( request, ok );
-        if ( ! ok ) {
-            img = loadImage( request, ok );
-            if ( ok ) {
-                writeThumbnail( request, img );
-            }
-        }
+        QImage img = loadImage( request, ok );
 
         if ( ok ) {
             img = scaleAndRotate( request, img );
@@ -80,52 +69,18 @@ void ImageManager::ImageLoader::run()
     }
 }
 
-QImage ImageManager::ImageLoader::rotateAndScale( QImage img, int width, int height, int angle )
-{
-    if ( angle != 0 )  {
-        QMatrix matrix;
-        matrix.rotate( angle );
-        img = img.transformed( matrix );
-    }
-    img = Utilities::scaleImage(img, width, height, Qt::KeepAspectRatio );
-    return img;
-}
-
-QImage ImageManager::ImageLoader::tryLoadThumbnail( ImageRequest* request, bool& ok )
-{
-    ok = false;
-    QString key = thumbnailKey( request );
-
-    QImage result;
-    ok = _storage->retrieve(key, &result);
-    if (!ok)
-        return result;
-
-    // TODO(hzeller): ppm do not store meta tags - we always accept them,
-    // because we cannot check 'outdatedness'.
-    // Find workaround (mtime(thumbnail) ? )
-    time_t thumbTime = result.text( "Thumb::MTime" ).toUInt();
-
-    if ( thumbTime != 0 && QFileInfo(request->fileName()).exists() ) {
-        time_t fileTime = QFileInfo(request->fileName()).lastModified().toTime_t();
-        ok = (thumbTime == fileTime);
-    }
-
-    return result;
-}
-
 QImage ImageManager::ImageLoader::loadImage( ImageRequest* request, bool& ok )
 {
     int dim = calcLoadSize( request );
     QSize fullSize;
 
     ok = false;
-    if ( !QFile( request->fileName() ).exists() )
+    if ( !QFile( request->fileSystemFileName() ).exists() )
         return QImage();
 
     QImage img;
-    if (Utilities::isJPEG(request->fileName())) {
-        ok = Utilities::loadJPEG(&img, request->fileName(),  &fullSize, dim);
+    if (Utilities::isJPEG(request->fileSystemFileName())) {
+        ok = Utilities::loadJPEG(&img, request->fileSystemFileName(),  &fullSize, dim);
         if (ok == true)
             request->setFullSize( fullSize );
     }
@@ -134,14 +89,14 @@ QImage ImageManager::ImageLoader::loadImage( ImageRequest* request, bool& ok )
         // At first, we have to give our RAW decoders a try. If we allowed
         // QImage's load() method, it'd for example load a tiny thumbnail from
         // NEF files, which is not what we want.
-        ok = ImageDecoder::decode( &img, request->fileName(),  &fullSize, dim);
+        ok = ImageDecoder::decode( &img, request->fileSystemFileName(),  &fullSize, dim);
         if (ok)
             request->setFullSize( img.size() );
     }
 
     if (!ok) {
         // Now we can try QImage's stuff as a fallback...
-        ok = img.load( request->fileName() );
+        ok = img.load( request->fileSystemFileName() );
         if (ok)
             request->setFullSize( img.size() );
 
@@ -150,43 +105,10 @@ QImage ImageManager::ImageLoader::loadImage( ImageRequest* request, bool& ok )
     return img;
 }
 
-void ImageManager::ImageLoader::writeThumbnail( ImageRequest* request, QImage img )
-{
-    int dim = calcLoadSize( request );
-     QList<int> list;
-    list << 128;
-    if ( dim == 256 )
-        list << 256;
-
-     for( QList<int>::Iterator it = list.begin(); it != list.end(); ++it ) {
-        QString path = thumbnailKey( requestURL( request ), *it );
-        if ( path.isNull() )
-            continue;
-
-        QFileInfo fi( request->fileName() );
-        QImage scaledImg = Utilities::scaleImage(img, *it, *it, Qt::KeepAspectRatio );
-        scaledImg.setText( "Software","",QString::fromLatin1( "KPhotoAlbum" ) );
-        scaledImg.setText( "Thumb::URI", "", requestURL( request ) );
-        scaledImg.setText( "Thumb::MTime", "", QString::number( fi.lastModified().toTime_t() ) );
-        scaledImg.setText( "Thumb::Size", "", QString::number( fi.size() ) );
-        scaledImg.setText( "Thumb::Image::Width", "", QString::number( request->fullSize().width() ) );
-        scaledImg.setText( "Thumb::Image::Height", "", QString::number( request->fullSize().height() ) );
-        _storage->store(path, scaledImg);
-    }
-}
 
 int ImageManager::ImageLoader::calcLoadSize( ImageRequest* request )
 {
-    if ( request->width() == -1 )
-        return -1;
-
-    int max = qMax( request->width(), request->height() );
-    if ( max > 256 )
-        return max;
-    else if ( max > 128 )
-        return 256;
-    else
-        return 128;
+    return qMax( request->width(), request->height() );
 }
 
 QImage ImageManager::ImageLoader::scaleAndRotate( ImageRequest* request, QImage img )
@@ -206,32 +128,6 @@ QImage ImageManager::ImageLoader::scaleAndRotate( ImageRequest* request, QImage 
         img = Utilities::scaleImage(img, request->width(), request->height(), Qt::KeepAspectRatio );
 
     return img;
-}
-
-QString ImageManager::ImageLoader::thumbnailKey( ImageRequest* request )
-{
-    return thumbnailKey( requestURL( request ), calcLoadSize( request ) );
-}
-
-QString ImageManager::ImageLoader::thumbnailKey( QString uri, int dim )
-{
-    QString dir;
-    if ( dim == 256 )
-        dir = QString::fromLatin1( "large" );
-    else if ( dim == 128 )
-        dir = QString::fromLatin1( "normal" );
-    else
-        return QString::null;
-
-    KMD5 md5( uri.toUtf8() );
-    return QString::fromLatin1( "%1/%2" ).arg(dir).arg(QString::fromUtf8(md5.hexDigest()));
-}
-
-QString ImageManager::ImageLoader::requestURL( ImageRequest* request )
-{
-    KUrl url;
-    url.setPath( request->fileName() );
-    return url.url();
 }
 
 bool ImageManager::ImageLoader::shouldImageBeScale( const QImage& img, ImageRequest* request )

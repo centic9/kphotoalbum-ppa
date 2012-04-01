@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,7 +29,7 @@ namespace Browser
  * See \ref Browser for a detailed description of how this fits in with the rest of the classes in this module
  *
  * This is basically a simple class to make the code for handling
- * breadcrumbs simpler. It encodes the following two informations about a
+ * breadcrumbs simpler. It encodes the following information about a
  * breadcrumb:
  * \li Is this a first breadcrumb (the result of going home e.g.)
  * \li which text should be shown for this breadcrumb.
@@ -42,7 +42,7 @@ public:
     static Breadcrumb home();
     static Breadcrumb view();
 
-    Breadcrumb( const QString& text, bool isBeginning = false );
+    explicit Breadcrumb( const QString& text, bool isBeginning = false );
     QString text() const;
     bool isBeginning() const;
     bool isView() const;

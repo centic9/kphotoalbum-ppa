@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -56,7 +56,7 @@ public:
             return QString::fromLatin1("%1x%2").arg(width).arg(height);
     }
 
-    bool operator<( const ImageSizeCheckBox& other )
+    bool operator<( const ImageSizeCheckBox& other ) const
     {
         return _width < other.width();
     }

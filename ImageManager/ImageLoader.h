@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,25 +29,12 @@ class ImageRequest;
 class ThumbnailStorage;
 
 class ImageLoader :public QThread {
-public:
-    ImageLoader(ThumbnailStorage* storage);
-    static QImage rotateAndScale( QImage, int width, int height, int angle );
-    QImage tryLoadThumbnail( ImageRequest* request, bool& ok );
-    void writeThumbnail( ImageRequest* request, QImage image );
-
-    static QString thumbnailKey( QString uri, int dim );
-
 protected:
     virtual void run();
     QImage loadImage( ImageRequest* request, bool& ok );
     static int calcLoadSize( ImageRequest* request );
     QImage scaleAndRotate( ImageRequest* request, QImage img );
-    static QString thumbnailKey( ImageRequest* request );
-    static QString requestURL( ImageRequest* request );
     bool shouldImageBeScale( const QImage& img, ImageRequest* request );
-
-private:
-    ThumbnailStorage *const _storage;
 };
 
 }

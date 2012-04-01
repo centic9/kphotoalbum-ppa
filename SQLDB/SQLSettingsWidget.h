@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2006-2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2006-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ namespace SQLDB
         Q_OBJECT
 
     public:
-        SQLSettingsWidget(QWidget* parent=0, Qt::WindowFlags fl=0);
+        explicit SQLSettingsWidget(QWidget* parent=0, Qt::WindowFlags fl=0);
 
         QStringList availableDrivers() const;
         bool hasSettings() const;

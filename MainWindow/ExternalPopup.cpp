@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,38 +22,38 @@
 #include <qstringlist.h>
 #include <qlabel.h>
 #include <QPixmap>
+#include <QFile>
 #include <kservice.h>
 #include <kurl.h>
 #include <krun.h>
+#include <kshell.h>
 #include <klocale.h>
 #include <kfileitem.h>
+#include <kdialog.h>
 #include <kdebug.h>
 #include <KMimeTypeTrader>
 #include <KIcon>
 #include "Window.h"
+#include "RunDialog.h"
 
 void MainWindow::ExternalPopup::populate( DB::ImageInfoPtr current, const QStringList& imageList )
 {
     _list = imageList;
     _currentInfo = current;
     clear();
+    QAction *action;
 
-    QStringList list = QStringList() << i18n("Current Item") << i18n("All Selected Items");
-    for ( int which = 0; which < 2; ++which ) {
+    QStringList list = QStringList() << i18n("Current Item") << i18n("All Selected Items") << i18n("Copy and Open");
+    for ( int which = 0; which < 3; ++which ) {
         if ( which == 0 && !current )
             continue;
 
         const bool multiple = (_list.count() > 1);
-        const bool enabled = (which == 0 && _currentInfo ) || (which == 1 && multiple);
+        const bool enabled = (which != 1 && _currentInfo ) || (which == 1 && multiple);
 
-        // Title
-        QAction* action = addAction( list[which] );
-        QFont fnt = font();
-        fnt.setPointSize( static_cast<int>(fnt.pointSize()*1.5));
-        fnt.setBold(true);
-        action->setFont( fnt );
-        action->setData( -1 );
-        action->setEnabled( enabled );
+        // Submenu
+        QMenu *submenu = addMenu( list[which] );
+        submenu->setEnabled(enabled);
 
         // Fetch set of offers
         OfferType offers;
@@ -63,12 +63,27 @@ void MainWindow::ExternalPopup::populate( DB::ImageInfoPtr current, const QStrin
             offers = appInfos( imageList );
 
         for ( OfferType::const_iterator offerIt = offers.begin(); offerIt != offers.end(); ++offerIt ) {
-            QAction* action = addAction( (*offerIt).first );
+            action = submenu->addAction( (*offerIt).first );
             action->setObjectName( (*offerIt).first ); // Notice this is needed to find the application later!
             action->setIcon( KIcon((*offerIt).second) );
             action->setData( which );
             action->setEnabled( enabled );
         }
+
+        // A personal command
+        action = submenu->addAction( i18n("Open With...") );
+        action->setObjectName( i18n("Open With...") ); // Notice this is needed to find the application later!
+        // XXX: action->setIcon( KIcon((*offerIt).second) );
+        action->setData( which );
+        action->setEnabled( enabled );
+
+        // A personal command
+        // XXX: see kdialog.h for simple usage
+        action = submenu->addAction( i18n("Your Command Line") );
+        action->setObjectName( i18n("Your Command Line") ); // Notice this is needed to find the application later!
+        // XXX: action->setIcon( KIcon((*offerIt).second) );
+        action->setData( which );
+        action->setEnabled( enabled );
     }
 }
 
@@ -76,21 +91,66 @@ void MainWindow::ExternalPopup::slotExecuteService( QAction* action )
 {
     QString name = action->objectName();
     const StringSet apps =_appToMimeTypeMap[name];
-    KService::List offers = KMimeTypeTrader::self()->query( *(apps.begin()), QString::fromLatin1("Application"),
-                                                            QString::fromLatin1("Name == '%1'").arg(name));
-    Q_ASSERT( offers.count() >= 1 );
-    KService::Ptr ptr = offers.first();
+
+    // get the list of arguments
     KUrl::List lst;
-    if ( action->data() == 1 ) {
+
+    if ( action->data() == -1 )
+    {
+	return;  //user clicked the title entry. (i.e: "All Selected Items")
+    } else if ( action->data() == 1 ) {
         for( QStringList::Iterator it = _list.begin(); it != _list.end(); ++it ) {
             if ( _appToMimeTypeMap[name].contains( mimeType(*it) ) )
                 lst.append( KUrl(*it) );
         }
-    }
-    else {
+    } else if (action->data() == 2) {
+        QString origFile = _currentInfo->fileName(DB::AbsolutePath);
+        QString newFile = origFile;
+
+        QString origRegexpString =
+            Settings::SettingsData::instance()->copyFileComponent();
+        QRegExp origRegexp =
+            QRegExp(origRegexpString);
+        QString copyFileReplacement =
+            Settings::SettingsData::instance()->copyFileReplacementComponent();
+
+        if (origRegexpString.length() > 0) {
+            newFile.replace(origRegexp, copyFileReplacement);
+            QFile::copy(origFile, newFile);
+            lst.append( newFile );
+        } else {
+            qWarning("No settings were appropriate for modifying the file name (you must fill in the regexp field; Opening the original instead");
+            lst.append( origFile );
+        }
+
+    } else {
         lst.append( KUrl(_currentInfo->fileName(DB::AbsolutePath)));
     }
 
+
+    // get the program to run
+
+    // check for the special entry for self-defined
+    if (name == i18n("Your Command Line")) {
+
+        static RunDialog* dialog = new RunDialog(MainWindow::Window::theMainWindow());
+        dialog->setImageList(_list);
+        dialog->show();
+
+        return;
+    }
+
+    // check for the special entry for self-defined
+    if (name == i18n("Open With...")) {
+        KRun::displayOpenWithDialog(lst, MainWindow::Window::theMainWindow());
+        return;
+    }
+
+
+    KService::List offers = KMimeTypeTrader::self()->query( *(apps.begin()), QString::fromLatin1("Application"),
+                                                            QString::fromLatin1("Name == '%1'").arg(name));
+    Q_ASSERT( offers.count() >= 1 );
+    KService::Ptr ptr = offers.first();
     KRun::run(*ptr, lst, MainWindow::Window::theMainWindow() );
 }
 
@@ -103,14 +163,21 @@ MainWindow::ExternalPopup::ExternalPopup( QWidget* parent )
 
 QString MainWindow::ExternalPopup::mimeType( const QString& file )
 {
-    return KFileItem( KFileItem::Unknown, KFileItem::Unknown, KUrl(file) ).mimetype();
+    return KMimeType::findByPath(file, 0, true)->name();
 }
 
 Utilities::StringSet MainWindow::ExternalPopup::mimeTypes( const QStringList& files )
 {
     StringSet res;
+    StringSet extensions;
     for( QStringList::ConstIterator fileIt = files.begin(); fileIt != files.end(); ++fileIt ) {
-        res.insert( mimeType( *fileIt ) );
+       QString baseFileName = *fileIt;
+       int extStart = baseFileName.lastIndexOf(QChar::fromLatin1('.'));
+       baseFileName.remove(0, extStart);
+       if (! extensions.contains(baseFileName)) {
+           res.insert( mimeType( *fileIt ) );
+           extensions.insert( baseFileName );
+       }
     }
     return res;
 }

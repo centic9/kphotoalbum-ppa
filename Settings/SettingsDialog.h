@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -33,6 +33,7 @@ class SubCategoriesPage;
 class GeneralPage;
 class ThumbnailsPage;
 class ViewerPage;
+class FileVersionDetectionPage;
 class PluginsPage;
 class ExifPage;
 class DatabaseBackendPage;
@@ -49,12 +50,14 @@ public slots:
 
 signals:
     void changed();
+    void thumbnailSizeChanged();
 
 protected slots:
     void slotMyOK();
 
 private:
     Settings::GeneralPage* _generalPage;
+    Settings::FileVersionDetectionPage* _fileVersionDetectionPage;
     Settings::ThumbnailsPage* _thumbnailsPage;
     Settings::CategoryPage* _categoryPage;
     Settings::SubCategoriesPage* _subCategoriesPage;

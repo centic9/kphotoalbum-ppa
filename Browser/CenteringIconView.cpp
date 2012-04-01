@@ -1,5 +1,26 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 #include "CenteringIconView.h"
+#include "Settings/SettingsData.h"
+#include <QApplication>
 #include <Utilities/BooleanGuard.h>
+#include "Utilities/Set.h"
+#include "Utilities/Util.h"
 #include <cmath>
 
 const int CELLWIDTH = 200;
@@ -8,6 +29,10 @@ const int CELLHEIGHT = 150;
 Browser::CenteringIconView::CenteringIconView( QWidget* parent )
     : QListView( parent ), _viewMode( NormalIconView )
 {
+    QPalette pal = palette();
+    pal.setBrush( QPalette::Base, QApplication::palette().color( QPalette::Base ) );
+    setPalette( pal );
+
     setGridSize( QSize(CELLWIDTH, CELLHEIGHT) );
     viewport()->setAutoFillBackground(false);
 
