@@ -1,0 +1,59 @@
+/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
+#ifndef XMLDB_FILESAVER_H
+#define XMLDB_FILESAVER_H
+
+#include <qstring.h>
+#include <qdom.h>
+#include "DB/ImageInfoPtr.h"
+
+class QWidget;
+namespace XMLDB
+{
+class Database;
+
+class FileWriter
+{
+public:
+    FileWriter( Database* db ) :_db(db) {}
+    void save( const QString& fileName, bool isAutoSave );
+    static QString escape( const QString& );
+
+protected:
+    void saveCategories( QDomDocument doc, QDomElement top );
+    void saveImages( QDomDocument doc, QDomElement top );
+    void saveBlockList( QDomDocument doc, QDomElement top );
+    void saveMemberGroups( QDomDocument doc, QDomElement top );
+    void add21CompatXML( QDomElement& top );
+    QDomElement save( QDomDocument doc, const DB::ImageInfoPtr& info );
+    void writeCategories( QDomDocument doc,  QDomElement elm, const DB::ImageInfoPtr& info );
+    void writeCategoriesCompressed( QDomElement& elm, const DB::ImageInfoPtr& info );
+    bool shouldSaveCategory( const QString& categoryName ) const;
+
+private:
+    // The parent widget information dialogs are displayed in.
+    QWidget *messageParent();
+
+    Database* const _db;
+};
+
+}
+
+
+#endif /* XMLDB_FILESAVER_H */
+

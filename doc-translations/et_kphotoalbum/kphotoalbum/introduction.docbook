@@ -1,0 +1,96 @@
+<chapter id="introduction">
+  <title
+>Sissejuhatus</title>
+  <para
+>Kui sa oled natukenegi minu moodi, on sul sellest alates, kui sa said oma esimese fotoaparaadi, kogunenud sadu või isegi tuhandeid pilte, mõned võetud tavalise, mõned digitaalkaameraga. Sa oled aastaid uskunud, et iga pildiga seotud lugu püsib meeles igavesti (või vähemalt sinu maise teekonna lõpuni) ja et ühegi pildile jäädvustatu nimi ei unune ja et ka märkmete puudumisel mäletad, millal täpselt on iga pilt tehtud. Mina sain ühel hetkel aru, et see ei ole kuidagi hästi võimalik ning eriti digitaalpiltide, aga ka tavaliste paberfotode jaoks läheks hädasti tarvis mingit vahendit, mis aitaks kohe kirja panna piltide kirjelduse ning võimalikult kiiresti fotouputusest vajalikku võtte üles leida. Ja just seda &kphotoalbum; väga edukalt teebki.</para>
+  
+  
+  <para
+>&kphotoalbum; keskendub ennekõike kolmele asjale: <itemizedlist>
+      <listitem
+><para
+>Peab olema hõlpus kirjeldada kas või paljusid pilte korraga. Nii ei tohi näiteks kõigi 1992. aastal Itaalias veedetud puhkuse piltide märkimiseks kuluda üle mõne üksiku hiireklõpsu. &kphotoalbum; pakub nii võimalust kirjeldada pilte <guilabel
+>ükshaaval</guilabel
+>, mis on kasulik näiteks pildi kohta käiva teksti kirjapanemiseks, kui ka <guilabel
+>kõiki korraga</guilabel
+>, mis on kasulik paljude piltide üheaegseks valimiseks ning näiteks kohtade, inimeste ja võtteaja määramiseks.</para
+></listitem>
+      
+      <listitem
+><para
+>Peab olema hõlpus pilte otsida. &kphotoalbum; võimaldab pilte kirjeldada mitmete omaduste alusel, sealhulgas kuupäev, inimesed pildil, pildil nähtav koht, rääkimata juba võtmesõnast, mille puhul võib näiteks määrata <emphasis
+>Album 7</emphasis
+> või <emphasis
+>Puhkusereis Itaaliasse</emphasis
+>. &kphotoalbum; mõistagi võimaldab ka kõigi nende kategooriate raames otsida, näiteks leida pildid, millel on Jesper.</para
+></listitem
+> 
+      
+      <listitem
+><para
+>Peab olema hõlpus pilte sirvida ja vaadata. Pilte vaadates su fookus sageli muutub: ühel hetkel vaatad oma puhkusepilte 1992. aastast ning kui siis näed pilti sõbraga, kes samuti tollel puhkusereisil viibis, pöördub su tähelepanu järsku temale ja sa soovid näha ka teisi selle sõbraga seotud pilte.</para
+></listitem>
+    </itemizedlist
+></para>
+  
+  <!-- ====================================================================== -->
+  <sect1 id="sect-overview-of-manual">
+    <title
+>Käsiraamatu ülevaade</title>
+    <para
+>Käesolevas käsiraamatus vaatleme sammude kaupa (1) oma piltide annoteerimist, (2) piltide sirvimist ja vaatamist ning (2) muid teemasid ja kohandamisvõimalusi.</para>
+
+<para
+>KPhotoAlbum oli alguses piltide haldamise rakendus, aga seda on hiljem laiendatud, nii et nüüd saab selle abil hoolt kanda ka oma videode eest. Käsiraamatus on mitmel pool juttu ainult piltidest, kuid enamasti käib kõik piltide kohta öeldu ka videode kohta.</para>
+  
+
+  </sect1>
+  
+  
+  <!-- ====================================================================== -->
+  <sect1 id="sec-organization-of-images-and-KPhotoAlbum-files">
+    <title
+>Piltide ja &kphotoalbum;i failide korraldamine</title>
+    <para
+>&kphotoalbum; kasutab kõiki konkreetses kataloogis ja selle alamkataloogides olevaid pilte. Kataloogi saab määrata &kphotoalbum;i esmakäivitusel. &kphotoalbum; ei muuda ühtki pilti, nii et sul ei pruugi muret tunda piltide esialgse kuju säilimise üle <footnote
+><para
+>Õigupoolest ainuke hävitustöö, milleks &kphotoalbum; on võimeline, on sinu enda teha, kui sa selleks spetsiaalselt soovi avaldad menüükäsuga <menuchoice
+><guimenu
+>Redigeerimine</guimenu
+><guimenuitem
+>Kustuta valitud</guimenuitem
+></menuchoice
+> või mõne mõne plugina vahendusel.</para
+></footnote
+>. Kui sa siiski &kphotoalbum;it ei usalda, võid panna piltidele peale kirjutuskaitse.</para>
+    
+    <para
+>&kphotoalbum; salvestab kogu oma info baaskataloogis asuvasse faili <filename
+>index.xml</filename
+>. See on tavaline XML-fail, millest saab hõlpsasti varukoopia teha mis tahes abivahendiga, mille võib kopeerida flopikettale või mille abil saab CVS-is erinevaid versioone hoida.</para>
+    
+    <para
+>&kphotoalbum; jätab meelde talle ette antud pildikataloogi ja kasutab seda alati, kui käivitad &kphotoalbum;i. Kui soovid, et &kphotoalbum; kasutaks mõnda muud andmebaasi (s.t. mõnda muud pildikataloogi), tuleb see käivitada võtmega <option
+>-c</option
+>, näiteks <userinput
+><command
+>kphotoalbum</command
+> <option
+>-c</option
+> <filename
+>~/Firma/Pildid/index.xml</filename
+></userinput
+>.</para>
+  </sect1>
+</chapter>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-namecase-general:t
+sgml-general-insert-case:lower
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-parent-document: "index.docbook"
+End:
+-->

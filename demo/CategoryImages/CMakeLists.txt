@@ -1,0 +1,1 @@
+install( FILES  Keywords-scenic.jpg Places-Grand_Canyon.jpg Places-Skagen.jpg People-Anne_Helene.jpg People-Blackie.jpg People-Donna.jpg People-Jesper.jpg People-Jim.jpg People-Spiff.jpg People-Wayne.jpg People-Pets.jpg DESTINATION ${DATA_INSTALL_DIR}/kphotoalbum/demo/CategoryImages )

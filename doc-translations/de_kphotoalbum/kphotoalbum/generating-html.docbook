@@ -1,0 +1,113 @@
+  <chapter id="chp-generating-html">
+    <title
+>Erstellen von HTML-Dateien</title>
+    <para
+>&kphotoalbum; stellt Ihnen zwei Möglichkeiten zur Verfügung HTML-Webseiten mit Ihren Bildern zu erstellen. Die eine ist in &kphotoalbum; integriert und die andere als Modul verfügbar (siehe <xref linkend="chp-plugins"/>). Im folgenden Teil des Benutzerhandbuchs wird die in &kphotoalbum; integrierte Version beschrieben, die Sie über das Menü <menuchoice
+><guimenu
+>Datei</guimenu
+><guimenuitem
+>HTML erstellen...</guimenuitem
+></menuchoice
+> aufrufen können.</para>
+    
+    <para
+>Bevor HTML-Seiten erstellt werden müssen Sie einige Einstellungen vornehmen. Diese sind in die drei Bereiche <guilabel
+>Inhalt</guilabel
+>, <guilabel
+>Layout</guilabel
+> und <guilabel
+>Ziel</guilabel
+> aufgeteilt. Im folgenden wird jeder Bereich genauer beschrieben.</para>
+
+    <sect1 id="the_content_page">
+      <title
+>Der Bereich <guilabel
+>Inhalt</guilabel
+></title>
+      <para
+>Im Bereich Inhalt legen Sie fest, welche Informationen die HTML-Seiten darstellen sollen.</para>
+
+      <para
+>Zuerst geben Sie den Titel des Überblicks und eine Beschreibung ein, die die HTML-Datei später enthalten soll. Auf <ulink url="http://ktown.kde.org/kphotoalbum/rounded-theme/index.html"
+>&kphotoalbum; HTML-Beispiel-Seiten</ulink
+> sehen Sie ein Beispiel für diese Einstellungen.</para>
+
+      <para
+>Als nächstes wählen Sie aus, ob eine &kphotoalbum;-Exportdatei erstellt werden soll die auf der Übersichtsseite zu sehen ist. Nähre Informationen über die Export-Dateien finden Sie in <xref linkend="chp-importExport"/>.</para>
+
+      <para
+>Zuletzt können Sie auswählen, welche Informationen auf den HTML-Seiten angezeigt werden sollen. Dadurch können Sie vermeiden, dass Informationen angezeigt werden, die dem Betrachter auch ohne Beschreibung offensichtlich sind. Zum Beispiel dass alle Bilder von einer Party sind. Beachten Sie, dass &kphotoalbum; momentan alle Bilder exportiert. Sie können diese Einstellung deshalb nicht verwenden, um bestimmte Bilder vor bestimmten Betrachtern zu verbergen.</para>
+    </sect1>
+
+    <sect1 id="the_layout_page">
+      <title
+>Der Bereich <guilabel
+>Layout</guilabel
+></title>
+      <para
+>In diesem Bereich können Sie festlegen, wie die HTML-Seiten aussehen sollen. Die meisten Einstellungsmöglichkeiten sind eindeutig, weshalb auf diese nicht speziell eingegangen wird.</para>
+
+      <para
+>Unten auf der Seite können Sie verschiedene Auflösungen für die Bilder einstellen. Dadurch müssen diejenigen die Ihre Webseite betrachten und einen Monitor besitzen, der die maximale Auflösung 800x600 unterstützt, keine Bilder mehr herunterladen die beispielsweise eine Auflösung von 1600x1200 haben.</para>
+      
+      <para
+>Die Betrachter Ihrer Seite können die Auflösung jederzeit ändern die Sie festgelegt haben. Er kann also Ihre Bilder mit niedriger Auflösung, was zu einer geringeren Übertragungszeit führt, durchsuchen. Wenn er ein Bild größer angezeigt bekommen möchte wechselt er zu einer höheren Auflösung.</para>
+    </sect1>
+
+    <sect1 id="the_destination_page">
+      <title
+>Der Bereich <guilabel
+>Ziel</guilabel
+></title>
+      <para
+>In diesem Einstellungsbereich legen Sie die verschiedenen Ordner und die URL fest wo Ihre Website gespeichert wird.</para>
+
+      <para
+>Am besten wählen Sie für all Ihre HTML-Dateien einen Basisordner an und für jeden nachfolgenden Satz ein neuen Unterordner.</para>
+
+      <para
+>Zunächst müssen Sie den Hauptordner auswählen, in dem all Ihre Bilder gespeichert werden. Dieses Ordner wird gespeichert und beim nächsten mal automatisch ergänzt. Dadurch können Sie für alle zukünftigen Bilder den Speicherort festlegen. Hier können Sie entweder einen Ordner oder ein von KDE unterstütztes <ulink url="help:/kioslave/index.html"
+>Protokoll</ulink
+> auswählen, zum Beispiel: <itemizedlist>
+          <listitem
+><para
+>ftp://einserver/mein-bereich-zum-hochladen/bilder (Verwendung von FTP zum Speichern)</para
+></listitem>
+          <listitem
+><para
+>fish://einserver/home/foo/bilder (Verwendung von ssh)</para
+></listitem>
+          <listitem
+><para
+>smb://einserver/c/bilder (Verwendung eines Windows-Ordners)</para
+></listitem>
+        </itemizedlist>
+      </para>
+      
+      <para
+>Nachdem Sie Ihren Bilder erstellt haben, können Sie überprüfen ob diese wirklich alle für Betrachter sichtbar sind. Wenn Sie für den <guilabel
+>Basisordner</guilabel
+> eine URL wählen wird ein Webbrowser, nachdem die Seiten erstellt wurden, gestartet. Die URL, die Sie hier festlegen, sollte dieser Ordner sein. Andernfalls wird der Webbrowser im falschen Ordner starten.</para>
+      
+      <para
+>Falls sich die die von Ihnen erstellten HTML-Dateien noch nicht im endgültigen Zielordner befinden müssen Sie sie manuell dorthin kopieren. Damit die Import-Funktion, siehe <xref linkend="chp-importExport"/>, richtig funktioniert müssen Sie das endgültige Ziel der Dateien angeben. Dies ist nicht der Unterordner der aktuellen Dateien, sondern der Basisordner in dem sich alle Unterordner befinden.</para>
+
+      <para
+>Die gerade beschriebenen Einstellungsmöglichkeiten haben sich alle drei auf Basisordner bzw. URLs bezogen. In diesen wird ein Unterordner angelegt, dessen Name Sie in <guilabel
+>Ausgabeordner</guilabel
+> festlegen.</para>
+    </sect1>
+
+</chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-namecase-general:t
+sgml-general-insert-case:lower
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-parent-document: "index.docbook"
+End:
+-->
