@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -142,7 +142,6 @@ SettingsData::SettingsData( const QString& imageDirectory )
     QString s = STR( "/" );
     _imageDirectory = imageDirectory.endsWith(s) ? imageDirectory : imageDirectory + s;
 
-    QPixmapCache::setCacheLimit( thumbnailCacheBytes() / 1024);
     _smoothScale = value( "Viewer", "smoothScale", true );
 }
 
@@ -154,13 +153,19 @@ property_ref ( backend               , setBackend               , QString       
 property_copy( useEXIFRotate         , setUseEXIFRotate         , bool          , General, true                       )
 property_copy( useEXIFComments       , setUseEXIFComments       , bool          , General, true                       )
 property_copy( searchForImagesOnStart, setSearchForImagesOnStart, bool          , General, true                       )
+property_copy( ignoreFileExtension   , setIgnoreFileExtension   , bool          , General, false                      )
+property_copy( skipSymlinks,           setSkipSymlinks          , bool          , General, false                      )
 property_copy( skipRawIfOtherMatches , setSkipRawIfOtherMatches , bool          , General, false                      )
+property_copy( useRawThumbnail       , setUseRawThumbnail       , bool          , General, false                      )
+property_copy( useRawThumbnailSize   , setUseRawThumbnailSize   , QSize         , General, QSize(1024,768)            )
 property_copy( useCompressedIndexXML , setUseCompressedIndexXML , bool          , General, false                      )
 property_copy( compressBackup        , setCompressBackup        , bool          , General, true                       )
 property_copy( showSplashScreen      , setShowSplashScreen      , bool          , General, true                       )
+property_copy( showHistogram         , setShowHistogram         , bool          , General, true                       )
 property_copy( autoSave              , setAutoSave              , int           , General, 5                          )
 property_copy( backupCount           , setBackupCount           , int           , General, 5                          )
 property_enum( tTimeStamps           , setTTimeStamps           , TimeStampTrust, General, Always                     )
+property_copy( excludeDirectories    , setExcludeDirectories    , QString       , General, QString::fromLatin1("xml,ThumbNails,.thumbs") )
 
 getValueFunc( QSize,histogramSize,  General,QSize(15,30) )
 getValueFunc( ViewSortType,viewSortType,  General,(int)SortLastUse )
@@ -210,48 +215,40 @@ bool SettingsData::trustTimeStamps()
     }
 }
 
+////////////////////////////////
+//// File Version Detection ////
+////////////////////////////////
+
+property_copy( detectModifiedFiles   , setDetectModifiedFiles   , bool          , FileVersionDetection, false               )
+property_copy( modifiedFileComponent , setModifiedFileComponent , QString       , FileVersionDetection, QString()           )
+property_copy( originalFileComponent , setOriginalFileComponent , QString       , FileVersionDetection, QString()           )
+property_copy( moveOriginalContents  , setMoveOriginalContents  , bool          , FileVersionDetection, false               )
+property_copy( autoStackNewFiles     , setAutoStackNewFiles     , bool          , FileVersionDetection, true                )
+property_copy( copyFileComponent     , setCopyFileComponent     , QString       , FileVersionDetection, QString()           )
+property_copy( copyFileReplacementComponent , setCopyFileReplacementComponent , QString  , FileVersionDetection, QString()  )
+
 ////////////////////
 //// Thumbnails ////
 ////////////////////
 
 property_copy( displayLabels           , setDisplayLabels          , bool                , Thumbnails, true       )
 property_copy( displayCategories       , setDisplayCategories      , bool                , Thumbnails, false      )
-property_copy( autoShowThumbnailView   , setAutoShowThumbnailView  , bool                , Thumbnails, 0          )
+property_copy( autoShowThumbnailView   , setAutoShowThumbnailView  , unsigned int        , Thumbnails, 0          )
 property_copy( showNewestThumbnailFirst, setShowNewestFirst        , bool                , Thumbnails, false      )
 property_copy( thumbnailDisplayGrid    , setThumbnailDisplayGrid   , bool                , Thumbnails, false      )
 property_copy( previewSize             , setPreviewSize            , int                 , Thumbnails, 256        )
 property_copy( thumbnailSpace          , setThumbnailSpace         , int                 , Thumbnails, 4          )
 property_enum( thumbnailAspectRatio    , setThumbnailAspectRatio   , ThumbnailAspectRatio, Thumbnails, Aspect_4_3 )
-property_ref ( thumbnailFormat         , setThumbnailFormat        , QString             , Thumbnails, QString::fromLatin1("ppm") )
 property_ref(  backgroundColor         , setBackgroundColor        , QString             , Thumbnails, QColor(Qt::darkGray).name() )
 
-getValueFunc( int,thumbSize,  Thumbnails, 150)
-
-getValueFunc( int,thumbnailCacheScreens,  Thumbnails,3) // Three pages sounds good; one before, one after the current screen
-
-void SettingsData::setThumbnailCacheScreens( int screens )
-{
-    setValue( "Thumbnails", "thumbnailCacheScreens", screens );
-    QPixmapCache::setCacheLimit( thumbnailCacheBytes() / 1024);
-    QPixmapCache::clear();
-}
+getValueFunc_( int, thumbSize, groupForDatabase("Thumbnails"), "thumbSize", 150)
 
 void SettingsData::setThumbSize( int value )
 {
     QPixmapCache::clear();
-    setValue( "Thumbnails", "thumbSize", value );
+    setValue( groupForDatabase("Thumbnails"), "thumbSize", value );
 }
 
-size_t SettingsData::thumbnailBytesForScreens(int screens) {
-    const QRect screen = QApplication::desktop()->screenGeometry();
-    const size_t kBytesPerPixel = 4;
-    return kBytesPerPixel * screen.width() * screen.height() * screens;
-}
-
-size_t SettingsData::thumbnailCacheBytes() const
-{
-    return thumbnailBytesForScreens(thumbnailCacheScreens());
-}
 
 ////////////////
 //// Viewer ////
@@ -316,8 +313,18 @@ property_ref( untaggedTag,      setUntaggedTag,      QString, General, "untagged
 #ifdef HAVE_EXIV2
     property_sset( exifForViewer, setExifForViewer,          Exif, StringSet()                            )
     property_sset( exifForDialog, setExifForDialog,          Exif, Exif::Info::instance()->standardKeys() )
-    property_ref ( iptcCharset  , setIptcCharset  , QString, Exif, (QString)QString::null                 )
+    property_ref ( iptcCharset  , setIptcCharset  , QString, Exif, QString()                 )
 #endif
+
+/////////////////////
+//// Exif Import ////
+/////////////////////
+
+property_copy( updateExifData           , setUpdateExifData           , bool , ExifImport, true );
+property_copy( updateImageDate          , setUpdateImageDate          , bool , ExifImport, false );
+property_copy( useModDateIfNoExif       , setUseModDateIfNoExif       , bool , ExifImport, true );
+property_copy( updateOrientation        , setUpdateOrientation        , bool , ExifImport, false );
+property_copy( updateDescription        , setUpdateDescription        , bool , ExifImport, false );
 
 ///////////////
 //// SQLDB ////
@@ -351,7 +358,7 @@ property_copy( delayLoadingPlugins, setDelayLoadingPlugins,  bool, Plug-ins, tru
 property_ref_(
         HTMLBaseDir, setHTMLBaseDir, QString,
         groupForDatabase( "HTML Settings" ),
-        QString::fromLocal8Bit(getenv( "HOME" )) + STR( "/public_html" ) )
+        QString::fromLocal8Bit(qgetenv( "HOME" )) + STR( "/public_html" ) )
 property_ref_(
         HTMLBaseURL, setHTMLBaseURL, QString,
         groupForDatabase( "HTML Settings" ),
@@ -364,6 +371,10 @@ property_ref_(
         HTMLCopyright, setHTMLCopyright, QString,
         groupForDatabase( "HTML Settings" ),
         STR( "" ) )
+property_ref_(
+        HTMLDate, setHTMLDate, int,
+        groupForDatabase( "HTML Settings" ),
+        true )
 property_ref_(
         HTMLTheme, setHTMLTheme, int,
         groupForDatabase( "HTML Settings" ),
@@ -393,7 +404,7 @@ property_ref_(
         groupForDatabase( "HTML Settings" ),
         STR("") )
 
-property_ref_( password, setPassword, QString, groupForDatabase( "Privacy Settings" ), STR("") + HTMLBaseDir() )
+property_ref_( password, setPassword, QString, groupForDatabase( "Privacy Settings" ), STR("") )
 
 QDate SettingsData::fromDate() const
 {
@@ -469,4 +480,33 @@ QRect SettingsData::windowGeometry( WindowType win ) const
 bool Settings::SettingsData::hasUntaggedCategoryFeatureConfigured() const
 {
     return DB::ImageDB::instance()->categoryCollection()->categoryNames().contains( untaggedCategory() );
+}
+
+double Settings::SettingsData::getThumbnailAspectRatio() const
+{
+    double ratio = 1.0;
+    switch (Settings::SettingsData::instance()->thumbnailAspectRatio()) {
+        case Settings::Aspect_16_9:
+            ratio = 9.0 / 16;
+            break;
+        case Settings::Aspect_4_3:
+            ratio = 3.0 / 4;
+            break;
+        case Settings::Aspect_3_2:
+            ratio = 2.0 / 3;
+            break;
+        case Settings::Aspect_9_16:
+            ratio = 16 / 9.0;
+            break;
+        case Settings::Aspect_3_4:
+            ratio = 4 / 3.0;
+            break;
+        case Settings::Aspect_2_3:
+            ratio = 3 / 2.0;
+            break;
+        case Settings::Aspect_1_1:
+            ratio = 1.0;
+            break;
+    }
+    return ratio;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,7 +21,7 @@
 #include <QKeyEvent>
 
 AnnotationDialog::CompletableLineEdit::CompletableLineEdit( ListSelect* parent )
-    :QLineEdit( parent )
+    :KLineEdit( parent )
 {
     _listSelect = parent;
 }
@@ -45,7 +45,7 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
 
     if ( _mode == SearchMode && ( ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) ) { //Confirm autocomplete, deselect all text
         handleSpecialKeysInSearch( ev );
-        _listSelect->showOnlyItemsMatching( QString::null ); // Show all again after confirming autocomplete suggestion.
+        _listSelect->showOnlyItemsMatching( QString() ); // Show all again after confirming autocomplete suggestion.
         return;
     }
 
@@ -60,7 +60,7 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
     QString prevContent = text();
 
     if ( ev->text().isEmpty() || !ev->text()[0].isPrint() ) {
-        QLineEdit::keyPressEvent( ev );
+        KLineEdit::keyPressEvent( ev );
         if ( prevContent != text() )
             _listSelect->showOnlyItemsMatching( text() );
         return;
@@ -69,14 +69,14 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
     // &,|, or ! should result in the current item being inserted
     if ( _mode == SearchMode && isSpecialKey( ev ) )  {
         handleSpecialKeysInSearch( ev );
-        _listSelect->showOnlyItemsMatching( QString::null ); // Show all again after a special caracter.
+        _listSelect->showOnlyItemsMatching( QString() ); // Show all again after a special caracter.
         return;
     }
 
     int cursorPos = cursorPosition();
     int selStart = selectionStart();
 
-    QLineEdit::keyPressEvent( ev );
+    KLineEdit::keyPressEvent( ev );
 
 
     // Find the text of the current item

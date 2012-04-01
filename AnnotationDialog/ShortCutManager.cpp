@@ -1,3 +1,20 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 #include "ShortCutManager.h"
 #include "ListSelect.h"
 #include <QShortcut>
@@ -24,7 +41,7 @@ void AnnotationDialog::ShortCutManager::setupShortCuts()
         QWidget* widget = pair.second;
         QString title = dock->windowTitle();
         for ( int index = 0; index < title.length(); ++index ) {
-            const QChar ch = title[index];
+            const QChar ch = title[index].toLower();
             if ( !m_taken.contains(ch) ) {
                 m_taken.insert( ch );
                 dock->setWindowTitle( title.left(index) + QString::fromLatin1("&") + title.mid(index) );
@@ -37,7 +54,7 @@ void AnnotationDialog::ShortCutManager::setupShortCuts()
     Q_FOREACH( QLabel* label, m_labelWidgets ) {
         const QString title = label->text();
         for ( int index = 0; index < title.length(); ++index ) {
-            const QChar ch = title[index];
+            const QChar ch = title[index].toLower();
             if ( !m_taken.contains(ch) ) {
                 m_taken.insert( ch );
                 label->setText( title.left(index) + QString::fromLatin1("&") + title.mid(index) );
@@ -58,5 +75,5 @@ void AnnotationDialog::ShortCutManager::addTaken( const QString& text )
 {
     const int index = text.indexOf(QChar::fromLatin1('&'));
     if ( index != -1 )
-        m_taken.insert( text[index+1] );
+        m_taken.insert( text[index+1].toLower() );
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,12 +19,14 @@
 #ifndef HTMLGENERATOR_HTMLDIALOG_H
 #define HTMLGENERATOR_HTMLDIALOG_H
 #include <KPageDialog>
+#include <KComboBox>
+class QLabel;
 class QComboBox;
 class QTextEdit;
 class KLineEdit;
 class QSpinBox;
 class QCheckBox;
-#include "DB/Result.h"
+#include "DB/IdList.h"
 
 namespace HTMLGenerator
 {
@@ -37,11 +39,12 @@ class HTMLDialog :public KPageDialog {
 
 public:
     HTMLDialog( QWidget* parent );
-    int exec(const DB::Result& list);
+    int exec(const DB::IdList& list);
 
 protected slots:
     void slotOk();
     void selectDir();
+    void displayThemeDescription(int);
 
 protected:
     bool checkVars();
@@ -61,16 +64,20 @@ private:
     KLineEdit* _destURL;
     KLineEdit* _outputDir;
     KLineEdit* _copyright;
+    QCheckBox* _date;
     QSpinBox* _thumbSize;
     QTextEdit* _description;
     QSpinBox* _numOfCols;
     QCheckBox* _generateKimFile;
     QCheckBox* _inlineMovies;
     QMap<int,QString> _themes;
-    QComboBox *_themeBox;
+    KComboBox* _themeBox;
+    QLabel* _themeInfo;
+    QStringList _themeAuthors;
+    QStringList _themeDescriptions;
     QMap< QString, QCheckBox* > _whatToIncludeMap;
     QList<ImageSizeCheckBox*> _cbs;
-    DB::Result _list;
+    DB::IdList _list;
 };
 
 }

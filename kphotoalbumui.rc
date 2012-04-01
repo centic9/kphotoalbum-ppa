@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kphotoalbum" version="39">
+<kpartgui name="kphotoalbum" version="40">
   <MenuBar>
     <Menu name="file">
       <Action name="exportHTML"/>
@@ -7,7 +7,10 @@
       <Action name="export"/>
     </Menu>
     <Menu name="edit" >
-      <Action name="copySelectedURLs" />
+      <Action name="edit_copy" />
+      <Action name="edit_paste" />
+      <Action name="edit_select_all" />
+      <Separator/>
       <Action name="deleteSelected" />
       <Action name="removeTokens" />
       <Action name="showListOfFiles" />
@@ -56,6 +59,7 @@
       <Action name="rescan"/>
       <Action name="recreateExifDB" />
       <Action name="reReadExifInfo" />
+      <Action name="autoStack" />
       <Action name="convertBackend" />
       <Separator/>
       <Action name="removeAllThumbs"/>

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,14 +18,14 @@
 #include "XMLHandler.h"
 #include <qdom.h>
 #include "Utilities/Util.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 
 using Utilities::StringSet;
 
 /**
  * \class ImportExport::XMLHandler
  * \brief Helper class for
- * reading and writting the index.xml file located in exported .kim file.
+ * reading and writing the index.xml file located in exported .kim file.
  * This class is a simple helper class which encapsulate the code needed for generating an index.xml for the export file.
  * There should never be a need to keep any instances around of this class, simply create one on the stack, and call
  * thee method \ref createIndexXML().
@@ -36,7 +36,7 @@ using Utilities::StringSet;
  * separate from the normal index.xml file, which might change with KPhotoAlbum versions to e.g. support compression.
  */
 QByteArray ImportExport::XMLHandler::createIndexXML(
-    const DB::Result& images,
+    const DB::IdList& images,
     const QString& baseUrl,
     ImageFileLocation location,
     Utilities::UniqFilenameMapper* nameMap)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,22 +18,25 @@
 
 #ifndef IMAGECONFIG_H
 #define IMAGECONFIG_H
+#include "Utilities/Set.h"
 #include "ListSelect.h"
 #include "DB/ImageSearchInfo.h"
 #include <qdialog.h>
 #include <QList>
-#include <Q3PtrList>
+#include <QSpinBox>
 #include "DB/ImageInfoList.h"
 #include "DB/Category.h"
 #include "enums.h"
 #include "config-kpa-nepomuk.h"
 #include "ImagePreviewWidget.h"
+#include <QCheckBox>
 
-
+class QStackedWidget;
 class KActionCollection;
 class QMoveEvent;
 class QResizeEvent;
 class QCloseEvent;
+class KComboBox;
 class KTextEdit;
 class DockWidget;
 class QDockWidget;
@@ -69,10 +72,10 @@ class Dialog :public QDialog {
     Q_OBJECT
 public:
     Dialog( QWidget* parent );
+    ~Dialog();
     int configure( DB::ImageInfoList list,  bool oneAtATime );
     DB::ImageSearchInfo search( DB::ImageSearchInfo* search = 0 );
-    bool thumbnailShouldReload() const;
-    bool thumbnailTextShouldReload() const;
+    Utilities::StringSet rotatedFiles() const;
     KActionCollection* actions();
 
 protected slots:
@@ -93,6 +96,7 @@ protected slots:
     void slotStartDateChanged( const DB::ImageDate& );
     void slotCopyPrevious();
     void slotRatingChanged( unsigned int );
+    void togglePreview();
 
 protected:
     QDockWidget* createDock( const QString& title, const QString& name, Qt::DockWidgetArea location, QWidget* widget );
@@ -119,19 +123,21 @@ protected:
     void setUpCategoryListBoxForMultiImageSelection( ListSelect*, const DB::ImageInfoList& images );
     QPair<StringSet,StringSet> selectionForMultiSelect( ListSelect*, const DB::ImageInfoList& images );
     void saveAndClose();
+    void ShowHideSearch( bool show );
 
 private:
+    QStackedWidget* _stack;
+    Viewer::ViewerWidget* _fullScreenPreview;
     DB::ImageInfoList _origList;
     QList<DB::ImageInfo> _editList;
     int _current;
     UsageMode _setup;
-    Q3PtrList< ListSelect > _optionList;
+    QList< ListSelect* > _optionList;
     DB::ImageSearchInfo _oldSearch;
     QSplitter* _splitter;
     int _accept;
     QList<QDockWidget*> _dockWidgets;
-    bool _thumbnailShouldReload;
-    bool _thumbnailTextShouldReload;
+    Utilities::StringSet _rotatedFiles;
 
     // Widgets
     QMainWindow* _dockWindow;
@@ -146,11 +152,19 @@ private:
     KPushButton* _continueLaterBut;
     KTextEdit* _description;
     QTimeEdit* _time;
+    QLabel* _timeLabel;
     KPushButton* _addTime;
 #ifdef HAVE_NEPOMUK
     KRatingWidget* _rating;
+    KComboBox* _ratingSearchMode;
+    QLabel* _ratingSearchLabel;
 #endif
     bool _ratingChanged;
+    QSpinBox* _megapixel;
+    QLabel* _megapixelLabel;
+    QCheckBox* _searchRAW;
+    QString conflictText;
+    QString firstDescription;
 
     KActionCollection* _actions;
 

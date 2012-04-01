@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -39,6 +39,7 @@ signals:
     void dirty();
 
 private:
+    friend class StatusBar;
     friend class Window;
     DirtyIndicator( QWidget* parent );
     void autoSaved();

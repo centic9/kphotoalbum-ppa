@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,12 +20,14 @@
 #define DELETEDIALOG_H
 #include <KDialog>
 #include <QLabel>
-
-#include "DB/Result.h"
+#include <kjob.h>
+#include <qradiobutton.h>
+#include "DB/IdList.h"
 
 class QLabel;
 class QCheckBox;
-
+class KJob;
+namespace KIO {class Job; }
 namespace MainWindow
 {
 
@@ -34,15 +36,18 @@ class DeleteDialog :public KDialog {
 
 public:
     DeleteDialog( QWidget* parent );
-    int exec(const DB::Result& list);
+    int exec(const DB::IdList& list);
 
 protected slots:
     void deleteImages();
+    void slotKIOJobCompleted( KJob* );
 
 private:
-    DB::Result _list;
+    DB::IdList _list;
     QLabel* _label;
-    QCheckBox* _delete_file;
+    QRadioButton* _deleteFile;
+    QRadioButton* _useTrash;
+    QRadioButton* _deleteFromDb;
 
 };
 

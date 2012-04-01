@@ -1,11 +1,4 @@
-#include <Browser/BreadcrumbList.h>
-#include <QContextMenuEvent>
-#include <QMoveEvent>
-#include <QCloseEvent>
-#include <QResizeEvent>
-#include <QLabel>
-#include <KAction>
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -33,6 +26,13 @@ class KTipDialog;
 class QLabel;
 class KActionMenu;
 
+#include <Browser/BreadcrumbList.h>
+#include <QContextMenuEvent>
+#include <QMoveEvent>
+#include <QCloseEvent>
+#include <QResizeEvent>
+#include <QLabel>
+#include <KAction>
 #include "DB/ImageInfoList.h"
 #include <kmainwindow.h>
 #include "Settings/SettingsData.h"
@@ -43,8 +43,9 @@ class KActionMenu;
 #ifdef HASKIPI
 #  include <libkipi/pluginloader.h>
 #endif
-#include "DB/Result.h"
-#include "DB/ResultId.h"
+#include "DB/IdList.h"
+#include "DB/Id.h"
+#include "ThumbnailView/enums.h"
 
 namespace Plugins { class Interface; }
 namespace ThumbnailView { class ThumbnailFacade; }
@@ -58,8 +59,7 @@ namespace MainWindow
 {
 class DeleteDialog;
 class TokenEditor;
-class ImageCounter;
-class DirtyIndicator;
+class StatusBar;
 
 class Window :public KXmlGuiWindow
 {
@@ -70,13 +70,14 @@ public:
     ~Window();
     static void configureImages( const DB::ImageInfoList& list, bool oneAtATime );
     static Window* theMainWindow();
-    DB::Result selected(bool keepSortOrderOfDatabase=false);
+    DB::IdList selected();
     DB::ImageSearchInfo currentContext();
     QString currentBrowseCategory() const;
-    void setStackHead( const DB::ResultId image );
+    void setStackHead( const DB::Id image );
+    void setHistogramVisibilty( bool visible ) const;
 
 public slots:
-    void showThumbNails(const DB::Result& items);
+    void showThumbNails(const DB::IdList& items);
     void loadPlugins();
 
 protected slots:
@@ -90,8 +91,10 @@ protected slots:
     void slotSetStackHead();
     void slotSave();
     void slotCopySelectedURLs();
+    void slotPasteInformation();
     void slotDeleteSelected();
     void slotReReadExifInfo();
+    void slotAutoStackImages();
     void slotSearch();
     void slotView( bool reuse = true, bool slideShow = false, bool random = false );
     void slotViewNewWindow();
@@ -109,11 +112,9 @@ protected slots:
     void unlockFromDefaultScope();
     void changePassword();
     void slotConfigureKeyBindings();
-    void slotSetFileName( const DB::ResultId& );
-    void slotThumbNailSelectionChanged(int selectionSize);
-    void reloadThumbnails(bool flushCache);
-    void reloadThumbnailsAndFlushCache();
-    void reloadThumbnailsAfterRotation();
+    void slotSetFileName( const DB::Id& );
+    void updateContextMenuFromSelectionSize(int selectionSize);
+    void reloadThumbnails( ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection );
     void slotUpdateViewMenu( DB::Category::ViewType );
     void slotShowNotOnDisk();
     void slotBuildThumbnails();
@@ -143,7 +144,7 @@ protected slots:
     void slotRecalcCheckSums();
     void slotShowExifInfo();
     void showFeatures();
-    void showImage( const DB::ResultId& fileName );
+    void showImage( const DB::Id& fileName );
     void slotOrderIncr();
     void slotOrderDecr();
     void slotRotateSelectedLeft();
@@ -166,9 +167,9 @@ protected:
     void setLocked( bool b, bool force );
     void configImages( const DB::ImageInfoList& list, bool oneAtATime );
     void updateStates( bool thumbNailView );
-    DB::Result selectedOnDisk();
+    DB::IdList selectedOnDisk();
     void setupPluginMenu();
-    void launchViewer(const DB::Result& mediaList, bool reuse, bool slideShow, bool random);
+    void launchViewer(const DB::IdList& mediaList, bool reuse, bool slideShow, bool random);
     void setupStatusBar();
     void setPluginMenuState( const char* name, const QList<QAction*>& actions );
     void createSarchBar();
@@ -177,7 +178,7 @@ private:
     static Window* _instance;
 
     ThumbnailView::ThumbnailFacade* _thumbnailView;
-    Settings::SettingsDialog* _optionsDialog;
+    Settings::SettingsDialog* _settingsDialog;
     QPointer<AnnotationDialog::Dialog> _annotationDialog;
     Q3WidgetStack* _stack;
     QWidget* _welcome;
@@ -185,8 +186,6 @@ private:
     Browser::BrowserWidget* _browser;
     KTipDialog* _tipDialog;
     DeleteDialog* _deleteDialog;
-    DirtyIndicator* _dirtyIndicator;
-    QLabel* _lockedIndicator;
     KAction* _lock;
     KAction* _unlock;
     KAction* _setDefaultPos;
@@ -202,6 +201,7 @@ private:
     KAction* _rotLeft;
     KAction* _rotRight;
     KAction* _sortByDateAndTime;
+    KAction* _AutoStackImages;
     KAction* _viewInNewWindow;
     KActionMenu* _viewMenu;
     KToggleAction* _smallListView;
@@ -209,7 +209,7 @@ private:
     KToggleAction* _smallIconView;
     KToggleAction* _largeIconView;
     KAction* _generateHtml;
-    KAction* _cut;
+    KAction* _copy;
     KAction* _paste;
     KAction* _deleteSelected;
     KAction* _limitToMarked;
@@ -224,9 +224,10 @@ private:
     KAction* _recreateThumbnails;
     TokenEditor* _tokenEditor;
     DateBar::DateBarWidget* _dateBar;
+    QFrame* _dateBarLine;
     bool _hasLoadedPlugins;
-    ImageCounter* _partial;
-    BreadcrumbViewer* _pathIndicator;
+    QMap<Qt::Key, QPair<QString,QString> > _viewerInputMacros;
+    MainWindow::StatusBar* _statusBar;
 };
 
 }

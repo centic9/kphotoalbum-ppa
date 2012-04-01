@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -205,21 +205,28 @@ bool Browser::OverviewPage::isSearchable() const
 Browser::BrowserPage* Browser::OverviewPage::activateExivAction()
 {
 #ifdef HAVE_EXIV2
-    Exif::SearchDialog dialog( browser() );
+    QPointer<Exif::SearchDialog> dialog = new Exif::SearchDialog( browser() );
 
     {
         Utilities::ShowBusyCursor undoTheBusyWhileShowingTheDialog( Qt::ArrowCursor );
 
-        if ( dialog.exec() == QDialog::Rejected )
+        if ( dialog->exec() == QDialog::Rejected ) {
+            delete dialog;
+            return 0;
+        }
+        // Dialog can be deleted by its parent in event loop while in exec()
+        if ( dialog.isNull() )
             return 0;
     }
 
 
-    Exif::SearchInfo result = dialog.info();
+    Exif::SearchInfo result = dialog->info();
 
     DB::ImageSearchInfo info = BrowserPage::searchInfo();
 
-    info.addExifSearchInfo( dialog.info() );
+    info.addExifSearchInfo( dialog->info() );
+
+    delete dialog;
 
     if ( DB::ImageDB::instance()->count( info ).total() == 0 ) {
         KMessageBox::information( browser(), i18n( "Search did not match any images or videos." ), i18n("Empty Search Result") );
@@ -266,8 +273,8 @@ bool Browser::OverviewPage::showDuringMovement() const
 Browser::BrowserPage* Browser::OverviewPage::activateUntaggedImagesAction()
 {
     if ( Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured() ) {
-        DB::ImageSearchInfo info;
-        info.setCategoryMatchText( Settings::SettingsData::instance()->untaggedCategory(),
+        DB::ImageSearchInfo info = BrowserPage::searchInfo();
+        info.addAnd( Settings::SettingsData::instance()->untaggedCategory(),
                                    Settings::SettingsData::instance()->untaggedTag() );
         return new ImageViewPage( info, browser()  );
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "ImageDisplay.h"
 #include "Viewer/ViewHandler.h"
 #include <QRubberBand>
 #include <qpainter.h>
@@ -69,7 +68,7 @@ bool Viewer::ViewHandler::mousePressEvent( QMouseEvent*e,  const QPoint& unTrans
     }
 }
 
-bool Viewer::ViewHandler::mouseMoveEvent( QMouseEvent*, 
+bool Viewer::ViewHandler::mouseMoveEvent( QMouseEvent*,
                                           const QPoint& unTranslatedPos, double scaleFactor )
 {
     if ( _scale ) {
@@ -114,5 +113,16 @@ bool Viewer::ViewHandler::mouseReleaseEvent( QMouseEvent* e,  const QPoint& /*un
         return true;
     }
     else
-        return false;
+      return false;
+}
+
+void Viewer::ViewHandler::hideEvent()
+{
+  // In case the escape key is pressed while viewing or scaling, then we need to restore the override cursor
+  // (As in that case we will not see a key release event)
+  if ( _pan || _scale) {
+    qApp->restoreOverrideCursor();
+    _pan = false;
+    _scale = false;
+  }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,10 @@
 */
 #include "RequestQueue.h"
 #include "ImageRequest.h"
+#include "ImageClient.h"
+#include "CancelEvent.h"
+#include <QApplication>
+#include "Manager.h"
 
 bool ImageManager::RequestQueue::addRequest( ImageRequest* request )
 {
@@ -45,7 +49,9 @@ ImageManager::ImageRequest* ImageManager::RequestQueue::popNext()
 
             if ( ! request->stillNeeded() ) {
                 removeRequest( request );
-                delete request;
+                request->setLoadedOK( false );
+                CancelEvent* event = new CancelEvent( request );
+                QApplication::postEvent( Manager::instance(),  event );
             } else {
                 _uniquePending.remove( request );
                 return request;

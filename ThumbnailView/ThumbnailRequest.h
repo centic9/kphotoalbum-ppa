@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,31 +21,19 @@
 
 namespace ThumbnailView
 {
-class ThumbnailPainter;
-class ThumbnailCache;
+class ThumbnailModel;
 
 class ThumbnailRequest : public ImageManager::ImageRequest
 {
 public:
-    ThumbnailRequest( const QString& fileName, const QSize& size, int angle, ThumbnailPainter* client);
+    ThumbnailRequest( int row, const QString& fileName, const QSize& size, int angle, ThumbnailModel* client);
     virtual bool stillNeeded() const;
 
 private:
-    const ThumbnailPainter* const _thumbnailPainter;
-    const QString _fileName;
+    const ThumbnailModel* const _thumbnailModel;
+    int m_row;
 };
 
-    // Temporarily here. TODO(hzeller): unify both these requests.
-class ThumbnailCacheRequest : public ImageManager::ImageRequest
-{
-public:
-    ThumbnailCacheRequest( const QString& fileName, const QSize& size, int angle, ThumbnailCache* client);
-    virtual bool stillNeeded() const;
-
-private:
-    const ThumbnailCache* const _thumbnailCache;
-    const QString _fileName;
-};
 
 }
 

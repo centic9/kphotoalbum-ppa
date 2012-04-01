@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -23,8 +23,9 @@
 #include <KDialog>
 #include "Utilities/UniqFilenameMapper.h"
 #include <QEventLoop>
+#include <QPointer>
 
-namespace DB { class Result; }
+namespace DB { class IdList; }
 
 class QRadioButton;
 class QSpinBox;
@@ -35,18 +36,19 @@ class Q3ProgressDialog;
 namespace ImportExport
 {
 
-enum ImageFileLocation { Inline, ManualCopy, AutoCopy, Link };
+enum ImageFileLocation { Inline, ManualCopy, AutoCopy, Link, Symlink };
 
 class Export :public ImageManager::ImageClient {
 
 public:
-    static void imageExport(const DB::Result& list);
+    static void imageExport(const DB::IdList& list);
 
-    Export( const DB::Result& list, const QString& zipFile,
+    Export( const DB::IdList& list, const QString& zipFile,
             bool compress, int maxSize,
             ImageFileLocation, const QString& baseUrl,
             bool generateThumbnails,
             bool *ok);
+    ~Export();
 
     static void showUsageDialog();
 
@@ -54,8 +56,8 @@ public:
     virtual void pixmapLoaded( const QString& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
 
 protected:
-    void generateThumbnails(const DB::Result& list);
-    void copyImages(const DB::Result& list);
+    void generateThumbnails(const DB::IdList& list);
+    void copyImages(const DB::IdList& list);
 
 private:
     bool* _ok;
@@ -70,7 +72,7 @@ private:
     Utilities::UniqFilenameMapper _filenameMapper;
     bool _copyingFiles;
     QString _destdir;
-    QEventLoop _eventLoop;
+    const QPointer <QEventLoop> _eventLoop;
 };
 
 class ExportConfig :public KDialog {
@@ -89,6 +91,7 @@ private:
     QRadioButton* _include;
     QRadioButton* _manually;
     QRadioButton* _link;
+    QRadioButton* _symlink;
     QRadioButton* _auto;
 };
 

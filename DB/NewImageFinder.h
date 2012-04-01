@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -25,17 +25,18 @@
 namespace DB
 {
 class MD5Map;
-class Result;
+class IdList;
 
 
 class NewImageFinder
 {
 public:
     bool findImages();
-    bool calculateMD5sums(const DB::Result& list, DB::MD5Map* map, bool* wasCanceled=0);
+    bool calculateMD5sums(const DB::IdList& list, DB::MD5Map* map, bool* wasCanceled=0);
 
 protected:
     void searchForNewFiles( const QSet<QString>& loadedFiles, QString directory );
+    void setupFileVersionDetection();
     void loadExtraFiles();
     ImageInfoPtr loadExtraFile( const QString& name, DB::MediaType type );
     void markUnTagged( ImageInfoPtr info );
@@ -43,6 +44,10 @@ protected:
 private:
     typedef QList< QPair< QString, DB::MediaType > > LoadList;
     LoadList _pendingLoad;
+
+    QString _modifiedFileCompString;
+    QRegExp _modifiedFileComponent;
+    QStringList _originalFileComponents;
 };
 }
 

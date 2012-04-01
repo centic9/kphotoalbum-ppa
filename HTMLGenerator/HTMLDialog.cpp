@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,6 +18,7 @@
 
 #include "HTMLDialog.h"
 #include <QComboBox>
+#include <QLabel>
 
 #include <klocale.h>
 #include <qlayout.h>
@@ -38,7 +39,7 @@
 #include "DB/ImageDB.h"
 #include "Generator.h"
 #include "ImageSizeCheckBox.h"
-#include <QTextEdit>
+#include <KTextEdit>
 #include <QStringMatcher>
 using namespace HTMLGenerator;
 
@@ -88,7 +89,7 @@ void HTMLDialog::createContentPage()
     label = new QLabel( i18n("Description:"), contentPage );
     label->setAlignment( Qt::AlignTop );
     lay2->addWidget( label, 2, 0 );
-    _description = new QTextEdit( contentPage );
+    _description = new KTextEdit( contentPage );
     label->setBuddy( _description );
     lay2->addWidget( _description, 2, 1 );
 
@@ -109,7 +110,12 @@ void HTMLDialog::createContentPage()
     _whatToIncludeMap.insert( QString::fromLatin1("**DESCRIPTION**"), cb );
     lay3->addWidget( cb, 0, 0 );
 
-    int row=0;
+    _date = new QCheckBox( i18n("Date"), whatToInclude );
+    _date->setChecked( Settings::SettingsData::instance()->HTMLDate() );
+    _whatToIncludeMap.insert( QString::fromLatin1("**DATE**"), _date );
+    lay3->addWidget( _date, 0, 1 );
+
+    int row=1;
     int col=0;
     QString selectionsTmp = Settings::SettingsData::instance()->HTMLIncludeSelections();
     QStringMatcher* pattern = new QStringMatcher();
@@ -119,13 +125,13 @@ void HTMLDialog::createContentPage()
      QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
      for( QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it ) {
         if ( ! (*it)->isSpecialCategory() ) {
-            if ( ++col % 2 == 0 )
-                ++row;
             QCheckBox* cb = new QCheckBox( (*it)->text(), whatToInclude );
             lay3->addWidget( cb, row, col%2 );
             _whatToIncludeMap.insert( (*it)->name(), cb );
 	    pattern->setPattern((*it)->name());
 	    cb->setChecked( pattern->indexIn (selectionsTmp)  >= 0 ? 1 : 0 );
+            if ( ++col % 2 == 0 )
+                ++row;
         }
     }
 }
@@ -177,12 +183,16 @@ void HTMLDialog::createLayoutPage()
     lay2->addWidget( label, 2, 0 );
     lay4 = new QHBoxLayout;
     lay2->addLayout( lay4, 2, 1 );
-    _themeBox = new QComboBox( layoutPage );
+    _themeBox = new KComboBox( layoutPage );
     label->setBuddy( _themeBox );
     lay4->addWidget( _themeBox );
-    lay4->addStretch( 1 );
-    populateThemesCombo();
-
+    lay4->addStretch( 1 );    
+    _themeInfo = new QLabel( i18n("Theme Description"), layoutPage );
+    _themeInfo->setWordWrap(true);
+    lay2->addWidget( _themeInfo, 3, 1 );
+    connect(_themeBox, SIGNAL(currentIndexChanged( int )), this, SLOT(displayThemeDescription( int )));  // update theme description whenever ComboBox changes
+    populateThemesCombo();   
+    
     // Image sizes
     Q3HGroupBox* sizes = new Q3HGroupBox( i18n("Image Sizes"), layoutPage );
     lay1->addWidget( sizes );
@@ -309,6 +319,7 @@ void HTMLDialog::slotOk()
     Settings::SettingsData::instance()->setHTMLBaseURL( _baseURL->text() );
     Settings::SettingsData::instance()->setHTMLDestURL( _destURL->text() );
     Settings::SettingsData::instance()->setHTMLCopyright( _copyright->text() );
+    Settings::SettingsData::instance()->setHTMLDate( _date->isChecked() );
     Settings::SettingsData::instance()->setHTMLTheme( _themeBox->currentIndex() );
     Settings::SettingsData::instance()->setHTMLKimFile( _generateKimFile->isChecked() );
     Settings::SettingsData::instance()->setHTMLInlineMovies( _inlineMovies->isChecked() );
@@ -358,15 +369,15 @@ bool HTMLDialog::checkVars()
     bool ok = KIO::NetAccess::stat( KUrl(baseDir), result, this );
     if ( !ok ) {
         KMessageBox::error( this, i18n("<p>Error while reading information about %1. "
-                                       "This is most likely because the directory does not exist.</p>")
-                            .arg( baseDir ) );
+                                       "This is most likely because the directory does not exist.</p>",
+                                       baseDir ) );
         return false;
     }
 
     KFileItem fileInfo( result, KUrl(baseDir) );
     if ( !fileInfo.isDir() ) {
         KMessageBox::error( this, i18n("<p>%1 does not exist, is not a directory or "
-                                       "cannot be written to.</p>").arg( baseDir ) );
+                                       "cannot be written to.</p>", baseDir ) );
         return false;
     }
 
@@ -377,7 +388,7 @@ bool HTMLDialog::checkVars()
         int answer = KMessageBox::warningYesNo( this,
                                                 i18n("<p>Output directory %1 already exists. "
                                                      "Usually, this means you should specify a new directory.</p>"
-                                                     "<p>Should %2 be deleted first?</p>").arg( outputDir ).arg( outputDir ),
+                                                     "<p>Should %2 be deleted first?</p>", outputDir, outputDir ),
                                                 i18n("Directory Exists"), KStandardGuiItem::yes(), KStandardGuiItem::no(),
                                                 QString::fromLatin1("html_export_delete_original_directory") );
         if ( answer == KMessageBox::Yes ) {
@@ -445,13 +456,17 @@ void HTMLDialog::populateThemesCombo()
             KConfig themeconfig( QString::fromLatin1( "%1/kphotoalbum.theme").arg( themePath ), KConfig::SimpleConfig );
             KConfigGroup config = themeconfig.group("theme");
             QString themeName = config.readEntry( "Name" );
-            QString themeAuthor = config.readEntry( "Author" );
+            QString themeAuthor = config.readEntry( "Author" );  
+            _themeAuthors << themeAuthor; // save author to display later
             QString themeDefault = config.readEntry( "Default" );
-
+            QString themeDescription = config.readEntry( "Description" );
+            _themeDescriptions << themeDescription; // save description to display later
+            
             enableButtonOk( true );
-            _themeBox->insertItem( i, i18n( "%1 (by %2)",themeName, themeAuthor ) );
+            //_themeBox->insertItem( i, i18n( "%1 (by %2)",themeName, themeAuthor ) ); // combined alternative
+            _themeBox->insertItem( i, i18n( "%1",themeName) );
             _themes.insert( i, themePath );
-
+            
             if (themeDefault == QString::fromLatin1("true")) {
 		theme = i;
 		defaultthemes++;
@@ -462,16 +477,28 @@ void HTMLDialog::populateThemesCombo()
     if(_themeBox->count() < 1) {
         KMessageBox::error( this, i18n("Could not find any themes - this is very likely an installation error" ) );
     }
-    if (Settings::SettingsData::instance()->HTMLTheme() >= 0)
-	_themeBox->setCurrentIndex( Settings::SettingsData::instance()->HTMLTheme() );
+    if ( (Settings::SettingsData::instance()->HTMLTheme() >= 0) && (Settings::SettingsData::instance()->HTMLTheme() < _themeBox->count()) )
+        _themeBox->setCurrentIndex( Settings::SettingsData::instance()->HTMLTheme() );
     else {
-	_themeBox->setCurrentIndex( theme );
-	if (defaultthemes > 1)
-	    KMessageBox::information( this, i18n("More than one theme is set as default, using theme %1", _themeBox->currentText()) );
+        _themeBox->setCurrentIndex( theme );
+        if (defaultthemes > 1)
+            KMessageBox::information( this, i18n("More than one theme is set as default, using theme %1", _themeBox->currentText()) );
     }
 }
 
-int HTMLDialog::exec(const DB::Result& list)
+void HTMLDialog::displayThemeDescription(int themenr)
+{
+   // SLOT: update _themeInfo label whenever the _theme QComboBox changes.
+   QString outtxt = i18n( "by " );
+   outtxt.append( _themeAuthors[themenr] );
+   outtxt.append( i18n( "\n " ) );
+   outtxt.append( _themeDescriptions[themenr] );
+   _themeInfo->setText( outtxt );
+   // Instead of two separate lists for authors and descriptions one could have a combined one by appending the text prior to storing within populateThemesCombo(), 
+   // however, storing author and descriptions separately might be cleaner.
+}
+
+int HTMLDialog::exec(const DB::IdList& list)
 {
     _list = list;
     return KDialog::exec();
@@ -489,6 +516,7 @@ Setup HTMLGenerator::HTMLDialog::setup() const
     setup.setOutputDir( _outputDir->text() );
     setup.setThumbSize( _thumbSize->value() );
     setup.setCopyright( _copyright->text() );
+    setup.setDate( _date->isChecked() );
     setup.setDescription( _description->toPlainText() );
     setup.setNumOfCols( _numOfCols->value() );
     setup.setGenerateKimFile( _generateKimFile->isChecked() );

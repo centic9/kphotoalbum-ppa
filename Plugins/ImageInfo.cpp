@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -37,7 +37,7 @@ QString Plugins::ImageInfo::title()
     if ( _info )
         return _info->label();
     else
-        return QString::null;
+        return QString();
 }
 
 QString Plugins::ImageInfo::description()
@@ -45,7 +45,7 @@ QString Plugins::ImageInfo::description()
     if ( _info )
         return _info->description();
     else
-        return QString::null;
+        return QString();
 }
 
 QMap<QString,QVariant> Plugins::ImageInfo::attributes()
@@ -106,9 +106,11 @@ void Plugins::ImageInfo::setDescription( const QString& description )
 
 void Plugins::ImageInfo::clearAttributes()
 {
+    if( _info ) {
     _info->clearAllCategoryInfo();
     // TODO I think it is reasonable to keep the gps position anyway, isn't it?
     MainWindow::DirtyIndicator::markDirty();
+    }
 }
 
 void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& map )

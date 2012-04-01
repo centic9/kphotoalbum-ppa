@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,6 +20,11 @@
 #include <QHBoxLayout>
 #include <klocale.h>
 #include <QWidget>
+#include "DB/ImageDB.h"
+#include "DB/ImageInfo.h"
+#include "DB/IdList.h"
+#include "DB/Id.h"
+#include "MainWindow/DeleteDialog.h"
 using namespace AnnotationDialog;
 
 ImagePreviewWidget::ImagePreviewWidget() : QWidget()
@@ -72,14 +77,14 @@ ImagePreviewWidget::ImagePreviewWidget() : QWidget()
     _delBut->setAutoDefault( false );
 
     hlay->addStretch(1);
-    
+
     connect( _copyPreviousBut, SIGNAL( clicked() ), this, SLOT( slotCopyPrevious() ) );
     connect( _delBut, SIGNAL( clicked() ), this, SLOT( slotDeleteImage() ) );
     connect( _nextBut, SIGNAL( clicked() ), this, SLOT( slotNext() ) );
     connect( _prevBut, SIGNAL( clicked() ), this, SLOT( slotPrev() ) );
     connect( _rotateLeft, SIGNAL( clicked() ), this, SLOT( rotateLeft() ) );
     connect( _rotateRight, SIGNAL( clicked() ), this, SLOT( rotateRight() ) );
-    
+
     _current = -1;
 }
 int ImagePreviewWidget::angle() const { return _preview->angle(); }
@@ -92,7 +97,7 @@ void ImagePreviewWidget::configure( QList<DB::ImageInfo>* imageList, bool single
   _current = 0;
   setImage(_imageList->at( _current ));
   _singleEdit = singleEdit;
-  
+
   _delBut->setEnabled( _singleEdit );
   _copyPreviousBut->setEnabled( _singleEdit );
   _rotateLeft->setEnabled( _singleEdit );
@@ -108,7 +113,7 @@ void ImagePreviewWidget::slotPrev()
     if ( _current != 0 )
         _preview->anticipate( (*_imageList)[ _current-1 ] );
     setImage( _imageList->at( _current ) );
-    
+
     emit indexChanged( _current );
 
 }
@@ -119,18 +124,18 @@ void ImagePreviewWidget::slotNext()
         return;
 
     _current++;
-    
+
     if ( _current != (int)_imageList->count()-1 )
         _preview->anticipate( (*_imageList)[ _current+1 ]);
     setImage( _imageList->at( _current ) );
-    
+
     emit indexChanged( _current );
 
 }
 
 void ImagePreviewWidget::slotCopyPrevious()
 {
-    emit copyPrevClicked(); 
+    emit copyPrevClicked();
 }
 
 void ImagePreviewWidget::rotateLeft()
@@ -146,40 +151,51 @@ void ImagePreviewWidget::rotateRight()
 void ImagePreviewWidget::rotate( int angle )
 {
     if( ! _singleEdit ) return;
-    
+
     _preview->rotate( angle );
-    
+
     emit imageRotated( angle );
 }
 
 void ImagePreviewWidget::slotDeleteImage()
 {
   if( ! _singleEdit ) return;
+
+    MainWindow::DeleteDialog dialog( this );
+    DB::ImageInfo info = _imageList->at( _current );
+
+    DB::Id idToDelete = DB::ImageDB::instance()->ID_FOR_FILE(info.fileName(DB::AbsolutePath));
+    const DB::IdList deleteList = DB::IdList(idToDelete);
+
+    int ret = dialog.exec( deleteList );
+    if ( ret == QDialog::Rejected ) //Delete Dialog rejected, do nothing
+	  return;
+
   emit imageDeleted( _imageList->at( _current ) );
-  
+
   if( ! _nextBut->isEnabled() ) //No next image exists, select previous
       _current--;
 
   if( _imageList->count() == 0 ) return; //No images left
-  
+
   setImage(_imageList->at( _current ) );
-  
+
 }
 void ImagePreviewWidget::setImage( const DB::ImageInfo& info )
 {
     _nextBut->setEnabled( _current != (int) _imageList->count()-1 );
     _prevBut->setEnabled( _current != 0 );
     _copyPreviousBut->setEnabled( _current != 0 && _singleEdit);
-    
+
     _preview->setImage( info );
-    
+
     emit imageChanged( info );
 }
 
 void ImagePreviewWidget::setImage( const int index )
 {
     _current = index;
-    
+
     setImage( _imageList->at( _current ) );
 }
 
@@ -193,12 +209,12 @@ void ImagePreviewWidget::setImage( const QString& fileName )
 {
     _preview->setImage( fileName );
     _current = -1;
-    
+
     _nextBut->setEnabled( false );
     _prevBut->setEnabled( false );
     _rotateLeft->setEnabled( false );
     _rotateRight->setEnabled( false );
     _delBut->setEnabled( false );
     _copyPreviousBut->setEnabled( false );
-    
+
 }

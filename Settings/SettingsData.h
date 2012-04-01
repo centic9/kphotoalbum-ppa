@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -52,7 +52,7 @@ namespace Settings
     using Utilities::StringSet;
 
     enum Position { Bottom, Top, Left, Right, TopLeft, TopRight, BottomLeft, BottomRight };
-    enum ViewSortType { SortLastUse, SortAlpha };
+    enum ViewSortType { SortLastUse, SortAlphaTree, SortAlphaFlat };
     enum TimeStampTrust { Always, Ask, Never};
     enum StandardViewSize { FullSize, NaturalSize, NaturalSizeIfFits };
     enum ThumbnailAspectRatio { Aspect_1_1, Aspect_4_3, Aspect_3_2, Aspect_16_9, Aspect_3_4, Aspect_2_3, Aspect_9_16 };
@@ -78,14 +78,32 @@ public:
     property_copy( useEXIFRotate         , setUseEXIFRotate         , bool );
     property_copy( useEXIFComments       , setUseEXIFComments       , bool );
     property_copy( searchForImagesOnStart, setSearchForImagesOnStart, bool );
+    property_copy( ignoreFileExtension   , setIgnoreFileExtension   , bool );
+    property_copy( skipSymlinks          , setSkipSymlinks          , bool );
     property_copy( skipRawIfOtherMatches , setSkipRawIfOtherMatches , bool );
+    property_copy( useRawThumbnail       , setUseRawThumbnail       , bool );
+    property_copy( useRawThumbnailSize   , setUseRawThumbnailSize   , QSize );
     property_copy( useCompressedIndexXML , setUseCompressedIndexXML , bool );
     property_copy( compressBackup        , setCompressBackup        , bool );
     property_copy( showSplashScreen      , setShowSplashScreen      , bool );
+    property_copy( showHistogram         , setShowHistogram         , bool );
     property_copy( autoSave              , setAutoSave              , int );
     property_copy( backupCount           , setBackupCount           , int );
     property_copy( viewSortType          , setViewSortType          , ViewSortType   );
     property_copy( tTimeStamps           , setTTimeStamps           , TimeStampTrust );
+    property_copy( excludeDirectories    , setExcludeDirectories    , QString );
+
+    ////////////////////////////////
+    //// File Version Detection ////
+    ////////////////////////////////
+
+    property_copy( detectModifiedFiles   , setDetectModifiedFiles   , bool );
+    property_copy( modifiedFileComponent , setModifiedFileComponent , QString );
+    property_copy( originalFileComponent , setOriginalFileComponent , QString );
+    property_copy( moveOriginalContents  , setMoveOriginalContents  , bool );
+    property_copy( autoStackNewFiles     , setAutoStackNewFiles  , bool );
+    property_copy( copyFileComponent     , setCopyFileComponent , QString );
+    property_copy( copyFileReplacementComponent , setCopyFileReplacementComponent , QString );
 
     bool trustTimeStamps();
 
@@ -95,7 +113,7 @@ public:
 
     property_copy( displayLabels           , setDisplayLabels          , bool );
     property_copy( displayCategories       , setDisplayCategories      , bool );
-    property_copy( autoShowThumbnailView   , setAutoShowThumbnailView  , bool );
+    property_copy( autoShowThumbnailView   , setAutoShowThumbnailView  , unsigned int );
     property_copy( showNewestThumbnailFirst, setShowNewestFirst        , bool );
     property_copy( thumbnailDisplayGrid    , setThumbnailDisplayGrid   , bool );
     property_copy( previewSize             , setPreviewSize            , int );
@@ -103,18 +121,8 @@ public:
 
     // Border space around thumbnails.
     property_copy( thumbnailSpace          , setThumbnailSpace         , int );
-    property_copy( thumbnailCacheScreens   , setThumbnailCacheScreens  , int );
     property_copy( thumbSize               , setThumbSize              , int );
     property_copy( thumbnailAspectRatio    , setThumbnailAspectRatio   , ThumbnailAspectRatio );
-    property_ref ( thumbnailFormat         , setThumbnailFormat        , QString );
-
-    /**
-     * Return an approximate figure of megabytes to cache to be able to
-     * cache the amount of "screens" of caches.
-     */
-    static size_t thumbnailBytesForScreens(int screen);
-
-    size_t thumbnailCacheBytes() const;   // convenience method
 
     ////////////////
     //// Viewer ////
@@ -159,6 +167,16 @@ public:
     property_ref( iptcCharset  , setIptcCharset  , QString   );
 #endif
 
+    /////////////////////
+    //// Exif Import ////
+    /////////////////////
+
+    property_copy( updateExifData           , setUpdateExifData           , bool             );
+    property_copy( updateImageDate          , setUpdateImageDate          , bool             );
+    property_copy( useModDateIfNoExif       , setUseModDateIfNoExif       , bool             );
+    property_copy( updateOrientation        , setUpdateOrientation        , bool             );
+    property_copy( updateDescription        , setUpdateDescription        , bool             );
+
     ///////////////
     //// SQLDB ////
     ///////////////
@@ -179,6 +197,7 @@ public:
     property_ref( HTMLBaseURL, setHTMLBaseURL, QString);
     property_ref( HTMLDestURL, setHTMLDestURL, QString);
     property_ref( HTMLCopyright, setHTMLCopyright, QString);
+    property_ref( HTMLDate, setHTMLDate, int);
     property_ref( HTMLTheme, setHTMLTheme, int);
     property_ref( HTMLKimFile, setHTMLKimFile, int);
     property_ref( HTMLInlineMovies, setHTMLInlineMovies, int);
@@ -203,6 +222,8 @@ public:
 
     void  setWindowGeometry( WindowType, const QRect& geometry );
     QRect windowGeometry( WindowType ) const;
+
+    double getThumbnailAspectRatio() const;
 
 signals:
     void locked( bool lock, bool exclude );

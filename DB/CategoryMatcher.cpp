@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -24,13 +24,6 @@ QString CategoryMatcher::spaces(int level ) const
 {
     return QString::fromLatin1("").rightJustified(level*3 );
 }
-
-void DB::CategoryMatcher::finalize()
-{
-    _shouldPrepareMatchedSet = hasEmptyMatcher();
-    setShouldCreateMatchedSet( _shouldPrepareMatchedSet );
-}
-
 
 void DB::CategoryMatcher::setShouldCreateMatchedSet(bool b)
 {

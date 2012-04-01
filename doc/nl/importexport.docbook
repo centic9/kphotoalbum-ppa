@@ -1,0 +1,150 @@
+<chapter id="chp-importExport">
+  <title
+>Importeren/Exporteren</title>
+  <para
+>If you attend a family party, a company meeting, a conference, or any other event where other &kphotoalbum; users may be present, you may wish to share your images with those people. You may of course choose to generate &HTML; pages for them to browse, but given you already have spent time classifying all images (Who is on the images, where were they taken etc), there are no reason for them to redo all that work.</para>
+
+    <para
+>&kphotoalbum; allows you to export a set of your images into a <literal role="extension"
+>.kim</literal
+> file, which other people may import into their database, to get your classification for these images.</para>
+
+    <para
+>Two different kind of <literal role="extension"
+>.kim</literal
+> files exists, inlines or externals, referring to whether the images them self are located in the file or at some other location. Placing the images in the file has the obvious advantage that the file is self contained, while it has the equally obvious disadvantage of the file being rather big.</para>
+
+    <para
+>There are two places from which you may generate a <literal role="extension"
+>.kim</literal
+> file, namely directly from <menuchoice
+><guimenu
+>File</guimenu
+><guimenuitem
+>Export...</guimenuitem
+></menuchoice
+>, or along with &HTML; pages (see <xref linkend="chp-generating-html"/>). Creating a <literal role="extension"
+>.kim</literal
+> file during &HTML; export will create an external <literal role="extension"
+>.kim</literal
+> file.</para>
+
+    <para
+>External <literal role="extension"
+>.kim</literal
+> files will search for images in one of two ways. First it will try to look for the images next to the <literal role="extension"
+>.kim</literal
+> file, and if not found, it will search for them at the URL specified when the <literal role="extension"
+>.kim</literal
+> file was created. Notice the later is only possible for <literal role="extension"
+>.kim</literal
+> files created during &HTML; export.</para>
+    
+    <sect1 id="chp-exportDialog">
+      <title
+>Exportdialoog</title>
+      <para
+>Deze sectie laat u zien de exportdialoog zien die u krijgt om na het kiezen van <menuchoice
+><guimenu
+>bestand</guimenu
+> <guimenuitem
+>Exporteren...</guimenuitem
+></menuchoice
+>.</para>
+
+      <para
+>Het meest belangrijke deel van deze dialoog is het specificeren of het <literal role="extension"
+>.kim</literal
+>-bestand intern of extern (zie bovenstaande beschrijving) moet zijn. U hebt de volgende drie opties: <itemizedlist>
+          <listitem
+><para
+>Ingevoegd in het <literal role="extension"
+>.kim</literal
+>-bestand - dit is dan een intern bestand</para
+></listitem>
+          <listitem
+><para
+>Handmatig naast het .kim-bestand kopiëren - hier moet u de afbeeldingen zelf naast het .kim-bestand kopiëren</para
+></listitem>
+          <listitem
+><para
+>Automatisch naast het .kim-bestand kopiëren - hier kopieert &kphotoalbum; de afbeeldingen voor u.</para
+></listitem>
+        </itemizedlist>
+      </para>
+      
+      <para
+>Between you and me, <literal role="extension"
+>.kim</literal
+> files are really just zip files. Normally it is not worth bothering compressing the files because images normally are compressed JPEG already, and the XML file itself are really tiny. If you really want to squish out the last few bytes, you may still do so, by checking <guilabel
+>Compress Export File</guilabel
+></para>
+
+      <para
+>The final option on the page are <guilabel
+>Limit maximum image dimension</guilabel
+>. When sending some images to some friends, you may not want to send images in full size, as the <literal role="extension"
+>.kim</literal
+> file might be huge. For this, you may specify that the maximum dimension of images should be say maximum 800 pixels in each direction.</para>
+    </sect1>
+
+
+
+
+    
+<sect1 id="chp-importDialog">
+  <title
+>Importdialoog</title>
+<para
+>When you select a <literal role="extension"
+>.kim</literal
+> file from a web browser, or choose <menuchoice
+><guimenu
+>File</guimenu
+><guimenuitem
+>Import...</guimenuitem
+></menuchoice
+>, &kphotoalbum; will import the database exported with the functionality described in <xref linkend="chp-importExport"/>.</para>
+
+<para
+>De importassistent bestaat uit vier stappen. Eerst moet u specificeren welke afbeeldingen u wilt importeren. Vervolgens moet u specificeren in welke map de geïmporteerde afbeeldingen geplaatst moeten worden.</para>
+
+<para
+>Chances are that you call the people category <emphasis
+>personen</emphasis
+> (if you are German), while I in Danish might call this category <emphasis
+>personer</emphasis
+>. In the third step of the import dialog, you must specify which category from the import file to import, plus which categories in your database they match.</para>
+
+<para
+>Ik kan mijzelf in mijn databases <emphasis
+>mij</emphasis
+> noemen, terwijl ik in uw database Jesper K. Pedersen wordt genoemd. Stap vier laat u het overeen laten komen instellen voor elk van de geïmporteerde categorieën. Dit kan bekeken worden in <xref linkend="fig-import-dialog"/>.</para>
+
+<figure id="fig-import-dialog">
+<title
+>Personen overeen laten komen in de importdialoog </title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="import-dialog.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</figure>
+
+<para
+>In the screen shot you may see that Donna is the same in both the .kim file and in my database - the name is shown in black to indicate a perfect match in the database. The other three names was not found in the database, though both Jesper and Anne Helene was found matching as substring, so these are suggested. Finally in my database I didn't have Spiff (or I might have named it quite differently), so &kphotoalbum; simply suggest Spiff for the import name.</para>
+
+</sect1>
+  </chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-namecase-general:t
+sgml-general-insert-case:lower
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-parent-document: "index.docbook"
+End:
+-->

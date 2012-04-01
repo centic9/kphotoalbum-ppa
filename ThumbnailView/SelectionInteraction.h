@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -23,40 +23,27 @@
 #include "MouseInteraction.h"
 #include <qobject.h>
 
-namespace DB { class ResultId; }
+namespace DB { class Id; }
 
 class QMouseEvent;
 namespace ThumbnailView
 {
 class ThumbnailFactory;
-class Cell;
 
 class SelectionInteraction : public QObject, public MouseInteraction, private ThumbnailComponent {
     Q_OBJECT
 
 public:
     SelectionInteraction( ThumbnailFactory* factory );
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void mouseMoveEvent( QMouseEvent* );
-    virtual void mouseReleaseEvent( QMouseEvent* );
+    OVERRIDE bool mousePressEvent( QMouseEvent* );
+    OVERRIDE bool mouseMoveEvent( QMouseEvent* );
     bool isDragging() const;
 
 protected:
-    bool isMouseOverIcon( const QPoint& viewportPos ) const;
     void startDrag();
-    bool atLeftSide( const QPoint& contentCoordinates );
-    bool atRightSide( const QPoint& contentCoordinates );
-    Cell prevCell( const Cell& cell );
-    Cell nextCell( const Cell& cell );
-    QRect iconRect( const QPoint& pos, CoordinateSystem ) const;
-    bool deselectSelection( const QMouseEvent* ) const;
-
-protected slots:
-    void handleDragSelection();
-    void calculateSelection( Cell* pos1, Cell* pos2 );
 
 private:
-    typedef QSet<DB::ResultId> IdSet;
+    typedef QSet<DB::Id> IdSet;
     /**
      * This variable contains the position the mouse was pressed down.
      * The point is in contents coordinates.
@@ -69,7 +56,6 @@ private:
     bool _isMouseDragOperation;
 
     IdSet _originalSelectionBeforeDragStart;
-    QTimer* _dragTimer;
     bool _dragInProgress;
     bool _dragSelectionInProgress;
     ThumbnailFactory* _JUMP;

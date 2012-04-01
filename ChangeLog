@@ -1,7 +1,254 @@
+====================== KPhotoalbum 4.2 released  ======================
+
+Other changes done since 4.1.1
+
+	* Helper scripts for RAW workflow and backup
+	* Documentation and tips
+	* Fixes to prevent file corruption
+	* Annotation dialog and search improvements
+	* HTML export improvements
+	* Option to skip symbolic links when detecting new files
+	* Multi core CPU improvements
+	* Background thumbnail building
+	* Thumbnail pre-loading
+	* Thumbnail tooltip fixes
+	* Plenty of other bug and crash fixes
+
+2011-05-30  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* Improvement: If you start the exif viewer from the image viewer,
+	then going to the next image in the image viewer, will update the
+	data shown in the exif viewer.
+
+	If you want to show two exif viewers for two different files, then
+	simply start two exif viewer on an image, only the latest one
+	started will update when the image changes. 
+
+2011-05-15  Miika Turkia <miika.turkia@gmail.com>
+
+	* Added video extensions webm, mts, ogg and ogv (fixes bug #269579)
+
+2011-01-09  Miika Turkia <miika.turkia@gmail.com>
+
+	* Fixed bug #262127, compile fails with exiv2-0.21
+
+2010-12-22  Miika Turkia <miika.turkia@gmail.com>
+
+	* Fixed bugs #255286 and #237889, crashes on missing exif information
+
+2010-10-22  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* Added "Export by symlink" to the export dialog. Thanks to Robert
+	Krawitz for a patch.
+
+	* Bugfix: If you right click on an
+	image in the viewer and accidentally hover over Run Program (on the
+	selection), it is extremely slow. Thanks to Robert Krawitz for a patch
+
+2010-09-08  Miika Turkia <miika.turkia@gmail.com>
+
+	* Patch to display filter button correctly, enable collapsing super
+	categories, and copying with drag-drop categories (annotation dialog).
+	Thanks to Reimar Imhof for the patch.
+
+2010-09-07  Miika Turkia <miika.turkia@gmail.com>
+
+	* bugfix: Autostack set to ignore images with no exact timestamp
+	* Autostack affects selected images only (instead of whole database).
+	Thanks to Andreas Neustifter for the patch.
+
+2010-09-05  Miika Turkia <miika.turkia@gmail.com>
+
+	* Tooltip is shown on thumbnail view only if mouse is idle for 200ms.
+
+2010-08-30  Miika Turkia <miika.turkia@gmail.com>
+
+	* Opening of annotation dialog: sort button selection fits real
+	sorting. Sort menu items now have check boxes. Thanks to Reimar Imhof
+	for the patch.
+	* Fixes bug that prevented deselecting images in thumbnail view.
+	Thanks to Reimar Imhof for the patch.
+
+2010-08-28  Miika Turkia <miika.turkia@gmail.com>
+
+	* With the new Thumbnail-View KPA crashes when creating a stack from 2
+	selected images (either via Ctrl-3 or the context menu). Thanks to
+	Andreas Neustifter for reporting and patch.
+	* Added option to sort category items aphabetically on annotation
+	dialog (tree view alphabetical, flat alphabetical and most recently
+	used are the currently supported options). Thanks to Reimar Imhof for
+	the patch.
+
+2010-08-19  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* ThumbnailView has been completely rewritten, so that it is much
+	faster.
+	* Thumbnail (re)building is now automatically build in the
+	background when needed.
+
+2010-07-07  Miika Turkia <miika.turkia@gmail.com>
+
+	* Implemented automatic stacking of images. Images that are shot
+	within specified time frame are stacked together (supports also
+	stacking of matching MD5 sum as requested by someone on the IRC
+	channel).
+
+2010-07-03  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* Continue reading info exif from files even if some fails. Thanks
+	for patch from Robert Krawitz.
+
+	* Disable screensaver when running a slideshow. Thanks to
+	Christian Schafmeister for a patch for this.
+
+	* It is now possible to copy tags from one image in the browser
+	(using Ctrl+c) and then paste that to several other images using
+	Ctrl-v. Thanks to Andreas Neustifter for a patch with this feature.
+
+2010-06-20  Miika Turkia <theBro@luukku.com>
+
+	* Fixed two bugs from HTMLExport theme darkJS that prevented w3c
+	compliancy
+	* Fixed two bugs from HTMLExport theme dark that prevented w3c
+	compliancy
+	* Fixed rating in viewer mode (numbers 1 to 5 give star rating)
+
+2010-02-15  Miika Turkia <theBro@luukku.com>
+
+	* fixed bug #182046: Re-read metadata settings not saved. Thanks to
+	Andreas Neustifter for patch.
+
+2010-02-13  Miika Turkia <theBro@luukku.com>
+
+	* Removing blue link borders from images on HTMLExport theme dark.
+	Thanks to Andreas Neustifter for patch.
+
+
+2010-01-31  Miika Turkia <theBro@luukku.com>
+
+	* bugfix: HTML generator theme darkJS did not show fullsize images as
+	dimensions were reported as -1. Now dimensions are retrieved from the
+	first image if dealing with fullsize images. (Added also a version
+	number to the theme.)
+
+2010-01-30  Miika Turkia <theBro@luukku.com>
+
+	* Moved modified file detection configurations from General tab to
+	it's own configuration tab called 'File Versions' (General tab was
+	taller than my screen)
+	* Error message changed to display correct menu text
+
+2010-01-24  Miika Turkia <theBro@luukku.com>
+
+	* GUI: Added checkboxes for display filters to view which ones are
+	selected.
+	* Added check that color depth is enough for each filter.
+	* bugfix: File name based autostacking of new images relied on
+	relative paths and did not work if KPA was started from elsewhere
+
+2010-01-23  Miika Turkia <theBro@luukku.com>
+
+	* Minor tweak on HTMLGenerator theme darkJS to highlight displayed
+	thumbnail
+	* New filters added for contrast streching and histogram equalization
+
+2010-01-15  Jan Kundrát <jkt@gentoo.org>
+
+	* Make copying a list of images with Ctrl+C work on all images,
+	regardless if they are currently available on the disk or not.
+
+2010-01-15 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+
+	* Draw stack indicator correctly for images
+	with different dimensions.
+
+2010-01-06  Miika Turkia <theBro@luukku.com>
+
+	* Added possibility to use embedded thumbnails instead of decoding RAW
+	files. User is able to specify what is the minimum size for the
+	embedded thumbnail to be used.
+
+	* Remove of some code that became dead with yesterdays bugfix
+
+2010-01-05  Miika Turkia <theBro@luukku.com>
+
+	* fixed bug #220373: Viewer settings dialog did not load correct
+	values and had wrong defaults
+
+2010-01-04  Miika Turkia <theBro@luukku.com>
+
+	* ImageViewer and SlideShow added to HTMLGenerator's theme darkJS
+
+2010-01-01  Miika Turkia <theBro@luukku.com>
+
+	* fixed bug #159718: Excluding subdirecories like .thumbs.
+	Thanks to Michal Yogi Práznovský
+
+2009-12-31  Miika Turkia <theBro@luukku.com>
+
+	* fixed bug #145735: Move deleted files to Trash. Thanks to  Kirill
+	Kalyuzhniy
+
+2009-12-30  Miika Turkia <theBro@luukku.com>
+
+	* Tip added to inform users about rating with number keys
+
+2009-12-30  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* fixed bug #220376: Shortcuts in the annotation dialog was broken
+	in some translations
+
+	* bugfix: KPA crashes when viewing images if viewer cache size is set
+	to zero
+
+2009-12-25  Jan Kundrát <jkt@gentoo.org>
+
+	* Added a simple `script/focal-length-hist.py` for printing out a histogram
+	of lens focal lengths used.  It's a rather quick & dirty hack, but might be
+	useful when deciding which focal lengths you use most before buying new
+	lens.
+
+2009-12-24  Jesper K. Pedersen  <blackie@kdab.com>
+
+	* Bugfix: no more multiple lineedits with focus in the annotation dialog.
+
+	* Now a viewer can be invoked from the annotation dialog by
+	pressin Ctrl+Space
+
+	* At end of viewing images, KPhotoalbum will now ask if you want
+	to delete those images from disk that you deleted (by pressing
+	del) during the viewing process.
+
+2009-12-20  Miika Turkia <theBro@luukku.com>
+
+	* Added support for rating images using numbers from keyboard (0-5)
+	* bugfix: KPA crashes when viewing images if viewer cache size is set
+	to zero
+	* On exporting HTMLGallery the escaping of quotes and carriage returns
+	is required only for the JS array, on image page escaping the quotes
+	actually messes up the HTML code.
+
+2009-12-19  Miika Turkia <theBro@luukku.com>
+
+	* Added support for exporting picture date on HTMLGallery
+	* bugfix: JavaScript based HTMLGallery theme shows information of
+	wrong picture upon initial loading
+	* Added support for HTMLGallery theme darkJS to navigate through
+	images with arrow keys (left and right)
+
+2009-11-25 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+
+	* fixed bug #211907: Fix EXIF support dialog at startup. Thanks to Olivier Berger
+
+2009-11-19 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+
+	* fixed bug #147891: Crashing on wrong export directory in Plugin interface
+
 2009-11-08  Hassan Ibraheem <hasan.ibraheem@gmail.com>
 
 	* fixed bug #211392: Incorrect rotation angle after annotating multiple
 	 images.Thanks to Andreas Neustifter.
+
 ====================== KPhotoalbum 4.1 released  ===================================	
 
 2009-09-02  Miika Turkia <theBro@luukku.com>

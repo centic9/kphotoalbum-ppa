@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,14 +29,14 @@ class MouseTrackingInteraction : public QObject, public MouseInteraction, privat
 
 public:
     MouseTrackingInteraction( ThumbnailFactory* factory );
-    virtual void mouseMoveEvent( QMouseEvent* );
+    OVERRIDE bool mouseMoveEvent( QMouseEvent* );
 
 signals:
-    void fileIdUnderCursorChanged( const DB::ResultId& id );
+    void fileIdUnderCursorChanged( const DB::Id& id );
 
 private:
     void updateStackingIndication( QMouseEvent* event );
-    void handleCursorOverNewIcon( QMouseEvent* event );
+    void handleCursorOverNewIcon();
 
 private:
     bool _cursorWasAtStackIcon;

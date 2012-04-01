@@ -1,15 +1,32 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 #include "CategoryPage.h"
 #include "UntaggedGroupBox.h"
 #include <DB/ImageDB.h>
 #include "SettingsDialog.h"
 #include <kmessagebox.h>
 #include "CategoryItem.h"
-#include <QComboBox>
+#include <KComboBox>
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <QSpinBox>
 #include <kicondialog.h>
-#include <QLineEdit>
+#include <KLineEdit>
 #include <QLabel>
 #include <QGridLayout>
 #include <Q3ListBoxItem>
@@ -36,7 +53,7 @@ Settings::CategoryPage::CategoryPage( QWidget* parent )
     _labelLabel = new QLabel( i18n( "Label:" ), this );
     lay3->addWidget( _labelLabel, 0, 0 );
 
-    _text = new QLineEdit( this );
+    _text = new KLineEdit( this );
     connect( _text, SIGNAL( textChanged( const QString& ) ),
              this, SLOT( slotLabelChanged( const QString& ) ) );
 
@@ -65,11 +82,11 @@ Settings::CategoryPage::CategoryPage( QWidget* parent )
     connect( _thumbnailSizeInCategory, SIGNAL( valueChanged( int ) ), this, SLOT( thumbnailSizeChanged( int ) ) );
 
 
-    // Prefered View
+    // Preferred View
     _preferredViewLabel = new QLabel( i18n("Preferred view:"), this );
     lay3->addWidget( _preferredViewLabel, 3, 0 );
 
-    _preferredView = new QComboBox( this );
+    _preferredView = new KComboBox( this );
     lay3->addWidget( _preferredView, 3, 1 );
     QStringList list;
     list << i18n("List View") << i18n("List View with Custom Thumbnails") << i18n("Icon View") << i18n("Icon View with Custom Thumbnails");
@@ -140,9 +157,9 @@ void Settings::CategoryPage::slotPreferredViewChanged( int i )
 
 void Settings::CategoryPage::slotNewItem()
 {
-    _current = new Settings::CategoryItem( QString::null, QString::null, QString::null, DB::Category::TreeView, 64, _categories );
+    _current = new Settings::CategoryItem( QString(), QString(), QString(), DB::Category::TreeView, 64, _categories );
     _text->setText( QString::fromLatin1( "" ) );
-    _icon->setIcon( QString::null );
+    _icon->setIcon( QIcon() );
     _thumbnailSizeInCategory->setValue( 64 );
     enableDisable( true );
     _categories->setSelected( _current, true );
@@ -159,7 +176,7 @@ void Settings::CategoryPage::slotDeleteCurrent()
     _categories->takeItem( _current );
     _current = 0;
     _text->setText( QString::fromLatin1( "" ) );
-    _icon->setIcon( QString::null );
+    _icon->setIcon( QIcon() );
     _thumbnailSizeInCategory->setValue(64);
     enableDisable(false);
 }

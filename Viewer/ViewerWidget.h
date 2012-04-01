@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,8 +22,11 @@
 #include <QStackedWidget>
 #include <qimage.h>
 #include <QPixmap>
+#include <QMap>
 #include "DB/ImageInfoPtr.h"
+#include "DB/IdList.h"
 #include <config-kpa-exiv2.h>
+#include <QPointer>
 
 class QKeyEvent;
 class QResizeEvent;
@@ -34,9 +37,9 @@ class KActionCollection;
 class QMenu;
 class KAction;
 
-namespace DB { class ImageInfo; class ResultId; }
+namespace DB { class ImageInfo; class Id; }
 namespace MainWindow { class ExternalPopup; class CategoryImagePopup; }
-
+namespace Exif { class InfoDialog; }
 namespace Viewer
 {
 class VideoDisplay;
@@ -50,7 +53,10 @@ class ViewerWidget :public QStackedWidget
 {
     Q_OBJECT
 public:
-    ViewerWidget();
+    enum UsageType { InlineViewer, ViewerWindow };
+
+    ViewerWidget( UsageType type = ViewerWindow,
+                  QMap<Qt::Key, QPair<QString,QString> > *macroStore = 0);
     ~ViewerWidget();
     static ViewerWidget* latest();
     void load( const QStringList& list, int index = 0 );
@@ -65,10 +71,10 @@ public slots:
     void updateInfoBox();
     void test();
     void moveInfoBox( int );
+    void stopPlayback();
 
 signals:
-    void rotated();
-    void soughtTo( const DB::ResultId& id );
+    void soughtTo( const DB::Id& id );
 
 protected:
     OVERRIDE void contextMenuEvent ( QContextMenuEvent * e );
@@ -90,15 +96,21 @@ protected:
     void createSlideShowMenu();
     void createVideoMenu();
     void createCategoryImageMenu();
+    void createFilterMenu();
     void changeSlideShowInterval( int delta );
     void createVideoViewer();
-
+    void inhibitScreenSaver( bool inhibit );
     DB::ImageInfoPtr currentInfo() const;
     friend class InfoBox;
 
 private:
     void showNextN(int);
     void showPrevN(int);
+    int  find_tag_in_list(const QStringList &list, QString &namefound);
+    void invalidateThumbnail() const;
+    enum RemoveAction { RemoveImageFromDatabase, OnlyRemoveFromViewer };
+    void removeOrDeleteCurrent( RemoveAction );
+
 
 protected slots:
     void showNext();
@@ -111,6 +123,7 @@ protected slots:
     void showPrev1000();
     void showFirst();
     void showLast();
+    void deleteCurrent();
     void removeCurrent();
     void rotate90();
     void rotate180();
@@ -122,6 +135,12 @@ protected slots:
     void slotSlideShowFaster();
     void slotSlideShowSlower();
     void editImage();
+    void filterNone();
+    void filterSelected();
+    void filterBW();
+    void filterContrastStretch();
+    void filterHistogramEqualization();
+    void filterMono();
     void slotSetStackHead();
     void updateCategoryConfig();
     void slotSetWallpaperC();
@@ -153,18 +172,27 @@ private:
     KAction* _slideShowRunFaster;
     KAction* _slideShowRunSlower;
     KAction* _setStackHead;
+    KAction* _filterNone;
+    KAction* _filterSelected;
+    KAction* _filterBW;
+    KAction* _filterContrastStretch;
+    KAction* _filterHistogramEqualization;
+    KAction* _filterMono;
 
     Display* _display;
     ImageDisplay* _imageDisplay;
     VideoDisplay* _videoDisplay;
     TextDisplay* _textDisplay;
 
+    int m_screenSaverCookie;
     QStringList _list;
+    DB::IdList _removed;
     int _current;
     QRect _textRect;
     QMenu* _popup;
     QMenu* _rotateMenu;
     QMenu* _wallpaperMenu;
+    QMenu* _filterMenu;
     MainWindow::ExternalPopup* _externalPopup;
     MainWindow::CategoryImagePopup* _categoryImagePopup;
     int _width, _height;
@@ -173,6 +201,7 @@ private:
     KAction* _delete;
 #ifdef HAVE_EXIV2
     KAction* _showExifViewer;
+    QPointer<Exif::InfoDialog> _exifViewer;
 #endif
 
     InfoBox* _infoBox;
@@ -191,6 +220,19 @@ private:
     KAction* _stop;
     KAction* _playPause;
     bool _videoPlayerStoppedManually;
+    UsageType _type;
+
+    enum InputMode { InACategory, AlwaysStartWithCategory };
+
+    InputMode _currentInputMode;
+    QString _currentInput;
+    QString _currentCategory;
+    QString _currentInputList;
+
+    QString _lastFound;
+    QString _lastCategory;
+    QMap<Qt::Key, QPair<QString,QString> >* _inputMacros;
+    QMap<Qt::Key, QPair<QString,QString> >* _myInputMacros;
 };
 
 }

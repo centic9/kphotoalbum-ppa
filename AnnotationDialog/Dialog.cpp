@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,8 +17,10 @@
 */
 
 #include "Dialog.h"
+#include <QStackedWidget>
 #include <KAction>
 #include <KActionCollection>
+#include <KComboBox>
 #include <QList>
 #include <QCloseEvent>
 #include <QDir>
@@ -27,6 +29,7 @@
 #include <QMainWindow>
 #include <QTimeEdit>
 #include <QVBoxLayout>
+#include <QSpinBox>
 #include <kacceleratormanager.h>
 #include <kguiitem.h>
 #include <klineedit.h>
@@ -49,12 +52,11 @@
 #include "DB/CategoryCollection.h"
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
-#include "DB/Result.h"
-#include "DB/ResultId.h"
+#include "DB/IdList.h"
+#include "DB/Id.h"
 #include "ImagePreviewWidget.h"
 #include "KDateEdit.h"
 #include "ListSelect.h"
-#include "MainWindow/DeleteDialog.h"
 #include "MainWindow/DirtyIndicator.h"
 #include "Settings/SettingsData.h"
 #include "ShortCutManager.h"
@@ -72,25 +74,39 @@ using Utilities::StringSet;
  */
 
 AnnotationDialog::Dialog::Dialog( QWidget* parent )
-    : QDialog( parent ), _ratingChanged(false)
+    : QDialog( parent ),
+    _ratingChanged( false ),
+    conflictText( i18n("(You have differing descriptions on individual images, setting text here will override them all)" ) )
 {
     Utilities::ShowBusyCursor dummy;
     ShortCutManager shortCutManager;
+
+    // The widget stack
+    _stack = new QStackedWidget(this);
     QVBoxLayout* layout = new QVBoxLayout( this );
+    layout->addWidget( _stack );
+
+    // The Viewer
+    _fullScreenPreview = new Viewer::ViewerWidget( Viewer::ViewerWidget::InlineViewer );
+    _stack->addWidget( _fullScreenPreview );
+
+    // The dock widget
     _dockWindow = new QMainWindow;
+    _stack->addWidget( _dockWindow );
     _dockWindow->setDockNestingEnabled( true );
 
-    layout->addWidget( _dockWindow );
-
     // -------------------------------------------------- Dock widgets
-    QDockWidget* dock = createDock( i18n("Label and Dates"), QString::fromLatin1("Label and Dates"), Qt::TopDockWidgetArea, createDateWidget(shortCutManager) );
+    createDock( i18n("Label and Dates"), QString::fromLatin1("Label and Dates"), Qt::TopDockWidgetArea, createDateWidget(shortCutManager) );
 
     createDock( i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget() );
 
-    _description = new KTextEdit(this);
+    _description = new KTextEdit;
     _description->setProperty( "WantsFocus", true );
+    _description->setObjectName( i18n("Description") );
+    _description->setCheckSpellingEnabled( true );
+    _description->setTabChangesFocus( true ); // this allows tabbing to the next item in the tab order.
 
-    dock = createDock( i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, _description );
+    QDockWidget* dock = createDock( i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, _description );
     shortCutManager.addDock( dock, _description );
 
     // -------------------------------------------------- Categrories
@@ -107,29 +123,29 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     QHBoxLayout* lay1 = new QHBoxLayout;
     layout->addLayout( lay1 );
 
-    _revertBut = new KPushButton( i18n("Revert This Item"), this );
+    _revertBut = new KPushButton( i18n("Revert This Item") );
     KAcceleratorManager::setNoAccel(_revertBut);
     lay1->addWidget( _revertBut );
 
     _clearBut = new KPushButton( KGuiItem(i18n("Clear Form"),QApplication::isRightToLeft()
                                              ? QString::fromLatin1("clear_left")
-                                             : QString::fromLatin1("locationbar_erase")), this );
+                                             : QString::fromLatin1("locationbar_erase")) );
     KAcceleratorManager::setNoAccel(_clearBut);
     lay1->addWidget( _clearBut );
 
-    KPushButton* optionsBut = new KPushButton( i18n("Options..." ), this );
+    KPushButton* optionsBut = new KPushButton( i18n("Options..." ) );
     KAcceleratorManager::setNoAccel(optionsBut);
     lay1->addWidget( optionsBut );
 
     lay1->addStretch(1);
 
-    _okBut = new KPushButton( i18n("&Done"), this );
+    _okBut = new KPushButton( i18n("&Done") );
     lay1->addWidget( _okBut );
 
-    _continueLaterBut = new KPushButton( i18n("Continue &Later"), this );
+    _continueLaterBut = new KPushButton( i18n("Continue &Later") );
     lay1->addWidget( _continueLaterBut );
 
-    KPushButton* cancelBut = new KPushButton( KStandardGuiItem::cancel(), this );
+    KPushButton* cancelBut = new KPushButton( KStandardGuiItem::cancel() );
     lay1->addWidget( cancelBut );
 
     // It is unfortunately not possible to ask KAcceleratorManager not to setup the OK and cancel keys.
@@ -144,7 +160,7 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     connect( cancelBut, SIGNAL( clicked() ), this, SLOT( reject() ) );
     connect( _clearBut, SIGNAL( clicked() ), this, SLOT(slotClear() ) );
     connect( optionsBut, SIGNAL( clicked() ), this, SLOT( slotOptions() ) );
-    
+
     connect( _preview, SIGNAL( imageRotated( int ) ), this, SLOT( rotate( int ) ) );
     connect( _preview, SIGNAL( indexChanged( int ) ), this, SLOT( slotIndexChanged( int ) ) );
     connect( _preview, SIGNAL( imageDeleted( const DB::ImageInfo& ) ), this, SLOT( slotDeleteImage() ) );
@@ -158,12 +174,10 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     _clearBut->setAutoDefault( false );
     optionsBut->setAutoDefault( false );
 
-    _optionList.setAutoDelete( true );
-
     _dockWindowCleanState = _dockWindow->saveState();
 
     loadWindowLayout();
-    
+
     _current = -1;
 
     setGeometry( Settings::SettingsData::instance()->windowGeometry( Settings::AnnotationDialog ) );
@@ -198,6 +212,7 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     lay3->addWidget( label );
     _imageLabel = new KLineEdit;
     _imageLabel->setProperty( "WantsFocus", true );
+    _imageLabel->setObjectName( i18n("Label") );
     lay3->addWidget( _imageLabel );
     shortCutManager.addLabel( label );
     label->setBuddy( _imageLabel );
@@ -211,7 +226,6 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     lay4->addWidget( label );
 
     _startDate = new ::AnnotationDialog::KDateEdit( true );
-    _startDate->setProperty( "WantsFocus", true );
     lay4->addWidget( _startDate, 1 );
     connect( _startDate, SIGNAL( dateChanged( const DB::ImageDate& ) ), this, SLOT( slotStartDateChanged( const DB::ImageDate& ) ) );
     shortCutManager.addLabel(label );
@@ -221,37 +235,64 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     lay4->addWidget( label );
 
     _endDate = new ::AnnotationDialog::KDateEdit( false );
-    _endDate->setProperty( "WantsFocus", true );
     lay4->addWidget( _endDate, 1 );
+    lay4->addStretch(1);
 
     // Time
     QHBoxLayout* lay7 = new QHBoxLayout;
     lay2->addLayout( lay7 );
 
-    label = new QLabel( i18n("Time: ") );
-    lay7->addWidget( label );
+    _timeLabel = new QLabel( i18n("Time: ") );
+    lay7->addWidget( _timeLabel );
 
     _time= new QTimeEdit;
-    _time->setProperty( "WantsFocus", true );
     lay7->addWidget( _time );
     lay7->addStretch(1);
     _time->hide();
 
     _addTime= new KPushButton(i18n("Add Time Info..."));
-    _addTime->setProperty( "WantsFocus", true );
     lay7->addWidget( _addTime );
     lay7->addStretch(1);
     _addTime->hide();
     connect(_addTime,SIGNAL(clicked()), this, SLOT(slotAddTimeInfo()));
 
+    QHBoxLayout* lay8 = new QHBoxLayout;
+    lay2->addLayout( lay8 );
+
+    _megapixelLabel = new QLabel( i18n("Minimum megapixels:") );
+    lay8->addWidget( _megapixelLabel );
+
+    _megapixel = new QSpinBox;
+    _megapixel->setRange( 0, 99 );
+    _megapixel->setSingleStep( 1 );
+    _megapixelLabel->setBuddy( _megapixel );
+    lay8->addWidget( _megapixel );
+    lay8->addStretch( 1 );
+
+    QHBoxLayout* lay9 = new QHBoxLayout;
+    lay2->addLayout( lay9 );
+
 #ifdef HAVE_NEPOMUK
-    _rating = new KRatingWidget( this );
+    label = new QLabel( i18n("Rating:") );
+    lay9->addWidget( label );
+    _rating = new KRatingWidget;
     _rating->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    lay2->addStretch(1);
-    lay2->addWidget( _rating, 0, Qt::AlignCenter );
+    lay9->addWidget( _rating, 0, Qt::AlignCenter );
     connect( _rating, SIGNAL( ratingChanged( unsigned int ) ), this, SLOT( slotRatingChanged( unsigned int ) ) );
+    
+    _ratingSearchLabel = new QLabel( i18n("Rating search mode:") );
+    lay9->addWidget( _ratingSearchLabel );
+
+    _ratingSearchMode = new KComboBox( lay9 );
+    _ratingSearchMode->addItems( QStringList() << i18n("==") << i18n(">=") << i18n("<=") << i18n("!=") );
+    _ratingSearchLabel->setBuddy( _ratingSearchMode );
+    lay9->addWidget( _ratingSearchMode );
 #endif
 
+    _searchRAW = new QCheckBox( i18n("Search only for RAW files") );
+    lay2->addWidget( _searchRAW );
+    
+    lay9->addStretch( 1 );
     lay2->addStretch(1);
 
     return top;
@@ -273,12 +314,12 @@ void AnnotationDialog::Dialog::slotIndexChanged( int index )
 {
   if ( _setup != InputSingleImageConfigMode )
         return;
-    
+
     if(_current >= 0 )
       writeToInfo();
-    
+
     _current = index;
-    
+
     load();
 }
 
@@ -306,7 +347,7 @@ void AnnotationDialog::Dialog::slotCopyPrevious()
     // FIXME: it would be better to compute the "previous image" in a better way, but let's stick with this for now...
     DB::ImageInfo& old_info = _editList[ _current - 1 ];
 
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->setSelection( old_info.itemsOfCategory( (*it)->category() ) );
     }
 }
@@ -318,11 +359,13 @@ void AnnotationDialog::Dialog::load()
 
     if( info.date().hasValidTime() ) {
         _time->show();
+        _timeLabel->show();
         _addTime->hide();
         _time->setTime( info.date().start().time());
     }
     else {
         _time->hide();
+        _timeLabel->hide();
         _addTime->show();
     }
 
@@ -332,7 +375,7 @@ void AnnotationDialog::Dialog::load()
         _endDate->setDate( info.date().end().date() );
 
     _imageLabel->setText( info.label() );
-    _description->setText( info.description() );
+    _description->setPlainText( info.description() );
 
 #ifdef HAVE_NEPOMUK
     if ( _setup == InputSingleImageConfigMode )
@@ -340,7 +383,7 @@ void AnnotationDialog::Dialog::load()
     _ratingChanged = false;
 #endif
 
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->setSelection( info.itemsOfCategory( (*it)->category() ) );
         (*it)->rePopulate();
     }
@@ -351,7 +394,7 @@ void AnnotationDialog::Dialog::load()
 
 void AnnotationDialog::Dialog::writeToInfo()
 {
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->slotReturn();
     }
 
@@ -370,7 +413,7 @@ void AnnotationDialog::Dialog::writeToInfo()
 
     info.setLabel( _imageLabel->text() );
     info.setDescription( _description->toPlainText() );
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         info.setCategoryInfo( (*it)->category(), (*it)->itemsOn() );
     }
 
@@ -382,14 +425,24 @@ void AnnotationDialog::Dialog::writeToInfo()
 #endif
 }
 
+void AnnotationDialog::Dialog::ShowHideSearch( bool show )
+{
+    _megapixel->setVisible( show );
+    _megapixelLabel->setVisible( show );
+    _searchRAW->setVisible( show );
+    _ratingSearchMode->setVisible( show );
+    _ratingSearchLabel->setVisible( show );
+}
+
 
 int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime )
 {
+    ShowHideSearch(false);
+
     if ( Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured() ) {
         DB::ImageDB::instance()->categoryCollection()->categoryForName( Settings::SettingsData::instance()->untaggedCategory() )
             ->addItem(Settings::SettingsData::instance()->untaggedTag() );
     }
-    
 
     if ( oneAtATime )
         _setup = InputSingleImageConfigMode;
@@ -409,8 +462,11 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
         _current = 0;
         _preview->configure( &_editList, true );
         load();
+        firstDescription = _editList[ _current ].description();
     }
     else {
+        uint descrCount = 0;
+        uint matchCount = 0;
         _preview->configure( &_editList, false );
         _startDate->setDate( QDate() );
         _endDate->setDate( QDate() );
@@ -421,16 +477,31 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
         _ratingChanged = false;
 #endif
 
-        for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it )
+        for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it )
             setUpCategoryListBoxForMultiImageSelection( *it, list );
 
         _imageLabel->setText( QString::fromLatin1("") );
-        _description->setText( QString::fromLatin1("") );
 
+        // Checking all the description fields if there is text and whether the descriptions mach
+        Q_FOREACH( DB::ImageInfo info, _editList ) {
+            descrCount++;
+            if ( !info.description().isEmpty() ) {
+                if ( firstDescription.isEmpty() ) {
+                    firstDescription = info.description();
+                    matchCount++;
+                } else if ( !firstDescription.compare( info.description() ) ) {
+                    matchCount++;
+                }
+            }
+        }
+        if ( !firstDescription.isEmpty() ) {
+            if ( descrCount == matchCount )
+                _description->setPlainText( firstDescription );
+            else
+                _description->setPlainText( conflictText );
+        } else
+            _description->setPlainText( QString::fromLatin1( "" ) );
     }
-
-    _thumbnailShouldReload = false;
-    _thumbnailTextShouldReload = false;
 
     showHelpDialog( oneAtATime ? InputSingleImageConfigMode : InputMultiImageConfigMode );
 
@@ -439,6 +510,8 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
 
 DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* search  )
 {
+    ShowHideSearch(true);
+
     _setup = SearchMode;
     if ( search )
         _oldSearch = *search;
@@ -448,7 +521,6 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
     _preview->setImage(Utilities::locateDataFile(QString::fromLatin1("pics/search.jpg")));
 
 #ifdef HAVE_NEPOMUK
-        _rating->setRating( 0 );
         _ratingChanged = false ;
 #endif
 
@@ -460,7 +532,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         _oldSearch = DB::ImageSearchInfo( DB::ImageDate( start, end ),
                                       _imageLabel->text(), _description->toPlainText() );
 
-        for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+        for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
             _oldSearch.setCategoryMatchText( (*it)->category(), (*it)->text() );
         }
 #ifdef HAVE_NEPOMUK
@@ -468,20 +540,23 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         //then change back to 0 .
         if( _ratingChanged)
           _oldSearch.setRating( _rating->rating() );
-        
+
         _ratingChanged = false;
 #endif
+	_oldSearch.setMegaPixel( _megapixel->value() );
+	_oldSearch.setSearchRAW( _searchRAW->isChecked() );
+	_oldSearch.setSearchMode( _ratingSearchMode->currentIndex() );
         return _oldSearch;
     }
     else
-        return DB::ImageSearchInfo();
+	return DB::ImageSearchInfo();
 }
 
 void AnnotationDialog::Dialog::setup()
 {
 // Repopulate the listboxes in case data has changed
     // An group might for example have been renamed.
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->populate();
     }
 
@@ -502,7 +577,7 @@ void AnnotationDialog::Dialog::setup()
         setWindowTitle( i18n("Annotations") );
     }
 
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it )
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it )
         (*it)->setMode( _setup );
 }
 
@@ -517,20 +592,19 @@ void AnnotationDialog::Dialog::loadInfo( const DB::ImageSearchInfo& info )
     _startDate->setDate( info.date().start().date() );
     _endDate->setDate( info.date().end().date() );
 
-    for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->setText( info.categoryMatchText( (*it)->category() ) );
     }
 
     _imageLabel->setText( info.label() );
-    _description->setText( info.description() );
 }
 
 void AnnotationDialog::Dialog::slotOptions()
 {
-    QMenu menu( this );
-    QAction* saveCurrent = menu.addAction( i18n("Save Current Window Setup") );
-    QAction* reset = menu.addAction( i18n( "Reset layout" ) );
-    QAction* res = menu.exec( QCursor::pos() );
+    QMenu* menu = _dockWindow->createPopupMenu();
+    QAction* saveCurrent = menu->addAction( i18n("Save Current Window Setup") );
+    QAction* reset = menu->addAction( i18n( "Reset layout" ) );
+    QAction* res = menu->exec( QCursor::pos() );
     if ( res == saveCurrent )
         slotSaveWindowSetup();
     else if ( res == reset )
@@ -539,10 +613,13 @@ void AnnotationDialog::Dialog::slotOptions()
 
 int AnnotationDialog::Dialog::exec()
 {
+    _stack->setCurrentWidget( _dockWindow );
     showTornOfWindows();
+    this->setFocus(); // Set temporary focus before show() is called so that extra cursor is not shown on any "random" input widget
     show(); // We need to call show before we call setupFocus() otherwise the widget will not yet all have been moved in place.
     setupFocus();
     const int ret = QDialog::exec();
+    _description->setCheckSpellingEnabled( false );
     hideTornOfWindows();
     return ret;
 }
@@ -552,14 +629,27 @@ void AnnotationDialog::Dialog::slotSaveWindowSetup()
     const QByteArray data = _dockWindow->saveState();
 
     QFile file( QString::fromLatin1( "%1/layout.dat" ).arg( Settings::SettingsData::instance()->imageDirectory() ) );
-    file.open( QIODevice::WriteOnly );
-    file.write( data );
+    if ( !file.open( QIODevice::WriteOnly ) ) {
+		KMessageBox::sorry( this, 
+				i18n("<p>Could not save the window layout.</p>"
+					"File %1 could not be opened because of the following error: %2"
+					, file.fileName(), file.errorString() ) 
+				);
+	} else if ( ! ( file.write( data ) && file.flush() ) )
+	{
+		KMessageBox::sorry( this, 
+				i18n("<p>Could not save the window layout.</p>"
+					"File %1 could not be written because of the following error: %2"
+					, file.fileName(), file.errorString() ) 
+				);
+	}
     file.close();
 }
 
 void AnnotationDialog::Dialog::closeEvent( QCloseEvent* e )
 {
     e->ignore();
+    firstDescription.clear();
     reject();
 }
 
@@ -608,6 +698,7 @@ void AnnotationDialog::Dialog::slotRenameOption( DB::Category* category, const Q
 
 void AnnotationDialog::Dialog::reject()
 {
+    _fullScreenPreview->stopPlayback();
     if ( hasChanges() ) {
         int code =  KMessageBox::questionYesNo( this, i18n("<p>Some changes are made to annotations. Do you really want to cancel all recent changes for each affected file?</p>") );
         if ( code == KMessageBox::No )
@@ -626,25 +717,26 @@ bool AnnotationDialog::Dialog::hasChanges()
 {
     bool changed = false;
     if ( _setup == InputSingleImageConfigMode )  {
-        // PENDING(blackie) how about description and label?
+        // PENDING(blackie) how about label?
         writeToInfo();
         for ( int i = 0; i < _editList.count(); ++i )  {
             changed |= (*(_origList[i]) != _editList[i]);
         }
+        changed |= _description->toPlainText().compare( firstDescription );
     }
 
     else if ( _setup == InputMultiImageConfigMode ) {
         changed |= ( !_startDate->date().isNull() );
         changed |= ( !_endDate->date().isNull() );
 
-        for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+        for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
             QPair<StringSet, StringSet> origSelection = selectionForMultiSelect( *it, _origList );
             changed |= origSelection.first != (*it)->itemsOn();
             changed |= origSelection.second != (*it)->itemsUnchanged();
         }
 
         changed |= ( !_imageLabel->text().isEmpty() );
-        changed |= ( !_description->toPlainText().isEmpty() );
+        changed |= ( !_description->toPlainText().isEmpty() && _description->toPlainText().compare( conflictText ) && _description->toPlainText().compare( firstDescription ));
         changed |= _ratingChanged;
     }
     return changed;
@@ -652,24 +744,14 @@ bool AnnotationDialog::Dialog::hasChanges()
 
 void AnnotationDialog::Dialog::rotate( int angle )
 {
-    _thumbnailShouldReload = true;
     if ( _setup == InputMultiImageConfigMode ) {
         // In doneTagging the preview will be queried for its angle.
     }
     else {
         DB::ImageInfo& info = _editList[ _current ];
         info.rotate(angle);
+        _rotatedFiles.insert( info.fileName( DB::AbsolutePath ) );
     }
-}
-
-bool AnnotationDialog::Dialog::thumbnailShouldReload() const
-{
-    return _thumbnailShouldReload;
-}
-
-bool AnnotationDialog::Dialog::thumbnailTextShouldReload() const
-{
-    return _thumbnailTextShouldReload;
 }
 
 void AnnotationDialog::Dialog::slotAddTimeInfo()
@@ -680,24 +762,18 @@ void AnnotationDialog::Dialog::slotAddTimeInfo()
 
 void AnnotationDialog::Dialog::slotDeleteImage()
 {
-    Q_ASSERT( _setup != SearchMode );
-    
+    // CTRL+Del is a common key combination when editing text
+    // TODO: The word right of cursor should be deleted as expected also in date and category fields
+    if ( _setup == SearchMode )
+	return;
+
     if( _setup == InputMultiImageConfigMode )  //TODO: probably delete here should mean remove from selection
       return;
-    
-    MainWindow::DeleteDialog dialog( this );
+
     DB::ImageInfoPtr info = _origList[_current];
-
-    DB::ResultId idToDelete = DB::ImageDB::instance()->ID_FOR_FILE(info->fileName(DB::AbsolutePath));
-    const DB::Result deleteList = DB::Result(idToDelete);
-
-    int ret = dialog.exec( deleteList );
-    if ( ret == Rejected )
-        return;
 
     _origList.remove( info );
     _editList.removeAll( _editList.at( _current ) );
-    _thumbnailShouldReload = true;
     MainWindow::DirtyIndicator::markDirty();
     if ( _origList.count() == 0 ) {
         doneTagging();
@@ -732,7 +808,7 @@ void AnnotationDialog::Dialog::showHelpDialog( UsageMode type )
     }
 
 
-    KMessageBox::information( this, txt, QString::null, doNotShowKey, KMessageBox::AllowLink );
+    KMessageBox::information( this, txt, QString(), doNotShowKey, KMessageBox::AllowLink );
 }
 
 void AnnotationDialog::Dialog::resizeEvent( QResizeEvent* )
@@ -755,7 +831,7 @@ void AnnotationDialog::Dialog::setupFocus()
     // Iterate through all widgets in our dialog.
     Q_FOREACH( QObject* obj, list ) {
         QWidget* current = static_cast<QWidget*>( obj );
-        if ( !current->property("WantsFocus").isValid() )
+        if ( !current->property("WantsFocus").isValid() || !current->isVisible() )
             continue;
 
         int cx = current->mapToGlobal( QPoint(0,0) ).x();
@@ -781,12 +857,22 @@ void AnnotationDialog::Dialog::setupFocus()
 
     // now setup tab order.
     QWidget* prev = 0;
+    QWidget* first = 0;
     for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
         if ( prev ) {
+            qDebug() << "tabbing " << prev->objectName() << " -> " << (*orderedIt)->objectName();
             setTabOrder( prev, *orderedIt );
+        } else {
+            first = *orderedIt;
         }
         prev = *orderedIt;
     }
+
+    if ( first ) {
+        qDebug() << "tabbing " << prev->objectName() << " -> " << first->objectName();
+        setTabOrder( prev, first );
+    }
+
 
     // Finally set focus on the first list select
     for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
@@ -827,10 +913,12 @@ void AnnotationDialog::Dialog::setupActions()
     _actions = new KActionCollection( this );
 
     KAction* action = 0;
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alpha"), _optionList.at(0), SLOT( slotSortAlpha() ) );
-    action->setText( i18n("Sort Alphabetically") );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphatree"), _optionList.at(0), SLOT( slotSortAlphaTree() ) );
+    action->setText( i18n("Sort Alphabetically (Tree)") );
     action->setShortcut(Qt::CTRL+Qt::Key_F4);
 
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphaflat"), _optionList.at(0), SLOT( slotSortAlphaFlat() ) );
+    action->setText( i18n("Sort Alphabetically (Flat)") );
 
     action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-MRU"), _optionList.at(0), SLOT( slotSortDate() ) );
     action->setText( i18n("Sort Most Recently Used") );
@@ -870,6 +958,10 @@ void AnnotationDialog::Dialog::setupActions()
 
     action = _actions->addAction( QString::fromLatin1("annotationdialog-rotate-right"),  _preview, SLOT( rotateRight() ) );
     action->setText(  i18n("Rotate clockwise") );
+
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-viewer"), this, SLOT( togglePreview() ) );
+    action->setText( i18n("Toggle fullscreen preview") );
+    action->setShortcut( Qt::CTRL + Qt::Key_Space );
 
     foreach (QAction* action, _actions->actions()) {
       action->setShortcutContext(Qt::WindowShortcut);
@@ -918,6 +1010,8 @@ void AnnotationDialog::Dialog::continueLater()
 
 void AnnotationDialog::Dialog::saveAndClose()
 {
+    _fullScreenPreview->stopPlayback();
+
     if (_origList.isEmpty()) {
         // all images are deleted.
         QDialog::accept();
@@ -935,7 +1029,7 @@ void AnnotationDialog::Dialog::saveAndClose()
         }
     }
     else if ( _setup == InputMultiImageConfigMode ) {
-        for( Q3PtrListIterator<ListSelect> it( _optionList ); *it; ++it ) {
+	for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
             (*it)->slotReturn();
         }
 
@@ -945,7 +1039,7 @@ void AnnotationDialog::Dialog::saveAndClose()
             if ( !_startDate->date().isNull() )
                 info->setDate( DB::ImageDate( _startDate->date(), _endDate->date(), _time->time() ) );
 
-            for( Q3PtrListIterator<ListSelect> listSelectIt( _optionList ); *listSelectIt; ++listSelectIt ) {
+            for( QList<ListSelect*>::Iterator listSelectIt = _optionList.begin(); listSelectIt != _optionList.end(); ++listSelectIt ) {
                 info->addCategoryInfo( (*listSelectIt)->category(), (*listSelectIt)->itemsOn() );
                 info->removeCategoryInfo( (*listSelectIt)->category(), (*listSelectIt)->itemsOff() );
             }
@@ -955,7 +1049,7 @@ void AnnotationDialog::Dialog::saveAndClose()
             }
 
 
-            if ( !_description->toPlainText().isEmpty() ) {
+            if ( !_description->toPlainText().isEmpty() && _description->toPlainText().compare( conflictText ) ) {
                 info->setDescription( _description->toPlainText() );
             }
 
@@ -967,6 +1061,7 @@ void AnnotationDialog::Dialog::saveAndClose()
 #endif
 
             info->delaySavingChanges(false);
+            firstDescription.clear();
         }
 #ifdef HAVE_NEPOMUK
         _ratingChanged = false;
@@ -974,13 +1069,33 @@ void AnnotationDialog::Dialog::saveAndClose()
     }
     _accept = QDialog::Accepted;
 
-    // I shouldn't emit changed before I've actually commited the changes, otherwise the listeners will act on the old data.
-    if ( anyChanges ) {
+    if ( anyChanges )
         MainWindow::DirtyIndicator::markDirty();
-        _thumbnailTextShouldReload = true;
-    }
 
     QDialog::accept();
+}
+
+AnnotationDialog::Dialog::~Dialog()
+{
+    qDeleteAll( _optionList );
+    _optionList.clear();
+}
+
+void AnnotationDialog::Dialog::togglePreview()
+{
+    if ( _stack->currentWidget() == _fullScreenPreview ) {
+        _stack->setCurrentWidget( _dockWindow );
+        _fullScreenPreview->stopPlayback();
+    }
+    else {
+        _stack->setCurrentWidget( _fullScreenPreview );
+        _fullScreenPreview->load( QStringList() << _editList[ _current].fileName(DB::AbsolutePath) );
+    }
+}
+
+Utilities::StringSet AnnotationDialog::Dialog::rotatedFiles() const
+{
+    return _rotatedFiles;
 }
 
 #include "Dialog.moc"

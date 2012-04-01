@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,7 +27,7 @@
 #include <time.h>
 #include "ImageManager/Manager.h"
 #include "DB/ImageInfo.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 #include <qapplication.h>
 #include <kmessagebox.h>
 #include <qlayout.h>
@@ -42,7 +42,7 @@
 
 using namespace ImportExport;
 
-void Export::imageExport(const DB::Result& list)
+void Export::imageExport(const DB::IdList& list)
 {
     ExportConfig config;
     if ( config.exec() == QDialog::Rejected )
@@ -85,12 +85,14 @@ ExportConfig::ExportConfig()
     _manually = new QRadioButton( i18n("Manual copy next to .kim file"), grp );
     _auto = new QRadioButton( i18n("Automatically copy next to .kim file"), grp );
     _link = new QRadioButton( i18n("Hard link next to .kim file"), grp );
+    _symlink = new QRadioButton( i18n("Symbolic link next to .kim file"), grp );
     _manually->setChecked( true );
 
     boxLay->addWidget( _include );
     boxLay->addWidget( _manually );
     boxLay->addWidget( _auto );
     boxLay->addWidget( _link );
+    boxLay->addWidget( _symlink );
 
     // Compress
     _compress = new QCheckBox( i18n("Compress export file"), top );
@@ -151,6 +153,7 @@ ExportConfig::ExportConfig()
     _include->setWhatsThis( txt );
     _manually->setWhatsThis( txt );
     _link->setWhatsThis( txt );
+    _symlink->setWhatsThis( txt );
     _auto->setWhatsThis( txt );
     setHelp( QString::fromLatin1( "chp-exportDialog" ) );
 }
@@ -163,13 +166,19 @@ ImageFileLocation ExportConfig::imageFileLocation() const
         return ManualCopy;
     else if ( _link->isChecked() )
         return Link;
+    else if ( _symlink->isChecked() )
+        return Symlink;
     else
         return AutoCopy;
 }
 
+Export::~Export()
+{
+    delete _eventLoop;
+}
 
 Export::Export(
-    const DB::Result& list,
+    const DB::IdList& list,
     const QString& zipFile,
     bool compress,
     int maxSize,
@@ -180,6 +189,7 @@ Export::Export(
     : _ok( ok )
     , _maxSize( maxSize )
     , _location( location )
+    , _eventLoop( new QEventLoop )
 {
     *ok = true;
     _destdir = QFileInfo( zipFile ).path();
@@ -199,7 +209,7 @@ Export::Export(
       total += list.size();
 
     _steps = 0;
-    _progressDialog = new Q3ProgressDialog( QString::null, i18n("&Cancel"), total, 0, "progress dialog", true );
+    _progressDialog = new Q3ProgressDialog( QString(), i18n("&Cancel"), total, 0, "progress dialog", true );
     _progressDialog->setProgress( 0 );
     _progressDialog->show();
 
@@ -220,7 +230,7 @@ Export::Export(
         Q3CString indexml = XMLHandler().createIndexXML( list, baseUrl, _location, &_filenameMapper );
         time_t t;
         time(&t);
-        _zip->writeFile( QString::fromLatin1( "index.xml" ), QString::null, QString::null, indexml.data(), indexml.size()-1 );
+        _zip->writeFile( QString::fromLatin1( "index.xml" ), QString(), QString(), indexml.data(), indexml.size()-1 );
 
        _steps++;
        _progressDialog->setProgress( _steps );
@@ -229,7 +239,7 @@ Export::Export(
 }
 
 
-void Export::generateThumbnails(const DB::Result& list)
+void Export::generateThumbnails(const DB::IdList& list)
 {
     _progressDialog->setLabelText( i18n("Creating thumbnails") );
     _loopEntered = false;
@@ -242,11 +252,11 @@ void Export::generateThumbnails(const DB::Result& list)
     }
     if ( _filesRemaining > 0 ) {
         _loopEntered = true;
-        _eventLoop.exec();
+        _eventLoop->exec();
     }
 }
 
-void Export::copyImages(const DB::Result& list)
+void Export::copyImages(const DB::IdList& list)
 {
     Q_ASSERT( _location != ManualCopy );
 
@@ -260,7 +270,7 @@ void Export::copyImages(const DB::Result& list)
         QString file = info->fileName(DB::AbsolutePath);
         QString zippedName = _filenameMapper.uniqNameFor(file);
 
-        if ( _maxSize == -1 || Utilities::isVideo( file ) ) {
+        if ( _maxSize == -1 || Utilities::isVideo( file ) || Utilities::isRAW( file )) {
             if ( QFileInfo( file ).isSymLink() )
                 file = QFileInfo(file).readLink();
 
@@ -270,6 +280,8 @@ void Export::copyImages(const DB::Result& list)
                 Utilities::copy( file, _destdir + QString::fromLatin1( "/" ) + zippedName );
             else if ( _location == Link )
                 Utilities::makeHardLink( file, _destdir + QString::fromLatin1( "/" ) + zippedName );
+            else if ( _location == Symlink )
+                Utilities::makeSymbolicLink( file, _destdir + QString::fromLatin1( "/" ) + zippedName );
 
             _steps++;
             _progressDialog->setProgress( _steps );
@@ -292,7 +304,7 @@ void Export::copyImages(const DB::Result& list)
     }
     if ( _filesRemaining > 0 ) {
         _loopEntered = true;
-        _eventLoop.exec();
+        _eventLoop->exec();
     }
 }
 
@@ -301,7 +313,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
     if ( !loadedOK )
         return;
 
-    const QString ext = Utilities::isVideo( fileName ) ? QString::fromLatin1( "jpg" ) : QFileInfo( _filenameMapper.uniqNameFor(fileName) ).completeSuffix();
+    const QString ext = (Utilities::isVideo( fileName ) || Utilities::isRAW( fileName )) ? QString::fromLatin1( "jpg" ) : QFileInfo( _filenameMapper.uniqNameFor(fileName) ).completeSuffix();
 
     // Add the file to the zip archive
     QString zipFileName = QString::fromLatin1( "%1/%2.%3" ).arg( Utilities::stripSlash(_subdir))
@@ -312,7 +324,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
     image.save( &buffer,  QFileInfo(zipFileName).suffix().toLower().toLatin1() );
 
     if ( _location == Inline || !_copyingFiles )
-        _zip->writeFile( zipFileName, QString::null, QString::null, data, data.size() );
+        _zip->writeFile( zipFileName, QString(), QString(), data, data.size() );
     else {
         QString file = _destdir + QString::fromLatin1( "/" ) + _filenameMapper.uniqNameFor(fileName);
         QFile out( file );
@@ -330,7 +342,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
 
     if ( canceled ) {
         _ok = false;
-        _eventLoop.exit();
+        _eventLoop->exit();
         ImageManager::Manager::instance()->stop( this );
         return;
     }
@@ -341,7 +353,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
 
 
         if ( _filesRemaining == 0 && _loopEntered )
-            _eventLoop.exit();
+            _eventLoop->exit();
 }
 
 void Export::showUsageDialog()

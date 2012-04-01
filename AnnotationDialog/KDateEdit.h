@@ -1,3 +1,20 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 /**
  * A date editing widget that consists of an editable combo box.
  * The combo box contains the date in text form, and clicking the combo
@@ -5,7 +22,7 @@
  *
  * This widget also supports advanced features like allowing the user
  * to type in the day name to get the date. The following keywords
- * are supported (in the native language): tomorrow, yesturday, today,
+ * are supported (in the native language): tomorrow, yesterday, today,
  * monday, tuesday, wednesday, thursday, friday, saturday, sunday.
  *
  * @author Cornelius Schumacher <schumacher@kde.org>
@@ -17,7 +34,7 @@
 #define ANNOTATIONDIALOG_KDATEEDIT_H
 
 #include <q3vbox.h>
-#include <qcombobox.h>
+#include <KComboBox>
 #include <qmap.h>
 #include <QEvent>
 #include <QMouseEvent>
@@ -29,11 +46,11 @@ class KDatePicker;
 namespace AnnotationDialog
 {
 
-class KDateEdit : public QComboBox
+class KDateEdit : public KComboBox
 {
     Q_OBJECT
 public:
-    KDateEdit( bool isStartEdit, QWidget *parent=0 );
+    explicit KDateEdit( bool isStartEdit, QWidget *parent=0 );
     virtual ~KDateEdit();
 
     /** @return True if the date in the text edit is valid,
@@ -113,6 +130,7 @@ protected slots:
     virtual void mousePressEvent(QMouseEvent *);
 
 private:
+    void keyPressEvent( QKeyEvent *event );
     virtual bool eventFilter(QObject *o, QEvent *e);
     bool readDate(QDate& result, QDate* end) const;
 

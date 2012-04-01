@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,7 +27,7 @@ namespace DB
 class CategoryItem :public KShared
 {
 public:
-    CategoryItem( const QString& name, bool isTop = false ) : _name( name ), _isTop( isTop ) {}
+    explicit CategoryItem( const QString& name, bool isTop = false ) : _name( name ), _isTop( isTop ) {}
     ~CategoryItem();
     CategoryItem* clone() const;
     bool isDescendentOf( const QString& child, const QString& parent ) const;

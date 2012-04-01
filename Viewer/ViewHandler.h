@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,6 +20,8 @@
 #define VIEWHANDLER_H
 #include <qpoint.h>
 #include <QMouseEvent>
+#include "ImageDisplay.h"
+
 class ImageDisplay;
 class QRubberBand;
 
@@ -27,12 +29,13 @@ namespace Viewer
 {
 
 class ViewHandler :public QObject {
-
+Q_OBJECT
 public:
     ViewHandler( ImageDisplay* display );
     bool mousePressEvent ( QMouseEvent* e, const QPoint& unTranslatedPos, double scaleFactor );
     bool mouseReleaseEvent ( QMouseEvent* e, const QPoint& unTranslatedPos, double scaleFactor );
     bool mouseMoveEvent ( QMouseEvent* e, const QPoint& unTranslatedPos, double scaleFactor );
+    void hideEvent();
 
 private:
     bool _scale, _pan;

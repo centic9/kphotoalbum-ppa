@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,12 +20,12 @@
 
 #include <QMap>
 #include "DB/ImageDateCollection.h"
-#include "DB/Result.h"
+#include "DB/IdList.h"
 
 class XMLImageDateCollection :public DB::ImageDateCollection
 {
 public:
-    XMLImageDateCollection(const DB::Result&);
+    XMLImageDateCollection(const DB::IdList&);
 
 public:
     virtual DB::ImageCount count( const DB::ImageDate& range );

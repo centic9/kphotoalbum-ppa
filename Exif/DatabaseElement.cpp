@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -70,7 +70,10 @@ QString Exif::IntExifElement::queryString()
 
 void Exif::IntExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data )
 {
-    query->bindValue( counter++, (int) data[_tag].toLong() );
+    if (data[_tag].count() > 0)
+        query->bindValue( counter++, (int) data[_tag].toLong() );
+    else
+        query->bindValue( counter++, (int) 0 );
 }
 
 

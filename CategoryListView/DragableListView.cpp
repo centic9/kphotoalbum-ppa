@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,7 +30,7 @@ Q3DragObject* CategoryListView::DragableListView::dragObject()
     for ( Q3ListViewItemIterator itemIt( this ); *itemIt; ++itemIt ) {
         if ( (*itemIt)->isSelected() ) {
             Q3ListViewItem* parent = (*itemIt)->parent();
-            QString parentText = parent ? parent->text(0) : QString::null;
+            QString parentText = parent ? parent->text(0) : QString();
             selected.insert( CategoryListView::DragItemInfo( parentText, (*itemIt)->text(0) ) );
         }
     }

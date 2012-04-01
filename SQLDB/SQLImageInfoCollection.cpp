@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2006-2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2006-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ SQLImageInfoCollection::getImageInfoOf(const QString& relativeFilename) const
     return p;
 }
 
-DB::ImageInfoPtr SQLImageInfoCollection::getImageInfoOf(const DB::ResultId& id) const
+DB::ImageInfoPtr SQLImageInfoCollection::getImageInfoOf(const DB::Id& id) const
 {
     Q_ASSERT(!id.isNull());
 
@@ -91,7 +91,7 @@ DB::ImageInfoPtr SQLImageInfoCollection::getImageInfoOf(const DB::ResultId& id) 
     DB::ImageInfoPtr p = _infoPointers[id.rawId()];
     if (!p) {
         QList<DB::RawId> prefetchIdList;
-        const DB::Result context = id.context();
+        const DB::IdList context = id.context();
         if (!context.isEmpty()) {
             const int contextSize = context.size();
             const int rawIdIndex = context.indexOf(id);
@@ -128,7 +128,7 @@ QString SQLImageInfoCollection::filenameForId(DB::RawId id) const
              filename = _qh.mediaItemFilename(id);
         }
         catch (NotFoundError& e) {
-            return QString::null;
+            return QString();
         }
         _idFilenameMap.insert(id, filename);
     }

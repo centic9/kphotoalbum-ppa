@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -49,6 +49,7 @@ void Settings::CategoryItem::submit( DB::MemberMap* memberMap )
     if ( _categoryOrig.isNull() ) {
         // New Item
         DB::ImageDB::instance()->categoryCollection()->addCategory( _text, _icon, _type, _thumbnailSize, true );
+        _category = _text;
     }
     else {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName( _categoryOrig );
@@ -123,7 +124,7 @@ void Settings::CategoryItem::renameCategory( DB::MemberMap* memberMap )
                        "step save the database.</p>" );
 
 
-    if ( KMessageBox::warningContinueCancel( ::MainWindow::Window::theMainWindow(), txt ) == QMessageBox::Cancel )
+    if ( KMessageBox::warningContinueCancel( ::MainWindow::Window::theMainWindow(), txt ) == KMessageBox::Cancel )
         return;
 
     QDir dir( QString::fromLatin1("%1/CategoryImages" ).arg( Settings::SettingsData::instance()->imageDirectory() ) );

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,7 +22,7 @@
 #include "Display.h"
 #include <kparts/componentfactory.h>
 #include <QResizeEvent>
-#include <Phonon/MediaObject>
+#include <phonon/mediaobject.h>
 namespace Phonon {
    class VideoWidget;
    class SeekSlider;

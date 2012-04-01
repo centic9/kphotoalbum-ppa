@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,7 @@
 */
 #include "FileReader.h"
 
+#include <kcmdlineargs.h>
 #include <QTextCodec>
 #include <QTextStream>
 #include <klocale.h>
@@ -259,16 +260,17 @@ void XMLDB::FileReader::checkIfImagesAreSorted()
 
     if ( wrongOrder ) {
         KMessageBox::information( messageParent(),
-#ifdef HASEXIV2
+#ifdef HAVE_EXIV2
                                   i18n("<p>Your images/videos are not sorted, which means that navigating using the date bar "
                                        "will only work suboptimally.</p>"
                                        "<p>In the <b>Maintenance</b> menu, you can find <b>Display Images with Incomplete Dates</b> "
                                        "which you can use to find the images that are missing date information.</p>"
-                                       "You can then select the images that you have reason to believe have a correct date "
+                                       "<p>You can then select the images that you have reason to believe have a correct date "
                                        "in either their EXIF data or on the file, and execute <b>Maintenance->Read EXIF Info</b> "
                                        "to reread the information.</p>"
                                        "<p>Finally, once all images have their dates set, you can execute "
-                                       "<b>Images->Sort Selected by Date & Time</b> to sort them in the database.</p>"),
+                                       "<b>Images->Sort Selected by Date & Time</b> to sort them in the database. "
+                                       "Note that you should expand all stacks for sorting.</p>"),
 #else
                                   i18n("<p>Your images/videos are not sorted, which means that navigating using the date bar "
                                        "will only work suboptimally.</p>"
@@ -293,7 +295,7 @@ void XMLDB::FileReader::checkIfAllImagesHasSizeAttributes()
     if ( _db->_anyImageWithEmptySize ) {
         KMessageBox::information( messageParent(),
                                   i18n("<p>Not all the images in the database have information about image sizes; this is needed to "
-                                       "get the best result in the thumbnail view. To fix this, simply go to the <b>Maintainance</b> menu, "
+                                       "get the best result in the thumbnail view. To fix this, simply go to the <b>Maintenance</b> menu, "
                                        "and first choose <b>Remove All Thumbnails</b>, and after that choose <tt>Build Thumbnails</tt>.</p>"
                                        "<p>Not doing so will result in extra space around images in the thumbnail view - that is all - so "
                                        "there is no urgency in doing it.</p>"),
@@ -365,8 +367,13 @@ QDomElement XMLDB::FileReader::readConfigFile( const QString& configFile )
         int errCol;
 
         if ( !doc.setContent( &file, false, &errMsg, &errLine, &errCol )) {
-            KMessageBox::error( messageParent(), i18n("Error on line %1 column %2 in file %3: %4", errLine , errCol , configFile , errMsg ) );
-            exit(-1);
+            file.close();
+            // If parsing index.xml fails let's see if we could use a backup instead
+            Utilities::checkForBackupFile( configFile, i18n( "line %1 column %2 in file %3: %4", errLine , errCol , configFile , errMsg ) );
+            if ( !file.open( QIODevice::ReadOnly ) || ( !doc.setContent( &file, false, &errMsg, &errLine, &errCol ) ) ) {
+                KMessageBox::error( messageParent(), i18n( "Failed to recover the backup: %1", errMsg ) );
+                exit(-1);
+            }
         }
     }
 
@@ -390,7 +397,20 @@ QDomElement XMLDB::FileReader::readConfigFile( const QString& configFile )
 QString XMLDB::FileReader::unescape( const QString& str )
 {
     QString tmp( str );
-    tmp.replace( QString::fromLatin1( "_" ), QString::fromLatin1( " " ) );
+    // Matches encoded characters in attribute names
+    QRegExp rx( QString::fromLatin1( "(_.)([0-9A-F]{2})" ) );
+    int pos = 0;
+    
+    // Unencoding special characters if compressed XML is selected
+    if ( Settings::SettingsData::instance()->useCompressedIndexXML() && !KCmdLineArgs::parsedArgs()->isSet( "export-in-2.1-format" ) ) {
+        while ( ( pos = rx.indexIn( tmp, pos ) ) != -1 ) {
+            QString before = rx.cap( 1 ) + rx.cap( 2 );
+            QString after = QString::fromLatin1( QByteArray::fromHex( rx.cap( 2 ).toLocal8Bit() ) );
+            tmp.replace( pos, before.length(), after  );
+            pos += after.length();
+        }
+    } else
+        tmp.replace( QString::fromLatin1( "_" ), QString::fromLatin1( " " ) );
     return tmp;
 }
 

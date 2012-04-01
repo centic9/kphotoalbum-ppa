@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -25,6 +25,7 @@ class KFileItem;
 #include "RequestQueue.h"
 #include "Manager.h"
 #include <QEventLoop>
+#include <QPointer>
 
 namespace ImageManager
 {
@@ -40,10 +41,15 @@ public:
     void request( ImageRequest* request );
     void stop( ImageClient*, StopAction action );
     bool hasVideoThumbnailSupport() const;
+    void removeFullScaleFrame( const QString& fileName );
 
 protected:
     void load( ImageRequest* request );
     void requestLoadNext();
+    void sendResult( QImage image );
+    void saveFullScaleFrame( const QImage& image );
+    bool requestFullScaleFrame( ImageRequest* request );
+    QString pathForRequest( const QString& fileName  );
 
 protected slots:
     void slotGotPreview(const KFileItem&, const QPixmap& pixmap );
@@ -54,10 +60,11 @@ protected slots:
 
 private:
     VideoManager();
+    ~VideoManager();
     RequestQueue _pending;
     ImageRequest* _currentRequest;
     bool _hasVideoSupport;
-    mutable QEventLoop _eventLoop;
+    mutable QPointer<QEventLoop> _eventLoop;
 };
 
 }

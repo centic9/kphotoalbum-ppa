@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2006-2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2006-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,15 +26,15 @@
 #define ERROR_CLASS(X,Y) \
 struct X: public Y\
 {\
-    X(const QString& message=QString::null): Y(message) {}\
+    X(const QString& message=QString()): Y(message) {}\
     QString name() const { return QString::fromLatin1(#X); }\
 }
 
 #define ERROR_CLASS2(X,Y) \
 struct X: public Y\
 {\
-    X(const QString& queryLine=QString::null,\
-      const QString& message=QString::null): Y(queryLine, message) {}\
+    X(const QString& queryLine=QString(),\
+      const QString& message=QString()): Y(queryLine, message) {}\
     QString name() const { return QString::fromLatin1(#X); }\
 }
 
@@ -43,7 +43,7 @@ namespace SQLDB
     class Error: public std::exception
     {
     public:
-        Error(const QString& message=QString::null): _message(message) {}
+        Error(const QString& message=QString()): _message(message) {}
         virtual ~Error() throw() {}
         const QString& message() const { return _message; }
         virtual QString name() const { return QString::fromLatin1("Error"); }
@@ -94,8 +94,8 @@ namespace SQLDB
     class SQLError: public Error
     {
     public:
-        SQLError(const QString& queryLine=QString::null,
-                 const QString& message=QString::null):
+        explicit SQLError(const QString& queryLine=QString(),
+                 const QString& message=QString()):
             Error(message), _queryLine(queryLine) {}
         virtual ~SQLError() throw() {}
         const QString& queryLine() const { return _queryLine; }
@@ -124,7 +124,7 @@ namespace SQLDB
         {
             Q_ASSERT(_qtError.isValid());
         }
-        QtSQLError(const QSqlQuery& executedQuery,
+        explicit QtSQLError(const QSqlQuery& executedQuery,
                    const QString& message=QString()):
             SQLError(executedQuery.lastQuery(), message),
             _qtError(executedQuery.lastError()),

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -59,6 +59,13 @@ public:
     virtual void pixmapLoaded( const QString& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
     void setImageList( const QStringList& list );
 
+    void filterNone();
+    void filterSelected();
+    bool filterMono();
+    bool filterBW();
+    bool filterContrastStretch();
+    bool filterHistogramEqualization();
+
 public slots:
     void zoomIn();
     void zoomOut();
@@ -82,6 +89,7 @@ protected:
     virtual void mouseReleaseEvent( QMouseEvent* event );
     virtual void resizeEvent( QResizeEvent* event );
     virtual void paintEvent( QPaintEvent* event );
+    OVERRIDE void hideEvent(QHideEvent* );
     QPoint mapPos( QPoint );
     QPoint offset( int logicalWidth, int logicalHeight, int physicalWidth, int physicalHeight, double* ratio );
     void xformPainter( QPainter* );

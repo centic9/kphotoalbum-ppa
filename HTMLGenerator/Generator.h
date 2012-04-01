@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,8 +27,9 @@
 #include <QEventLoop>
 #include <KTempDir>
 #include "Utilities/Set.h"
+#include <QPointer>
 
-namespace DB { class ResultId; }
+namespace DB { class Id; }
 
 namespace HTMLGenerator
 {
@@ -40,6 +41,7 @@ class Generator :public QProgressDialog, private ImageManager::ImageClient
 
 public:
     Generator( const Setup& setup,  QWidget* parent );
+    ~Generator();
     void generate();
 
 protected slots:
@@ -49,7 +51,7 @@ protected slots:
 protected:
     bool generateIndexPage( int width, int height );
     bool generateContentPage( int width, int height,
-                              const DB::ResultId& prevInfo, const DB::ResultId& current, const DB::ResultId& nextInfo );
+                              const DB::Id& prevInfo, const DB::Id& current, const DB::Id& nextInfo );
     bool linkIndexFile();
     QString populateDescription( QList<DB::CategoryPtr> categories, const DB::ImageInfoPtr info );
 
@@ -57,7 +59,7 @@ public:
     QString namePage( int width, int height, const QString& fileName );
     QString nameImage( const QString& fileName, int size );
 
-    QString createImage( const DB::ResultId& id, int size );
+    QString createImage( const DB::Id& id, int size );
     QString createVideo( const QString& fileName );
 
     QString kimFileName( bool relative );
@@ -82,7 +84,7 @@ private:
     QSet< QPair<QString,int> > _generatedFiles;
     StringSet _copiedVideos;
     bool _hasEnteredLoop;
-    QEventLoop _eventLoop;
+    QPointer<QEventLoop> _eventLoop;
 };
 
 }

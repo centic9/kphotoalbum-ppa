@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,7 +18,7 @@
 
 #include "XMLImageDateCollection.h"
 #include "DB/ImageDB.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 
 void XMLImageDateCollection::add( const DB::ImageDate& date )
 {
@@ -119,7 +119,7 @@ QDateTime XMLImageDateCollection::upperLimit() const
     return QDateTime( QDate( 2100, 1, 1 ) );
 }
 
-XMLImageDateCollection::XMLImageDateCollection(const DB::Result& list)
+XMLImageDateCollection::XMLImageDateCollection(const DB::IdList& list)
 {
     Q_FOREACH(DB::ImageInfoPtr info, list.fetchInfos()) {
         add(info->date());

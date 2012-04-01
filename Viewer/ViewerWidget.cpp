@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,11 +16,12 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include "ViewerWidget.h"
 #include <config-kpa-exiv2.h>
 
 #include <kdeversion.h>
-#include "Viewer/ViewerWidget.h"
 #include <QContextMenuEvent>
+#include <QtDBus>
 #include <QKeyEvent>
 #include <QList>
 #include <QResizeEvent>
@@ -41,7 +42,8 @@
 #include "InfoBox.h"
 #include "VideoDisplay.h"
 #include "MainWindow/DirtyIndicator.h"
-#include "ViewerWidget.h"
+#include "ImageManager/ThumbnailCache.h"
+#include <KMessageBox>
 #include "VisibleOptionsMenu.h"
 #include <qglobal.h>
 #include <QTimeLine>
@@ -59,6 +61,7 @@
 #include <QVBoxLayout>
 #include <KProcess>
 #include <KStandardDirs>
+#include "MainWindow/DeleteDialog.h"
 
 #ifdef HAVE_EXIV2
 #  include "Exif/InfoDialog.h"
@@ -73,13 +76,22 @@ Viewer::ViewerWidget* Viewer::ViewerWidget::latest()
 
 
 // Notice the parent is zero to allow other windows to come on top of it.
-Viewer::ViewerWidget::ViewerWidget()
-    :QStackedWidget( 0 ), _current(0), _popup(0), _showingFullScreen( false ), _forward( true ), _isRunningSlideShow( false ), _videoPlayerStoppedManually(false)
+Viewer::ViewerWidget::ViewerWidget( UsageType type, QMap<Qt::Key, QPair<QString,QString> > *macroStore )
+    :QStackedWidget( 0 ), _current(0), _popup(0), _showingFullScreen( false ), _forward( true ), _isRunningSlideShow( false ), _videoPlayerStoppedManually(false), _type(type), _currentCategory(QString::fromLatin1("Tokens")), _inputMacros(macroStore),  _myInputMacros(0)
 {
-    setWindowFlags( Qt::Window );
-    setAttribute( Qt::WA_DeleteOnClose );
+    if ( type == ViewerWindow ) {
+        setWindowFlags( Qt::Window );
+        setAttribute( Qt::WA_DeleteOnClose );
+        _latest = this;
+    }
 
-    _latest = this;
+    if (! _inputMacros) {
+        _myInputMacros = _inputMacros =
+            new QMap<Qt::Key, QPair<QString,QString> >;
+    }
+
+    m_screenSaverCookie = -1;
+    _currentInputMode = InACategory;
 
     _display = _imageDisplay = new ImageDisplay( this );
     addWidget( _imageDisplay );
@@ -109,16 +121,7 @@ Viewer::ViewerWidget::ViewerWidget()
     _speedDisplay->hide();
 
     setFocusPolicy( Qt::StrongFocus );
-#ifndef Q_WS_WIN
-    const QString xdgScreenSaver = KStandardDirs::findExe( QString::fromAscii("xdg-screensaver") );
-    if ( !xdgScreenSaver.isEmpty() ) {
-        KProcess proc;
-        proc << xdgScreenSaver;
-        proc << QString::fromLatin1("suspend");
-        proc << QString::number( winId() );
-        proc.startDetached();
-    }
-#endif
+
     QTimer::singleShot( 2000, this, SLOT(test()) );
 }
 
@@ -136,6 +139,7 @@ void Viewer::ViewerWidget::setupContextMenu()
     createInvokeExternalMenu();
     createVideoMenu();
     createCategoryImageMenu();
+    createFilterMenu();
 
     KAction* action = _actions->addAction( QString::fromLatin1("viewer-edit-image-properties"), this, SLOT( editImage() ) );
     action->setText( i18n("Annotate...") );
@@ -153,9 +157,11 @@ void Viewer::ViewerWidget::setupContextMenu()
     _popup->addAction( _showExifViewer );
 #endif
 
-    action = _actions->addAction( QString::fromLatin1("viewer-close"), this, SLOT( close() ) );
-    action->setText( i18n("Close") );
-    action->setShortcut( Qt::Key_Escape );
+    if ( _type == ViewerWindow ) {
+        action = _actions->addAction( QString::fromLatin1("viewer-close"), this, SLOT( close() ) );
+        action->setText( i18n("Close") );
+        action->setShortcut( Qt::Key_Escape );
+    }
 
     _popup->addAction( action );
     _actions->readSettings();
@@ -211,6 +217,31 @@ void Viewer::ViewerWidget::createWallPaperMenu()
     _popup->addMenu( _wallpaperMenu );
 #endif // DOES_STILL_NOT_WORK_IN_KPA4
 }
+
+
+void Viewer::ViewerWidget::inhibitScreenSaver( bool inhibit ) {
+    QDBusMessage message;
+    if (inhibit) {
+        message = QDBusMessage::createMethodCall( QString::fromLatin1("org.freedesktop.ScreenSaver"), QString::fromLatin1("/ScreenSaver"),
+                                                  QString::fromLatin1("org.freedesktop.ScreenSaver"), QString::fromLatin1("Inhibit") );
+
+        message << QString( QString::fromLatin1("KPhotoAlbum") );
+        message << QString( QString::fromLatin1("Giving a slideshow") );
+        QDBusMessage reply = QDBusConnection::sessionBus().call( message );
+        if ( reply.type() == QDBusMessage::ReplyMessage )
+            m_screenSaverCookie = reply.arguments().first().toInt();
+    }
+    else {
+        if ( m_screenSaverCookie != -1 ) {
+            message = QDBusMessage::createMethodCall( QString::fromLatin1("org.freedesktop.ScreenSaver"), QString::fromLatin1("/ScreenSaver"),
+                                                      QString::fromLatin1("org.freedesktop.ScreenSaver"), QString::fromLatin1("UnInhibit") );
+            message << (uint)m_screenSaverCookie;
+            QDBusConnection::sessionBus().send( message );
+            m_screenSaverCookie = -1;
+        }
+    }
+}
+
 
 void Viewer::ViewerWidget::createInvokeExternalMenu()
 {
@@ -310,6 +341,11 @@ void Viewer::ViewerWidget::createSkipMenu()
     action->setShortcut( Qt::CTRL+Qt::SHIFT+Qt::Key_PageUp );
     popup->addAction( action );
     _backwardActions.append(action);
+
+    action = _actions->addAction( QString::fromLatin1("viewer-delete-current"), this, SLOT( deleteCurrent() ) );
+    action->setText( i18n("Delete Image") );
+    action->setShortcut( Qt::CTRL + Qt::Key_Delete );
+    popup->addAction( action );
 
     action = _actions->addAction( QString::fromLatin1("viewer-remove-current"), this, SLOT( removeCurrent() ) );
     action->setText( i18n("Remove Image from Display List") );
@@ -414,8 +450,11 @@ void Viewer::ViewerWidget::load()
     _rotateMenu->setEnabled( !isVideo );
     _wallpaperMenu->setEnabled( !isVideo );
     _categoryImagePopup->setEnabled( !isVideo );
+    _filterMenu->setEnabled( !isVideo );
 #ifdef HAVE_EXIV2
     _showExifViewer->setEnabled( !isVideo );
+    if ( _exifViewer )
+      _exifViewer->setImage( DB::ImageDB::instance()->ID_FOR_FILE(currentInfo()->fileName(DB::AbsolutePath)) );
 #endif
 
     Q_FOREACH( QAction* videoAction, _videoActions ) {
@@ -473,6 +512,7 @@ void Viewer::ViewerWidget::contextMenuEvent( QContextMenuEvent * e )
 
 void Viewer::ViewerWidget::showNextN(int n)
 {
+    filterNone();
     if ( _display == _videoDisplay ) {
         _videoPlayerStoppedManually = true;
         _videoDisplay->stop();
@@ -494,12 +534,26 @@ void Viewer::ViewerWidget::showNext()
 
 void Viewer::ViewerWidget::removeCurrent()
 {
-    _list.removeAll(_list[_current]);
-    qDebug("%d,%d", _current, _list.count() );
-    if ( _current == _list.count() ) {
-        qDebug("Show prev");
+    removeOrDeleteCurrent(OnlyRemoveFromViewer);
+}
+
+void Viewer::ViewerWidget::deleteCurrent()
+{
+    removeOrDeleteCurrent( RemoveImageFromDatabase );
+}
+
+void Viewer::ViewerWidget::removeOrDeleteCurrent( RemoveAction action )
+{
+    const QString fileName = _list[_current];
+    const DB::Id id = DB::ImageDB::instance()->ID_FOR_FILE( fileName );
+
+    if ( action == RemoveImageFromDatabase )
+        _removed.append(id);
+    _list.removeAll(fileName);
+    if ( _list.isEmpty() )
+        close();
+    if ( _current == _list.count() )
         showPrev();
-    }
     else
         showNextN(0);
 }
@@ -557,21 +611,21 @@ void Viewer::ViewerWidget::rotate90()
 {
     currentInfo()->rotate( 90 );
     load();
-    emit rotated();
+    invalidateThumbnail();
 }
 
 void Viewer::ViewerWidget::rotate180()
 {
     currentInfo()->rotate( 180 );
     load();
-    emit rotated();
+    invalidateThumbnail();
 }
 
 void Viewer::ViewerWidget::rotate270()
 {
     currentInfo()->rotate( 270 );
     load();
-    emit rotated();
+    invalidateThumbnail();
 }
 
 void Viewer::ViewerWidget::showFirst()
@@ -630,6 +684,11 @@ void Viewer::ViewerWidget::setAsWallpaper(int /*mode*/)
 
 bool Viewer::ViewerWidget::close( bool alsoDelete)
 {
+    if ( !_removed.isEmpty() ) {
+        MainWindow::DeleteDialog dialog( this );
+        dialog.exec( _removed );
+    }
+
     _slideShowTimer->stop();
     _isRunningSlideShow = false;
     return QWidget::close();
@@ -722,10 +781,30 @@ void Viewer::ViewerWidget::resizeEvent( QResizeEvent* e )
 
 void Viewer::ViewerWidget::updateInfoBox()
 {
-    if ( currentInfo() ) {
+    if ( currentInfo() || _currentInput != QString::fromLatin1("") ||
+         (_currentCategory != QString::fromLatin1("") &&
+          _currentCategory != QString::fromLatin1("Tokens"))) {
         QMap<int, QPair<QString,QString> > map;
         QString text = Utilities::createInfoText( currentInfo(), &map );
-        if ( Settings::SettingsData::instance()->showInfoBox() && !text.isNull() ) {
+        QString selecttext = QString::fromLatin1("");
+        if (_currentCategory == QString::fromLatin1("")) {
+            selecttext = i18n("<b>Setting Category: </b>") + _currentInput;
+            if (_currentInputList.length() > 0) {
+                selecttext += QString::fromLatin1("{") + _currentInputList +
+                    QString::fromLatin1("}");
+            }
+        } else if (_currentInput != QString::fromLatin1("") ||
+                   _currentCategory != QString::fromLatin1("Tokens")) {
+            selecttext = i18n("<b>Assigning: </b>") + _currentCategory +
+                QString::fromLatin1("/")  + _currentInput;
+            if (_currentInputList.length() > 0) {
+                selecttext += QString::fromLatin1("{") + _currentInputList +
+                    QString::fromLatin1("}");
+            }
+        }
+        if (selecttext != QString::fromLatin1(""))
+            text = selecttext + QString::fromLatin1("<br />") + text;
+        if ( Settings::SettingsData::instance()->showInfoBox() && !text.isNull() && ( _type != InlineViewer ) ) {
             _infoBox->setInfo( text, map );
             _infoBox->show();
 
@@ -739,19 +818,13 @@ void Viewer::ViewerWidget::updateInfoBox()
 
 Viewer::ViewerWidget::~ViewerWidget()
 {
-#ifndef Q_WS_WIN
-    const QString xdgScreenSaver = KStandardDirs::findExe( QString::fromAscii("xdg-screensaver") );
-    if ( !xdgScreenSaver.isEmpty() ) {
-        KProcess proc;
-        proc << xdgScreenSaver << QLatin1String("resume") << QString::number( winId() );
-        // if we don't wait here, xdg-screensaver realizes that the window is
-        // already gone and doesn't re-activate the screensaver
-        proc.execute();
-    }
-#endif
+    inhibitScreenSaver(false);
 
     if ( _latest == this )
         _latest = 0;
+
+    if ( _myInputMacros )
+        delete _myInputMacros;
 }
 
 
@@ -770,12 +843,14 @@ void Viewer::ViewerWidget::slotStartStopSlideShow()
         _slideShowTimer->stop();
         if ( _list.count() != 1 )
             _speedDisplay->end();
+        inhibitScreenSaver(false);
     }
     else {
         _startStopSlideShow->setText( i18n("Stop Slideshow") );
         if ( currentInfo()->mediaType() != DB::Video )
             _slideShowTimer->start( _slideShowPause );
         _speedDisplay->start();
+        inhibitScreenSaver(true);
     }
 }
 
@@ -833,6 +908,74 @@ void Viewer::ViewerWidget::editImage()
     DB::ImageInfoList list;
     list.append( currentInfo() );
     MainWindow::Window::configureImages( list, true );
+}
+
+void Viewer::ViewerWidget::filterNone()
+{
+    if ( _display == _imageDisplay ) {
+        _imageDisplay->filterNone();
+        _filterMono->setChecked( false );
+        _filterBW->setChecked( false );
+        _filterContrastStretch->setChecked( false );
+        _filterHistogramEqualization->setChecked( false );
+    }
+}
+
+void Viewer::ViewerWidget::filterSelected()
+{
+    // The filters that drop bit depth below 32 should be the last ones
+    // so that filters requiring more bit depth are processed first
+    if ( _display == _imageDisplay ) {
+        _imageDisplay->filterNone();
+        if (_filterBW->isChecked())
+            _imageDisplay->filterBW();
+        if (_filterContrastStretch->isChecked())
+            _imageDisplay->filterContrastStretch();
+        if (_filterHistogramEqualization->isChecked())
+            _imageDisplay->filterHistogramEqualization();
+        if (_filterMono->isChecked())
+            _imageDisplay->filterMono();
+    }
+}
+
+void Viewer::ViewerWidget::filterBW()
+{
+    if ( _display == _imageDisplay ) {
+        if ( _filterBW->isChecked() )
+            _filterBW->setChecked( _imageDisplay->filterBW());
+        else
+            filterSelected();
+    }
+}
+
+void Viewer::ViewerWidget::filterContrastStretch()
+{
+    if ( _display == _imageDisplay ) {
+        if (_filterContrastStretch->isChecked())
+            _filterContrastStretch->setChecked( _imageDisplay->filterContrastStretch() );
+        else
+            filterSelected();
+    }
+}
+
+void Viewer::ViewerWidget::filterHistogramEqualization()
+{
+    if ( _display == _imageDisplay ) {
+        if ( _filterHistogramEqualization->isChecked() )
+            _filterHistogramEqualization->setChecked( _imageDisplay->filterHistogramEqualization() );
+        else
+            filterSelected();
+    }
+}
+
+void Viewer::ViewerWidget::filterMono()
+{
+    if ( _display == _imageDisplay ) {
+        if ( _filterMono->isChecked() )
+            _filterMono->setChecked( _imageDisplay->filterMono() );
+        else
+            filterSelected();
+    }
 }
 
 void Viewer::ViewerWidget::slotSetStackHead()
@@ -915,19 +1058,153 @@ KActionCollection* Viewer::ViewerWidget::actions()
     return _actions;
 }
 
+int Viewer::ViewerWidget::find_tag_in_list(const QStringList &list,
+                                           QString &namefound)
+{
+    int found = 0;
+    _currentInputList = QString::fromLatin1("");
+    for( QStringList::ConstIterator listIter = list.constBegin();
+         listIter != list.constEnd(); ++listIter ) {
+        if (listIter->startsWith(_currentInput, Qt::CaseInsensitive)) {
+            found++;
+            if (_currentInputList.length() > 0)
+                _currentInputList =
+                    _currentInputList + QString::fromLatin1(",");
+            _currentInputList =_currentInputList +
+                listIter->right(listIter->length() - _currentInput.length());
+            if (found > 1 && _currentInputList.length() > 20) {
+                // already found more than we want to display
+                // bail here for now
+                // XXX: non-ideal?  display more?  certainly config 20
+                return found;
+            } else {
+                namefound = *listIter;
+            }
+        }
+    }
+    return found;
+}
+
 void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
 {
-    if ( event->modifiers() == 0 && event->key() >= Qt::Key_A && event->key() <= Qt::Key_Z ) {
-        QString token = event->text().toUpper().left(1);
-        if ( currentInfo()->hasCategoryInfo( QString::fromLatin1("Tokens"), token ) )
-            currentInfo()->removeCategoryInfo( QString::fromLatin1("Tokens"), token );
-        else
-            currentInfo()->addCategoryInfo( QString::fromLatin1("Tokens"), token );
-        DB::ImageDB::instance()->categoryCollection()->categoryForName( QString::fromLatin1("Tokens") )->addItem( token );
+
+    if (event->key() == Qt::Key_Backspace) {
+        // remove stuff from the current input string
+        _currentInput.remove( _currentInput.length()-1, 1 );
+        updateInfoBox();
+        MainWindow::DirtyIndicator::markDirty();
+        _currentInputList = QString::fromLatin1("");
+//     } else if (event->modifier & (Qt::AltModifier | Qt::MetaModifier) &&
+//                event->key() == Qt::Key_Enter) {
+        return; // we've handled it
+    } else if (event->key() == Qt::Key_Comma) {
+        // force set the "new" token
+        if (_currentCategory != QString::fromLatin1("")) {
+            if (_currentInput.left(1) == QString::fromLatin1("\"") ||
+                // allow a starting ' or " to signal a brand new category
+                // this bypasses the auto-selection of matching characters
+                _currentInput.left(1) == QString::fromLatin1("\'")) {
+                _currentInput = _currentInput.right(_currentInput.length()-1);
+            }
+            currentInfo()->addCategoryInfo( _currentCategory, _currentInput );
+            DB::CategoryPtr category =
+                DB::ImageDB::instance()->categoryCollection()->categoryForName(_currentCategory);
+            category->addItem(_currentInput);
+        }
+        _currentInput = QString::fromLatin1("");
+        updateInfoBox();
+        MainWindow::DirtyIndicator::markDirty();
+        return; // we've handled it
+    } else if ( event->modifiers() == 0 && event->key() >= Qt::Key_0 && event->key() <= Qt::Key_5 ) {
+        bool ok;
+        short rating = event->text().left(1).toShort(&ok, 10);
+        if (ok) {
+            currentInfo()->setRating(rating * 2);
+            updateInfoBox();
+            MainWindow::DirtyIndicator::markDirty();
+        }
+    } else if (event->modifiers() == 0 ||
+               event->modifiers() == Qt::ShiftModifier) {
+        // search the category for matches
+        QString namefound;
+        QString incomingKey = event->text().left(1);
+
+        // start searching for a new category name
+        if (incomingKey == QString::fromLatin1("/")) {
+            if (_currentInput == QString::fromLatin1("") &&
+                _currentCategory == QString::fromLatin1("")) {
+                if (_currentInputMode == InACategory) {
+                    _currentInputMode = AlwaysStartWithCategory;
+                } else {
+                    _currentInputMode = InACategory;
+                }
+            } else {
+                // reset the category to search through
+                _currentInput = QString::fromLatin1("");
+                _currentCategory = QString::fromLatin1("");
+            }
+
+        // use an assigned key or map to a given key for future reference
+        } else if (_currentInput == QString::fromLatin1("") &&
+                   // can map to function keys
+                   event->key() >= Qt::Key_F1 &&
+                   event->key() <= Qt::Key_F35) {
+
+            // we have a request to assign a macro key or use one
+            Qt::Key key = (Qt::Key) event->key();
+            if (_inputMacros->contains(key)) {
+                // Use the requested toggle
+                if ( event->modifiers() == Qt::ShiftModifier ) {
+                    if ( currentInfo()->hasCategoryInfo( (*_inputMacros)[key].first, (*_inputMacros)[key].second ) ) {
+                        currentInfo()->removeCategoryInfo( (*_inputMacros)[key].first, (*_inputMacros)[key].second );
+                    }
+                } else {
+                    currentInfo()->addCategoryInfo( (*_inputMacros)[key].first, (*_inputMacros)[key].second );
+                }
+            } else {
+                (*_inputMacros)[key] = qMakePair(_lastCategory, _lastFound);
+            }
+            updateInfoBox();
+            MainWindow::DirtyIndicator::markDirty();
+            // handled it
+            return;
+        } else if (_currentCategory == QString::fromLatin1("")) {
+            // still searching for a category to lock to
+            _currentInput += incomingKey;
+            QStringList categorynames = DB::ImageDB::instance()->categoryCollection()->categoryNames();
+            if (find_tag_in_list(categorynames, namefound) == 1) {
+                // yay, we have exactly one!
+                _currentCategory = namefound;
+                _currentInput = QString::fromLatin1("");
+                _currentInputList = QString::fromLatin1("");
+            }
+        } else {
+            _currentInput += incomingKey;
+
+            DB::CategoryPtr category =
+                DB::ImageDB::instance()->categoryCollection()->categoryForName(_currentCategory);
+            QStringList items = category->items();
+            if (find_tag_in_list(items, namefound) == 1) {
+                // yay, we have exactly one!
+                if ( currentInfo()->hasCategoryInfo( _currentCategory, namefound ) )
+                    currentInfo()->removeCategoryInfo( _currentCategory, namefound );
+                else
+                    currentInfo()->addCategoryInfo( _currentCategory, namefound );
+
+                _lastFound = namefound;
+                _lastCategory = _currentCategory;
+                _currentInput = QString::fromLatin1("");
+                _currentInputList = QString::fromLatin1("");
+                if (_currentInputMode == AlwaysStartWithCategory)
+                    _currentCategory = QString::fromLatin1("");
+            }
+        }
+
         updateInfoBox();
         MainWindow::DirtyIndicator::markDirty();
     }
     QWidget::keyPressEvent( event );
+    return;
 }
 
 void Viewer::ViewerWidget::videoStopped()
@@ -950,8 +1227,8 @@ void Viewer::ViewerWidget::wheelEvent( QWheelEvent* event )
 void Viewer::ViewerWidget::showExifViewer()
 {
 #ifdef HAVE_EXIV2
-    Exif::InfoDialog* exifDialog = new Exif::InfoDialog( DB::ImageDB::instance()->ID_FOR_FILE(currentInfo()->fileName(DB::AbsolutePath)), this );
-    exifDialog->show();
+    _exifViewer = new Exif::InfoDialog( DB::ImageDB::instance()->ID_FOR_FILE(currentInfo()->fileName(DB::AbsolutePath)), this );
+    _exifViewer->show();
 #endif
 
 }
@@ -1050,6 +1327,39 @@ void Viewer::ViewerWidget::createCategoryImageMenu()
     connect( _categoryImagePopup, SIGNAL( aboutToShow() ), this, SLOT( populateCategoryImagePopup() ) );
 }
 
+void Viewer::ViewerWidget::createFilterMenu()
+{
+    _filterMenu = new QMenu( _popup );
+    _filterMenu->setTitle( i18n("Filters") );
+
+    _filterNone = _actions->addAction( QString::fromLatin1("filter-empty"), this, SLOT( filterNone() ) );
+    _filterNone->setText( i18n("Remove All Filters") );
+    _filterMenu->addAction( _filterNone );
+
+    _filterBW = _actions->addAction( QString::fromLatin1("filter-bw"), this, SLOT( filterBW() ) );
+    _filterBW->setText( i18n("Apply Grayscale Filter") );
+    _filterBW->setCheckable( true );
+    _filterMenu->addAction( _filterBW );
+
+    _filterContrastStretch = _actions->addAction( QString::fromLatin1("filter-cs"), this, SLOT( filterContrastStretch() ) );
+    _filterContrastStretch->setText( i18n("Apply Contrast Stretching Filter") );
+    _filterContrastStretch->setCheckable( true );
+    _filterMenu->addAction( _filterContrastStretch );
+
+    _filterHistogramEqualization = _actions->addAction( QString::fromLatin1("filter-he"), this, SLOT( filterHistogramEqualization() ) );
+    _filterHistogramEqualization->setText( i18n("Apply Histogram Equalization Filter") );
+    _filterHistogramEqualization->setCheckable( true );
+    _filterMenu->addAction( _filterHistogramEqualization );
+
+    _filterMono = _actions->addAction( QString::fromLatin1("filter-mono"), this, SLOT( filterMono() ) );
+    _filterMono->setText( i18n("Apply Monochrome Filter") );
+    _filterMono->setCheckable( true );
+    _filterMenu->addAction( _filterMono );
+
+    _popup->addMenu( _filterMenu );
+}
+
+
 void Viewer::ViewerWidget::test()
 {
 #ifdef TESTING
@@ -1071,6 +1381,16 @@ void Viewer::ViewerWidget::createVideoViewer()
     _videoDisplay = new VideoDisplay( this );
     addWidget( _videoDisplay );
     connect( _videoDisplay, SIGNAL( stopped() ), this, SLOT( videoStopped() ) );
+}
+
+void Viewer::ViewerWidget::stopPlayback()
+{
+    _videoDisplay->stop();
+}
+
+void Viewer::ViewerWidget::invalidateThumbnail() const
+{
+    ImageManager::ThumbnailCache::instance()->removeThumbnail( currentInfo()->fileName( DB::AbsolutePath ) );
 }
 
 #include "ViewerWidget.moc"

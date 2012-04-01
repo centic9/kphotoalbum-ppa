@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,11 +17,12 @@
 */
 
 
-#include "Viewer/ImageDisplay.h"
+#include "ImageDisplay.h"
 #include <qpainter.h>
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
+#include <KMessageBox>
 #include <klocale.h>
 #include "Settings/SettingsData.h"
 #include "Viewer/ViewHandler.h"
@@ -30,7 +31,6 @@
 #include <qapplication.h>
 #include <math.h>
 #include "DB/ImageDB.h"
-#include "ImageDisplay.h"
 #include <qtimer.h>
 
 /**
@@ -196,7 +196,7 @@ void Viewer::ImageDisplay::resizeEvent( QResizeEvent* event )
     _cache.fill(0); // Clear the cache
     if ( _info ) {
         cropAndScale();
-        if ( event->size().width() > 1.5*event->oldSize().width() || event->size().height() > 1.5*event->oldSize().height() )
+        if ( event->size().width() > 1.5*this->_loadedImage.size().width() || event->size().height() > 1.5*this->_loadedImage.size().height() )
             potentialyLoadFullSize(); // Only do if we scale much bigger.
     }
     updatePreload();
@@ -330,6 +330,161 @@ void Viewer::ImageDisplay::cropAndScale()
     update();
 }
 
+void Viewer::ImageDisplay::filterNone()
+{
+    cropAndScale();
+    update();
+}
+
+bool Viewer::ImageDisplay::filterMono()
+{
+    _croppedAndScaledImg = _croppedAndScaledImg.convertToFormat(_croppedAndScaledImg.Format_Mono);
+    update();
+    return true;
+}
+
+// I can't believe there isn't a standard conversion for this??? -- WH
+bool Viewer::ImageDisplay::filterBW()
+{
+    if (_croppedAndScaledImg.depth() < 32) {
+        KMessageBox::error( this, i18n("Insufficient color depth for this filter"));
+        return false;
+    }
+
+    for (int y = 0; y < _croppedAndScaledImg.height(); ++y) {
+        for (int x = 0; x < _croppedAndScaledImg.width(); ++x) {
+            int pixel = _croppedAndScaledImg.pixel(x, y);
+            int gray = qGray(pixel);
+            int alpha = qAlpha(pixel);
+            _croppedAndScaledImg.setPixel(x, y, qRgba(gray, gray, gray, alpha));
+        }
+    }
+    update();
+    return true;
+}
+
+bool Viewer::ImageDisplay::filterContrastStretch()
+{
+    int redMin, redMax, greenMin, greenMax, blueMin, blueMax;
+
+    redMin = greenMin = blueMin = 255;
+    redMax = greenMax = blueMax = 0;
+
+    if (_croppedAndScaledImg.depth() < 32) {
+        KMessageBox::error( this, i18n("Insufficient color depth for this filter"));
+        return false;
+    }
+
+    // Look for minimum and maximum intensities within each color channel
+    for (int y = 0; y < _croppedAndScaledImg.height(); ++y) {
+        for (int x = 0; x < _croppedAndScaledImg.width(); ++x) {
+            int pixel = _croppedAndScaledImg.pixel(x, y);
+            int red = qRed(pixel);
+            int green = qGreen(pixel);
+            int blue = qBlue(pixel);
+            redMin = redMin < red ? redMin : red;
+            redMax = redMax > red ? redMax : red;
+            greenMin = greenMin < green ? greenMin : green;
+            greenMax = greenMax > green ? greenMax : green;
+            blueMin = blueMin < blue ? blueMin : blue;
+            blueMax = blueMax > blue ? blueMax : blue;
+        }
+    }
+
+    // Calculate factor for stretching each color intensity throughout the
+    // whole range
+    float redFactor, greenFactor, blueFactor;
+    redFactor = ((float)(255) / (float) (redMax - redMin));
+    greenFactor = ((float)(255) / (float) (greenMax - greenMin));
+    blueFactor = ((float)(255) / (float) (blueMax - blueMin));
+
+    // Perform the contrast stretching
+    for (int y = 0; y < _croppedAndScaledImg.height(); ++y) {
+        for (int x = 0; x < _croppedAndScaledImg.width(); ++x) {
+            int pixel = _croppedAndScaledImg.pixel(x, y);
+            int red = qRed(pixel);
+            int green = qGreen(pixel);
+            int blue = qBlue(pixel);
+            int alpha = qAlpha(pixel);
+
+            red = (red - redMin) * redFactor;
+            red = red < 255 ? red : 255;
+            red = red > 0 ? red : 0;
+            green = (green - greenMin) * greenFactor;
+            green = green < 255 ? green : 255;
+            green = green > 0 ? green : 0;
+            blue = (blue - blueMin) * blueFactor;
+            blue = blue < 255 ? blue : 255;
+            blue = blue > 0 ? blue : 0;
+            _croppedAndScaledImg.setPixel(x, y, qRgba(red, green, blue, alpha));
+        }
+    }
+    update();
+    return true;
+}
+
+bool Viewer::ImageDisplay::filterHistogramEqualization()
+{
+    int width, height;
+    float R_histogram[256];
+    float G_histogram[256];
+    float B_histogram[256];
+    float d;
+
+    if (_croppedAndScaledImg.depth() < 32) {
+        KMessageBox::error( this, i18n("Insufficient color depth for this filter"));
+        return false;
+    }
+    memset(R_histogram, 0, sizeof(R_histogram));
+    memset(G_histogram, 0, sizeof(G_histogram));
+    memset(B_histogram, 0, sizeof(B_histogram));
+
+    width = _croppedAndScaledImg.width();
+    height = _croppedAndScaledImg.height();
+    d = 1.0 / width / height;
+
+    // Populate histogram for each color channel
+    for (int y = 0; y < height; ++y) {
+        for (int x = 1; x < width; ++x) {
+            int pixel = _croppedAndScaledImg.pixel(x, y);
+
+            R_histogram[qRed(pixel)] += d;
+            G_histogram[qGreen(pixel)] += d;
+            B_histogram[qBlue(pixel)] += d;
+        }
+    }
+
+    // Transfer histogram table to cumulative distribution table
+    float R_sum = 0.0;
+    float G_sum = 0.0;
+    float B_sum = 0.0;
+    for (int i = 0; i < 256; ++i) {
+        R_sum += R_histogram[i];
+        G_sum += G_histogram[i];
+        B_sum += B_histogram[i];
+
+        R_histogram[i] = R_sum * 255 + 0.5;
+        G_histogram[i] = G_sum * 255 + 0.5;
+        B_histogram[i] = B_sum * 255 + 0.5;
+
+    }
+
+    // Equalize the image
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            int pixel = _croppedAndScaledImg.pixel(x, y);
+
+            _croppedAndScaledImg.setPixel(
+                x, y, qRgba(R_histogram[qRed(pixel)],
+                G_histogram[qGreen(pixel)], B_histogram[qBlue(pixel)],
+                qAlpha(pixel))
+            );
+        }
+    }
+    update();
+    return true;
+}
+
 void Viewer::ImageDisplay::updateZoomCaption() {
     const QSize imgSize = _loadedImage.size();
     // similar to sizeRatio(), but we take the _highest_ factor.
@@ -348,7 +503,7 @@ QImage Viewer::ImageDisplay::currentViewAsThumbnail() const
     if ( _croppedAndScaledImg.isNull() )
         return QImage();
     else
-        return _croppedAndScaledImg.scaled( 128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+        return _croppedAndScaledImg.scaled( 512, 512, Qt::KeepAspectRatio, Qt::SmoothTransformation );
 }
 
 
@@ -417,7 +572,7 @@ void Viewer::ImageDisplay::updatePreload()
     int incr = ( _forward ? 1 : -1 );
     int nextOnesInCache = 0;
     // Iterate from the current image in the direction of the viewing
-    for ( int i = _curIndex+incr; true ; i += incr ) {
+    for ( int i = _curIndex+incr; cacheSize ; i += incr ) {
         if ( _forward ? ( i >= (int) _imageList.count() ) : (i < 0) )
             break;
 
@@ -533,9 +688,7 @@ void Viewer::ImageDisplay::updateZoomPoints( const Settings::StandardViewSize ty
 
 void Viewer::ImageDisplay::potentialyLoadFullSize()
 {
-    // The second part of this disables loading a higher resolution. The reason for this is that zooming in a rotated image is broken, and we can't find where,
-    // so this is a work around to get zooming to work at all.
-    if ( _info->size() != _loadedImage.size() && _info->angle() == 0 ) {
+    if ( _info->size() != _loadedImage.size() ) {
         ImageManager::ImageRequest* request = new ImageManager::ImageRequest( _info->fileName(DB::AbsolutePath), QSize(-1,-1), _info->angle(), this );
         request->setPriority( ImageManager::Viewer );
         ImageManager::Manager::instance()->load( request );
@@ -568,6 +721,11 @@ void Viewer::ImageDisplay::requestImage( const DB::ImageInfoPtr& info, bool prio
     request->setUpScale( viewSize == Settings::FullSize );
     request->setPriority( priority ? ImageManager::Viewer : ImageManager::ViewerPreload );
     ImageManager::Manager::instance()->load( request );
+}
+
+void Viewer::ImageDisplay::hideEvent(QHideEvent *)
+{
+  _viewHandler->hideEvent();
 }
 
 #include "ImageDisplay.moc"

@@ -1,3 +1,20 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 #include "ImportHandler.h"
 #include "Utilities/Util.h"
 
@@ -23,12 +40,14 @@ using namespace ImportExport;
 
 ImportExport::ImportHandler::ImportHandler()
     : m_fileMapper(NULL), m_finishedPressed(false), _progress(0), _reportUnreadableFiles( true )
+    , m_eventLoop( new QEventLoop )
 
 {
 }
 
 ImportHandler::~ImportHandler() {
     delete m_fileMapper;
+    delete m_eventLoop;
 }
 
 bool ImportExport::ImportHandler::exec( const ImportSettings& settings, KimFileReader* kimFileReader )
@@ -44,7 +63,7 @@ bool ImportExport::ImportHandler::exec( const ImportSettings& settings, KimFileR
 
         // If none of the images were to be copied, then we flushed the loop before we got started, in that case, don't start the loop.
         if ( _pendingCopies.count() > 0 )
-            ok = m_eventLoop.exec();
+            ok = m_eventLoop->exec();
         else
             ok = false;
     }
@@ -178,14 +197,15 @@ void ImportExport::ImportHandler::aCopyFailed( QStringList files )
     int result = _reportUnreadableFiles ?
                  KMessageBox::warningYesNoCancelList( _progress,
                                                       i18n("Cannot copy from any of the following locations:"),
-                                                      files, QString::null, KStandardGuiItem::cont(), KGuiItem( i18n("Continue without Asking") )) : KMessageBox::Yes;
+                                                      files, QString(), KStandardGuiItem::cont(), KGuiItem( i18n("Continue without Asking") )) : KMessageBox::Yes;
 
     switch (result) {
     case KMessageBox::Cancel:
         // This might be late -- if we managed to copy some files, we will
         // just throw away any changes to the DB, but some new image files
         // might be in the image directory...
-        m_eventLoop.exit(false);
+        m_eventLoop->exit(false);
+        _pendingCopies.pop_front();
         break;
 
     case KMessageBox::No:
@@ -200,14 +220,14 @@ void ImportExport::ImportHandler::aCopyJobCompleted( KJob* job )
 {
     if ( job && job->error() ) {
         job->uiDelegate()->showErrorMessage();
-        m_eventLoop.exit(false);
+        m_eventLoop->exit(false);
     }
     else if ( _pendingCopies.count() == 0 ) {
         updateDB();
-        m_eventLoop.exit(true);
+        m_eventLoop->exit(true);
     }
     else if ( _progress->wasCanceled() ) {
-        m_eventLoop.exit(false);
+        m_eventLoop->exit(false);
     }
     else {
         _progress->setValue( ++_totalCopied );
@@ -251,7 +271,7 @@ void ImportExport::ImportHandler::updateInfo( DB::ImageInfoPtr dbInfo, DB::Image
 
 void ImportExport::ImportHandler::addNewRecord( DB::ImageInfoPtr info )
 {
-    QString importName = Utilities::stripImageDirectory(m_fileMapper->uniqNameFor(info->fileName(DB::RelativeToImageRoot)));
+    QString importName = info->fileName( DB::RelativeToImageRoot );
 
     DB::ImageInfoPtr updateInfo(new DB::ImageInfo(importName, DB::Image, false ));
     updateInfo->setLabel( info->label() );

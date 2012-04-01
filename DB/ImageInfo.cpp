@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -154,7 +154,7 @@ QString ImageInfo::fileName( PathType type ) const
     case DB::AbsolutePath:        return _absoluteFileName;
     default:
         kFatal("Invalid parameter to ImageInfo::fileName()");
-        return QString::null;
+        return QString();
     }
 }
 
@@ -465,7 +465,7 @@ void DB::ImageInfo::setAbsoluteFileName()
 void DB::ImageInfo::createFolderCategoryItem( DB::CategoryPtr folderCategory, DB::MemberMap& memberMap )
 {
     QString folderName = Utilities::relativeFolderName( _relativeFileName );
-    if ( folderName.isNull() )
+    if ( folderName.isEmpty() )
         return;
 
     QStringList directories = folderName.split(QString::fromLatin1( "/" ) );
@@ -483,6 +483,26 @@ void DB::ImageInfo::createFolderCategoryItem( DB::CategoryPtr folderCategory, DB
 
     _categoryInfomation.insert( folderCategory->name() , StringSet() << folderName );
     folderCategory->addItem( folderName );
+}
+
+void DB::ImageInfo::copyExtraData( const DB::ImageInfo& from, bool copyAngle)
+{
+    _categoryInfomation = from._categoryInfomation;
+    _description = from._description;
+    // Hmm...  what should the date be?  orig or modified?
+    // _date = from._date;
+    if (copyAngle)
+        _angle = from._angle;
+    _rating = from._rating;
+    _geoPosition = from._geoPosition;
+}
+
+void DB::ImageInfo::removeExtraData ()
+{
+    _categoryInfomation.clear();
+    _description.clear();
+    _rating = -1;
+    _geoPosition = GpsCoordinates();
 }
 
 void DB::ImageInfo::addCategoryInfo( const QString& category, const StringSet& values )

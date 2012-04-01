@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Henner Zeller <h.zeller@acm.org>
+/* Copyright (C) 2008-2010 Henner Zeller <h.zeller@acm.org>
 
    based on Utilities::createUniqNameMap() by <blackie@kde.org>
 
@@ -49,7 +49,7 @@ public:
     explicit UniqFilenameMapper(const QString &targetDirectory);
 
     // Create a unique, flat filename for the target directory. If this method
-    // has been called before with the same argument, the uniq name that has
+    // has been called before with the same argument, the unique name that has
     // been created before is returned (see example above).
     QString uniqNameFor(const QString& filename);
 

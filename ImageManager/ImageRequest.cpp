@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@
 */
 #include "ImageRequest.h"
 
-ImageManager::ImageRequest::ImageRequest( const QString& fileName, 
+ImageManager::ImageRequest::ImageRequest( const QString& fileName,
                                           const QSize& size, int angle,
                                           ImageManager::ImageClient* client )
     : _null( false ),
@@ -28,7 +28,8 @@ ImageManager::ImageRequest::ImageRequest( const QString& fileName,
       _angle( angle ),
       _priority( ThumbnailVisible ),
       _loadedOK( false ),
-      _dontUpScale( false )
+      _dontUpScale( false ),
+      _isThumbnailRequest(false)
 {
 }
 
@@ -40,13 +41,6 @@ bool ImageManager::ImageRequest::loadedOK() const
 bool ImageManager::ImageRequest::isNull() const
 {
     return _null;
-}
-
-QString ImageManager::ImageRequest::fileName() const
-{
-    // We need a lock here to avoid a race condition in Operator T() of QDeepCopy
-    QMutexLocker dummy( &_fileNameLock );
-    return _fileName;
 }
 
 int ImageManager::ImageRequest::width() const
@@ -61,8 +55,8 @@ int ImageManager::ImageRequest::height() const
 
 bool ImageManager::ImageRequest::operator<( const ImageRequest& other ) const
 {
-    const QString fileA = fileName();
-    const QString fileB = other.fileName();
+    const QString fileA = databaseFileName();
+    const QString fileB = other.databaseFileName();
 
     if (  fileA != fileB )
         return fileA < fileB;
@@ -77,7 +71,7 @@ bool ImageManager::ImageRequest::operator<( const ImageRequest& other ) const
 bool ImageManager::ImageRequest::operator==( const ImageRequest& other ) const
 {
     // Compare all atributes but the pixmap.
-    return ( _null == other._null && fileName() == other.fileName() &&
+    return ( _null == other._null && databaseFileName() == other.databaseFileName() &&
              _width == other._width && _height == other._height &&
              _angle == other._angle && _client == other._client &&
              _priority == other._priority );
@@ -132,3 +126,29 @@ void ImageManager::ImageRequest::setUpScale( bool b )
 {
     _dontUpScale = !b;
 }
+
+void ImageManager::ImageRequest::setIsThumbnailRequest( bool b )
+{
+    _isThumbnailRequest = b;
+}
+
+bool ImageManager::ImageRequest::isThumbnailRequest() const
+{
+    return _isThumbnailRequest;
+}
+
+QString ImageManager::ImageRequest::databaseFileName() const
+{
+    return _fileName;
+}
+
+QString ImageManager::ImageRequest::fileSystemFileName() const
+{
+    return _fileName;
+}
+
+QSize ImageManager::ImageRequest::size() const
+{
+    return QSize( _width, _height );
+}
+

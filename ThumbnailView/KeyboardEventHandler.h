@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,6 @@
 */
 #ifndef KEYBOARDEVENTHANDLER_H
 #define KEYBOARDEVENTHANDLER_H
-#include "Cell.h"
 #include "ThumbnailComponent.h"
 #include "enums.h"
 class QKeyEvent;
@@ -31,19 +30,15 @@ class KeyboardEventHandler :public QObject, public ThumbnailComponent
 
 public:
     KeyboardEventHandler( ThumbnailFactory* factory );
-    void keyPressEvent( QKeyEvent* event );
+    bool keyPressEvent( QKeyEvent* event );
     bool keyReleaseEvent( QKeyEvent* );
-    void keyboardMoveEvent( QKeyEvent* );
 
 signals:
     void showSelection();
 
-private:
-    bool isMovementKey( int key );
 
 private:
     // For Shift + movement key selection handling
-    Cell _cellOnFirstShiftMovementKey;
     IdSet _selectionOnFirstShiftMovementKey;
 
 };

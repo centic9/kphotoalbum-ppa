@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,10 +18,10 @@
 #ifndef IMAGEREQUEST_H
 #define IMAGEREQUEST_H
 #include <qstring.h>
-#include <q3deepcopy.h>
 #include <qsize.h>
 #include <qmutex.h>
 #include <QHash>
+#include "enums.h"
 
 // WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 //
@@ -34,33 +34,30 @@ namespace ImageManager
 {
 class ImageClient;
 
-/** @short Priority of an image request
- *
- * The higher the priority, the sooner the image is expected to be decoded
- * */
-enum Priority {
-    BuildThumbnails, //< @short Requests generated through the "Rebuild Thumbnails" command
-    BuildScopeThumbnails, //< @short thumbnails in current search scope to be rebuidl
-    ThumbnailInvisible, //< @short Thumbnails in current search scope, but invisible
-    ViewerPreload, // < @short Image that will be displayed later
-    BatchTask, /**< @short Requests like resizing images for HTML pages
-                *
-                * As they are requested by user, they are expected to finish
-                * sooner than invisible thumbnails */
-    ThumbnailVisible, /**< @short Thumbnail visible on screen right now (might get invalidated later) */
-    Viewer /**< @short Image is visible in the viewer right now */,
-    LastPriority /**< @short Boundary for list of queues */
-};
-
 class ImageRequest {
 public:
     ImageRequest( const QString& fileName, const QSize& size, int angle, ImageClient* client);
     virtual ~ImageRequest() {}
 
     bool isNull() const;
-    QString fileName() const;
+
+    /** This is the filename that the media is known by in the database.
+        See \ref fileSystemFileName for details
+    **/
+    QString databaseFileName() const;
+
+    /**
+        This is the file name that needs to be loaded using the image loader.
+        In case of a video file where we are loading the snapshot from a prerendered
+        image, this file name may be different than the one returned from dabataseFileName.
+        In that example, databaseFileName() returns the path to the video file,
+        while fileSystemFileName returns the path to the prerendered image.
+    **/
+    virtual QString fileSystemFileName() const;
+
     int width() const;
     int height() const;
+    QSize size() const;
     int angle() const;
 
     ImageClient* client() const;
@@ -81,10 +78,12 @@ public:
     bool doUpScale() const;
     void setUpScale( bool b );
 
+    void setIsThumbnailRequest( bool );
+    bool isThumbnailRequest() const;
+
 private:
     bool _null;
-    mutable Q3DeepCopy<QString> _fileName; // PENDING(blackie) I don't think this deep copy is needed anymore!
-    mutable QMutex _fileNameLock;
+    QString _fileName;
 
     int _width;
     int _height;
@@ -94,11 +93,12 @@ private:
     Priority _priority;
     bool _loadedOK;
     bool _dontUpScale;
+    bool _isThumbnailRequest;
 };
 
 inline uint qHash(const ImageRequest& ir)
 {
-    return ::qHash(ir.fileName()) ^ ::qHash(ir.width()) ^ ::qHash(ir.angle());
+    return ::qHash(ir.databaseFileName()) ^ ::qHash(ir.width()) ^ ::qHash(ir.angle());
 }
 
 }
