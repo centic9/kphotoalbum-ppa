@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -28,7 +28,7 @@ namespace DB
 using Utilities::StringSet;
 
 /**
-   This class may be overriden by a which wants to store md5 information
+   This class may be overridden by a which wants to store md5 information
    directly in a database, rather than in a map in memory.
 **/
 class MD5Map

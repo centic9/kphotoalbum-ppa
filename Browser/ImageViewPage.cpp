@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,8 +30,8 @@ void Browser::ImageViewPage::activate()
 {
     MainWindow::Window::theMainWindow()->showThumbNails( DB::ImageDB::instance()->search( searchInfo() ) );
 
-    if ( !_context.isNull() ) {
-        DB::ResultId id = DB::ImageDB::instance()->ID_FOR_FILE( _context );
+    if ( !_context.isEmpty() ) {
+        DB::Id id = DB::ImageDB::instance()->ID_FOR_FILE( _context );
         // PENDING(blackie) this is the only place that uses the ThumbnailFacade as a singleton. Rewrite to make it communicate with it otherwise.
         ThumbnailView::ThumbnailFacade::instance()->setCurrentItem( id );
     }

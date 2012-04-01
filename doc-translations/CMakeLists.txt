@@ -1,5 +1,0 @@
-add_subdirectory( de_kphotoalbum/kphotoalbum )
-add_subdirectory( et_kphotoalbum/kphotoalbum )
-add_subdirectory( it_kphotoalbum/kphotoalbum )
-add_subdirectory( sv_kphotoalbum/kphotoalbum )
-add_subdirectory( uk_kphotoalbum/kphotoalbum )

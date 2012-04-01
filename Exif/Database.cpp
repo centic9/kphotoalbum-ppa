@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -76,7 +76,7 @@ static void showError( QSqlQuery& query )
     const QString txt =
         i18n("<p>There was an error while executing the SQL backend command. "
              "The error is likely due to a broken database file.</p>"
-             "<p>To fix this problem run Maintainance->Rebuild EXIF database.</p>"
+             "<p>To fix this problem run Maintenance->Recreate Exif Search database.</p>"
              "<hr/>"
              "<p>For debugging: the command that was attempted to be executed was:<br/>%1</p>"
              "<p>The error message obtained was:<br/>%2</p>",
@@ -104,7 +104,7 @@ void Exif::Database::openDatabase()
     else
         _isOpen = true;
 
-    // If SQLite in Qt has Unicode feature, it will convert querys to
+    // If SQLite in Qt has Unicode feature, it will convert queries to
     // UTF-8 automatically. Otherwise we should do the conversion to
     // be able to store any Unicode character.
     _doUTF8Conversion = !_db.driver()->hasFeature(QSqlDriver::Unicode);
@@ -302,7 +302,7 @@ void Exif::Database::recreate()
     QDir().rename(exifDBFile(), origBackup);
     init();
 
-    const DB::Result allImages = DB::ImageDB::instance()->images();
+    const DB::IdList allImages = DB::ImageDB::instance()->images();
     QProgressDialog dialog;
     dialog.setModal(true);
     dialog.setLabelText(i18n("Rereading EXIF information from all images"));
@@ -316,11 +316,12 @@ void Exif::Database::recreate()
         }
         if ( i % 10 )
             qApp->processEvents();
-        if (!success || dialog.wasCanceled())
+        if (dialog.wasCanceled())
             break;
     }
 
-    if (!success || dialog.wasCanceled()) {
+    // PENDING(blackie) We should count the amount of files that did not succeeded and warn the user.
+    if (dialog.wasCanceled()) {
         _db.close();
         QDir().remove(exifDBFile());
         QDir().rename(origBackup, exifDBFile());

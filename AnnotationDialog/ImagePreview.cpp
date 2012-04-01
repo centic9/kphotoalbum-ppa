@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,6 +19,7 @@
 #include "ImagePreview.h"
 #include "ImageManager/Manager.h"
 #include "ImageManager/ImageLoader.h"
+#include "Utilities/Util.h"
 
 using namespace AnnotationDialog;
 
@@ -96,7 +97,7 @@ void ImagePreview::reload()
     }
     else {
         QImage img( _fileName );
-        img = ImageManager::ImageLoader::rotateAndScale( img, width(), height(), _angle );
+        img = rotateAndScale( img, width(), height(), _angle );
         setPixmap( QPixmap::fromImage(img) );
     }
 }
@@ -113,7 +114,7 @@ void ImagePreview::setCurrentImage(const QImage &image)
     _lastImage.set(_currentImage);
     _currentImage.set(_info.fileName(DB::AbsolutePath), image);
     setPixmap( QPixmap::fromImage( _currentImage.getImage()) );
-    if (!_anticipated._fileName.isNull())
+    if (!_anticipated._fileName.isEmpty())
         _preloader.preloadImage(_anticipated._fileName, width(), height(), _anticipated._angle);
 }
 
@@ -173,7 +174,7 @@ void ImagePreview::PreviewImage::set(const PreviewImage &other)
 
 void ImagePreview::PreviewImage::reset()
 {
-    _fileName=QString::null;
+    _fileName.clear();
     _image=QImage();
 }
 
@@ -200,6 +201,17 @@ void ImagePreview::PreviewLoader::cancelPreload()
 {
     reset();
     ImageManager::Manager::instance()->stop(this);
+}
+
+QImage AnnotationDialog::ImagePreview::rotateAndScale(QImage img, int width, int height, int angle) const
+{
+    if ( angle != 0 )  {
+        QMatrix matrix;
+        matrix.rotate( angle );
+        img = img.transformed( matrix );
+    }
+    img = Utilities::scaleImage(img, width, height, Qt::KeepAspectRatio );
+    return img;
 }
 
 

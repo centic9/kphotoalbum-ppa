@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -36,16 +36,18 @@ namespace DB
 namespace Utilities
 {
 QString createInfoText( DB::ImageInfoPtr info, QMap<int, QPair<QString,QString> >* );
-void checkForBackupFile( const QString& fileName );
+void checkForBackupFile( const QString& fileName, const QString& message = QString() );
 bool ctrlKeyDown();
 bool copy( const QString& from, const QString& to );
 void copyList( const QStringList& from, const QString& directoryTo );
+bool makeSymbolicLink( const QString& from, const QString& to );
 bool makeHardLink( const QString& from, const QString& to );
 bool runningDemo();
 void deleteDemo();
 QString setupDemo();
 bool canReadImage( const QString& fileName );
 bool isVideo( const QString& fileName );
+bool isRAW( const QString& fileName );
 QString locateDataFile(const QString& fileName);
 QString readFile( const QString& fileName );
 bool loadJPEG(QImage *img, const QString& imageFile, QSize* fullSize, int dim=-1);
@@ -71,6 +73,8 @@ QImage scaleImage(const QImage &image, const QSize& s, Qt::AspectRatioMode mode=
 QString cStringWithEncoding( const char *c_str, const QString& charset );
 
 DB::MD5 MD5Sum( const QString& fileName );
+
+QColor contrastColor( const QColor& );
 }
 
 bool operator>( const QPoint&, const QPoint& );

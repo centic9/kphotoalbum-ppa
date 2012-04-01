@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,44 +16,87 @@
    Boston, MA 02110-1301, USA.
 */
 #include "GridResizeInteraction.h"
-#include <KGlobal>
+#include "ImageManager/ThumbnailBuilder.h"
+#include "ImageManager/ThumbnailCache.h"
+#include "CellGeometry.h"
+#include "ThumbnailModel.h"
+#include <QScrollBar>
 #include "ThumbnailWidget.h"
 #include "Settings/SettingsData.h"
 #include <KSharedConfig>
-
-ThumbnailView::GridResizeInteraction::GridResizeInteraction( ThumbnailWidget* view )
-    : _view( view )
+#include <KGlobal>
+#include "MainWindow/Window.h"
+#include <klocale.h>
+#include <KMessageBox>
+#include "ImageManager/enums.h"
+ThumbnailView::GridResizeInteraction::GridResizeInteraction( ThumbnailFactory* factory )
+    : ThumbnailComponent( factory )
 {
 }
 
-void ThumbnailView::GridResizeInteraction::mousePressEvent( QMouseEvent* event )
+bool ThumbnailView::GridResizeInteraction::mousePressEvent( QMouseEvent* event )
 {
     _resizing = true;
     _mousePressPos = event->pos();
-    _view->setContentsPos( 0, 0 );
-    _origSize = QSize( _view->cellWidth(), _view->cellHeight() );
+    enterGridResizingMode();
+    return true;
 }
 
 
-void ThumbnailView::GridResizeInteraction::mouseMoveEvent( QMouseEvent* event )
+bool ThumbnailView::GridResizeInteraction::mouseMoveEvent( QMouseEvent* event )
 {
     QPoint dist = event->pos() - _mousePressPos;
-
-    Settings::SettingsData::instance()->setThumbSize( qMax( 32, _origSize.width() + dist.x()/5 ) );
-    _view->updateCellSize();
+    setCellSize( qMax( 32, _origWidth + dist.x()/5 ) );
+    return true;
 }
 
 
-void ThumbnailView::GridResizeInteraction::mouseReleaseEvent( QMouseEvent* )
+bool ThumbnailView::GridResizeInteraction::mouseReleaseEvent( QMouseEvent* )
 {
+    leaveGridResizingMode();
     _resizing = false;
-    _view->repaintScreen();
-    KGlobal::config()->sync();
+    return true;
 }
+
+void ThumbnailView::GridResizeInteraction::setCellSize(int size)
+{
+    Settings::SettingsData::instance()->setThumbSize( size );
+    model()->reset();
+    cellGeometryInfo()->calculateCellSize();
+}
+
 
 bool ThumbnailView::GridResizeInteraction::isResizingGrid()
 {
     return _resizing;
 }
 
+
+void ThumbnailView::GridResizeInteraction::leaveGridResizingMode()
+{
+    int code =  KMessageBox::questionYesNo( MainWindow::Window::theMainWindow(),
+                                            i18n("Really resize grid, it will result in all thumbnails being regenerated?"),
+                                            i18n("Really resize grid?"),
+                                            KStandardGuiItem::yes(), KStandardGuiItem::no(),
+                                            QLatin1String("resizeGrid"));
+    if ( code == KMessageBox::Yes ) {
+        KGlobal::config()->sync();
+        model()->reset();
+        cellGeometryInfo()->flushCache();
+        ImageManager::ThumbnailCache::instance()->flush();
+        model()->updateVisibleRowInfo();
+        widget()->setCurrentIndex( model()->index( m_currentRow, 0 ) );
+        ImageManager::ThumbnailBuilder::instance()->buildAll( ImageManager::StartDelayed );
+    }
+    else
+        setCellSize( _origWidth );
+}
+
+void ThumbnailView::GridResizeInteraction::enterGridResizingMode()
+{
+    _origWidth = widget()->cellWidth();
+    ImageManager::ThumbnailBuilder::instance()->cancelRequests();
+    m_currentRow = widget()->currentIndex().row();
+    widget()->verticalScrollBar()->setValue(0);
+}
 

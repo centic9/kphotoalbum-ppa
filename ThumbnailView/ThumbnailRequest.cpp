@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,25 +16,15 @@
    Boston, MA 02110-1301, USA.
 */
 #include "ThumbnailRequest.h"
-#include "ThumbnailPainter.h"
-#include "ThumbnailCache.h"
+#include "ThumbnailModel.h"
 
-ThumbnailView::ThumbnailRequest::ThumbnailRequest( const QString& fileName, const QSize& size, int angle, ThumbnailPainter* client)
-    : ImageManager::ImageRequest( fileName, size, angle, client ), _thumbnailPainter( client ), _fileName( fileName )
+ThumbnailView::ThumbnailRequest::ThumbnailRequest( int row, const QString& fileName, const QSize& size, int angle, ThumbnailModel* client)
+    : ImageManager::ImageRequest( fileName, size, angle, client ), _thumbnailModel( client ), m_row(row)
 {
+    setIsThumbnailRequest(true);
 }
 
 bool ThumbnailView::ThumbnailRequest::stillNeeded() const
 {
-    return _thumbnailPainter->thumbnailStillNeeded( _fileName );
-}
-
-ThumbnailView::ThumbnailCacheRequest::ThumbnailCacheRequest( const QString& fileName, const QSize& size, int angle, ThumbnailCache* client)
-    : ImageManager::ImageRequest( fileName, size, angle, client ), _thumbnailCache( client ), _fileName( fileName )
-{
-}
-
-bool ThumbnailView::ThumbnailCacheRequest::stillNeeded() const
-{
-    return _thumbnailCache->thumbnailStillNeeded( _fileName );
+    return _thumbnailModel->thumbnailStillNeeded( m_row );
 }

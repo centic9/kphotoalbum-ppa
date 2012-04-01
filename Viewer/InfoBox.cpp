@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,7 +38,7 @@
 using namespace Settings;
 
 Viewer::InfoBox::InfoBox( Viewer::ViewerWidget* viewer )
-    :QTextBrowser( viewer ), _viewer( viewer ), _hoveringOverLink( false ), _infoBoxResizer( this ), _menu(0)
+    :KTextBrowser( viewer ), _viewer( viewer ), _hoveringOverLink( false ), _infoBoxResizer( this ), _menu(0)
 {
     setFrameStyle( Box | Plain );
     setLineWidth(1);
@@ -87,7 +87,7 @@ QVariant Viewer::InfoBox::loadResource( int type, const QUrl& name )
         return _ratingPixmap[ rating ];
     }
 #endif
-    return QTextBrowser::loadResource( type, name );
+    return KTextBrowser::loadResource( type, name );
 }
 
 void Viewer::InfoBox::setSource( const QUrl& which )
@@ -126,7 +126,7 @@ void Viewer::InfoBox::setSize()
         (showVerticalBar ? verticalScrollBar()->width() + frameWidth() : 0) +
         _jumpToContext->width() + 10;
 
-    resize( realWidth, QMIN( (int)document()->size().height(), maxHeight ) );
+    resize( realWidth, qMin( (int)document()->size().height(), maxHeight ) );
 #else
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     resize( maxWidth, maxHeight );
@@ -137,7 +137,7 @@ void Viewer::InfoBox::mousePressEvent( QMouseEvent* e )
 {
     if ( e->button() == Qt::LeftButton )
         possiblyStartResize( e->pos() );
-    QTextBrowser::mousePressEvent(e);
+    KTextBrowser::mousePressEvent(e);
 }
 
 void Viewer::InfoBox::mouseReleaseEvent( QMouseEvent* e )
@@ -148,7 +148,7 @@ void Viewer::InfoBox::mouseReleaseEvent( QMouseEvent* e )
     }
 
     _infoBoxResizer.deactivate();
-    QTextBrowser::mouseReleaseEvent(e);
+    KTextBrowser::mouseReleaseEvent(e);
 }
 
 void Viewer::InfoBox::mouseMoveEvent( QMouseEvent* e)
@@ -158,11 +158,11 @@ void Viewer::InfoBox::mouseMoveEvent( QMouseEvent* e)
             _infoBoxResizer.setPos( e->pos() );
         else
             _viewer->infoBoxMove();
-        // Do not tell QTextBrowser about the mouse movement, as this will just start a selection.
+        // Do not tell KTextBrowser about the mouse movement, as this will just start a selection.
     }
     else {
         updateCursor(e->pos() );
-        QTextBrowser::mouseMoveEvent( e );
+        KTextBrowser::mouseMoveEvent( e );
     }
 }
 

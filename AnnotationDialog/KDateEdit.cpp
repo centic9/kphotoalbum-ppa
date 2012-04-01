@@ -1,3 +1,20 @@
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public
+   License as published by the Free Software Foundation; either
+   version 2 of the License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; see the file COPYING.  If not, write to
+   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.
+*/
 /**
  * A date editing widget that consists of an editable combo box.
  * The combo box contains the date in text form, and clicking the combo
@@ -5,7 +22,7 @@
  *
  * This widget also supports advanced features like allowing the user
  * to type in the day name to get the date. The following keywords
- * are supported (in the native language): tomorrow, yesturday, today,
+ * are supported (in the native language): tomorrow, yesterday, today,
  * monday, tuesday, wednesday, thursday, friday, saturday, sunday.
  *
  * @author Cornelius Schumacher <schumacher@kde.org>
@@ -35,7 +52,7 @@
 
 
 AnnotationDialog::KDateEdit::KDateEdit( bool isStartEdit, QWidget *parent )
-    : QComboBox( parent ),
+    : KComboBox( parent ),
       defaultValue( QDate::currentDate() ),
       mReadOnly(false),
       mDiscardNextMousePress(false),
@@ -58,7 +75,7 @@ AnnotationDialog::KDateEdit::KDateEdit( bool isStartEdit, QWidget *parent )
 
     mDatePicker = new KDatePicker(value, mDateFrame);
 
-    connect(lineEdit(),SIGNAL(returnPressed()),SLOT(lineEnterPressed()));
+    connect(lineEdit(),SIGNAL(editingFinished()),SLOT(lineEnterPressed()));
     connect(this,SIGNAL(textChanged(const QString &)),
             SLOT(slotTextChanged(const QString &)));
 
@@ -200,6 +217,9 @@ void AnnotationDialog::KDateEdit::dateEntered(QDate newDate)
 
 void AnnotationDialog::KDateEdit::lineEnterPressed()
 {
+    if ( !mTextChanged )
+        return;
+
     QDate date;
     QDate end;
     if (readDate(date, &end) && (mHandleInvalid || date.isValid()) && validate(date))
@@ -269,35 +289,35 @@ bool AnnotationDialog::KDateEdit::readDate(QDate& result, QDate* end) const
     return true;
 }
 
+void AnnotationDialog::KDateEdit::keyPressEvent( QKeyEvent *event )
+{
+    int step = 0;
+ 
+    if ( event->key() == Qt::Key_Up )
+        step = 1;
+    else if ( event->key() == Qt::Key_Down )
+        step = -1;
+ 
+    setDate( value.addDays(step) );
+    KComboBox::keyPressEvent( event );
+}
+
 /* Checks for a focus out event. The display of the date is updated
  * to display the proper date when the focus leaves.
  */
 bool AnnotationDialog::KDateEdit::eventFilter(QObject *obj, QEvent *e)
 {
     if (obj == lineEdit()) {
-        // We only process the focus out event if the text has changed
-        // since we got focus
-        if ((e->type() == QEvent::FocusOut) && mTextChanged)
-        {
-            lineEnterPressed();
-            mTextChanged = false;
-        }
-        else if (e->type() == QEvent::KeyPress)
-        {
+        if (e->type() == QEvent::Wheel) {
             // Up and down arrow keys step the date
-            QKeyEvent* ke = (QKeyEvent*)e;
+            QWheelEvent* we = dynamic_cast<QWheelEvent*>(e);
+			Q_ASSERT( we != NULL );
 
-            if (ke->key() == Qt::Key_Return)
-            {
-                lineEnterPressed();
-                return true;
-            }
-
-            int step = 0;
-            if (ke->key() == Qt::Key_Up)
-                step = 1;
-            else if (ke->key() == Qt::Key_Down)
-                step = -1;
+			int step = 0;
+			step = we->delta() > 0 ? 1 : -1;
+			if (we->orientation() == Qt::Vertical) {
+				setDate( value.addDays(step) );
+			}
         }
     }
     else {
@@ -330,7 +350,7 @@ void AnnotationDialog::KDateEdit::mousePressEvent(QMouseEvent *e)
         mDiscardNextMousePress = false;
         return;
     }
-    QComboBox::mousePressEvent(e);
+    KComboBox::mousePressEvent(e);
 }
 
 void AnnotationDialog::KDateEdit::slotTextChanged(const QString &)

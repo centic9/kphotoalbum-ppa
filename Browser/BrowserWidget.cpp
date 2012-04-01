@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,8 +15,6 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-
-#include "CenteringIconView.h"
 
 #include "BrowserWidget.h"
 #include <QMouseEvent>
@@ -36,7 +34,6 @@
 #include "Settings/SettingsData.h"
 #include <qtimer.h>
 #include <QHBoxLayout>
-#include "DB/ImageDB.h"
 #include "Utilities/Util.h"
 #include "Utilities/ShowBusyCursor.h"
 #include <QStackedWidget>
@@ -167,7 +164,7 @@ void Browser::BrowserWidget::load( const QString& category, const QString& value
     info.addAnd( category, value );
 
     DB::MediaCount counts = DB::ImageDB::instance()->count( info );
-    bool loadImages = (counts.total() < static_cast<uint>(Settings::SettingsData::instance()->autoShowThumbnailView()));
+    bool loadImages = (counts.total() < Settings::SettingsData::instance()->autoShowThumbnailView());
     if ( Utilities::ctrlKeyDown() ) loadImages = !loadImages;
 
     if ( loadImages )
@@ -371,9 +368,15 @@ void Browser::BrowserWidget::createWidgets()
 
 
     _treeView = new QTreeView( _stack );
+
+    QPalette pal = _treeView->palette();
+    pal.setBrush( QPalette::Base, QApplication::palette().color( QPalette::Background ) );
+    _treeView->setPalette( pal );
+
     _treeView->header()->setStretchLastSection(false);
     _treeView->header()->setSortIndicatorShown(true);
     _treeView->setSortingEnabled(true);
+    _treeView->sortByColumn( 0, Qt::AscendingOrder );
     _stack->addWidget( _treeView );
 
     // Do not give focus to the widgets when they are scrolled with the wheel.

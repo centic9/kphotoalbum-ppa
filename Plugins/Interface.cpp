@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -111,7 +111,7 @@ void Plugins::Interface::delImage( const KUrl& url )
 {
     DB::ImageInfoPtr info = DB::ImageDB::instance()->info( url.path(), DB::AbsolutePath );
     if ( info ) {
-        DB::Result list;
+        DB::IdList list;
         list.append(DB::ImageDB::instance()->ID_FOR_FILE(info->fileName(DB::AbsolutePath)));
         DB::ImageDB::instance()->deleteList( list );
     }

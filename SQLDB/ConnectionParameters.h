@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2007-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ namespace SQLDB
 
         void setToLocal()
         {
-            _hostName = QString();
+            _hostName.clear();
         }
 
         void setHostName(const QString& hostName)
@@ -64,7 +64,7 @@ namespace SQLDB
 
         bool isLocal() const
         {
-            return _hostName.isNull();
+            return _hostName.isEmpty();
         }
 
         const QString& hostName() const

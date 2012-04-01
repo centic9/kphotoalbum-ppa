@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Jan Kundrat <jkt@gentoo.org>
+/* Copyright (C) 2007-2010 Jan Kundrat <jkt@gentoo.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,11 +16,11 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include "TextDisplay.h"
 #include <qlabel.h>
 #include <qlayout.h>
 #include <QLabel>
 #include <QVBoxLayout>
-#include "TextDisplay.h"
 #include "ImageDisplay.h"
 #include "DB/ImageDB.h"
 

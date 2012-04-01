@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -24,13 +24,13 @@
 #include "DB/ImageDB.h"
 #include "DB/ImageDate.h"
 #include "DB/FileInfo.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 #include "MainWindow/Window.h"
 #include <qapplication.h>
 #include <qeventloop.h>
 #include "Utilities/ShowBusyCursor.h"
 #include <QGroupBox>
-#include <QTextEdit>
+#include <KTextEdit>
 #include <KProgressDialog>
 #include <kdebug.h>
 
@@ -74,25 +74,27 @@ void InvalidDateFinder::accept()
     info->setMainWidget( top );
 
     QVBoxLayout* lay1 = new QVBoxLayout( top );
-    QTextEdit* edit = new QTextEdit( top );
+    KTextEdit* edit = new KTextEdit( top );
     lay1->addWidget( edit );
     edit->setText( i18n("<h1>Here you may see the date changes for the displayed items.</h1>") );
 
     // Now search for the images.
-    DB::Result list = DB::ImageDB::instance()->images();
-    DB::Result toBeShown;
+    DB::IdList list = DB::ImageDB::instance()->images();
+    DB::IdList toBeShown;
     KProgressDialog dialog( 0, i18n("Reading file properties"),
                             i18n("Reading File Properties") );
     dialog.progressBar()->setMaximum(list.size());
     dialog.progressBar()->setValue(0);
     int progress = 0;
 
-    Q_FOREACH(DB::ResultId id, list) {
+    Q_FOREACH(DB::Id id, list) {
         DB::ImageInfoPtr info = id.fetchInfo();
         dialog.progressBar()->setValue( ++progress );
         qApp->processEvents( QEventLoop::AllEvents );
         if ( dialog.wasCancelled() )
             break;
+        if ( info.isNull() )
+            continue;
 
         DB::ImageDate date = info->date();
         bool show = false;

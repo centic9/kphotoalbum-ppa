@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -81,7 +81,7 @@ void CategoryListView::CheckDropItem::dropped( QDropEvent* e )
 
         memberMap.addMemberToGroup( _listView->category()->name(), newParent, child );
 
-        if ( !oldParent.isNull() )
+        if ( !oldParent.isEmpty() && e->dropAction()!=Qt::CopyAction )
             memberMap.removeMemberFromGroup( _listView->category()->name(), oldParent, child );
     }
 

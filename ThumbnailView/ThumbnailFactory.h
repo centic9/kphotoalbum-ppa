@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -23,8 +23,6 @@ namespace ThumbnailView
 class ThumbnailWidget;
 class CellGeometry;
 class ThumbnailModel;
-class ThumbnailPainter;
-class ThumbnailCache;
 
 class ThumbnailFactory
 {
@@ -33,8 +31,6 @@ public:
     virtual ThumbnailModel* model() = 0;
     virtual CellGeometry* cellGeometry() = 0;
     virtual ThumbnailWidget* widget() = 0;
-    virtual ThumbnailPainter* painter() = 0;
-    virtual ThumbnailCache* cache() = 0;
 };
 
 }

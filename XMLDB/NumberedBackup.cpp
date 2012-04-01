@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -31,6 +31,10 @@ void XMLDB::NumberedBackup::makeNumberedBackup()
     int max = getMaxId();
     QString fileName;
     fileName.sprintf( "index.xml~%04d~", max+1 );
+
+    if ( !QFileInfo( QString::fromLatin1( "%1/index.xml" ).arg( Settings::SettingsData::instance()->imageDirectory() ) ).exists() )
+        return;
+
     if ( Settings::SettingsData::instance()->compressBackup() ) {
         QString fileNameWithExt = fileName + QString::fromLatin1( ".zip" );
 
@@ -41,7 +45,10 @@ void XMLDB::NumberedBackup::makeNumberedBackup()
             return;
         }
 
-        zip.addLocalFile( QString::fromLatin1( "%1/index.xml" ).arg( Settings::SettingsData::instance()->imageDirectory() ), fileName );
+        if ( !zip.addLocalFile( QString::fromLatin1( "%1/index.xml" ).arg( Settings::SettingsData::instance()->imageDirectory() ), fileName ) )
+		{
+			KMessageBox::error( 0, i18n("Error writing file %1 to zip file %2", fileName, fileAndDir) );
+		}
         zip.close();
     }
     else {

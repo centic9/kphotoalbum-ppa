@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,7 +19,7 @@
 #define ANNOTATIONDIALOG_COMPLETABLELINEEDIT_H
 
 #include "enums.h"
-#include <QLineEdit>
+#include <KLineEdit>
 class Q3ListViewItem;
 class Q3ListView;
 class QKeyEvent;
@@ -28,7 +28,7 @@ namespace AnnotationDialog
 {
 class ListSelect;
 
-class CompletableLineEdit :public QLineEdit {
+class CompletableLineEdit :public KLineEdit {
 
 public:
     CompletableLineEdit( ListSelect* parent );

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -62,7 +62,7 @@ class ImageInfo :public KShared {
 
 public:
     ImageInfo();
-    ImageInfo( const QString& relativeFileName, MediaType type = Image, bool readExifInfo = true );
+    explicit ImageInfo( const QString& relativeFileName, MediaType type = Image, bool readExifInfo = true );
     ImageInfo( const QString& relativeFileName,
                const QString& label,
                const QString& description,
@@ -146,6 +146,9 @@ public:
     void createFolderCategoryItem( DB::CategoryPtr, DB::MemberMap& memberMap );
 
     void delaySavingChanges(bool b=true);
+
+    void copyExtraData( const ImageInfo& from, bool copyAngle = true);
+    void removeExtraData();
 
 protected:
     /** Save changes to database.

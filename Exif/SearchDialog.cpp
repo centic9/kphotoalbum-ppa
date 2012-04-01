@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -55,20 +55,24 @@ Exif::SearchDialog::SearchDialog( QWidget* parent )
     makeISO( grid );
     makeExposureTime( grid );
 
-    Q3Grid* grid2 = new Q3Grid( 4, settings );
-    grid2->setSpacing( 6 );
-    hlay->addWidget( grid2 );
+    grid = new Q3Grid( 4, settings );
+    grid->setSpacing( 6 );
+    hlay->addWidget( grid );
     hlay->addStretch( 1 );
-    _apertureValue = makeApertureOrFNumber( i18n( "Aperture Value" ), QString::fromLatin1( "Exif_Photo_ApertureValue" ), grid2 );
-    _fNumber = makeApertureOrFNumber( i18n( "F Number" ), QString::fromLatin1( "Exif_Photo_FNumber" ), grid2 );
+    _apertureValue = makeApertureOrFNumber( i18n( "Aperture Value" ), QString::fromLatin1( "Exif_Photo_ApertureValue" ), grid );
+    _fNumber = makeApertureOrFNumber( i18n( "F Number" ), QString::fromLatin1( "Exif_Photo_FNumber" ), grid );
 
     // Focal length
-    QLabel* label = new QLabel( i18n( "Focal Length" ), grid );
-    _fromFocalLength = new QSpinBox;
+    grid = new Q3Grid( 4, settings );
+    grid->setSpacing( 6 );
+    hlay->addWidget( grid );
+    hlay->addStretch( 1 );
+    new QLabel( i18n( "Focal Length" ), grid );
+    _fromFocalLength = new QSpinBox( grid );
     _fromFocalLength->setRange( 0, 10000 );
     _fromFocalLength->setSingleStep( 10 );
-    label = new QLabel( i18n("to"), grid );
-    _toFocalLength = new QSpinBox;
+    new QLabel( i18n("to"), grid );
+    _toFocalLength = new QSpinBox( grid );
     _toFocalLength->setRange( 0, 10000 );
     _toFocalLength->setSingleStep( 10 );
 
@@ -113,7 +117,12 @@ void Exif::SearchDialog::makeISO( Q3Grid* parent )
          << Exif::RangeWidget::Value( 200, QString::fromLatin1("200") )
          << Exif::RangeWidget::Value( 400, QString::fromLatin1("400") )
          << Exif::RangeWidget::Value( 800, QString::fromLatin1("800") )
-         << Exif::RangeWidget::Value( 1600, QString::fromLatin1("1600") );
+         << Exif::RangeWidget::Value( 1600, QString::fromLatin1("1600") )
+         << Exif::RangeWidget::Value( 3200, QString::fromLatin1("3200") )
+         << Exif::RangeWidget::Value( 6400, QString::fromLatin1("6400") )
+         << Exif::RangeWidget::Value( 12800, QString::fromLatin1("12800") )
+         << Exif::RangeWidget::Value( 25600, QString::fromLatin1("25600") )
+         << Exif::RangeWidget::Value( 51200, QString::fromLatin1("51200") );
 
     _iso = new RangeWidget( i18n("Iso setting" ), QString::fromLatin1( "Exif_Photo_ISOSpeedRatings" ), list, parent );
 }

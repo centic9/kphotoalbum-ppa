@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,6 +18,7 @@
 
 #ifndef BROWSER_H
 #define BROWSER_H
+#include "CenteringIconView.h"
 #include "BreadcrumbList.h"
 #include <QListView>
 #include "Settings/SettingsData.h"

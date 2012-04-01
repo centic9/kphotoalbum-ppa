@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -36,6 +36,7 @@
 #include <kcmdlineargs.h>
 #include <kio/netaccess.h>
 #include "MainWindow/Window.h"
+#include "ImageManager/RawImageDecoder.h"
 
 #ifdef Q_WS_X11
 #include "X11/X.h"
@@ -49,7 +50,6 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <sys/stat.h>
 #include <setjmp.h>
 #include <sys/types.h>
@@ -88,7 +88,7 @@ static void AddNonEmptyInfo(const QString &label, const QString &info,
  * thumbnail view.
  *
  * As the HTML text is created, the parameter linkMap is filled with
- * informations about hyberlinks. The map maps from an index to a pair of
+ * information about hyberlinks. The map maps from an index to a pair of
  * (categoryName, categoryItem). This linkMap is used when the user selects
  * one of the hyberlinks.
  */
@@ -102,7 +102,7 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
     }
 
     if ( Settings::SettingsData::instance()->showDate() )  {
-        AddNonEmptyInfo(i18n("<b>Date: </b> "), info->date().toString( true ),
+        AddNonEmptyInfo(i18n("<b>Date: </b> "), info->date().toString( Settings::SettingsData::instance()->showTime() ? true : false ),
                         &result);
     }
 
@@ -215,18 +215,32 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
     return result;
 }
 
-void Utilities::checkForBackupFile( const QString& fileName )
+void Utilities::checkForBackupFile( const QString& fileName, const QString& message )
 {
     QString backupName = QFileInfo( fileName ).absolutePath() + QString::fromLatin1("/.#") + QFileInfo( fileName ).fileName();
     QFileInfo backUpFile( backupName);
     QFileInfo indexFile( fileName );
-    if ( !backUpFile.exists() || indexFile.lastModified() > backUpFile.lastModified() )
-        return;
 
-    int code = KMessageBox::questionYesNo( 0, i18n("Backup file '%1' exists and is newer than '%2'. "
-                                                   "Should the backup file be used?",
-                                           backupName,fileName),
-                                           i18n("Found Backup File") );
+    if ( !backUpFile.exists() || indexFile.lastModified() > backUpFile.lastModified() || backUpFile.size() == 0 )
+        if ( !( backUpFile.exists() && !message.isNull() ) )
+            return;
+
+    int code;
+    if ( message.isNull() )
+        code = KMessageBox::questionYesNo( 0, i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
+                "Should the autosave file be used?", backupName, fileName, backUpFile.size() >> 10 ),
+                i18n("Found Autosave File") );
+    else if ( backUpFile.size() > 0 )
+        code = KMessageBox::warningYesNo( 0,i18n( "<p>Error: %2</p>"
+                "<p>Do you want to use autosave (%3 - size %4 KB) instead of exiting?</p>"
+                "<p><small>(Manually verifying and copying the file might be a good idea)</small></p>", fileName, message, backupName, backUpFile.size() >> 10 ),
+                i18n("Recover from Autosave?") );
+    else {
+        KMessageBox::error( 0, i18n( "<p>Error: %1</p><p>Also autosave file is empty, check manually "
+                        "if numbered backup files exist and can be used to restore index.xml.</p>", message ) );
+        exit(-1);
+    }
+ 
     if ( code == KMessageBox::Yes ) {
         QFile in( backupName );
         if ( in.open( QIODevice::ReadOnly ) ) {
@@ -238,7 +252,8 @@ void Utilities::checkForBackupFile( const QString& fileName )
                     out.write( data, len );
             }
         }
-    }
+    } else if ( !message.isNull() )
+        exit(-1);
 }
 
 bool Utilities::ctrlKeyDown()
@@ -262,7 +277,7 @@ void Utilities::copyList( const QStringList& from, const QString& directoryTo )
 
 QString Utilities::setupDemo()
 {
-    QString dir = QString::fromLatin1( "/tmp/kphotoalbum-demo-" ) + QString::fromLocal8Bit( getenv( "LOGNAME" ) );
+    QString dir = QString::fromLatin1( "/tmp/kphotoalbum-demo-" ) + QString::fromLocal8Bit( qgetenv( "LOGNAME" ) );
     QFileInfo fi(dir);
     if ( ! fi.exists() ) {
         bool ok = QDir().mkdir( dir );
@@ -346,9 +361,18 @@ bool Utilities::makeHardLink( const QString& from, const QString& to )
         return true;
 }
 
+bool Utilities::makeSymbolicLink( const QString& from, const QString& to )
+{
+    if (symlink(from.toLocal8Bit(), to.toLocal8Bit()) != 0)
+        return false;
+    else
+        return true;
+}
+
 bool Utilities::canReadImage( const QString& fileName )
 {
-    return ! KImageIO::typeForMime( KMimeType::findByPath( fileName, 0, true )->name() ).isEmpty() ||
+	bool fastMode = !Settings::SettingsData::instance()->ignoreFileExtension();
+    return ! KImageIO::typeForMime( KMimeType::findByPath( fileName, 0, fastMode )->name() ).isEmpty() ||
         ImageManager::ImageDecoder::mightDecode( fileName );
     // KMimeType::findByPath() never returns null pointer
 }
@@ -365,13 +389,13 @@ QString Utilities::readFile( const QString& fileName )
 {
     if ( fileName.isEmpty() ) {
         KMessageBox::error( 0, i18n("<p>Unable to find file %1</p>", fileName ) );
-        return QString::null;
+        return QString();
     }
 
     QFile file( fileName );
     if ( !file.open( QIODevice::ReadOnly ) ) {
         //KMessageBox::error( 0, i18n("Could not open file %1").arg( fileName ) );
-        return QString::null;
+        return QString();
     }
 
     QTextStream stream( &file );
@@ -525,7 +549,7 @@ QString dereferenceSymLinks( const QString& fileName )
     while (fi.isSymLink() && --rounds > 0)
         fi = QFileInfo(fi.readLink());
     if (rounds == 0)
-        return QString::null;
+        return QString();
     return fi.filePath();
 }
 }
@@ -557,7 +581,7 @@ QString Utilities::relativeFolderName( const QString& fileName)
 {
     int index= fileName.lastIndexOf( QChar::fromLatin1('/'), -1);
     if (index == -1)
-        return QString::null;
+        return QString();
     else
         return fileName.left( index );
 }
@@ -570,7 +594,7 @@ bool Utilities::runningDemo()
 
 void Utilities::deleteDemo()
 {
-    QString dir = QString::fromLatin1( "/tmp/kphotoalbum-demo-" ) + QString::fromLocal8Bit( getenv( "LOGNAME" ) );
+    QString dir = QString::fromLatin1( "/tmp/kphotoalbum-demo-" ) + QString::fromLocal8Bit( qgetenv( "LOGNAME" ) );
     KUrl url;
     url.setPath( dir );
     (void) KIO::NetAccess::del( dir, MainWindow::Window::theMainWindow() );
@@ -605,15 +629,18 @@ QString Utilities::imageFileNameToAbsolute( const QString& fileName )
         return fileName;
     else if ( fileName.startsWith( QString::fromAscii("file://") ) )
         return imageFileNameToAbsolute( fileName.mid( 7 ) ); // 7 == length("file://")
+    else if ( fileName.startsWith( QString::fromAscii("/") ) )
+        return QString(); // Not within our image root
     else
         return absoluteImageFileName( fileName );
 }
 
 QString Utilities::imageFileNameToRelative( const QString& fileName )
 {
+    QRegExp regexp( QString::fromLatin1( "^/*" ) );
     // A bit back and forth, but this function is to go away anyway (hzeller).
     QString s = imageFileNameToAbsolute(fileName).mid( Settings::SettingsData::instance()->imageDirectory().length());
-    return s;
+    return s.replace( regexp, QString::fromLatin1( "" ) );
 }
 
 bool operator>( const QPoint& p1, const QPoint& p2)
@@ -653,12 +680,22 @@ bool Utilities::isVideo( const QString& fileName )
         videoExtensions.insert( QString::fromLatin1( "ogm" ) );
         videoExtensions.insert( QString::fromLatin1( "rm" ) );
         videoExtensions.insert( QString::fromLatin1( "flv" ) );
+        videoExtensions.insert( QString::fromLatin1( "webm" ) );
+        videoExtensions.insert( QString::fromLatin1( "mts" ) );
+        videoExtensions.insert( QString::fromLatin1( "ogg" ) );
+        videoExtensions.insert( QString::fromLatin1( "ogv" ) );
     }
 
     QFileInfo fi( fileName );
     QString ext = fi.suffix().toLower();
     return videoExtensions.contains( ext );
 }
+
+bool Utilities::isRAW( const QString& fileName )
+{
+    return ImageManager::RAWImageDecoder::isRAW( fileName );
+}
+
 
 QImage Utilities::scaleImage(const QImage &image, int w, int h, Qt::AspectRatioMode mode )
 {
@@ -690,3 +727,10 @@ DB::MD5 Utilities::MD5Sum( const QString& fileName )
     return DB::MD5(QString::fromLatin1(md5calculator.hexDigest()));
 }
 
+QColor Utilities::contrastColor( const QColor& col )
+{
+    if ( col.red() < 127 && col.green() < 127 && col.blue() < 127 )
+        return Qt::white;
+    else
+        return Qt::black;
+}

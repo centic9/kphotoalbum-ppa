@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,7 +30,6 @@ public:
     ValueCategoryMatcher( const QString& category, const QString& value, bool sign );
     OVERRIDE bool eval(ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched);
     OVERRIDE void debug( int level ) const;
-    OVERRIDE bool hasEmptyMatcher() const;
 
     QString _option;
     StringSet _members;

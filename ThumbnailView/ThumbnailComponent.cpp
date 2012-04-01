@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,11 +38,6 @@ ThumbnailView::ThumbnailWidget* ThumbnailView::ThumbnailComponent::widget()
     return _factory->widget();
 }
 
-ThumbnailView::ThumbnailPainter* ThumbnailView::ThumbnailComponent::painter()
-{
-    return _factory->painter();
-}
-
 const ThumbnailView::ThumbnailModel* ThumbnailView::ThumbnailComponent::model() const
 {
     return _factory->model();
@@ -58,17 +53,3 @@ const ThumbnailView::ThumbnailWidget* ThumbnailView::ThumbnailComponent::widget(
     return _factory->widget();
 }
 
-const ThumbnailView::ThumbnailPainter* ThumbnailView::ThumbnailComponent::painter() const
-{
-    return _factory->painter();
-}
-
-ThumbnailView::ThumbnailCache* ThumbnailView::ThumbnailComponent::cache()
-{
-    return _factory->cache();
-}
-
-const ThumbnailView::ThumbnailCache* ThumbnailView::ThumbnailComponent::cache() const
-{
-    return _factory->cache();
-}

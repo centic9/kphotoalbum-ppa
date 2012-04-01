@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,7 +18,8 @@
 
 #include "ImageSearchInfo.h"
 #include "ValueCategoryMatcher.h"
-#include "NoOtherItemsCategoryMatcher.h"
+#include "ExactCategoryMatcher.h"
+#include "NoTagCategoryMatcher.h"
 #include "AndCategoryMatcher.h"
 #include "ContainerCategoryMatcher.h"
 #include "OrCategoryMatcher.h"
@@ -31,11 +32,12 @@
 #include <kapplication.h>
 #include <config-kpa-exiv2.h>
 #include <kconfiggroup.h>
+#include "ImageManager/RawImageDecoder.h"
 using namespace DB;
 
 ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
                                   const QString& label, const QString& description )
-    : _date( date), _label( label ), _description( description ), _rating( -1 ), _isNull( false ), _compiled( false )
+    : _date( date), _label( label ), _description( description ), _rating( -1 ), _megapixel( 0 ), ratingSearchMode( 0 ), _searchRAW( false ), _isNull( false ), _compiled( false )
 {
 }
 
@@ -50,7 +52,7 @@ QString ImageSearchInfo::description() const
 }
 
 ImageSearchInfo::ImageSearchInfo()
-    : _rating( -1 ), _isNull( true ), _compiled( false )
+    : _rating( -1 ), _megapixel( 0 ), ratingSearchMode( 0 ), _searchRAW( false ), _isNull( true ), _compiled( false )
 {
 }
 
@@ -106,9 +108,36 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     // -------------------------------------------------- Label
     ok &= ( _label.isEmpty() || info->label().indexOf(_label) != -1 );
 
+    // -------------------------------------------------- RAW
+    ok &= ( _searchRAW == false || ImageManager::RAWImageDecoder::isRAW( info->fileName(DB::AbsolutePath)) );
+
     // -------------------------------------------------- Rating
 
-    ok &= (_rating == -1 ) || ( _rating == info->rating() );
+    //ok &= (_rating == -1 ) || ( _rating == info->rating() );
+    if (_rating != -1) {
+	switch( ratingSearchMode ) {
+	    case 1:
+		// Image rating at least selected
+		ok &= ( _rating <= info->rating() );
+		break;
+	    case 2:
+		// Image rating less than selected
+		ok &= ( _rating >= info->rating() );
+		break;
+	    case 3:
+		// Image rating not equal
+		ok &= ( _rating != info->rating() );
+		break;
+	    default:
+		ok &= (_rating == -1 ) || ( _rating == info->rating() );
+		break;
+	}
+    }
+	    
+    
+    // -------------------------------------------------- Resolution
+    if ( _megapixel )
+        ok &= ( _megapixel * 1000000 <= info->size().width() * info->size().height() );
 
     // -------------------------------------------------- Text
     QString txt = info->description();
@@ -155,6 +184,22 @@ void ImageSearchInfo::setRating( short rating )
   _compiled = false;
 }
 
+void ImageSearchInfo::setMegaPixel( short megapixel )
+{
+  _megapixel = megapixel;
+}
+
+void ImageSearchInfo::setSearchMode(int index)
+{
+  ratingSearchMode = index;
+}
+
+void ImageSearchInfo::setSearchRAW( bool searchRAW )
+{
+  _searchRAW = searchRAW;
+}
+
+
 QString ImageSearchInfo::toString() const
 {
     QString res;
@@ -170,7 +215,7 @@ QString ImageSearchInfo::toString() const
             if ( txt == ImageDB::NONE() )
                 txt = i18nc( "As in No persons, no locations etc. I do realize that translators may have problem with this, "
                             "but I need some how to indicate the category, and users may create their own categories, so this is "
-                            "the best I can do - Jesper.", "No %1" ).arg( it.key() );
+                            "the best I can do - Jesper.", "No %1", it.key() );
 
             if ( txt.contains( QString::fromLatin1("|") ) )
                 txt.replace( QString::fromLatin1( "&" ), QString::fromLatin1( " %1 " ).arg( i18n("and") ) );
@@ -183,7 +228,7 @@ QString ImageSearchInfo::toString() const
             txt.replace( ImageDB::NONE(), i18nc( "As in no other persons, or no other locations. "
                                                 "I do realize that translators may have problem with this, "
                                                 "but I need some how to indicate the category, and users may create their own categories, so this is "
-                                                "the best I can do - Jesper.", "No other %1" ).arg( it.key() ) );
+                                                "the best I can do - Jesper.", "No other %1", it.key() ) );
             txt.simplified();
             res += txt;
         }
@@ -233,6 +278,9 @@ ImageSearchInfo::ImageSearchInfo( const ImageSearchInfo& other )
     _isNull = other._isNull;
     _compiled = false;
     _rating = other._rating;
+    ratingSearchMode = other.ratingSearchMode;
+    _megapixel = other._megapixel;
+    _searchRAW = other._searchRAW;
 #ifdef HAVE_EXIV2
     _exifSearchInfo = other._exifSearchInfo;
 #endif
@@ -255,12 +303,9 @@ void ImageSearchInfo::compile() const
         for( QStringList::Iterator itOr = orParts.begin(); itOr != orParts.end(); ++itOr ) {
             QStringList andParts = (*itOr).split(QString::fromLatin1("&"), QString::SkipEmptyParts);
 
-            DB::ContainerCategoryMatcher* andMatcher = orMatcher;
-            if ( andParts.count() > 1 ) {
-                andMatcher = new DB::AndCategoryMatcher;
-                orMatcher->addElement( andMatcher );
-            }
-
+            DB::ContainerCategoryMatcher* andMatcher;
+            bool exactMatch=false;
+            andMatcher = new DB::AndCategoryMatcher;
 
             for( QStringList::Iterator itAnd = andParts.begin(); itAnd != andParts.end(); ++itAnd ) {
                 QString str = *itAnd;
@@ -273,11 +318,35 @@ void ImageSearchInfo::compile() const
                 str = str.trimmed();
                 CategoryMatcher* valueMatcher;
                 if ( str == ImageDB::NONE() )
-                    valueMatcher = new DB::NoOtherItemsCategoryMatcher( category, !negate );
+                { // mark AND-group as containing a "No other" condition
+                    exactMatch = true;
+                    continue;
+                }
                 else
                     valueMatcher = new DB::ValueCategoryMatcher( category, str, !negate );
                 andMatcher->addElement( valueMatcher );
             }
+            if ( exactMatch )
+            {
+                // if andMatcher has exactMatch set, but no CategoryMatchers, then
+                // matching "category / None" is what we want:
+                if ( andMatcher->_elements.count() == 0 )
+                    orMatcher->addElement( new DB::NoTagCategoryMatcher( category ) );
+                else
+                {
+                    ExactCategoryMatcher *noOtherMatcher = new ExactCategoryMatcher( category );
+                    if ( andMatcher->_elements.count() == 1 )
+                        noOtherMatcher->setMatcher( andMatcher->_elements[0] );
+                    else
+                        noOtherMatcher->setMatcher( andMatcher );
+                    orMatcher->addElement( noOtherMatcher );
+                }
+            } 
+            else
+                if ( andMatcher->_elements.count() == 1 )
+                    orMatcher->addElement( andMatcher->_elements[0] );
+                else if ( andMatcher->_elements.count() > 1 )
+                    orMatcher->addElement( andMatcher );
         }
         CategoryMatcher* matcher = 0;
         if ( orMatcher->_elements.count() == 1 )
@@ -286,10 +355,8 @@ void ImageSearchInfo::compile() const
             matcher = orMatcher;
 
 
-        if ( matcher ) {
-            matcher->finalize();
+        if ( matcher )
             _categoryMatchers.append( matcher );
-        }
     }
     _compiled = true;
 }
@@ -428,3 +495,4 @@ void DB::ImageSearchInfo::renameCategory( const QString& oldName, const QString&
     _categoryMatchText.remove( oldName );
     _compiled = false;
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

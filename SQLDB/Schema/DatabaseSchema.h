@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2007-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -125,7 +125,7 @@ namespace SQLDB
         public:
             static const int noLength = -1;
 
-            FieldType(DataType dataType,
+            explicit FieldType(DataType dataType,
                       int length1=noLength,
                       int length2=noLength);
 

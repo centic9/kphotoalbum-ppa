@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -34,31 +34,30 @@ public:
     static ThumbnailFacade* instance();
     ThumbnailFacade();
     QWidget* gui();
-    void setCurrentItem( const DB::ResultId& id );
-    void reload( bool flushCache, bool clearSelection=true );
-    DB::Result selection(bool keepSortOrderOfDatabase=false) const;
-    DB::Result imageList(Order) const;
-    DB::ResultId mediaIdUnderCursor() const;
-    DB::ResultId currentItem() const;
-    void setImageList(const DB::Result& list);
+    void setCurrentItem( const DB::Id& id );
+    void reload( SelectionUpdateMethod method );
+    DB::IdList selection() const;
+    DB::IdList imageList(Order) const;
+    DB::Id mediaIdUnderCursor() const;
+    DB::Id currentItem() const;
+    void setImageList(const DB::IdList& list);
     void setSortDirection( SortDirection );
 
 public slots:
     void gotoDate( const DB::ImageDate& date, bool includeRanges );
     void selectAll();
     void showToolTipsOnImages( bool b );
-    void repaintScreen();
-    void toggleStackExpansion(const DB::ResultId& id);
+    void toggleStackExpansion(const DB::Id& id);
     void collapseAllStacks();
     void expandAllStacks();
     void updateDisplayModel();
-    void changeSingleSelection(const DB::ResultId& id);
+    void changeSingleSelection(const DB::Id& id);
     void slotRecreateThumbnail();
 
 signals:
-    void showImage( const DB::ResultId& id );
+    void showImage( const DB::Id& id );
     void showSelection();
-    void fileIdUnderCursorChanged( const DB::ResultId& id );
+    void fileIdUnderCursorChanged( const DB::Id& id );
     void currentDateChanged( const QDateTime& );
     void selectionChanged(int numberOfItemsSelected );
     void collapseAllStacksEnabled(bool enabled);
@@ -68,14 +67,11 @@ private:
     OVERRIDE ThumbnailModel* model();
     OVERRIDE CellGeometry* cellGeometry();
     OVERRIDE ThumbnailWidget* widget();
-    OVERRIDE ThumbnailPainter* painter();
-    OVERRIDE ThumbnailCache* cache();
 
 private:
     static ThumbnailFacade* _instance;
     CellGeometry* _cellGeometry;
     ThumbnailModel* _model;
-    ThumbnailCache* _thumbnailCache;
     ThumbnailWidget* _widget;
     ThumbnailPainter* _painter;
     ThumbnailToolTip* _toolTip;

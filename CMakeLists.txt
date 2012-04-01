@@ -61,12 +61,17 @@ macro_optional_find_package(Nepomuk)
 macro_bool_to_01(NEPOMUK_FOUND HAVE_NEPOMUK)
 
 if(QT_QTSQL_FOUND)
-  set(SQLDB_SUPPORT TRUE)
+  option(KPA_ENABLE_SQLDB "Build support for the experimental SQL database backend." OFF)
 endif(QT_QTSQL_FOUND)
+
+if(QT_QTSQL_FOUND AND KPA_ENABLE_SQLDB )
+  set(SQLDB_SUPPORT TRUE)
+else()
+  set(SQLDB_SUPPORT FALSE)
+endif(QT_QTSQL_FOUND AND KPA_ENABLE_SQLDB )
 
 # For config-kpa-*.h
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
 
 set(libdatebar_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/DateBarWidget.cpp ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/ViewHandler.cpp ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/MouseHandler.cpp)
 
@@ -78,6 +83,7 @@ set(libSettings_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoryPage.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/SubCategoriesPage.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/GeneralPage.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/Settings/FileVersionDetectionPage.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ThumbnailsPage.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ViewerPage.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Settings/DatabaseBackendPage.cpp
@@ -98,18 +104,17 @@ set(libThumbnailView_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailRequest.cpp  
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailToolTip.cpp  
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailWidget.cpp 
-  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailCache.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/GridResizeInteraction.cpp 
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/SelectionInteraction.cpp 
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/MouseTrackingInteraction.cpp 
-  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailBuilder.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailPainter.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/CellGeometry.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailModel.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailFacade.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailComponent.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/KeyboardEventHandler.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailDND.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/Delegate.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/SelectionMaintainer.cpp
 )
 set(libPlugins_SRCS)
 
@@ -159,8 +164,10 @@ set(libUtilities_SRCS
 
 set(libMainWindow_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DeleteDialog.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/RunDialog.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/FeatureDialog.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/InvalidDateFinder.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/AutoStackImages.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/TokenEditor.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/WelcomeDialog.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/Window.cpp 
@@ -172,6 +179,7 @@ set(libMainWindow_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DirtyIndicator.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/StatisticsDialog.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/BreadcrumbViewer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/StatusBar.cpp
     )
 
 set(libImageManager_SRCS 
@@ -183,12 +191,19 @@ set(libImageManager_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RawImageDecoder.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RequestQueue.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailStorage.cpp )
+	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailCache.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageEvent.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailBuilder.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/PreloadRequest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/CancelEvent.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoImageRescaleRequest.cpp
+)
 
 set(libDB_SRCS 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfo.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/Category.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryCollection.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/DB/ExactCategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDate.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/MD5Map.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/MemberMap.cpp
@@ -196,17 +211,18 @@ set(libDB_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDB.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/FileInfo.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/NewImageFinder.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/DB/NoTagCategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/GroupCounter.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageSearchInfo.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryItem.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/DB/ResultId.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/DB/Result.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/NoOtherItemsCategoryMatcher.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/DB/Id.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/DB/IdList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/ContainerCategoryMatcher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/ValueCategoryMatcher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/OrCategoryMatcher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/AndCategoryMatcher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp
     )
 
 set(libImportExport_SRCS
@@ -262,25 +278,51 @@ set(libexif_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp )
 
+##set(libthreading_SRCS
+##	${CMAKE_CURRENT_SOURCE_DIR}/Threading/Test.cpp  
+##	${CMAKE_CURRENT_SOURCE_DIR}/Threading/SearchForNewImagesJob.cpp
+##   )
+
 add_subdirectory( images )
 add_subdirectory( icons )
 add_subdirectory( demo )
 add_subdirectory( themes )
+
 if(SQLDB_SUPPORT)
   add_subdirectory( SQLDB )
 endif(SQLDB_SUPPORT)
 
 set(EXIV2_SRCS)
-if(EXIV2_FOUND)
- 	set(EXIV2_SRCS 
-# ${CMAKE_CURRENT_SOURCE_DIR}/Browser/ExifFolder.cpp 
- ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp
-  ${libexif_SRCS})
-endif(EXIV2_FOUND)
+if(EXIV2_FOUND AND QT_QTSQL_FOUND)
+  set(EXIV2_SRCS 
+    # ${CMAKE_CURRENT_SOURCE_DIR}/Browser/ExifFolder.cpp 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp
+    ${libexif_SRCS}
+  )
+endif(EXIV2_FOUND AND QT_QTSQL_FOUND)
 
 ########### next target ###############
 
-set(kphotoalbum_SRCS main.cpp ${libdatebar_SRCS} ${libSettings_SRCS} ${libsurvey_SRCS} ${libxmldb_SRCS} ${libThumbnailView_SRCS} ${libPlugins_SRCS} ${libViewer_SRCS} ${libCategoryListView_SRCS} ${libHTMLGenerator_SRCS} ${libMainWindow_SRCS} ${libImageManager_SRCS} ${libDB_SRCS} ${libImportExport_SRCS} ${libAnnotationDialog_SRCS} ${EXIV2_SRCS} ${libBrowser_SRCS})
+set(kphotoalbum_SRCS 
+  main.cpp 
+  ${libdatebar_SRCS} 
+  ${libSettings_SRCS} 
+  ${libsurvey_SRCS} 
+  ${libxmldb_SRCS} 
+  ${libThumbnailView_SRCS} 
+  ${libPlugins_SRCS} 
+  ${libViewer_SRCS} 
+  ${libCategoryListView_SRCS} 
+  ${libHTMLGenerator_SRCS} 
+  ${libMainWindow_SRCS} 
+  ${libImageManager_SRCS} 
+  ${libDB_SRCS} 
+  ${libImportExport_SRCS} 
+  ${libAnnotationDialog_SRCS} 
+  ${EXIV2_SRCS} 
+  ${libBrowser_SRCS} 
+## ${libthreading_SRCS}
+)
 
 kde4_add_executable(kphotoalbum ${kphotoalbum_SRCS})
 
@@ -303,9 +345,9 @@ if(KDCRAW_FOUND)
   target_link_libraries(kphotoalbum ${KDCRAW_LIBRARIES})
 endif(KDCRAW_FOUND)
 
-if(EXIV2_FOUND)
- 	target_link_libraries(kphotoalbum ${EXIV2_LIBRARIES} )
-endif(EXIV2_FOUND)
+if(EXIV2_FOUND AND QT_QTSQL_FOUND)
+	target_link_libraries(kphotoalbum ${EXIV2_LIBRARIES} ${QT_QTSQL_LIBRARY})
+endif(EXIV2_FOUND AND QT_QTSQL_FOUND)
 
 if(MARBLE_FOUND)
     target_link_libraries(kphotoalbum ${MARBLE_LIBRARIES} )
@@ -317,12 +359,14 @@ if(NEPOMUK_FOUND)
     INCLUDE_DIRECTORIES(${NEPOMUK_INCLUDE_DIR})
 endif(NEPOMUK_FOUND)
 
+##target_link_libraries(kphotoalbum threadweaver )
+
 install(TARGETS kphotoalbum ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############
 
-install( FILES  kphotoalbum.desktop kphotoalbum-import.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( PROGRAMS  kphotoalbum.desktop kphotoalbum-import.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES  kphotoalbumrc DESTINATION ${CONFIG_INSTALL_DIR} )
 install( FILES  tips DESTINATION ${DATA_INSTALL_DIR}/kphotoalbum )
 install( FILES  kphotoalbumui.rc default-setup default-layout.xml DESTINATION ${DATA_INSTALL_DIR}/kphotoalbum )
@@ -334,8 +378,9 @@ configure_file(config-kpa-kipi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-ki
 configure_file(config-kpa-sqldb.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-sqldb.h)
 configure_file(config-kpa-marble.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-marble.h)
 configure_file(config-kpa-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-nepomuk.h)
-find_package(Msgfmt REQUIRED)
-find_package(Gettext REQUIRED)
-add_subdirectory( po )
-add_subdirectory( doc-translations )
-add_subdirectory( doc )
+
+include(MacroOptionalAddSubdirectory)
+macro_optional_add_subdirectory( po )
+
+include(MacroOptionalAddSubdirectory)
+macro_optional_add_subdirectory( doc )

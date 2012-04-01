@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -73,9 +73,9 @@ void Exif::TreeView::reload()
     for( StringSet::const_iterator keysIt = keys.begin(); keysIt != keys.end(); ++keysIt ) {
         QStringList subKeys = (*keysIt).split(QLatin1String("."));
         Q3CheckListItem* parent = 0;
-        QString path = QString::null;
+        QString path;
         for( QStringList::Iterator subKeyIt = subKeys.begin(); subKeyIt != subKeys.end(); ++subKeyIt ) {
-            if ( !path.isNull() )
+            if ( !path.isEmpty() )
                 path += QString::fromLatin1( "." );
             path +=  *subKeyIt;
             if ( tree.contains( path ) )

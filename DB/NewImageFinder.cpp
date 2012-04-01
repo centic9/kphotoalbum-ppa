@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,14 +16,16 @@
    Boston, MA 02110-1301, USA.
 */
 #include "NewImageFinder.h"
-
-#include <sys/types.h>
-#include <dirent.h>
+#include "ImageManager/ThumbnailBuilder.h"
+#include "FastDir.h"
+#include "ImageManager/ThumbnailCache.h"
 
 #include "DB/ImageDB.h"
-#include "DB/ResultId.h"
+#include "DB/Id.h"
+#include "DB/IdList.h"
 
 #include <qfileinfo.h>
+#include <QStringList>
 #include <QProgressDialog>
 #include <klocale.h>
 #include <qapplication.h>
@@ -40,6 +42,7 @@
 #include "ImageManager/RawImageDecoder.h"
 #include "Settings/SettingsData.h"
 #include "Utilities/Util.h"
+#include <MainWindow/Window.h>
 
 using namespace DB;
 
@@ -52,9 +55,8 @@ bool NewImageFinder::findImages()
     // knows about an image ? Here we've to iterate through all of them and it
     // might be more efficient do do this in the database without fetching the
     // whole info.
-    Q_FOREACH(
-        const DB::ImageInfoPtr info,
-        DB::ImageDB::instance()->images().fetchInfos()) {
+    Q_FOREACH( const DB::ImageInfoPtr& info,
+        DB::ImageDB::instance()->images().fetchInfos() ) {
         loadedFiles.insert(info->fileName(DB::AbsolutePath));
     }
 
@@ -62,63 +64,12 @@ bool NewImageFinder::findImages()
     searchForNewFiles( loadedFiles, Settings::SettingsData::instance()->imageDirectory() );
     loadExtraFiles();
 
+    ImageManager::ThumbnailBuilder::instance()->buildMissing();
     // To avoid deciding if the new images are shown in a given thumbnail view or in a given search
     // we rather just go to home.
     return (!_pendingLoad.isEmpty()); // returns if new images was found.
 }
 
-// FastDir is used in place of QDir because QDir stat()s every file in
-// the directory, even if we tell it not to restrict anything.  When
-// scanning for new images, we don't want to look at files we already
-// have in our database, and we also don't want to look at files whose
-// names indicate that we don't care about them.  So what we do is
-// simply read the names from the directory and let the higher layers
-// decide what to do with them.
-//
-// On my sample database with ~20,000 images, this improves the time
-// to rescan for images on a cold system from about 100 seconds to
-// about 3 seconds.
-//
-// -- Robert Krawitz, rlk@alum.mit.edu 2007-07-22
-class FastDir
-{
-public:
-    FastDir(const QString &path);
-    QStringList entryList() const;
-private:
-    const QString _path;
-};
-
-FastDir::FastDir(const QString &path)
-  : _path(path)
-{
-}
-
-QStringList FastDir::entryList() const
-{
-    QStringList answer;
-    DIR *dir;
-    dirent *file;
-    dir = opendir( QFile::encodeName(_path) );
-    if ( !dir )
-	return answer; // cannot read the directory
-
-#if defined(QT_THREAD_SUPPORT) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_CYGWIN)
-    union dirent_buf {
-	struct dirent mt_file;
-	char b[sizeof(struct dirent) + MAXNAMLEN + 1];
-    } *u = new union dirent_buf;
-    while ( readdir_r(dir, &(u->mt_file), &file ) == 0 && file )
-#else
-    while ( (file = readdir(dir)) )
-#endif // QT_THREAD_SUPPORT && _POSIX_THREAD_SAFE_FUNCTIONS
-	answer.append(QFile::decodeName(file->d_name));
-#if defined(QT_THREAD_SUPPORT) && defined(_POSIX_THREAD_SAFE_FUNCTIONS) && !defined(Q_OS_CYGWIN)
-    delete u;
-#endif
-    (void) closedir(dir);
-    return answer;
-}
 
 void NewImageFinder::searchForNewFiles( const QSet<QString>& loadedFiles, QString directory )
 {
@@ -133,18 +84,25 @@ void NewImageFinder::searchForNewFiles( const QSet<QString>& loadedFiles, QStrin
     FastDir dir( directory );
     QStringList dirList = dir.entryList( );
     ImageManager::RAWImageDecoder dec;   // TODO: DEPENDENCY: DB:: should not reference other directories
+    QStringList excluded;
+    excluded << Settings::SettingsData::instance()->excludeDirectories();
+    excluded = excluded.at(0).split(QString::fromLatin1(","));
+
+    bool skipSymlinks = Settings::SettingsData::instance()->skipSymlinks();
+
     for( QStringList::const_iterator it = dirList.constBegin(); it != dirList.constEnd(); ++it ) {
         QString file = directory + QString::fromLatin1("/") + *it;
-        if ( (*it) == QString::fromLatin1(".") || (*it) == QString::fromLatin1("..") ||
-             (*it) == QString::fromLatin1("ThumbNails") ||
-             (*it) == QString::fromLatin1("CategoryImages") ||
-	         loadedFiles.contains( file ) ||
-	         dec._skipThisFile(loadedFiles, file) )
-            continue;
+	if ( (*it) == QString::fromLatin1(".") || (*it) == QString::fromLatin1("..") ||
+                excluded.contains( (*it) ) || loadedFiles.contains( file ) ||
+                dec._skipThisFile(loadedFiles, file) ||
+                (*it) == QString::fromLatin1("CategoryImages") )
+	    continue;
 
         QFileInfo fi( file );
 
 	    if ( !fi.isReadable() )
+	        continue;
+	    if ( skipSymlinks && fi.isSymLink() )
 	        continue;
 
         if ( fi.isFile() ) {
@@ -171,6 +129,8 @@ void NewImageFinder::loadExtraFiles()
     dialog.setMaximum( _pendingLoad.count() );
     dialog.setMinimumDuration( 1000 );
 
+    setupFileVersionDetection();
+
     int count = 0;
     ImageInfoList newImages;
     for( LoadList::Iterator it = _pendingLoad.begin(); it != _pendingLoad.end(); ++it, ++count ) {
@@ -188,6 +148,14 @@ void NewImageFinder::loadExtraFiles()
     DB::ImageDB::instance()->addImages( newImages );
 }
 
+void NewImageFinder::setupFileVersionDetection() {
+    // should be cached because loading once per image is expensive
+    _modifiedFileCompString = Settings::SettingsData::instance()->modifiedFileComponent();
+    _modifiedFileComponent = QRegExp(_modifiedFileCompString);
+
+    _originalFileComponents << Settings::SettingsData::instance()->originalFileComponent();
+    _originalFileComponents = _originalFileComponents.at(0).split(QString::fromLatin1(";"));
+}
 
 ImageInfoPtr NewImageFinder::loadExtraFile( const QString& relativeNewFileName, DB::MediaType type )
 {
@@ -226,27 +194,106 @@ ImageInfoPtr NewImageFinder::loadExtraFile( const QString& relativeNewFileName, 
         }
     }
 
+    // check to see if this is a new version of a previous image
+    ImageInfoPtr info = ImageInfoPtr(new ImageInfo( relativeNewFileName, type ));
+    ImageInfoPtr originalInfo;
+    QString originalFileName;
+
+    if (Settings::SettingsData::instance()->detectModifiedFiles()) {
+        // requires at least *something* in the modifiedFileComponent
+        if (_modifiedFileCompString.length() >= 0 &&
+            relativeNewFileName.contains(_modifiedFileComponent)) {
+
+            for( QStringList::const_iterator it = _originalFileComponents.constBegin(); 
+                 it != _originalFileComponents.constEnd(); ++it ) {
+                originalFileName = relativeNewFileName;
+                originalFileName.replace(_modifiedFileComponent, (*it));
+
+                MD5 originalSum = Utilities::MD5Sum( Utilities::absoluteImageFileName( originalFileName ) );
+                if ( DB::ImageDB::instance()->md5Map()->contains( originalSum ) ) {
+                    // we have a previous copy of this file; copy it's data
+                    // from the original.
+                    originalInfo = DB::ImageDB::instance()->info( originalFileName, DB::RelativeToImageRoot );
+                    if ( !originalInfo ) {
+                        qDebug() << "Original info not found by name for " << originalFileName << ", trying by MD5 sum.";
+                        originalFileName = DB::ImageDB::instance()->md5Map()->lookup( originalSum );
+
+                        if (!originalFileName.isNull())
+                        {
+                            qDebug() << "Substitute image " << originalFileName << " found.";
+                            originalInfo = DB::ImageDB::instance()->info( originalFileName, DB::RelativeToImageRoot );
+                        }
+
+                        if ( !originalInfo )
+                        {
+                            qWarning("How did that happen? We couldn't find info for the original image %s; can't copy the original data to %s", qPrintable(originalFileName), qPrintable(relativeNewFileName));
+                            continue;
+                        }
+                    }
+                    info->copyExtraData(*originalInfo);
+
+                    /* if requested to move, then delete old data from original */
+                    if (Settings::SettingsData::instance()->moveOriginalContents() ) {
+                        originalInfo->removeExtraData();
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
     // also inserts image into exif db if present:
-    ImageInfoPtr info = ImageInfoPtr( new ImageInfo( relativeNewFileName, type ) );
     info->setMD5Sum(sum);
     DB::ImageDB::instance()->md5Map()->insert( sum, info->fileName(DB::RelativeToImageRoot) );
+
+    if (originalInfo &&
+        Settings::SettingsData::instance()->autoStackNewFiles() ) {
+        // we have to do this immediately to get the ids
+        ImageInfoList newImages;
+        newImages.append(info);
+        DB::ImageDB::instance()->addImages( newImages );
+
+        // stack the files together
+        DB::Id olderfile = DB::ImageDB::instance()->ID_FOR_FILE(originalFileName);
+        DB::Id newerfile = DB::ImageDB::instance()->ID_FOR_FILE(info->fileName(DB::AbsolutePath));
+        DB::IdList tostack = DB::IdList();
+
+        // the newest file should go to the top of the stack
+        tostack.append(newerfile);
+
+        DB::IdList oldStack;
+        if ( ( oldStack = DB::ImageDB::instance()->getStackFor( olderfile ) ).isEmpty() ) {
+            tostack.append(olderfile);
+        } else {
+            Q_FOREACH( DB::Id tmp, oldStack ) {
+                tostack.append( tmp );
+            }
+        }
+        DB::ImageDB::instance()->stack(tostack);
+        MainWindow::Window::theMainWindow()->setStackHead( newerfile );
+
+        // ordering: XXX we ideally want to place the new image right
+        // after the older one in the list.
+
+        info = NULL;  // we already added it, so don't process again
+    }
 
     return info;
 }
 
 bool  NewImageFinder::calculateMD5sums(
-    const DB::Result& list,
+    const DB::IdList& list,
     DB::MD5Map* md5Map,
     bool* wasCanceled)
 {
     // FIXME: should be converted to a threadpool for SMP stuff and whatnot :]
     QProgressDialog dialog;
     dialog.setLabelText(
-        i18n("<p><b>Calculating checksum for %1 files<b></p>"
-             "<p>By storing a checksum for each image "
+        i18np("<p><b>Calculating checksum for %1 file</b></p>","<p><b>Calculating checksums for %1 files</b></p>", list.size())
+		+ i18n("<p>By storing a checksum for each image "
              "KPhotoAlbum is capable of finding images "
-             "even when you have moved them on the disk.</p>")
-        .arg(list.size()));
+             "even when you have moved them on the disk.</p>"));
     dialog.setMaximum(list.size());
     dialog.setMinimumDuration( 1000 );
 
@@ -276,7 +323,7 @@ bool  NewImageFinder::calculateMD5sums(
         if  ( info->MD5Sum() != md5 ) {
             info->setMD5Sum( md5 );
             dirty = true;
-            ImageManager::Manager::instance()->removeThumbnail( absoluteFileName );
+            ImageManager::ThumbnailCache::instance()->removeThumbnail( absoluteFileName );
         }
 
         md5Map->insert( md5, info->fileName(DB::RelativeToImageRoot) );

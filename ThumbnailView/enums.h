@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,7 @@
 */
 #ifndef THUMBNAILVIEW_ENUMS_H
 #define THUMBNAILVIEW_ENUMS_H
-#include "DB/ResultId.h"
+#include "DB/Id.h"
 #include <QSet>
 
 namespace ThumbnailView
@@ -27,7 +27,10 @@ enum Order { ViewOrder, SortedOrder };
 enum CoordinateSystem {ViewportCoordinates, ContentsCoordinates };
 enum VisibleState { FullyVisible, PartlyVisible };
 
-typedef QSet<DB::ResultId> IdSet;
+typedef QSet<DB::Id> IdSet;
+
+enum SelectionUpdateMethod { ClearSelection, MaintainSelection };
+
 }
 
 #endif /* THUMBNAILVIEW_ENUMS_H */

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2007 Tuomas Suutari <thsuut@utu.fi>
+  Copyright (C) 2007-2010 Tuomas Suutari <thsuut@utu.fi>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ void SQLiteCSG::makeIdTest(const StringTuple& l1, const string& p2,
     while (i1 != l1.end() && i2 != l2.end()) {
         if (i1 != l1.begin())
             destStr += " AND ";
-        destStr += *i1 + "=" + p2 + "." + *i2;
+        destStr += *i1 + '=' + p2 + '.' + *i2;
         ++i1;
         ++i2;
     }

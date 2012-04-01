@@ -1,0 +1,214 @@
+<chapter id="chp-typingIn">
+  <title
+>Anotar as suas imagens</title>
+  <para
+>Em <xref linkend="fig-empty-browser-window"/> poderá ver um exemplo da janela que lhe será apresentada quando tiver iniciado o &kphotoalbum; com as suas próprias imagens.</para>
+  
+  <para
+>At the top of the screen you will find a menu and toolbar, as you know from any KDE application. Below the toolbar you see the browser window. Currently this is not containing much information, as you have not yet specified any information about your images. In <xref linkend="chp-browsing"/> we will get back to the browser, but for now, simply press the <guibutton
+>View Images</guibutton
+> item, which will show you an overview of all your images.</para>
+  
+  <figure id="fig-empty-browser-window">
+    <title
+>Iniciar o &kphotoalbum; com as suas imagens</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="empty-browser-window.png"
+          format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+  
+    <para
+>The key feature of &kphotoalbum; is that you can annotate your images. This includes who is on a given image, where is it taken, etc. You can do this either an image at a time, or you can annotate a number of images simultaneously (For example, all these images contain the person <emphasis
+>Jesper</emphasis
+>, and is taken in <emphasis
+>Copenhagen</emphasis
+>.)</para>
+
+    <para
+>To annotate an images, select the images in question, and go to <menuchoice
+><guimenu
+>Edit</guimenu
+> <guisubmenu
+>Annotate Individual Items</guisubmenu
+></menuchoice
+>. Now you annotate your selected images one after the other. If you instead choose <guimenuitem
+>Annotate Multiple Items at a Time</guimenuitem
+>, you will annotate all the selected items as if it was one single item. In other words, with this option you mass-annotate your image - e.g. saying all these images was shot in Copenhagen. These two options are also available from a context menu, that you get by right clicking the mouse in the thumbnail overview. An example of this can be seen in <xref linkend="fig-edit-properies-menu"/>.</para
+> 
+    
+    <figure id="fig-edit-properies-menu">
+      <title
+>Menu de contexto para editar as propriedades</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="edit-properies-menu.png"
+            format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para
+>In <xref linkend="fig-image-config-window"/> below you can see the window for annotating images and videos. In this window you can specify the date of the item, the label of the item <footnote
+><para
+>The label is initialized to the name of the file. The label is used in the browser, and when the images are exported to HTML pages</para
+></footnote
+>, a description for the item, and most important different <emphasis
+>categories</emphasis
+> for the item. In the screen shot, these categories are <literal
+>People</literal
+>, <literal
+>Places</literal
+>, and <literal
+>Keywords</literal
+>, but as you will see in <xref linkend="sec-specifying-categories"/>, these three predefined categories may be changed to your preferences. </para>
+    
+    <figure id="fig-image-config-window">
+      <title
+>Anotar as imagens e vídeos</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="image-config-window.png"
+            format="PNG"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+    
+    <para
+>A data, para além das opções, pode ser usada para procurar e navegar nas imagens, como poderá ser visto em <xref linkend="chp-browsing"/>. Se for pedido, poderá ver estas anotações quando observar os itens no visualizador incorporado.</para>
+    
+    
+    
+    
+    <sect1 id="sect-specifying-options">
+      <title
+>Categorias</title>
+      <para
+>In <xref linkend="fig-image-config-window"/> there are three list boxes combined with a line edits for specifying people, places and keywords. These widget are a very important part of &kphotoalbum;, as you will use them over and over again, when specifying information about your images.</para>
+      
+      <para
+>You can specify a property from a list box, simply by selecting it. Select say <literal
+>Donna</literal
+> to specify that Donna is on the given image. Alternatively you may type its name in the line edit. When you start typing a name in the line edit, &kphotoalbum; will look into the listbox, and search for the first item matching what you've typed so far, and fill it out. Thus typing <literal
+>Do</literal
+> might be enough to find <literal
+>Donna</literal
+>. Once you have found the item you search for, simply press &Enter; to select this item in the listbox. The item will now be moved to the top of the view, so next time you need the given item it is even easier to find.</para
+> 
+      
+      <para
+>A ideia por detrás da mudança das imagens para o topo, quando tiverem sido seleccionadas, pode ser explicada com o exemplo de uma ida a uma festa de família, na qual terá talvez 50 imagens com as mesmas 5-10 pessoas. Ao escrever alguma informação sobre estas 50 imagens, o utilizador terá essas 5-10 pessoas no topo da lista, pelo que será mais fácil associar-lhes o nome da primeira vez.</para>
+
+     <para
+>Se optar por ter a lista ordenada alfabeticamente em alternativa, basta carregar no ícone de ordenação, sob a lista.</para>
+    </sect1>
+    
+    
+    <sect1 id="sect-specifying-properties-for-one-image-at-a-time">
+      <title
+>Anotar um item de cada vez</title>
+      <para
+>Quando indicar propriedades para uma imagem de cada vez, você poderá obviamente seleccionar à mesma um conjunto de imagens e dizer <emphasis
+>Eu quero anotar estas imagens</emphasis
+>. Nesta situação, irá encontrar um botão de anterior e seguinte por baixo da imagem no canto superior direito. </para>
+    </sect1>
+    
+    <sect1 id="sect-specifying-properties-for-all-images-simultaneously">
+      <title
+>Anotar vários itens de uma vez</title>
+      <para
+>Se tiver várias imagens com, por exemplo, a mesma pessoa, então poderá ser mais conveniente seleccionar essas imagens e indicar que esta pessoa está em todas as imagens ao <emphasis
+>Anotar Vários Itens de uma Vez</emphasis
+>.</para>
+      
+    </sect1>
+
+
+<sect1 id="sec-member-groups-in-property-editor">
+<title
+>Sub-Categorias</title>
+  <para
+>Las Vegas, San Francisco, Los Angeles e Califórnia são todas pertencentes aos EUA. Para além disso, San Francisco e Los Angeles localizam-se na Califórnia.</para>
+
+<para
+>Instead of specifying for each and every image from San Francisco, that it is in San Francisco, and in California, and in USA, you may instead tell &kphotoalbum; that San Francisco, and Los Angeles are in California, and that California among others are in USA. Doing so the browser (see <xref linkend="chp-browsing"/>) will offer you an item for USA, and an item for California in addition to all your normal items. Selecting California, you will see all images from San Francisco, Los Angeles, etc.</para>
+
+<para
+>Em <xref linkend="fig-usa-as-a-member"/>, você poderá ver uma janela de navegação que contém os EUA como uma super-categoria. Para lhe indicar que isto é um grupo, é usado um ícone especial.</para>
+
+<figure id="fig-usa-as-a-member">
+<title
+>O navegador a mostrar os EUA como super-categoria</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="usa-as-a-member.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</figure>
+
+<para
+>No menu de contexto da janela de anotações, é possível adicionar um item a uma categoria ou sub-categoria. Para além disso, poderá simplesmente arrastar um item para uma categoria, para o tornar uma sub-categoria desse item. Lembre-se que isto necessita que você esteja a ordenar as suas categorias alfabeticamente. Veja em <xref linkend="fig-membergroup-config"/>.</para>
+
+<figure id="fig-membergroup-config">
+<title
+>As categorias apresentadas na área alfabética da janela de anotações</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="member-group-setting.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</figure>
+
+</sect1>
+
+
+
+  
+
+
+  <sect1 id="sect-changing-layout-of-the-property-window">
+    <title
+>Alterar a disposição da janela de anotações</title>
+    <para
+>É possível mover os itens da janela de anotações para qualquer lado, desde a barra ao topo das janelas - poderá até tornar uma dessas janelas uma janela de topo autónoma.</para>
+    
+    <para
+>Once you have found a layout that matches your screen layout, your usage of &kphotoalbum;, etc, simply press the <guibutton
+>Options...</guibutton
+> button, that will display a popup menu from which you can save the current window layout.</para>
+    
+    <para
+>You may also choose to hide away a frame. If you later want to include that frame in your layout, then choose the <guibutton
+>Options...</guibutton
+> button, and from there the <guimenuitem
+>Show/Hide windows</guimenuitem
+> item. This can be see in <xref linkend="fig-redisplay-frames"/>.</para>
+  
+
+  <figure id="fig-redisplay-frames">
+    <title
+>A mostrar as janelas escondidas anteriormente.</title>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="redisplay-frames.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </figure>
+  
+  </sect1>
+
+  </chapter>
+
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: xml
+sgml-namecase-general:t
+sgml-general-insert-case:lower
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-parent-document: "index.docbook"
+End:
+-->

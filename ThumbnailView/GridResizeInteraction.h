@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -34,6 +34,7 @@
 */
 #ifndef GRIDRESIZEINTERACTION_H
 #define GRIDRESIZEINTERACTION_H
+#include "ThumbnailComponent.h"
 #include "MouseInteraction.h"
 #include <QMouseEvent>
 
@@ -41,15 +42,19 @@ namespace ThumbnailView
 {
 class ThumbnailWidget;
 
-class GridResizeInteraction : public MouseInteraction {
+class GridResizeInteraction : public MouseInteraction, private ThumbnailComponent {
 public:
-    GridResizeInteraction( ThumbnailWidget* );
-    virtual void mousePressEvent( QMouseEvent* );
-    virtual void mouseMoveEvent( QMouseEvent* );
-    virtual void mouseReleaseEvent( QMouseEvent* );
-    virtual bool isResizingGrid();
+    GridResizeInteraction( ThumbnailFactory* factory );
+    OVERRIDE bool mousePressEvent( QMouseEvent* );
+    OVERRIDE bool mouseMoveEvent( QMouseEvent* );
+    OVERRIDE bool mouseReleaseEvent( QMouseEvent* );
+    OVERRIDE bool isResizingGrid();
+    void enterGridResizingMode();
+    void leaveGridResizingMode();
 
 private:
+    void setCellSize(int size);
+
     /**
      * The position the mouse was pressed down, in view port coordinates
      */
@@ -59,11 +64,10 @@ private:
      * This variable contains the size of a cell prior to the beginning of
      * resizing the grid.
      */
-    QSize _origSize;
-
-    ThumbnailWidget* _view;
+    int _origWidth;
 
     bool _resizing;
+    int m_currentRow;
 };
 
 }

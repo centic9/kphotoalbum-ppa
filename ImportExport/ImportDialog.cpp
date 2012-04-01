@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2006 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -276,12 +276,12 @@ void ImportDialog::createCategoryPages()
     }
 
     if ( !categories.isEmpty() ) {
-        _categoryMatcher = new ImportMatcher( QString::null, QString::null, categories, DB::ImageDB::instance()->categoryCollection()->categoryNames(),
+        _categoryMatcher = new ImportMatcher( QString(), QString(), categories, DB::ImageDB::instance()->categoryCollection()->categoryNames(),
                                               false, this );
         _categoryMatcherPage = addPage( _categoryMatcher, i18n("Match Categories") );
 
         QWidget* dummy = new QWidget;
-        _dummy = addPage( dummy, QString::null );
+        _dummy = addPage( dummy, QString() );
     }
     else {
         _categoryMatcherPage = 0;

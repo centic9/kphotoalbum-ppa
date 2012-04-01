@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,7 +18,7 @@
 #ifndef THUMBNAILCOMPONENT_H
 #define THUMBNAILCOMPONENT_H
 
-namespace DB {class ResultId; }
+namespace DB {class Id; }
 
 namespace ThumbnailView
 {
@@ -27,7 +27,6 @@ class ThumbnailPainter;
 class ThumbnailWidget;
 class CellGeometry;
 class ThumbnailModel;
-class ThumbnailCache;
 
 class ThumbnailComponent
 {
@@ -43,11 +42,6 @@ public:
     ThumbnailWidget* widget();
     const ThumbnailWidget* widget() const;
 
-    ThumbnailPainter* painter();
-    const ThumbnailPainter* painter() const;
-
-    ThumbnailCache* cache();
-    const ThumbnailCache* cache() const;
 private:
     ThumbnailFactory* _factory;
 };

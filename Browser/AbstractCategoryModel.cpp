@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2009 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -66,16 +66,16 @@ QString Browser::AbstractCategoryModel::text( const QString& name ) const
 
 QPixmap Browser::AbstractCategoryModel::icon( const QString& name ) const
 {
+    const int size = _category->thumbnailSize();
     if ( BrowserWidget::isResizing() ) {
-        const int size = _category->thumbnailSize();
-        QPixmap res( size, 3.0/4.0 * size );
+        QPixmap res( size, size * Settings::SettingsData::instance()->getThumbnailAspectRatio() );
         res.fill( Qt::white );
         return res;
     }
 
     if ( _category->viewType() == DB::Category::TreeView || _category->viewType() == DB::Category::IconView ) {
         if ( DB::ImageDB::instance()->memberMap().isGroup( _category->name(), name ) )
-            return KIcon( QString::fromLatin1( "folder_image" ) ).pixmap(22);
+            return KIcon( QString::fromLatin1( "folder-image" ) ).pixmap(22);
         else {
             return _category->icon();
         }
@@ -83,7 +83,7 @@ QPixmap Browser::AbstractCategoryModel::icon( const QString& name ) const
     else {
         // The category images are screenshot from the size of the viewer (Which might very well be considered a bug)
         // This is the reason for asking for the thumbnail height being 3/4 of its width.
-        return _category->categoryImage( _category->name(), name, _category->thumbnailSize(), _category->thumbnailSize() * 3.0 / 4.0 );
+        return _category->categoryImage( _category->name(), name, size, size * Settings::SettingsData::instance()->getThumbnailAspectRatio() );
     }
 }
 
