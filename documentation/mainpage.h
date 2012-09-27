@@ -5,7 +5,7 @@
    A few related pages that you should read:
    \li \ref coding-standards
    \li \ref phrase-book
-   \li \ref common-tasks
+   \li \ref videothumbnails
 
    KPhotoAlbum is split into a number of modules, each module is a directory of its own on the hard disk and a namespace in the source code.
    The following is a list of modules:
@@ -29,10 +29,11 @@
    <h2>Database backend</h2>
    \li \ref DB The abstract interface for the database backend.
    \li \ref XMLDB The XML based database backend.
-   \li \ref SQLDB The SQL based database backend - still not released.
 
    <h2>Backend</h2>
    \li \ref ImageManager - Thumbnail loader
    \li \ref Plugins - KIPI plug-in management
    \li \ref Utilities - Miscellaneous utility classes
+   \li \ref BackgroundTaskManager
+   \li \ref BackgroundJobs - Jobs for the BackgroundTaskManager
  */

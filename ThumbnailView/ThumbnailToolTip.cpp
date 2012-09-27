@@ -25,7 +25,7 @@
 
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
-#include "ImageManager/Manager.h"
+#include "ImageManager/AsyncLoader.h"
 #include "Settings/SettingsData.h"
 #include "ThumbnailWidget.h"
 #include "Utilities/Util.h"
@@ -77,12 +77,11 @@ bool ThumbnailView::ThumbnailToolTip::eventFilter( QObject* o , QEvent* event )
 
 void ThumbnailView::ThumbnailToolTip::showToolTips( bool force )
 {
-    DB::Id id = _view->mediaIdUnderCursor();
+    const DB::FileName fileName = _view->mediaIdUnderCursor();
     hide();
-    if ( id.isNull() )
+    if ( fileName.isNull() )
         return;
 
-    QString fileName = id.fetchInfo()->fileName(DB::AbsolutePath);
     if ( force || (fileName != _currentFileName) ) {
         if ( loadImage( fileName ) ) {
             setText( QString() );
@@ -90,10 +89,10 @@ void ThumbnailView::ThumbnailToolTip::showToolTips( bool force )
             if ( size != 0 ) {
                 setText( QString::fromLatin1("<table cols=\"2\" cellpadding=\"10\"><tr><td><img src=\"%1\"></td><td>%2</td></tr>")
                          .arg(_tmpFileForThumbnailView->fileName()).
-                         arg(Utilities::createInfoText( DB::ImageDB::instance()->info( fileName, DB::AbsolutePath ), 0 ) ) );
+                         arg(Utilities::createInfoText( DB::ImageDB::instance()->info( fileName ), 0 ) ) );
             }
             else {
-                setText( QString::fromLatin1("<p>%1</p>").arg( Utilities::createInfoText( DB::ImageDB::instance()->info( fileName, DB::AbsolutePath ), 0 ) ) );
+                setText( QString::fromLatin1("<p>%1</p>").arg( Utilities::createInfoText( DB::ImageDB::instance()->info( fileName ), 0 ) ) );
             }
             setWordWrap( true );
         }
@@ -163,23 +162,23 @@ void ThumbnailView::ThumbnailToolTip::placeWindow()
 }
 
 
-bool ThumbnailView::ThumbnailToolTip::loadImage( const QString& fileName )
+bool ThumbnailView::ThumbnailToolTip::loadImage( const DB::FileName& fileName )
 {
     int size = Settings::SettingsData::instance()->previewSize();
-    DB::ImageInfoPtr info = DB::ImageDB::instance()->info( fileName, DB::AbsolutePath );
+    DB::ImageInfoPtr info = DB::ImageDB::instance()->info( fileName );
     if ( size != 0 ) {
         if ( fileName != _currentFileName ) {
             ImageManager::ImageRequest* request = new ImageManager::ImageRequest( fileName, QSize( size, size ), info->angle(), this );
             // request->setCache();  // TODO: do caching in callback.
             request->setPriority( ImageManager::Viewer );
-            ImageManager::Manager::instance()->load( request );
+            ImageManager::AsyncLoader::instance()->load( request );
             return false;
         }
     }
     return true;
 }
 
-void ThumbnailView::ThumbnailToolTip::pixmapLoaded( const QString& fileName, const QSize& /*size*/,
+void ThumbnailView::ThumbnailToolTip::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/,
                                                     const QSize& /*fullSize*/, int /*angle*/, const QImage& image, const bool /*loadedOK*/)
 {
     delete _tmpFileForThumbnailView;

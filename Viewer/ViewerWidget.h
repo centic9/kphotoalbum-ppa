@@ -24,9 +24,9 @@
 #include <QPixmap>
 #include <QMap>
 #include "DB/ImageInfoPtr.h"
-#include "DB/IdList.h"
 #include <config-kpa-exiv2.h>
 #include <QPointer>
+#include <DB/FileNameList.h>
 
 class QKeyEvent;
 class QResizeEvent;
@@ -45,9 +45,10 @@ namespace Viewer
 class VideoDisplay;
 class ImageDisplay;
 class TextDisplay;
-class Display;
+class AbstractDisplay;
 class SpeedDisplay;
 class InfoBox;
+class VideoShooter;
 
 class ViewerWidget :public QStackedWidget
 {
@@ -59,7 +60,7 @@ public:
                   QMap<Qt::Key, QPair<QString,QString> > *macroStore = 0);
     ~ViewerWidget();
     static ViewerWidget* latest();
-    void load( const QStringList& list, int index = 0 );
+    void load( const DB::FileNameList& list, int index = 0 );
     void infoBoxMove();
     bool showingFullScreen() const;
     void setShowFullScreen( bool on );
@@ -67,14 +68,14 @@ public:
     KActionCollection* actions();
 
 public slots:
-    virtual bool close(bool alsoDelete = false );
+    OVERRIDE bool close(bool alsoDelete = false );
     void updateInfoBox();
     void test();
     void moveInfoBox( int );
     void stopPlayback();
 
 signals:
-    void soughtTo( const DB::Id& id );
+    void soughtTo( const DB::FileName& id );
 
 protected:
     OVERRIDE void contextMenuEvent ( QContextMenuEvent * e );
@@ -158,12 +159,14 @@ protected slots:
     void zoomOut();
     void zoomFull();
     void zoomPixelForPixel();
+    void makeThumbnailImage();
 
     /** Set the current window title (filename) and add the given detail */
     void setCaptionWithDetail( const QString& detail );
 
 private:
     static ViewerWidget* _latest;
+    friend class VideoShooter;
 
     QList<KAction*> _forwardActions;
     QList<KAction*> _backwardActions;
@@ -179,14 +182,14 @@ private:
     KAction* _filterHistogramEqualization;
     KAction* _filterMono;
 
-    Display* _display;
+    AbstractDisplay* _display;
     ImageDisplay* _imageDisplay;
     VideoDisplay* _videoDisplay;
     TextDisplay* _textDisplay;
 
     int m_screenSaverCookie;
-    QStringList _list;
-    DB::IdList _removed;
+    DB::FileNameList _list;
+    DB::FileNameList _removed;
     int _current;
     QRect _textRect;
     QMenu* _popup;
@@ -219,6 +222,7 @@ private:
     QList<QAction*> _videoActions;
     KAction* _stop;
     KAction* _playPause;
+    KAction* _makeThumbnailImage;
     bool _videoPlayerStoppedManually;
     UsageType _type;
 

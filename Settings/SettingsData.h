@@ -23,18 +23,13 @@
 #include "DB/ImageSearchInfo.h"
 #include "DB/Category.h"
 #include <config-kpa-exiv2.h>
+#include <AnnotationDialog/enums.h>
 
 #ifdef HAVE_EXIV2
 #   include "Exif/Info.h"
 #endif
 
 #include "Utilities/Set.h"
-#include <config-kpa-sqldb.h>
-
-#ifdef SQLDB_SUPPORT
-    namespace SQLDB { class DatabaseAddress; }
-#endif
-
 #define property( GET_TYPE,GET_FUNC, SET_FUNC,SET_TYPE ) \
     GET_TYPE GET_FUNC() const;                           \
     void SET_FUNC( const SET_TYPE )
@@ -74,7 +69,6 @@ public:
     /////////////////
 
     property_ref ( histogramSize         , setHistogramSize         , QSize );
-    property_ref ( backend               , setBackend               , QString );
     property_copy( useEXIFRotate         , setUseEXIFRotate         , bool );
     property_copy( useEXIFComments       , setUseEXIFComments       , bool );
     property_copy( searchForImagesOnStart, setSearchForImagesOnStart, bool );
@@ -90,6 +84,7 @@ public:
     property_copy( autoSave              , setAutoSave              , int );
     property_copy( backupCount           , setBackupCount           , int );
     property_copy( viewSortType          , setViewSortType          , ViewSortType   );
+    property_copy( matchType             , setMatchType             , AnnotationDialog::MatchType      );
     property_copy( tTimeStamps           , setTTimeStamps           , TimeStampTrust );
     property_copy( excludeDirectories    , setExcludeDirectories    , QString );
 
@@ -137,6 +132,7 @@ public:
     property_copy( showDescription          , setShowDescription          , bool             );
     property_copy( showDate                 , setShowDate                 , bool             );
     property_copy( showImageSize            , setShowImageSize            , bool             );
+    property_copy( showRating               , setShowRating               , bool             );
     property_copy( showTime                 , setShowTime                 , bool             );
     property_copy( showFilename             , setShowFilename             , bool             );
     property_copy( showEXIF                 , setShowEXIF                 , bool             );
@@ -176,14 +172,6 @@ public:
     property_copy( useModDateIfNoExif       , setUseModDateIfNoExif       , bool             );
     property_copy( updateOrientation        , setUpdateOrientation        , bool             );
     property_copy( updateDescription        , setUpdateDescription        , bool             );
-
-    ///////////////
-    //// SQLDB ////
-    ///////////////
-
-#ifdef SQLDB_SUPPORT
-    property_ref( SQLParameters, setSQLParameters, SQLDB::DatabaseAddress);
-#endif
 
     ///////////////////////
     //// Miscellaneous ////
@@ -228,6 +216,7 @@ public:
 signals:
     void locked( bool lock, bool exclude );
     void viewSortTypeChanged( Settings::ViewSortType );
+    void matchTypeChanged( AnnotationDialog::MatchType );
     void histogramSizeChanged( const QSize& );
 
 private:

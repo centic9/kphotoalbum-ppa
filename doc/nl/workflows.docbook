@@ -2,13 +2,13 @@
   <title
 >Werkflows met &kphotoalbum;</title>
   <para
->Workflow is rather important aspect in digital imaging. In this chapter we describe different workflows that fit on different needs. There are many different factors that must be considered when developing a workflow. Hopefully these examples will provide you with sufficient ideas of how to tune-up your own method of working with digital imaging.</para>
+>Workflow is behoorlijk belangrijk aspect bij digitale beelden. In dit hoofdstuk beschrijven we verschillende workflows die passen bij verschillende behoeften. Er zijn veel verschillende factoren die in beschouwing genomen moeten worden bij het ontwikkelen van een workflow. Hopelijk bieden deze voorbeelden u voldoende ideeën over hoe u uw eigen methode van werken met digitale afbeeldingen in kunt richten.</para>
 
   <sect1 id="raw-workflow">
   <title
->RAW-werkflow met &kphotoalbum; en Bibble5</title>
+>RAW-werkflow met &kphotoalbum; en Bibble5/AfterShot Pro</title>
   <para
->Bij het schieten van RAW-afbeeldingen moeten de bestanden uit de camera geconverteerd worden naar algemeen herkende formaten zoals JPEG of TIFF. Er zijn een paar opties waaruit kan worden gekozen bij het werken op Linux. RawTherapee en Ufraw zijn bijvoorbeeld open-source alternatieven waarbij Bibble5/AfterShotPro een commerciële toepassing voor dit doel is.</para>
+>Bij het schieten van RAW-afbeeldingen moeten de bestanden uit de camera geconverteerd worden naar algemeen herkende formaten zoals JPEG of TIFF. Er zijn een paar opties waaruit kan worden gekozen bij het werken op Linux. RawTherapee en Ufraw zijn bijvoorbeeld open-source alternatieven waarbij Bibble5/AfterShot Pro een commerciële toepassing voor dit doel is.</para>
 
   <para
 >A few settings are recommended for a RAW workflow. First is to enable the using of the embedded thumbnail. This will give a tremendous speed boost over decoding each raw file each time they are viewed (check also the minimum dimension configuration to ensure decent quality). Second one is for the New Image Finder to automatically stack the developed versions over the RAW file (developed image must be on same directory as the original). This requires regular expressions as described in <xref linkend="opt-search-new"/>. Two helper scripts are provided in &kphotoalbum; sources to help in RAW workflow. These are open-raw.desktop and open-raw.pl. The first one enables GUI applications to open the RAW files in the open-raw.pl script that tries to find the original RAW file and open that instead of the developed image. </para>
@@ -85,7 +85,9 @@
 > category to mark &eg; crabs and shrimps to be easily able to display only selected type of images during the later phases of selection and identification.</para>
 
   <para
->After a reduced amount of images is left I start tagging them. I add the Latin Name of the species and Common Name. Whenever I have these two categories completed I consider the image Done and get rid of the Untagged marking. (As the tags are copied over to new version of images only when the new image is found and not when the top of the stack is re-tagged it is good to have as final tagging done as possible before developing JPEGs.)</para>
+>Nadat een gereduceerde hoeveelheid afbeeldingen over is begin ik ze van tags te voorzien. Ik voeg de Latijnse naam van de soort en de gewone naam. Wanneer ik deze twee categorieën heb voltooid beschouw ik de afbeelding als af gooi de geen-tag markering weg. Merk op dat als het nodig is tagging te doen na het ontwikkelen van de RAW-afbeelding (en ze auto te stapelen) het nodig is de bovenkant van de ingeklapte stapel (of alle afbeeldingen op een uitgeklapte stapel) en <emphasis
+>Meerdere items op hetzelfde moment annoteren</emphasis
+> selecteren om de gehele stapel te annoteren in plaats van alleen de aller bovenste afbeelding.</para>
 
   <para
 >The best images are sent to external application for developing. With wanted images selected, right click on selected thumbnail and select <menuchoice
@@ -102,9 +104,61 @@
 >Now that there is plenty of new JPEGs in the image directories I let &kphotoalbum; search for new images and automatically stack the new ones on top of the original RAW (<xref linkend="fig-options-file-versions"/>). Then a final round of selection with the developed images and adding some descriptions if needed.</para>
 
   <para
->De laatste stap is het genereren van statische &HTML;-pagina's en het uploaden naar mijn webserver voor het genieten door vrienden en collega's. &HTML;-generatie wordt beschreven in <xref linkend="chp-generating-html"/>.</para>
+>De laatste stap is het genereren van statische &HTML;-pagina's en het uploaden naar mijn webserver voor het genieten door vrienden en collega's. Dit doe ik met de ingeklapte stapels om alleen de ontwikkelde afbeeldingen van de webpagina te verkrijgen. &HTML;-generatie wordt beschreven in <xref linkend="chp-generating-html"/>.</para>
   </sect1>
 
+  <sect1 id="pano-workflow">
+  <title
+>Panorama workflow</title>
+  <para
+>Panoramas require a bit different workflow than normal photo editing. This is due to the requirement for multiple source files. The tool of choice for panoramas is Autopano Pro but latest version of &digikam; should do well and fits zero budget. Following list describes the steps required: <orderedlist>
+  <listitem
+><para
+>Tag the photos belonging to a panorama in &kphotoalbum; appropriately. This is done mainly to avoid discarding images by accident, when sorting out the garbage among the photos taken. You probably want also to stack the set of source images at this point.</para
+></listitem>
+  <listitem
+><para
+>You have at least two simple options for next step: <orderedlist>
+  <listitem
+><para
+>You can let Autopano Pro find the panoramas automatically from the photo directory. </para
+></listitem>
+  <listitem
+><para
+>Or send the proper images to Autopano Pro on command line to speed things up. This is handy if the image directory contains a lot of images, especially RAW ones. This requires one to fix the script that starts Autopano Pro to accept input and to create a desktop file or invoking external program with own command line.</para
+></listitem>
+  </orderedlist>
+  </para
+></listitem>
+  <listitem
+><para
+>If it happens that the resulting panorama is missing a small part, you can try to craft it e.g. with the Gimp. Gimp works usually quite well if there is enough "structure" to be cloned but there is absolutely no guarantee you will get usable results.</para
+></listitem>
+  <listitem
+><para
+>Save the new image somewhere under &kphotoalbum;'s image directory and run <menuchoice
+><guimenu
+>Maintenance</guimenu
+><guimenuitem
+>Rescan for Images and Videos</guimenuitem
+></menuchoice
+>. This should notice the new panorama and include it in the picture gallery. </para
+></listitem>
+  <listitem
+><para
+>If you have set the AutoStacking of new images properly and name of the new panorama matches the rules for this, the panorama should be on top of the stack. Otherwise sort the images by date, so the new panorama ends up at by the source images and stack them manually. (Autopano Pro seems to write the EXIF info of the first image into the panorama.)</para
+></listitem>
+  <listitem
+><para
+>You can still add tagging at this point to the panorama or you might include all the source images also with <keycombo
+>&Ctrl;<keycap
+>2</keycap
+></keycombo
+>.</para
+></listitem>
+  </orderedlist>
+  </para>
+</sect1>
 </chapter>
 <!-- Keep this comment at the end of the file
 Local variables:

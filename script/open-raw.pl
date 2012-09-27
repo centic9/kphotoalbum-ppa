@@ -9,11 +9,26 @@ my @params;
 # Raw extensions you use. If you use Ufraw you might want to add ufraw
 # as the first extension in the list
 # my @rawExt = ("ufraw", "CR2", "NEF");
-my @rawExt = ("CR2", "NEF");
+my @rawExt = ("CR2", "NEF", "ORF");
 
 # The application you use to develop the RAW files
+my @raw_converters = ( "/usr/bin/AfterShotPro", "/usr/bin/bibble5",
+	"/usr/bin/ufraw" );
 # my $extApp = "/usr/bin/ufraw";
-my $extApp = "/usr/bin/AfterShotPro";
+my $extApp = "";
+
+foreach my $app (@raw_converters) {
+	if ( -e $app ) {
+		$extApp = $app;
+		last;
+	}
+}
+
+if ($extApp =~ m/^$/) {
+	my $errMsg = "Could not find RAW developer. If you have one, " .
+		"script open-raw.pl must be updated.";
+	exec("notify-send \"$errMsg\"");
+}
 
 # A default regular expression for detecting the original RAW file
 # We attempt to update this with the one used by KPhotoAlbum later

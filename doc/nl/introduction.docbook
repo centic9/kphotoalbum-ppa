@@ -52,35 +52,35 @@
     <title
 >Organisatie van afbeeldingen en bestanden van &kphotoalbum;</title>
     <para
->&kphotoalbum; uses all the images of a directory and all subdirectories below it, first time you start &kphotoalbum;, you will be asked for the location of this directory. &kphotoalbum; will not modify any images, so you do not have to be afraid of &kphotoalbum; altering your images <footnote
+>&kphotoalbum; gebruikt de eerste keer dat u &kphotoalbum; start, alle afbeeldingen in een map en alle submappen eronder, waarbij u gevraagd wordt naar de locatie van deze map. &kphotoalbum; zal geen enkele afbeelding wijzigen, zodat u niet bang hoeft te zijn dat &kphotoalbum; uw afbeeldingen zal aanpassen <footnote
 ><para
->The two exceptions to this rule is (1) if you ask &kphotoalbum; to delete individual images, from <menuchoice
+>De twee uitzonderingen op deze regel zijn (1) als u &kphotoalbum; vraagt om individuele afbeeldingen te verwijderen, met <menuchoice
 ><guimenu
->Edit</guimenu
+>Bewerken</guimenu
 ><guimenuitem
->Delete Selected</guimenuitem
+>Geselecteerden verwijderen</guimenuitem
 ></menuchoice
->, and (2) plug-in operations.</para
+> en (2) bewerkingen in een plug-in.</para
 ></footnote
->, actually if you do not trust &kphotoalbum;, feel free to make all your images write protected.</para>
+>, en als u &kphotoalbum; niet vertrouwt, voel u dan vrij om al uw afbeeldingen te beschermen tegen schrijven (alleen-lezen maken).</para>
     
     <para
->&kphotoalbum; will save all its information in the file <filename
+>&kphotoalbum; zal al zijn informatie opslaan in het bestand <filename
 >index.xml</filename
-> in your topmost image directory. This file is a simple XML file, so you can easily back it up using whatever tools you prefer, including normal backup utilities, copying the file to a floppy disk, or keeping revisions using VCS. There is also a backup script (<emphasis
+> in uw hoogste map met afbeeldingen. Dit bestand is een eenvoudig XML-bestand, zodat u er gemakkelijk een reservekopie met elk hulpmiddel van kan maken, inclusief normale hulpmiddelen voor reservekopieën, het bestand naar een USB-stick kopiëren of revisies met VCS bewaren. Er is ook een script voor het maken van een reservekopie (<emphasis
 >kpa-backup.sh</emphasis
->) provided in &kphotoalbum;'s sources that backs up not only the index.xml but also the configuration files inside user's home directory.</para>
+>) geleverd in de bronnen van &kphotoalbum; die niet alleen een reservekopie maakt van index.xml maar ook van de instellingsbestanden in de thuismap van de gebruiker.</para>
     
     <para
->&kphotoalbum; will remember where you told it your images were located, and reuse that in future use of &kphotoalbum;. Should you ever want to load another database into &kphotoalbum; (i.e. another directory tree of images), then you may start it with the <option
+>&kphotoalbum; onthoudt waar u hem hebt verteld waar uw afbeeldingen zich bevinden en hergebruikt dat in toekomstig gebruik van &kphotoalbum;. Zou u ooit een andere database in &kphotoalbum; willen laden (dwz. een andere mappenboom van afbeeldingen), dan kunt u starten met de optie <option
 >-c</option
-> option. For example: <userinput
+> option. Bijvoorbeeld: <userinput
 ><command
 >kphotoalbum</command
 > <option
 >-c</option
 > <filename
->~/CompanyImages/index.xml</filename
+>~/Bedrijfsafbeeldingen/index.xml</filename
 ></userinput
 >.</para>
   </sect1>

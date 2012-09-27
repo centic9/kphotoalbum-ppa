@@ -178,8 +178,6 @@ void XMLDB::FileReader::loadCategories( const QDomElement& elm )
 
 void XMLDB::FileReader::loadImages( const QDomElement& images )
 {
-    QString directory = Settings::SettingsData::instance()->imageDirectory();
-
     for ( QDomNode node = images.firstChild(); !node.isNull(); node = node.nextSibling() )  {
         QDomElement elm;
         if ( node.isElement() )
@@ -187,17 +185,17 @@ void XMLDB::FileReader::loadImages( const QDomElement& images )
         else
             continue;
 
-        QString fileName = elm.attribute( QString::fromLatin1("file") );
-        if ( fileName.isNull() ) {
+        const QString fileNameStr = elm.attribute( QString::fromLatin1("file") );
+        if ( fileNameStr.isNull() ) {
             qWarning( "Element did not contain a file attribute" );
-        } else if (_db->_idMapper.exists(fileName)) {
-            qDebug() << fileName << " already in database";
-        } else {
-            DB::ImageInfoPtr info = load( fileName, elm );
-            _db->_images.append(info);
-            _db->_idMapper.add(fileName );
-            _db->_md5map.insert( info->MD5Sum(), fileName );
+            return;
         }
+
+        const DB::FileName dbFileName = DB::FileName::fromRelativePath(fileNameStr);
+
+        DB::ImageInfoPtr info = load( dbFileName, elm );
+        _db->_images.append(info);
+        _db->_md5map.insert( info->MD5Sum(), dbFileName );
     }
 
 }
@@ -213,7 +211,7 @@ void XMLDB::FileReader::loadBlockList( const QDomElement& blockList )
 
         QString fileName = elm.attribute( QString::fromLatin1( "file" ) );
         if ( !fileName.isEmpty() )
-            _db->_blockList << fileName;
+            _db->_blockList << DB::FileName::fromRelativePath(fileName);
     }
 }
 
@@ -317,7 +315,7 @@ void XMLDB::FileReader::checkAndWarnAboutVersionConflict()
     }
 }
 
-DB::ImageInfoPtr XMLDB::FileReader::load( const QString& fileName, QDomElement elm )
+DB::ImageInfoPtr XMLDB::FileReader::load( const DB::FileName& fileName, QDomElement elm )
 {
     DB::ImageInfoPtr info = XMLDB::Database::createImageInfo( fileName, elm, _db );
     _nextStackId = qMax( _nextStackId, info->stackId() + 1 );
@@ -337,7 +335,7 @@ QDomElement XMLDB::FileReader::readConfigFile( const QString& configFile )
                                       i18n( "<p>KPhotoAlbum was unable to load a default setup, which indicates an installation error</p>"
                                             "<p>If you have installed KPhotoAlbum yourself, then you must remember to set the environment variable "
                                             "<b>KDEDIRS</b>, to point to the topmost installation directory.</p>"
-                                            "<p>If you for example ran configure with <b>--prefix=/usr/local/kde</b>, then you must use the following "
+                                            "<p>If you for example ran cmake with <b>-DCMAKE_INSTALL_PREFIX=/usr/local/kde</b>, then you must use the following "
                                             "environment variable setup (this example is for Bash and compatible shells):</p>"
                                             "<p><b>export KDEDIRS=/usr/local/kde</b></p>"
                                             "<p>In case you already have KDEDIRS set, simply append the string as if you where setting the <b>PATH</b> "

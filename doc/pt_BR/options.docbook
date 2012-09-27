@@ -10,12 +10,19 @@
 ></menuchoice
 > no menu, irá mostrar a janela de opções. Este capítulo apresentará as opções de configuração aqui disponíveis.</para>
 
+
+<sect1 id="opt-general">
+  <title
+>Configurações gerais</title>
+
 <para
->Abaixo, você poderá ver a página de configuração das opções gerais, das opções para a área de miniaturas e para o visualizador. Cada grupo de opções tem alguns detalhes sobre a sua descrição, como tal para obter ajuda sobre estes itens, basta pressionar F1 e pressionar com o cursor na opção em geral.</para>
+>Abaixo você pode ver a página de configuração das opções gerais. Algumas destas opções são brevemente descritas aqui, podendo ainda acessar um menu informativo enquanto faz as configurações, se clicar com o botão direito em uma opção e selecionar o item <guimenuitem
+>O que é isto?</guimenuitem
+> do menu.</para>
 
 <figure id="fig-options-general">
 <title
->Opções Gerais</title>
+>Opções gerais</title>
 <mediaobject>
 <imageobject>
 <imagedata fileref="options-general.png" format="PNG"/>
@@ -23,6 +30,69 @@
 </mediaobject>
 </figure>
 
+<para
+>O uso da orientação EXIF irá girar automaticamente as imagens da forma como foram tiradas. A maioria das câmeras digitais incorporam uma miniatura nos arquivos do formato RAW e muitas vezes esta miniatura já tem um tamanho suficiente. Se optar por usar esta miniatura incorporada, você pode agilizar todas as operações com imagens, pois a decodificação de arquivos RAW normalmente leva muito tempo e o uso da miniatura é muito mais rápido. Você pode também definir o tamanho mínimo da miniatura, para os casos em que a mesma tiverem um tamanho muito pequeno, utilizando, assim a imagem RAW.</para>
+</sect1>
+
+<sect1 id="opt-search-new">
+  <title
+>Configurações da pesquisa por novas imagens</title>
+<para
+>O painel esquerdo fornece-lhe acesso a outras configurações, tais como a <guimenuitem
+>Pesquisa e versões dos arquivos</guimenuitem
+>. Estas configurações definem o comportamento do &kphotoalbum; quando encontrar novas imagens. Estas poderão ser pesquisadas automaticamente no inicialização ou manualmente a partir do menu <guimenu
+>Manutenção</guimenu
+>. Mais uma vez, as opções estão bem descritas na ajuda on-line, embora só algumas tenham aqui uma breve descrição.</para>
+
+<figure id="fig-options-file-versions">
+<title
+>Pesquisa e versões dos arquivos</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="options-file-versions.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</figure>
+
+<para>
+<itemizedlist mark='opencircle'>
+    <listitem
+><para
+>Você poderá querer ignorar a pesquisa para algumas pastas que são geradas pelos diferentes visualizadores de imagens ou gerenciadores de arquivos. Esta é uma lista separada por vírgulas e novas pastas podem ser facilmente adicionadas.</para
+></listitem>
+    <listitem>
+        <para
+>Novas versões do mesmos arquivos podem ser automaticamente detectadas até certo ponto. Se quiser &eg; empilhar novas versões da mesma imagem, você pode configurar a expressão regular a ser usada para procurar se o novo arquivo é uma nova versão de um arquivo original. As opções seguintes correspondem à expressão regular de pesquisa e o segundo arquivo original, e deverão estar devidamente configuradas ao, mas talvez seja necessário algum ajuste para se adequar a sua convenção de nomes:</para>
+    <orderedlist>
+    <listitem
+><para
+>(_(v){0,1}([0-9]){1,2}){0,1}\.(jpg|JPG|tif|TIF|png|PNG)</para
+></listitem>
+    <listitem
+><para
+>.CR2;.NEF;.JPG;.jpg</para
+></listitem>
+    </orderedlist>
+    </listitem>
+</itemizedlist>
+Lembre-se de que o texto de substituição do arquivo original pode ter vários sufixos separados por ponto e vírgula e pode usar referências a grupos na expressão regular com a sintaxe \1. O arquivo original será pesquisado na mesma pasta que o arquivo novo. A expressão regular de exemplo iria corresponder &eg; aos seguintes arquivos: exemplo_v1.jpg, exemplo_12.tif, exemplo.PNG. </para>
+</sect1>
+
+<sect1 id="opt-thumbnails">
+  <title
+>Configurações do visualizador de miniaturas</title>
+  <para
+>Não existe muito a ser configurado no visualizador de miniaturas. Normalmente, serão as opções do tamanho da miniatura e o tamanho da dica (se pensar em usar a funcionalidade das dicas, que pode ser ativada com a opção <menuchoice
+><guimenu
+>Configurações</guimenu
+><guimenuitem
+>Mostrar dicas na janela de miniaturas</guimenuitem
+></menuchoice
+> ou com <keycombo
+>&Ctrl;<keycap
+>T</keycap
+></keycombo
+>). Você também pode selecionar as informações adicionais, tais como as legendas e as categorias, em conjunto com as miniaturas. </para>
 <figure>
 <title
 >Opções da Área de Miniaturas</title>
@@ -32,7 +102,17 @@
 </imageobject>
 </mediaobject>
 </figure>
+</sect1>
 
+<sect1 id="opt-viewer">
+  <title
+>Configurações do visualizador</title>
+  <para
+>Outra configuração relativamente simples. Você pode principalmente selecionar o tamanho preferido para a janela do visualizador ou da apresentação de slides, ou então, para exibi-las em tela cheia. O intervalo da apresentação de slides básica pode ser definido aqui, mas uma apresentação de slides avançada com mais recursos também está disponível nos plugins do KIPI. O algoritmo de escala pode ser <emphasis
+>Melhor</emphasis
+> ou <emphasis
+>Mais rápido</emphasis
+>. Se o seu computador for suficientemente rápido para a escala Melhor, use essa opção. Caso contrário, opte pela velocidade. </para>
 <figure>
 <title
 >Opções do Visualizador</title>
@@ -42,7 +122,7 @@
 </imageobject>
 </mediaobject>
 </figure>
-
+</sect1>
 
 
 
@@ -87,7 +167,7 @@
 >Sub-Categorias</title>
 
 <para
->Em <xref linkend="sec-member-groups-in-property-editor"/> falou-se dos grupos de membros. Na janela de opções, é possível configurar grupos inteiros de membros, i.e., configurar todos os membros de um grupo, de uma vez, em vez de configurar todos os grupos para um membro, como foi o caso em <xref linkend="sec-member-groups-in-property-editor"/>.</para>
+>Em <xref linkend="sec-member-groups-in-property-editor"/> falou-se dos grupos de membros. Na janela de opções, é possível configurar grupos inteiros de membros, &ie;, configurar todos os membros de um grupo, de uma vez, em vez de configurar todos os grupos para um membro, como foi o caso em <xref linkend="sec-member-groups-in-property-editor"/>.</para>
 
 <para
 >Em <xref linkend="fig-options-member"/> você poderá ver a página de configuração para indicar os grupos de membros. Em cima existe uma lista onde poderá indicar a categoria que você está atualmente configurando. Do lado esquerdo poderá ver uma lista com a categoria atual e do lado direito uma lista com as sub-categorias.</para>
