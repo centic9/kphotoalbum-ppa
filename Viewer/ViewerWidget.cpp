@@ -62,6 +62,7 @@
 #include <KProcess>
 #include <KStandardDirs>
 #include "MainWindow/DeleteDialog.h"
+#include "VideoShooter.h"
 
 #ifdef HAVE_EXIV2
 #  include "Exif/InfoDialog.h"
@@ -414,7 +415,7 @@ void Viewer::ViewerWidget::createSlideShowMenu()
 }
 
 
-void Viewer::ViewerWidget::load( const QStringList& list, int index )
+void Viewer::ViewerWidget::load( const DB::FileNameList& list, int index )
 {
     _list = list;
     _imageDisplay->setImageList( list );
@@ -429,8 +430,8 @@ void Viewer::ViewerWidget::load( const QStringList& list, int index )
 
 void Viewer::ViewerWidget::load()
 {
-    bool isReadable = QFileInfo( currentInfo()->fileName(DB::AbsolutePath) ).isReadable();
-    bool isVideo = isReadable && Utilities::isVideo( currentInfo()->fileName(DB::AbsolutePath) );
+    const bool isReadable = QFileInfo( currentInfo()->fileName().absolute() ).isReadable();
+    const bool isVideo = isReadable && Utilities::isVideo( currentInfo()->fileName() );
 
     if ( isReadable ) {
         if ( isVideo ) {
@@ -454,14 +455,14 @@ void Viewer::ViewerWidget::load()
 #ifdef HAVE_EXIV2
     _showExifViewer->setEnabled( !isVideo );
     if ( _exifViewer )
-      _exifViewer->setImage( DB::ImageDB::instance()->ID_FOR_FILE(currentInfo()->fileName(DB::AbsolutePath)) );
+        _exifViewer->setImage( currentInfo()->fileName() );
 #endif
 
     Q_FOREACH( QAction* videoAction, _videoActions ) {
         videoAction->setVisible( isVideo );
     }
 
-    emit soughtTo( DB::ImageDB::instance()->ID_FOR_FILE( _list[ _current ] ) );
+    emit soughtTo( _list[ _current ]);
 
     bool ok = _display->setImage( currentInfo(), _forward );
     if ( !ok ) {
@@ -491,7 +492,7 @@ void Viewer::ViewerWidget::load()
 
 void Viewer::ViewerWidget::setCaptionWithDetail( const QString& detail ) {
     setWindowTitle( QString::fromLatin1( "KPhotoAlbum - %1 %2" )
-                    .arg( currentInfo()->fileName(DB::AbsolutePath) )
+                    .arg( currentInfo()->fileName().absolute() )
                     .arg( detail ) );
 }
 
@@ -544,11 +545,10 @@ void Viewer::ViewerWidget::deleteCurrent()
 
 void Viewer::ViewerWidget::removeOrDeleteCurrent( RemoveAction action )
 {
-    const QString fileName = _list[_current];
-    const DB::Id id = DB::ImageDB::instance()->ID_FOR_FILE( fileName );
+    const DB::FileName fileName = _list[_current];
 
     if ( action == RemoveImageFromDatabase )
-        _removed.append(id);
+        _removed.append(fileName);
     _list.removeAll(fileName);
     if ( _list.isEmpty() )
         close();
@@ -698,7 +698,7 @@ bool Viewer::ViewerWidget::close( bool alsoDelete)
 
 DB::ImageInfoPtr Viewer::ViewerWidget::currentInfo() const
 {
-    return DB::ImageDB::instance()->info(_list[ _current], DB::AbsolutePath); // PENDING(blackie) can we postpone this lookup?
+    return DB::ImageDB::instance()->info(_list[ _current]); // PENDING(blackie) can we postpone this lookup?
 }
 
 void Viewer::ViewerWidget::infoBoxMove()
@@ -793,7 +793,8 @@ void Viewer::ViewerWidget::updateInfoBox()
                 selecttext += QString::fromLatin1("{") + _currentInputList +
                     QString::fromLatin1("}");
             }
-        } else if (_currentInput != QString::fromLatin1("") ||
+        } else if ( ( _currentInput != QString::fromLatin1("") &&
+                   _currentCategory != QString::fromLatin1("Tokens") ) ||
                    _currentCategory != QString::fromLatin1("Tokens")) {
             selecttext = i18n("<b>Assigning: </b>") + _currentCategory +
                 QString::fromLatin1("/")  + _currentInput;
@@ -801,6 +802,9 @@ void Viewer::ViewerWidget::updateInfoBox()
                 selecttext += QString::fromLatin1("{") + _currentInputList +
                     QString::fromLatin1("}");
             }
+        } else if ( _currentInput != QString::fromLatin1("") &&
+                   _currentCategory == QString::fromLatin1("Tokens") ) {
+            _currentInput = QString::fromLatin1("");
         }
         if (selecttext != QString::fromLatin1(""))
             text = selecttext + QString::fromLatin1("<br />") + text;
@@ -980,7 +984,7 @@ void Viewer::ViewerWidget::filterMono()
 
 void Viewer::ViewerWidget::slotSetStackHead()
 {
-    MainWindow::Window::theMainWindow()->setStackHead( DB::ImageDB::instance()->ID_FOR_FILE( _list[ _current ] ) );
+    MainWindow::Window::theMainWindow()->setStackHead(_list[ _current ]);
 }
 
 bool Viewer::ViewerWidget::showingFullScreen() const
@@ -1106,7 +1110,7 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
                 _currentInput.left(1) == QString::fromLatin1("\'")) {
                 _currentInput = _currentInput.right(_currentInput.length()-1);
             }
-            currentInfo()->addCategoryInfo( _currentCategory, _currentInput );
+            currentInfo()->addCategoryInfo( DB::ImageDB::instance()->categoryCollection()->nameForText( _currentCategory ), _currentInput );
             DB::CategoryPtr category =
                 DB::ImageDB::instance()->categoryCollection()->categoryForName(_currentCategory);
             category->addItem(_currentInput);
@@ -1171,7 +1175,7 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
         } else if (_currentCategory == QString::fromLatin1("")) {
             // still searching for a category to lock to
             _currentInput += incomingKey;
-            QStringList categorynames = DB::ImageDB::instance()->categoryCollection()->categoryNames();
+            QStringList categorynames = DB::ImageDB::instance()->categoryCollection()->categoryTexts();
             if (find_tag_in_list(categorynames, namefound) == 1) {
                 // yay, we have exactly one!
                 _currentCategory = namefound;
@@ -1182,14 +1186,14 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
             _currentInput += incomingKey;
 
             DB::CategoryPtr category =
-                DB::ImageDB::instance()->categoryCollection()->categoryForName(_currentCategory);
+                DB::ImageDB::instance()->categoryCollection()->categoryForName( DB::ImageDB::instance()->categoryCollection()->nameForText( _currentCategory ) );
             QStringList items = category->items();
             if (find_tag_in_list(items, namefound) == 1) {
                 // yay, we have exactly one!
-                if ( currentInfo()->hasCategoryInfo( _currentCategory, namefound ) )
-                    currentInfo()->removeCategoryInfo( _currentCategory, namefound );
+                if ( currentInfo()->hasCategoryInfo( category->name(), namefound ) )
+                    currentInfo()->removeCategoryInfo( category->name(), namefound );
                 else
-                    currentInfo()->addCategoryInfo( _currentCategory, namefound );
+                    currentInfo()->addCategoryInfo( category->name(), namefound );
 
                 _lastFound = namefound;
                 _lastCategory = _currentCategory;
@@ -1227,7 +1231,7 @@ void Viewer::ViewerWidget::wheelEvent( QWheelEvent* event )
 void Viewer::ViewerWidget::showExifViewer()
 {
 #ifdef HAVE_EXIV2
-    _exifViewer = new Exif::InfoDialog( DB::ImageDB::instance()->ID_FOR_FILE(currentInfo()->fileName(DB::AbsolutePath)), this );
+    _exifViewer = new Exif::InfoDialog( currentInfo()->fileName(), this );
     _exifViewer->show();
 #endif
 
@@ -1251,6 +1255,11 @@ void Viewer::ViewerWidget::zoomFull()
 void Viewer::ViewerWidget::zoomPixelForPixel()
 {
     _display->zoomPixelForPixel();
+}
+
+void Viewer::ViewerWidget::makeThumbnailImage()
+{
+    VideoShooter::go(currentInfo(), this);
 }
 
 
@@ -1314,6 +1323,13 @@ void Viewer::ViewerWidget::createVideoMenu()
     _playPause->setShortcut( Qt::Key_P );
     _popup->addAction( _playPause );
     _videoActions.append( _playPause );
+
+    _makeThumbnailImage = _actions->addAction( QString::fromLatin1("make-thumbnail-image"), this, SLOT(makeThumbnailImage()));
+    _makeThumbnailImage->setShortcut(Qt::ControlModifier + Qt::Key_S);
+    _makeThumbnailImage->setText( tr("Use current frame in thumbnail view") );
+    _popup->addAction(_makeThumbnailImage);
+    _videoActions.append(_makeThumbnailImage);
+
     KAction* restart = _actions->addAction( QString::fromLatin1("viewer-video-restart"), _videoDisplay, SLOT( restart() ) );
     restart->setText( i18n("Restart") );
     _popup->addAction( restart );
@@ -1390,7 +1406,7 @@ void Viewer::ViewerWidget::stopPlayback()
 
 void Viewer::ViewerWidget::invalidateThumbnail() const
 {
-    ImageManager::ThumbnailCache::instance()->removeThumbnail( currentInfo()->fileName( DB::AbsolutePath ) );
+    ImageManager::ThumbnailCache::instance()->removeThumbnail( currentInfo()->fileName() );
 }
 
 #include "ViewerWidget.moc"

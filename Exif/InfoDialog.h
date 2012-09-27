@@ -20,7 +20,8 @@
 #include <KDialog>
 #include <q3gridview.h>
 #include "Utilities/Set.h"
-#include "ImageManager/ImageClient.h"
+#include "ImageManager/ImageClientInterface.h"
+#include <DB/FileName.h>
 class KComboBox;
 class QLabel;
 class QKeyEvent;
@@ -33,18 +34,18 @@ namespace Exif
 using Utilities::StringSet;
 class Grid;
 
-class InfoDialog : public KDialog, public ImageManager::ImageClient {
+class InfoDialog : public KDialog, public ImageManager::ImageClientInterface {
     Q_OBJECT
 
 public:
-    InfoDialog( const DB::Id& id, QWidget* parent );
-    void setImage( const DB::Id& id );
+    InfoDialog( const DB::FileName& fileName, QWidget* parent );
+    void setImage( const DB::FileName& fileName );
 
     OVERRIDE QSize sizeHint() const;
     OVERRIDE void enterEvent( QEvent* );
 
     // ImageManager::ImageClient interface.
-    OVERRIDE void pixmapLoaded( const QString& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+    OVERRIDE void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
 
 protected slots:
     void updateSearchString( const QString& );
@@ -63,7 +64,7 @@ class Grid :public Q3GridView
 
 public:
     explicit Grid( QWidget* parent, const char* name = 0 );
-    void setFileName( const QString& fileName );
+    void setFileName( const DB::FileName& fileName );
 
 signals:
     QString searchStringChanged( const QString& text );
@@ -88,7 +89,7 @@ private:
     QSet<int> m_headers;
     int m_maxKeyWidth;
     QString m_search;
-    QString m_fileName;
+    DB::FileName m_fileName;
 };
 
 }

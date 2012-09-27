@@ -6,9 +6,9 @@
 
   <sect1 id="raw-workflow">
   <title
->Flusso di lavoro RAW con &kphotoalbum; e Bibble5</title>
+>Flusso di lavoro RAW con &kphotoalbum; e Bibble5/AfterShot Pro</title>
   <para
->Quando si scattano immagini RAW, i file della fotocamera vanno convertiti in formati più riconoscibili come JPEG o TIFF. Ci sono alcune possibilità tra cui scegliere quando si lavora su Linux. A tal file, per esempio, RawTherapee e Ufraw sono delle alternative libere, mentre Bibble5/AfterShotPro sono applicazioni commerciali.</para>
+>Quando si scattano immagini RAW, i file della fotocamera vanno convertiti in formati più riconoscibili come JPEG o TIFF. Ci sono alcune possibilità tra cui scegliere quando si lavora su Linux. A tal file, per esempio, RawTherapee e Ufraw sono delle alternative libere, mentre Bibble5/AfterShot Pro sono applicazioni commerciali.</para>
 
   <para
 >Alcune impostazioni sono raccomandate per un flusso di lavoro RAW. La prima è abilitare l'uso delle miniature incorporate. Questo accelererà sensibilmente il lavoro al confronto della decodifica di ogni file RAW ogni volta che viene visualizzato (controlla anche la configurazione della dimensione minima per assicurare una qualità accettabile). La seconda è l'impilamento automatico da parte del rilevatore di nuove immagini delle versioni convertite dal file RAW (l'immagine convertita deve essere nella stessa cartella dell'originale). Questo richiede espressioni regolari come descritte nel<xref linkend="opt-search-new"/>. Due script di supporto sono acclusi al codice sorgente di &kphotoalbum; per supportare il flusso di lavoro RAW. Questi sono <filename
@@ -91,7 +91,9 @@
 > per indicare per esempio granchi e gamberi, per poter vedere facilmente solo il tipo di immagini selezionate nelle fasi successive di selezione e identificazione.</para>
 
   <para
->Quando rimane un numero ridotto di immagini, inizio ad etichettarle. Aggiungo il nome della specie in Latino e il nome volgare. Quando ho completato queste categorie considero l'immagine completata e rimuovo l'indicazione di immagine senza etichette. Siccome le etichette vengono copiate alle nuove versioni delle immagini solo quando queste vengono rilevate, e non quando la cima della pila viene nuovamente etichettata, è meglio finire l'etichettatura se possibile prima di sviluppare le immagini JPEG.</para>
+>Quando rimane un numero ridotto di immagini, inizio ad etichettarle. Aggiungo il nome della specie in Latino e il nome volgare. Quando ho completato queste categorie considero l'immagine completata e rimuovo l'indicazione di immagine senza etichette. Nota che se devi ancora etichettare dopo aver sviluppato (e impilato autoaticamentem) l'immagine RAW, devi selezionare la cima della pila contratta (o tutte le immagini della pila espansa) e selezionare <guilabel
+>Annota più elementi alla volta</guilabel
+> per annotare tutta la pila invece di solo l'immagine in cima.</para>
 
   <para
 >Le migliori immagini vengono inviate a un'applicazione esterna per la conversione. Selezionate le immagini desiderate, fai clic con il &RMB; sulla miniatura selezionata e seleziona <menuchoice
@@ -108,7 +110,7 @@
 >Adesso che ci sono un sacco di nuove JPEG nelle cartelle delle immagini, lascio che &kphotoalbum; cerchi le nuove immagini e impili automaticamente le nuove sopra le RAW originali (<xref linkend="fig-options-file-versions"/>). È quindi necessaria un'ultima serie di selezione con le immagini convertite, aggiungendo delle descrizioni se opportuno.</para>
 
   <para
->L'ultimo passo è generare delle pagine &HTML; statiche e caricarle sul mio server Web per farle vedere ad amici e colleghi. La generazione dell'&HTML; è descritta nel<xref linkend="chp-generating-html"/>.</para>
+>L'ultimo passo è generare delle pagine &HTML; statiche e caricarle sul mio server Web per farle vedere ad amici e colleghi. Questo è quello che io faccio con le pile contratte per mettere solo le immagini sviluppate sulla pagina Web. La generazione dell'&HTML; è descritta nel<xref linkend="chp-generating-html"/>.</para>
   </sect1>
 
 </chapter>

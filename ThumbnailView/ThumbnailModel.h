@@ -17,20 +17,21 @@
 */
 #ifndef THUMBNAILMODEL_H
 #define THUMBNAILMODEL_H
-#include "ImageManager/ImageClient.h"
+#include "ImageManager/ImageClientInterface.h"
 #include "ImageManager/ImageRequest.h"
 #include <QAbstractListModel>
 #include "ThumbnailComponent.h"
-#include "DB/Id.h"
 #include "ThumbnailView/enums.h"
 #include "DB/ImageInfo.h"
 #include "enums.h"
+#include <QPixmap>
+#include <DB/FileNameList.h>
 
 namespace ThumbnailView
 {
 class ThumbnailFactory;
 
-class ThumbnailModel :public QAbstractListModel, public ImageManager::ImageClient, private ThumbnailComponent
+class ThumbnailModel :public QAbstractListModel, public ImageManager::ImageClientInterface, private ThumbnailComponent
 {
     Q_OBJECT
 
@@ -44,41 +45,42 @@ public:
     QString thumbnailText( const QModelIndex& index ) const;
     void updateCell( int row );
     void updateCell( const QModelIndex& index );
-    void updateCell( const DB::Id& id );
+    void updateCell( const DB::FileName& id );
 
     // -------------------------------------------------- ImageClient API
-    OVERRIDE void pixmapLoaded( const QString&, const QSize& size, const QSize& fullSize, int, const QImage&, const bool loadedOK);
+    OVERRIDE void pixmapLoaded( const DB::FileName&, const QSize& size, const QSize& fullSize, int, const QImage&, const bool loadedOK);
     bool thumbnailStillNeeded( int row ) const;
 
 
     //-------------------------------------------------- Drag and Drop of items
-    DB::Id rightDropItem() const;
-    void setRightDropItem( const DB::Id& item );
-    DB::Id leftDropItem() const;
-    void setLeftDropItem( const DB::Id& item );
+    DB::FileName rightDropItem() const;
+    void setRightDropItem( const DB::FileName& item );
+    DB::FileName leftDropItem() const;
+    void setLeftDropItem( const DB::FileName& item );
 
     //-------------------------------------------------- Stack
-    void toggleStackExpansion(const DB::Id& id);
+    void toggleStackExpansion(const DB::FileName& id);
     void collapseAllStacks();
     void expandAllStacks();
     bool isItemInExpandedStack( const DB::StackID& id ) const;
 
     //-------------------------------------------------- Position Information
-    DB::Id imageAt( int index ) const;
-    int indexOf(const DB::Id& id ) const;
-    int indexOf( const DB::Id& id );
-    QModelIndex idToIndex( const DB::Id& id ) const;
+    DB::FileName imageAt( int index ) const;
+    int indexOf(const DB::FileName& fileName ) const;
+    int indexOf( const DB::FileName& fileName );
+    QModelIndex fileNameToIndex( const DB::FileName& fileName ) const;
 
     //-------------------------------------------------- Images
-    void setImageList(const DB::IdList& list);
-    DB::IdList imageList(Order) const;
+    void setImageList(const DB::FileNameList& list);
+    DB::FileNameList imageList(Order) const;
     int imageCount() const;
+    void setOverrideImage( const DB::FileName& fileName, const QPixmap& pixmap );
 
     //-------------------------------------------------- Misc.
     void updateDisplayModel();
     void updateIndexCache();
     void setSortDirection( SortDirection );
-    QPixmap pixmap( const DB::Id& id ) const;
+    QPixmap pixmap( const DB::FileName& fileName ) const;
 
 public slots:
     void updateVisibleRowInfo();
@@ -90,11 +92,11 @@ signals:
 
 
 private: // Methods
-    void requestThumbnail( const DB::Id& mediaId, const ImageManager::Priority priority );
+    void requestThumbnail( const DB::FileName& mediaId, const ImageManager::Priority priority );
     void preloadThumbnails();
 
 private slots:
-    void imagesDeletedFromDB( const DB::IdList& );
+    void imagesDeletedFromDB( const DB::FileNameList& );
 
 
 private: // Instance variables.
@@ -105,20 +107,20 @@ private: // Instance variables.
      * shown, ie. it exclude images from stacks that are collapsed and thus
      * not visible.
      */
-    DB::IdList _displayList;
+    DB::FileNameList _displayList;
 
     /** The input list for images. See documentation for _displayList */
-    DB::IdList _imageList;
+    DB::FileNameList _imageList;
 
     /**
      * File which should have drop indication point drawn on its left side
      */
-    DB::Id _leftDrop;
+    DB::FileName _leftDrop;
 
     /**
      * File which should have drop indication point drawn on its right side
      */
-    DB::Id _rightDrop;
+    DB::FileName _rightDrop;
 
     SortDirection _sortDirection;
 
@@ -135,10 +137,13 @@ private: // Instance variables.
     /**
      * A map mapping from Id to its index in _displayList.
      */
-    QMap<DB::Id,int> _idToIndex;
+    QMap<DB::FileName,int> _fileNameToIndex;
 
     int _firstVisibleRow;
     int _lastVisibleRow;
+
+    DB::FileName m_overrideFileName;
+    QPixmap m_overrideImage;
 };
 
 }

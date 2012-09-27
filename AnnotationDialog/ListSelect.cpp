@@ -46,7 +46,7 @@ using namespace AnnotationDialog;
 using CategoryListView::CheckDropItem;
 
 AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidget* parent )
-    : QWidget( parent ), _category( category )
+    : QWidget( parent ), _category( category ), _baseTitle( )
 {
     QVBoxLayout* layout = new QVBoxLayout( this );
 
@@ -66,6 +66,7 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
     connect( _listView, SIGNAL( contextMenuRequested( Q3ListViewItem*, const QPoint&, int ) ),
              this, SLOT(showContextMenu( Q3ListViewItem*, const QPoint& ) ) );
     connect( _listView, SIGNAL( itemsChanged() ), this, SLOT( rePopulate() ) );
+    connect( _listView, SIGNAL( selectionChanged() ), this, SLOT( updateSelectionCount() ) );
 
     layout->addWidget( _listView );
     _listView->viewport()->installEventFilter( this );
@@ -106,6 +107,7 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
     _showSelectedOnly->setIcon( SmallIcon( QString::fromLatin1( "view-filter" ) ) );
     _showSelectedOnly->setCheckable( true );
     _showSelectedOnly->setToolTip( i18n("Show only selected Ctrl+S") );
+	_showSelectedOnly->setChecked( ShowSelectionOnlyManager::instance().selectionIsLimited() );
 
     _alphaTreeSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaTree );
     _alphaFlatSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaFlat );
@@ -128,6 +130,8 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
 
     connect( Settings::SettingsData::instance(), SIGNAL( viewSortTypeChanged( Settings::ViewSortType ) ),
              this, SLOT( setViewSortType( Settings::ViewSortType ) ) );
+    connect( Settings::SettingsData::instance(), SIGNAL( matchTypeChanged( AnnotationDialog::MatchType ) ),
+             this, SLOT( updateListview( ) ) );
 
     connect( &ShowSelectionOnlyManager::instance(), SIGNAL( limitToSelected() ), this, SLOT(limitToSelection() ) );
     connect( &ShowSelectionOnlyManager::instance(), SIGNAL( broaden() ), this, SLOT( showAllChildren() ) );
@@ -152,6 +156,7 @@ void AnnotationDialog::ListSelect::slotReturn()
 
         _lineEdit->clear();
     }
+    updateSelectionCount();
 }
 
 QString AnnotationDialog::ListSelect::category() const
@@ -171,6 +176,7 @@ void AnnotationDialog::ListSelect::setSelection( const StringSet& on, const Stri
     }
 
     _lineEdit->clear();
+    updateSelectionCount();
 }
 
 bool AnnotationDialog::ListSelect::isAND() const
@@ -193,10 +199,13 @@ void AnnotationDialog::ListSelect::setMode( UsageMode mode )
     } else {
         _and->hide();
         _or->hide();
-	_showSelectedOnly->show();
+        _showSelectedOnly->show();
     }
     for ( Q3ListViewItemIterator itemIt( _listView ); *itemIt; ++itemIt )
         configureItem( dynamic_cast<CategoryListView::CheckDropItem*>(*itemIt) );
+
+    // ensure that the selection count indicator matches the current mode:
+    updateSelectionCount();
 }
 
 
@@ -214,7 +223,6 @@ void AnnotationDialog::ListSelect::setViewSortType( Settings::ViewSortType tp )
     _alphaFlatSort->setChecked( tp == Settings::SortAlphaFlat );
     _dateSort->setChecked( tp == Settings::SortLastUse );
 }
-
 
 QString AnnotationDialog::ListSelect::text() const
 {
@@ -519,7 +527,7 @@ void AnnotationDialog::ListSelect::rePopulate()
     populate();
     setSelection( on, noChange );
 
-    if(_showSelectedOnly->isChecked())
+    if( ShowSelectionOnlyManager::instance().selectionIsLimited() )
         limitToSelection();
 
     _listView->setContentsPos( x, y );
@@ -527,7 +535,7 @@ void AnnotationDialog::ListSelect::rePopulate()
 
 void AnnotationDialog::ListSelect::showOnlyItemsMatching( const QString& text )
 {
-    ListViewTextMatchHider dummy( text, true, _listView );
+    ListViewTextMatchHider dummy( text, Settings::SettingsData::instance()->matchType(), _listView );
     ShowSelectionOnlyManager::instance().unlimitFromSelection();
 }
 
@@ -579,6 +587,12 @@ void AnnotationDialog::ListSelect::toggleSortType()
         data->setViewSortType( Settings::SortLastUse );
 }
 
+void AnnotationDialog::ListSelect::updateListview()
+{
+    // update item list (e.g. when MatchType changes):
+    showOnlyItemsMatching( text() );
+}
+
 void AnnotationDialog::ListSelect::limitToSelection()
 {
     if ( !isInputMode() )
@@ -592,6 +606,43 @@ void AnnotationDialog::ListSelect::showAllChildren()
 {
     _showSelectedOnly->setChecked( false );
     showOnlyItemsMatching( QString() );
+}
+
+void AnnotationDialog::ListSelect::updateSelectionCount()
+{
+    if ( _baseTitle.isEmpty()    //-> first time
+            || ! parentWidget()->windowTitle().startsWith( _baseTitle ) //-> title has changed
+       )
+    {
+        // save the original parentWidget title
+        _baseTitle = parentWidget()->windowTitle();
+    }
+    switch( _mode )
+    {
+        case InputMultiImageConfigMode:
+            if ( itemsUnchanged().size() > 0 )
+            { // if min != max
+                // tri-state selection -> show min-max (selected items vs. partially selected items):
+                parentWidget()->setWindowTitle( QString::fromLatin1( "%1 (%2-%3)" )
+                        .arg( _baseTitle )
+                        .arg( itemsOn().size() )
+                        .arg( itemsOn().size() + itemsUnchanged().size() ) );
+                break;
+            } // else fall through and only show one number:
+        case InputSingleImageConfigMode:
+            if ( itemsOn().size() > 0 )
+            { // if any tags have been selected
+                // "normal" on/off states -> show selected items
+                parentWidget()->setWindowTitle( QString::fromLatin1( "%1 (%2)" )
+                        .arg( _baseTitle )
+                        .arg( itemsOn().size() ) );
+                break;
+            } // else fall through and only show category
+        case SearchMode:
+            // no indicator while searching
+            parentWidget()->setWindowTitle( _baseTitle );
+            break;
+    }
 }
 
 

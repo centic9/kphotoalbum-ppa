@@ -25,9 +25,8 @@
 #include <q3progressdialog.h>
 #include <klocale.h>
 #include <time.h>
-#include "ImageManager/Manager.h"
+#include "ImageManager/AsyncLoader.h"
 #include "DB/ImageInfo.h"
-#include "DB/Id.h"
 #include <qapplication.h>
 #include <kmessagebox.h>
 #include <qlayout.h>
@@ -39,10 +38,11 @@
 #include "XMLHandler.h"
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <DB/FileNameList.h>
 
 using namespace ImportExport;
 
-void Export::imageExport(const DB::IdList& list)
+void Export::imageExport(const DB::FileNameList& list)
 {
     ExportConfig config;
     if ( config.exec() == QDialog::Rejected )
@@ -178,7 +178,7 @@ Export::~Export()
 }
 
 Export::Export(
-    const DB::IdList& list,
+    const DB::FileNameList& list,
     const QString& zipFile,
     bool compress,
     int maxSize,
@@ -239,16 +239,16 @@ Export::Export(
 }
 
 
-void Export::generateThumbnails(const DB::IdList& list)
+void Export::generateThumbnails(const DB::FileNameList& list)
 {
     _progressDialog->setLabelText( i18n("Creating thumbnails") );
     _loopEntered = false;
     _subdir = QString::fromLatin1( "Thumbnails/" );
     _filesRemaining = list.size(); // Used to break the event loop.
-    Q_FOREACH(const DB::ImageInfoPtr info, list.fetchInfos()) {
-        ImageManager::ImageRequest* request = new ImageManager::ImageRequest( info->fileName(DB::AbsolutePath), QSize( 128, 128 ), info->angle(), this );
+    Q_FOREACH(const DB::FileName& fileName, list) {
+        ImageManager::ImageRequest* request = new ImageManager::ImageRequest( fileName, QSize( 128, 128 ), fileName.info()->angle(), this );
         request->setPriority( ImageManager::BatchTask );
-        ImageManager::Manager::instance()->load( request );
+        ImageManager::AsyncLoader::instance()->load( request );
     }
     if ( _filesRemaining > 0 ) {
         _loopEntered = true;
@@ -256,7 +256,7 @@ void Export::generateThumbnails(const DB::IdList& list)
     }
 }
 
-void Export::copyImages(const DB::IdList& list)
+void Export::copyImages(const DB::FileNameList& list)
 {
     Q_ASSERT( _location != ManualCopy );
 
@@ -266,11 +266,11 @@ void Export::copyImages(const DB::IdList& list)
     _progressDialog->setLabelText( i18n("Copying image files") );
 
     _filesRemaining = 0;
-    Q_FOREACH(const DB::ImageInfoPtr info, list.fetchInfos()) {
-        QString file = info->fileName(DB::AbsolutePath);
-        QString zippedName = _filenameMapper.uniqNameFor(file);
+    Q_FOREACH(const DB::FileName& fileName, list) {
+        QString file = fileName.absolute();
+        QString zippedName = _filenameMapper.uniqNameFor(fileName);
 
-        if ( _maxSize == -1 || Utilities::isVideo( file ) || Utilities::isRAW( file )) {
+        if ( _maxSize == -1 || Utilities::isVideo( fileName ) || Utilities::isRAW( fileName )) {
             if ( QFileInfo( file ).isSymLink() )
                 file = QFileInfo(file).readLink();
 
@@ -289,16 +289,16 @@ void Export::copyImages(const DB::IdList& list)
         else {
             _filesRemaining++;
             ImageManager::ImageRequest* request =
-                new ImageManager::ImageRequest( file, QSize( _maxSize, _maxSize ), 0, this );
+                new ImageManager::ImageRequest( DB::FileName::fromAbsolutePath(file), QSize( _maxSize, _maxSize ), 0, this );
             request->setPriority( ImageManager::BatchTask );
-            ImageManager::Manager::instance()->load( request );
+            ImageManager::AsyncLoader::instance()->load( request );
         }
 
         // Test if the cancel button was pressed.
         qApp->processEvents( QEventLoop::AllEvents );
 
         if ( _progressDialog->wasCanceled() ) {
-            _ok = false;
+            *_ok = false;
             return;
         }
     }
@@ -308,7 +308,7 @@ void Export::copyImages(const DB::IdList& list)
     }
 }
 
-void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const QSize& /*fullSize*/, int /*angle*/, const QImage& image, const bool loadedOK)
+void Export::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/, const QSize& /*fullSize*/, int /*angle*/, const QImage& image, const bool loadedOK)
 {
     if ( !loadedOK )
         return;
@@ -316,7 +316,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
     const QString ext = (Utilities::isVideo( fileName ) || Utilities::isRAW( fileName )) ? QString::fromLatin1( "jpg" ) : QFileInfo( _filenameMapper.uniqNameFor(fileName) ).completeSuffix();
 
     // Add the file to the zip archive
-    QString zipFileName = QString::fromLatin1( "%1/%2.%3" ).arg( Utilities::stripSlash(_subdir))
+    QString zipFileName = QString::fromLatin1( "%1/%2.%3" ).arg( Utilities::stripEndingForwardSlash(_subdir))
         .arg(QFileInfo( _filenameMapper.uniqNameFor(fileName) ).baseName()).arg( ext );
     QByteArray data;
     QBuffer buffer( &data );
@@ -330,7 +330,7 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
         QFile out( file );
         if ( !out.open( QIODevice::WriteOnly ) ) {
             KMessageBox::error( 0, i18n("Error writing file %1", file ) );
-            _ok = false;
+            *_ok = false;
         }
         out.write( data, data.size() );
         out.close();
@@ -341,9 +341,9 @@ void Export::pixmapLoaded( const QString& fileName, const QSize& /*size*/, const
     bool canceled = (!_ok ||  _progressDialog->wasCanceled());
 
     if ( canceled ) {
-        _ok = false;
+        *_ok = false;
         _eventLoop->exit();
-        ImageManager::Manager::instance()->stop( this );
+        ImageManager::AsyncLoader::instance()->stop( this );
         return;
     }
 

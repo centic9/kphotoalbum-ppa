@@ -24,6 +24,7 @@
 #include "MainWindow/DirtyIndicator.h"
 #include "DB/ImageDB.h"
 #include "ThumbnailModel.h"
+#include "VideoThumbnailCycler.h"
 
 ThumbnailView::KeyboardEventHandler::KeyboardEventHandler( ThumbnailFactory* factory )
     : ThumbnailComponent( factory )
@@ -38,9 +39,9 @@ bool ThumbnailView::KeyboardEventHandler::keyPressEvent( QKeyEvent* event )
         bool mustRemoveToken = false;
         bool hadHit          = false;
 
-        const DB::IdList selection = widget()->selection();
-        for( DB::IdList::ConstIterator it = selection.begin(); it != selection.end(); ++it ) {
-            DB::ImageInfoPtr info = (*it).fetchInfo();
+        const DB::FileNameList selection = widget()->selection(NoExpandCollapsedStacks);
+        Q_FOREACH( const DB::FileName& fileName, selection ) {
+            DB::ImageInfoPtr info = fileName.info();
             if ( ! hadHit ) {
                 mustRemoveToken = info->hasCategoryInfo( QString::fromLatin1("Tokens"), token );
                 hadHit = true;
@@ -51,25 +52,30 @@ bool ThumbnailView::KeyboardEventHandler::keyPressEvent( QKeyEvent* event )
             else
                 info->addCategoryInfo( QString::fromLatin1("Tokens"), token );
 
-            model()->updateCell( *it );
+            model()->updateCell(fileName);
         }
 
         DB::ImageDB::instance()->categoryCollection()->categoryForName( QString::fromLatin1("Tokens") )->addItem( token );
         MainWindow::DirtyIndicator::markDirty();
         return true;
-    } else if ( event->modifiers() == Qt::NoModifier && ( event->key() >= Qt::Key_0 && event->key() <= Qt::Key_5 ) ) {
+    }
+
+    if ( event->modifiers() == Qt::NoModifier && ( event->key() >= Qt::Key_0 && event->key() <= Qt::Key_5 ) ) {
         bool ok;
         short rating = event->text().left(1).toShort(&ok, 10);
         if (ok) {
-            const DB::IdList selection = widget()->selection();
-            for( DB::IdList::ConstIterator it = selection.begin(); it != selection.end(); ++it ) {
-                DB::ImageInfoPtr info = (*it).fetchInfo();
+            const DB::FileNameList selection = widget()->selection( NoExpandCollapsedStacks );
+            Q_FOREACH( const DB::FileName& fileName, selection ) {
+                DB::ImageInfoPtr info = fileName.info();
                 info->setRating(rating * 2);
             }
             MainWindow::DirtyIndicator::markDirty();
         }
         return true;
     }
+
+    if (event->key() == Qt::Key_Control && widget()->isItemUnderCursorSelected())
+        VideoThumbnailCycler::instance()->stopCycle();
 
     if ( event->key() == Qt::Key_Return ) {
         emit showSelection();
@@ -91,6 +97,10 @@ bool ThumbnailView::KeyboardEventHandler::keyReleaseEvent( QKeyEvent* event )
 
         return false; // Don't propagate the event - I'm not sure why.
     }
+
+    if (event->key() == Qt::Key_Control)
+        VideoThumbnailCycler::instance()->setActive(widget()->mediaIdUnderCursor());
+
     return true;
 }
 

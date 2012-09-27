@@ -70,6 +70,7 @@ public slots:
     void slotSortAlphaTree();
     void slotSortAlphaFlat();
     void toggleSortType();
+    void updateListview();
     void rePopulate();
 
 protected slots:
@@ -78,6 +79,7 @@ protected slots:
     void setViewSortType( Settings::ViewSortType );
     void limitToSelection();
     void showAllChildren();
+    void updateSelectionCount();
 
 protected:
     virtual bool eventFilter( QObject* object, QEvent* event );
@@ -102,6 +104,7 @@ private:
     QToolButton* _alphaFlatSort;
     QToolButton* _dateSort;
     QToolButton* _showSelectedOnly;
+    QString _baseTitle;
 };
 
 }

@@ -17,7 +17,7 @@ ADD_DEFINITIONS(${QT_DEFINITIONS}
                 -DKDAB_NYI=qWarning
                 -DQT_NO_CAST_FROM_ASCII
                 -DQT_NO_CAST_TO_ASCII
-#                -DDB_RAWID_IS_PLAIN_INTEGER
+#                -DDEBUG_JOBMANAGER
                )
 
 INCLUDE_DIRECTORIES(${KDE4_INCLUDES}
@@ -60,16 +60,6 @@ endif(MARBLE_FOUND)
 macro_optional_find_package(Nepomuk)
 macro_bool_to_01(NEPOMUK_FOUND HAVE_NEPOMUK)
 
-if(QT_QTSQL_FOUND)
-  option(KPA_ENABLE_SQLDB "Build support for the experimental SQL database backend." OFF)
-endif(QT_QTSQL_FOUND)
-
-if(QT_QTSQL_FOUND AND KPA_ENABLE_SQLDB )
-  set(SQLDB_SUPPORT TRUE)
-else()
-  set(SQLDB_SUPPORT FALSE)
-endif(QT_QTSQL_FOUND AND KPA_ENABLE_SQLDB )
-
 # For config-kpa-*.h
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -97,8 +87,7 @@ set(libxmldb_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XMLImageDateCollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/NumberedBackup.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileReader.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileWriter.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/IdNameMapper.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileWriter.cpp)
 
 set(libThumbnailView_SRCS 
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailRequest.cpp  
@@ -115,6 +104,7 @@ set(libThumbnailView_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailDND.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/Delegate.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/SelectionMaintainer.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/VideoThumbnailCycler.cpp
 )
 set(libPlugins_SRCS)
 
@@ -125,7 +115,9 @@ set(libPlugins_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Plugins/ImageInfo.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Plugins/CategoryImageCollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Plugins/ImageCollectionSelector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/PluginsPage.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Settings/PluginsPage.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadWidget.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadImageCollection.cpp
 )
 endif(KIPI_FOUND)
 
@@ -136,11 +128,13 @@ set(libViewer_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/SpeedDisplay.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/InfoBox.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/CategoryImageConfig.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/Display.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/AbstractDisplay.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VideoDisplay.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/TextDisplay.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/InfoBoxResizer.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VisibleOptionsMenu.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VisibleOptionsMenu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VideoShooter.cpp
+        )
 
 set(libCategoryListView_SRCS 
 	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragableListView.cpp 
@@ -160,6 +154,7 @@ set(libUtilities_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Util.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Set.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp
     )
 
 set(libMainWindow_SRCS
@@ -180,16 +175,16 @@ set(libMainWindow_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/StatisticsDialog.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/BreadcrumbViewer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/StatusBar.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/UpdateVideoThumbnail.cpp
     )
 
 set(libImageManager_SRCS 
-	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageLoader.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/Manager.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageLoaderThread.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/AsyncLoader.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageRequest.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageClient.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageClientInterface.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageDecoder.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RawImageDecoder.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RequestQueue.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailCache.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageEvent.cpp
@@ -197,6 +192,9 @@ set(libImageManager_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/PreloadRequest.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/CancelEvent.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoImageRescaleRequest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoThumbnails.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoLengthExtractor.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ExtractOneVideoFrame.cpp
 )
 
 set(libDB_SRCS 
@@ -210,19 +208,20 @@ set(libDB_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfoList.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDB.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/FileInfo.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/DB/NegationCategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/NewImageFinder.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/NoTagCategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/GroupCounter.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryMatcher.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageSearchInfo.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryItem.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/DB/Id.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/DB/IdList.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/ContainerCategoryMatcher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/ValueCategoryMatcher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/OrCategoryMatcher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/AndCategoryMatcher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/ContainerCategoryMatcher.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/ValueCategoryMatcher.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/OrCategoryMatcher.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/AndCategoryMatcher.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/FileName.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/DB/FileNameList.cpp
     )
 
 set(libImportExport_SRCS
@@ -278,19 +277,35 @@ set(libexif_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp )
 
-##set(libthreading_SRCS
-##	${CMAKE_CURRENT_SOURCE_DIR}/Threading/Test.cpp  
-##	${CMAKE_CURRENT_SOURCE_DIR}/Threading/SearchForNewImagesJob.cpp
-##   )
+set(libBackgroundTaskManager_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobInterface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobManager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/StatusIndicator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobViewer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobModel.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobInfo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/CompletedJobInfo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/PriorityQueue.cpp
+)
+
+kde4_add_ui_files( libBackgroundTaskManager_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobViewer.ui
+)
+
+set(libBackgroundJobs_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/ReadVideoLengthJob.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/HandleVideoThumbnailRequestJob.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/ExtractOneThumbnailJob.cpp
+)
 
 add_subdirectory( images )
 add_subdirectory( icons )
 add_subdirectory( demo )
 add_subdirectory( themes )
+add_subdirectory( script )
 
-if(SQLDB_SUPPORT)
-  add_subdirectory( SQLDB )
-endif(SQLDB_SUPPORT)
 
 set(EXIV2_SRCS)
 if(EXIV2_FOUND AND QT_QTSQL_FOUND)
@@ -321,7 +336,8 @@ set(kphotoalbum_SRCS
   ${libAnnotationDialog_SRCS} 
   ${EXIV2_SRCS} 
   ${libBrowser_SRCS} 
-## ${libthreading_SRCS}
+  ${libBackgroundTaskManager_SRCS}
+  ${libBackgroundJobs_SRCS}
 )
 
 kde4_add_executable(kphotoalbum ${kphotoalbum_SRCS})
@@ -329,9 +345,6 @@ kde4_add_executable(kphotoalbum ${kphotoalbum_SRCS})
 kde4_add_library(Utilities STATIC ${libUtilities_SRCS})
 
 # Internal components
-if(SQLDB_SUPPORT)
-  target_link_libraries(kphotoalbum SQLDB)
-endif(SQLDB_SUPPORT)
 target_link_libraries(kphotoalbum Utilities)
 
 # External components
@@ -359,8 +372,6 @@ if(NEPOMUK_FOUND)
     INCLUDE_DIRECTORIES(${NEPOMUK_INCLUDE_DIR})
 endif(NEPOMUK_FOUND)
 
-##target_link_libraries(kphotoalbum threadweaver )
-
 install(TARGETS kphotoalbum ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
@@ -375,7 +386,6 @@ install( FILES  kphotoalbumui.rc default-setup default-layout.xml DESTINATION ${
 configure_file(config-kpa-kdcraw.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kdcraw.h)
 configure_file(config-kpa-exiv2.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-exiv2.h)
 configure_file(config-kpa-kipi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kipi.h)
-configure_file(config-kpa-sqldb.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-sqldb.h)
 configure_file(config-kpa-marble.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-marble.h)
 configure_file(config-kpa-nepomuk.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-nepomuk.h)
 

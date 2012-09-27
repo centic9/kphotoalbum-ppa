@@ -27,17 +27,13 @@
 #include <kaboutdata.h>
 #include <kimageio.h>
 #include "MainWindow/SplashScreen.h"
-#include <config-kpa-sqldb.h>
-#ifdef SQLDB_SUPPORT
-#include "SQLDB/QueryErrors.h"
-#endif
 #include <klocale.h>
 #include <kdebug.h>
 
 extern QTemporaryFile* _tmpFileForThumbnailView;
 
 int main( int argc, char** argv ) {
-    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), "4.2",
+    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), "4.3",
                           ki18n("KDE Photo Album"), KAboutData::License_GPL,
                           KLocalizedString(), KLocalizedString(), "http://www.kphotoalbum.org");
     aboutData.addAuthor( ki18n("Jesper K. Pedersen"), ki18n("Development"), "blackie@kde.org" );
@@ -68,7 +64,6 @@ int main( int argc, char** argv ) {
 
     KCmdLineOptions options;
     options.add("c ", ki18n("Config file"));
-    options.add("e ", ki18n("Database engine to use"));
     options.add("demo", ki18n( "Starts KPhotoAlbum with a prebuilt set of demo images" ));
     options.add("import ", ki18n( "Import file" ));
     options.add("export-in-2.1-format", ki18n( "This will make an attempt at saving in a format understandable by KimDaBa 2.1" ));
@@ -94,11 +89,6 @@ int main( int argc, char** argv ) {
         delete _tmpFileForThumbnailView;
         return code;
     }
-#ifdef SQLDB_SUPPORT
-    catch (SQLDB::Error& e) {
-        qFatal("Exception occurred in SQLDB:\n%s", e.what());
-    }
-#endif
     catch (...) {
         qFatal("Unknown exception caught");
     }

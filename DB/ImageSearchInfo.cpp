@@ -19,6 +19,7 @@
 #include "ImageSearchInfo.h"
 #include "ValueCategoryMatcher.h"
 #include "ExactCategoryMatcher.h"
+#include "NegationCategoryMatcher.h"
 #include "NoTagCategoryMatcher.h"
 #include "AndCategoryMatcher.h"
 #include "ContainerCategoryMatcher.h"
@@ -41,9 +42,21 @@ ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
 {
 }
 
+ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
+                                  const QString& label, const QString& description,
+				  const QString& fnPattern )
+    : _date( date), _label( label ), _description( description ), _fnPattern( fnPattern ), _rating( -1 ), _megapixel( 0 ), ratingSearchMode( 0 ), _searchRAW( false ), _isNull( false ), _compiled( false )
+{
+}
+
 QString ImageSearchInfo::label() const
 {
     return _label;
+}
+
+QRegExp ImageSearchInfo::fnPattern() const
+{
+    return _fnPattern;
 }
 
 QString ImageSearchInfo::description() const
@@ -71,8 +84,16 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
 
     bool ok = true;
 #ifdef HAVE_EXIV2
-    ok = _exifSearchInfo.matches( info->fileName(DB::AbsolutePath) );
+    ok = _exifSearchInfo.matches( info->fileName() );
 #endif
+
+    QDateTime actualStart = info->date().start();
+    QDateTime actualEnd = info->date().end();
+    if ( actualEnd <= actualStart )  {
+        QDateTime tmp = actualStart;
+        actualStart = actualEnd;
+        actualEnd = tmp;
+    }
 
     if ( !_date.start().isNull() ) {
         // Date
@@ -81,19 +102,15 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
         // actual.start <= search.end <=actuel.end or
         // search.start <= actual.start and actual.end <= search.end
 
-        QDateTime actualStart = info->date().start();
-        QDateTime actualEnd = info->date().end();
-        if ( actualEnd <= actualStart )  {
-            QDateTime tmp = actualStart;
-            actualStart = actualEnd;
-        actualEnd = tmp;
-        }
-
         bool b1 =( actualStart <= _date.start() && _date.start() <= actualEnd );
         bool b2 =( actualStart <= _date.end() && _date.end() <= actualEnd );
-        bool b3 = ( _date.start() <= actualStart && actualEnd <= _date.end() );
+        bool b3 = ( _date.start() <= actualStart && ( actualEnd <= _date.end() || _date.end().isNull() ) );
 
-        ok &= ( ( b1 || b2 || b3 ) );
+        ok = ok && ( ( b1 || b2 || b3 ) );
+    } else if ( !_date.end().isNull() ) {
+        bool b1 = ( actualStart <= _date.end() && _date.end() <= actualEnd );
+        bool b2 = ( actualEnd <= _date.end() );
+        ok = ok && ( ( b1 || b2 ) );
     }
 
     // -------------------------------------------------- Options
@@ -101,35 +118,35 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     // Jesper & None
     QMap<QString, StringSet> alreadyMatched;
     Q_FOREACH(CategoryMatcher* optionMatcher, _categoryMatchers) {
-        ok &= optionMatcher->eval(info, alreadyMatched);
+        ok = ok && optionMatcher->eval(info, alreadyMatched);
     }
 
 
     // -------------------------------------------------- Label
-    ok &= ( _label.isEmpty() || info->label().indexOf(_label) != -1 );
+    ok = ok && ( _label.isEmpty() || info->label().indexOf(_label) != -1 );
 
     // -------------------------------------------------- RAW
-    ok &= ( _searchRAW == false || ImageManager::RAWImageDecoder::isRAW( info->fileName(DB::AbsolutePath)) );
+    ok = ok && ( _searchRAW == false || ImageManager::RAWImageDecoder::isRAW( info->fileName()) );
 
     // -------------------------------------------------- Rating
 
-    //ok &= (_rating == -1 ) || ( _rating == info->rating() );
+    //ok = ok && (_rating == -1 ) || ( _rating == info->rating() );
     if (_rating != -1) {
 	switch( ratingSearchMode ) {
 	    case 1:
 		// Image rating at least selected
-		ok &= ( _rating <= info->rating() );
+		ok = ok && ( _rating <= info->rating() );
 		break;
 	    case 2:
 		// Image rating less than selected
-		ok &= ( _rating >= info->rating() );
+		ok = ok && ( _rating >= info->rating() );
 		break;
 	    case 3:
 		// Image rating not equal
-		ok &= ( _rating != info->rating() );
+		ok = ok && ( _rating != info->rating() );
 		break;
 	    default:
-		ok &= (_rating == -1 ) || ( _rating == info->rating() );
+	        ok = ok && ((_rating == -1 ) || ( _rating == info->rating() ));
 		break;
 	}
     }
@@ -137,16 +154,20 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     
     // -------------------------------------------------- Resolution
     if ( _megapixel )
-        ok &= ( _megapixel * 1000000 <= info->size().width() * info->size().height() );
+        ok = ok && ( _megapixel * 1000000 <= info->size().width() * info->size().height() );
 
     // -------------------------------------------------- Text
     QString txt = info->description();
     if ( !_description.isEmpty() ) {
         QStringList list = _description.split(QChar::fromLatin1(' '), QString::SkipEmptyParts);
         for( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
-            ok &= ( txt.indexOf( *it, 0, Qt::CaseInsensitive ) != -1 );
+            ok = ok && ( txt.indexOf( *it, 0, Qt::CaseInsensitive ) != -1 );
         }
     }
+
+    // -------------------------------------------------- File name pattern
+    ok = ok && ( _fnPattern.isEmpty() ||
+	    _fnPattern.indexIn( info->fileName().relative() ) != -1 );
 
     return ok;
 }
@@ -229,8 +250,8 @@ QString ImageSearchInfo::toString() const
                                                 "I do realize that translators may have problem with this, "
                                                 "but I need some how to indicate the category, and users may create their own categories, so this is "
                                                 "the best I can do - Jesper.", "No other %1", it.key() ) );
-            txt.simplified();
-            res += txt;
+
+            res += txt.simplified();
         }
     }
     return res;
@@ -275,6 +296,7 @@ ImageSearchInfo::ImageSearchInfo( const ImageSearchInfo& other )
     _categoryMatchText = other._categoryMatchText;
     _label = other._label;
     _description = other._description;
+    _fnPattern = other._fnPattern;
     _isNull = other._isNull;
     _compiled = false;
     _rating = other._rating;
@@ -305,13 +327,14 @@ void ImageSearchInfo::compile() const
 
             DB::ContainerCategoryMatcher* andMatcher;
             bool exactMatch=false;
+            bool negate = false;
             andMatcher = new DB::AndCategoryMatcher;
 
             for( QStringList::Iterator itAnd = andParts.begin(); itAnd != andParts.end(); ++itAnd ) {
                 QString str = *itAnd;
-                bool negate = false;
                 static QRegExp regexp( QString::fromLatin1("^\\s*!\\s*(.*)$") );
-                if ( regexp.exactMatch( str ) )  {
+                if ( regexp.exactMatch( str ) )
+                { // str is preceeded with NOT
                     negate = true;
                     str = regexp.cap(1);
                 }
@@ -323,15 +346,22 @@ void ImageSearchInfo::compile() const
                     continue;
                 }
                 else
-                    valueMatcher = new DB::ValueCategoryMatcher( category, str, !negate );
+                {
+                    valueMatcher = new DB::ValueCategoryMatcher( category, str );
+                    if ( negate )
+                        valueMatcher = new DB::NegationCategoryMatcher( valueMatcher );
+                }
                 andMatcher->addElement( valueMatcher );
             }
             if ( exactMatch )
             {
+                DB::CategoryMatcher *exactMatcher = 0;
                 // if andMatcher has exactMatch set, but no CategoryMatchers, then
                 // matching "category / None" is what we want:
                 if ( andMatcher->_elements.count() == 0 )
-                    orMatcher->addElement( new DB::NoTagCategoryMatcher( category ) );
+                {
+                    exactMatcher = new DB::NoTagCategoryMatcher( category );
+                }
                 else
                 {
                     ExactCategoryMatcher *noOtherMatcher = new ExactCategoryMatcher( category );
@@ -339,8 +369,11 @@ void ImageSearchInfo::compile() const
                         noOtherMatcher->setMatcher( andMatcher->_elements[0] );
                     else
                         noOtherMatcher->setMatcher( andMatcher );
-                    orMatcher->addElement( noOtherMatcher );
+                    exactMatcher = noOtherMatcher;
                 }
+                if ( negate )
+                    exactMatcher = new DB::NegationCategoryMatcher( exactMatcher );
+                orMatcher->addElement( exactMatcher );
             } 
             else
                 if ( andMatcher->_elements.count() == 1 )
@@ -357,6 +390,14 @@ void ImageSearchInfo::compile() const
 
         if ( matcher )
             _categoryMatchers.append( matcher );
+#ifdef DEBUG_CATEGORYMATCHERS
+        if ( matcher )
+        {
+            qDebug() << "Matching text '" << matchText << "' in category "<< category <<":";
+            matcher->debug(0);
+            qDebug() << ".";
+        }
+#endif
     }
     _compiled = true;
 }

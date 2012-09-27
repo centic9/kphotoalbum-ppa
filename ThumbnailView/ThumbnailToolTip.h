@@ -21,30 +21,32 @@
 #include <qtimer.h>
 #include <qlabel.h>
 #include <QEvent>
-#include "ImageManager/ImageClient.h"
+#include "ImageManager/ImageClientInterface.h"
+#include <DB/FileName.h>
+
 namespace DB { class ImageInfo; }
 
 namespace ThumbnailView
 {
 class ThumbnailWidget;
 
-class ThumbnailToolTip :public QLabel, public ImageManager::ImageClient {
+class ThumbnailToolTip :public QLabel, public ImageManager::ImageClientInterface {
     Q_OBJECT
 
 public:
     ThumbnailToolTip( ThumbnailWidget* view );
     void showToolTips( bool force );
     virtual void setActive(bool);
-    virtual void pixmapLoaded( const QString& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+    virtual void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
 
 protected:
     virtual bool eventFilter( QObject*, QEvent* e );
-    bool loadImage( const QString& fileName );
+    bool loadImage( const DB::FileName& fileName );
     void placeWindow();
 
 private:
     ThumbnailWidget* _view;
-    QString _currentFileName;
+    DB::FileName _currentFileName;
     bool _widthInverse;
     bool _heightInverse;
     QTimer *timer;

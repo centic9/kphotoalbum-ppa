@@ -31,6 +31,8 @@
 #include "Browser/BrowserWidget.h"
 #include "Plugins/ImageCollectionSelector.h"
 #include <QList>
+#include "UploadWidget.h"
+namespace KIPI { class UploadWidget; }
 
 Plugins::Interface::Interface( QObject *parent, const char *name )
     :KIPI::Interface( parent, name )
@@ -91,16 +93,15 @@ int Plugins::Interface::features() const
 
 bool Plugins::Interface::addImage( const KUrl& url, QString& errmsg )
 {
-    QString dir = url.path();
-    QString root = Settings::SettingsData::instance()->imageDirectory();
+    const QString dir = url.path();
+    const QString root = Settings::SettingsData::instance()->imageDirectory();
     if ( !dir.startsWith( root ) ) {
         errmsg = i18n("<p>Image needs to be placed in a sub directory of your photo album, "
                       "which is rooted at %1. Image path was %2</p>",root , dir );
         return false;
     }
 
-    dir = dir.mid( root.length() );
-    DB::ImageInfoPtr info( new DB::ImageInfo( dir ) );
+    DB::ImageInfoPtr info( new DB::ImageInfo( DB::FileName::fromAbsolutePath(dir) ) );
     DB::ImageInfoList list;
     list.append( info );
     DB::ImageDB::instance()->addImages( list );
@@ -109,12 +110,9 @@ bool Plugins::Interface::addImage( const KUrl& url, QString& errmsg )
 
 void Plugins::Interface::delImage( const KUrl& url )
 {
-    DB::ImageInfoPtr info = DB::ImageDB::instance()->info( url.path(), DB::AbsolutePath );
-    if ( info ) {
-        DB::IdList list;
-        list.append(DB::ImageDB::instance()->ID_FOR_FILE(info->fileName(DB::AbsolutePath)));
-        DB::ImageDB::instance()->deleteList( list );
-    }
+    DB::ImageInfoPtr info = DB::ImageDB::instance()->info( DB::FileName::fromAbsolutePath(url.path()));
+    if ( info )
+        DB::ImageDB::instance()->deleteList(DB::FileNameList() << info->fileName() );
 }
 
 void Plugins::Interface::slotSelectionChanged( bool b )
@@ -136,11 +134,9 @@ KIPI::ImageCollectionSelector* Plugins::Interface::imageCollectionSelector(QWidg
     return new ImageCollectionSelector( parent, this );
 }
 
-KIPI::UploadWidget* Plugins::Interface::uploadWidget(QWidget *)
+KIPI::UploadWidget* Plugins::Interface::uploadWidget(QWidget* parent)
 {
-    qDebug("Interface::uploadWidget(...) not yet implemented!");
-   //TODO
-    return 0;
+    return new Plugins::UploadWidget(parent);
 }
 
 #include "Interface.moc"

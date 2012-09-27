@@ -43,8 +43,7 @@ class KActionMenu;
 #ifdef HASKIPI
 #  include <libkipi/pluginloader.h>
 #endif
-#include "DB/IdList.h"
-#include "DB/Id.h"
+#include "DB/FileNameList.h"
 #include "ThumbnailView/enums.h"
 
 namespace Plugins { class Interface; }
@@ -70,15 +69,16 @@ public:
     ~Window();
     static void configureImages( const DB::ImageInfoList& list, bool oneAtATime );
     static Window* theMainWindow();
-    DB::IdList selected();
+    DB::FileNameList selected( ThumbnailView::SelectionMode mode = ThumbnailView::ExpandCollapsedStacks ) const;
     DB::ImageSearchInfo currentContext();
     QString currentBrowseCategory() const;
-    void setStackHead( const DB::Id image );
+    void setStackHead( const DB::FileName& image );
     void setHistogramVisibilty( bool visible ) const;
 
 public slots:
-    void showThumbNails(const DB::IdList& items);
+    void showThumbNails(const DB::FileNameList& items);
     void loadPlugins();
+    void reloadThumbnails( ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection );
 
 protected slots:
     void showThumbNails();
@@ -112,9 +112,8 @@ protected slots:
     void unlockFromDefaultScope();
     void changePassword();
     void slotConfigureKeyBindings();
-    void slotSetFileName( const DB::Id& );
+    void slotSetFileName( const DB::FileName& );
     void updateContextMenuFromSelectionSize(int selectionSize);
-    void reloadThumbnails( ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection );
     void slotUpdateViewMenu( DB::Category::ViewType );
     void slotShowNotOnDisk();
     void slotBuildThumbnails();
@@ -140,11 +139,10 @@ protected slots:
     void setDateRange( const DB::ImageDate& );
     void clearDateRange();
     void startAutoSaveTimer();
-    void convertBackend();
     void slotRecalcCheckSums();
     void slotShowExifInfo();
     void showFeatures();
-    void showImage( const DB::Id& fileName );
+    void showImage( const DB::FileName& fileName );
     void slotOrderIncr();
     void slotOrderDecr();
     void slotRotateSelectedLeft();
@@ -153,6 +151,8 @@ protected slots:
     void showVideos();
     void slotStatistics();
     void slotRecreateExifDB();
+    void useNextVideoThumbnail();
+    void usePreviousVideoThumbnail();
 
 protected:
     void configureImages( bool oneAtATime );
@@ -167,12 +167,15 @@ protected:
     void setLocked( bool b, bool force );
     void configImages( const DB::ImageInfoList& list, bool oneAtATime );
     void updateStates( bool thumbNailView );
-    DB::IdList selectedOnDisk();
+    DB::FileNameList selectedOnDisk();
     void setupPluginMenu();
-    void launchViewer(const DB::IdList& mediaList, bool reuse, bool slideShow, bool random);
+    void launchViewer(const DB::FileNameList& mediaList, bool reuse, bool slideShow, bool random);
     void setupStatusBar();
     void setPluginMenuState( const char* name, const QList<QAction*>& actions );
     void createSarchBar();
+    void executeStartupActions();
+    void checkIfMplayerIsInstalled();
+    bool anyVideosSelected() const;
 
 private:
     static Window* _instance;
@@ -221,7 +224,8 @@ private:
 #ifdef HASKIPI
     KIPI::PluginLoader* _pluginLoader;
 #endif
-    KAction* _recreateThumbnails;
+    KAction* _useNextVideoThumbnail;
+    KAction* _usePreviousVideoThumbnail;
     TokenEditor* _tokenEditor;
     DateBar::DateBarWidget* _dateBar;
     QFrame* _dateBarLine;

@@ -19,7 +19,7 @@
 #ifndef VIEWER_VIDEODISPLAY_H
 #define VIEWER_VIDEODISPLAY_H
 
-#include "Display.h"
+#include "AbstractDisplay.h"
 #include <kparts/componentfactory.h>
 #include <QResizeEvent>
 #include <phonon/mediaobject.h>
@@ -31,7 +31,7 @@ namespace Phonon {
 namespace Viewer
 {
 
-class VideoDisplay :public Viewer::Display
+class VideoDisplay :public Viewer::AbstractDisplay
 {
     Q_OBJECT
 
@@ -41,6 +41,7 @@ public:
     virtual bool setImage( DB::ImageInfoPtr info, bool forward );
     bool isPaused() const;
     bool isPlaying() const;
+    QImage screenShoot();
 
 signals:
     void stopped();

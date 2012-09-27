@@ -26,7 +26,7 @@
 #include <klocale.h>
 #include "Settings/SettingsData.h"
 #include "Viewer/ViewHandler.h"
-#include "ImageManager/Manager.h"
+#include "ImageManager/AsyncLoader.h"
 #include <qcursor.h>
 #include <qapplication.h>
 #include <math.h>
@@ -70,7 +70,7 @@
 */
 
 Viewer::ImageDisplay::ImageDisplay( QWidget* parent)
-    :Display( parent ), _reloadImageInProgress( false ), _forward(true), _curIndex(0),_busy( false ),
+    :AbstractDisplay( parent ), _reloadImageInProgress( false ), _forward(true), _curIndex(0),_busy( false ),
     _cursorHiding(true)
 {
     _viewHandler = new ViewHandler( this );
@@ -166,8 +166,8 @@ bool Viewer::ImageDisplay::setImage( DB::ImageInfoPtr info, bool forward )
 
     // Find the index of the current image
     _curIndex = 0;
-    for( QStringList::Iterator it = _imageList.begin(); it != _imageList.end(); ++it ) {
-        if ( *it == info->fileName(DB::AbsolutePath) )
+    for( DB::FileNameList::Iterator it = _imageList.begin(); it != _imageList.end(); ++it ) {
+        if ( *it == info->fileName() )
             break;
         ++_curIndex;
     }
@@ -192,7 +192,7 @@ bool Viewer::ImageDisplay::setImage( DB::ImageInfoPtr info, bool forward )
 
 void Viewer::ImageDisplay::resizeEvent( QResizeEvent* event )
 {
-    ImageManager::Manager::instance()->stop( this, ImageManager::StopOnlyNonPriorityLoads );
+    ImageManager::AsyncLoader::instance()->stop( this, ImageManager::StopOnlyNonPriorityLoads );
     _cache.fill(0); // Clear the cache
     if ( _info ) {
         cropAndScale();
@@ -518,10 +518,10 @@ bool Viewer::ImageDisplay::isImageZoomed( const Settings::StandardViewSize type,
     return false;
 }
 
-void Viewer::ImageDisplay::pixmapLoaded( const QString& fileName, const QSize& imgSize, const QSize& fullSize, int angle,
+void Viewer::ImageDisplay::pixmapLoaded( const DB::FileName& fileName, const QSize& imgSize, const QSize& fullSize, int angle,
                                          const QImage& img, const bool loadedOK)
 {
-    if ( loadedOK && fileName == _info->fileName(DB::AbsolutePath) ) {
+    if ( loadedOK && fileName == _info->fileName() ) {
         if ( fullSize.isValid() && !_info->size().isValid() )
             _info->setSize( fullSize );
 
@@ -558,7 +558,7 @@ void Viewer::ImageDisplay::pixmapLoaded( const QString& fileName, const QSize& i
     emit possibleChange();
 }
 
-void Viewer::ImageDisplay::setImageList( const QStringList& list )
+void Viewer::ImageDisplay::setImageList( const DB::FileNameList& list )
 {
     _imageList = list;
     _cache.fill( 0, list.count() );
@@ -576,7 +576,7 @@ void Viewer::ImageDisplay::updatePreload()
         if ( _forward ? ( i >= (int) _imageList.count() ) : (i < 0) )
             break;
 
-        DB::ImageInfoPtr info = DB::ImageDB::instance()->info(_imageList[i], DB::AbsolutePath);
+        DB::ImageInfoPtr info = DB::ImageDB::instance()->info(_imageList[i]);
         if ( !info ) {
             qWarning("Info was null for index %d!", i);
             return;
@@ -624,10 +624,10 @@ void Viewer::ImageDisplay::updatePreload()
 }
 
 
-int Viewer::ImageDisplay::indexOf( const QString& fileName )
+int Viewer::ImageDisplay::indexOf( const DB::FileName& fileName )
 {
     int i = 0;
-    for( QStringList::ConstIterator it = _imageList.constBegin(); it != _imageList.constEnd(); ++it ) {
+    for( DB::FileNameList::ConstIterator it = _imageList.constBegin(); it != _imageList.constEnd(); ++it ) {
         if ( *it == fileName )
             break;
         ++i;
@@ -689,9 +689,9 @@ void Viewer::ImageDisplay::updateZoomPoints( const Settings::StandardViewSize ty
 void Viewer::ImageDisplay::potentialyLoadFullSize()
 {
     if ( _info->size() != _loadedImage.size() ) {
-        ImageManager::ImageRequest* request = new ImageManager::ImageRequest( _info->fileName(DB::AbsolutePath), QSize(-1,-1), _info->angle(), this );
+        ImageManager::ImageRequest* request = new ImageManager::ImageRequest( _info->fileName(), QSize(-1,-1), _info->angle(), this );
         request->setPriority( ImageManager::Viewer );
-        ImageManager::Manager::instance()->load( request );
+        ImageManager::AsyncLoader::instance()->load( request );
         busy();
         _reloadImageInProgress = true;
     }
@@ -717,10 +717,10 @@ void Viewer::ImageDisplay::requestImage( const DB::ImageInfoPtr& info, bool prio
     if ( viewSize == Settings::NaturalSize )
         s = QSize(-1,-1);
 
-    ImageManager::ImageRequest* request = new ImageManager::ImageRequest( info->fileName(DB::AbsolutePath), s, info->angle(), this );
+    ImageManager::ImageRequest* request = new ImageManager::ImageRequest( info->fileName(), s, info->angle(), this );
     request->setUpScale( viewSize == Settings::FullSize );
     request->setPriority( priority ? ImageManager::Viewer : ImageManager::ViewerPreload );
-    ImageManager::Manager::instance()->load( request );
+    ImageManager::AsyncLoader::instance()->load( request );
 }
 
 void Viewer::ImageDisplay::hideEvent(QHideEvent *)

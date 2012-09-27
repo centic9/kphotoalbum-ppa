@@ -22,6 +22,7 @@
 #include <qmutex.h>
 #include <QHash>
 #include "enums.h"
+#include <DB/FileName.h>
 
 // WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 //
@@ -32,11 +33,11 @@
 
 namespace ImageManager
 {
-class ImageClient;
+class ImageClientInterface;
 
 class ImageRequest {
 public:
-    ImageRequest( const QString& fileName, const QSize& size, int angle, ImageClient* client);
+    ImageRequest( const DB::FileName& fileName, const QSize& size, int angle, ImageClientInterface* client);
     virtual ~ImageRequest() {}
 
     bool isNull() const;
@@ -44,7 +45,7 @@ public:
     /** This is the filename that the media is known by in the database.
         See \ref fileSystemFileName for details
     **/
-    QString databaseFileName() const;
+    DB::FileName databaseFileName() const;
 
     /**
         This is the file name that needs to be loaded using the image loader.
@@ -53,14 +54,14 @@ public:
         In that example, databaseFileName() returns the path to the video file,
         while fileSystemFileName returns the path to the prerendered image.
     **/
-    virtual QString fileSystemFileName() const;
+    virtual DB::FileName fileSystemFileName() const;
 
     int width() const;
     int height() const;
     QSize size() const;
     int angle() const;
 
-    ImageClient* client() const;
+    ImageClientInterface* client() const;
 
     QSize fullSize() const;
     void setFullSize( const QSize& );
@@ -83,11 +84,11 @@ public:
 
 private:
     bool _null;
-    QString _fileName;
+    DB::FileName _fileName;
 
     int _width;
     int _height;
-    ImageClient* _client;
+    ImageClientInterface* _client;
     int _angle;
     QSize _fullSize;
     Priority _priority;
@@ -98,7 +99,7 @@ private:
 
 inline uint qHash(const ImageRequest& ir)
 {
-    return ::qHash(ir.databaseFileName()) ^ ::qHash(ir.width()) ^ ::qHash(ir.angle());
+    return DB::qHash(ir.databaseFileName()) ^ ::qHash(ir.width()) ^ ::qHash(ir.angle());
 }
 
 }

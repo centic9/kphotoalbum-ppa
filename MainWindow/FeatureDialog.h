@@ -31,6 +31,8 @@ public:
     static bool hasAllFeaturesAvailable();
     static QString featureString();
     static QStringList supportedVideoMimeTypes();
+    static QString mplayerBinary();
+    static bool isMplayer2();
 
 protected:
     static bool hasKIPISupport();
