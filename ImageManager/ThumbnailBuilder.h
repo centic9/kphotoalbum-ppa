@@ -22,9 +22,10 @@
 #include <QList>
 #include <QProgressDialog>
 #include <QImage>
-#include "ImageManager/ImageClient.h"
+#include "ImageManager/ImageClientInterface.h"
 #include "DB/ImageInfoPtr.h"
 #include "enums.h"
+#include <DB/FileNameList.h>
 
 namespace MainWindow { class StatusBar; }
 namespace MainWindow { class Window; }
@@ -34,7 +35,7 @@ class QTimer;
 namespace ImageManager
 {
 
-class ThumbnailBuilder :public QObject, public ImageManager::ImageClient {
+class ThumbnailBuilder :public QObject, public ImageManager::ImageClientInterface {
     Q_OBJECT
 
 public:
@@ -42,12 +43,12 @@ public:
     void buildAll(ThumbnailBuildStart when );
     void buildMissing();
 
-    OVERRIDE void pixmapLoaded( const QString& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+    OVERRIDE void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
     OVERRIDE void requestCanceled();
 
 public slots:
     void cancelRequests( );
-    void scheduleThumbnailBuild( const QList<DB::ImageInfoPtr>& list, ThumbnailBuildStart when );
+    void scheduleThumbnailBuild( const DB::FileNameList& list, ThumbnailBuildStart when );
     void doThumbnailBuild();
 
 private:
@@ -58,7 +59,7 @@ private:
     int m_count;
     bool m_isBuilding;
     QTimer* m_startBuildTimer;
-    QList<DB::ImageInfoPtr> m_thumbnailsToBuild;
+    DB::FileNameList m_thumbnailsToBuild;
 };
 
 }

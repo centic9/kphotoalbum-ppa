@@ -2,9 +2,9 @@
   <title
 >Bildvorschau</title>
   <para
->Wenn Sie den Eintrag<guilabel
+>Wenn Sie den Eintrag <guilabel
 >Bilder anzeigen</guilabel
-> im Browser auswählen, erhalten Sie einen Überblick mit Vorschaubildern der aktuell ausgewählten Bilder, oder aller Bilder falls Sie keinen Filter gesetzt haben. Ein Beispiel dafür sehen Sie <xref linkend="fig-thumbnailview"/> hier. Sie können die Größe der Vorschaubilder, durch einfaches nach unten Ziehen der Maus mit der mittleren Maustaste, konfigurieren. Versuchen Sie es einfach mal.</para>
+> im Browser auswählen, erhalten Sie einen Überblick mit Vorschaubildern der aktuell ausgewählten Bilder, oder aller Bilder falls Sie keinen Filter gesetzt haben. Ein Beispiel dafür sehen Sie in <xref linkend="fig-thumbnailview"/> hier. Sie können die Größe der Vorschaubilder, durch einfaches nach unten Ziehen der Maus mit der mittleren Maustaste, konfigurieren. Versuchen Sie es einfach mal.</para>
 
   <figure id="fig-thumbnailview">
     <title
@@ -20,8 +20,8 @@
 >In der Vorschauansicht können Sie Ihre Bilder neu anordnen, indem Sie diese mit der Maus verschieben. Damit die Zeitleiste richtig funktioniert sollten Sie Ihre Bilder immer sortiert lassen. Sie können Ihre Bilder sortieren, indem Sie alle Bilder auswählen und aus dem Menü <menuchoice
 ><guimenu
 >Bilder</guimenu
-> <guimenu
->Auswahl nach Datum &amp; Zeit sortieren</guimenu
+> <guimenuitem
+>Auswahl nach Datum &amp; Zeit sortieren</guimenuitem
 ></menuchoice
 > ansteuern. Bilder die am selben Tag und zur selben Zeit aufgenommen wurden, werden nicht umsortiert. Wenn Sie also beispielsweise 100 Bilder aus dem Jahr 1992 haben, können Sie die Reihenfolge ändern, ohne dass die Reihenfolge bei einem Sortieren geändert wird.</para>
 
@@ -65,7 +65,7 @@
 ><guimenuitem
 >Auswahl löschen</guimenuitem
 ></menuchoice
->. Nun wird Ihnen das Fenster angezeigt, das Sie im Bild <xref linkend="fig-delete-images"/> sehen können. <xref linkend="fig-delete-images"/></para>
+>. Nun wird Ihnen das Fenster angezeigt, das Sie in <xref linkend="fig-delete-images"/> sehen können.</para>
 
 <figure id="fig-delete-images">
 <title
@@ -78,7 +78,7 @@
 </figure>
 
   <para
->Es gibt zwei verschiedene Möglichkeiten, Bilder mit &kphotoalbum;, zu löschen: Sie können die betreffenden Bilder entweder von Ihrer Festplatte löschen lassen, wodurch Sie unwiderruflich verloren sind oder Sie teilen &kphotoalbum;, mit, dass es das betreffende Bild nicht in die Datenbank mit aufnehmen soll. In diesem Fall wird &kphotoalbum;, Ihnen das Bild in Zukunft nicht mehr anzeigen, es wird jedoch nicht gelöscht und befindet sich daher weiterhin auf der Festplatte. Diese Funktion ist beispielsweise dann sehr nützlich, wenn sich Vorschaubilder unter Ihren Bildern befinden. Wenn sowohl die Vorschau-Bilder, als auch die Original-Bilder angezeigt werden, würden Sie schnell den Überblick über diese große Anzahl verlieren. Das Löschen dieser vielleicht notwendigen Bilder wäre jedoch auch keine geeignete Lösung.</para>
+>Es gibt drei verschiedene Möglichkeiten, Bilder in &kphotoalbum;, zu löschen: Sie können die betreffenden Bilder in den Mülleimer verschieben oder von Ihrer Festplatte löschen, wodurch Sie unwiderruflich verloren sind oder Sie geben an, dass es das betreffende Bild nicht in der Datenbank aufgenommen werden soll. In diesem Fall wird &kphotoalbum;, Ihnen das Bild in Zukunft nicht mehr anzeigen, es wird jedoch nicht gelöscht und befindet sich daher weiterhin auf der Festplatte. Diese Funktion ist beispielsweise dann sehr nützlich, wenn sich Vorschaubilder unter Ihren Bildern befinden. Wenn sowohl die Vorschau-Bilder, als auch die Original-Bilder angezeigt werden, würden Sie schnell den Überblick über diese große Anzahl verlieren. Das Löschen dieser vielleicht notwendigen Bilder wäre jedoch auch keine geeignete Lösung.</para>
 </sect1>
 
 
@@ -89,7 +89,7 @@
 >Sowohl die Kapazität der Festplatten, als auch die Größe der Daten, die darauf gespeichert sind, nehmen immer mehr zu. Wenn Sie eine sehr große Anzahl an Bildern haben, sind Sie vielleicht in der Situation, dass Sie nicht genügend freien Speicherplatz auf Ihrer Festplatte zur Verfügung haben, um all Ihre Bilder darauf zu speichern. In diesem Fall könnten Sie einige Bilder auf eine CD brennen. Ein anderes Beispiel hierfür ist eine Reise, auf der Sie viele Bilder mitnehmen möchten, jedoch nicht genügend Speicherplatz auf Ihrem Notebook zur Verfügung haben.</para>
 
 <para
->&kphotoalbum; bietet Ihnen für dieses Problem eine Lösung an. Sie können mit &kphotoalbum; nämlich Bilder auch verwenden, ohne Sie auf der Festplatte gespeichert zu haben. Natürlich müssen Sie die Bilder irgendwo gespeichert haben, damit &kphotoalbum; Sie in den Datenbank-Index aufnehmen kann. Im Bild <xref linkend="fig-offline-mode"/> sehen Sie die Ansicht von &kphotoalbum; wenn nicht alle benötigten Bilder von der Festplatte geladen werden können.</para>
+>&kphotoalbum; bietet Ihnen für dieses Problem eine Lösung an. Sie können mit &kphotoalbum; nämlich Bilder auch verwenden, ohne Sie auf der Festplatte gespeichert zu haben. Natürlich müssen Sie die Bilder irgendwo gespeichert haben, damit &kphotoalbum; Sie in den Datenbank-Index aufnehmen kann. In <xref linkend="fig-offline-mode"/> sehen Sie die Ansicht von &kphotoalbum; wenn nicht alle benötigten Bilder von der Festplatte geladen werden können.</para>
 
 <figure id="fig-offline-mode">
 <title
@@ -102,7 +102,7 @@
 </figure>
 
 <para
->Bilder, bei denen die rechte obere Ecke abgeschnitten ist, sind nicht auf der Festplatte gespeichert. Dies ist z.B. bei den Bilder 1-9 zu sehen. Für die Bilder 5-9 sind jedoch die Vorschaubilder vorhanden, sodass &kphotoalbum; Ihnen die Vorschau dieser Bilder anzeigen kann. Sie können jedoch auch diese Bilder nicht mit dem Bildbetrachter ansehen.</para>
+>Bilder wie Bild 1-4, bei denen die Ecke abgeschnitten ist, sind nicht auf der Festplatte gespeichert. Für die Bilder 5-9 sind jedoch die Vorschaubilder vorhanden, auch wenn die Bilder auf der Festplatte fehlen. Daher können die Vorschaubilder, aber nicht die tatsächlichen Bilder angezeigt werden. Eine abgeschnittene Ecke eines Vorschaubilds zeigt an, dass das Bild auf der Festplatte fehlt, leider funktioniert das zurzeit aber nicht richtig. </para>
 
 <para
 >Wie Sie sehen benötigt diese Funktion dass Sie Dateien aus den Ordnern heraus und wieder hineinkopieren. &kphotoalbum; unterstützt es bis jetzt noch nicht Sie um das Einlegen der betreffenden CD zu bitten. Falls Sie also Ärger, wie das Durcheinander-Bringen Ihrer Bilder vermeiden möchten, kaufen Sie sich bitte eine größere Festplatte, um alle Bilder darauf speichern zu können.</para>

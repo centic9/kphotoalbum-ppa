@@ -17,10 +17,10 @@
 */
 #include "RequestQueue.h"
 #include "ImageRequest.h"
-#include "ImageClient.h"
+#include "ImageClientInterface.h"
 #include "CancelEvent.h"
 #include <QApplication>
-#include "Manager.h"
+#include "AsyncLoader.h"
 
 bool ImageManager::RequestQueue::addRequest( ImageRequest* request )
 {
@@ -51,7 +51,7 @@ ImageManager::ImageRequest* ImageManager::RequestQueue::popNext()
                 removeRequest( request );
                 request->setLoadedOK( false );
                 CancelEvent* event = new CancelEvent( request );
-                QApplication::postEvent( Manager::instance(),  event );
+                QApplication::postEvent( AsyncLoader::instance(),  event );
             } else {
                 _uniquePending.remove( request );
                 return request;
@@ -62,7 +62,7 @@ ImageManager::ImageRequest* ImageManager::RequestQueue::popNext()
     return NULL;
 }
 
-void ImageManager::RequestQueue::cancelRequests( ImageClient* client, StopAction action )
+void ImageManager::RequestQueue::cancelRequests( ImageClientInterface* client, StopAction action )
 {
     // remove from active map
     for( QSet<ImageRequest*>::const_iterator it = _activeRequests.begin(); it != _activeRequests.end(); ) {

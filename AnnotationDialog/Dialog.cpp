@@ -52,8 +52,6 @@
 #include "DB/CategoryCollection.h"
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
-#include "DB/IdList.h"
-#include "DB/Id.h"
 #include "ImagePreviewWidget.h"
 #include "KDateEdit.h"
 #include "ListSelect.h"
@@ -65,6 +63,7 @@
 #include "Utilities/Util.h"
 #include "Viewer/ViewerWidget.h"
 #include "enums.h"
+#include <QDebug>
 
 using Utilities::StringSet;
 
@@ -289,6 +288,18 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     lay9->addWidget( _ratingSearchMode );
 #endif
 
+    // File name search pattern
+    QHBoxLayout* lay10 = new QHBoxLayout;
+    lay2->addLayout( lay10 );
+
+    _imageFilePatternLabel = new QLabel( i18n("File Name Pattern: " ) );
+    lay10->addWidget( _imageFilePatternLabel );
+    _imageFilePattern = new KLineEdit;
+    _imageFilePattern->setObjectName( i18n("File Name Pattern") );
+    lay10->addWidget( _imageFilePattern );
+    shortCutManager.addLabel( _imageFilePatternLabel );
+    _imageFilePatternLabel->setBuddy( _imageFilePattern );
+
     _searchRAW = new QCheckBox( i18n("Search only for RAW files") );
     lay2->addWidget( _searchRAW );
     
@@ -430,8 +441,12 @@ void AnnotationDialog::Dialog::ShowHideSearch( bool show )
     _megapixel->setVisible( show );
     _megapixelLabel->setVisible( show );
     _searchRAW->setVisible( show );
+    _imageFilePatternLabel->setVisible( show );
+    _imageFilePattern->setVisible( show );
+#ifdef HAVE_NEPOMUK
     _ratingSearchMode->setVisible( show );
     _ratingSearchLabel->setVisible( show );
+#endif
 }
 
 
@@ -462,7 +477,6 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
         _current = 0;
         _preview->configure( &_editList, true );
         load();
-        firstDescription = _editList[ _current ].description();
     }
     else {
         uint descrCount = 0;
@@ -481,6 +495,7 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
             setUpCategoryListBoxForMultiImageSelection( *it, list );
 
         _imageLabel->setText( QString::fromLatin1("") );
+        _imageFilePattern->setText( QString::fromLatin1("") );
 
         // Checking all the description fields if there is text and whether the descriptions mach
         Q_FOREACH( DB::ImageInfo info, _editList ) {
@@ -530,7 +545,8 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         const QDateTime start = _startDate->date().isNull() ? QDateTime() : QDateTime(_startDate->date());
         const QDateTime end = _endDate->date().isNull() ? QDateTime() : QDateTime( _endDate->date() );
         _oldSearch = DB::ImageSearchInfo( DB::ImageDate( start, end ),
-                                      _imageLabel->text(), _description->toPlainText() );
+					  _imageLabel->text(), _description->toPlainText(),
+					  _imageFilePattern->text());
 
         for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
             _oldSearch.setCategoryMatchText( (*it)->category(), (*it)->text() );
@@ -542,10 +558,10 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
           _oldSearch.setRating( _rating->rating() );
 
         _ratingChanged = false;
+        _oldSearch.setSearchMode( _ratingSearchMode->currentIndex() );
 #endif
 	_oldSearch.setMegaPixel( _megapixel->value() );
 	_oldSearch.setSearchRAW( _searchRAW->isChecked() );
-	_oldSearch.setSearchMode( _ratingSearchMode->currentIndex() );
         return _oldSearch;
     }
     else
@@ -601,14 +617,84 @@ void AnnotationDialog::Dialog::loadInfo( const DB::ImageSearchInfo& info )
 
 void AnnotationDialog::Dialog::slotOptions()
 {
-    QMenu* menu = _dockWindow->createPopupMenu();
-    QAction* saveCurrent = menu->addAction( i18n("Save Current Window Setup") );
-    QAction* reset = menu->addAction( i18n( "Reset layout" ) );
+    // create menu entries for dock windows
+    QMenu* menu = new QMenu( this );
+    QMenu* dockMenu =_dockWindow->createPopupMenu();
+    menu->addMenu( dockMenu )
+        ->setText( i18n( "Configure window layout..." ) );
+    QAction* saveCurrent = dockMenu->addAction( i18n("Save Current Window Setup") );
+    QAction* reset = dockMenu->addAction( i18n( "Reset layout" ) );
+
+    // create SortType entries
+    menu->addSeparator();
+    QActionGroup* sortTypes = new QActionGroup( menu );
+    QAction* alphaTreeSort = new QAction(
+            SmallIcon( QString::fromLatin1( "view-list-tree" ) ),
+            i18n("Sort Alphabetically (Tree)"),
+            sortTypes );
+    QAction* alphaFlatSort = new QAction(
+            SmallIcon( QString::fromLatin1( "draw-text" ) ),
+            i18n("Sort Alphabetically (Flat)"),
+            sortTypes );
+    QAction* dateSort = new QAction(
+            SmallIcon( QString::fromLatin1( "x-office-calendar" ) ),
+            i18n("Sort by date"),
+            sortTypes );
+    alphaTreeSort->setCheckable( true );
+    alphaFlatSort->setCheckable( true );
+    dateSort->setCheckable( true );
+    alphaTreeSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaTree );
+    alphaFlatSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaFlat );
+    dateSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortLastUse );
+    menu->addActions( sortTypes->actions() );
+    connect( dateSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortDate() ) );
+    connect( alphaTreeSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortAlphaTree() ) );
+    connect( alphaFlatSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortAlphaFlat() ) );
+
+    // create MatchType entries
+    menu->addSeparator();
+    QActionGroup* matchTypes = new QActionGroup( menu );
+    QAction* matchFromBeginning = new QAction( i18n( "Match tags from the first character."), matchTypes );
+    QAction* matchFromWordStart = new QAction( i18n( "Match tags from word boundaries." ), matchTypes );
+    QAction* matchAnywhere = new QAction( i18n( "Match tags anywhere."),matchTypes );
+    matchFromBeginning->setCheckable( true );
+    matchFromWordStart->setCheckable( true );
+    matchAnywhere->setCheckable( true );
+    // TODO add StatusTip text?
+    // set current state:
+    matchFromBeginning->setChecked( Settings::SettingsData::instance()->matchType() == AnnotationDialog::MatchFromBeginning );
+    matchFromWordStart->setChecked( Settings::SettingsData::instance()->matchType() == AnnotationDialog::MatchFromWordStart );
+    matchAnywhere->setChecked( Settings::SettingsData::instance()->matchType() == AnnotationDialog::MatchAnywhere );
+    // add MatchType actions to menu:
+    menu->addActions( matchTypes->actions() );
+
+    // create toggle-show-selected entry#
+    if ( _setup != SearchMode )
+    {
+        menu->addSeparator();
+        QAction* showSelectedOnly = new QAction(
+                SmallIcon( QString::fromLatin1( "view-filter" ) ),
+                i18n("Show only selected Ctrl+S"),
+                menu );
+        showSelectedOnly->setCheckable( true );
+        showSelectedOnly->setChecked( ShowSelectionOnlyManager::instance().selectionIsLimited() );
+        menu->addAction( showSelectedOnly );
+
+        connect( showSelectedOnly, SIGNAL( triggered() ), &ShowSelectionOnlyManager::instance(), SLOT( toggle() ) );
+    }
+
+    // execute menu & handle response:
     QAction* res = menu->exec( QCursor::pos() );
     if ( res == saveCurrent )
         slotSaveWindowSetup();
     else if ( res == reset )
         slotResetLayout();
+    else if ( res == matchFromBeginning )
+        Settings::SettingsData::instance()->setMatchType( AnnotationDialog::MatchFromBeginning );
+    else if ( res == matchFromWordStart )
+        Settings::SettingsData::instance()->setMatchType( AnnotationDialog::MatchFromWordStart );
+    else if ( res == matchAnywhere )
+        Settings::SettingsData::instance()->setMatchType( AnnotationDialog::MatchAnywhere );
 }
 
 int AnnotationDialog::Dialog::exec()
@@ -619,7 +705,6 @@ int AnnotationDialog::Dialog::exec()
     show(); // We need to call show before we call setupFocus() otherwise the widget will not yet all have been moved in place.
     setupFocus();
     const int ret = QDialog::exec();
-    _description->setCheckSpellingEnabled( false );
     hideTornOfWindows();
     return ret;
 }
@@ -717,12 +802,10 @@ bool AnnotationDialog::Dialog::hasChanges()
 {
     bool changed = false;
     if ( _setup == InputSingleImageConfigMode )  {
-        // PENDING(blackie) how about label?
         writeToInfo();
         for ( int i = 0; i < _editList.count(); ++i )  {
             changed |= (*(_origList[i]) != _editList[i]);
         }
-        changed |= _description->toPlainText().compare( firstDescription );
     }
 
     else if ( _setup == InputMultiImageConfigMode ) {
@@ -750,7 +833,7 @@ void AnnotationDialog::Dialog::rotate( int angle )
     else {
         DB::ImageInfo& info = _editList[ _current ];
         info.rotate(angle);
-        _rotatedFiles.insert( info.fileName( DB::AbsolutePath ) );
+        _rotatedFiles.insert( info.fileName() );
     }
 }
 
@@ -1089,13 +1172,15 @@ void AnnotationDialog::Dialog::togglePreview()
     }
     else {
         _stack->setCurrentWidget( _fullScreenPreview );
-        _fullScreenPreview->load( QStringList() << _editList[ _current].fileName(DB::AbsolutePath) );
+        _fullScreenPreview->load( DB::FileNameList() << _editList[ _current].fileName() );
     }
 }
 
-Utilities::StringSet AnnotationDialog::Dialog::rotatedFiles() const
+DB::FileNameSet AnnotationDialog::Dialog::rotatedFiles() const
 {
     return _rotatedFiles;
 }
 
 #include "Dialog.moc"
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

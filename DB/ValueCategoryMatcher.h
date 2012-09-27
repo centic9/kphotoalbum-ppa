@@ -27,7 +27,7 @@ namespace DB
 class ValueCategoryMatcher :public SimpleCategoryMatcher
 {
 public:
-    ValueCategoryMatcher( const QString& category, const QString& value, bool sign );
+    ValueCategoryMatcher( const QString& category, const QString& value );
     OVERRIDE bool eval(ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched);
     OVERRIDE void debug( int level ) const;
 

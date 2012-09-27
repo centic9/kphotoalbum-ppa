@@ -36,7 +36,6 @@
 #include "Browser/BrowserWidget.h"
 #include "DB/ImageDB.h"
 #include "DB/ImageInfoPtr.h"
-#include "DB/Id.h"
 #include "Settings/SettingsData.h"
 #include "Utilities/Set.h"
 #include "Utilities/Util.h"
@@ -63,7 +62,8 @@ ThumbnailView::ThumbnailWidget::ThumbnailWidget( ThumbnailFactory* factory)
      _mouseHandler( &_mouseTrackingHandler ),
      _dndHandler( new ThumbnailDND( factory ) ),
      m_pressOnStackIndicator( false ),
-     _keyboardHandler( new KeyboardEventHandler( factory ) )
+     _keyboardHandler( new KeyboardEventHandler( factory ) ),
+      m_videoThumbnailCycler( new VideoThumbnailCycler(model()) )
 {
     setModel( ThumbnailComponent::model() );
     setResizeMode( QListView::Adjust );
@@ -81,7 +81,7 @@ ThumbnailView::ThumbnailWidget::ThumbnailWidget( ThumbnailFactory* factory)
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
     setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
-    connect( &_mouseTrackingHandler, SIGNAL( fileIdUnderCursorChanged( DB::Id ) ), this, SIGNAL( fileIdUnderCursorChanged( DB::Id ) ) );
+    connect( &_mouseTrackingHandler, SIGNAL( fileIdUnderCursorChanged( DB::FileName ) ), this, SIGNAL( fileIdUnderCursorChanged( DB::FileName ) ) );
     connect( _keyboardHandler, SIGNAL( showSelection() ), this, SIGNAL( showSelection() ) );
 
     updatePalette();
@@ -118,7 +118,7 @@ void ThumbnailView::ThumbnailWidget::keyReleaseEvent( QKeyEvent* event )
 bool ThumbnailView::ThumbnailWidget::isMouseOverStackIndicator( const QPoint& point )
 {
     // first check if image is stack, if not return.
-    DB::ImageInfoPtr imageInfo = mediaIdUnderCursor().fetchInfo();
+    DB::ImageInfoPtr imageInfo = mediaIdUnderCursor().info();
     if (!imageInfo) return false;
     if (!imageInfo->isStacked()) return false;
 
@@ -143,7 +143,7 @@ static bool isMouseResizeGesture( QMouseEvent* event )
 void ThumbnailView::ThumbnailWidget::mousePressEvent( QMouseEvent* event )
 {
     if ( (!(event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier ) )) && isMouseOverStackIndicator( event->pos() ) ) {
-        model()->toggleStackExpansion( mediaIdUnderCursor() );
+        model()->toggleStackExpansion(mediaIdUnderCursor());
         m_pressOnStackIndicator = true;
         return;
     }
@@ -186,10 +186,10 @@ void ThumbnailView::ThumbnailWidget::mouseReleaseEvent( QMouseEvent* event )
 void ThumbnailView::ThumbnailWidget::mouseDoubleClickEvent( QMouseEvent * event )
 {
     if ( isMouseOverStackIndicator( event->pos() ) ) {
-        model()->toggleStackExpansion( mediaIdUnderCursor() );
+        model()->toggleStackExpansion(mediaIdUnderCursor());
         m_pressOnStackIndicator = true;
     } else if ( !( event->modifiers() & Qt::ControlModifier ) ) {
-        DB::Id id = mediaIdUnderCursor();
+        DB::FileName id = mediaIdUnderCursor();
         if ( !id.isNull() )
             emit showImage( id );
     }
@@ -228,12 +228,12 @@ void ThumbnailView::ThumbnailWidget::emitDateChange()
     if (row == -1)
 	return;
 
-    DB::Id id = model()->imageAt( row );
-    if ( id.isNull() )
+    DB::FileName fileName = model()->imageAt( row );
+    if ( fileName.isNull() )
         return;
 
     static QDateTime lastDate;
-    QDateTime date = id.fetchInfo()->date().start();
+    QDateTime date = fileName.info()->date().start();
     if ( date != lastDate ) {
         lastDate = date;
         if ( date.date().year() != 1900 )
@@ -248,7 +248,7 @@ void ThumbnailView::ThumbnailWidget::emitDateChange()
 void ThumbnailView::ThumbnailWidget::gotoDate( const DB::ImageDate& date, bool includeRanges )
 {
     _isSettingDate = true;
-    DB::Id candidate = DB::ImageDB::instance()
+    DB::FileName candidate = DB::ImageDB::instance()
                              ->findFirstItemInRange(model()->imageList(ViewOrder), date, includeRanges);
     if ( !candidate.isNull() )
         setCurrentItem( candidate );
@@ -263,20 +263,21 @@ void ThumbnailView::ThumbnailWidget::reload(SelectionUpdateMethod method )
     cellGeometryInfo()->flushCache();
     updatePalette();
 
-    const DB::IdList selectedItems = selection();
+    // const DB::IdList selectedItems = selection( NoExpandCollapsedStacks );
+    // PENDING(blackie) the selection wasn't used
     ThumbnailComponent::model()->reset();
 
     if ( method == ClearSelection )
         maintainer.disable();
 }
 
-DB::Id ThumbnailView::ThumbnailWidget::mediaIdUnderCursor() const
+DB::FileName ThumbnailView::ThumbnailWidget::mediaIdUnderCursor() const
 {
     const QModelIndex index = indexUnderCursor();
     if ( index.isValid() )
-        return model()->imageAt( index.row() );
+        return model()->imageAt(index.row());
     else
-        return DB::Id();
+        return DB::FileName();
 }
 
 QModelIndex ThumbnailView::ThumbnailWidget::indexUnderCursor() const
@@ -306,19 +307,19 @@ void ThumbnailView::ThumbnailWidget::dragEnterEvent( QDragEnterEvent * event )
     _dndHandler->contentsDragEnterEvent( event );
 }
 
-void ThumbnailView::ThumbnailWidget::setCurrentItem( const DB::Id& id )
+void ThumbnailView::ThumbnailWidget::setCurrentItem( const DB::FileName& fileName )
 {
-    if ( id.isNull() )
+    if ( fileName.isNull() )
         return;
 
-    const int row = model()->indexOf(id);
+    const int row = model()->indexOf(fileName);
     setCurrentIndex( QListView::model()->index( row, 0 ) );
 }
 
-DB::Id ThumbnailView::ThumbnailWidget::currentItem() const
+DB::FileName ThumbnailView::ThumbnailWidget::currentItem() const
 {
     if ( !currentIndex().isValid() )
-        return DB::Id::null;
+        return DB::FileName();
 
     return model()->imageAt( currentIndex().row());
 }
@@ -338,7 +339,7 @@ int ThumbnailView::ThumbnailWidget::cellWidth() const
 
 void ThumbnailView::ThumbnailWidget::emitSelectionChangedSignal()
 {
-    emit selectionCountChanged( selectionModel()->selectedIndexes().count() );
+    emit selectionCountChanged( selection( ExpandCollapsedStacks ).size() );
 }
 
 void ThumbnailView::ThumbnailWidget::scheduleDateChangeSignal()
@@ -365,18 +366,43 @@ void ThumbnailView::ThumbnailWidget::showEvent( QShowEvent* event )
     QListView::showEvent( event );
 }
 
-DB::IdList ThumbnailView::ThumbnailWidget::selection() const
+DB::FileNameList ThumbnailView::ThumbnailWidget::selection( ThumbnailView::SelectionMode mode ) const
 {
-    DB::IdList res;
+    DB::FileNameList res;
     Q_FOREACH(const QModelIndex& index, selectedIndexes()) {
-        res.append(model()->imageAt( index.row() ));
+        DB::FileName currFileName = model()->imageAt(index.row());
+        bool includeAllStacks = false;
+        switch ( mode )
+        {
+            case IncludeAllStacks:
+                includeAllStacks = true;
+                // no break!
+            case ExpandCollapsedStacks:
+                {
+                    // if the selected image belongs to a collapsed thread,
+                    // imply that all images in the stack are selected:
+                    DB::ImageInfoPtr imageInfo = currFileName.info();
+                    if ( imageInfo && imageInfo->isStacked()
+                            && ( includeAllStacks || ! model()->isItemInExpandedStack( imageInfo->stackId() ) ) 
+                            )
+                    {
+                        // add all images in the same stack
+                        res.append(DB::ImageDB::instance()->getStackFor(currFileName));
+                    } else
+                        res.append(currFileName);
+                } 
+                break;
+            case NoExpandCollapsedStacks:
+                res.append(currFileName);
+                break;
+        }
     }
     return res;
 }
 
-bool ThumbnailView::ThumbnailWidget::isSelected( const DB::Id& id ) const
+bool ThumbnailView::ThumbnailWidget::isSelected( const DB::FileName& fileName ) const
 {
-    return selectedIndexes().contains( model()->idToIndex(id) );
+    return selection( NoExpandCollapsedStacks ).indexOf(fileName) != -1;
 }
 
 /**
@@ -384,18 +410,24 @@ bool ThumbnailView::ThumbnailWidget::isSelected( const DB::Id& id ) const
    if there only are one item selected. This is used from the Viewer when
    you start it without a selection, and are going forward or backward.
 */
-void ThumbnailView::ThumbnailWidget::changeSingleSelection(const DB::Id& id)
+void ThumbnailView::ThumbnailWidget::changeSingleSelection(const DB::FileName& fileName)
 {
-    if ( selection().size() == 1 ) {
+    if ( selection( NoExpandCollapsedStacks ).size() == 1 ) {
         QItemSelectionModel* selection = selectionModel();
-        selection->select( model()->idToIndex(id), QItemSelectionModel::ClearAndSelect );
-        setCurrentItem( id );
+        selection->select( model()->fileNameToIndex(fileName), QItemSelectionModel::ClearAndSelect );
+        setCurrentItem(fileName);
     }
 }
 
-void ThumbnailView::ThumbnailWidget::select(const DB::IdList& items )
+void ThumbnailView::ThumbnailWidget::select(const DB::FileNameList& items )
 {
-    Q_FOREACH( const DB::Id& id, items )
-        selectionModel()->select(model()->idToIndex(id), QItemSelectionModel::Select );
+    Q_FOREACH( const DB::FileName& fileName, items )
+        selectionModel()->select(model()->fileNameToIndex(fileName), QItemSelectionModel::Select);
 }
 
+bool ThumbnailView::ThumbnailWidget::isItemUnderCursorSelected() const
+{
+    return widget()->selection(ExpandCollapsedStacks).contains(mediaIdUnderCursor());
+}
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

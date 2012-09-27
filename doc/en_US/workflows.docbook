@@ -8,11 +8,11 @@
   digital imaging.</para>
 
   <sect1 id="raw-workflow">
-  <title>RAW workflow using &kphotoalbum; and Bibble5</title>
+  <title>RAW workflow using &kphotoalbum; and Bibble5/AfterShot Pro</title>
   <para>When shooting RAW images the files from camera must be developed
   to commonly recognized format like JPEG or TIFF. There are a few
   options to choose from when working on Linux. For example RawTherapee
-  and Ufraw are open-source alternatives when Bibble5/AfterShotPro are
+  and Ufraw are open-source alternatives when Bibble5/AfterShot Pro are
   commercial application for this purpose.</para>
 
   <para>A few settings are recommended for a RAW workflow.
@@ -94,10 +94,12 @@
   <para>After a reduced amount of images is left I start tagging them. I
   add the Latin Name of the species and Common Name. Whenever I have
   these two categories completed I consider the image Done and get rid
-  of the Untagged marking. (As the tags are copied over to new version
-  of images only when the new image is found and not when the top of the
-  stack is re-tagged it is good to have as final tagging done as
-  possible before developing JPEGs.)</para>
+  of the Untagged marking. Note that if you still need to do tagging
+  after developing the RAW image (and auto-stacking them) you need to
+  select the top of collapsed stack (or all images on expanded stack)
+  and select <emphasis>Annotate Multiple Items at a Time</emphasis> to
+  get the whole stack annotated instead of only the topmost
+  image.</para>
 
   <para>The best images are sent to external application for developing.
   With wanted images selected, right click on selected thumbnail and
@@ -120,10 +122,62 @@
   descriptions if needed.</para>
 
   <para>Final step is to generate static &HTML; pages and upload to my web
-  server for the enjoyment of friends and colleagues. &HTML; generation is
-  described in <xref linkend="chp-generating-html"/>.</para>
+  server for the enjoyment of friends and colleagues. This I do with the
+  stacks collapsed to only get the developed images to the web page.
+  &HTML; generation is described in <xref
+  linkend="chp-generating-html"/>.</para>
   </sect1>
 
+  <sect1 id="pano-workflow">
+  <title>Panorama workflow</title>
+  <para>
+  Panoramas require a bit different workflow than normal photo editing.
+  This is due to the requirement for multiple source files. The tool of
+  choice for panoramas is Autopano Pro but latest version of &digikam;
+  should do well and fits zero budget. Following list describes the
+  steps required:
+  <orderedlist>
+  <listitem><para>Tag the photos belonging to a panorama in
+  &kphotoalbum; appropriately. This is done mainly to avoid discarding
+  images by accident, when sorting out the garbage among the photos
+  taken. You probably want also to stack the set of source images at
+  this point.</para></listitem>
+  <listitem><para>You have at least two simple options for next
+  step:
+  <orderedlist>
+  <listitem><para>You can let Autopano Pro find the panoramas
+  automatically from the photo directory.
+  </para></listitem>
+  <listitem><para>Or send the proper images to Autopano Pro on command
+  line to speed things up. This is handy if the image directory contains a
+  lot of images, especially RAW ones.  This requires one to fix the script
+  that starts Autopano Pro to accept input and to create a desktop file or
+  invoking external program with own command line.</para></listitem>
+  </orderedlist>
+  </para></listitem>
+  <listitem><para>If it happens that the resulting panorama is missing a
+  small part, you can try to craft it e.g. with the Gimp. Gimp works
+  usually quite well if there is enough "structure" to be cloned but there
+  is absolutely no guarantee you will get usable
+  results.</para></listitem>
+  <listitem><para>Save the new image somewhere under &kphotoalbum;'s image
+  directory and run
+  <menuchoice><guimenu>Maintenance</guimenu><guimenuitem>Rescan for Images
+  and Videos</guimenuitem></menuchoice>. This should notice the new
+  panorama and include it in the picture gallery.
+  </para></listitem>
+  <listitem><para>If you have set the AutoStacking of new images properly
+  and name of the new panorama matches the rules for this, the panorama
+  should be on top of the stack. Otherwise sort the images by date, so the
+  new panorama ends up at by the source images and stack them manually.
+  (Autopano Pro seems to write the EXIF info of the first image into the
+   panorama.)</para></listitem>
+  <listitem><para>You can still add tagging at this point to the panorama
+  or you might include all the source images also with
+  <keycombo>&Ctrl;<keycap>2</keycap></keycombo>.</para></listitem>
+  </orderedlist>
+  </para>
+</sect1>
 </chapter>
 <!-- Keep this comment at the end of the file
 Local variables:

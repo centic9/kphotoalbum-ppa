@@ -26,23 +26,24 @@ namespace DB
 {
 class MD5Map;
 class IdList;
-
+class FileNameList;
 
 class NewImageFinder
 {
 public:
     bool findImages();
-    bool calculateMD5sums(const DB::IdList& list, DB::MD5Map* map, bool* wasCanceled=0);
+    bool calculateMD5sums(const DB::FileNameList& list, DB::MD5Map* map, bool* wasCanceled=0);
 
 protected:
-    void searchForNewFiles( const QSet<QString>& loadedFiles, QString directory );
+    void searchForNewFiles( const DB::FileNameSet& loadedFiles, QString directory );
     void setupFileVersionDetection();
     void loadExtraFiles();
-    ImageInfoPtr loadExtraFile( const QString& name, DB::MediaType type );
+    ImageInfoPtr loadExtraFile( const DB::FileName& name, DB::MediaType type );
     void markUnTagged( ImageInfoPtr info );
+    bool handleIfImageHasBeenMoved( const DB::FileName& newFileName, const MD5& sum );
 
 private:
-    typedef QList< QPair< QString, DB::MediaType > > LoadList;
+    typedef QList< QPair< DB::FileName, DB::MediaType > > LoadList;
     LoadList _pendingLoad;
 
     QString _modifiedFileCompString;

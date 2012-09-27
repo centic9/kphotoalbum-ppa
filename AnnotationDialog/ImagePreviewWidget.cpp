@@ -22,8 +22,6 @@
 #include <QWidget>
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
-#include "DB/IdList.h"
-#include "DB/Id.h"
 #include "MainWindow/DeleteDialog.h"
 using namespace AnnotationDialog;
 
@@ -164,8 +162,7 @@ void ImagePreviewWidget::slotDeleteImage()
     MainWindow::DeleteDialog dialog( this );
     DB::ImageInfo info = _imageList->at( _current );
 
-    DB::Id idToDelete = DB::ImageDB::instance()->ID_FOR_FILE(info.fileName(DB::AbsolutePath));
-    const DB::IdList deleteList = DB::IdList(idToDelete);
+    const DB::FileNameList deleteList = DB::FileNameList() << info.fileName();
 
     int ret = dialog.exec( deleteList );
     if ( ret == QDialog::Rejected ) //Delete Dialog rejected, do nothing
@@ -199,11 +196,6 @@ void ImagePreviewWidget::setImage( const int index )
     setImage( _imageList->at( _current ) );
 }
 
-
-const QString& ImagePreviewWidget::lastImage()
-{
-    return _preview->lastImageFileName();
-}
 
 void ImagePreviewWidget::setImage( const QString& fileName )
 {

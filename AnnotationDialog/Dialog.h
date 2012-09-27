@@ -75,7 +75,7 @@ public:
     ~Dialog();
     int configure( DB::ImageInfoList list,  bool oneAtATime );
     DB::ImageSearchInfo search( DB::ImageSearchInfo* search = 0 );
-    Utilities::StringSet rotatedFiles() const;
+    DB::FileNameSet rotatedFiles() const;
     KActionCollection* actions();
 
 protected slots:
@@ -137,13 +137,15 @@ private:
     QSplitter* _splitter;
     int _accept;
     QList<QDockWidget*> _dockWidgets;
-    Utilities::StringSet _rotatedFiles;
+    DB::FileNameSet _rotatedFiles;
 
     // Widgets
     QMainWindow* _dockWindow;
     KLineEdit* _imageLabel;
     KDateEdit* _startDate;
     KDateEdit* _endDate;
+    QLabel* _imageFilePatternLabel;
+    KLineEdit* _imageFilePattern;
 
     ImagePreviewWidget* _preview;
     KPushButton* _revertBut;
@@ -179,3 +181,4 @@ private:
 
 #endif /* IMAGECONFIG_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

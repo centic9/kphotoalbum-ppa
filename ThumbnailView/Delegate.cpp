@@ -25,7 +25,7 @@
 #include "CellGeometry.h"
 #include <QPainter>
 #include "ThumbnailModel.h"
-
+#include <KLocale>
 ThumbnailView::Delegate::Delegate(ThumbnailFactory* factory )
     :ThumbnailComponent( factory )
 {
@@ -66,6 +66,7 @@ void ThumbnailView::Delegate::paintCellPixmap( QPainter* painter, const QStyleOp
     const QRect pixmapRect = cellGeometryInfo()->iconGeometry( pixmap ).translated(option.rect.topLeft());
     paintBoundingRect( painter, pixmapRect, index );
     painter->drawPixmap( pixmapRect, pixmap );
+    paintVideoInfo(painter, pixmapRect, index );
     paintDropIndicator( painter, option.rect, index );
     paintStackedIndicator(painter, pixmapRect, index);
 
@@ -74,14 +75,41 @@ void ThumbnailView::Delegate::paintCellPixmap( QPainter* painter, const QStyleOp
         painter->fillRect( option.rect, QColor(58,98,134, 127) );
 }
 
+void ThumbnailView::Delegate::paintVideoInfo(QPainter *painter, const QRect& pixmapRect, const QModelIndex &index) const
+{
+    DB::ImageInfoPtr imageInfo = model()->imageAt(index.row()).info();
+    if (!imageInfo || imageInfo->mediaType() != DB::Video )
+        return;
+
+    const QString text = videoLengthText(imageInfo);
+    const QRect metricsRect = painter->fontMetrics().boundingRect(text);
+
+    const int margin = 3;
+    const QRect textRect = QRect(pixmapRect.right()-metricsRect.width()-margin,
+                                 pixmapRect.bottom()-metricsRect.height()-margin,
+                                 metricsRect.width(), metricsRect.height());
+    const QRect backgroundRect =  textRect.adjusted(-margin,-margin, margin, margin);
+
+    if ( backgroundRect.width() > pixmapRect.width()/2  ) {
+        // Dont show the time if the box would fill more than half the thumbnail
+        return;
+    }
+
+    painter->save();
+    painter->fillRect(backgroundRect, QBrush( QColor(0,0,0,128)));
+    painter->setPen(Qt::white);
+    painter->drawText(textRect, text);
+    painter->restore();
+}
+
 void ThumbnailView::Delegate::paintCellText( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
     // Optimization based on result from KCacheGrind
     if ( !Settings::SettingsData::instance()->displayLabels() && !Settings::SettingsData::instance()->displayCategories() )
         return;
 
-    DB::Id mediaId = model()->imageAt( index.row() );
-    if ( mediaId.isNull() )
+    DB::FileName fileName = model()->imageAt( index.row() );
+    if ( fileName.isNull() )
         return;
 
     QString title = index.data( Qt::DisplayRole ).value<QString>();
@@ -153,14 +181,14 @@ void ThumbnailView::Delegate::paintBoundingRect( QPainter* painter, const QRect&
     }
 }
 
-static DB::StackID getStackId(const DB::Id& id)
+static DB::StackID getStackId(const DB::FileName& fileName)
 {
-    return id.fetchInfo()->stackId();
+    return fileName.info()->stackId();
 }
 
 void ThumbnailView::Delegate::paintStackedIndicator( QPainter* painter, const QRect &pixmapRect, const QModelIndex& index ) const
 {
-    DB::ImageInfoPtr imageInfo = model()->imageAt(index.row()).fetchInfo();
+    DB::ImageInfoPtr imageInfo = model()->imageAt(index.row()).info();
     if (!imageInfo || !imageInfo->isStacked())
         return;
 
@@ -174,7 +202,7 @@ void ThumbnailView::Delegate::paintStackedIndicator( QPainter* painter, const QR
         leftX = pixmapRect.left() + pixmapRect.width()/2;
 
     if ( isLast( index.row() ) )
-         rightX = pixmapRect.right();
+        rightX = pixmapRect.right();
 
     QPoint bottomLeftPoint( leftX, pixmapRect.bottom() );
     QPoint bottomRightPoint( rightX, pixmapRect.bottom() );
@@ -202,9 +230,9 @@ bool ThumbnailView::Delegate::isFirst( int row ) const
     const DB::StackID curId = getStackId(model()->imageAt(row));
 
     return
-        !model()->isItemInExpandedStack(curId) ||
-        row == 0 ||
-        getStackId(model()->imageAt(row-1)) != curId;
+            !model()->isItemInExpandedStack(curId) ||
+            row == 0 ||
+            getStackId(model()->imageAt(row-1)) != curId;
 }
 
 bool ThumbnailView::Delegate::isLast( int row ) const
@@ -212,20 +240,48 @@ bool ThumbnailView::Delegate::isLast( int row ) const
     const DB::StackID curId = getStackId(model()->imageAt(row));
 
     return
-        !model()->isItemInExpandedStack(curId) ||
-        row == model()->imageCount() -1 ||
-        getStackId(model()->imageAt(row+1)) != curId;
+            !model()->isItemInExpandedStack(curId) ||
+            row == model()->imageCount() -1 ||
+            getStackId(model()->imageAt(row+1)) != curId;
+}
+
+QString ThumbnailView::Delegate::videoLengthText(const DB::ImageInfoPtr &imageInfo) const
+{
+    const int length = imageInfo->videoLength();
+    if ( length < 0 )
+        return i18n("video");
+
+    const int hours = length/60/60;
+    const int minutes = (length/60)%60;
+    const int secs = length % 60;
+
+    QString res;
+    if (hours > 0)
+        res = QString::number(hours) + QLatin1String(":");
+
+    if (minutes < 10 && hours > 0)
+        res += QLatin1String("0");
+
+    res += QString::number(minutes);
+    res += QLatin1String(":");
+
+    if (secs < 10)
+        res += QLatin1String("0");
+
+    res += QString::number(secs);
+
+    return res;
 }
 
 
 void ThumbnailView::Delegate::paintDropIndicator( QPainter* painter, const QRect& rect, const QModelIndex& index ) const
 {
-    const DB::Id mediaId = model()->imageAt( index.row() );
+    const DB::FileName fileName = model()->imageAt( index.row() );
 
-    if ( model()->leftDropItem() == mediaId )
+    if ( model()->leftDropItem() == fileName )
         painter->fillRect( rect.left(), rect.top(), 3, rect.height(), QBrush( Qt::red ) );
 
-    else if ( model()->rightDropItem() == mediaId )
+    else if ( model()->rightDropItem() == fileName )
         painter->fillRect( rect.right() -2, rect.top(), 3, rect.height(), QBrush( Qt::red ) );
 }
 

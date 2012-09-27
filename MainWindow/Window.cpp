@@ -91,8 +91,6 @@
 #include "InvalidDateFinder.h"
 #include "AutoStackImages.h"
 #include "DB/ImageInfo.h"
-#include "DB/Id.h"
-#include "DB/IdList.h"
 #ifdef HAVE_STDLIB_H
 #  include <stdlib.h>
 #endif
@@ -104,13 +102,6 @@
 
 #include "FeatureDialog.h"
 
-#include <config-kpa-sqldb.h>
-#ifdef SQLDB_SUPPORT
-#  include "SQLDB/Database.h"
-#  include "SQLDB/ConfigFileHandler.h"
-#  include "SQLDB/QueryErrors.h"
-#  include <kprogressdialog.h>
-#endif
 #include <krun.h>
 #include <kglobal.h>
 #include <kvbox.h>
@@ -126,6 +117,10 @@
 #include "DB/MD5.h"
 #include "DB/MD5Map.h"
 #include "StatusBar.h"
+#include <BackgroundTaskManager/JobManager.h>
+#include <BackgroundJobs/SearchForVideosWithoutLengthInfo.h>
+#include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
+#include "UpdateVideoThumbnail.h"
 
 using namespace DB;
 
@@ -136,6 +131,8 @@ MainWindow::Window::Window( QWidget* parent )
     _annotationDialog(0),
      _deleteDialog( 0 ), _htmlDialog(0), _tokenEditor( 0 )
 {
+    checkIfMplayerIsInstalled();
+
     SplashScreen::instance()->message( i18n("Loading Database") );
     _instance = this;
 
@@ -199,10 +196,10 @@ MainWindow::Window::Window( QWidget* parent )
     connect( _dateBar, SIGNAL( dateRangeCleared() ), this, SLOT( clearDateRange() ) );
     connect( _thumbnailView, SIGNAL( currentDateChanged( const QDateTime& ) ), _dateBar, SLOT( setDate( const QDateTime& ) ) );
 
-    connect( _thumbnailView, SIGNAL( showImage( const DB::Id& ) ), this, SLOT( showImage( const DB::Id& ) ) );
+    connect( _thumbnailView, SIGNAL( showImage( const DB::FileName& ) ), this, SLOT( showImage( const DB::FileName& ) ) );
     connect( _thumbnailView, SIGNAL( showSelection() ), this, SLOT( slotView() ) );
 
-    connect( _thumbnailView, SIGNAL( fileIdUnderCursorChanged( const DB::Id& ) ), this, SLOT( slotSetFileName( const DB::Id& ) ) );
+    connect( _thumbnailView, SIGNAL( fileIdUnderCursorChanged( const DB::FileName& ) ), this, SLOT( slotSetFileName( const DB::FileName& ) ) );
     connect( DB::ImageDB::instance(), SIGNAL( totalChanged( uint ) ), this, SLOT( updateDateBar() ) );
     connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL( categoryCollectionChanged() ), this, SLOT( slotOptionGroupChanged() ) );
     connect( _browser, SIGNAL( imageCount(uint)), _statusBar->_partial, SLOT( showBrowserMatches(uint) ) );
@@ -214,8 +211,7 @@ MainWindow::Window::Window( QWidget* parent )
     // Automatically save toolbar settings
     setAutoSaveSettings();
 
-    new ImageManager::ThumbnailBuilder( _statusBar, this );
-    ImageManager::ThumbnailBuilder::instance()->buildMissing();
+    executeStartupActions();
 }
 
 MainWindow::Window::~Window()
@@ -318,7 +314,7 @@ void MainWindow::Window::slotOptions()
 
 void MainWindow::Window::slotCreateImageStack()
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList list = selected();
     if (list.size() < 2) {
         // it doesn't make sense to make a stack from one image, does it?
         return;
@@ -330,8 +326,8 @@ void MainWindow::Window::slotCreateImageStack()
                     i18n("Some of the selected images already belong to a stack. "
                         "Do you want to remove them from their stacks and create a "
                         "completely new one?"), i18n("Stacking Error")) == KMessageBox::Yes ) {
-            DB::ImageDB::instance()->unstack( list );
-            if ( ! DB::ImageDB::instance()->stack( list ) ) {
+            DB::ImageDB::instance()->unstack(list);
+            if ( ! DB::ImageDB::instance()->stack(list)) {
                 KMessageBox::sorry( this,
                         i18n("Unknown error, stack creation failed."),
                         i18n("Stacking Error"));
@@ -344,7 +340,7 @@ void MainWindow::Window::slotCreateImageStack()
 
     DirtyIndicator::markDirty();
     // The current item might have just became invisible
-    _thumbnailView->setCurrentItem( list.at(0) );
+    _thumbnailView->setCurrentItem(list.at(0));
     _thumbnailView->updateDisplayModel();
 }
 
@@ -357,7 +353,7 @@ void MainWindow::Window::slotCreateImageStack()
  * */
 void MainWindow::Window::slotSetStackHead()
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList list = selected();
     if ( list.size() != 1 ) {
         // this should be checked by enabling/disabling of QActions
         return;
@@ -366,21 +362,19 @@ void MainWindow::Window::slotSetStackHead()
     setStackHead( *list.begin() );
 }
 
-void MainWindow::Window::setStackHead( const DB::Id image )
+void MainWindow::Window::setStackHead( const DB::FileName& image )
 {
-    if ( ! image.fetchInfo()->isStacked() )
+    if ( ! image.info()->isStacked() )
         return;
 
-    unsigned int oldOrder = image.fetchInfo()->stackOrder();
+    unsigned int oldOrder = image.info()->stackOrder();
 
-    DB::IdList others = DB::ImageDB::instance()->getStackFor( image );
-    others.fetchInfos();
-    for ( DB::IdList::const_iterator it = others.begin(); it != others.end(); ++it ) {
-        DB::Id current = *it;
-        if ( current == image ) {
-            current.fetchInfo()->setStackOrder( 1 );
-        } else if ( current.fetchInfo()->stackOrder() < oldOrder ) {
-            current.fetchInfo()->setStackOrder( current.fetchInfo()->stackOrder() + 1 );
+    DB::FileNameList others = DB::ImageDB::instance()->getStackFor(image);
+    Q_FOREACH( const DB::FileName& current, others ) {
+        if (current == image) {
+            current.info()->setStackOrder( 1 );
+        } else if ( current.info()->stackOrder() < oldOrder ) {
+            current.info()->setStackOrder( current.info()->stackOrder() + 1 );
         }
     }
 
@@ -390,11 +384,11 @@ void MainWindow::Window::setStackHead( const DB::Id image )
 
 void MainWindow::Window::slotUnStackImages()
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList& list = selected();
     if (list.isEmpty())
         return;
 
-    DB::ImageDB::instance()->unstack( list );
+    DB::ImageDB::instance()->unstack(list);
     DirtyIndicator::markDirty();
     _thumbnailView->updateDisplayModel();
 }
@@ -411,14 +405,14 @@ void MainWindow::Window::slotConfigureImagesOneAtATime()
 
 void MainWindow::Window::configureImages( bool oneAtATime )
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList& list = selected();
     if (list.isEmpty()) {
         KMessageBox::sorry( this, i18n("No item is selected."), i18n("No Selection") );
     }
     else {
         DB::ImageInfoList images;
-        Q_FOREACH(DB::ImageInfoPtr info, list.fetchInfos()) {
-            images.append(info);
+        Q_FOREACH( const DB::FileName& fileName, list) {
+            images.append(fileName.info());
         }
         configureImages( images, oneAtATime );
     }
@@ -437,7 +431,7 @@ void MainWindow::Window::configImages( const DB::ImageInfoList& list, bool oneAt
         return;
 
     reloadThumbnails(  ThumbnailView::MaintainSelection );
-    Q_FOREACH( const QString& fileName, _annotationDialog->rotatedFiles() )
+    Q_FOREACH( const DB::FileName& fileName, _annotationDialog->rotatedFiles() )
         ImageManager::ThumbnailCache::instance()->removeThumbnail( fileName );
 }
 
@@ -482,9 +476,8 @@ void MainWindow::Window::slotDeleteSelected()
 void MainWindow::Window::slotCopySelectedURLs()
 {
     KUrl::List urls; int urlcount = 0;
-    Q_FOREACH(const DB::ImageInfoPtr info, selected().fetchInfos()) {
-        const QString fileName = info->fileName(DB::AbsolutePath);
-        urls.append( fileName );
+    Q_FOREACH(const DB::FileName fileName, selected()) {
+        urls.append( fileName.absolute() );
         urlcount++;
     }
     if (urlcount == 1) _paste->setEnabled (true); else _paste->setEnabled(false);
@@ -508,23 +501,24 @@ void MainWindow::Window::slotPasteInformation()
     // fail silent if more than one image is in clipboard.
     if (string.count(QString::fromLatin1("\n")) != 0) return;
 
-    MD5 originalSum = Utilities::MD5Sum( Utilities::absoluteImageFileName( string ) );
+    const DB::FileName fileName = DB::FileName::fromRelativePath(string);
+
+    MD5 originalSum = Utilities::MD5Sum( fileName );
     ImageInfoPtr originalInfo;
     if ( DB::ImageDB::instance()->md5Map()->contains( originalSum ) ) {
-        originalInfo = DB::ImageDB::instance()->info( string, DB::RelativeToImageRoot );
+        originalInfo = DB::ImageDB::instance()->info( fileName );
     } else {
-        DB::Id ID = DB::ImageDB::instance()->ID_FOR_FILE( string );
-        originalInfo = ID.fetchInfo();
+        originalInfo = fileName.info();
     }
-    Q_FOREACH(DB::ImageInfoPtr newInfo, selected().fetchInfos()) {
-        newInfo->copyExtraData(*originalInfo, false);
+    Q_FOREACH(const DB::FileName& newFile, selected()) {
+        newFile.info()->copyExtraData(*originalInfo, false);
     }
 }
 
 void MainWindow::Window::slotReReadExifInfo()
 {
 #ifdef HAVE_EXIV2
-    QStringList files = DB::ImageDB::instance()->CONVERT(selectedOnDisk());
+    DB::FileNameList files = selectedOnDisk();
     static Exif::ReReadDialog* dialog = 0;
     if ( ! dialog )
         dialog = new Exif::ReReadDialog( this );
@@ -535,7 +529,7 @@ void MainWindow::Window::slotReReadExifInfo()
 
 void MainWindow::Window::slotAutoStackImages()
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList list = selected();
     if (list.isEmpty()) {
         KMessageBox::sorry( this, i18n("No item is selected."), i18n("No Selection") );
         return;
@@ -546,12 +540,12 @@ void MainWindow::Window::slotAutoStackImages()
     delete stacker;
 }
 
-DB::IdList MainWindow::Window::selected()
+DB::FileNameList MainWindow::Window::selected( ThumbnailView::SelectionMode mode) const
 {
     if ( _thumbnailView->gui() == _stack->visibleWidget() )
-        return _thumbnailView->selection();
+        return _thumbnailView->selection(mode);
     else
-        return DB::IdList();
+        return DB::FileNameList();
 }
 
 void MainWindow::Window::slotViewNewWindow()
@@ -563,17 +557,16 @@ void MainWindow::Window::slotViewNewWindow()
  * Returns a list of files that are both selected and on disk. If there are no
  * selected files, returns all files form current context that are on disk.
  * */
-DB::IdList MainWindow::Window::selectedOnDisk()
+DB::FileNameList MainWindow::Window::selectedOnDisk()
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList list = selected(ThumbnailView::NoExpandCollapsedStacks);
     if (list.isEmpty())
-        return DB::ImageDB::instance()->currentScope( true );
+        return DB::ImageDB::instance()->currentScope(true);
 
-    DB::IdList listOnDisk;
-    Q_FOREACH(DB::Id id, list) {
-        const QString fileName = id.fetchInfo()->fileName(DB::AbsolutePath);
-        if ( DB::ImageInfo::imageOnDisk( fileName  ) )
-            listOnDisk.append(id);
+    DB::FileNameList listOnDisk;
+    Q_FOREACH(const DB::FileName& fileName, list) {
+        if (DB::ImageInfo::imageOnDisk(fileName))
+            listOnDisk.append(fileName);
     }
 
     return listOnDisk;
@@ -581,19 +574,19 @@ DB::IdList MainWindow::Window::selectedOnDisk()
 
 void MainWindow::Window::slotView( bool reuse, bool slideShow, bool random )
 {
-    launchViewer( selected(), reuse, slideShow, random );
+    launchViewer(selected(ThumbnailView::NoExpandCollapsedStacks), reuse, slideShow, random );
 }
 
-void MainWindow::Window::launchViewer(const DB::IdList& inputMediaList, bool reuse, bool slideShow, bool random)
+void MainWindow::Window::launchViewer(const DB::FileNameList& inputMediaList, bool reuse, bool slideShow, bool random)
 {
-    DB::IdList mediaList = inputMediaList;
+    DB::FileNameList mediaList = inputMediaList;
     int seek = -1;
     if (mediaList.isEmpty()) {
         mediaList = _thumbnailView->imageList( ThumbnailView::ViewOrder );
     } else if (mediaList.size() == 1) {
         // we fake it so it appears the user has selected all images
         // and magically scrolls to the originally selected one
-        DB::Id first = mediaList.at(0);
+        const DB::FileName first = mediaList.at(0);
         mediaList = _thumbnailView->imageList( ThumbnailView::ViewOrder );
         seek = mediaList.indexOf(first);
     }
@@ -607,12 +600,8 @@ void MainWindow::Window::launchViewer(const DB::IdList& inputMediaList, bool reu
     }
 
     if (random) {
-        mediaList = DB::IdList(Utilities::shuffleList(mediaList.rawIdList()));
+        mediaList = DB::FileNameList(Utilities::shuffleList(mediaList));
     }
-
-    // Here, we need to switch back to the StringList until the Viewer is
-    // converted.
-    QStringList fileNameList = DB::ImageDB::instance()->CONVERT(mediaList);
 
     Viewer::ViewerWidget* viewer;
     if ( reuse && Viewer::ViewerWidget::latest() ) {
@@ -623,17 +612,17 @@ void MainWindow::Window::launchViewer(const DB::IdList& inputMediaList, bool reu
     else
         viewer = new Viewer::ViewerWidget(Viewer::ViewerWidget::ViewerWindow,
                                           &_viewerInputMacros);
-    connect( viewer, SIGNAL( soughtTo(const DB::Id&) ), _thumbnailView, SLOT( changeSingleSelection(const DB::Id&) ) );
+    connect( viewer, SIGNAL( soughtTo(const DB::FileName&) ), _thumbnailView, SLOT( changeSingleSelection(const DB::FileName&) ) );
 
     viewer->show( slideShow );
-    viewer->load( fileNameList, seek < 0 ? 0 : seek );
+    viewer->load( mediaList, seek < 0 ? 0 : seek );
     viewer->raise();
 }
 
 void MainWindow::Window::slotSortByDateAndTime()
 {
-    DB::ImageDB::instance()->sortAndMergeBackIn( selected());
-    showThumbNails( DB::ImageDB::instance()->search( Browser::BrowserWidget::instance()->currentContext() ) );
+    DB::ImageDB::instance()->sortAndMergeBackIn(selected());
+    showThumbNails( DB::ImageDB::instance()->search( Browser::BrowserWidget::instance()->currentContext()));
     DirtyIndicator::markDirty();
 }
 
@@ -846,12 +835,6 @@ void MainWindow::Window::setupMenuBar()
     _AutoStackImages = actionCollection()->addAction( QString::fromLatin1( "autoStack" ), this, SLOT ( slotAutoStackImages() ) );
     _AutoStackImages->setText( i18n("Automatically Stack Selected Images...") );
 
-#ifdef SQLDB_SUPPORT
-    a = actionCollection()->addAction( QString::fromLatin1("convertBackend"), this, SLOT( convertBackend() ) );
-    a->setText( i18n("Convert Backend...(Experimental!)" ) );
-#endif
-
-
     a = actionCollection()->addAction( QString::fromLatin1("buildThumbs"), this, SLOT( slotBuildThumbnails() ) );
     a->setText( i18n("Build Thumbnails") );
 
@@ -925,8 +908,14 @@ void MainWindow::Window::setupMenuBar()
     _showExifDialog = actionCollection()->addAction( QString::fromLatin1("showExifInfo"), this, SLOT( slotShowExifInfo() ) );
     _showExifDialog->setText( i18n("Show Exif Info") );
 #endif
-    _recreateThumbnails = actionCollection()->addAction( QString::fromLatin1("recreateThumbnails"), _thumbnailView, SLOT( slotRecreateThumbnail() ) );
-    _recreateThumbnails->setText( i18n("Recreate Selected Thumbnails") );
+
+    _useNextVideoThumbnail = actionCollection()->addAction( QString::fromLatin1("useNextVideoThumbnail"), this, SLOT(useNextVideoThumbnail()));
+    _useNextVideoThumbnail->setText(i18n("Use next video thumbnail"));
+    _useNextVideoThumbnail->setShortcut(Qt::CTRL + Qt::Key_Plus);
+
+    _usePreviousVideoThumbnail = actionCollection()->addAction( QString::fromLatin1("usePreviousVideoThumbnail"), this, SLOT(usePreviousVideoThumbnail()));
+    _usePreviousVideoThumbnail->setText(i18n("Use previous video thumbnail"));
+    _usePreviousVideoThumbnail->setShortcut(Qt::CTRL + Qt::Key_Minus);
 
     createGUI( QString::fromLatin1( "kphotoalbumui.rc" ) );
 }
@@ -1039,44 +1028,6 @@ bool MainWindow::Window::load()
         qApp->processEvents();
     }
 
-    // Choose backend
-    QString backEnd = Settings::SettingsData::instance()->backend();
-    // Command line override for backend
-    if ( args->isSet( "e" ) )
-        backEnd = args->getOption( "e" );
-
-    // Initialize correct back-end
-    if ( backEnd == QString::fromLatin1("sql") ) {
-#ifdef SQLDB_SUPPORT
-        // SQL back-end needs some extra configuration first
-        KConfigGroup config = KGlobal::config()->group(QString::fromLatin1("SQLDB"));
-        try {
-            SQLDB::DatabaseAddress address = SQLDB::readConnectionParameters(config);
-
-            // Initialize SQLDB with the parameters
-            DB::ImageDB::setupSQLDB(address);
-            return true;
-        }
-        catch (SQLDB::Error& e){
-            KMessageBox::error(this, i18n("SQL backend initialization failed, "
-                                          "because following error occurred:\n%1",e.whatAsQString()));
-        }
-#else
-        KMessageBox::error(this, i18n("SQL database support is not compiled in."));
-#endif
-    }
-    else if ( backEnd == QString::fromLatin1("xml") );
-    else {
-        KMessageBox::error(this, i18n("Invalid database backend: %1",backEnd));
-    }
-
-    if (backEnd != QString::fromLatin1("xml")) {
-        int answer =
-            KMessageBox::questionYesNo(this, i18n("Do you want to use XML backend instead?"));
-        if (answer != KMessageBox::Yes)
-            return false;
-    }
-
     // Doing some validation on user provided index file
     if ( args->isSet( "c" ) ) {
         QFileInfo fi( configFile );
@@ -1108,6 +1059,7 @@ void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
         QMenu menu( this );
         menu.addAction( _configOneAtATime );
         menu.addAction( _configAllSimultaniously );
+        menu.addSeparator();
         menu.addAction( _createImageStack );
         menu.addAction( _unStackImages );
         menu.addAction( _setStackHead );
@@ -1121,16 +1073,19 @@ void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
         menu.addSeparator();
         menu.addAction(_rotLeft);
         menu.addAction(_rotRight);
-        menu.addAction(_recreateThumbnails);
+        menu.addAction(_useNextVideoThumbnail);
+        menu.addAction(_usePreviousVideoThumbnail);
+        _useNextVideoThumbnail->setEnabled(anyVideosSelected());
+        _usePreviousVideoThumbnail->setEnabled(anyVideosSelected());
         menu.addSeparator();
 
         menu.addAction(_view);
         menu.addAction(_viewInNewWindow);
 
         ExternalPopup* externalCommands = new ExternalPopup( &menu );
-        DB::ImageInfoPtr info = _thumbnailView->mediaIdUnderCursor().fetchInfo();
+        DB::ImageInfoPtr info = _thumbnailView->mediaIdUnderCursor().info();
 
-        externalCommands->populate( info, DB::ImageDB::instance()->CONVERT(selected() ));
+        externalCommands->populate( info, selected());
         QAction* action = menu.addMenu( externalCommands );
         if (info.isNull() && selected().isEmpty())
             action->setEnabled( false );
@@ -1253,16 +1208,16 @@ void MainWindow::Window::slotConfigureKeyBindings()
     delete viewer;
 }
 
-void MainWindow::Window::slotSetFileName( const DB::Id& id )
+void MainWindow::Window::slotSetFileName( const DB::FileName& fileName )
 {
     ImageInfoPtr infos;
 
-    if ( id.isNull() )
+    if ( fileName.isNull() )
         _statusBar->clearMessage();
     else {
-        infos = id.fetchInfo();
+        infos = fileName.info();
         if (infos != ImageInfoPtr(NULL) )
-            _statusBar->showMessage( id.fetchInfo()->fileName(DB::AbsolutePath), 4000 );
+            _statusBar->showMessage( fileName.absolute(), 4000 );
     }
 }
 
@@ -1274,7 +1229,6 @@ void MainWindow::Window::updateContextMenuFromSelectionSize(int selectionSize)
     _unStackImages->setEnabled(selectionSize >= 1);
     _setStackHead->setEnabled(selectionSize == 1); // FIXME: do we want to check if it's stacked here?
     _sortByDateAndTime->setEnabled(selectionSize > 1);
-    _recreateThumbnails->setEnabled(selectionSize >= 1);
     _rotLeft->setEnabled(selectionSize >= 1);
     _rotRight->setEnabled(selectionSize >= 1);
     _AutoStackImages->setEnabled(selectionSize > 1);
@@ -1282,14 +1236,14 @@ void MainWindow::Window::updateContextMenuFromSelectionSize(int selectionSize)
 
 void MainWindow::Window::rotateSelected( int angle )
 {
-    const DB::IdList& list = selected();
+    const DB::FileNameList list = selected();
     if (list.isEmpty())  {
         KMessageBox::sorry( this, i18n("No item is selected."),
                             i18n("No Selection") );
     } else {
-        Q_FOREACH(DB::ImageInfoPtr info, list.fetchInfos()) {
-            info->rotate(angle);
-            ImageManager::ThumbnailCache::instance()->removeThumbnail( info->fileName( DB::AbsolutePath) );
+        Q_FOREACH(const DB::FileName& fileName, list) {
+            fileName.info()->rotate(angle);
+            ImageManager::ThumbnailCache::instance()->removeThumbnail(fileName);
         }
         _statusBar->_dirtyIndicator->markDirty();
     }
@@ -1329,12 +1283,10 @@ void MainWindow::Window::slotUpdateViewMenu( DB::Category::ViewType type )
 
 void MainWindow::Window::slotShowNotOnDisk()
 {
-    DB::IdList notOnDisk;
-    Q_FOREACH(DB::Id id, DB::ImageDB::instance()->images()) {
-        const DB::ImageInfoPtr info = id.fetchInfo();
-        QFileInfo fi( info->fileName(DB::AbsolutePath) );
-        if ( !fi.exists() )
-            notOnDisk.append(id);
+    DB::FileNameList notOnDisk;
+    Q_FOREACH(const DB::FileName& fileName, DB::ImageDB::instance()->images()) {
+        if ( !fileName.exists() )
+            notOnDisk.append(fileName);
     }
 
     showThumbNails(notOnDisk);
@@ -1537,7 +1489,12 @@ void MainWindow::Window::setPluginMenuState( const char* name, const QList<QActi
 void MainWindow::Window::slotImagesChanged( const KUrl::List& urls )
 {
     for( KUrl::List::ConstIterator it = urls.begin(); it != urls.end(); ++it ) {
-        ImageManager::ThumbnailCache::instance()->removeThumbnail( (*it).path() );
+        DB::FileName fileName = DB::FileName::fromAbsolutePath((*it).path());
+        if ( !fileName.isNull()) {
+            // Pluigins may report images outsite of the photodatabase
+            // This seems to be the case with the border image plugin, which reports the destination image
+            ImageManager::ThumbnailCache::instance()->removeThumbnail( fileName );
+        }
     }
     _statusBar->_dirtyIndicator->markDirty();
     reloadThumbnails( ThumbnailView::MaintainSelection );
@@ -1590,20 +1547,20 @@ void MainWindow::Window::slotShowListOfFiles()
     if ( list.isEmpty() )
         return;
 
-    DB::IdList out;
+    DB::FileNameList out;
     for ( QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it ) {
-        QString fileName = Utilities::imageFileNameToAbsolute( *it );
-        if ( fileName.isNull() )
+        QString fileNameStr = Utilities::imageFileNameToAbsolute( *it );
+        if ( fileNameStr.isNull() )
             continue;
-        DB::Id id = DB::ImageDB::instance()->ID_FOR_FILE(fileName);
-        if ( !id.isNull() )
-            out.append(id);
+        const DB::FileName fileName = DB::FileName::fromAbsolutePath(fileNameStr);
+        if ( !fileName.isNull() )
+            out.append(fileName);
     }
 
     if (out.isEmpty())
         KMessageBox::sorry( this, i18n("No images matching your input were found."), i18n("No Matches") );
     else
-        showThumbNails( out );
+        showThumbNails(out);
 }
 
 void MainWindow::Window::updateDateBar( const Browser::BreadcrumbList& path )
@@ -1635,11 +1592,9 @@ void MainWindow::Window::showDateBarTip( const QString& msg )
 
 void MainWindow::Window::slotJumpToContext()
 {
-    DB::Id id =_thumbnailView->currentItem();
-    if ( !id.isNull() ) {
-        // QWERTY: addImageView should take id as well.
-        QString fileName = id.fetchInfo()->fileName(DB::AbsolutePath);
-        _browser->addImageView( fileName );
+    const DB::FileName fileName =_thumbnailView->currentItem();
+    if ( !fileName.isNull() ) {
+        _browser->addImageView(fileName);
    }
 }
 
@@ -1658,66 +1613,11 @@ void MainWindow::Window::clearDateRange()
     reloadThumbnails( ThumbnailView::MaintainSelection );
 }
 
-void MainWindow::Window::showThumbNails(const DB::IdList& items)
+void MainWindow::Window::showThumbNails(const DB::FileNameList& items)
 {
-    _thumbnailView->setImageList( items );
+    _thumbnailView->setImageList(items);
     _statusBar->_partial->setMatchCount(items.size());
     showThumbNails();
-}
-
-void MainWindow::Window::convertBackend()
-{
-#ifdef SQLDB_SUPPORT
-    // Converting from SQLDB to the same SQLDB will not work and there
-    // is currently no way to check if two SQL back-ends use the same
-    // database. So this is my current workaround for it.
-    if (dynamic_cast<SQLDB::Database*>(DB::ImageDB::instance())) {
-        KMessageBox::sorry(this, i18n("Database conversion from SQL database is not yet supported."));
-        return;
-    }
-
-    KConfigGroup config = KGlobal::config()->group( QString::fromLatin1("SQLDB") );
-    if (!config.exists()) {
-        int ret =
-            KMessageBox::questionYesNo(this, i18n("You should set SQL database settings before the conversion. "
-                                                  "Do you want to do this now?"));
-        if (ret != KMessageBox::Yes)
-            return;
-        if (!_settingsDialog)
-            _settingsDialog = new Settings::SettingsDialog(this);
-        _settingsDialog->showBackendPage();
-        ret = _settingsDialog->exec();
-        if (ret != Settings::SettingsDialog::Accepted)
-            return;
-    }
-    try {
-        SQLDB::DatabaseAddress address = SQLDB::readConnectionParameters(config);
-
-        SQLDB::Database sqlBackend(address);
-
-        // TODO: ask if old database should be flushed first
-
-        KProgressDialog dialog(this);
-        dialog.setModal(true);
-        dialog.setCaption(i18n("Converting database"));
-        dialog.setLabelText
-            (QString::fromLatin1("<p><b><nobr>%1</nobr></b></p><p>%2</p>")
-             .arg(i18n("Converting database to SQL."))
-             .arg(i18n("Please wait.")));
-        dialog.setAllowCancel(false);
-        dialog.setAutoClose(true);
-        dialog.setFixedSize(dialog.sizeHint());
-        dialog.setMinimumDuration(0);
-        qApp->processEvents();
-
-        DB::ImageDB::instance()->convertBackend(&sqlBackend, dialog.progressBar());
-
-        KMessageBox::information(this, i18n("Database conversion is ready."));
-    }
-    catch (SQLDB::Error& e) {
-        KMessageBox::error(this, i18n("Database conversion failed, because following error occurred:\n%1",e.whatAsQString()));
-    }
-#endif
 }
 
 void MainWindow::Window::slotRecalcCheckSums()
@@ -1728,7 +1628,7 @@ void MainWindow::Window::slotRecalcCheckSums()
 void MainWindow::Window::slotShowExifInfo()
 {
 #ifdef HAVE_EXIV2
-    DB::IdList items = selectedOnDisk();
+    DB::FileNameList items = selectedOnDisk();
     if (!items.isEmpty()) {
         Exif::InfoDialog* exifDialog = new Exif::InfoDialog(items.at(0), this);
         exifDialog->show();
@@ -1742,9 +1642,9 @@ void MainWindow::Window::showFeatures()
     dialog.exec();
 }
 
-void MainWindow::Window::showImage( const DB::Id& id )
+void MainWindow::Window::showImage( const DB::FileName& fileName )
 {
-    launchViewer(DB::IdList(id), true, false, false);
+    launchViewer(DB::FileNameList() << fileName, true, false, false);
 }
 
 void MainWindow::Window::slotBuildThumbnails()
@@ -1787,6 +1687,16 @@ void MainWindow::Window::slotRecreateExifDB()
 #endif
 }
 
+void MainWindow::Window::useNextVideoThumbnail()
+{
+    UpdateVideoThumbnail::useNext(selected());
+}
+
+void MainWindow::Window::usePreviousVideoThumbnail()
+{
+    UpdateVideoThumbnail::usePrevious(selected());
+}
+
 void MainWindow::Window::createSarchBar()
 {
     // Set up the search tool bar
@@ -1799,6 +1709,45 @@ void MainWindow::Window::createSarchBar()
     connect( bar, SIGNAL( keyPressed( QKeyEvent* ) ), _browser, SLOT( scrollKeyPressed( QKeyEvent* ) ) );
     connect( _browser, SIGNAL( viewChanged() ), bar, SLOT( reset() ) );
     connect( _browser, SIGNAL( isSearchable( bool ) ), bar, SLOT( setLineEditEnabled( bool ) ) );
+}
+
+void MainWindow::Window::executeStartupActions()
+{
+    new ImageManager::ThumbnailBuilder( _statusBar, this );
+    ImageManager::ThumbnailBuilder::instance()->buildMissing();
+    BackgroundTaskManager::JobManager::instance()->addJob(
+                new BackgroundJobs::SearchForVideosWithoutLengthInfo );
+
+    BackgroundTaskManager::JobManager::instance()->addJob(
+                new BackgroundJobs::SearchForVideosWithoutVideoThumbnailsJob );
+}
+
+void MainWindow::Window::checkIfMplayerIsInstalled()
+{
+    if ( FeatureDialog::mplayerBinary().isNull() ) {
+        KMessageBox::error( this,
+                i18n("<p>Unable to find mplayer on the system</p>"
+                     "<p>KPhotoAlbum needs mplayer to extract video thumbnails among other things. "
+                     "Please install the mplayer2 package</p>") );
+        exit(-1);
+    }
+
+    if ( !FeatureDialog::isMplayer2() ) {
+        KMessageBox::information( this,
+                                  i18n("<p>You have mplayer installed on your system, but it is unfortunately not version 2. "
+                                       "mplayer2 is on most systems a separate package, please install that if at all possible, "
+                                       "as that version has much better support for extracting thumbnails from videos."),
+                                  i18n("mplayer is too old"), QString::fromLatin1("mplayerVersionTooOld"));
+    }
+}
+
+bool MainWindow::Window::anyVideosSelected() const
+{
+    Q_FOREACH(const DB::FileName& fileName, selected()) {
+        if ( Utilities::isVideo(fileName))
+            return true;
+    }
+    return false;
 }
 
 void MainWindow::Window::setHistogramVisibilty( bool visible ) const

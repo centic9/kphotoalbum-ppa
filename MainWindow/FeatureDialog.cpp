@@ -24,10 +24,11 @@
 #include <QList>
 #include <kapplication.h>
 #include "Exif/Database.h"
-#include <ImageManager/VideoManager.h>
 #include <kparts/componentfactory.h>
 #include <ktoolinvocation.h>
 #include <phonon/backendcapabilities.h>
+#include <KStandardDirs>
+#include <QProcess>
 
 using namespace MainWindow;
 
@@ -46,7 +47,7 @@ FeatureDialog::FeatureDialog( QWidget* parent )
 
                   "<p>If you compiled KPhotoAlbum yourself, then please review the sections below to learn what to install "
                   "to get the feature in question. If on the other hand you installed KPhotoAlbum from a binary package, please tell "
-                  "whoever made the package about this defect, eventually including the information from the section below.<p>"
+                  "whoever made the package about this defect, eventually including the information from the section below.</p>"
 
                   "<p>In case you are missing a feature and you did not compile KPhotoAlbum yourself, please do consider doing so. "
                   "It really isn't that hard. If you need help compiling KPhotoAlbum, feel free to ask on the "
@@ -58,14 +59,14 @@ FeatureDialog::FeatureDialog( QWidget* parent )
 
 
 
-    text += i18n( "<h1><a name=\"kipi\">Plug-ins Support</a></h1>"
+    text += i18n( "<h1><a name=\"kipi\">Plug-ins support</a></h1>"
                  "<p>KPhotoAlbum has a plug-in system with lots of extensions. You may among other things find plug-ins for:"
                   "<ul>"
-                  "<li>Writing images to cds or dvd's"
-                  "<li>Adjusting timestamps on your images"
-                  "<li>Making a calendar featuring your images"
-                  "<li>Uploading your images to flickr"
-                  "<li>Upload your images to facebook"
+                  "<li>Writing images to cds or dvd's</li>"
+                  "<li>Adjusting timestamps on your images</li>"
+                  "<li>Making a calendar featuring your images</li>"
+                  "<li>Uploading your images to flickr</li>"
+                  "<li>Upload your images to facebook</li>"
                   "</ul></p>"
 
                   "<p>The plug-in library is called KIPI, and may be downloaded from the "
@@ -79,17 +80,12 @@ FeatureDialog::FeatureDialog( QWidget* parent )
                   "to read EXIF information from images</p>" );
 
 
-    text += i18n( "<h1><a name=\"database\">SQL Database Support</a></h1>"
+    text += i18n( "<h1><a name=\"database\">SQL database support</a></h1>"
                   "<p>KPhotoAlbum allows you to search using a certain number of EXIF tags. For this KPhotoAlbum "
                   "needs an Sqlite database. "
                   "In addition the qt package for sqlite (e.g.qt-sql-sqlite) must be installed.</p>");
 
-    text += i18n("<h1><a name=\"thumbnails\">Video Thumbnails Support</a></h1>"
-                 "<p>KPhotoAlbum asks the KDE plug-in system for help when it needs to generate a thumbnail for videos. "
-                 "<p>Unfortunately KDE4 does currently not come with any plug-ins for this, you therefore need manually to install "
-                 "<a href=\"http://www.kde-apps.org/content/show.php?content=41180\">MPlayerThumbs</a>.</p>");
-
-    text += i18n("<h1><a name=\"video\">Video Support</a></h1>"
+    text += i18n("<h1><a name=\"video\">Video support</a></h1>"
                  "<p>KPhotoAlbum relies on Qt's Phonon architecture for displaying videos; this in turn relies on GStreamer. "
                  "If this feature is not enabled for you, have a look at the "
                  "<a href=\"http://userbase.kde.org/KPhotoAlbum#Video_Support\">KPhotoAlbum wiki article on video support</a>.</p>");
@@ -100,6 +96,13 @@ FeatureDialog::FeatureDialog( QWidget* parent )
         text += i18n( "<p>No video mime types found, which indicates that either Qt was compiled without phonon support, or there were missing codecs</p>");
     else
         text += i18n("<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</ul></p>", mimeTypes.join(QString::fromLatin1( "<li>" ) ) );
+
+    text += i18n("<h1><a name=\"videoPreview\">Video thumbnail support</a></h1>"
+                 "<p>KPhotoAlbum uses <tt>mplayer</tt> to extract thumbnails from videos. These thumbnails are used to preview "
+                 "videos in the thumbnail viewer.</p>"
+                 "<p>If at all possible you should install the <b>mplayer2</b> package rather than the <b>mplayer</b> package, as it has important "
+                 "improvements over the mplayer package. mplayer (in contrast to mplayer2) often has problems extracting the length "
+                 "of videos and also often fails to extract the thumbnails used for cycling video thumbnails.");
 
     edit->setText( text );
 
@@ -116,8 +119,10 @@ void HelpBrowser::setSource( const QUrl& url )
 {
     const QString name = url.toString();
 
-    if ( name.startsWith( QString::fromLatin1( "#" ) ) )
-        KTextBrowser::setSource( name );
+    if ( name.startsWith( QString::fromLatin1( "#" ) ) ) {
+        // Must be QTextBrowser rather than KTextBrowser, as KTextBrowser opens the URL in an external browser, rather than jumping to the target.
+        QTextBrowser::setSource( name );
+    }
     else
         KToolInvocation::invokeBrowser( name );
 }
@@ -159,10 +164,29 @@ bool MainWindow::FeatureDialog::hasEXIV2DBSupport()
 #endif
 }
 
+QString FeatureDialog::mplayerBinary()
+{
+    const QString mplayer2 = KStandardDirs::findExe(QString::fromLatin1("mplayer2"));
+
+    if ( !mplayer2.isNull() )
+        return mplayer2;
+    else
+        return KStandardDirs::findExe(QString::fromLatin1("mplayer"));
+}
+
+bool FeatureDialog::isMplayer2()
+{
+    QProcess process;
+    process.start( mplayerBinary(), QStringList() << QString::fromLatin1("--version"));
+    process.waitForFinished();
+    const QString output = QString::fromLocal8Bit(process.readAllStandardOutput().data());
+    return output.contains(QString::fromLatin1("MPlayer2"));
+}
+
 bool MainWindow::FeatureDialog::hasAllFeaturesAvailable()
 {
     // Only answer those that are compile time tests, otherwise we will pay a penalty each time we start up.
-    return hasKIPISupport() && hasSQLDBSupport() && hasEXIV2Support() && hasEXIV2DBSupport();
+    return hasKIPISupport() && hasSQLDBSupport() && hasEXIV2Support() && hasEXIV2DBSupport() && !mplayerBinary().isNull() && isMplayer2();
 }
 
 struct Data
@@ -177,23 +201,26 @@ struct Data
 
 QString MainWindow::FeatureDialog::featureString()
 {
-     QList<Data> features;
+    QList<Data> features;
     features << Data( i18n("Plug-ins available"), QString::fromLatin1("#kipi"),  hasKIPISupport() );
     features << Data( i18n("EXIF info supported"), QString::fromLatin1("#exiv2"), hasEXIV2Support() );
-    features << Data( i18n("SQL Database Support"), QString::fromLatin1("#database"), hasSQLDBSupport() );
-    features << Data( i18n( "Sqlite Database Support (used for EXIF searches)" ), QString::fromLatin1("#database"),
+    features << Data( i18n("SQL database support"), QString::fromLatin1("#database"), hasSQLDBSupport() );
+    features << Data( i18n( "Sqlite database support (used for EXIF searches)" ), QString::fromLatin1("#database"),
                       hasEXIV2Support() && hasEXIV2DBSupport() );
-    features << Data( i18n( "Video Thumbnail support" ), QString::fromLatin1("#thumbnails"),
-                      ImageManager::VideoManager::instance().hasVideoThumbnailSupport() );
     features << Data( i18n( "Video support" ), QString::fromLatin1("#video"),  !supportedVideoMimeTypes().isEmpty() );
 
     QString result = QString::fromLatin1("<p><table>");
+    const QString red = QString::fromLatin1("<font color=\"red\">%1</font>");
     const QString yes = i18n("Yes");
-    const QString no =  QString::fromLatin1("<font color=\"red\">%1</font>").arg( i18n("No") );
+    const QString no =  red.arg( i18n("No") );
+    const QString formatString = QString::fromLatin1( "<tr><td><a href=\"%1\">%2</a></td><td><b>%3</b></td></tr>" );
      for( QList<Data>::ConstIterator featureIt = features.constBegin(); featureIt != features.constEnd(); ++featureIt ) {
-        result += QString::fromLatin1( "<tr><td><a href=\"%1\">%2</a></td><td><b>%3</b></td></tr>" )
+        result += formatString
                   .arg( (*featureIt).tag ).arg( (*featureIt).title ).arg( (*featureIt).featureFound ? yes : no  );
     }
+
+     QString thumbnailSupport = mplayerBinary().isNull() ? no : ( isMplayer2() ? yes : red.arg(i18n("Only with mplayer1")));
+    result += formatString.arg(QString::fromLatin1("#videoPreview")).arg(i18n("Video thumbnail support")).arg(thumbnailSupport);
     result += QString::fromLatin1( "</table></p>" );
 
     return result;

@@ -45,7 +45,7 @@
 #include <phonon/mediaobject.h>
 
 Viewer::VideoDisplay::VideoDisplay( QWidget* parent )
-    :Viewer::Display( parent ), _zoomType( FullZoom ), _zoomFactor(1)
+    :Viewer::AbstractDisplay( parent ), _zoomType( FullZoom ), _zoomFactor(1)
 {
     QPalette pal = palette();
     pal.setColor( QPalette::Window, Qt::black );
@@ -87,7 +87,7 @@ bool Viewer::VideoDisplay::setImage( DB::ImageInfoPtr info, bool /*forward*/ )
         setup();
 
     _info = info;
-    _mediaObject->setCurrentSource( info->fileName(DB::AbsolutePath) );
+    _mediaObject->setCurrentSource( info->fileName().absolute() );
     _mediaObject->play();
 
     return true;
@@ -125,7 +125,7 @@ void Viewer::VideoDisplay::resize( double factor )
 
 void Viewer::VideoDisplay::resizeEvent( QResizeEvent* event )
 {
-    Display::resizeEvent( event );
+    AbstractDisplay::resizeEvent( event );
     setVideoWidgetSize();
 }
 
@@ -151,6 +151,11 @@ void Viewer::VideoDisplay::playPause()
         _mediaObject->play();
     else
         _mediaObject->pause();
+}
+
+QImage Viewer::VideoDisplay::screenShoot()
+{
+    return QPixmap::grabWindow( _videoWidget->winId()).toImage();
 }
 
 void Viewer::VideoDisplay::restart()

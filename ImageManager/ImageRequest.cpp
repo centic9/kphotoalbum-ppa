@@ -17,9 +17,9 @@
 */
 #include "ImageRequest.h"
 
-ImageManager::ImageRequest::ImageRequest( const QString& fileName,
+ImageManager::ImageRequest::ImageRequest( const DB::FileName& fileName,
                                           const QSize& size, int angle,
-                                          ImageManager::ImageClient* client )
+                                          ImageManager::ImageClientInterface* client )
     : _null( false ),
       _fileName( fileName ),
       _width( size.width() ),
@@ -55,8 +55,8 @@ int ImageManager::ImageRequest::height() const
 
 bool ImageManager::ImageRequest::operator<( const ImageRequest& other ) const
 {
-    const QString fileA = databaseFileName();
-    const QString fileB = other.databaseFileName();
+    const DB::FileName fileA = databaseFileName();
+    const DB::FileName fileB = other.databaseFileName();
 
     if (  fileA != fileB )
         return fileA < fileB;
@@ -77,7 +77,7 @@ bool ImageManager::ImageRequest::operator==( const ImageRequest& other ) const
              _priority == other._priority );
 }
 
-ImageManager::ImageClient* ImageManager::ImageRequest::client() const
+ImageManager::ImageClientInterface* ImageManager::ImageRequest::client() const
 {
     return _client;
 }
@@ -137,12 +137,12 @@ bool ImageManager::ImageRequest::isThumbnailRequest() const
     return _isThumbnailRequest;
 }
 
-QString ImageManager::ImageRequest::databaseFileName() const
+DB::FileName ImageManager::ImageRequest::databaseFileName() const
 {
     return _fileName;
 }
 
-QString ImageManager::ImageRequest::fileSystemFileName() const
+DB::FileName ImageManager::ImageRequest::fileSystemFileName() const
 {
     return _fileName;
 }

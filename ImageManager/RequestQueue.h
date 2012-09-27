@@ -20,18 +20,17 @@
 
 #include <QQueue>
 #include <QSet>
-#include "StopAction.h"
+#include "enums.h"
 #include "ImageManager/ImageRequest.h"
 
 namespace ImageManager
 {
-class ImageClient;
+class ImageClientInterface;
 
 // RequestQueue for ImageRequests. Non-synchronized, locking has to be
 // provided by the user.
-class RequestQueue :public QObject
+class RequestQueue
 {
-    Q_OBJECT
 
 public:
     RequestQueue();
@@ -46,7 +45,7 @@ public:
     ImageRequest* popNext();
 
     // Remove all pending requests from the given client.
-    void cancelRequests( ImageClient* client, StopAction action );
+    void cancelRequests( ImageClientInterface* client, StopAction action );
 
     bool isRequestStillValid( ImageRequest* request );
     void removeRequest( ImageRequest* );

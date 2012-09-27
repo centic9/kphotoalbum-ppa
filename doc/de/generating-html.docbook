@@ -1,72 +1,100 @@
   <chapter id="chp-generating-html">
     <title
->Erstellen von HTML-Dateien</title>
+>Erstellen von &HTML;-Dateien</title>
     <para
->&kphotoalbum; stellt Ihnen zwei Möglichkeiten zur Verfügung HTML-Webseiten mit Ihren Bildern zu erstellen. Die eine ist in &kphotoalbum; integriert und die andere als Modul verfügbar (siehe <xref linkend="chp-plugins"/>). Im folgenden Teil des Benutzerhandbuchs wird die in &kphotoalbum; integrierte Version beschrieben, die Sie über das Menü <menuchoice
+>&kphotoalbum; stellt Ihnen zwei Möglichkeiten zur Verfügung &HTML;-Webseiten mit Ihren Bildern zu erstellen. Die eine ist in &kphotoalbum; integriert und die andere als Modul verfügbar (siehe <xref linkend="chp-plugins"/>). Im folgenden Teil des Benutzerhandbuchs wird die in &kphotoalbum; integrierte Version beschrieben, die Sie über das Menü <menuchoice
 ><guimenu
 >Datei</guimenu
 ><guimenuitem
->HTML erstellen...</guimenuitem
+>&HTML; erstellen ...</guimenuitem
 ></menuchoice
 > aufrufen können.</para>
     
     <para
->Bevor HTML-Seiten erstellt werden müssen Sie einige Einstellungen vornehmen. Diese sind in die drei Bereiche <guilabel
+>Bevor &HTML;-Seiten erstellt werden, müssen Sie einige Einstellungen vornehmen. Diese sind in die drei Seiten <guilabel
 >Inhalt</guilabel
 >, <guilabel
 >Layout</guilabel
 > und <guilabel
 >Ziel</guilabel
-> aufgeteilt. Im folgenden wird jeder Bereich genauer beschrieben.</para>
+> aufgeteilt. Im folgenden wird jede Seite genauer beschrieben.</para>
 
     <sect1 id="the_content_page">
       <title
->Der Bereich <guilabel
->Inhalt</guilabel
+>Die Seite <quote
+>Inhalt</quote
 ></title>
       <para
->Im Bereich Inhalt legen Sie fest, welche Informationen die HTML-Seiten darstellen sollen.</para>
+>Auf der Seite Inhalt legen Sie fest, welche Informationen die &HTML;-Seiten darstellen sollen.</para>
+
+	<figure id="html-content">
+	<title
+>Einstellungen für den Inhalt der &HTML;-Seiten</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-content.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
->Zuerst geben Sie den Titel des Überblicks und eine Beschreibung ein, die die HTML-Datei später enthalten soll. Auf <ulink url="http://ktown.kde.org/kphotoalbum/rounded-theme/index.html"
->&kphotoalbum; HTML-Beispiel-Seiten</ulink
-> sehen Sie ein Beispiel für diese Einstellungen.</para>
+>Zuerst geben Sie den Titel des Überblicks und eine Beschreibung für die Seiten in der &HTML;-Datei ein. Unterstützt das gewählte Design Copyright-Information, können sie hier ebenfalls eingetragen werden. </para>
 
       <para
->Als nächstes wählen Sie aus, ob eine &kphotoalbum;-Exportdatei erstellt werden soll die auf der Übersichtsseite zu sehen ist. Nähre Informationen über die Export-Dateien finden Sie in <xref linkend="chp-importExport"/>.</para>
+>Als nächstes wählen Sie aus, ob eine &kphotoalbum;-Exportdatei erstellt werden soll, die auf der Übersichtsseite zu sehen ist. Nähere Informationen über die Export-Dateien finden Sie im <xref linkend="chp-importExport"/>. Außerdem müssen Sie festlegen, ob Filme eingefügt oder als herunterzuladende Objekte enthalten sein sollen.</para>
 
       <para
->Zuletzt können Sie auswählen, welche Informationen auf den HTML-Seiten angezeigt werden sollen. Dadurch können Sie vermeiden, dass Informationen angezeigt werden, die dem Betrachter auch ohne Beschreibung offensichtlich sind. Zum Beispiel dass alle Bilder von einer Party sind. Beachten Sie, dass &kphotoalbum; momentan alle Bilder exportiert. Sie können diese Einstellung deshalb nicht verwenden, um bestimmte Bilder vor bestimmten Betrachtern zu verbergen.</para>
+>Zuletzt können Sie auswählen, welche Informationen auf den &HTML;-Seiten angezeigt werden sollen. Dadurch können Sie vermeiden, dass Informationen angezeigt werden, die dem Betrachter auch ohne Beschreibung offensichtlich sind. Zum Beispiel dass alle Bilder von einer Party sind. Beachten Sie, dass &kphotoalbum; momentan alle Bilder exportiert. Sie können diese Einstellung deshalb nicht verwenden, um bestimmte Bilder vor einigen Betrachtern zu verbergen.</para>
     </sect1>
 
     <sect1 id="the_layout_page">
       <title
->Der Bereich <guilabel
->Layout</guilabel
+>Die Seite <quote
+>Layout</quote
 ></title>
       <para
->In diesem Bereich können Sie festlegen, wie die HTML-Seiten aussehen sollen. Die meisten Einstellungsmöglichkeiten sind eindeutig, weshalb auf diese nicht speziell eingegangen wird.</para>
+>Auf dieser Seite können Sie festlegen, wie die &HTML;-Seiten aussehen sollen. Die meisten Einstellungsmöglichkeiten sind eindeutig, weshalb auf diese nicht speziell eingegangen wird. Eine kurze Einführung zu jedem Design wird angezeigt, wenn es ausgewählt wird und vermittelt einen Eindruck des Erscheinungsbilds.</para>
+
+	<figure id="html-layout">
+	<title
+>Einstellungen für das Layout der &HTML;-Seiten</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-layout.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
 >Unten auf der Seite können Sie verschiedene Auflösungen für die Bilder einstellen. Dadurch müssen diejenigen die Ihre Webseite betrachten und einen Monitor besitzen, der die maximale Auflösung 800x600 unterstützt, keine Bilder mehr herunterladen die beispielsweise eine Auflösung von 1600x1200 haben.</para>
       
       <para
->Die Betrachter Ihrer Seite können die Auflösung jederzeit ändern die Sie festgelegt haben. Er kann also Ihre Bilder mit niedriger Auflösung, was zu einer geringeren Übertragungszeit führt, durchsuchen. Wenn er ein Bild größer angezeigt bekommen möchte wechselt er zu einer höheren Auflösung.</para>
+>Der Betrachter Ihrer Seite kann die Auflösung jederzeit ändern, die Sie festgelegt haben. Er kann also Ihre Bilder mit niedriger Auflösung, was zu einer geringeren Übertragungszeit führt, durchsuchen. Wenn er ein Bild größer angezeigt bekommen möchte wechselt er zu einer höheren Auflösung.</para>
     </sect1>
 
     <sect1 id="the_destination_page">
       <title
->Der Bereich <guilabel
->Ziel</guilabel
+>Die Seite <quote
+>Ziel</quote
 ></title>
       <para
->In diesem Einstellungsbereich legen Sie die verschiedenen Ordner und die URL fest wo Ihre Website gespeichert wird.</para>
+>Auf der Seite Ziel legen Sie die verschiedenen Ordner und die Adressen (URLs) fest, wo Ihre Seite gespeichert wird.</para>
 
       <para
 >Am besten wählen Sie für all Ihre HTML-Dateien einen Basisordner an und für jeden nachfolgenden Satz ein neuen Unterordner.</para>
 
+	<figure id="html-destination">
+	<title
+>Einstellungen für das Ziel der &HTML;-Seiten</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-destination.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
+
       <para
->Zunächst müssen Sie den Hauptordner auswählen, in dem all Ihre Bilder gespeichert werden. Dieses Ordner wird gespeichert und beim nächsten mal automatisch ergänzt. Dadurch können Sie für alle zukünftigen Bilder den Speicherort festlegen. Hier können Sie entweder einen Ordner oder ein von KDE unterstütztes <ulink url="help:/kioslave/index.html"
+>Zunächst müssen Sie den Hauptordner auswählen, in dem all Ihre Bilder gespeichert werden. Dieser Ordner wird gespeichert und beim nächsten mal automatisch ergänzt. Dadurch können Sie für alle zukünftigen Bilder den Speicherort festlegen. Hier können Sie entweder einen Ordner oder ein von &kde; unterstütztes <ulink url="help:/kioslave/index.html"
 >Protokoll</ulink
 > auswählen, zum Beispiel: <itemizedlist>
           <listitem
@@ -87,10 +115,10 @@
       <para
 >Nachdem Sie Ihren Bilder erstellt haben, können Sie überprüfen ob diese wirklich alle für Betrachter sichtbar sind. Wenn Sie für den <guilabel
 >Basisordner</guilabel
-> eine URL wählen wird ein Webbrowser, nachdem die Seiten erstellt wurden, gestartet. Die URL, die Sie hier festlegen, sollte dieser Ordner sein. Andernfalls wird der Webbrowser im falschen Ordner starten.</para>
+> eine URL wählen, wird ein Webbrowser gestartet, nachdem die &HTML;-Seiten erstellt wurden. Die URL, die Sie hier festlegen, sollte dieser Ordner sein. Anderenfalls wird der Webbrowser im falschen Ordner starten.</para>
       
       <para
->Falls sich die die von Ihnen erstellten HTML-Dateien noch nicht im endgültigen Zielordner befinden müssen Sie sie manuell dorthin kopieren. Damit die Import-Funktion, siehe <xref linkend="chp-importExport"/>, richtig funktioniert müssen Sie das endgültige Ziel der Dateien angeben. Dies ist nicht der Unterordner der aktuellen Dateien, sondern der Basisordner in dem sich alle Unterordner befinden.</para>
+>Falls sich die von Ihnen erstellten &HTML;-Dateien noch nicht im endgültigen Zielordner befinden müssen Sie sie manuell dorthin kopieren. Damit die Import-Funktion, siehe <xref linkend="chp-importExport"/>, richtig funktioniert, müssen Sie das endgültige Ziel der Dateien angeben. Dies ist nicht der Unterordner der aktuellen Dateien, sondern der Basisordner in dem sich alle Unterordner befinden.</para>
 
       <para
 >Die gerade beschriebenen Einstellungsmöglichkeiten haben sich alle drei auf Basisordner bzw. URLs bezogen. In diesen wird ein Unterordner angelegt, dessen Name Sie in <guilabel
