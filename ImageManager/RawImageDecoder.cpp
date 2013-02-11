@@ -24,6 +24,7 @@
 #ifdef HAVE_KDCRAW
 #  include <libkdcraw/kdcraw.h>
 #  include <libkdcraw/rawfiles.h>
+#  include <libkdcraw/version.h>
 #endif
 #include <kdebug.h>
 #include <DB/FileName.h>
@@ -37,19 +38,26 @@ bool RAWImageDecoder::_decode( QImage *img, const DB::FileName& imageFile, QSize
     Q_UNUSED( dim );
 
 #ifdef HAVE_KDCRAW
+#if KDCRAW_VERSION >= 0x020200
+    if ( !KDcrawIface::KDcraw::loadRawPreview( *img, imageFile.absolute() ) )
+#else
     if ( !KDcrawIface::KDcraw::loadDcrawPreview( *img, imageFile.absolute() ) )
+#endif
         return false;
 
+    // FIXME: The preview data for Canon's image is always returned in its non-rotated form by libkdcraw, ie. KPA should do the rotation.
+    // FIXME: This will happen later on.
     if ( Settings::SettingsData::instance()->useRawThumbnail() &&
          img->width() >= Settings::SettingsData::instance()->useRawThumbnailSize().width() &&
          img->height() >= Settings::SettingsData::instance()->useRawThumbnailSize().height() )
         return true;
 
     KDcrawIface::DcrawInfoContainer metadata;
+    if (!KDcrawIface::KDcraw::rawFileIdentify(metadata, imageFile.absolute()))
+        return false;
 
-    if ( !KDcrawIface::KDcraw::rawFileIdentify( metadata, imageFile.absolute() ) ||
-         ( img->width() < metadata.imageSize.width() * 0.8 ) ||
-         ( img->height() < metadata.imageSize.height() * 0.8 ) ) {
+    if ((img->width() < metadata.imageSize.width() * 0.8) ||
+        (img->height() < metadata.imageSize.height() * 0.8)) {
 
         // let's try to get a better resolution
         KDcrawIface::KDcraw decoder;
@@ -236,3 +244,4 @@ bool RAWImageDecoder::_skipThisFile( const DB::FileNameSet& loadedFiles, const D
 }
 
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

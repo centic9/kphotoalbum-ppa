@@ -22,6 +22,10 @@
 #include <MainWindow/Window.h>
 #include <config-kpa-kipi.h>
 #ifdef HASKIPI
+#  include <libkipi/version.h>
+#if KIPI_VERSION >= 0x020000
+#  include <libkipi/configwidget.h>
+#endif
 #  include <libkipi/pluginloader.h>
 #endif
 
@@ -52,3 +56,4 @@ void Settings::PluginsPage::loadSettings( Settings::SettingsData* opt )
 {
     _delayLoadingPlugins->setChecked( opt->delayLoadingPlugins() );
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

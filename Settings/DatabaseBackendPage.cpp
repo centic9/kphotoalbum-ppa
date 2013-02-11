@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 #include "DatabaseBackendPage.h"
-#include <Q3ButtonGroup>
 #include <klocale.h>
 #include "SettingsData.h"
 #include <QSpacerItem>
@@ -24,7 +23,6 @@
 #include <QSpinBox>
 #include <QLabel>
 #include <QCheckBox>
-#include <Q3VGroupBox>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include "MainWindow/DirtyIndicator.h"
@@ -105,3 +103,4 @@ void Settings::DatabaseBackendPage::markDirty()
 {
     MainWindow::DirtyIndicator::markDirty();
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

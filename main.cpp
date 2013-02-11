@@ -30,10 +30,10 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-extern QTemporaryFile* _tmpFileForThumbnailView;
+#include "version.h"
 
 int main( int argc, char** argv ) {
-    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), "4.3",
+    KAboutData aboutData( "kphotoalbum", 0, ki18n("KPhotoAlbum"), KPA_VERSION,
                           ki18n("KDE Photo Album"), KAboutData::License_GPL,
                           KLocalizedString(), KLocalizedString(), "http://www.kphotoalbum.org");
     aboutData.addAuthor( ki18n("Jesper K. Pedersen"), ki18n("Development"), "blackie@kde.org" );
@@ -66,7 +66,6 @@ int main( int argc, char** argv ) {
     options.add("c ", ki18n("Config file"));
     options.add("demo", ki18n( "Starts KPhotoAlbum with a prebuilt set of demo images" ));
     options.add("import ", ki18n( "Import file" ));
-    options.add("export-in-2.1-format", ki18n( "This will make an attempt at saving in a format understandable by KimDaBa 2.1" ));
     KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
@@ -84,12 +83,10 @@ int main( int argc, char** argv ) {
         view->setGeometry( Settings::SettingsData::instance()->windowGeometry( Settings::MainWindow ) );
 
         int code = app.exec();
-
-        // To avoid filling /tmp up with temporary files from the thumbnail tooltips, we need to destruct this one.
-        delete _tmpFileForThumbnailView;
         return code;
     }
     catch (...) {
         qFatal("Unknown exception caught");
     }
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

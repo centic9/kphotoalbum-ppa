@@ -72,6 +72,9 @@ void MainWindow::StatusBar::setupGUI()
     _partial = new ImageCounter( this );
     addPermanentWidget( _partial, 0 );
 
+    _selected = new ImageCounter( this );
+    addPermanentWidget( _selected, 0);
+
     ImageCounter* total = new ImageCounter( this );
     addPermanentWidget( total, 0 );
     total->setTotal( DB::ImageDB::instance()->totalCount() );
@@ -132,3 +135,4 @@ void MainWindow::StatusBar::showStatusBar()
 {
     setProgressBarVisible( true );
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

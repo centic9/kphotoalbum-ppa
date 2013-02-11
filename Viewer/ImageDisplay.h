@@ -24,7 +24,7 @@
 #include <QPaintEvent>
 #include "ImageManager/ImageClientInterface.h"
 #include <qimage.h>
-#include <q3ptrvector.h>
+#include <QVector>
 #include "DB/ImageInfoPtr.h"
 #include "AbstractDisplay.h"
 #include "Settings/SettingsData.h"
@@ -43,6 +43,7 @@ class ViewerWidget;
 
 struct ViewPreloadInfo
 {
+    ViewPreloadInfo()  {}
     ViewPreloadInfo( const QImage& img, const QSize& size, int angle )
         : img(img), size(size), angle(angle) {}
     QImage img;
@@ -123,7 +124,7 @@ private:
     QPoint _zStart;
     QPoint _zEnd;
 
-    Q3PtrVector<ViewPreloadInfo> _cache;
+    QMap<int,ViewPreloadInfo> _cache;
     DB::FileNameList _imageList;
     QMap<QString, DB::ImageInfoPtr> _loadMap;
     bool _reloadImageInProgress;
@@ -141,3 +142,4 @@ private:
 
 #endif /* DISPLAYAREA_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

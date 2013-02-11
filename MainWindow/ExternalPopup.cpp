@@ -98,7 +98,7 @@ void MainWindow::ExternalPopup::slotExecuteService( QAction* action )
 
     if ( action->data() == -1 )
     {
-	return;  //user clicked the title entry. (i.e: "All Selected Items")
+    return;  //user clicked the title entry. (i.e: "All Selected Items")
     } else if ( action->data() == 1 ) {
         for( DB::FileNameList::Iterator it = _list.begin(); it != _list.end(); ++it ) {
             if ( _appToMimeTypeMap[name].contains( mimeType(*it) ) )
@@ -204,3 +204,4 @@ bool operator<( const QPair<QString,QPixmap>& a, const QPair<QString,QPixmap>& b
 
 
 #include "ExternalPopup.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

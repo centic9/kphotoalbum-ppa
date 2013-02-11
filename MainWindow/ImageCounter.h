@@ -31,6 +31,7 @@ public:
 
 public slots:
     void setMatchCount( uint matches );
+    void setSelectionCount( uint selected );
     void setTotal( uint );
     void showBrowserMatches(uint matches );
 };
@@ -39,3 +40,4 @@ public slots:
 
 #endif /* IMAGECOUNTER_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -28,7 +28,7 @@ class ShowSelectionOnlyManager :public QObject
 
 public:
     static ShowSelectionOnlyManager& instance();
-	bool selectionIsLimited() const;
+    bool selectionIsLimited() const;
 
 public slots:
     void toggle();
@@ -48,3 +48,4 @@ private:
 
 #endif /* ANNOTATIONDIALOG_SHOWSELECTIONONLYMANAGER_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

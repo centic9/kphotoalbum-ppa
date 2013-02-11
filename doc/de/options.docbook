@@ -32,10 +32,10 @@
 
 <para
 >Mit der Auswahl von <guilabel
->EXIF-Ausrichtungsinformationen verwenden</guilabel
+>EXIF-Ausrichtungsinformation verwenden</guilabel
 > werden Bilder automatisch wie aufgenommen gedreht. Die meisten Digitalkameras betten ein Vorschaubild in Rohformat-Dateien ein, häufig hat diese Vorschau bereit eine ausreichende Größe, eventuell sogar die volle Größe. Aktivieren Sie <guilabel
->Bei RAW-Dateien eingebettete Vorschau verwenden</guilabel
->, werden alle Bildoperationen viel schneller ausgeführt, da die Dekodierung von Rohformat-Dateien viel Zeit beansprucht und die Bearbeitung der Vorschaubilder erheblich schneller geht. Sie können auch die Mindestgröße der zu verwendenden Vorschaubilder angeben, so dass das Rohbild dekodiert werden kann, wenn die Vorschaugröße nicht ausreicht.</para>
+>In RAW-Dateien eingebettete Vorschau verwenden</guilabel
+>, werden alle Bildoperationen viel schneller ausgeführt, da die Dekodierung von Rohformat-Dateien viel Zeit beansprucht und die Verarbeitung der Vorschaubilder erheblich schneller geht. Sie können auch die Mindestgröße der zu verwendenden Vorschaubilder angeben, so dass das Rohbild dekodiert wird, wenn die Vorschaugröße nicht ausreicht. </para>
 </sect1>
 
 <sect1 id="opt-search-new">
@@ -68,7 +68,7 @@
 ></listitem>
     <listitem>
         <para
->Neue Versionen der gleichen Datei können in gewissen Umfang automatisch erkannt werden. Wenn Sie &eg; automatisch neue Versionen der gleichen Datei stapeln möchten, können Sie mit regulären Ausdrücken prüfen, ob die neue Datei eine neue Version einer vorhandenen Originaldatei ist. Die folgenden Einstellungen, bei der der erste Wert den regulären Ausdruck für die Suche und der zweite Wert den Ersetzungsausdruck der Originaldatei angibt, sollten Ihnen beim Einstieg helfen. Sie müssen diese Werte nur an Ihre Namensschema anpassen.</para>
+>Neue Versionen der gleichen Datei können in gewissem Umfang automatisch erkannt werden. Wenn Sie &eg; automatisch neue Versionen der gleichen Datei stapeln möchten, können Sie mit regulären Ausdrücken prüfen, ob die neue Datei eine neue Version einer vorhandenen Originaldatei ist. Die folgenden Einstellungen, bei der der erste Wert den regulären Ausdruck für die Suche und der zweite Wert den Ersetzungsausdruck der Originaldatei angibt, sollten Ihnen beim Einstieg helfen. Sie müssen diese Werte nur an Ihre Namensschema anpassen.</para>
     <orderedlist>
     <listitem
 ><para
@@ -81,7 +81,7 @@
     </orderedlist>
     </listitem>
 </itemizedlist>
-Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Semikolon getrennte Erweiterungen haben kann und dass Referenzen zu regulären Mustern im Format „\1“ benutzt werden können. Die ursprüngliche Datei wird vom gleichen Ordner wie die neue Datei aus gesucht. Außerdem passt der reguläre Ausdruck im Beispiel auch auf die folgenden Dateien: example_v1.jpg, example_12.tif, example.PNG. </para>
+Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Semikolon getrennte Erweiterungen haben kann und dass Referenzen zu Übereinstimmungen mit regulären Mustern im Format „\1“ benutzt werden können. Die ursprüngliche Datei wird vom gleichen Ordner wie die neue Datei aus gesucht. Außerdem passt der reguläre Ausdruck im Beispiel auch auf die folgenden Dateien: example_v1.jpg, example_12.tif, example.PNG. </para>
 </sect1>
 
 <sect1 id="opt-thumbnails">
@@ -98,7 +98,7 @@ Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Se
 >&Ctrl;<keycap
 >T</keycap
 ></keycombo
-> aktivieren. Sie können auch die Anzeige zusätzliche Informationen wie Namen und Kategorien in der Vorschauansicht einschalten. </para>
+> aktivieren. Sie können auch die Anzeige zusätzlicher Informationen wie Namen und Kategorien in der Vorschauansicht einschalten. </para>
 <figure>
 <title
 >Einstellungen für die Bildvorschau</title>
@@ -114,11 +114,11 @@ Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Se
   <title
 >Betrachter-Einstellungen</title>
   <para
->Hier können Sie hauptsächlich die bevorzugte Größe der Diaschau oder Vorschauansicht einstellen oder den Vollbildmodus dafür wählen. Das Diaschau-Intervall lässt sich hier ebenfalls eingeben. Eine Diaschau mit zusätzlichen Funktionen ist in den KIPI-Modulen enthalten. Als Skalierungsmethode kann zwischen  <emphasis
+>Hier können Sie hauptsächlich die bevorzugte Größe der Diaschau oder Vorschauansicht einstellen oder den Vollbildmodus dafür wählen. Das Diaschau-Intervall lässt sich hier ebenfalls eingeben. Eine Diaschau mit zusätzlichen Funktionen ist in den KIPI-Modulen enthalten. Als Skalierungsmethode kann zwischen <emphasis
 >Beste</emphasis
-> or <emphasis
+> oder <emphasis
 >Schnellste</emphasis
-> eingestellt werden. Ist Ihr Rechner schnell genug für die beste Skalierungsmethode, wählen sie dies aus. </para>
+> eingestellt werden. Ist Ihr Rechner schnell genug für die beste Skalierungsmethode, wählen sie diese aus. </para>
 <figure>
 <title
 >Einstellungen des Bildbetrachters</title>
@@ -137,13 +137,13 @@ Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Se
   <title
 >Kategorien</title>
   <para
->In <xref linkend="chp-typingIn"/> wurde Ihnen beschrieben, wie Sie für jedes Bild verschiedene Eigenschaften, z.B. <literal
+>In <xref linkend="chp-typingIn"/> wurde Ihnen beschrieben, wie Sie für jedes Bild verschiedene Eigenschaften, z. B. <literal
 >Personen</literal
 >, <literal
 >Orte</literal
 > und <literal
 >Stichworte</literal
-> festlegen können. Sie können auch Ihre eigenen Gruppen wie z.B. <literal
+> festlegen können. Sie können auch Ihre eigenen Gruppen, wie z. B. <literal
 >Gegenstände</literal
 >, <literal
 >Tiere</literal
@@ -152,7 +152,7 @@ Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Se
 > erstellen.</para>
 
 <para
->In <xref linkend="fig-options-group"/> sehen Sie den Dialog, der verwendet wird, um bereits existierende Gruppen zu bearbeiten. Für jede vorhandene Gruppe können Sie eine Beschriftung und ein Symbol auswählen.</para>
+>In <xref linkend="fig-options-group"/> sehen Sie den Dialog, der verwendet wird, um Kategorien zu bearbeiten. Für jede vorhandene Kategorie können Sie eine Beschriftung und ein Symbol auswählen.</para>
 
 <figure id="fig-options-group">
 <title
@@ -173,10 +173,10 @@ Beachten Sie, dass der Ersetzungstext der ursprünglichen Datei mehrere durch Se
 >Unterkategorien</title>
 
 <para
->Im Abschnitt <xref linkend="sec-member-groups-in-property-editor"/> wurden Unterkategorien bereits erwähnt. Im Dialog Optionen können Sie komplette Mitgliedergruppen einrichten, also z.B. alle Mitglieder einer Gruppe auf einmal in einer Gruppe einrichten anstatt alle Gruppen eines Mitglieds wie in <xref linkend="sec-member-groups-in-property-editor"/> erklärt.</para>
+>Im Abschnitt <xref linkend="sec-member-groups-in-property-editor"/> wurden Unterkategorien bereits erwähnt. Im Einstellungsdialog können Sie komplette Mitgliedergruppen einrichten, also z. B. alle Mitglieder einer Gruppe auf einmal in einer Gruppe einrichten anstatt alle Gruppen eines Mitglieds wie in <xref linkend="sec-member-groups-in-property-editor"/> erklärt.</para>
 
 <para
->In <xref linkend="fig-options-member"/> sehen Sie die Einstellungsmöglichkeiten, die Ihnen zum Festlegen der Mitgliedergruppen zur Verfügung stehen. Mit der oben angeordneten Auswahlliste können Sie die Kategorie auswählen die Sie konfigurieren möchten. In der linken Fensterhälfte befindet sich eine Liste mit den aktuellen Kategorie und in der rechten eine Liste der Unterkategorien.</para>
+>In <xref linkend="fig-options-member"/> sehen Sie die Einstellungsmöglichkeiten, die Ihnen zum Festlegen der Mitgliedergruppen zur Verfügung stehen. Mit der oben angeordneten Auswahlliste können Sie die Kategorie auswählen, die Sie konfigurieren möchten. In der linken Fensterhälfte befindet sich eine Liste mit den aktuellen Kategorie und in der rechten eine Liste der Unterkategorien.</para>
 
 <figure id="fig-options-member">
 <title

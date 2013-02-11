@@ -18,17 +18,17 @@
 #ifndef SETTINGS_CATEGORYITEM_H
 #define SETTINGS_CATEGORYITEM_H
 
-#include <q3listbox.h>
+#include <QListWidgetItem>
 #include <DB/Category.h>
 namespace DB { class MemberMap; }
 
 namespace Settings
 {
-class CategoryItem :public Q3ListBoxText
+class CategoryItem :public QListWidgetItem
 {
 public:
     CategoryItem( const QString& category, const QString& text, const QString& icon,
-                  DB::Category::ViewType type, int thumbnailSize, Q3ListBox* parent );
+                  DB::Category::ViewType type, int thumbnailSize, QListWidget* parent );
     void setLabel( const QString& label );
     void submit( DB::MemberMap* memberMap );
     void removeFromDatabase();
@@ -57,3 +57,4 @@ private:
 
 #endif /* SETTINGS_CATEGORYITEM_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

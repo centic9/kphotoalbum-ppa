@@ -20,7 +20,7 @@
 #define MAINVIEW_H
 class BreadcrumbViewer;
 class KToggleAction;
-class Q3WidgetStack;
+class QStackedWidget;
 class QTimer;
 class KTipDialog;
 class QLabel;
@@ -41,6 +41,7 @@ class KActionMenu;
 #include <QPointer>
 #include <config-kpa-kipi.h>
 #ifdef HASKIPI
+#  include <libkipi/version.h>
 #  include <libkipi/pluginloader.h>
 #endif
 #include "DB/FileNameList.h"
@@ -153,6 +154,7 @@ protected slots:
     void slotRecreateExifDB();
     void useNextVideoThumbnail();
     void usePreviousVideoThumbnail();
+    void mergeDuplicates();
 
 protected:
     void configureImages( bool oneAtATime );
@@ -183,7 +185,7 @@ private:
     ThumbnailView::ThumbnailFacade* _thumbnailView;
     Settings::SettingsDialog* _settingsDialog;
     QPointer<AnnotationDialog::Dialog> _annotationDialog;
-    Q3WidgetStack* _stack;
+    QStackedWidget* _stack;
     QWidget* _welcome;
     QTimer* _autoSaveTimer;
     Browser::BrowserWidget* _browser;
@@ -224,6 +226,7 @@ private:
 #ifdef HASKIPI
     KIPI::PluginLoader* _pluginLoader;
 #endif
+    KAction* _recreateThumbnails;
     KAction* _useNextVideoThumbnail;
     KAction* _usePreviousVideoThumbnail;
     TokenEditor* _tokenEditor;
@@ -238,3 +241,4 @@ private:
 
 #endif /* MAINVIEW_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

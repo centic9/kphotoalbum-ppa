@@ -49,7 +49,6 @@ protected:
 
     void checkIfImagesAreSorted();
     void checkIfAllImagesHasSizeAttributes();
-    void checkAndWarnAboutVersionConflict();
 
     // The parent widget information dialogs are displayed in.
     QWidget *messageParent();
@@ -64,3 +63,4 @@ private:
 
 #endif /* XMLDB_FILEREADER_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -33,7 +33,7 @@
 #include <QPixmap>
 #include <QCloseEvent>
 #include <QVBoxLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include "ImageManager/ThumbnailBuilder.h"
 #include "AnnotationDialog/Dialog.h"
 #include <qdir.h>
@@ -44,7 +44,7 @@
 #include "Utilities/ShowBusyCursor.h"
 #include <klocale.h>
 
-#include <q3widgetstack.h>
+#include <QStackedWidget>
 #include "HTMLGenerator/HTMLDialog.h"
 #include "ImageCounter.h"
 #include <qtimer.h>
@@ -109,7 +109,6 @@
 #include <KToggleAction>
 #include <KActionMenu>
 #include <KHBox>
-#include <K3URLDrag>
 #include <qclipboard.h>
 #include <stdexcept>
 #include <KInputDialog>
@@ -121,6 +120,7 @@
 #include <BackgroundJobs/SearchForVideosWithoutLengthInfo.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
 #include "UpdateVideoThumbnail.h"
+#include "DuplicateMerger/DuplicateMerger.h"
 
 using namespace DB;
 
@@ -147,14 +147,14 @@ MainWindow::Window::Window( QWidget* parent )
     lay->setContentsMargins(2,2,2,2);
     setCentralWidget( top );
 
-    _stack = new Q3WidgetStack( top, "_stack" );
+    _stack = new QStackedWidget( top );
     lay->addWidget( _stack, 1 );
 
     _dateBar = new DateBar::DateBarWidget( top );
     lay->addWidget( _dateBar );
 
     _dateBarLine = new QFrame( top );
-    _dateBarLine->setFrameStyle( QFrame::HLine | Q3Frame::Plain );
+    _dateBarLine->setFrameStyle( QFrame::HLine | QFrame::Plain );
     _dateBarLine->setLineWidth(0); _dateBarLine->setMidLineWidth(0);
 
     QPalette pal = _dateBarLine->palette();
@@ -170,7 +170,7 @@ MainWindow::Window::Window( QWidget* parent )
 
     _stack->addWidget( _browser );
     _stack->addWidget( _thumbnailView->gui() );
-    _stack->raiseWidget( _browser );
+    _stack->setCurrentWidget( _browser );
 
     _settingsDialog = 0;
     setupMenuBar();
@@ -542,7 +542,7 @@ void MainWindow::Window::slotAutoStackImages()
 
 DB::FileNameList MainWindow::Window::selected( ThumbnailView::SelectionMode mode) const
 {
-    if ( _thumbnailView->gui() == _stack->visibleWidget() )
+    if ( _thumbnailView->gui() == _stack->currentWidget() )
         return _thumbnailView->selection(mode);
     else
         return DB::FileNameList();
@@ -779,7 +779,7 @@ void MainWindow::Window::setupMenuBar()
     _sortByDateAndTime->setText( i18n("Sort Selected by Date && Time") );
 
     _limitToMarked = actionCollection()->addAction( QString::fromLatin1("limitToMarked"), this, SLOT( slotLimitToSelected() ) );
-    _limitToMarked->setText( i18n("Limit View to Marked") );
+    _limitToMarked->setText( i18n("Limit View to Selection") );
 
     _jumpToContext = actionCollection()->addAction( QString::fromLatin1("jumpToContext"), this, SLOT( slotJumpToContext() ) );
     _jumpToContext->setText( i18n("Jump to Context") );
@@ -814,6 +814,8 @@ void MainWindow::Window::setupMenuBar()
     a->setText( i18n("Display Images and Videos with Changed MD5 Sum") );
 #endif //DOES_STILL_NOT_WORK_IN_KPA4
 
+    a = actionCollection()->addAction( QLatin1String("mergeDuplicates"), this, SLOT(mergeDuplicates()));
+    a->setText(i18n("Merge duplicates"));
     a = actionCollection()->addAction( QString::fromLatin1("rebuildMD5s"), this, SLOT( slotRecalcCheckSums() ) );
     a->setText( i18n("Recalculate Checksum") );
 
@@ -908,6 +910,8 @@ void MainWindow::Window::setupMenuBar()
     _showExifDialog = actionCollection()->addAction( QString::fromLatin1("showExifInfo"), this, SLOT( slotShowExifInfo() ) );
     _showExifDialog->setText( i18n("Show Exif Info") );
 #endif
+    _recreateThumbnails = actionCollection()->addAction( QString::fromLatin1("recreateThumbnails"), _thumbnailView, SLOT( slotRecreateThumbnail() ) );
+    _recreateThumbnails->setText( i18n("Recreate Selected Thumbnails") );
 
     _useNextVideoThumbnail = actionCollection()->addAction( QString::fromLatin1("useNextVideoThumbnail"), this, SLOT(useNextVideoThumbnail()));
     _useNextVideoThumbnail->setText(i18n("Use next video thumbnail"));
@@ -951,7 +955,7 @@ void MainWindow::Window::slotAutoSave()
 void MainWindow::Window::showThumbNails()
 {
     reloadThumbnails( ThumbnailView::ClearSelection );
-    _stack->raiseWidget( _thumbnailView->gui() );
+    _stack->setCurrentWidget( _thumbnailView->gui() );
     _thumbnailView->gui()->setFocus();
     updateStates( true );
 }
@@ -959,8 +963,9 @@ void MainWindow::Window::showThumbNails()
 void MainWindow::Window::showBrowser()
 {
     _statusBar->clearMessage();
-    _stack->raiseWidget( _browser );
+    _stack->setCurrentWidget( _browser );
     _browser->setFocus();
+    updateContextMenuFromSelectionSize( 0 );
     updateStates( false );
 }
 
@@ -1055,7 +1060,7 @@ bool MainWindow::Window::load()
 
 void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
 {
-    if ( _stack->visibleWidget() == _thumbnailView->gui() ) {
+    if ( _stack->currentWidget() == _thumbnailView->gui() ) {
         QMenu menu( this );
         menu.addAction( _configOneAtATime );
         menu.addAction( _configAllSimultaniously );
@@ -1073,6 +1078,7 @@ void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
         menu.addSeparator();
         menu.addAction(_rotLeft);
         menu.addAction(_rotRight);
+        menu.addAction(_recreateThumbnails);
         menu.addAction(_useNextVideoThumbnail);
         menu.addAction(_usePreviousVideoThumbnail);
         _useNextVideoThumbnail->setEnabled(anyVideosSelected());
@@ -1229,9 +1235,11 @@ void MainWindow::Window::updateContextMenuFromSelectionSize(int selectionSize)
     _unStackImages->setEnabled(selectionSize >= 1);
     _setStackHead->setEnabled(selectionSize == 1); // FIXME: do we want to check if it's stacked here?
     _sortByDateAndTime->setEnabled(selectionSize > 1);
+    _recreateThumbnails->setEnabled(selectionSize >= 1);
     _rotLeft->setEnabled(selectionSize >= 1);
     _rotRight->setEnabled(selectionSize >= 1);
     _AutoStackImages->setEnabled(selectionSize > 1);
+    _statusBar->_selected->setSelectionCount( selectionSize );
 }
 
 void MainWindow::Window::rotateSelected( int angle )
@@ -1394,9 +1402,16 @@ void MainWindow::Window::loadPlugins()
 
     QStringList ignores;
     ignores << QString::fromLatin1( "CommentsEditor" )
-            << QString::fromLatin1( "HelloWorld" );
+        << QString::fromLatin1( "HelloWorld" );
 
+#if KIPI_VERSION >= 0x020000
+    _pluginLoader = new KIPI::PluginLoader();
+    _pluginLoader->setIgnoredPluginsList( ignores );
+    _pluginLoader->setInterface( _pluginInterface );
+    _pluginLoader->init();
+#else
     _pluginLoader = new KIPI::PluginLoader( ignores, _pluginInterface );
+#endif
     connect( _pluginLoader, SIGNAL( replug() ), this, SLOT( plug() ) );
     _pluginLoader->loadPlugins();
 
@@ -1697,6 +1712,12 @@ void MainWindow::Window::usePreviousVideoThumbnail()
     UpdateVideoThumbnail::usePrevious(selected());
 }
 
+void MainWindow::Window::mergeDuplicates()
+{
+    DuplicateMerger* merger = new DuplicateMerger;
+    merger->show();
+}
+
 void MainWindow::Window::createSarchBar()
 {
     // Set up the search tool bar
@@ -1765,3 +1786,4 @@ void MainWindow::Window::setHistogramVisibilty( bool visible ) const
 }
 
 #include "Window.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

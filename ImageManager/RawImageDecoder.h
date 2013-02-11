@@ -37,9 +37,10 @@ private:
     bool _fileExistsWithExtensions( const DB::FileName& fileName, const QStringList& extensionList ) const;
     static bool _fileEndsWithExtensions( const DB::FileName& fileName, const QStringList& extensionList );
     bool _fileIsKnownWithExtensions( const DB::FileNameSet& files, const DB::FileName& fileName, const QStringList& extensionList ) const;
-	static void _initializeExtensionLists( QStringList& rawExtensions, QStringList& standardExtensions, QStringList& ignoredExtensions );
+    static void _initializeExtensionLists( QStringList& rawExtensions, QStringList& standardExtensions, QStringList& ignoredExtensions );
 };
 
 }
 
 #endif /* RAWIMAGEDECODER_H */
+// vi:expandtab:tabstop=4 shiftwidth=4:

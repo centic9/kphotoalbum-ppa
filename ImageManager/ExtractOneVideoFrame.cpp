@@ -75,7 +75,7 @@ void ExtractOneVideoFrame::handleError(QProcess::ProcessError error)
     }
 
     KMessageBox::information( MainWindow::Window::theMainWindow(),
-            i18n("<p>Error when extracting video thumbnails.<br>Error was: %1</p>" , message ),
+            i18n("<p>Error when extracting video thumbnails.<br/>Error was: %1</p>" , message ),
             QString(), QLatin1String("errorWhenRunningQProcessFromExtractOneVideoFrame"));
     emit result(QImage());
     deleteLater();
@@ -84,8 +84,7 @@ void ExtractOneVideoFrame::handleError(QProcess::ProcessError error)
 void ExtractOneVideoFrame::setupWorkingDirectory()
 {
     const QString tmpPath = STR("%1/KPA-XXXXXX").arg(QDir::tempPath());
-    char* cTmpPath = tmpPath.toUtf8().data();
-    m_workingDirectory = QString::fromUtf8(mkdtemp(cTmpPath));
+    m_workingDirectory = QString::fromUtf8(mkdtemp(tmpPath.toUtf8().data()));
 }
 
 void ExtractOneVideoFrame::deleteWorkingDirectory()
@@ -99,3 +98,4 @@ void ExtractOneVideoFrame::deleteWorkingDirectory()
 }
 
 } // namespace ImageManager
+// vi:expandtab:tabstop=4 shiftwidth=4:
