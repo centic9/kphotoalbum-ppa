@@ -111,13 +111,13 @@ StringSet Info::standardKeys()
 #if (EXIV2_TEST_VERSION(0,21,0))
     const Exiv2::GroupInfo* gi = Exiv2::ExifTags::groupList();
     while (gi->tagList_ != 0) {
-	    Exiv2::TagListFct tl     = gi->tagList_;
-	    const Exiv2::TagInfo* ti = tl();
+        Exiv2::TagListFct tl     = gi->tagList_;
+        const Exiv2::TagInfo* ti = tl();
 
-	    while (ti->tag_ != 0xFFFF) {
-		    tags << ti;
-		    ++ti;
-	    }
+        while (ti->tag_ != 0xFFFF) {
+            tags << ti;
+            ++ti;
+        }
         ++gi;
     }
 
@@ -238,3 +238,4 @@ Exif::Metadata Exif::Info::metadata( const DB::FileName& fileName )
     return Exif::Metadata();
 }
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

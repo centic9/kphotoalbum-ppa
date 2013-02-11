@@ -72,6 +72,7 @@ namespace XMLDB {
         OVERRIDE bool stack(const DB::FileNameList& items);
         OVERRIDE void unstack(const DB::FileNameList& images);
         OVERRIDE DB::FileNameList getStackFor(const DB::FileName& referenceId) const;
+        OVERRIDE void copyData( const DB::FileName& from, const DB::FileName& to);
 
     protected:
         DB::FileNameList searchPrivate(
@@ -116,3 +117,4 @@ namespace XMLDB {
 
 #endif /* XMLDB_DATABSE_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

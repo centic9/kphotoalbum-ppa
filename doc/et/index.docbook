@@ -4,7 +4,7 @@
 >KPhotoAlbum</application
 >">
   <!ENTITY kappname "&kphotoalbum;">
-  <!ENTITY package "kdeextragear-2">
+  <!ENTITY package "extragear-graphics">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % Estonian  "INCLUDE"
 > 
@@ -16,12 +16,13 @@
   <!ENTITY viewer SYSTEM "viewer.docbook">
   <!ENTITY datebar SYSTEM "datebar.docbook">
   <!ENTITY options SYSTEM "options.docbook">
+  <!ENTITY workflows SYSTEM "workflows.docbook">
   <!ENTITY generating-html SYSTEM "generating-html.docbook">
   <!ENTITY importexport SYSTEM "importexport.docbook">
   <!ENTITY plugins SYSTEM "plugins.docbook">
 ]>
 
-<book lang="&language;">
+<book id="kphotoalbum" lang="&language;">
   
   <bookinfo>
     <title
@@ -33,6 +34,12 @@
 >Jesper K.</firstname
 > <surname
 >Pedersen</surname
+> </author>
+      <author
+><firstname
+>Miika</firstname
+> <surname
+>Turkia</surname
 > </author>
       
       <othercredit role="translator"
@@ -59,15 +66,32 @@
 >Jesper K. Pedersen</holder>
       
     </copyright>
+    <copyright>
+      <year
+>2012</year>
+      <holder
+>Miika Turkia</holder>
+    </copyright>
     
     <date
->2004-08-06</date>
+>2012-02-23</date>
     <releaseinfo
->2.0</releaseinfo>
+>4.2</releaseinfo>
     
-    <abstract
-><para
->See on &kphotoalbum;i käsiraamat. Kui sa ei armasta eriti käsiraamatuid lugeda, vaid soovid lihtsalt proovida, mis mida teeb, siis on sinu ees lahti mitu võimalust: <itemizedlist>
+    <abstract>
+    <para
+><inlinemediaobject>
+    <imageobject
+><imagedata fileref="splash-large.png" format="PNG" scalefit="1"/></imageobject>
+    <textobject
+><phrase
+>&kphotoalbum;i logo</phrase
+></textobject>
+    </inlinemediaobject
+></para>
+    
+    <para
+>See on &kphotoalbum;i käsiraamat. KPhotoAlbum on digitaalpiltide kataloogimise tarkvara, mis toetab digitaalsete piltide ja videode annoteerimist, sirvimist, otsimist ja vaatamist. Kui sa ei armasta eriti käsiraamatuid lugeda, vaid soovid lihtsalt proovida, mis mida teeb, siis on sinu ees lahti mitu võimalust: <itemizedlist>
           <listitem
 ><para
 >Mine <ulink url="http://www.kphotoalbum.org/"
@@ -86,7 +110,9 @@
 ></para>
 
    <para
->Kui soovid kogu käsiraamatu endale välja trükkida, leiab selle pika HTML-dokumendina <ulink url="http://www.kphotoalbum.org/"
+>Kui soovid kogu käsiraamatu endale välja trükkida, leiab selle pika PDF-dokumendina <ulink url="http://docs.kde.org/"
+>&kde; dokumentatsioonisaidil</ulink
+>. Otselingi leiab <ulink url="http://kphotoalbum.org/index.php?page=documentation"
 >&kphotoalbum;i koduleheküljelt</ulink
 >.</para>
 </abstract>
@@ -94,7 +120,7 @@
       <keyword
 >KDE</keyword>
       <keyword
->kdeextragear-2</keyword>
+>extragear-graphics</keyword>
       <keyword
 >KPhotoAlbum</keyword>
       <keyword
@@ -112,6 +138,7 @@
   &importexport;
   &plugins;
   &options;
+  &workflows;
 
 
   <!-- ====================================================================== -->
@@ -127,6 +154,15 @@
 ></para>
   </chapter>
 
+  <chapter id="credits-and-licenses">
+    <title
+>Autorid ja litsents</title>
+    <para
+>Tõlge eesti keelde: Marek Laane <email
+>bald@smail.ee</email
+></para
+> 
+&underFDL; &underGPL; </chapter>
 
 </book>
 

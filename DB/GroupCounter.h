@@ -19,7 +19,7 @@
 #ifndef GROUPCOUNTER_H
 #define GROUPCOUNTER_H
 #include "Settings/SettingsData.h"
-#include <q3dict.h>
+#include <QHash>
 
 namespace DB
 {
@@ -33,8 +33,8 @@ public:
     QMap<QString,uint> result();
 
 private:
-    Q3Dict<QStringList> _memberToGroup;
-    Q3Dict<uint> _groupCount;
+    QHash<QString,QStringList> _memberToGroup;
+    QHash<QString,uint> _groupCount;
 
 };
 
@@ -42,3 +42,4 @@ private:
 
 #endif /* GROUPCOUNTER_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

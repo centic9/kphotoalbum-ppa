@@ -41,7 +41,7 @@
 >Käesolevas käsiraamatus vaatleme sammude kaupa (1) oma piltide annoteerimist, (2) piltide sirvimist ja vaatamist ning (2) muid teemasid ja kohandamisvõimalusi.</para>
 
 <para
->KPhotoAlbum oli alguses piltide haldamise rakendus, aga seda on hiljem laiendatud, nii et nüüd saab selle abil hoolt kanda ka oma videode eest. Käsiraamatus on mitmel pool juttu ainult piltidest, kuid enamasti käib kõik piltide kohta öeldu ka videode kohta.</para>
+>&kphotoalbum; oli alguses piltide haldamise rakendus, aga seda on hiljem laiendatud, nii et nüüd saab selle abil hoolt kanda ka oma videode eest. Käsiraamatus on mitmel pool juttu ainult piltidest, kuid enamasti käib kõik piltide kohta öeldu ka videode kohta.</para>
   
 
   </sect1>
@@ -67,7 +67,9 @@
     <para
 >&kphotoalbum; salvestab kogu oma info baaskataloogis asuvasse faili <filename
 >index.xml</filename
->. See on tavaline XML-fail, millest saab hõlpsasti varukoopia teha mis tahes abivahendiga, mille võib kopeerida flopikettale või mille abil saab CVS-is erinevaid versioone hoida.</para>
+>. See on tavaline XML-fail, millest saab hõlpsasti varukoopia teha mis tahes abivahendiga, mille võib kopeerida flopikettale või mille abil saab versioonihaldussüsteemis erinevaid versioone hoida. Samuti on olemas varundamisskript (<emphasis
+>kpa-backup.sh</emphasis
+>), mis on kaasas &kphotoalbum;i lähtekoodiga ja mis teeb varukoopia nii failist index.xml kui ka kasutaja kodukataloogis olevatest seadistusfailidest.</para>
     
     <para
 >&kphotoalbum; jätab meelde talle ette antud pildikataloogi ja kasutab seda alati, kui käivitad &kphotoalbum;i. Kui soovid, et &kphotoalbum; kasutaks mõnda muud andmebaasi (s.t. mõnda muud pildikataloogi), tuleb see käivitada võtmega <option

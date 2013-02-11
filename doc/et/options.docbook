@@ -10,8 +10,15 @@
 ></menuchoice
 > avab valikute dialoogi ning käesolevas peatükis tutvustamegi selle võimalusi.</para>
 
+
+<sect1 id="opt-general">
+  <title
+>Üldised seadistused</title>
+
 <para
->Allpool on näha üldiste valikute, pisipildivaate ja näitaja vaate valikute seadistamisdialoogid. Kõik valikud on korralikult dokumenteeritud ja kui soovid neist mõne kohta midagi lähemalt teada saada, vajuta klahvi F1 ning klõpsa hiirega vajaliku valiku peal.</para>
+>Allpool näeb üldiste seadistuste paneeli. Mõnda valikud kirjeldatakse siin lühidalt, samuti leiab lisateavet, kui seadistamise ajal teha mis tahes valikul paremklõps ja valida menüükäsk <guimenuitem
+>Mis see on?</guimenuitem
+></para>
 
 <figure id="fig-options-general">
 <title
@@ -23,6 +30,69 @@
 </mediaobject>
 </figure>
 
+<para
+>EXIF-i orietantsiooniinfo kasutamisel pööratakse pildid automaatselt selliseks nagu pildistamisel. Enamik digitaalkaameraid põimib toorfaili pisipildi ja üsna sageli on pisipilt tegelikult piisava suurusega, mõnikord isegi täissuurusega. Põimitud pisipildi kasutamine kiirendab kõiki pilditoiminguid, sest toorfaili dekodeerimine nõuab tublisti aega, ent pisipiltidega käib kõik palju kiiremini. Samuti saab määrata pisipildi minimaalse suuruse, millisel juhul toorpilt dekodeeritakse, kui pisipilt on kasutuskõlbmatu suurusega.</para>
+</sect1>
+
+<sect1 id="opt-search-new">
+  <title
+>Uute piltide otsija seadistused</title>
+<para
+>Vasakul paneelil näeb muid seadistusi, näiteks <guimenuitem
+>failide otsimine ja versioonid</guimenuitem
+>. Need seadistused määravad &kphotoalbum;i käitumise uute piltide leidmisel. Neid võib otsida automaatselt käivitamisel või käsitsi käskudega menüüs <guimenu
+>Hooldus</guimenu
+>. Ka neid valikuid kirjeldatakse korralikult rakenduse enda abitekstides, kuid üht-teist oleks ehk mõttekas ka siin öelda.</para>
+
+<figure id="fig-options-file-versions">
+<title
+>Failide otsimine ja versioonid</title>
+<mediaobject>
+<imageobject>
+<imagedata fileref="options-file-versions.png" format="PNG"/>
+</imageobject>
+</mediaobject>
+</figure>
+
+<para>
+<itemizedlist mark='opencircle'>
+    <listitem
+><para
+>Tõenäoliselt on mõttekas vahele jätta mõned kataloogid, mille on loonud eri pildinäitajad või failibrauserid. See on komadega eraldatud nimekiri, nii et uusi katalooge saab vajaduse korral hõlpsalt lisada.</para
+></listitem>
+    <listitem>
+        <para
+>Teataval määral suudetakse tuvastada sama faili eri versioone. Kui soovid näiteks automaatselt lisada sama pildi uued versioonid algsega samasse pakki, saab määrata regulaaravaldise, millega selgitatakse, kas uue fail on originaalfaili uus versioon või mitte. Esimese valikuga saab paika panna otsimise regulaaravaldise ja teisega originaalfaili, kuid usutavasti nõuab sobiva nimetuvastuskombinatsiooni leidmine mõningat katsetamist.</para>
+    <orderedlist>
+    <listitem
+><para
+>(_(v){0,1}([0-9]){1,2}){0,1}\.(jpg|JPG|tif|TIF|png|PNG)</para
+></listitem>
+    <listitem
+><para
+>.CR2;.NEF;.JPG;.jpg</para
+></listitem>
+    </orderedlist>
+    </listitem>
+</itemizedlist>
+Pane tähele, et originaalfaili asendustekstis võib olla mitu semikooloniga eraldatud sufiksit ja et viidet regulaaravaldise vastele saab kasutada kujul \1. Originaalfaili otsitakse samast kataloogist, kus asub uus fail. Ja et kõik hingelt ära öelda, siis näidisregulaaravaldis leiab näiteks sellised failid: example_v1.jpg, example_12.tif, example.PNG. </para>
+</sect1>
+
+<sect1 id="opt-thumbnails">
+  <title
+>Pisipiltide näitaja seadistused</title>
+  <para
+>Pisipiltide näitajas pole kuigi palju seadistada. Peamiselt vaid pisipildi suurus ja kohtspikri suurus (kui kavatsed kasutada kohtspikreid, mille saab sisse lülitada menüükäsuga <menuchoice
+><guimenu
+>Seadistused</guimenu
+> <guimenuitem
+>Kohtspikrite näitamine pisipildiaknas</guimenuitem
+></menuchoice
+> või kiirklahviga <keycombo
+>&Ctrl;<keycap
+>T</keycap
+></keycombo
+>). Samuti saab valida, kas pisipiltide juures näidatakse lisateavet, näiteks pealdisi ja kategooriaid. </para>
 <figure>
 <title
 >Pisipildivaate valikud</title>
@@ -32,7 +102,17 @@
 </imageobject>
 </mediaobject>
 </figure>
+</sect1>
 
+<sect1 id="opt-viewer">
+  <title
+>Näitaja seadistused</title>
+  <para
+>Ka siin pole palju seadistada. Peamiselt saab valida näitaja või slaidiseansi akna eelistatud suuruse või lasta neid näidata täisekraanirežiimis. Samuti saab siin määrata slaidiseansi intervalli, kuid KIPI pluginad pakuvad palju võimalusterohkemat täiustatud slaidiseanssi. Skaleerimisalgoritn võib olla <emphasis
+>parim</emphasis
+> või <emphasis
+>kiireim</emphasis
+>. Kui sinu arvuti on piisavalt kiire parima jaoks, vali see, muidu tasuks eelistada kiirust. </para>
 <figure>
 <title
 >Näitaja valikud</title>
@@ -42,7 +122,7 @@
 </imageobject>
 </mediaobject>
 </figure>
-
+</sect1>
 
 
 

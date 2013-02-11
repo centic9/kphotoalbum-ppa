@@ -32,6 +32,14 @@ void MainWindow::ImageCounter::setMatchCount( uint matches )
     setText( i18np( "Showing 1 thumbnail", "Showing %1 thumbnails", matches ) );
 }
 
+void MainWindow::ImageCounter::setSelectionCount( uint selected )
+{
+    if ( selected > 0 )
+        setText( i18n( "(%1 selected)", selected ) );
+    else
+        setText( QString() );
+}
+
 void MainWindow::ImageCounter::setTotal( uint c )
 {
     setText( i18n( "Total: %1", c) );
@@ -43,3 +51,4 @@ void MainWindow::ImageCounter::showBrowserMatches(uint matches )
 }
 
 #include "ImageCounter.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

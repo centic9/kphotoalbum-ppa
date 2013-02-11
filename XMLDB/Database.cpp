@@ -32,7 +32,6 @@
 #include "XMLImageDateCollection.h"
 #include "FileReader.h"
 #include "FileWriter.h"
-#include <Q3ValueList>
 #ifdef HAVE_EXIV2
 #   include "Exif/Database.h"
 #endif
@@ -75,7 +74,7 @@ QMap<QString,uint> XMLDB::Database::classify( const DB::ImageSearchInfo& info, c
 {
     QMap<QString, uint> map;
     DB::GroupCounter counter( category );
-    Q3Dict<void> alreadyMatched = info.findAlreadyMatched( category );
+    Utilities::StringSet alreadyMatched = info.findAlreadyMatched( category );
 
     DB::ImageSearchInfo noMatchInfo = info;
     QString currentMatchTxt = noMatchInfo.categoryMatchText( category );
@@ -95,7 +94,7 @@ QMap<QString,uint> XMLDB::Database::classify( const DB::ImageSearchInfo& info, c
             StringSet items = (*it)->itemsOfCategory(category);
             counter.count( items );
             for( StringSet::const_iterator it2 = items.begin(); it2 != items.end(); ++it2 ) {
-                if ( !alreadyMatched[*it2] ) // We do not want to match "Jesper & Jesper"
+                if ( !alreadyMatched.contains(*it2) ) // We do not want to match "Jesper & Jesper"
                     map[*it2]++;
             }
 
@@ -506,6 +505,11 @@ DB::FileNameList XMLDB::Database::getStackFor(const DB::FileName& referenceImg) 
         return DB::FileNameList();
 }
 
+void XMLDB::Database::copyData(const DB::FileName &from, const DB::FileName &to)
+{
+    (*info(to)).merge(*info(from));
+}
+
 DB::ImageInfoPtr XMLDB::Database::createImageInfo( const DB::FileName& fileName, const QDomElement& elm, Database* db )
 {
     QString label = elm.attribute( QString::fromLatin1("label") );
@@ -637,8 +641,8 @@ void XMLDB::Database::possibleLoadCompressedCategories( const QDomElement& elm, 
     if ( db == 0 )
         return;
 
-    Q3ValueList<DB::CategoryPtr> categoryList = db->_categoryCollection.categories();
-    for( Q3ValueList<DB::CategoryPtr>::Iterator categoryIt = categoryList.begin(); categoryIt != categoryList.end(); ++categoryIt ) {
+    QList<DB::CategoryPtr> categoryList = db->_categoryCollection.categories();
+    for( QList<DB::CategoryPtr>::Iterator categoryIt = categoryList.begin(); categoryIt != categoryList.end(); ++categoryIt ) {
         QString categoryName = (*categoryIt)->name();
         QString str = elm.attribute( FileWriter::escape( categoryName ) );
         if ( !str.isEmpty() ) {
@@ -652,3 +656,4 @@ void XMLDB::Database::possibleLoadCompressedCategories( const QDomElement& elm, 
     }
 }
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -19,7 +19,7 @@
 #include "GroupCounter.h"
 #include "DB/MemberMap.h"
 #include "DB/ImageDB.h"
-
+#include "Utilities/Set.h"
 using namespace DB;
 
 
@@ -54,10 +54,8 @@ GroupCounter::GroupCounter( const QString& category )
     const MemberMap map = DB::ImageDB::instance()->memberMap();
     QMap<QString,StringSet> groupToMemberMap = map.groupMap(category);
 
-    _memberToGroup.resize( 2729 /* A large prime */ );
-    _groupCount.resize( 2729 /* A large prime */ );
-    _memberToGroup.setAutoDelete( true );
-    _groupCount.setAutoDelete( true );
+    _memberToGroup.reserve( 2729 /* A large prime */ );
+    _groupCount.reserve( 2729 /* A large prime */ );
 
     // Populate the _memberToGroup map
     for( QMap<QString,StringSet>::Iterator groupToMemberIt= groupToMemberMap.begin();
@@ -67,17 +65,9 @@ GroupCounter::GroupCounter( const QString& category )
         QString group = groupToMemberIt.key();
 
         for( StringSet::const_iterator memberIt = members.begin(); memberIt != members.end(); ++memberIt ) {
-            QStringList* item = _memberToGroup[*memberIt];
-            if ( !item ) {
-                item = new QStringList;
-                _memberToGroup.insert(*memberIt, item );
-            }
-
-            item->append( group );
+            _memberToGroup[*memberIt].append( group );
         }
-        uint* intPtr = new uint;
-        *intPtr = 0;
-        _groupCount.insert( group, intPtr );
+        _groupCount.insert( group, 0 );
     }
 }
 
@@ -91,24 +81,23 @@ GroupCounter::GroupCounter( const QString& category )
  */
 void GroupCounter::count( const StringSet& categories )
 {
-    // It takes quite some time to clear the dict with a large prime!
-    static Q3Dict<void> countedGroupDict( 97 /* a large, but not extreme prime */ );
+    static StringSet countedGroupDict;
 
     countedGroupDict.clear();
     for( StringSet::const_iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
-        QStringList* groups = _memberToGroup[*categoryIt];
-        if ( groups ) {
-            for( QStringList::Iterator groupsIt = (*groups).begin(); groupsIt != (*groups).end(); ++groupsIt ) {
-                if ( countedGroupDict.find( *groupsIt ) == 0 ) {
-                    countedGroupDict.insert( *groupsIt, (void*) 0x1 ); // value not used, must be different from 0.
-                    (*_groupCount[*groupsIt])++;
+        if ( _memberToGroup.contains(*categoryIt)) {
+            const QStringList groups = _memberToGroup[*categoryIt];
+            Q_FOREACH( const QString& group, groups ) {
+                if ( !countedGroupDict.contains( group ) ) {
+                    countedGroupDict.insert( group );
+                    (_groupCount[group])++;
                 }
             }
         }
         // The item Nevada should itself go into the group Nevada.
-        if ( countedGroupDict.find( *categoryIt ) == 0 && _groupCount.find( *categoryIt ) ) {
-             countedGroupDict.insert( *categoryIt, (void*) 0x1 ); // value not used, must be different from 0.
-             (*_groupCount[*categoryIt])++;
+        if ( !countedGroupDict.contains( *categoryIt ) == 0 && _groupCount.contains( *categoryIt ) ) {
+             countedGroupDict.insert( *categoryIt);
+             (_groupCount[*categoryIt])++;
         }
     }
 }
@@ -117,9 +106,10 @@ QMap<QString,uint> GroupCounter::result()
 {
     QMap<QString,uint> res;
 
-    for( Q3DictIterator<uint> it(_groupCount); *it; ++it ) {
-        if ( *(*it) != 0 )
-            res.insert( it.currentKey(), *(*it) );
+    Q_FOREACH( const QString& key, _groupCount.keys()) {
+        if ( _groupCount[key] != 0 )
+            res.insert( key, _groupCount[key] );
     }
     return res;
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

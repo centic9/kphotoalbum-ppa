@@ -1,17 +1,17 @@
 <chapter id="work-flow">
   <title
->I flussi di lavoro con &kphotoalbum;</title>
+>Le procedure con &kphotoalbum;</title>
   <para
->Il flusso di lavoro è un aspetto importante della fotografia digitale. In questo capitolo descriviamo diversi flussi di lavoro che si adattano ad esigenze diverse. Ci sono molti diversi fattori che vanno considerati nello sviluppo di un flusso di lavoro. Speriamo che questi esempi potranno darti abbastanza idee su come regolare il tuo metodo di lavorare con le immagini digitali.</para>
+>Le procedure sono un aspetto importante della fotografia digitale. In questo capitolo descriviamo diverse procedure che si adattano a diverse esigenze. Ci sono molti diversi fattori che vanno considerati nello sviluppo di una procedura. Speriamo che questi esempi potranno darti abbastanza idee su come regolare il tuo modo di lavorare con le immagini digitali.</para>
 
   <sect1 id="raw-workflow">
   <title
->Flusso di lavoro RAW con &kphotoalbum; e Bibble5/AfterShot Pro</title>
+>Procedura RAW con &kphotoalbum; e Bibble5/AfterShot Pro</title>
   <para
 >Quando si scattano immagini RAW, i file della fotocamera vanno convertiti in formati più riconoscibili come JPEG o TIFF. Ci sono alcune possibilità tra cui scegliere quando si lavora su Linux. A tal file, per esempio, RawTherapee e Ufraw sono delle alternative libere, mentre Bibble5/AfterShot Pro sono applicazioni commerciali.</para>
 
   <para
->Alcune impostazioni sono raccomandate per un flusso di lavoro RAW. La prima è abilitare l'uso delle miniature incorporate. Questo accelererà sensibilmente il lavoro al confronto della decodifica di ogni file RAW ogni volta che viene visualizzato (controlla anche la configurazione della dimensione minima per assicurare una qualità accettabile). La seconda è l'impilamento automatico da parte del rilevatore di nuove immagini delle versioni convertite dal file RAW (l'immagine convertita deve essere nella stessa cartella dell'originale). Questo richiede espressioni regolari come descritte nel<xref linkend="opt-search-new"/>. Due script di supporto sono acclusi al codice sorgente di &kphotoalbum; per supportare il flusso di lavoro RAW. Questi sono <filename
+>Alcune impostazioni sono raccomandate per una procedura RAW. La prima è abilitare l'uso delle miniature incorporate. Questo accelererà sensibilmente il lavoro al confronto della decodifica di ogni file RAW ogni volta che viene visualizzato (controlla anche la configurazione della dimensione minima per assicurare una qualità accettabile). La seconda è l'impilamento automatico da parte del rilevatore di nuove immagini delle versioni convertite dal file RAW (l'immagine convertita deve essere nella stessa cartella dell'originale). Questo richiede espressioni regolari come descritte nel<xref linkend="opt-search-new"/>. Due script di supporto sono acclusi al codice sorgente di &kphotoalbum; per supportare la procedura RAW. Questi sono <filename
 >open-raw.desktop</filename
 > e <filename
 >open-raw.pl</filename
@@ -30,7 +30,7 @@
   </figure>
 
   <para
->Il primo passo di un flusso di lavoro reale è copiare le immagini dalla fotocamera al computer. Una semplice copia da una finestra di terminale è tutto il necessario: </para>
+>Il primo passo di una procedura reale è copiare le immagini dalla fotocamera al computer. Una semplice copia da una finestra di terminale è tutto il necessario: </para>
   <screen
 ><userinput
 ><command
@@ -113,6 +113,60 @@
 >L'ultimo passo è generare delle pagine &HTML; statiche e caricarle sul mio server Web per farle vedere ad amici e colleghi. Questo è quello che io faccio con le pile contratte per mettere solo le immagini sviluppate sulla pagina Web. La generazione dell'&HTML; è descritta nel<xref linkend="chp-generating-html"/>.</para>
   </sect1>
 
+  <sect1 id="pano-workflow">
+  <title
+>Procedura per panorami</title>
+  <para
+>I panorami richiedono una procedura un po' diversa dalla normale modifica delle immagini. Questo perché sono richiesti diversi file di partenza. Lo strumento migliore per i panorami è Autopano Pro, ma l'ultima versione di &digikam; dovrebbe andare bene e non costa nulla. L'elenco seguente descrive i passi richiesti: <orderedlist>
+  <listitem
+><para
+>Etichetta correttamente le foto che compongono un panorama in &kphotoalbum;. Questo va fatto soprattutto per evitare di eliminare le immagini per sbaglio quando si tolgono le immagini non buone da tutte quelle scattate. A questo punto probabilmente vorrai anche impilare la serie di immagini sorgente.</para
+></listitem>
+  <listitem
+><para
+>Hai almeno due semplici alternative per il prossimo passo: <orderedlist>
+  <listitem
+><para
+>Puoi far trovare i panorami automaticamente ad Autopano Pro dalla cartella delle foto; </para
+></listitem>
+  <listitem
+><para
+>o puoi mandare le immagini giuste ad Autopano Pro sulla riga di comando per accelerare il procedimento. Questo è comodo se la cartella contiene molte immagini, soprattutto se sono RAW. Questo richiede di correggere lo script che avvia Autopano Pro per accettare dell'input e creare un file desktop, o richiamare un programma esterno con la sua riga di comando.</para
+></listitem>
+  </orderedlist>
+  </para
+></listitem>
+  <listitem
+><para
+>Se sembra che al panorama risultante manchi una parte, puoi provare ad aggiungerla con per esempio Gimp. Gimp funziona molto bene se c'è abbastanza <quote
+>struttura</quote
+> da clonare, ma non c'è garanzia che otterrai dei risultati accettabili.</para
+></listitem>
+  <listitem
+><para
+>Salva l'immagine da qualche parte nella cartella delle immagini di &kphotoalbum; ed esegui <menuchoice
+><guimenu
+>Manutenzione</guimenu
+><guimenuitem
+>Scansiona di nuovo le immagini e i filmati</guimenuitem
+></menuchoice
+>. Questo dovrebbe far rilevare il nuovo panorama e includerlo nella galleria delle immagini. </para
+></listitem>
+  <listitem
+><para
+>Se hai impostato correttamente l'impilamento automatico delle nuove immagini e il nome del nuovo panorama corrisponde alle regole giuste, il panorama dovrebbe essere in cima alla pila. Altrimenti, ordina le immagini per data, in modo che il nuovo panorama sia presso le immagini sorgente, e impilale a mano (sembra che Autopano Pro scriva le informazioni EXIF della prima immagine del panorama).</para
+></listitem>
+  <listitem
+><para
+>A questo punto puoi ancora aggiungere delle etichette al panorama, o potresti includere tutte le immagini sorgente con <keycombo
+>&Ctrl;<keycap
+>2</keycap
+></keycombo
+>.</para
+></listitem>
+  </orderedlist>
+  </para>
+</sect1>
 </chapter>
 <!-- Keep this comment at the end of the file
 Local variables:

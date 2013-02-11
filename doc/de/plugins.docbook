@@ -8,7 +8,7 @@
 >Gwenview</application
 >. Dieses Modulsystem heißt <application
 >KIPI</application
-> und bedeutet &kde;Image Plugin Interface. Nähre Informationen hierzu finden Sie auf der <ulink url="http://extragear.kde.org/apps/kipi.php"
+> und bedeutet &kde; Image Plugin Interface (Schnittstelle für &kde;-Bildermodule). Nähre Informationen hierzu finden Sie auf der <ulink url="http://extragear.kde.org/apps/kipi.php"
 >Homepage von Kipi</ulink
 >.</para>
 
@@ -19,7 +19,7 @@
 
 <warning
 ><para
->Da die Module von mehreren Anwendungen untereinander gemeinsam verwendet werden, kann es sein, dass die Module mit &kphotoalbum; nur sehr wenig getestet wurden. Deswegen sollten Sie neue Module immer zuerst mit der Demo-Datenbank testen, bevor Sie diese auf Ihre eigenen Bilder anwenden<footnote
+>Da die Module von mehreren Anwendungen untereinander gemeinsam verwendet werden, kann es sein, dass einige davon mit &kphotoalbum; nur sehr wenig getestet wurden. Deswegen sollten Sie neue Module immer zuerst mit der Demo-Datenbank testen, bevor Sie diese auf Ihre eigenen Bilder anwenden<footnote
 ><para
 >Die &kphotoalbum; Demo-Datenbank können Sie entweder über die Befehlszeile mit dem Befehl <userinput
 ><command
@@ -41,27 +41,27 @@
 <para
 >Dabei simuliert &kphotoalbum; das <emphasis
 >aktuelle Album</emphasis
->, das einfach der aktuellen Ansicht entspricht, also alle Bilder, die Ihnen die Bildervorschau momentan anzeigt.</para>
+>, indem es einfach der aktuellen Ansicht entspricht, also alle Bilder enthält, die Ihnen die Bildervorschau momentan anzeigt.</para>
 
 <para
->Neben dem aktuellen Album muss &kphotoalbum; den Modulen auch noch eine Liste von Alben übergeben. Hierbei geht &kphotoalbum; wie folgt vor:</para>
+>Neben dem aktuellen Album muss &kphotoalbum; den Modulen auch noch eine Liste aller Alben übergeben. Hierbei geht &kphotoalbum; wie folgt vor:</para>
 
 <itemizedlist>
   <listitem
 ><para
->Wenn &kphotoalbum;s Browser den Inhalt einer Kategorie anzeigt, z.B. alle Personen, dann stellt jeder Eintrag dieser Kategorie ein Album für das Modul dar.</para
+>Wenn &kphotoalbum;s Browser den Inhalt einer Kategorie anzeigt, z. B. alle Personen, dann stellt jeder Eintrag dieser Kategorie ein Album für das Modul dar.</para
 ></listitem
 > 
   <listitem
 ><para
 >Oder es wird die Kategorie, die Sie im Einstellungsdialog als <guilabel
 >Kategorie für virtuelle Alben</guilabel
-> festgelegt haben, verwendet. Wenn Sie also beispielsweise die Kategorie Personen verwenden, wird &kphotoalbum; so tun, also ob Sie Personen zur Ansicht ausgewählt hätten und dem Modul  dies weitergeben.</para
+> festgelegt haben, verwendet. Wenn Sie also beispielsweise die Kategorie Personen verwenden, wird &kphotoalbum; so tun, also ob Sie Personen zur Ansicht ausgewählt hätten und dem Modul dies weitergeben.</para
 ></listitem>
 </itemizedlist>
 
 <para
->Da einige Module mit &kphotoalbum; nicht kompatibel sind können Sie diese aus der Liste der Module entfernen. Starten Sie dazu den Einstellungsdialog und wählen Sie im Bereich Module, welche Module geladen werden sollen.</para>
+>Einige Module können redundant zu Funktionen sein, die bereits in &kphotoalbum; eingebaut sind, weshalb Sie sie vielleicht aus dem Menü entfernen wollen. Starten Sie dazu den Einstellungsdialog und wählen Sie im Bereich Module, welche Module geladen werden sollen.</para>
   </chapter>
 
 

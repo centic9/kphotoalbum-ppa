@@ -44,7 +44,7 @@ ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
 
 ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
                                   const QString& label, const QString& description,
-				  const QString& fnPattern )
+                  const QString& fnPattern )
     : _date( date), _label( label ), _description( description ), _fnPattern( fnPattern ), _rating( -1 ), _megapixel( 0 ), ratingSearchMode( 0 ), _searchRAW( false ), _isNull( false ), _compiled( false )
 {
 }
@@ -132,26 +132,26 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
 
     //ok = ok && (_rating == -1 ) || ( _rating == info->rating() );
     if (_rating != -1) {
-	switch( ratingSearchMode ) {
-	    case 1:
-		// Image rating at least selected
-		ok = ok && ( _rating <= info->rating() );
-		break;
-	    case 2:
-		// Image rating less than selected
-		ok = ok && ( _rating >= info->rating() );
-		break;
-	    case 3:
-		// Image rating not equal
-		ok = ok && ( _rating != info->rating() );
-		break;
-	    default:
-	        ok = ok && ((_rating == -1 ) || ( _rating == info->rating() ));
-		break;
-	}
+    switch( ratingSearchMode ) {
+        case 1:
+        // Image rating at least selected
+        ok = ok && ( _rating <= info->rating() );
+        break;
+        case 2:
+        // Image rating less than selected
+        ok = ok && ( _rating >= info->rating() );
+        break;
+        case 3:
+        // Image rating not equal
+        ok = ok && ( _rating != info->rating() );
+        break;
+        default:
+            ok = ok && ((_rating == -1 ) || ( _rating == info->rating() ));
+        break;
     }
-	    
-    
+    }
+
+
     // -------------------------------------------------- Resolution
     if ( _megapixel )
         ok = ok && ( _megapixel * 1000000 <= info->size().width() * info->size().height() );
@@ -167,7 +167,7 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
 
     // -------------------------------------------------- File name pattern
     ok = ok && ( _fnPattern.isEmpty() ||
-	    _fnPattern.indexIn( info->fileName().relative() ) != -1 );
+        _fnPattern.indexIn( info->fileName().relative() ) != -1 );
 
     return ok;
 }
@@ -374,7 +374,7 @@ void ImageSearchInfo::compile() const
                 if ( negate )
                     exactMatcher = new DB::NegationCategoryMatcher( exactMatcher );
                 orMatcher->addElement( exactMatcher );
-            } 
+            }
             else
                 if ( andMatcher->_elements.count() == 1 )
                     orMatcher->addElement( andMatcher->_elements[0] );
@@ -451,21 +451,21 @@ QList<QList<SimpleCategoryMatcher*> > ImageSearchInfo::query() const
     return result;
 }
 
-Q3Dict<void> ImageSearchInfo::findAlreadyMatched( const QString &group ) const
+Utilities::StringSet ImageSearchInfo::findAlreadyMatched( const QString &group ) const
 {
-    Q3Dict<void> map;
+    Utilities::StringSet result;
     QString str = categoryMatchText( group );
     if ( str.contains( QString::fromLatin1( "|" ) ) ) {
-        return map;
+        return result;
     }
 
     QStringList list = str.split(QString::fromLatin1( "&" ), QString::SkipEmptyParts);
     for( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
         QString nm = (*it).trimmed();
         if (! nm.contains( QString::fromLatin1( "!" ) ) )
-            map.insert( nm, (void*) 0x1 /* something different from 0x0 */ );
+            result.insert(nm);
     }
-    return map;
+    return result;
 }
 
 void ImageSearchInfo::deleteMatchers() const

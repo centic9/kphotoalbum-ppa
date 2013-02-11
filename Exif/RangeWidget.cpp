@@ -18,20 +18,29 @@
 #include "RangeWidget.h"
 #include <qlabel.h>
 #include <KComboBox>
-#include <q3grid.h>
+#include <QGridLayout>
 
-Exif::RangeWidget::RangeWidget( const QString& text, const QString& searchTag, const ValueList& list, Q3Grid* parent )
-    : QObject( parent ),_searchTag ( searchTag ), _list( list )
+Exif::RangeWidget::RangeWidget( const QString& text, const QString& searchTag, const ValueList& list, QGridLayout* layout, int row )
+    : QObject( layout->widget() ),_searchTag ( searchTag ), _list( list )
 {
-	// widget layout: <title text> <from_value> "to" <to_value>
-	// register title text:
-    new QLabel( text, parent );
-	// register from-field:
-    _from = new KComboBox( parent );
-	// register filler between from- and to-field:
-    new QLabel( QString::fromLatin1( "to" ), parent );
-	// register to-field:
-    _to = new KComboBox( parent );
+    int col = 0;
+
+    // widget layout: <title text> <from_value> "to" <to_value>
+    // register title text:
+    QLabel* label = new QLabel( text );
+    layout->addWidget( label, row, col++);
+
+    // register from-field:
+    _from = new KComboBox;
+    layout->addWidget(_from, row, col++);
+
+    // register filler between from- and to-field:
+    label = new QLabel( QString::fromLatin1( "to" ) );
+    layout->addWidget(label, row, col++);
+
+    // register to-field:
+    _to = new KComboBox;
+    layout->addWidget(_to, row, col++);
 
     Q_ASSERT( list.count() > 2 );
     ValueList::ConstIterator it = list.begin();
@@ -87,3 +96,4 @@ Exif::SearchInfo::Range Exif::RangeWidget::range() const
 }
 
 #include "RangeWidget.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:
