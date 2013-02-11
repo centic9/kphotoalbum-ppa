@@ -580,8 +580,8 @@ void Viewer::ViewerWidget::showPrevN(int n)
 
     if ( _current > 0  )  {
         _current -= n;
-	if (_current < 0)
-	  _current = 0;
+    if (_current < 0)
+      _current = 0;
         _forward = false;
         load();
     }
@@ -1410,3 +1410,4 @@ void Viewer::ViewerWidget::invalidateThumbnail() const
 }
 
 #include "ViewerWidget.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

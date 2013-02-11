@@ -26,11 +26,11 @@
 #include <QLineEdit>
 #include <QLabel>
 #include <QWidget>
-#include <Q3VGroupBox>
 #include <QVBoxLayout>
 #include "DB/CategoryCollection.h"
 #include "SettingsData.h"
 #include "MainWindow/Window.h"
+#include <QGroupBox>
 
 Settings::GeneralPage::GeneralPage( QWidget* parent )
     : QWidget( parent )
@@ -226,3 +226,4 @@ void Settings::GeneralPage::showHistogramChanged( int state ) const
 {
     MainWindow::Window::theMainWindow()->setHistogramVisibilty( state == Qt::Checked );
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

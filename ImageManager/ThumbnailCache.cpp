@@ -25,11 +25,6 @@
 #include <QPixmap>
 #include <QFile>
 
-/* If we're not using GNU C, elide __attribute__ */
-#ifndef __GNUC__
-#  define  __attribute__(x)  /*NOTHING*/
-#endif
-
 // We split the thumbnails into chunks to avoid a huge file changing over and over again, with a bad hit for backups
 const int MAXFILESIZE=32*1024*1024;
 const int FILEVERSION=4;
@@ -52,32 +47,30 @@ void ImageManager::ThumbnailCache::insert( const DB::FileName& name, const QImag
 {
     QFile file( fileNameForIndex(m_currentFile) );
     if ( ! file.open(QIODevice::ReadWrite ) )
-	{
-		qWarning("Failed to open thumbnail file for inserting");
-		return;
-	}
+    {
+        qWarning("Failed to open thumbnail file for inserting");
+        return;
+    }
     if ( ! file.seek( m_currentOffset ) )
-	{
-		qWarning("Failed to seek in thumbnail file");
-		return;
-	}
+    {
+        qWarning("Failed to seek in thumbnail file");
+        return;
+    }
 
     QByteArray data;
     QBuffer buffer( &data );
-	// suppress compiler warnings when OK is not used:
-    bool OK __attribute__((unused));
-	OK = buffer.open( QIODevice::WriteOnly );
-    Q_ASSERT( OK );
+    bool OK = buffer.open( QIODevice::WriteOnly );
+    Q_ASSERT(OK); Q_UNUSED(OK);
 
     OK = image.save( &buffer, "JPG" );
     Q_ASSERT( OK );
 
     const int size = data.size();
     if ( ! ( file.write( data.data(), size ) == size && file.flush() ) )
-	{
-		qWarning("Failed to write image data to thumbnail file");
-		return;
-	}
+    {
+        qWarning("Failed to write image data to thumbnail file");
+        return;
+    }
     file.close();
 
     m_map.insert( name, CacheFileInfo( m_currentFile, m_currentOffset, size ) );
@@ -106,17 +99,17 @@ QPixmap ImageManager::ThumbnailCache::lookup( const DB::FileName& name ) const
 
     QFile file( fileNameForIndex( info.fileIndex ) );
     if ( !file.open( QIODevice::ReadOnly ) )
-	{
-		qWarning("Failed to open thumbnail file");
-		return QPixmap();
-	}
+    {
+        qWarning("Failed to open thumbnail file");
+        return QPixmap();
+    }
 
     const char* data = (const char*) file.map( info.offset, info.size );
-	if ( !data || QFile::NoError != file.error() )
-	{
-		qWarning("Failed to map thumbnail file");
-		return QPixmap();
-	}
+    if ( !data || QFile::NoError != file.error() )
+    {
+        qWarning("Failed to map thumbnail file");
+        return QPixmap();
+    }
     QByteArray array( data, info.size );
     QBuffer buffer( &array );
     buffer.open( QIODevice::ReadOnly );
@@ -226,3 +219,4 @@ void ImageManager::ThumbnailCache::removeThumbnail( const DB::FileName& fileName
     m_map.remove( fileName );
     save();
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -35,6 +35,7 @@ public:
     StatusBar();
     DirtyIndicator* _dirtyIndicator;
     ImageCounter* _partial;
+    ImageCounter* _selected;
     BreadcrumbViewer* _pathIndicator;
 
     void setLocked( bool locked );
@@ -64,3 +65,4 @@ private:
 
 #endif /* STATUSBAR_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

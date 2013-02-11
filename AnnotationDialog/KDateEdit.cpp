@@ -36,8 +36,6 @@
 #include <qevent.h>
 #include <qlineedit.h>
 #include <qapplication.h>
-#include <q3listbox.h>
-#include <Q3Frame>
 #include <QMouseEvent>
 #include <QKeyEvent>
 
@@ -49,7 +47,7 @@
 #include <kdebug.h>
 
 #include "KDateEdit.moc"
-
+#include <QVBoxLayout>
 
 AnnotationDialog::KDateEdit::KDateEdit( bool isStartEdit, QWidget *parent )
     : KComboBox( parent ),
@@ -67,13 +65,16 @@ AnnotationDialog::KDateEdit::KDateEdit( bool isStartEdit, QWidget *parent )
     setItemText( 0, QString::fromLatin1( "" ));
     setMinimumSize(sizeHint());
 
-    mDateFrame = new Q3VBox(0,0,Qt::WType_Popup);
-    mDateFrame->setFrameStyle(Q3Frame::PopupPanel | Q3Frame::Raised);
+    mDateFrame = new QFrame;
+    mDateFrame->setWindowFlags(Qt::Popup);
+    QVBoxLayout* layout = new QVBoxLayout(mDateFrame);
+    mDateFrame->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     mDateFrame->setLineWidth(3);
     mDateFrame->hide();
     mDateFrame->installEventFilter(this);
 
     mDatePicker = new KDatePicker(value, mDateFrame);
+    layout->addWidget(mDatePicker);
 
     connect(lineEdit(),SIGNAL(editingFinished()),SLOT(lineEnterPressed()));
     connect(this,SIGNAL(textChanged(const QString &)),
@@ -311,13 +312,13 @@ bool AnnotationDialog::KDateEdit::eventFilter(QObject *obj, QEvent *e)
         if (e->type() == QEvent::Wheel) {
             // Up and down arrow keys step the date
             QWheelEvent* we = dynamic_cast<QWheelEvent*>(e);
-			Q_ASSERT( we != NULL );
+            Q_ASSERT( we != NULL );
 
-			int step = 0;
-			step = we->delta() > 0 ? 1 : -1;
-			if (we->orientation() == Qt::Vertical) {
-				setDate( value.addDays(step) );
-			}
+            int step = 0;
+            step = we->delta() > 0 ? 1 : -1;
+            if (we->orientation() == Qt::Vertical) {
+                setDate( value.addDays(step) );
+            }
         }
     }
     else {
@@ -357,3 +358,4 @@ void AnnotationDialog::KDateEdit::slotTextChanged(const QString &)
 {
     mTextChanged = true;
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

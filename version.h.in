@@ -15,24 +15,12 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#include "DragObject.h"
-const char* CategoryListView::DragObject::format( int i ) const
-{
-    if ( i == 0 )
-        return "x-kphotoalbum/x-category-drag";
-    else
-        return 0;
-}
 
-QByteArray CategoryListView::DragObject::encodedData( const char* ) const
-{
-    QByteArray res;
-    QDataStream stream( &res, QIODevice::WriteOnly );
-    stream << _items;
-    return res;
-}
+#ifndef KPA_VERSION_H
+#define KPA_VERSION_H
 
-CategoryListView::DragObject::DragObject( const CategoryListView::DragItemInfoSet& items, QWidget* dragSource )
-    :Q3DragObject( dragSource ), _items( items )
-{
-}
+#define KPA_VERSION "@KPA_VERSION@"
+
+#endif /* KPA_VERSION_H */
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

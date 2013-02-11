@@ -149,6 +149,7 @@ public:
 
     void copyExtraData( const ImageInfo& from, bool copyAngle = true);
     void removeExtraData();
+    void merge(const ImageInfo& other);
 
 protected:
     /** Save changes to database.
@@ -199,3 +200,4 @@ private:
 
 #endif /* IMAGEINFO_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

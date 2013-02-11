@@ -40,7 +40,6 @@ public:
 
 protected slots:
     void deleteImages();
-    void slotKIOJobCompleted( KJob* );
 
 private:
     DB::FileNameList _list;
@@ -56,3 +55,4 @@ private:
 
 #endif /* DELETEDIALOG_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-
 #include "ImageDisplay.h"
 #include <qpainter.h>
 #include <QPaintEvent>
@@ -74,7 +73,6 @@ Viewer::ImageDisplay::ImageDisplay( QWidget* parent)
     _cursorHiding(true)
 {
     _viewHandler = new ViewHandler( this );
-    _cache.setAutoDelete( true );
 
     setMouseTracking( true );
     _cursorTimer = new QTimer( this );
@@ -89,7 +87,7 @@ Viewer::ImageDisplay::ImageDisplay( QWidget* parent)
  */
 void Viewer::ImageDisplay::hideCursor() {
     if (_cursorHiding)
-        setCursor( Qt::blankCursor );
+        setCursor( Qt::BlankCursor );
 }
 
 /**
@@ -172,12 +170,12 @@ bool Viewer::ImageDisplay::setImage( DB::ImageInfoPtr info, bool forward )
         ++_curIndex;
     }
 
-    ViewPreloadInfo* found = _cache[_curIndex];
-    if ( found && found->angle == info->angle() ) {
-        _loadedImage = found->img;
-        updateZoomPoints( Settings::SettingsData::instance()->viewerStandardSize(), found->img.size() );
+    if ( _cache.contains(_curIndex) && _cache[_curIndex].angle == info->angle()) {
+        const ViewPreloadInfo& found = _cache[_curIndex];
+        _loadedImage = found.img;
+        updateZoomPoints( Settings::SettingsData::instance()->viewerStandardSize(), found.img.size() );
         cropAndScale();
-        info->setSize( found->size );
+        info->setSize( found.size );
         emit imageReady();
     }
     else {
@@ -193,7 +191,7 @@ bool Viewer::ImageDisplay::setImage( DB::ImageInfoPtr info, bool forward )
 void Viewer::ImageDisplay::resizeEvent( QResizeEvent* event )
 {
     ImageManager::AsyncLoader::instance()->stop( this, ImageManager::StopOnlyNonPriorityLoads );
-    _cache.fill(0); // Clear the cache
+    _cache.clear();
     if ( _info ) {
         cropAndScale();
         if ( event->size().width() > 1.5*this->_loadedImage.size().width() || event->size().height() > 1.5*this->_loadedImage.size().height() )
@@ -548,10 +546,8 @@ void Viewer::ImageDisplay::pixmapLoaded( const DB::FileName& fileName, const QSi
         if ( imgSize != size() )
             return; // Might be an old preload version, or a loaded version that never made it in time
 
-        ViewPreloadInfo* info = new ViewPreloadInfo( img, fullSize, angle );
-        bool ok = _cache.insert( indexOf(fileName), info );
-        if ( !ok )
-            delete info;
+        ViewPreloadInfo info( img, fullSize, angle );
+        _cache.insert( indexOf(fileName), info );
         updatePreload();
     }
     unbusy();
@@ -561,12 +557,12 @@ void Viewer::ImageDisplay::pixmapLoaded( const DB::FileName& fileName, const QSi
 void Viewer::ImageDisplay::setImageList( const DB::FileNameList& list )
 {
     _imageList = list;
-    _cache.fill( 0, list.count() );
+    _cache.clear();
 }
 
 void Viewer::ImageDisplay::updatePreload()
 {
-    uint cacheSize = ( Settings::SettingsData::instance()->viewerCacheSize() * 1024 * 1024 ) / (width()*height()*4);
+    const int cacheSize = ( Settings::SettingsData::instance()->viewerCacheSize() * 1024 * 1024 ) / (width()*height()*4);
     bool cacheFull = (_cache.count() > cacheSize);
 
     int incr = ( _forward ? 1 : -1 );
@@ -582,7 +578,7 @@ void Viewer::ImageDisplay::updatePreload()
             return;
         }
 
-        if ( _cache[i] ) {
+        if ( _cache.contains(i) ) {
             nextOnesInCache++;
             if ( nextOnesInCache >= ceil(cacheSize/2.0) && cacheFull ) {
                 // Ok enough images in cache
@@ -599,7 +595,7 @@ void Viewer::ImageDisplay::updatePreload()
                 for ( int j = ( _forward ? 0 : _imageList.count() -1 );
                       j != _curIndex;
                       j += ( _forward ? 1 : -1 ) ) {
-                    if ( _cache[j] ) {
+                    if ( _cache.contains(j) ) {
                         _cache.remove(j);
                         return;
                     }
@@ -609,7 +605,7 @@ void Viewer::ImageDisplay::updatePreload()
                 for ( int j = ( _forward ? _imageList.count() -1 : 0 );
                       j != _curIndex;
                       j += ( _forward ? -1 : 1 ) ) {
-                    if ( _cache[j] ) {
+                    if ( _cache.contains(j) ) {
                         _cache.remove(j);
                         return;
                     }
@@ -729,3 +725,4 @@ void Viewer::ImageDisplay::hideEvent(QHideEvent *)
 }
 
 #include "ImageDisplay.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

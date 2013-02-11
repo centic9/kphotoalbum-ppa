@@ -163,3 +163,14 @@ ThumbnailView::ThumbnailFacade* ThumbnailView::ThumbnailFacade::instance()
     Q_ASSERT( _instance );
     return _instance;
 }
+
+void ThumbnailView::ThumbnailFacade::slotRecreateThumbnail()
+{
+    Q_FOREACH( const DB::FileName& fileName, widget()->selection( NoExpandCollapsedStacks )) {
+        ImageManager::ThumbnailCache::instance()->removeThumbnail( fileName );
+        BackgroundJobs::HandleVideoThumbnailRequestJob::removeFullScaleFrame(fileName);
+        _model->updateCell(fileName);
+    }
+}
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

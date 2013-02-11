@@ -21,7 +21,6 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qtimer.h>
-#include <Q3Frame>
 
 #include <klocale.h>
 
@@ -89,3 +88,4 @@ void Viewer::SpeedDisplay::setAlphaChannel(int alpha)
 }
 
 #include "SpeedDisplay.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

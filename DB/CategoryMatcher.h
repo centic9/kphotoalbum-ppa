@@ -43,6 +43,7 @@ using Utilities::StringSet;
 class CategoryMatcher
 {
 public:
+    CategoryMatcher();
     virtual ~CategoryMatcher() {}
     virtual void debug( int level ) const = 0;
 
@@ -59,3 +60,4 @@ protected:
 
 #endif /* CATEGORYMATCHER_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

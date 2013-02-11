@@ -112,13 +112,12 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
         // Do not add -1 x -1 text
         if (imageSize.width() >= 0 && imageSize.height() >= 0) {
             const double megapix = imageSize.width() * imageSize.height() / 1000000.0;
-            QString info =
-                QString::number(imageSize.width()) + i18n("x") +
-                QString::number(imageSize.height());
+            QString info = i18nc("width x height","%1x%2")
+                .arg(QString::number(imageSize.width()))
+                .arg(QString::number(imageSize.height()));
             if (megapix > 0.05) {
-                info +=
-                    QString::fromLatin1(" (") + QString::number(megapix, 'f', 1) +
-                    i18nc("Short for Mega Pixels", "MP") + QString::fromLatin1(")");
+                info += i18nc("short for: x megapixels"," (%1MP)")
+                    .arg(QString::number(megapix, 'f', 1));
             }
             AddNonEmptyInfo(i18n("<b>Image Size: </b> "), info, &result);
         }
@@ -353,7 +352,7 @@ bool Utilities::makeSymbolicLink( const QString& from, const QString& to )
 
 bool Utilities::canReadImage( const DB::FileName& fileName )
 {
-	bool fastMode = !Settings::SettingsData::instance()->ignoreFileExtension();
+    bool fastMode = !Settings::SettingsData::instance()->ignoreFileExtension();
     return ! KImageIO::typeForMime( KMimeType::findByPath( fileName.absolute(), 0, fastMode )->name() ).isEmpty() ||
         ImageManager::ImageDecoder::mightDecode( fileName );
     // KMimeType::findByPath() never returns null pointer
@@ -689,5 +688,6 @@ void Utilities::saveImage( const DB::FileName& fileName, const QImage& image, co
     const QFileInfo info(fileName.absolute());
     QDir().mkpath(info.path());
     const bool ok = image.save(fileName.absolute(),format);
-    Q_ASSERT(ok);
+    Q_ASSERT(ok); Q_UNUSED(ok);
 }
+// vi:expandtab:tabstop=4 shiftwidth=4:

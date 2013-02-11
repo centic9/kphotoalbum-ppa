@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2012 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,34 +15,25 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef CATEGORYLISTVIEW_DRAGABLELISTVIEW_H
-#define CATEGORYLISTVIEW_DRAGABLELISTVIEW_H
 
-#include <q3listview.h>
-#include "DB/CategoryPtr.h"
+#ifndef ELEMENTWRITER_H
+#define ELEMENTWRITER_H
 
-namespace CategoryListView
+class QXmlStreamWriter;
+#include <QString>
+
+class ElementWriter
 {
-class DragableListView :public Q3ListView
-{
-    Q_OBJECT
-
 public:
-    DragableListView( const DB::CategoryPtr& category, QWidget* parent, const char* name = 0 );
-    DB::CategoryPtr category() const;
-    void emitItemsChanged();
-
-signals:
-    void itemsChanged();
-
-protected:
-    virtual Q3DragObject* dragObject();
+    ElementWriter(QXmlStreamWriter& writer, const QString& elementName, bool writeAtOnce = true );
+    void writeStartElement();
+    ~ElementWriter();
 
 private:
-    const DB::CategoryPtr _category;
+    QXmlStreamWriter& m_writer;
+    QString m_elementName;
+    bool m_haveWrittenStartTag;
 };
 
-}
-
-#endif /* CATEGORYLISTVIEW_DRAGABLELISTVIEW_H */
-
+#endif // ELEMENTWRITER_H
+// vi:expandtab:tabstop=4 shiftwidth=4:

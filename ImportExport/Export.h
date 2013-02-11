@@ -30,7 +30,7 @@ class QRadioButton;
 class QSpinBox;
 class QCheckBox;
 class KZip;
-class Q3ProgressDialog;
+class QProgressDialog;
 
 namespace ImportExport
 {
@@ -62,7 +62,7 @@ private:
     bool* _ok;
     int _filesRemaining;
     int _steps;
-    Q3ProgressDialog* _progressDialog;
+    QProgressDialog* _progressDialog;
     KZip* _zip;
     int _maxSize;
     QString _subdir;
@@ -99,3 +99,4 @@ private:
 
 #endif /* IMPORTEXPORT_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

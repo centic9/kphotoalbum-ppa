@@ -20,9 +20,9 @@
 
 #include "enums.h"
 #include <KLineEdit>
-class Q3ListViewItem;
-class Q3ListView;
 class QKeyEvent;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 namespace AnnotationDialog
 {
@@ -32,21 +32,21 @@ class CompletableLineEdit :public KLineEdit {
 
 public:
     CompletableLineEdit( ListSelect* parent );
-    void setListView( Q3ListView* );
+    void setListView( QTreeWidget* );
     void setMode( UsageMode mode );
 
 protected:
     virtual void keyPressEvent( QKeyEvent* ev );
-    Q3ListViewItem* findItemInListView( const QString& startWith );
+    QTreeWidgetItem* findItemInListView( const QString& startWith );
     bool isSpecialKey( QKeyEvent* );
     void handleSpecialKeysInSearch( QKeyEvent* );
-    bool itemMatchesText( Q3ListViewItem* item, const QString& text );
+    bool itemMatchesText( QTreeWidgetItem* item, const QString& text );
     void selectPrevNextMatch( bool next );
-    void selectItemAndUpdateLineEdit( Q3ListViewItem* item, int itemStart, const QString& inputText );
+    void selectItemAndUpdateLineEdit( QTreeWidgetItem* item, int itemStart, const QString& inputText );
     void mergePreviousImageSelection();
 
 private:
-    Q3ListView* _listView;
+    QTreeWidget* _listView;
     UsageMode _mode;
     ListSelect* _listSelect;
     bool _showingSelectionOnly;
@@ -56,3 +56,4 @@ private:
 
 #endif /* ANNOTATIONDIALOG_COMPLETABLELINEEDIT_H */
 
+// vi:expandtab:tabstop=4 shiftwidth=4:

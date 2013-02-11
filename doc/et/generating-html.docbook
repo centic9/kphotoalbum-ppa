@@ -1,17 +1,17 @@
   <chapter id="chp-generating-html">
     <title
->HTML-i genereerimine</title>
+>&HTML;-i genereerimine</title>
     <para
->&kphotoalbum; võimaldab kahel moel luua piltide andmebaasist HTML-lehekülje. Üks neist on teostatud otse &kphotoalbum;is, teist saab kasutada pluginana (vaata <xref linkend="chp-plugins"/>). Käesolevas osas kirjeldatakse sisseehitatud versiooni, mida saab tarvitada menüükäsuga <menuchoice
+>&kphotoalbum; võimaldab kahel moel luua piltide andmebaasist &HTML;-lehekülje. Üks neist on teostatud otse &kphotoalbum;is, teist saab kasutada pluginana (vaata <xref linkend="chp-plugins"/>). Käesolevas osas kirjeldatakse sisseehitatud versiooni, mida saab tarvitada menüükäsuga <menuchoice
 ><guimenu
 >Fail</guimenu
 ><guimenuitem
->Tekita HTML</guimenuitem
+>Tekita &HTML;</guimenuitem
 ></menuchoice
 >.</para>
     
     <para
->Enne HTML-lehekülje loomist tuleb täpsustada mõningat infot, milleks on olemas kolm kaarti nimetustega <guilabel
+>Enne &HTML;-lehekülje loomist tuleb täpsustada mõningat infot, milleks on olemas kolm kaarti nimetustega <guilabel
 >Sisu</guilabel
 >, <guilabel
 >Paigutus</guilabel
@@ -25,18 +25,26 @@
 >Sisu</guilabel
 ></title>
       <para
->Sisukaardil saab määrata, millist infot HTML-leheküljel esitada.</para>
+>Sisukaardil saab määrata, millist infot &HTML;-leheküljel esitada.</para>
+
+	<figure id="html-content">
+	<title
+>HTML-i genereerija sisu seadistused</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-content.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
->Kõigepealt tuleb määrata loodava lehekülje üldpealkiri ja kirjeldus. Vaata selle kohta näidet <ulink url="http://www.kphotoalbum.org/rounded-theme/index.html"
->&kphotoalbum;i näidis-HTML-lehekülgedel</ulink
->.</para>
+>Kõigepealt tuleb määrata loodava lehekülje üldpealkiri ja kirjeldus. Kui valitud teema toetab autoriõiguse märke näitamist, saab ka selle siin määrata. </para>
 
       <para
->Seejärel tuleb määrata, kas luua &kphotoalbum;i ekspordifail ja panna see leheküljele. Täpsemalt räägib ekspordifailidest <xref linkend="chp-importExport"/>.</para>
+>Seejärel tuleb määrata, kas luua &kphotoalbum;i ekspordifail ja panna see leheküljele. Täpsemalt räägib ekspordifailidest <xref linkend="chp-importExport"/>. Soovi korral saab lisada ka filme nii leheküljel näidatavate kui ka allalaaditavate objektidena.</para>
 
       <para
->Lõpuks tuleb määrata, millist infot HTML-lehekülgedel genereerida. Sel moel on võimalik ära jätta lehekülgede vaatajale niigi teada info (kui näiteks pildid on mõnelt peolt, kus kõik vaatajad osalesid). Pane tähele, et &kphotoalbum; ei võimalda veel ekspordifailist välja jätta teatud kategooriaid, seepärast ära kasuta seda sellise info kindla väljajätmise viisina, mida sa ei soovi oma lehekülgede vaatajatel näha lasta.</para>
+>Lõpuks tuleb määrata, millist infot &HTML;-lehekülgedel genereerida. Sel moel on võimalik ära jätta lehekülgede vaatajale niigi teada info (kui näiteks pildid on mõnelt peolt, kus kõik vaatajad osalesid). Pane tähele, et &kphotoalbum; ei võimalda veel ekspordifailist välja jätta teatud kategooriaid, seepärast ära kasuta seda sellise info kindla väljajätmise viisina, mida sa ei soovi oma lehekülgede vaatajatel näha lasta.</para>
     </sect1>
 
     <sect1 id="the_layout_page">
@@ -45,7 +53,17 @@
 >Paigutus</guilabel
 ></title>
       <para
->Paigutusekaardil saab määrata, milline HTML-lehekülg välja näeb. Enamik siinseid võimalusi on enesestmõistetavad ega vaja lähemat kirjeldust.</para>
+>Paigutusekaardil saab määrata, milline &HTML;-lehekülg välja näeb. Enamik siinseid võimalusi on enesestmõistetavad ega vaja lähemat kirjeldust. Teema valimisel näidatakse lühikest sissejuhatust, mis annab aimu, kuidas kõik lõpuks hakkab välja nägema.</para>
+
+	<figure id="html-layout">
+	<title
+>HTML-i genereerija paigutuse seadistused</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-layout.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
 >Kaardi allosas on võimalik määrata mitu piltide resolutsiooni. Sel moel ei pea lehekülje vaataja ilmtingimata laadima näiteks 1600x1200 resolutsiooniga pilti, samal ajal kui tema monitor ei võimaldagi paremat kui näiteks 800x600.</para>
@@ -65,8 +83,18 @@
       <para
 >Üldreegel on määrata baaskataloog kõigile loodavatele piltidele ning iga lehekülje jaoks eraldi alamkataloog.</para>
 
+	<figure id="html-destination">
+	<title
+>HTML-i genereerija sihtkoha seadistused</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-destination.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
+
       <para
->Kõigepealt tuleb määrata kõigi piltide baaskataloog. Seda arvestatakse kogu seansi ajal ning see määrab lõppkokkuvõttes koha, kus üldse kõik pildid asuvad. Siin võib anda nii kataloogi kui ka mis tahes KDE toetatud <ulink url="help:/kioslave/index.html"
+>Kõigepealt tuleb määrata kõigi piltide baaskataloog. Seda arvestatakse kogu seansi ajal ning see määrab lõppkokkuvõttes koha, kus üldse kõik pildid asuvad. Siin võib anda nii kataloogi kui ka mis tahes &kde; toetatud <ulink url="help:/kioslave/index.html"
 >protokolli</ulink
 >. Mõned näited: <itemizedlist>
           <listitem
@@ -87,10 +115,10 @@
       <para
 >Kui oled piltide genereerimise lõpetanud, võiks ka kontrollida, kas lehekülg on ikka kasutatav. Kui määrasid tekstikastis <guilabel
 >Baas-URL</guilabel
-> mingi URL-i, avatakse kohe pärast HTML-lehekülgede tekitamist veebilehitseja. Sinu määratud URL peab ühtima varemmääratud kataloogiga. Siis saab veebilehitseja alustada antud URL-i alamkataloogide esitamist.</para>
+> mingi URL-i, avatakse kohe pärast &HTML;-lehekülgede tekitamist veebilehitseja. Sinu määratud URL peab ühtima varemmääratud kataloogiga. Siis saab veebilehitseja alustada antud URL-i alamkataloogide esitamist.</para>
       
       <para
->Kui oled HTML-leheküljed tekitanud, ei pruugi nad veel tegelikult oma sihtkohas päral olla ja sul võib olla tarvidus kasutada mõningaid &kphotoalbum;i raamest väljuvaid spetsiaalseid üleslaadimisviise. Importimisvõimaluse jaoks (vaata <xref linkend="chp-importExport"/>) tuleb määrata lehekülgede lõplik asukoht.</para>
+>Kui oled &HTML;-leheküljed tekitanud, ei pruugi nad veel tegelikult oma sihtkohas päral olla ja sul võib olla tarvidus kasutada mõningaid &kphotoalbum;i raamest väljuvaid spetsiaalseid üleslaadimisviise. Importimisvõimaluse jaoks (vaata <xref linkend="chp-importExport"/>) tuleb määrata lehekülgede lõplik asukoht.</para>
 
       <para
 >Kolm eespool kirjeldatud tekstikasti on mõeldud baaskataloogide ja baas-URL-ide tarbeks. Neis asukohtades luuakse uus alamkataloog, mille nime saab määrata väljal <guilabel

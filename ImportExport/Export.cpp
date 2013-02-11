@@ -20,9 +20,8 @@
 #include <kfiledialog.h>
 #include <kzip.h>
 #include <qfileinfo.h>
-#include <Q3CString>
 #include "Utilities/Util.h"
-#include <q3progressdialog.h>
+#include <QProgressDialog>
 #include <klocale.h>
 #include <time.h>
 #include "ImageManager/AsyncLoader.h"
@@ -209,8 +208,11 @@ Export::Export(
       total += list.size();
 
     _steps = 0;
-    _progressDialog = new Q3ProgressDialog( QString(), i18n("&Cancel"), total, 0, "progress dialog", true );
-    _progressDialog->setProgress( 0 );
+    _progressDialog = new QProgressDialog;
+    _progressDialog->setCancelButtonText(i18n("&Cancel"));
+    _progressDialog->setMaximum(total);
+
+    _progressDialog->setValue(0);
     _progressDialog->show();
 
     // Copy image files and generate thumbnails
@@ -227,13 +229,13 @@ Export::Export(
     if ( _ok ) {
         // Create the index.xml file
         _progressDialog->setLabelText(i18n("Creating index file"));
-        Q3CString indexml = XMLHandler().createIndexXML( list, baseUrl, _location, &_filenameMapper );
+        QByteArray indexml = XMLHandler().createIndexXML( list, baseUrl, _location, &_filenameMapper );
         time_t t;
         time(&t);
         _zip->writeFile( QString::fromLatin1( "index.xml" ), QString(), QString(), indexml.data(), indexml.size()-1 );
 
        _steps++;
-       _progressDialog->setProgress( _steps );
+       _progressDialog->setValue( _steps );
         _zip->close();
     }
 }
@@ -284,7 +286,7 @@ void Export::copyImages(const DB::FileNameList& list)
                 Utilities::makeSymbolicLink( file, _destdir + QString::fromLatin1( "/" ) + zippedName );
 
             _steps++;
-            _progressDialog->setProgress( _steps );
+            _progressDialog->setValue( _steps );
         }
         else {
             _filesRemaining++;
@@ -349,7 +351,7 @@ void Export::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/, 
 
     _steps++;
     _filesRemaining--;
-    _progressDialog->setProgress( _steps );
+    _progressDialog->setValue( _steps );
 
 
         if ( _filesRemaining == 0 && _loopEntered )
@@ -375,3 +377,4 @@ void Export::showUsageDialog()
 
 
 #include "Export.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,4 +1,10 @@
+cmake_minimum_required( VERSION 2.6.2 FATAL_ERROR )
 project(kphotoalbum)
+
+# provide drop-down menu for build-type in cmake-gui:
+if( NOT ${CMAKE_VERSION} VERSION_LESS "2.8.0" )
+	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";Debug;Release;RelWithDebInfo;MinSizeRel")
+endif()
 
 find_package(KDE4 REQUIRED)
 include( KDE4Defaults)
@@ -11,8 +17,6 @@ set(INSTALL_TARGETS_DEFAULT_ARGS RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
 ADD_DEFINITIONS(${QT_DEFINITIONS} 
                 ${KDE4_DEFINITIONS}
                 ${KDE4_ENABLE_EXCEPTIONS}
-                -DQT3_SUPPORT
-                -DQT3_SUPPORT_WARNINGS
                 -DOVERRIDE=
                 -DKDAB_NYI=qWarning
                 -DQT_NO_CAST_FROM_ASCII
@@ -56,6 +60,10 @@ if(MARBLE_FOUND)
     INCLUDE_DIRECTORIES(${MARBLE_INCLUDE_DIR})
 endif(MARBLE_FOUND)
 
+add_custom_target( UpdateVersion ALL
+	COMMAND ${CMAKE_COMMAND} -DBASE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/UpdateVersion.cmake"
+	COMMENT "Updating version header."
+	)
 
 macro_optional_find_package(Nepomuk)
 macro_bool_to_01(NEPOMUK_FOUND HAVE_NEPOMUK)
@@ -87,7 +95,9 @@ set(libxmldb_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XMLImageDateCollection.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/NumberedBackup.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileReader.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileWriter.cpp)
+        ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileWriter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/ElementWriter.cpp
+)
 
 set(libThumbnailView_SRCS 
   ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailRequest.cpp  
@@ -137,8 +147,7 @@ set(libViewer_SRCS
         )
 
 set(libCategoryListView_SRCS 
-	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragableListView.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragObject.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragableTreeWidget.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/CheckDropItem.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragItemInfo.cpp )
 
@@ -146,6 +155,7 @@ set(libHTMLGenerator_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/HTMLDialog.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/Generator.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/Setup.cpp)
+
 set(libUtilities_SRCS 
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ShowBusyCursor.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/List.cpp
@@ -155,6 +165,8 @@ set(libUtilities_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Set.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DeleteFiles.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ToolTip.cpp
     )
 
 set(libMainWindow_SRCS
@@ -176,6 +188,9 @@ set(libMainWindow_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/BreadcrumbViewer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/StatusBar.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/UpdateVideoThumbnail.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMerger.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMatch.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/MergeToolTip.cpp
     )
 
 set(libImageManager_SRCS 
@@ -275,8 +290,9 @@ set(libexif_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/Info.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/RangeWidget.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp 
-	${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp )
-
+        ${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Grid.cpp
+)
 set(libBackgroundTaskManager_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobInterface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobManager.cpp
@@ -348,7 +364,7 @@ kde4_add_library(Utilities STATIC ${libUtilities_SRCS})
 target_link_libraries(kphotoalbum Utilities)
 
 # External components
-target_link_libraries(kphotoalbum  ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KIO_LIBS} ${JPEG_LIBRARY} kmediaplayer ${KDE4_PHONON_LIBS})
+target_link_libraries(kphotoalbum ${KDE4_KIO_LIBS} ${JPEG_LIBRARY} kmediaplayer ${KDE4_PHONON_LIBS})
 
 if(KIPI_FOUND)
   target_link_libraries(kphotoalbum ${KIPI_LIBRARIES})
