@@ -11,10 +11,10 @@ Forwarded: not-needed
 Reviewed-By: Scott Kitterman <scott@kitterman.com>
 Last-Update: <2012-12-09>
 
-Index: kphotoalbum-4.3/Settings/PluginsPage.cpp
+Index: git/Settings/PluginsPage.cpp
 ===================================================================
---- kphotoalbum-4.3.orig/Settings/PluginsPage.cpp	2012-12-10 00:37:47.000000000 -0500
-+++ kphotoalbum-4.3/Settings/PluginsPage.cpp	2012-12-10 00:37:47.000000000 -0500
+--- git.orig/Settings/PluginsPage.cpp	2013-01-30 18:27:13.000000000 +0100
++++ git/Settings/PluginsPage.cpp	2013-01-30 18:27:21.000000000 +0100
 @@ -22,6 +22,10 @@
  #include <MainWindow/Window.h>
  #include <config-kpa-kipi.h>
@@ -26,10 +26,10 @@ Index: kphotoalbum-4.3/Settings/PluginsPage.cpp
  #  include <libkipi/pluginloader.h>
  #endif
  
-Index: kphotoalbum-4.3/MainWindow/Window.cpp
+Index: git/MainWindow/Window.cpp
 ===================================================================
---- kphotoalbum-4.3.orig/MainWindow/Window.cpp	2012-12-10 00:37:47.000000000 -0500
-+++ kphotoalbum-4.3/MainWindow/Window.cpp	2012-12-10 00:37:47.000000000 -0500
+--- git.orig/MainWindow/Window.cpp	2013-01-30 18:27:13.000000000 +0100
++++ git/MainWindow/Window.cpp	2013-01-30 18:27:21.000000000 +0100
 @@ -1394,11 +1394,19 @@
  
      QStringList ignores;
@@ -56,10 +56,10 @@ Index: kphotoalbum-4.3/MainWindow/Window.cpp
  
  #include "Window.moc"
 +// vi:expandtab:tabstop=4 shiftwidth=4:
-Index: kphotoalbum-4.3/MainWindow/Window.h
+Index: git/MainWindow/Window.h
 ===================================================================
---- kphotoalbum-4.3.orig/MainWindow/Window.h	2012-12-10 00:37:47.000000000 -0500
-+++ kphotoalbum-4.3/MainWindow/Window.h	2012-12-10 00:37:47.000000000 -0500
+--- git.orig/MainWindow/Window.h	2013-01-30 18:27:13.000000000 +0100
++++ git/MainWindow/Window.h	2013-01-30 18:27:21.000000000 +0100
 @@ -41,6 +41,7 @@
  #include <QPointer>
  #include <config-kpa-kipi.h>
@@ -68,10 +68,10 @@ Index: kphotoalbum-4.3/MainWindow/Window.h
  #  include <libkipi/pluginloader.h>
  #endif
  #include "DB/FileNameList.h"
-Index: kphotoalbum-4.3/Plugins/ImageInfo.h
+Index: git/Plugins/ImageInfo.h
 ===================================================================
---- kphotoalbum-4.3.orig/Plugins/ImageInfo.h	2012-12-10 00:37:47.000000000 -0500
-+++ kphotoalbum-4.3/Plugins/ImageInfo.h	2012-12-10 00:37:47.000000000 -0500
+--- git.orig/Plugins/ImageInfo.h	2013-01-30 18:27:13.000000000 +0100
++++ git/Plugins/ImageInfo.h	2013-01-30 18:27:21.000000000 +0100
 @@ -20,6 +20,7 @@
  #define MYIMAGEINFO_H
  
@@ -150,10 +150,10 @@ Index: kphotoalbum-4.3/Plugins/ImageInfo.h
  #endif /* MYIMAGEINFO_H */
  
 +// vi:expandtab:tabstop=4 shiftwidth=4:
-Index: kphotoalbum-4.3/Plugins/ImageInfo.cpp
+Index: git/Plugins/ImageInfo.cpp
 ===================================================================
---- kphotoalbum-4.3.orig/Plugins/ImageInfo.cpp	2012-12-10 00:37:47.000000000 -0500
-+++ kphotoalbum-4.3/Plugins/ImageInfo.cpp	2012-12-10 01:20:20.717793584 -0500
+--- git.orig/Plugins/ImageInfo.cpp	2013-01-30 18:27:13.000000000 +0100
++++ git/Plugins/ImageInfo.cpp	2013-01-30 18:27:21.000000000 +0100
 @@ -33,31 +33,45 @@
      _info = DB::ImageDB::instance()->info( DB::FileName::fromAbsolutePath(_url.path()));
  }
