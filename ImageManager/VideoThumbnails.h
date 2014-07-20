@@ -39,7 +39,7 @@ class VideoThumbnails : public QObject
 {
     Q_OBJECT
 public:
-    explicit VideoThumbnails(QObject *parent = 0);
+    explicit VideoThumbnails(QObject *parent = nullptr);
     void setVideoFile( const DB::FileName& fileName );
 
 public slots:
@@ -53,7 +53,7 @@ private slots:
 
 private:
     bool loadFramesFromCache(const DB::FileName& fileName);
-    void cancelPrevioiusJobs();
+    void cancelPreviousJobs();
 
     DB::FileName m_videoFile;
     QVector<QImage> m_cache;

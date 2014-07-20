@@ -77,8 +77,8 @@ AnnotationDialog::KDateEdit::KDateEdit( bool isStartEdit, QWidget *parent )
     layout->addWidget(mDatePicker);
 
     connect(lineEdit(),SIGNAL(editingFinished()),SLOT(lineEnterPressed()));
-    connect(this,SIGNAL(textChanged(const QString &)),
-            SLOT(slotTextChanged(const QString &)));
+    connect(this,SIGNAL(textChanged(QString)),
+            SLOT(slotTextChanged(QString)));
 
     connect(mDatePicker,SIGNAL(dateEntered(QDate)),SLOT(dateEntered(QDate)));
     connect(mDatePicker,SIGNAL(dateSelected(QDate)),SLOT(dateSelected(QDate)));
@@ -312,7 +312,7 @@ bool AnnotationDialog::KDateEdit::eventFilter(QObject *obj, QEvent *e)
         if (e->type() == QEvent::Wheel) {
             // Up and down arrow keys step the date
             QWheelEvent* we = dynamic_cast<QWheelEvent*>(e);
-            Q_ASSERT( we != NULL );
+            Q_ASSERT( we != nullptr );
 
             int step = 0;
             step = we->delta() > 0 ? 1 : -1;

@@ -21,12 +21,12 @@
 
 #include "config-kpa-marble.h"
 #ifdef HAVE_MARBLE
-  #include <marble/GeoDataCoordinates.h>
+  #include <GeoDataCoordinates.h>
 // This might be the version that renamed global.h to MarbleGlobal.h
   #if MARBLE_VERSION >= 0x000e00
-    #include <marble/MarbleGlobal.h>
+    #include <MarbleGlobal.h>
   #else
-    #include <marble/global.h>
+    #include <global.h>
   #endif
 #endif
 
@@ -63,12 +63,12 @@ public:
         throw()
         : _longitude(0.0)
         , _latitude(0.0)
-        , _altitude(0)
+        , _altitude(0.0)
         , _precision(PrecisionDataForNull)
     {
     }
 
-    GpsCoordinates(
+    explicit GpsCoordinates(
         double longitude,
         double latitude,
         double altitude,
@@ -84,7 +84,7 @@ public:
     }
 
 #ifdef HAVE_MARBLE
-    GpsCoordinates(const GeoDataCoordinates& position)
+    explicit GpsCoordinates(const GeoDataCoordinates& position)
         throw()
         : _longitude(0.0)
         , _latitude(0.0)

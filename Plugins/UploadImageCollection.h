@@ -26,10 +26,10 @@ namespace Plugins {
 class UploadImageCollection : public KIPI::ImageCollectionShared
 {
 public:
-    UploadImageCollection(const QString& path);
-    OVERRIDE KUrl::List images();
-    OVERRIDE QString name();
-    OVERRIDE KUrl uploadPath();
+    explicit UploadImageCollection(const QString& path);
+    KUrl::List images() override;
+    QString name() override;
+    KUrl uploadPath() override;
 
 private:
     QString m_path;

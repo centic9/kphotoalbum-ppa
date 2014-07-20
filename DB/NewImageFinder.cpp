@@ -35,11 +35,11 @@
 #  include "Exif/Database.h"
 #endif
 
-#include "ImageManager/AsyncLoader.h"
 #include "ImageManager/RawImageDecoder.h"
 #include "Settings/SettingsData.h"
 #include "Utilities/Util.h"
 #include <MainWindow/Window.h>
+#include <MainWindow/FeatureDialog.h>
 #include <BackgroundTaskManager/JobManager.h>
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
@@ -56,7 +56,7 @@ bool NewImageFinder::findImages()
     // knows about an image ? Here we've to iterate through all of them and it
     // might be more efficient do do this in the database without fetching the
     // whole info.
-    Q_FOREACH( const DB::FileName& fileName, DB::ImageDB::instance()->images()) {
+    for ( const DB::FileName& fileName : DB::ImageDB::instance()->images()) {
         loadedFiles.insert(fileName);
     }
 
@@ -67,8 +67,10 @@ bool NewImageFinder::findImages()
     ImageManager::ThumbnailBuilder::instance()->buildMissing();
 
     // Man this is not super optimal, but will be changed onces the image finder moves to become a background task.
-    BackgroundTaskManager::JobManager::instance()->addJob(
+    if ( ! MainWindow::FeatureDialog::mplayerBinary().isNull() ) {
+        BackgroundTaskManager::JobManager::instance()->addJob(
                 new BackgroundJobs::SearchForVideosWithoutVideoThumbnailsJob );
+    }
 
     // To avoid deciding if the new images are shown in a given thumbnail view or in a given search
     // we rather just go to home.
@@ -149,10 +151,12 @@ void NewImageFinder::loadExtraFiles()
     DB::ImageDB::instance()->addImages( newImages );
 
     // I would have loved to do this in loadExtraFile, but the image has not been added to the database yet
-    Q_FOREACH( const ImageInfoPtr& info, newImages ) {
-        if ( info->isVideo() )
-            BackgroundTaskManager::JobManager::instance()->addJob(
+    if ( ! MainWindow::FeatureDialog::mplayerBinary().isNull() ) {
+        Q_FOREACH( const ImageInfoPtr& info, newImages ) {
+            if ( info->isVideo() )
+                BackgroundTaskManager::JobManager::instance()->addJob(
                         new BackgroundJobs::ReadVideoLengthJob(info->fileName(), BackgroundTaskManager::BackgroundVideoPreviewRequest));
+        }
     }
 
 }
@@ -246,7 +250,7 @@ ImageInfoPtr NewImageFinder::loadExtraFile( const DB::FileName& newFileName, DB:
         if ( ( oldStack = DB::ImageDB::instance()->getStackFor( olderfile)).isEmpty() ) {
             tostack.append(olderfile);
         } else {
-            Q_FOREACH( const DB::FileName& tmp, oldStack ) {
+            for ( const DB::FileName& tmp : oldStack ) {
                 tostack.append( tmp );
             }
         }
@@ -256,7 +260,7 @@ ImageInfoPtr NewImageFinder::loadExtraFile( const DB::FileName& newFileName, DB:
         // ordering: XXX we ideally want to place the new image right
         // after the older one in the list.
 
-        info = NULL;  // we already added it, so don't process again
+        info = nullptr;  // we already added it, so don't process again
     }
 
     return info;
@@ -318,7 +322,7 @@ bool  NewImageFinder::calculateMD5sums(
     DB::FileNameList cantRead;
     bool dirty = false;
 
-    Q_FOREACH(const FileName& fileName, list) {
+    for (const FileName& fileName : list) {
         if ( count % 10 == 0 ) {
             dialog.setValue( count ); // ensure to call setProgress(0)
             qApp->processEvents( QEventLoop::AllEvents );
@@ -351,7 +355,7 @@ bool  NewImageFinder::calculateMD5sums(
         *wasCanceled = false;
 
     if ( !cantRead.empty() )
-        KMessageBox::informationList( 0, i18n("Following files could not be read:"), cantRead.toStringList(DB::RelativeToImageRoot) );
+        KMessageBox::informationList( nullptr, i18n("Following files could not be read:"), cantRead.toStringList(DB::RelativeToImageRoot) );
 
     return dirty;
 }

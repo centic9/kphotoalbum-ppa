@@ -23,6 +23,7 @@ class QComboBox;
 class QSpinBox;
 class QCheckBox;
 class KComboBox;
+class QTextEdit;
 namespace Settings
 {
 class SettingsData;
@@ -31,7 +32,7 @@ class GeneralPage :public QWidget
 {
     Q_OBJECT
 public:
-    GeneralPage( QWidget* parent );
+    explicit GeneralPage( QWidget* parent );
     void loadSettings( Settings::SettingsData* );
     void saveSettings( Settings::SettingsData* );
     void setUseRawThumbnailSize( const QSize& size );
@@ -39,11 +40,15 @@ public:
 
 private slots:
     void showHistogramChanged( int state ) const;
+    void useEXIFCommentsChanged(int state);
+    void stripEXIFCommentsChanged(int state);
 
 private:
     KComboBox* _trustTimeStamps;
     QCheckBox* _useEXIFRotate;
     QCheckBox* _useEXIFComments;
+    QTextEdit* _commentsToStrip;
+    QCheckBox* _stripEXIFComments;
     QCheckBox* _useRawThumbnail;
     QSpinBox* _useRawThumbnailWidth;
     QSpinBox* _useRawThumbnailHeight;
@@ -52,6 +57,7 @@ private:
     QSpinBox* _barHeight;
     QCheckBox* _showSplashScreen;
     QComboBox* _albumCategory;
+    QCheckBox* _listenForAndroidDevicesOnStartup;
 };
 }
 

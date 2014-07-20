@@ -15,13 +15,14 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef EXIFDIALOG_H
-#define EXIFDIALOG_H
+#ifndef INFODIALOG_H
+#define INFODIALOG_H
 #include <KDialog>
 #include "Utilities/Set.h"
 #include "ImageManager/ImageClientInterface.h"
 #include <DB/FileName.h>
 class KComboBox;
+class KLineEdit;
 class QLabel;
 class QKeyEvent;
 class QResizeEvent;
@@ -39,17 +40,14 @@ public:
     InfoDialog( const DB::FileName& fileName, QWidget* parent );
     void setImage( const DB::FileName& fileName );
 
-    OVERRIDE QSize sizeHint() const;
-    OVERRIDE void enterEvent( QEvent* );
+    QSize sizeHint() const override;
+    void enterEvent( QEvent* ) override;
 
     // ImageManager::ImageClient interface.
-    OVERRIDE void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
-
-protected slots:
-    void updateSearchString( const QString& );
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
 
 private:
-    QLabel* m_searchLabel;
+    KLineEdit* m_searchBox;
     QLabel* m_pix;
     KComboBox* m_iptcCharset;
     Grid* m_grid;
@@ -58,6 +56,6 @@ private:
 
 }
 
-#endif /* EXIFDIALOG_H */
+#endif /* INFODIALOG_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

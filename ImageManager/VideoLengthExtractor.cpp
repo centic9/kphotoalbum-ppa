@@ -33,7 +33,7 @@
 #endif
 
 ImageManager::VideoLengthExtractor::VideoLengthExtractor(QObject *parent) :
-    QObject(parent), m_process(0)
+    QObject(parent), m_process(nullptr)
 {
 }
 
@@ -44,18 +44,17 @@ void ImageManager::VideoLengthExtractor::extract(const DB::FileName &fileName)
         disconnect( m_process, SIGNAL(finished(int)), this, SLOT(processEnded()));
         m_process->kill();
         delete m_process;
-        m_process = 0;
+        m_process = nullptr;
+    }
+
+    if (MainWindow::FeatureDialog::mplayerBinary().isEmpty()) {
+        emit unableToDetermineLength();
+        return;
     }
 
     m_process = new Utilities::Process(this);
     m_process->setWorkingDirectory(QDir::tempPath());
     connect( m_process, SIGNAL(finished(int)), this, SLOT(processEnded()));
-
-    if (MainWindow::FeatureDialog::mplayerBinary().isEmpty()) {
-        kWarning() << "mplayer not found. Unable to extract length of video file";
-        emit unableToDetermineLength();
-        return;
-    }
 
     QStringList arguments;
     arguments << STR("-identify") << STR("-frames") << STR("0") << STR("-vc") << STR("null")
@@ -72,7 +71,7 @@ void ImageManager::VideoLengthExtractor::processEnded()
     QStringList list = m_process->stdout().split(QChar::fromLatin1('\n'));
     list = list.filter(STR("ID_LENGTH="));
     if ( list.count() == 0 ) {
-        kWarning() << "Unable to find ID_LENGTH in output from mplayer for file " << m_fileName.absolute() << "\n"
+        kWarning() << "Unable to find ID_LENGTH in output from MPlayer for file " << m_fileName.absolute() << "\n"
                    << "Output was:\n"
                    << m_process->stdout();
         emit unableToDetermineLength();
@@ -90,7 +89,7 @@ void ImageManager::VideoLengthExtractor::processEnded()
 
     const QString cap = regexp.cap(1);
 
-    const int length = cap.toDouble(&ok);
+    const double length = cap.toDouble(&ok);
     if ( !ok ) {
         kWarning() << STR("Unable to convert string \"%1\"to integer (for file %2)").arg(cap).arg(m_fileName.absolute());
         emit unableToDetermineLength();
@@ -105,6 +104,6 @@ void ImageManager::VideoLengthExtractor::processEnded()
 
     emit lengthFound(length);
     m_process->deleteLater();
-    m_process = 0;
+    m_process = nullptr;
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

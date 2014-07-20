@@ -17,10 +17,12 @@
 */
 #include "Exif/InfoDialog.h"
 #include <KComboBox>
+#include <klineedit.h>
 #include <klocale.h>
 #include "Exif/Info.h"
 #include <qlayout.h>
 #include <qlabel.h>
+#include <qlineedit.h>
 #include <QTextCodec>
 #include "ImageManager/AsyncLoader.h"
 #include "ImageManager/ImageRequest.h"
@@ -62,18 +64,11 @@ Exif::InfoDialog::InfoDialog( const DB::FileName& fileName, QWidget* parent )
     // -------------------------------------------------- Current Search
     hlay = new QHBoxLayout;
     vlay->addLayout(hlay);
-    m_fileNameLabel = new QLabel( i18n( "Current EXIF Label Search: "), top );
-    hlay->addWidget( m_fileNameLabel );
 
-    m_searchLabel = new QLabel( top );
-    QPalette pal = m_searchLabel->palette();
-    pal.setColor( QPalette::Foreground, Qt::red );
-    m_searchLabel->setPalette(pal);
-    fnt = font();
-    fnt.setWeight( QFont::Bold );
-    m_searchLabel->setFont( fnt );
-
-    hlay->addWidget( m_searchLabel );
+    QLabel* searchLabel = new QLabel( i18n( "EXIF Label Search: "), top );
+    hlay->addWidget( searchLabel );
+    m_searchBox = new KLineEdit( top );
+    hlay->addWidget( m_searchBox );
     hlay->addStretch( 1 );
 
     QLabel* iptcLabel = new QLabel( i18n("IPTC character set:"), top );
@@ -87,18 +82,9 @@ Exif::InfoDialog::InfoDialog( const DB::FileName& fileName, QWidget* parent )
     hlay->addWidget( iptcLabel );
     hlay->addWidget( m_iptcCharset );
 
-    connect( m_grid, SIGNAL( searchStringChanged( const QString& ) ), this, SLOT( updateSearchString( const QString& ) ) );
-    connect( m_iptcCharset, SIGNAL( activated( const QString& ) ), m_grid, SLOT( setupUI( const QString& ) ) );
+    connect( m_searchBox, SIGNAL(textChanged(QString)), m_grid, SLOT(updateSearchString(QString)) );
+    connect( m_iptcCharset, SIGNAL(activated(QString)), m_grid, SLOT(setupUI(QString)) );
     setImage(fileName);
-    updateSearchString( QString() );
-}
-
-void Exif::InfoDialog::updateSearchString( const QString& txt )
-{
-    if( txt.isEmpty() )
-        m_searchLabel->setText( i18n("<No Search>") );
-    else
-        m_searchLabel->setText( txt );
 }
 
 QSize Exif::InfoDialog::sizeHint() const
@@ -106,10 +92,10 @@ QSize Exif::InfoDialog::sizeHint() const
     return QSize( 800, 400 );
 }
 
-void Exif::InfoDialog::pixmapLoaded( const DB::FileName& , const QSize& , const QSize& , int , const QImage& img, const bool loadedOK)
+void Exif::InfoDialog::pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image)
 {
-    if ( loadedOK )
-      m_pix->setPixmap( QPixmap::fromImage(img) );
+    if ( request->loadedOK() )
+        m_pix->setPixmap( QPixmap::fromImage(image) );
 }
 
 void Exif::InfoDialog::setImage(const DB::FileName& fileName )

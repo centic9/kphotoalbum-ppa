@@ -15,12 +15,13 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef XMLDB_FILESAVER_H
-#define XMLDB_FILESAVER_H
+#ifndef XMLDB_FILEWRITER_H
+#define XMLDB_FILEWRITER_H
 
 #include <qstring.h>
 #include <qdom.h>
 #include "DB/ImageInfoPtr.h"
+#include <QRect>
 
 class QWidget;
 class QXmlStreamWriter;
@@ -32,7 +33,7 @@ class Database;
 class FileWriter
 {
 public:
-    FileWriter( Database* db ) :_db(db) {}
+    explicit FileWriter( Database* db ) :_db(db) {}
     void save( const QString& fileName, bool isAutoSave );
     static QString escape( const QString& );
 
@@ -52,11 +53,12 @@ private:
     QWidget *messageParent();
 
     Database* const _db;
+    QString areaToString(QRect area) const;
 };
 
 }
 
 
-#endif /* XMLDB_FILESAVER_H */
+#endif /* XMLDB_FILEWRITER_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

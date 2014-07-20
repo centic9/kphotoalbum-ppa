@@ -50,7 +50,7 @@ class BrowserWidget :public QWidget {
     friend class ImageFolderAction;
 
 public:
-    BrowserWidget( QWidget* parent );
+    explicit BrowserWidget( QWidget* parent );
     void addSearch( DB::ImageSearchInfo& info );
     void addImageView( const DB::FileName& context );
     static BrowserWidget* instance();
@@ -89,7 +89,7 @@ signals:
     void imageCount(uint);
 
 protected:
-    OVERRIDE bool eventFilter( QObject*, QEvent* );
+    bool eventFilter( QObject*, QEvent* ) override;
 
 private slots:
     void resetIconViewSearch();

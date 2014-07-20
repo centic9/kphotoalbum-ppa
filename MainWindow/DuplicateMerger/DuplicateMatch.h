@@ -39,15 +39,12 @@ class DuplicateMatch : public QWidget, ImageManager::ImageClientInterface
     Q_OBJECT
 
 public:
-    DuplicateMatch(const DB::FileNameList& files);
-    virtual void pixmapLoaded( const DB::FileName& fileName,
-                               const QSize& size, const QSize& fullSize,
-                               int angle, const QImage& image,
-                               const bool loadedOK);
+    explicit DuplicateMatch(const DB::FileNameList& files);
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
     void setSelected(bool);
     bool selected() const;
     void execute(Utilities::DeleteMethod);
-    OVERRIDE bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *) override;
 
 signals:
     void selectionChanged();
@@ -61,3 +58,4 @@ private:
 } // namespace MainWindow
 
 #endif // MAINWINDOW_DUPLICATEMATCH_H
+// vi:expandtab:tabstop=4 shiftwidth=4:

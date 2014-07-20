@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef MAINVIEW_H
-#define MAINVIEW_H
+#ifndef MAINWINDOW_WINDOW_H
+#define MAINWINDOW_WINDOW_H
 class BreadcrumbViewer;
 class KToggleAction;
 class QStackedWidget;
@@ -66,7 +66,7 @@ class Window :public KXmlGuiWindow
     Q_OBJECT
 
 public:
-    Window( QWidget* parent );
+    explicit Window( QWidget* parent );
     ~Window();
     static void configureImages( const DB::ImageInfoList& list, bool oneAtATime );
     static Window* theMainWindow();
@@ -80,6 +80,7 @@ public slots:
     void showThumbNails(const DB::FileNameList& items);
     void loadPlugins();
     void reloadThumbnails( ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection );
+    void slotImageRotated(const DB::FileName& fileName);
 
 protected slots:
     void showThumbNails();
@@ -100,6 +101,7 @@ protected slots:
     void slotView( bool reuse = true, bool slideShow = false, bool random = false );
     void slotViewNewWindow();
     void slotSortByDateAndTime();
+    void slotSortAllByDateAndTime();
     void slotLimitToSelected();
     void slotExportToHTML();
     void slotAutoSave();
@@ -178,6 +180,7 @@ protected:
     void executeStartupActions();
     void checkIfMplayerIsInstalled();
     bool anyVideosSelected() const;
+    void announceAndroidVersion();
 
 private:
     static Window* _instance;
@@ -206,6 +209,7 @@ private:
     KAction* _rotLeft;
     KAction* _rotRight;
     KAction* _sortByDateAndTime;
+    KAction* _sortAllByDateAndTime;
     KAction* _AutoStackImages;
     KAction* _viewInNewWindow;
     KActionMenu* _viewMenu;
@@ -239,6 +243,6 @@ private:
 
 }
 
-#endif /* MAINVIEW_H */
+#endif /* MAINWINDOW_WINDOW_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

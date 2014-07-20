@@ -31,11 +31,11 @@
 
 using namespace DB;
 
-ImageDB* ImageDB::_instance = 0;
+ImageDB* ImageDB::_instance = nullptr;
 
 ImageDB* DB::ImageDB::instance()
 {
-    if ( _instance == 0 )
+    if ( _instance == nullptr )
         exit(0); // Either we are closing down or ImageDB::instance was called before ImageDB::setup
     return _instance;
 }
@@ -51,18 +51,19 @@ void ImageDB::setupXMLDB( const QString& configFile )
 void ImageDB::deleteInstance()
 {
     delete _instance;
-    _instance = 0;
+    _instance = nullptr;
 }
 
 void ImageDB::connectSlots()
 {
-    connect( Settings::SettingsData::instance(), SIGNAL( locked( bool, bool ) ), _instance, SLOT( lockDB( bool, bool ) ) );
-    connect( &_instance->memberMap(), SIGNAL( dirty() ), _instance, SLOT( markDirty() ));
+    connect( Settings::SettingsData::instance(), SIGNAL(locked(bool,bool)), _instance, SLOT(lockDB(bool,bool)) );
+    connect( &_instance->memberMap(), SIGNAL(dirty()), _instance, SLOT(markDirty()));
 }
 
 QString ImageDB::NONE()
 {
-    return QString::fromLatin1("**NONE**");
+    static QString none = QString::fromLatin1("**NONE**");
+    return none;
 }
 
 DB::FileNameList ImageDB::currentScope(bool requireOnDisk) const
@@ -130,7 +131,7 @@ DB::MediaCount ImageDB::count( const ImageSearchInfo& searchInfo )
 {
     uint images = 0;
     uint videos = 0;
-    Q_FOREACH(const DB::FileName& fileName, search(searchInfo)) {
+    for (const DB::FileName& fileName : search(searchInfo)) {
         if ( info(fileName)->mediaType() == Image )
             ++images;
         else
@@ -169,7 +170,7 @@ DB::FileName ImageDB::findFirstItemInRange(const DB::FileNameList& images,
 {
     DB::FileName candidate;
     QDateTime candidateDateStart;
-    Q_FOREACH(const DB::FileName& fileName, images) {
+    for (const DB::FileName& fileName : images) {
         ImageInfoPtr iInfo = info(fileName);
 
         ImageDate::MatchType match = iInfo->date().isIncludedIn(range);

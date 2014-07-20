@@ -21,7 +21,7 @@
 #include <DB/CategoryPtr.h>
 #include <qstring.h>
 #include <ImageManager/ImageClientInterface.h>
-#include <QProgressDialog>
+#include <KProgressDialog>
 #include "Utilities/UniqFilenameMapper.h"
 #include "Setup.h"
 #include <QEventLoop>
@@ -35,7 +35,7 @@ namespace HTMLGenerator
 {
 using Utilities::StringSet;
 
-class Generator :public QProgressDialog, private ImageManager::ImageClientInterface
+class Generator :public KProgressDialog, private ImageManager::ImageClientInterface
 {
     Q_OBJECT
 
@@ -69,9 +69,7 @@ public:
     void getThemeInfo( QString* baseDir, QString* name, QString* author );
 
 
-    virtual void pixmapLoaded( const DB::FileName& fileName, const QSize& size,
-                               const QSize& fullSize, int angle, const QImage&,
-                               const bool loadedOK);
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
     int maxImageSize();
     void minImageSize( int& width, int& height);
 
@@ -85,6 +83,7 @@ private:
     DB::FileNameSet _copiedVideos;
     bool _hasEnteredLoop;
     QPointer<QEventLoop> _eventLoop;
+    QString _avconv;
 };
 
 }

@@ -33,9 +33,13 @@ void BackgroundJobs::SearchForVideosWithoutVideoThumbnailsJob::execute()
 {
     const DB::FileNameList images = DB::ImageDB::instance()->images();
 
-    Q_FOREACH( const DB::FileName& image, images ) {
+    for( const DB::FileName& image : images ) {
         const DB::ImageInfoPtr info = image.info();
         if ( !info->isVideo() )
+            continue;
+
+        // silently ignore videos not (currently) on disk:
+        if ( ! info->fileName().exists() )
             continue;
 
         const DB::FileName thumbnailName = BackgroundJobs::HandleVideoThumbnailRequestJob::frameName(info->fileName(),9);

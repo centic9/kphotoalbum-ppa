@@ -78,7 +78,7 @@ CategoryMatch::CategoryMatch( bool allowNew, const QString& kimFileItem, QString
 
     myItems.sort();
     _combobox->addItems( myItems );
-    QObject::connect( _checkbox, SIGNAL( toggled( bool ) ), _combobox, SLOT( setEnabled( bool ) ) );
+    QObject::connect( _checkbox, SIGNAL(toggled(bool)), _combobox, SLOT(setEnabled(bool)) );
     grid->addWidget( _combobox, row, 1 );
 
     if ( myItems.contains( kimFileItem ) ) {
@@ -120,7 +120,7 @@ CategoryMatch::CategoryMatch( bool allowNew, const QString& kimFileItem, QString
 ImportExport::CategoryMatchSetting ImportExport::ImportMatcher::settings()
 {
     CategoryMatchSetting res( _myCategory, _otherCategory );
-    Q_FOREACH( CategoryMatch* match, _matchers ) {
+    for ( CategoryMatch* match : _matchers ) {
         if ( match->_checkbox->isChecked() )
             res.add( match->_combobox->currentText(),match->_text );
     }

@@ -31,6 +31,7 @@
 #include "SettingsData.h"
 #include "MainWindow/Window.h"
 #include <QGroupBox>
+#include <QTextEdit>
 
 Settings::GeneralPage::GeneralPage( QWidget* parent )
     : QWidget( parent )
@@ -47,7 +48,9 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
     // Thrust time stamps
     QLabel* timeStampLabel = new QLabel( i18n("Trust image dates:"), box );
     _trustTimeStamps = new KComboBox( box );
-    _trustTimeStamps->addItems( QStringList() << i18n("Always") << i18n("Ask") << i18n("Never") );
+    _trustTimeStamps->addItems( QStringList() << i18nc("As in 'always trust image dates'","Always")
+            << i18nc("As in 'ask whether to trust image dates'","Ask")
+            << i18nc("As in 'never trust image dates'","Never") );
     timeStampLabel->setBuddy( _trustTimeStamps );
     lay->addWidget( timeStampLabel, row, 0 );
     lay->addWidget( _trustTimeStamps, row, 1, 1, 3 );
@@ -57,9 +60,21 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
     _useEXIFRotate = new QCheckBox( i18n( "Use EXIF orientation information" ), box );
     lay->addWidget( _useEXIFRotate, row, 0, 1, 4 );
 
+    // Use EXIF description
     row++;
     _useEXIFComments = new QCheckBox( i18n( "Use EXIF description" ), box );
     lay->addWidget( _useEXIFComments, row, 0, 1, 4 );
+    connect( _useEXIFComments, SIGNAL(stateChanged(int)), this, SLOT(useEXIFCommentsChanged(int)) );
+
+    _stripEXIFComments = new QCheckBox(i18n("Strip out camera generated default descriptions"), box);
+    connect( _stripEXIFComments, SIGNAL(stateChanged(int)), this, SLOT(stripEXIFCommentsChanged(int)) );
+    lay->addWidget(_stripEXIFComments, row, 1, 1, 4);
+
+    row++;
+    _commentsToStrip = new QTextEdit();
+    _commentsToStrip->setMaximumHeight(60);
+    _commentsToStrip->setEnabled(false);
+    lay->addWidget(_commentsToStrip, row, 1, 1, 4);
 
     // Use embedded thumbnail
     row++;
@@ -90,7 +105,7 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
 
     _showHistogram = new QCheckBox( i18n("Show histogram:"), box);
     lay->addWidget( _showHistogram, row, 0 );
-    connect( _showHistogram, SIGNAL( stateChanged(int) ), this, SLOT( showHistogramChanged(int) ) );
+    connect( _showHistogram, SIGNAL(stateChanged(int)), this, SLOT(showHistogramChanged(int)) );
 
     row++;
     label = new QLabel( i18n("Size of histogram columns in date bar:"), box );
@@ -128,6 +143,9 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
     for( QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it ) {
        _albumCategory->addItem( (*it)->text() );
     }
+
+    _listenForAndroidDevicesOnStartup = new QCheckBox(i18n("Listen for Android devices on startup"));
+    lay->addWidget(_listenForAndroidDevicesOnStartup);
 
     lay1->addStretch( 1 );
 
@@ -174,6 +192,19 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
 
     txt = i18n( "Show the KPhotoAlbum splash screen on start up" );
     _showSplashScreen->setWhatsThis( txt );
+
+    txt = i18n("<p>KPhotoAlbum is capable of showing your images on android devices. KPhotoAlbum will automatically pair with the app from "
+               "android. This, however, requires that KPhotoAlbum on your desktop is listening for multicast messages. "
+               "Checking this checkbox will make KPhotoAlbum do so automatically on start up. "
+               "Alternatively, you can click the connection icon in the status bar to start listening.");
+    _listenForAndroidDevicesOnStartup->setWhatsThis(txt);
+
+    txt = i18n("<p>Some cameras automatically store generic comments in each image. "
+               "These comments can be ignored automatically.</p>"
+               "<p>Enter the comments that you want to ignore in the input field, one per line. "
+               "Be sure to add the exact comment, including all whitespace.</p>");
+    _stripEXIFComments->setWhatsThis(txt);
+    _commentsToStrip->setWhatsThis(txt);
 }
 
 void Settings::GeneralPage::loadSettings( Settings::SettingsData* opt )
@@ -181,12 +212,28 @@ void Settings::GeneralPage::loadSettings( Settings::SettingsData* opt )
     _trustTimeStamps->setCurrentIndex( opt->tTimeStamps() );
     _useEXIFRotate->setChecked( opt->useEXIFRotate() );
     _useEXIFComments->setChecked( opt->useEXIFComments() );
+
+    _stripEXIFComments->setChecked( opt->stripEXIFComments() );
+    _stripEXIFComments->setEnabled( opt->useEXIFComments() );
+
+    QStringList commentsToStrip = opt->EXIFCommentsToStrip();
+    QString commentsToStripStr;
+    for (int i = 0; i < commentsToStrip.size(); ++i) {
+        if (commentsToStripStr.size() > 0) {
+            commentsToStripStr += QString::fromLatin1("\n");
+        }
+        commentsToStripStr += commentsToStrip.at(i);
+    }
+    _commentsToStrip->setPlainText(commentsToStripStr);
+    _commentsToStrip->setEnabled( opt->stripEXIFComments() );
+
     _useRawThumbnail->setChecked( opt->useRawThumbnail() );
     setUseRawThumbnailSize(QSize(opt->useRawThumbnailSize().width(), opt->useRawThumbnailSize().height()));
     _barWidth->setValue( opt->histogramSize().width() );
     _barHeight->setValue( opt->histogramSize().height() );
     _showHistogram->setChecked( opt->showHistogram() );
     _showSplashScreen->setChecked( opt->showSplashScreen() );
+    _listenForAndroidDevicesOnStartup->setChecked(opt->listenForAndroidDevicesOnStartup());
     DB::CategoryPtr cat = DB::ImageDB::instance()->categoryCollection()->categoryForName( opt->albumCategory() );
     if ( !cat )
         cat = DB::ImageDB::instance()->categoryCollection()->categories()[0];
@@ -199,10 +246,28 @@ void Settings::GeneralPage::saveSettings( Settings::SettingsData* opt )
     opt->setTTimeStamps( (TimeStampTrust) _trustTimeStamps->currentIndex() );
     opt->setUseEXIFRotate( _useEXIFRotate->isChecked() );
     opt->setUseEXIFComments( _useEXIFComments->isChecked() );
+
+    opt->setStripEXIFComments(_stripEXIFComments->isChecked());
+
+    QStringList commentsToStrip = _commentsToStrip->toPlainText().split(QString::fromLatin1("\n"));
+    // Put the processable list to opt
+    opt->setEXIFCommentsToStrip(commentsToStrip);
+
+    QString commentsToStripString;
+    for ( QString comment : commentsToStrip )
+    {
+        // separate comments with "-,-" and escape existing commas by doubling
+        if ( !comment.isEmpty() )
+            commentsToStripString += comment.replace( QString::fromLatin1(","), QString::fromLatin1(",,") ) + QString::fromLatin1("-,-");
+    }
+    // Put the storable list to opt
+    opt->setCommentsToStrip(commentsToStripString);
+
     opt->setUseRawThumbnail( _useRawThumbnail->isChecked() );
     opt->setUseRawThumbnailSize(QSize(useRawThumbnailSize()));
     opt->setShowHistogram( _showHistogram->isChecked() );
     opt->setShowSplashScreen( _showSplashScreen->isChecked() );
+    opt->setListenForAndroidDevicesOnStartup(_listenForAndroidDevicesOnStartup->isChecked());
     QString name = DB::ImageDB::instance()->categoryCollection()->nameForText( _albumCategory->currentText() );
     if ( name.isNull() )
         name = DB::ImageDB::instance()->categoryCollection()->categoryNames()[0];
@@ -226,4 +291,16 @@ void Settings::GeneralPage::showHistogramChanged( int state ) const
 {
     MainWindow::Window::theMainWindow()->setHistogramVisibilty( state == Qt::Checked );
 }
+
+void Settings::GeneralPage::useEXIFCommentsChanged(int state)
+{
+    _stripEXIFComments->setEnabled(state);
+    _commentsToStrip->setEnabled(state && _stripEXIFComments->isChecked() );
+}
+
+void Settings::GeneralPage::stripEXIFCommentsChanged(int state)
+{
+    _commentsToStrip->setEnabled(state);
+}
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

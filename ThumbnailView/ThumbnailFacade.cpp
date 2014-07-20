@@ -25,10 +25,10 @@
 #include "CellGeometry.h"
 #include "ThumbnailWidget.h"
 
-ThumbnailView::ThumbnailFacade* ThumbnailView::ThumbnailFacade::_instance = 0;
+ThumbnailView::ThumbnailFacade* ThumbnailView::ThumbnailFacade::_instance = nullptr;
 ThumbnailView::ThumbnailFacade::ThumbnailFacade()
     :_cellGeometry( new CellGeometry(this) ),
-     _model( 0 ),_widget( 0 ), _toolTip( 0 )
+     _model( nullptr ),_widget( nullptr ), _toolTip( nullptr )
 {
     // To avoid one of the components references one of the other before it has been initialized, we first construct them all with null.
     _cellGeometry = new CellGeometry(this);
@@ -36,20 +36,20 @@ ThumbnailView::ThumbnailFacade::ThumbnailFacade()
     _widget = new ThumbnailWidget(this);
     _toolTip = new ThumbnailToolTip( _widget );
 
-    connect( _widget, SIGNAL( showImage( const DB::FileName& ) ),
-             this, SIGNAL( showImage( const DB::FileName& ) ) );
-    connect( _widget, SIGNAL( showSelection() ),
-             this, SIGNAL( showSelection() ) );
-    connect( _widget, SIGNAL( fileIdUnderCursorChanged( const DB::FileName& ) ),
-             this, SIGNAL( fileIdUnderCursorChanged( const DB::FileName&  ) ) );
-    connect( _widget, SIGNAL( currentDateChanged( const QDateTime& ) ),
-             this, SIGNAL( currentDateChanged( const QDateTime& ) ) );
-    connect( _widget, SIGNAL( selectionCountChanged(int) ),
-             this, SIGNAL( selectionChanged(int) ) );
-    connect( _model, SIGNAL( collapseAllStacksEnabled(bool ) ),
-             this, SIGNAL( collapseAllStacksEnabled(bool ) ) );
-    connect( _model, SIGNAL( expandAllStacksEnabled(bool) ),
-             this, SIGNAL( expandAllStacksEnabled(bool ) ) );
+    connect( _widget, SIGNAL(showImage(DB::FileName)),
+             this, SIGNAL(showImage(DB::FileName)) );
+    connect( _widget, SIGNAL(showSelection()),
+             this, SIGNAL(showSelection()) );
+    connect( _widget, SIGNAL(fileIdUnderCursorChanged(DB::FileName)),
+             this, SIGNAL(fileIdUnderCursorChanged(DB::FileName)) );
+    connect( _widget, SIGNAL(currentDateChanged(QDateTime)),
+             this, SIGNAL(currentDateChanged(QDateTime)) );
+    connect( _widget, SIGNAL(selectionCountChanged(int)),
+             this, SIGNAL(selectionChanged(int)) );
+    connect( _model, SIGNAL(collapseAllStacksEnabled(bool)),
+             this, SIGNAL(collapseAllStacksEnabled(bool)) );
+    connect( _model, SIGNAL(expandAllStacksEnabled(bool)),
+             this, SIGNAL(expandAllStacksEnabled(bool)) );
 
     _instance = this;
 }

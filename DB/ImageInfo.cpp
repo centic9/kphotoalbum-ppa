@@ -99,7 +99,7 @@ void ImageInfo::setDescription( const QString& desc )
 {
     if (desc != _description)
         _dirty = true;
-    _description = desc;
+    _description = desc.trimmed();
     saveChangesIfNotDelayed();
 }
 
@@ -134,9 +134,16 @@ StringSet ImageInfo::itemsOfCategory( const QString& key ) const
     return _categoryInfomation[key];
 }
 
-void ImageInfo::renameItem( const QString& key, const QString& oldValue, const QString& newValue )
+void ImageInfo::renameItem( const QString& category, const QString& oldValue, const QString& newValue )
 {
-    StringSet& set = _categoryInfomation[key];
+    if (_taggedAreas.contains(category)) {
+        if (_taggedAreas[category].contains(oldValue)) {
+            _taggedAreas[category][newValue] = _taggedAreas[category][oldValue];
+            _taggedAreas[category].remove(oldValue);
+        }
+    }
+
+    StringSet& set = _categoryInfomation[category];
     StringSet::iterator it = set.find( oldValue );
     if ( it != set.end() ) {
         _dirty = true;
@@ -169,12 +176,70 @@ void ImageInfo::setFileName( const DB::FileName& fileName )
 }
 
 
-void ImageInfo::rotate( int degrees )
+void ImageInfo::rotate( int degrees, RotationMode mode )
 {
-    if (degrees != 0)
-        _dirty = true;
-    _angle += degrees + 360;
-    _angle = _angle % 360;
+    // ensure positive degrees:
+    degrees += 360;
+    degrees = degrees % 360;
+    if ( degrees == 0 )
+        return;
+
+    _dirty = true;
+    _angle = ( _angle + degrees ) % 360;
+
+    if (degrees == 90 or degrees == 270) {
+        _size.transpose();
+    }
+
+    // the AnnotationDialog manages this by itself and sets RotateImageInfoOnly:
+    if ( mode == RotateImageInfoAndAreas )
+    {
+        for ( auto& areasOfCategory : _taggedAreas )
+        {
+            for ( auto& area : areasOfCategory )
+            {
+                QRect rotatedArea;
+
+                // parameter order for QRect::setCoords:
+                // setCoords( left, top, right, bottom )
+                // keep in mind that _size is already transposed
+                switch (degrees) {
+                    case 90:
+                        rotatedArea.setCoords(
+                                _size.width() - area.bottom(),
+                                area.left(),
+                                _size.width() - area.top(),
+                                area.right()
+                                );
+                        break;
+                    case 180:
+                        rotatedArea.setCoords(
+                                _size.width() - area.right(),
+                                _size.height() - area.bottom(),
+                                _size.width() - area.left(),
+                                _size.height() - area.top()
+                                );
+                        break;
+                    case 270:
+                        rotatedArea.setCoords(
+                                area.top(),
+                                _size.height() - area.right(),
+                                area.bottom(),
+                                _size.height() - area.left()
+                                );
+                        break;
+                    default:
+                        // degrees==0; "odd" values won't happen.
+                        rotatedArea = area;
+                        break;
+                }
+
+                // update _taggedAreas[category][tag]:
+                area = rotatedArea;
+            }
+        }
+    }
+
     saveChangesIfNotDelayed();
 }
 
@@ -311,8 +376,13 @@ bool ImageInfo::operator==( const ImageInfo& other ) const
 void ImageInfo::renameCategory( const QString& oldName, const QString& newName )
 {
     _dirty = true;
+
     _categoryInfomation[newName] = _categoryInfomation[oldName];
     _categoryInfomation.remove(oldName);
+
+    _taggedAreas[newName] = _taggedAreas[oldName];
+    _taggedAreas.remove(oldName);
+
     saveChangesIfNotDelayed();
 }
 
@@ -335,7 +405,8 @@ void ImageInfo::readExif(const DB::FileName& fullPath, DB::ExifMode mode)
 
     // Date
     if ( updateDateInformation(mode) ) {
-        setDate( exifInfo.dateTime() );
+        const ImageDate newDate ( exifInfo.dateTime() );
+        setDate( newDate );
     }
 
     // Orientation
@@ -345,7 +416,23 @@ void ImageInfo::readExif(const DB::FileName& fullPath, DB::ExifMode mode)
 
     // Description
     if ( (mode & EXIFMODE_DESCRIPTION) && Settings::SettingsData::instance()->useEXIFComments() ) {
-        setDescription( exifInfo.description() );
+        bool doSetDescription = true;
+        QString desc = exifInfo.description();
+
+        if ( Settings::SettingsData::instance()->stripEXIFComments() ) {
+            for( const auto& ignoredComment :  Settings::SettingsData::instance()->EXIFCommentsToStrip() )
+            {
+                if ( desc == ignoredComment )
+                {
+                    doSetDescription = false;
+                    break;
+                }
+            }
+        }
+
+        if (doSetDescription) {
+            setDescription(desc);
+        }
     }
 
     delaySavingChanges(false);
@@ -434,11 +521,13 @@ ImageInfo& ImageInfo::operator=( const ImageInfo& other )
     _description = other._description;
     _date = other._date;
     _categoryInfomation = other._categoryInfomation;
+    _taggedAreas = other._taggedAreas;
     _angle = other._angle;
     _imageOnDisk = other._imageOnDisk;
     _md5sum = other._md5sum;
     _null = other._null;
     _size = other._size;
+    _type = other._type;
     _dirty = other._dirty;
     _rating = other._rating;
     _stackId = other._stackId;
@@ -509,30 +598,39 @@ void ImageInfo::merge(const ImageInfo &other)
     if ( !other.description().isEmpty() ) {
         if ( _description.isEmpty() )
             _description = other.description();
-        else
+        else if (_description != other.description())
             _description += QString::fromUtf8("\n-----------\n") + other._description;
     }
 
     // Clear untagged tag if one of the images was untagged
-    const QString untagedCaterory = Settings::SettingsData::instance()->untaggedCategory();
-    const QString untagedTag = Settings::SettingsData::instance()->untaggedTag();
-    const bool isCompleted = !_categoryInfomation[untagedCaterory].contains(untagedTag) || !other._categoryInfomation[untagedCaterory].contains(untagedTag);
+    const QString untaggedCategory = Settings::SettingsData::instance()->untaggedCategory();
+    const QString untaggedTag = Settings::SettingsData::instance()->untaggedTag();
+    const bool isCompleted = !_categoryInfomation[untaggedCategory].contains(untaggedTag) || !other._categoryInfomation[untaggedCategory].contains(untaggedTag);
 
     // Merge tags
     QSet<QString> keys = QSet<QString>::fromList(_categoryInfomation.keys());
     keys.unite(QSet<QString>::fromList(other._categoryInfomation.keys()));
-    Q_FOREACH( const QString& key, keys) {
+    for( const QString& key : keys) {
         _categoryInfomation[key].unite(other._categoryInfomation[key]);
     }
 
     // Clear untagged tag if one of the images was untagged
     if (isCompleted)
-        _categoryInfomation[untagedCaterory].remove(untagedTag);
+        _categoryInfomation[untaggedCategory].remove(untaggedTag);
 
-    // Stack into the other image's stack if it has one
-    if ( _stackId == 0 && other._stackId != 0 ) {
-        _stackId = other._stackId;
-        _stackOrder = other._stackOrder;
+    // merge stacks:
+    if (isStacked() || other.isStacked())
+    {
+        DB::FileNameList stackImages;
+        if (!isStacked())
+            stackImages.append(fileName());
+        else
+            stackImages.append(DB::ImageDB::instance()->getStackFor(fileName()));
+        stackImages.append(DB::ImageDB::instance()->getStackFor(other.fileName()));
+
+        DB::ImageDB::instance()->unstack(stackImages);
+        if (!DB::ImageDB::instance()->stack(stackImages))
+            qWarning("Could not merge stacks!");
     }
 }
 
@@ -550,6 +648,7 @@ void DB::ImageInfo::addCategoryInfo( const QString& category, const StringSet& v
 void DB::ImageInfo::clearAllCategoryInfo()
 {
     _categoryInfomation.clear();
+    _taggedAreas.clear();
 }
 
 void DB::ImageInfo::removeCategoryInfo( const QString& category, const StringSet& values )
@@ -558,16 +657,21 @@ void DB::ImageInfo::removeCategoryInfo( const QString& category, const StringSet
         if ( _categoryInfomation[category].contains( *valueIt ) ) {
             _dirty = true;
             _categoryInfomation[category].remove(*valueIt);
+            _taggedAreas[category].remove(*valueIt);
         }
     }
     saveChangesIfNotDelayed();
 }
 
-void DB::ImageInfo::addCategoryInfo( const QString& category, const QString& value )
+void DB::ImageInfo::addCategoryInfo( const QString& category, const QString& value, const QRect& area )
 {
     if (! _categoryInfomation[category].contains( value ) ) {
         _dirty = true;
         _categoryInfomation[category].insert( value );
+
+        if (area.isValid()) {
+            _taggedAreas[category][value] = area;
+        }
     }
     saveChangesIfNotDelayed();
 }
@@ -577,7 +681,15 @@ void DB::ImageInfo::removeCategoryInfo( const QString& category, const QString& 
     if ( _categoryInfomation[category].contains( value ) ) {
         _dirty = true;
         _categoryInfomation[category].remove( value );
+        _taggedAreas[category].remove( value );
     }
+    saveChangesIfNotDelayed();
+}
+
+void DB::ImageInfo::setPositionedTags(const QString& category, const QMap<QString, QRect> &positionedTags)
+{
+    _dirty = true;
+    _taggedAreas[category] = positionedTags;
     saveChangesIfNotDelayed();
 }
 
@@ -594,6 +706,17 @@ bool DB::ImageInfo::updateDateInformation( int mode ) const
 #endif
 
     return Settings::SettingsData::instance()->trustTimeStamps();
+}
+
+QMap<QString, QMap<QString, QRect>> DB::ImageInfo::taggedAreas() const
+{
+    return _taggedAreas;
+}
+
+QRect DB::ImageInfo::areaForTag(QString category, QString tag) const
+{
+    // QMap::value returns a default constructed value if the key is not found:
+    return _taggedAreas.value(category).value(tag);
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
