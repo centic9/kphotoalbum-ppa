@@ -62,7 +62,12 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
     QString prevContent = text();
 
     if ( ev->text().isEmpty() || !ev->text()[0].isPrint() ) {
-        KLineEdit::keyPressEvent( ev );
+        // If final Return is handled by the default implementation,
+        // it can "leak" to other widgets. So we swallow it here:
+        if ( ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter )
+            emit KLineEdit::returnPressed( text() );
+        else
+            KLineEdit::keyPressEvent( ev );
         if ( prevContent != text() )
             _listSelect->showOnlyItemsMatching( text() );
         return;
@@ -118,7 +123,7 @@ QTreeWidgetItem *AnnotationDialog::CompletableLineEdit::findItemInListView( cons
         if ( itemMatchesText( *itemIt, text ) )
             return *itemIt;
     }
-    return 0;
+    return nullptr;
 }
 
 bool AnnotationDialog::CompletableLineEdit::itemMatchesText(QTreeWidgetItem *item, const QString& text )

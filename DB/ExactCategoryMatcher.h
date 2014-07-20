@@ -42,13 +42,13 @@ namespace DB
 class ExactCategoryMatcher :public CategoryMatcher
 {
 public:
-    ExactCategoryMatcher( const QString category );
+    explicit ExactCategoryMatcher( const QString category );
     virtual ~ExactCategoryMatcher();
     void setMatcher( CategoryMatcher * subMatcher );
-    OVERRIDE bool eval(ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched);
-    OVERRIDE void debug( int level ) const;
+    bool eval(ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched) override;
+    void debug( int level ) const override;
     /// shouldCreateMatchedSet is _always_ set for the sub-matcher of ExactCategoryMatcher.
-    OVERRIDE void setShouldCreateMatchedSet(bool);
+    void setShouldCreateMatchedSet(bool) override;
 
 private:
     const QString _category;

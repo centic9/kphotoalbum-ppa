@@ -40,6 +40,8 @@
 #include <qradiobutton.h>
 #include <QWidgetAction>
 #include <QHeaderView>
+#include "Dialog.h"
+#include <QDebug>
 
 using namespace AnnotationDialog;
 using CategoryListView::CheckDropItem;
@@ -59,12 +61,12 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
     _treeWidget = new CategoryListView::DragableTreeWidget( _category, this );
     _treeWidget->setHeaderLabel( QString::fromLatin1( "items" ) );
     _treeWidget->header()->hide();
-    connect( _treeWidget, SIGNAL( itemClicked( QTreeWidgetItem*,int  ) ),  this,  SLOT( itemSelected( QTreeWidgetItem* ) ) );
+    connect( _treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)),  this,  SLOT(itemSelected(QTreeWidgetItem*)) );
     _treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect( _treeWidget, SIGNAL( customContextMenuRequested (QPoint) ),
+    connect( _treeWidget, SIGNAL(customContextMenuRequested(QPoint)),
              this, SLOT(showContextMenu(QPoint)));
-    connect( _treeWidget, SIGNAL( itemsChanged() ), this, SLOT( rePopulate() ) );
-    connect( _treeWidget, SIGNAL( itemClicked(QTreeWidgetItem*,int)), this, SLOT( updateSelectionCount() ) );
+    connect( _treeWidget, SIGNAL(itemsChanged()), this, SLOT(rePopulate()) );
+    connect( _treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(updateSelectionCount()) );
 
     layout->addWidget( _treeWidget );
 
@@ -109,10 +111,10 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
     _alphaTreeSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaTree );
     _alphaFlatSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaFlat );
     _dateSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortLastUse );
-    connect( _dateSort, SIGNAL( clicked() ), this, SLOT( slotSortDate() ) );
-    connect( _alphaTreeSort, SIGNAL( clicked() ), this, SLOT( slotSortAlphaTree() ) );
-    connect( _alphaFlatSort, SIGNAL( clicked() ), this, SLOT( slotSortAlphaFlat() ) );
-    connect( _showSelectedOnly, SIGNAL( clicked() ), &ShowSelectionOnlyManager::instance(), SLOT( toggle() ) );
+    connect( _dateSort, SIGNAL(clicked()), this, SLOT(slotSortDate()) );
+    connect( _alphaTreeSort, SIGNAL(clicked()), this, SLOT(slotSortAlphaTree()) );
+    connect( _alphaFlatSort, SIGNAL(clicked()), this, SLOT(slotSortAlphaFlat()) );
+    connect( _showSelectedOnly, SIGNAL(clicked()), &ShowSelectionOnlyManager::instance(), SLOT(toggle()) );
 
     lay2->addWidget( _alphaTreeSort );
     lay2->addWidget( _alphaFlatSort );
@@ -121,17 +123,17 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
 
     _lineEdit->setListView( _treeWidget );
 
-    connect( _lineEdit, SIGNAL( returnPressed() ),  this,  SLOT( slotReturn() ) );
+    connect( _lineEdit, SIGNAL(returnPressed(QString)),  this,  SLOT(slotReturn()) );
 
     populate();
 
-    connect( Settings::SettingsData::instance(), SIGNAL( viewSortTypeChanged( Settings::ViewSortType ) ),
-             this, SLOT( setViewSortType( Settings::ViewSortType ) ) );
-    connect( Settings::SettingsData::instance(), SIGNAL( matchTypeChanged( AnnotationDialog::MatchType ) ),
-             this, SLOT( updateListview( ) ) );
+    connect( Settings::SettingsData::instance(), SIGNAL(viewSortTypeChanged(Settings::ViewSortType)),
+             this, SLOT(setViewSortType(Settings::ViewSortType)) );
+    connect( Settings::SettingsData::instance(), SIGNAL(matchTypeChanged(AnnotationDialog::MatchType)),
+             this, SLOT(updateListview()) );
 
-    connect( &ShowSelectionOnlyManager::instance(), SIGNAL( limitToSelected() ), this, SLOT(limitToSelection() ) );
-    connect( &ShowSelectionOnlyManager::instance(), SIGNAL( broaden() ), this, SLOT( showAllChildren() ) );
+    connect( &ShowSelectionOnlyManager::instance(), SIGNAL(limitToSelected()), this, SLOT(limitToSelection()) );
+    connect( &ShowSelectionOnlyManager::instance(), SIGNAL(broaden()), this, SLOT(showAllChildren()) );
 }
 
 void AnnotationDialog::ListSelect::slotReturn()
@@ -145,11 +147,17 @@ void AnnotationDialog::ListSelect::slotReturn()
         rePopulate();
 
         QList<QTreeWidgetItem*> items = _treeWidget->findItems( txt, Qt::MatchContains, 0 );
-        if ( !items.isEmpty() )
-            items.at(0)->setCheckState(0, Qt::Checked);
-        else
-            Q_ASSERT( false );
 
+        if (!items.isEmpty()) {
+            items.at(0)->setCheckState(0, Qt::Checked);
+
+            if (_positionable) {
+                emit positionableTagSelected(_category->name(), items.at(0)->text(0));
+            }
+        }
+        else {
+            Q_ASSERT(false);
+        }
 
         _lineEdit->clear();
     }
@@ -275,13 +283,21 @@ void AnnotationDialog::ListSelect::itemSelected(QTreeWidgetItem *item )
         }
         _lineEdit->setText( res );
     }
+
     else {
+        if (_positionable) {
+            if (item->checkState(0) == Qt::Checked) {
+                emit positionableTagSelected(_category->name(), item->text(0));
+            } else {
+                emit positionableTagDeselected(_category->name(), item->text(0));
+            }
+        }
+
         _lineEdit->clear();
         showAllChildren();
         ensureAllInstancesAreStateChanged( item );
     }
 }
-
 
 void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
 {
@@ -312,7 +328,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     DB::MemberMap& memberMap = DB::ImageDB::instance()->memberMap();
     QMenu* members = new QMenu( i18n( "Super Categories" ) );
     menu->addMenu( members );
-    QAction* newCategoryAction = 0;
+    QAction* newCategoryAction = nullptr;
     if ( item ) {
         QStringList grps = memberMap.groups( _category->name() );
 
@@ -333,8 +349,8 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     QAction* newSubcategoryAction = menu->addAction( i18n( "Create Subcategory..." ) );
 
     // -------------------------------------------------- Take item out of category
-    QTreeWidgetItem* parent = item ? item->parent() : 0;
-    QAction* takeAction = 0;
+    QTreeWidgetItem* parent = item ? item->parent() : nullptr;
+    QAction* takeAction = nullptr;
     if ( parent )
         takeAction = menu->addAction( i18n( "Take item out of category %1", parent->text(0) ) );
 
@@ -363,7 +379,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     }
     // -------------------------------------------------- exec
     QAction* which = menu->exec( _treeWidget->mapToGlobal(pos));
-    if ( which == 0 )
+    if ( which == nullptr )
         return;
 
     else if ( which == deleteAction ) {
@@ -374,6 +390,12 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
                                                        i18n("Really Delete %1?",item->text(0)),
                                                        KGuiItem(i18n("&Delete"),QString::fromLatin1("editdelete")) );
         if ( code == KMessageBox::Continue ) {
+            if (item->checkState(0) == Qt::Checked) {
+                // An area could be linked against this. We can use positionableTagDeselected
+                // here, as the procedure is the same as if the tag had been deselected.
+                emit positionableTagDeselected(_category->name(), item->text(0));
+            }
+
             _category->removeItem( item->text(0) );
             rePopulate();
         }
@@ -401,6 +423,11 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
                 QString oldFile = _category->fileForCategoryImage( category(), oldStr );
                 QString newFile = _category->fileForCategoryImage( category(), newStr );
                 KIO::move( KUrl(oldFile), KUrl(newFile) );
+
+                if (_positionable) {
+                    // Also take care of areas that could be linked against this
+                    emit positionableTagRenamed(_category->name(), oldStr, newStr);
+                }
             }
         }
     }
@@ -458,9 +485,9 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
 void AnnotationDialog::ListSelect::addItems( DB::CategoryItem* item, QTreeWidgetItem* parent )
 {
     for( QList<DB::CategoryItem*>::ConstIterator subcategoryIt = item->_subcategories.constBegin(); subcategoryIt != item->_subcategories.constEnd(); ++subcategoryIt ) {
-        CheckDropItem* newItem = 0;
+        CheckDropItem* newItem = nullptr;
 
-        if ( parent == 0 )
+        if ( parent == nullptr )
             newItem = new CheckDropItem( _treeWidget, (*subcategoryIt)->_name, QString() );
         else
             newItem = new CheckDropItem( _treeWidget, parent, (*subcategoryIt)->_name, QString() );
@@ -629,7 +656,6 @@ void AnnotationDialog::ListSelect::configureItem( CategoryListView::CheckDropIte
 {
     bool isDNDAllowed = Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaTree;
     item->setDNDEnabled( isDNDAllowed && ! _category->isSpecialCategory() );
-    item->setTristate( _mode == InputMultiImageConfigMode );
 }
 
 bool AnnotationDialog::ListSelect::isInputMode() const
@@ -684,9 +710,30 @@ void AnnotationDialog::ListSelect::ensureAllInstancesAreStateChanged(QTreeWidget
     }
 }
 
-QWidget* AnnotationDialog::ListSelect::lineEdit()
+QWidget* AnnotationDialog::ListSelect::lineEdit() const
 {
     return _lineEdit;
+}
+
+void AnnotationDialog::ListSelect::setPositionable(bool positionableState)
+{
+    _positionable = positionableState;
+}
+
+bool AnnotationDialog::ListSelect::positionable() const
+{
+    return _positionable;
+}
+
+bool AnnotationDialog::ListSelect::tagIsChecked(QString tag) const
+{
+    QList<QTreeWidgetItem*> matchingTags = _treeWidget->findItems(tag, Qt::MatchContains, 0);
+
+    if(matchingTags.isEmpty()) {
+        return false;
+    }
+
+    return (bool) matchingTags.first()->checkState(0);
 }
 
 #include "ListSelect.moc"

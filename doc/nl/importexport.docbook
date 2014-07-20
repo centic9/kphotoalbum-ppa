@@ -2,43 +2,43 @@
   <title
 >Importeren/Exporteren</title>
   <para
->If you attend a family party, a company meeting, a conference, or any other event where other &kphotoalbum; users may be present, you may wish to share your images with those people. You may of course choose to generate &HTML; pages for them to browse, but given you already have spent time classifying all images (Who is on the images, where were they taken etc), there are no reason for them to redo all that work.</para>
+>Als u een familiefeestje, een bedrijfsbijeenkomst, een seminar of wat voor bijeenkomst dan ook bezoekt, waar andere gebruikers van &kphotoalbum; aanwezig kunnen zijn, dan wilt u waarschijnlijk uw foto's delen met deze andere mensen. U kunt ervoor kiezen om &HTML;-pagina's te creëren waar zij doorheen kunnen bladeren, maar omdat u al zoveel tijd heeft gespendeerd aan het verzamelen van de informatie over de foto's en het classificeren daarvan (Wie staat er op de foto's, waar zijn ze genomen enz.), dan is er geen enkele reden waarom zij al dat werk opnieuw moeten doen.</para>
 
     <para
->&kphotoalbum; allows you to export a set of your images into a <literal role="extension"
+>Met &kphotoalbum; kunt u een verzameling van uw foto's exporteren naar een <literal role="extension"
 >.kim</literal
-> file, which other people may import into their database, to get your classification for these images.</para>
+>-bestand, zodat andere mensen deze in hun eigen database kunnen importeren en daarmee uw informatie over deze foto's verkrijgen.</para>
 
     <para
->Two different kind of <literal role="extension"
+>Er bestaan twee verschillende soorten <literal role="extension"
 >.kim</literal
-> files exists, inlines or externals, referring to whether the images them self are located in the file or at some other location. Placing the images in the file has the obvious advantage that the file is self contained, while it has the equally obvious disadvantage of the file being rather big.</para>
+>-bestanden, interne of externe, refererend aan of de foto's in het bestand zelf aanwezig zijn of dat ze op een andere locatie aanwezig zijn. Het plaatsen van de foto's in het bestand heeft het duidelijke voordeel van een onafhankelijk bestand, terwijl tegelijk de grootte van het bestand een duidelijke nadeel is.</para>
 
     <para
->There are two places from which you may generate a <literal role="extension"
+>Er zijn twee plaatsen waar u een <literal role="extension"
 >.kim</literal
-> file, namely directly from <menuchoice
+> bestand kunt creëren, namelijk direct in <menuchoice
 ><guimenu
->File</guimenu
+>Bestand</guimenu
 ><guimenuitem
 >Export...</guimenuitem
 ></menuchoice
->, or along with &HTML; pages (see <xref linkend="chp-generating-html"/>). Creating a <literal role="extension"
+> of tegelijk met &HTML; pagina's (lees <xref linkend="chp-generating-html"/>). Het creëren van een  <literal role="extension"
 >.kim</literal
-> file during &HTML; export will create an external <literal role="extension"
+>-bestand tijdens exporteren naar &HTML; zal een extern <literal role="extension"
 >.kim</literal
-> file.</para>
+>-bestand creëren.</para>
 
     <para
->External <literal role="extension"
+>Externe <literal role="extension"
 >.kim</literal
-> files will search for images in one of two ways. First it will try to look for the images next to the <literal role="extension"
+>-bestanden zoeken naar afbeeldingen op twee manieren. Eerst probeert het de foto's te vinden naast het <literal role="extension"
 >.kim</literal
-> file, and if not found, it will search for them at the URL specified when the <literal role="extension"
+>-bestand, en als het daar niet gevonden wordt, dan zoekt het in de URL die is opgegeven toen het <literal role="extension"
 >.kim</literal
-> file was created. Notice the later is only possible for <literal role="extension"
+>-bestand werd gecreëerd. Merk op dat dit laatste alleen mogelijk is bij <literal role="extension"
 >.kim</literal
-> files created during &HTML; export.</para>
+>-bestanden die gecreëerd zijn tijdens exporteren naar &HTML;.</para>
     
     <sect1 id="chp-exportDialog">
       <title
@@ -74,18 +74,18 @@
       </para>
       
       <para
->Between you and me, <literal role="extension"
+>Onder ons gezegd, <literal role="extension"
 >.kim</literal
-> files are really just zip files. Normally it is not worth bothering compressing the files because images normally are compressed JPEG already, and the XML file itself are really tiny. If you really want to squish out the last few bytes, you may still do so, by checking <guilabel
->Compress Export File</guilabel
-></para>
+>-bestanden zijn eigenlijk gewoon zip-bestanden. Normaal gesproken is het de moeite niet waard om het bestand te comprimeren omdat de foto's normaal al JPEG gecomprimeerd zijn en het XML-bestand zelf erg klein is. Als u echt de laatste paar bytes eruit wil persen dan kunt u dat doen door het inschakelen van <guilabel
+>Exportbestand comprimeren</guilabel
+>.</para>
 
       <para
->The final option on the page are <guilabel
->Limit maximum image dimension</guilabel
->. When sending some images to some friends, you may not want to send images in full size, as the <literal role="extension"
+>De laatste keuzemogelijkheid in het dialoogvenster is <guilabel
+>Maximum afmetingen van afbeeldingen beperken tot</guilabel
+>. Als u enkele foto's naar sommige vrienden stuurt dan wilt u niet foto's in volledige resolutie versturen omdat het <literal role="extension"
 >.kim</literal
-> file might be huge. For this, you may specify that the maximum dimension of images should be say maximum 800 pixels in each direction.</para>
+>-bestand dan erg groot kan zijn. Daarom kunt u instellen dat het formaat van de foto's bijvoorbeeld in elke richting maximaal 800 pixels mag zijn.</para>
     </sect1>
 
 
@@ -96,25 +96,25 @@
   <title
 >Importdialoog</title>
 <para
->When you select a <literal role="extension"
+>Als u een <literal role="extension"
 >.kim</literal
-> file from a web browser, or choose <menuchoice
+>-bestand via een webbrowser selecteert, of <menuchoice
 ><guimenu
->File</guimenu
+>Bestand</guimenu
 ><guimenuitem
->Import...</guimenuitem
+>Importeren...</guimenuitem
 ></menuchoice
->, &kphotoalbum; will import the database exported with the functionality described in <xref linkend="chp-importExport"/>.</para>
+> selecteert dan zal &kphotoalbum; de geëxporteerd database zoals beschreven in <xref linkend="chp-importExport"/> importeren.</para>
 
 <para
 >De importassistent bestaat uit vier stappen. Eerst moet u specificeren welke afbeeldingen u wilt importeren. Vervolgens moet u specificeren in welke map de geïmporteerde afbeeldingen geplaatst moeten worden.</para>
 
 <para
->Chances are that you call the people category <emphasis
+>Waarschijnlijk heeft u de mensen-categorie <emphasis
 >personen</emphasis
-> (if you are German), while I in Danish might call this category <emphasis
+> genoemd (als u een Nederlander bent), terwijl ik als Deen deze categorie <emphasis
 >personer</emphasis
->. In the third step of the import dialog, you must specify which category from the import file to import, plus which categories in your database they match.</para>
+> noem. In de derde stap van de import-dialoog moet u instellen welke categorieën van het importbestand u wilt importeren en met welke categorieën in uw database zij overeenkomen.</para>
 
 <para
 >Ik kan mijzelf in mijn databases <emphasis
@@ -132,7 +132,9 @@
 </figure>
 
 <para
->In the screen shot you may see that Donna is the same in both the .kim file and in my database - the name is shown in black to indicate a perfect match in the database. The other three names was not found in the database, though both Jesper and Anne Helene was found matching as substring, so these are suggested. Finally in my database I didn't have Spiff (or I might have named it quite differently), so &kphotoalbum; simply suggest Spiff for the import name.</para>
+>In de schermafdruk kunt u zien dat Donna hetzelfde is in zowel het <literal role="extension"
+>.kim</literal
+>-bestand en in mijn database - U ziet de naam in zwart om aan te geven dat dit een perfecte match is in de database. De andere drie namen zijn niet in de database gevonden, maar zowel Jesper en Anne Helene zijn wel als deelreeks gevonden, daarom zijn deze voorgesteld. Tenslotte kwam in mijn database Spiff niet voor (of ik kan het helemaal anders hebben gespeld), daarom stelt &kphotoalbum; eenvoudig Spiff voor als importnaam.</para>
 
 </sect1>
   </chapter>

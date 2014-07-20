@@ -29,7 +29,7 @@
 namespace BackgroundTaskManager {
 
 StatusIndicator::StatusIndicator( QWidget* parent )
-    : KLed( Qt::green, parent ), m_timer( new QTimer(this) ), m_jobViewer(0)
+    : KLed( Qt::green, parent ), m_timer( new QTimer(this) ), m_jobViewer(nullptr)
 {
     connect( m_timer, SIGNAL(timeout()), this, SLOT(flicker()));
     setCursor(Qt::PointingHandCursor);
@@ -92,10 +92,10 @@ void StatusIndicator::showToolTip(QHelpEvent* event)
                  "Color codes:"
                  "<ul><li><b>blinking green</b>: Active background jobs</li>"
                  "<li><b>gray</b>: No active jobs</li>"
-                 "<li><b>solid yellow</b>: Job queue is paused<li/>"
+                 "<li><b>solid yellow</b>: Job queue is paused</li>"
                  "<li><b>blinking yellow</b>: Job queue is paused for background jobs, but is executing a foreground job "
-                 "(like extracting a thumbnail for a video file, which is currently shown in the thumbnail viewer)</li></p>")
-            .arg(activeCount).arg(pendingCount);
+                 "(like extracting a thumbnail for a video file, which is currently shown in the thumbnail viewer)</li></ul></p>"
+                 ,activeCount,pendingCount);
     QToolTip::showText(event->globalPos(), text);
 }
 

@@ -26,9 +26,11 @@
 #include <QLabel>
 #include "DirtyIndicator.h"
 #include <KHBox>
+#include <KVBox>
 #include <kiconloader.h>
 #include <KIcon>
-#include <BackgroundTaskManager/StatusIndicator.h>
+#include "BackgroundTaskManager/StatusIndicator.h"
+#include "RemoteControl/ConnectionIndicator.h"
 
 MainWindow::StatusBar::StatusBar()
     : KStatusBar()
@@ -41,7 +43,7 @@ MainWindow::StatusBar::StatusBar()
     setupGUI();
     m_pendingShowTimer = new QTimer(this);
     m_pendingShowTimer->setSingleShot( true );
-    connect( m_pendingShowTimer, SIGNAL( timeout() ), this, SLOT( showStatusBar() ) );
+    connect( m_pendingShowTimer, SIGNAL(timeout()), this, SLOT(showStatusBar()) );
 }
 
 void MainWindow::StatusBar::setupGUI()
@@ -49,10 +51,15 @@ void MainWindow::StatusBar::setupGUI()
     setContentsMargins(7,2,7,2);
 
     KHBox* indicators = new KHBox( this );
+    indicators->setSpacing(10);
     _dirtyIndicator = new DirtyIndicator( indicators );
-    connect( DB::ImageDB::instance(), SIGNAL( dirty() ), _dirtyIndicator, SLOT( markDirtySlot() ) );
+    connect( DB::ImageDB::instance(), SIGNAL(dirty()), _dirtyIndicator, SLOT(markDirtySlot()) );
 
-    new BackgroundTaskManager::StatusIndicator(indicators);
+    new RemoteControl::ConnectionIndicator(indicators);
+
+    KVBox* statusIndicatorBox = new KVBox(indicators);
+    new BackgroundTaskManager::StatusIndicator(statusIndicatorBox);
+    statusIndicatorBox->setContentsMargins(0,7,0,0);
 
     m_progressBar = new QProgressBar( this );
     m_progressBar->setMinimumWidth( 400 );
@@ -62,8 +69,8 @@ void MainWindow::StatusBar::setupGUI()
     m_cancel->setIcon( KIcon( QString::fromLatin1( "dialog-close" ) ) );
     m_cancel->setShortcut( Qt::Key_Escape );
     addPermanentWidget( m_cancel, 0 );
-    connect( m_cancel, SIGNAL( clicked() ), this, SIGNAL( cancelRequest() ) );
-    connect( m_cancel, SIGNAL( clicked() ), this, SLOT( hideStatusBar() ) );
+    connect( m_cancel, SIGNAL(clicked()), this, SIGNAL(cancelRequest()) );
+    connect( m_cancel, SIGNAL(clicked()), this, SLOT(hideStatusBar()) );
 
     _lockedIndicator = new QLabel( indicators );
 
@@ -78,7 +85,7 @@ void MainWindow::StatusBar::setupGUI()
     ImageCounter* total = new ImageCounter( this );
     addPermanentWidget( total, 0 );
     total->setTotal( DB::ImageDB::instance()->totalCount() );
-    connect( DB::ImageDB::instance(), SIGNAL( totalChanged( uint ) ), total, SLOT( setTotal( uint ) ) );
+    connect( DB::ImageDB::instance(), SIGNAL(totalChanged(uint)), total, SLOT(setTotal(uint)) );
 
     _pathIndicator = new BreadcrumbViewer;
     addWidget( _pathIndicator, 1 );

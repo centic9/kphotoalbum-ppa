@@ -28,7 +28,7 @@
 namespace Utilities {
 
 ToolTip::ToolTip(QWidget *parent, Qt::WindowFlags f) :
-    QLabel(parent, f), _tmpFileForThumbnailView(0)
+    QLabel(parent, f), _tmpFileForThumbnailView(nullptr)
 {
     setAlignment( Qt::AlignLeft | Qt::AlignTop );
     setLineWidth(1);
@@ -55,9 +55,10 @@ void ToolTip::requestImage( const DB::FileName& fileName )
         renderToolTip();
 }
 
-void ToolTip::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/,
-                            const QSize& /*fullSize*/, int /*angle*/, const QImage& image, const bool /*loadedOK*/)
+void ToolTip::pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image)
 {
+    const DB::FileName fileName = request->databaseFileName();
+
     delete _tmpFileForThumbnailView;
     _tmpFileForThumbnailView = new QTemporaryFile(this);
     _tmpFileForThumbnailView->open();
@@ -82,10 +83,10 @@ void ToolTip::renderToolTip()
     if ( size != 0 ) {
         setText( QString::fromLatin1("<table cols=\"2\" cellpadding=\"10\"><tr><td><img src=\"%1\"></td><td>%2</td></tr>")
                  .arg(_tmpFileForThumbnailView->fileName()).
-                 arg(Utilities::createInfoText( DB::ImageDB::instance()->info( _currentFileName ), 0 ) ) );
+                 arg(Utilities::createInfoText( DB::ImageDB::instance()->info( _currentFileName ), nullptr ) ) );
     }
     else
-        setText( QString::fromLatin1("<p>%1</p>").arg( Utilities::createInfoText( DB::ImageDB::instance()->info( _currentFileName ), 0 ) ) );
+        setText( QString::fromLatin1("<p>%1</p>").arg( Utilities::createInfoText( DB::ImageDB::instance()->info( _currentFileName ), nullptr ) ) );
 
     setWordWrap( true );
 

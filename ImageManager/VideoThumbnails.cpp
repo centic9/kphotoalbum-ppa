@@ -23,6 +23,7 @@
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/ExtractOneThumbnailJob.h>
 #include <BackgroundTaskManager/JobManager.h>
+#include <MainWindow/FeatureDialog.h>
 
 ImageManager::VideoThumbnails::VideoThumbnails(QObject *parent) :
     QObject(parent), m_pendingRequest(false), m_index(0)
@@ -38,8 +39,12 @@ void ImageManager::VideoThumbnails::setVideoFile(const DB::FileName &fileName)
     if ( loadFramesFromCache(fileName) )
         return;
 
-    cancelPrevioiusJobs();
-    m_pendingRequest = 0;
+    // no video thumbnails without mplayer:
+    if (MainWindow::FeatureDialog::mplayerBinary().isEmpty())
+        return;
+
+    cancelPreviousJobs();
+    m_pendingRequest = nullptr;
     for ( int i= 0; i < 10; ++i )
         m_cache[i] = QImage();
 
@@ -98,9 +103,9 @@ bool ImageManager::VideoThumbnails::loadFramesFromCache(const DB::FileName& file
     return true;
 }
 
-void ImageManager::VideoThumbnails::cancelPrevioiusJobs()
+void ImageManager::VideoThumbnails::cancelPreviousJobs()
 {
-    Q_FOREACH( const QPointer<BackgroundJobs::ExtractOneThumbnailJob>& job, m_activeRequests ) {
+    for ( const QPointer<BackgroundJobs::ExtractOneThumbnailJob>& job : m_activeRequests ) {
         if (! job.isNull() )
             job->cancel();
     }

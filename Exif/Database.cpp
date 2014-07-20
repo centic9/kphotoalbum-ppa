@@ -69,7 +69,7 @@ static DatabaseElementList elements()
     return elms;
 }
 
-Exif::Database* Exif::Database::_instance = 0;
+Exif::Database* Exif::Database::_instance = nullptr;
 
 static void showError( QSqlQuery& query )
 {
@@ -145,7 +145,7 @@ bool Exif::Database::add( const DB::FileName& fileName )
 
     try {
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(fileName.absolute().toLocal8Bit().data());
-        Q_ASSERT(image.get() != 0);
+        Q_ASSERT(image.get() != nullptr);
         image->readMetadata();
         Exiv2::ExifData &exifData = image->exifData();
         insert( fileName, exifData );
@@ -205,7 +205,7 @@ Exif::Database* Exif::Database::instance()
 void Exif::Database::deleteInstance()
 {
     delete _instance;
-    _instance = 0;
+    _instance = nullptr;
 }
 
 bool Exif::Database::isAvailable()
@@ -309,7 +309,7 @@ void Exif::Database::recreate()
     dialog.setMaximum(allImages.size());
     int i = 0;
     bool success = true;
-    Q_FOREACH(const DB::FileName& fileName, allImages) {
+    for (const DB::FileName& fileName : allImages) {
         const DB::ImageInfoPtr info = fileName.info();
         dialog.setValue(i++);
         if (info->mediaType() == DB::Image) {

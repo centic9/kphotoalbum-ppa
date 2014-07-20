@@ -25,10 +25,12 @@
 #include "DB/CategoryCollection.h"
 
 Settings::CategoryItem::CategoryItem( const QString& category, const QString& text, const QString& icon,
-                                      DB::Category::ViewType type, int thumbnailSize, QListWidget* parent )
+                                      DB::Category::ViewType type, int thumbnailSize, QListWidget* parent,
+                                      bool positionable )
     :QListWidgetItem( text, parent ),
-     _categoryOrig( category ), _textOrig( text ), _iconOrig( icon ),
-     _category( category ), _text( text ), _icon( icon ), _type( type ), _typeOrig( type ),
+     _categoryOrig( category ), _iconOrig( icon ),
+     _positionable( positionable ), _positionableOrig( positionable ),
+     _category( category ), _icon( icon ), _type( type ), _typeOrig( type ),
      _thumbnailSize( thumbnailSize ), _thumbnailSizeOrig( thumbnailSize )
 {
 }
@@ -36,20 +38,22 @@ Settings::CategoryItem::CategoryItem( const QString& category, const QString& te
 void Settings::CategoryItem::setLabel( const QString& label )
 {
     setText( label );
-    _text = label;
+    _category = label;
 }
 
 void Settings::CategoryItem::submit( DB::MemberMap* memberMap )
 {
     if ( _categoryOrig.isNull() ) {
         // New Item
-        DB::ImageDB::instance()->categoryCollection()->addCategory( _text, _icon, _type, _thumbnailSize, true );
-        _category = _text;
+        DB::ImageDB::instance()->categoryCollection()->addCategory( _category, _icon, _type, _thumbnailSize, true );
     }
     else {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName( _categoryOrig );
-        if ( _text != _textOrig )
+        if ( _category != _categoryOrig )
             renameCategory( memberMap );
+
+        if ( _positionable != _positionableOrig )
+            category->setPositionable( _positionable );
 
         if ( _icon != _iconOrig )
             category->setIconName( _icon );
@@ -65,7 +69,7 @@ void Settings::CategoryItem::submit( DB::MemberMap* memberMap )
     _iconOrig = _icon;
     _typeOrig = _typeOrig;
     _thumbnailSizeOrig = _thumbnailSize;
-    _textOrig = _text;
+    _positionableOrig = _positionable;
 }
 
 void Settings::CategoryItem::removeFromDatabase()
@@ -78,7 +82,17 @@ void Settings::CategoryItem::removeFromDatabase()
 
 QString Settings::CategoryItem::text() const
 {
-    return _text;
+    return _category;
+}
+
+bool Settings::CategoryItem::positionable() const
+{
+    return _positionable;
+}
+
+void Settings::CategoryItem::setPositionable(bool positionable)
+{
+    _positionable = positionable;
 }
 
 QString Settings::CategoryItem::icon() const
@@ -125,19 +139,19 @@ void Settings::CategoryItem::renameCategory( DB::MemberMap* memberMap )
     QDir dir( QString::fromLatin1("%1/CategoryImages" ).arg( Settings::SettingsData::instance()->imageDirectory() ) );
     const QStringList files = dir.entryList( QStringList() << QString::fromLatin1("%1*" ).arg( _categoryOrig ) );
     for( QStringList::ConstIterator fileNameIt = files.begin(); fileNameIt != files.end(); ++fileNameIt ) {
-        QString newName = _text + (*fileNameIt).mid( _categoryOrig.length() );
+        QString newName = _category + (*fileNameIt).mid( _categoryOrig.length() );
         dir.rename( *fileNameIt, newName );
     }
 
     Settings::SettingsData* settings = Settings::SettingsData::instance();
     DB::ImageSearchInfo info = settings->currentLock();
     const bool exclude = settings->lockExcludes();
-    info.renameCategory( _categoryOrig, _text );
+    info.renameCategory( _categoryOrig, _category );
     settings->setCurrentLock( info, exclude );
 
-    DB::ImageDB::instance()->categoryCollection()->rename(  _categoryOrig, _text );
-    memberMap->renameCategory(  _categoryOrig, _text );
-    _categoryOrig =_text;
+    DB::ImageDB::instance()->categoryCollection()->rename(  _categoryOrig, _category );
+    memberMap->renameCategory(  _categoryOrig, _category );
+    _categoryOrig = _category;
 }
 
 

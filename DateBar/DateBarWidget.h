@@ -47,7 +47,7 @@ class DateBarWidget :public QWidget {
     Q_OBJECT
 
 public:
-    DateBarWidget( QWidget* parent );
+    explicit DateBarWidget( QWidget* parent );
     enum ViewType { DecadeView, YearView, MonthView, WeekView, DayView, HourView };
     bool includeFuzzyCounts() const;
 
@@ -63,6 +63,7 @@ public slots:
     void setHistogramBarSize( const QSize& size );
     void setIncludeFuzzyCounts( bool );
     void setShowResolutionIndicator( bool );
+    void setAutomaticRangeAdjustment( bool );
 
 signals:
     void canZoomIn( bool );
@@ -119,6 +120,7 @@ protected slots:
     void clearSelection();
 
 private:
+    void setViewHandlerForType( ViewType tp );
     QPixmap _buffer;
     friend class DateBarTip;
 
@@ -154,6 +156,7 @@ private:
     bool _includeFuzzyCounts;
     QMenu* _contextMenu;
     bool _showResolutionIndicator;
+    bool _doAutomaticRangeAdjustment;
 };
 
 }

@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef NOTCATEGORYMATCHER_H
-#define NOTCATEGORYMATCHER_H
+#ifndef NEGATIONCATEGORYMATCHER_H
+#define NEGATIONCATEGORYMATCHER_H
 
 #include "CategoryMatcher.h"
 
@@ -25,23 +25,24 @@ namespace DB
 {
 
     /**
-     * NegationCategoryMatcher matches, iff its child matcher does not match.
+     * NegationCategoryMatcher matches, if (and only if) its child matcher does not match.
      *
      * This is not a standard ContainerCategoryMatcher, because it always has exactly one child.
      */
     class NegationCategoryMatcher :public CategoryMatcher
     {
         public:
-            NegationCategoryMatcher( CategoryMatcher *child );
+            explicit NegationCategoryMatcher( CategoryMatcher *child );
             virtual ~NegationCategoryMatcher();
-            OVERRIDE bool eval( ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched );
-            OVERRIDE void debug( int level ) const;
-            OVERRIDE void setShouldCreateMatchedSet( bool b );
+            bool eval( ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched ) override;
+            void debug( int level ) const override;
+            void setShouldCreateMatchedSet( bool b ) override;
         private:
             CategoryMatcher *_child;
     };
 
 }
 
-#endif /* NOTCATEGORYMATCHER_H */
+#endif // NEGATIONCATEGORYMATCHER_H
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

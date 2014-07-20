@@ -37,13 +37,13 @@ class CenteringIconView :public QListView
 public:
     enum ViewMode {CenterView, NormalIconView };
 
-    CenteringIconView( QWidget* parent );
+    explicit CenteringIconView( QWidget* parent );
     void setViewMode( ViewMode );
-    OVERRIDE void setModel( QAbstractItemModel* );
-    OVERRIDE void showEvent( QShowEvent* );
+    void setModel( QAbstractItemModel* ) override;
+    void showEvent( QShowEvent* ) override;
 
 protected:
-    OVERRIDE void resizeEvent( QResizeEvent* );
+    void resizeEvent( QResizeEvent* ) override;
 
 private:
     void setupMargins();

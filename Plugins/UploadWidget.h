@@ -22,7 +22,6 @@
 
 #include <libkipi/imagecollection.h>
 #include <libkipi/uploadwidget.h>
-#include <libkipi/imagecollection.h>
 class QFileSystemModel;
 class QModelIndex;
 
@@ -33,7 +32,7 @@ class UploadWidget : public KIPI::UploadWidget
     Q_OBJECT
 
 public:
-    UploadWidget(QWidget* parent);
+    explicit UploadWidget(QWidget* parent);
     KIPI::ImageCollection selectedImageCollection() const;
 
 private slots:

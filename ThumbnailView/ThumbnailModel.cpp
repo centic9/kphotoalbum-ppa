@@ -28,12 +28,15 @@
 #include "ImageManager/ThumbnailCache.h"
 #include "SelectionMaintainer.h"
 #include <DB/FileName.h>
+#include <KIcon>
 
 ThumbnailView::ThumbnailModel::ThumbnailModel( ThumbnailFactory* factory)
     : ThumbnailComponent( factory ),
       _sortDirection( Settings::SettingsData::instance()->showNewestThumbnailFirst() ? NewestFirst : OldestFirst )
 {
-    connect( DB::ImageDB::instance(), SIGNAL( imagesDeleted( const DB::FileNameList& ) ), this, SLOT( imagesDeletedFromDB( const DB::FileNameList& ) ) );
+    connect( DB::ImageDB::instance(), SIGNAL(imagesDeleted(DB::FileNameList)), this, SLOT(imagesDeletedFromDB(DB::FileNameList)) );
+    m_ImagePlaceholder = KIcon( QLatin1String("image-x-generic") ).pixmap( cellGeometryInfo()->preferredIconSize() );
+    m_VideoPlaceholder = KIcon( QLatin1String("video-x-generic") ).pixmap( cellGeometryInfo()->preferredIconSize() );
 }
 
 static bool stackOrderComparator(const DB::FileName& a, const DB::FileName& b) {
@@ -284,8 +287,11 @@ void ThumbnailView::ThumbnailModel::requestThumbnail( const DB::FileName& fileNa
     ImageManager::AsyncLoader::instance()->load( request );
 }
 
-void ThumbnailView::ThumbnailModel::pixmapLoaded( const DB::FileName& fileName, const QSize& , const QSize& fullSize, int, const QImage& , const bool )
+void ThumbnailView::ThumbnailModel::pixmapLoaded(ImageManager::ImageRequest* request, const QImage& /*image*/)
 {
+    const DB::FileName fileName = request->databaseFileName();
+    const QSize fullSize = request->fullSize();
+
     // As a result of the image being loaded, we emit the dataChanged signal, which in turn asks the delegate to paint the cell
     // The delegate now fetches the newly loaded image from the cache.
 
@@ -392,14 +398,17 @@ QPixmap ThumbnailView::ThumbnailModel::pixmap( const DB::FileName& fileName ) co
         return m_overrideImage;
 
     const DB::ImageInfoPtr imageInfo = fileName.info();
-    if (imageInfo == DB::ImageInfoPtr(NULL) )
+    if (imageInfo == DB::ImageInfoPtr(nullptr) )
         return QPixmap();
 
     if ( ImageManager::ThumbnailCache::instance()->contains( fileName ) )
         return ImageManager::ThumbnailCache::instance()->lookup( fileName );
 
     const_cast<ThumbnailView::ThumbnailModel*>(this)->requestThumbnail( fileName, ImageManager::ThumbnailVisible );
-    return QPixmap();
+    if ( imageInfo->isVideo() )
+        return m_VideoPlaceholder;
+    else
+        return m_ImagePlaceholder;
 }
 
 bool ThumbnailView::ThumbnailModel::thumbnailStillNeeded( int row ) const
@@ -413,6 +422,10 @@ void ThumbnailView::ThumbnailModel::updateVisibleRowInfo()
     const int columns = widget()->width() / cellGeometryInfo()->cellSize().width();
     const int rows = widget()->height() / cellGeometryInfo()->cellSize().height();
     _lastVisibleRow = qMin(_firstVisibleRow + columns*(rows+1), rowCount(QModelIndex()));
+
+    // the cellGeometry has changed -> update placeholders
+    m_ImagePlaceholder = KIcon( QLatin1String("image-x-generic") ).pixmap( cellGeometryInfo()->preferredIconSize() );
+    m_VideoPlaceholder = KIcon( QLatin1String("video-x-generic") ).pixmap( cellGeometryInfo()->preferredIconSize() );
 }
 
 void ThumbnailView::ThumbnailModel::preloadThumbnails()

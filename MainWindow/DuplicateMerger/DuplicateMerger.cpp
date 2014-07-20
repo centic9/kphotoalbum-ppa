@@ -26,7 +26,6 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include "DuplicateMatch.h"
-#include <QScrollArea>
 #include <KLocale>
 #include <QLabel>
 #include "Utilities/ShowBusyCursor.h"
@@ -56,12 +55,14 @@ DuplicateMerger::DuplicateMerger(QWidget *parent) :
     topLayout->addWidget(label);
 
     _trash = new QRadioButton(i18n("Move to &trash"));
-    QRadioButton* deleteFromDisk = new QRadioButton(i18n("&Delete from disk"));
+    _deleteFromDisk = new QRadioButton(i18n("&Delete from disk"));
+    QRadioButton* blockFromDB = new QRadioButton(i18n("&Block from database"));
     _trash->setChecked(true);
 
     topLayout->addSpacing(10);
     topLayout->addWidget(_trash);
-    topLayout->addWidget(deleteFromDisk);
+    topLayout->addWidget(_deleteFromDisk);
+    topLayout->addWidget(blockFromDB);
     topLayout->addSpacing(10);
 
     QScrollArea* scrollArea = new QScrollArea;
@@ -101,8 +102,13 @@ void DuplicateMerger::selectNone()
 
 void DuplicateMerger::go()
 {
+    Utilities::DeleteMethod method = Utilities::BlockFromDatabase;
+    if (_trash->isChecked())
+        method = Utilities::MoveToTrash;
+    else if (_deleteFromDisk->isChecked())
+        method = Utilities::DeleteFromDisk;
     Q_FOREACH( DuplicateMatch* selector, m_selectors) {
-        selector->execute(_trash->isChecked() ? Utilities::MoveToTrash : Utilities::DeleteFromDisk );
+        selector->execute(method);
     }
 }
 
@@ -129,15 +135,15 @@ void DuplicateMerger::findDuplicates()
     }
 
     bool anyFound = false;
-    Q_FOREACH( const DB::MD5& md5, m_matches.keys() ) {
-        if ( m_matches[md5].count() > 1 ) {
-            addRow(md5);
+    for (QMap<DB::MD5, DB::FileNameList>::const_iterator it = m_matches.constBegin(); it != m_matches.constEnd(); ++it) {
+        if ( it.value().count() > 1 ) {
+            addRow(it.key());
             anyFound = true;
         }
     }
 
     if ( !anyFound )
-        tellThatNoDupplicatesWasFound();
+        tellThatNoDuplicatesWereFound();
     updateSelectionCount();
 }
 
@@ -156,7 +162,7 @@ void DuplicateMerger::selectAll(bool b)
     }
 }
 
-void DuplicateMerger::tellThatNoDupplicatesWasFound()
+void DuplicateMerger::tellThatNoDuplicatesWereFound()
 {
     QLabel* label = new QLabel(i18n("No duplicates found"));
     QFont fnt = font();
@@ -172,3 +178,4 @@ void DuplicateMerger::tellThatNoDupplicatesWasFound()
 } // namespace MainWindow
 
 #include "DuplicateMerger.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

@@ -48,11 +48,11 @@ using namespace ImportExport;
 
 
 ImportDialog::ImportDialog( QWidget* parent )
-    :KAssistantDialog( parent ), _hasFilled( false ), _md5CheckPage(0)
+    :KAssistantDialog( parent ), _hasFilled( false ), _md5CheckPage(nullptr)
 {
 }
 
-bool ImportDialog::exec( KimFileReader* kimFileReader, const QString& fileName, const KUrl& kimFileURL )
+bool ImportDialog::exec( KimFileReader* kimFileReader, const KUrl& kimFileURL )
 {
     _kimFileReader = kimFileReader;
 
@@ -62,7 +62,7 @@ bool ImportDialog::exec( KimFileReader* kimFileReader, const QString& fileName, 
     if ( indexXML.isNull() )
         return false;
 
-    bool ok = readFile( indexXML, fileName );
+    bool ok = readFile(indexXML);
     if ( !ok )
         return false;
 
@@ -71,28 +71,17 @@ bool ImportDialog::exec( KimFileReader* kimFileReader, const QString& fileName, 
     return KAssistantDialog::exec() ;
 }
 
-bool ImportDialog::readFile( const QByteArray& data, const QString& fileName )
+bool ImportDialog::readFile(const QByteArray& data)
 {
-    QDomDocument doc;
-    QString errMsg;
-    int errLine;
-    int errCol;
+    XMLDB::ReaderPtr reader = XMLDB::ReaderPtr(new XMLDB::XmlReader);
+    reader->addData(data);
 
-    if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol )) {
-        KMessageBox::error( this, i18n( "Error in file %1 on line %2 col %3: %4" ,fileName,errLine,errCol,errMsg) );
-        return false;
-    }
-
-    QDomElement top = doc.documentElement();
-    if ( top.tagName().toLower() != QString::fromLatin1( "kimdaba-export" ) &&
-        top.tagName().toLower() != QString::fromLatin1( "kphotoalbum-export" ) ) {
-        KMessageBox::error( this, i18n("Unexpected top element while reading file %1. Expected KPhotoAlbum-export found %2",
-                            fileName ,top.tagName() ) );
-        return false;
-    }
+    XMLDB::ElementInfo info = reader->readNextStartOrStopElement(QString::fromUtf8("KimDaBa-export"));
+    if ( !info.isStartToken )
+        reader->complainStartElementExpected(QString::fromUtf8("KimDaBa-export"));
 
     // Read source
-    QString source = top.attribute( QString::fromLatin1( "location" ) ).toLower();
+    QString source = reader->attribute( QString::fromUtf8( "location" ) ).toLower();
     if ( source != QString::fromLatin1( "inline" ) && source != QString::fromLatin1( "external" ) ) {
         KMessageBox::error( this, i18n("<p>XML file did not specify the source of the images, "
                                        "this is a strong indication that the file is corrupted</p>" ) );
@@ -102,19 +91,15 @@ bool ImportDialog::readFile( const QByteArray& data, const QString& fileName )
     _externalSource = ( source == QString::fromLatin1( "external" ) );
 
     // Read base url
-    _baseUrl = top.attribute( QString::fromLatin1( "baseurl" ) );
+    _baseUrl = reader->attribute( QString::fromLatin1( "baseurl" ) );
 
-    for ( QDomNode node = top.firstChild(); !node.isNull(); node = node.nextSibling() ) {
-        if ( !node.isElement() || ! (node.toElement().tagName().toLower() == QString::fromLatin1( "image" ) ) ) {
-            KMessageBox::error( this, i18n("Unknown element while reading %1, expected image.", fileName ) );
-            return false;
-        }
-        QDomElement elm = node.toElement();
-
-        const DB::FileName fileName = DB::FileName::fromRelativePath(elm.attribute(QString::fromLatin1( "file" )));
-        DB::ImageInfoPtr info = XMLDB::Database::createImageInfo( fileName, elm );
+    while ( reader->readNextStartOrStopElement(QString::fromUtf8("image")).isStartToken) {
+        const DB::FileName fileName = DB::FileName::fromRelativePath(reader->attribute(QString::fromUtf8( "file" )));
+        DB::ImageInfoPtr info = XMLDB::Database::createImageInfo( fileName, reader );
         _images.append( info );
     }
+    // the while loop already read the end element, so we tell readEndElement to not read the next token:
+    reader->readEndElement(false);
 
     return true;
 }
@@ -125,8 +110,8 @@ void ImportDialog::setupPages()
     createImagesPage();
     createDestination();
     createCategoryPages();
-    connect( this, SIGNAL( currentPageChanged( KPageWidgetItem*, KPageWidgetItem* ) ), this, SLOT( updateNextButtonState() ) );
-    connect( this, SIGNAL( helpClicked() ), this, SLOT( slotHelp() ) );
+    connect( this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)), this, SLOT(updateNextButtonState()) );
+    connect( this, SIGNAL(helpClicked()), this, SLOT(slotHelp()) );
 }
 
 void ImportDialog::createIntroduction()
@@ -150,7 +135,7 @@ void ImportDialog::createIntroduction()
 
     QLabel* intro = new QLabel( txt, this );
     intro->setWordWrap(true);
-    addPage( intro, i18n("Introduction") );
+    addPage( intro, i18nc("@title:tab introduction page","Introduction") );
 }
 
 void ImportDialog::createImagesPage()
@@ -171,8 +156,8 @@ void ImportDialog::createImagesPage()
     QPushButton* selectNone = new QPushButton( i18n("Deselect All"), container );
     lay2->addWidget( selectNone );
     lay2->addStretch( 1 );
-    connect( selectAll, SIGNAL( clicked() ), this, SLOT( slotSelectAll() ) );
-    connect( selectNone, SIGNAL( clicked() ), this, SLOT( slotSelectNone() ) );
+    connect( selectAll, SIGNAL(clicked()), this, SLOT(slotSelectAll()) );
+    connect( selectNone, SIGNAL(clicked()), this, SLOT(slotSelectNone()) );
 
     QGridLayout* lay3 = new QGridLayout;
     lay1->addLayout( lay3 );
@@ -191,7 +176,7 @@ void ImportDialog::createImagesPage()
             but->setIcon( pixmap );
             but->setIconSize( pixmap.size() );
             lay3->addWidget( but, row, 1 );
-            connect( but, SIGNAL( clicked() ), ir, SLOT( showImage() ) );
+            connect( but, SIGNAL(clicked()), ir, SLOT(showImage()) );
         }
         else {
             QLabel* label = new QLabel( info->label() );
@@ -227,8 +212,8 @@ void ImportDialog::createDestination()
 
 
     _destinationEdit->setText( Settings::SettingsData::instance()->imageDirectory());
-    connect( but, SIGNAL( clicked() ), this, SLOT( slotEditDestination() ) );
-    connect( _destinationEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( updateNextButtonState() ) );
+    connect( but, SIGNAL(clicked()), this, SLOT(slotEditDestination()) );
+    connect( _destinationEdit, SIGNAL(textChanged(QString)), this, SLOT(updateNextButtonState()) );
     _destinationPage = addPage( top, i18n("Destination of Images" ) );
 }
 
@@ -285,7 +270,7 @@ void ImportDialog::createCategoryPages()
         _dummy = addPage( dummy, QString() );
     }
     else {
-        _categoryMatcherPage = 0;
+        _categoryMatcherPage = nullptr;
         possiblyAddMD5CheckPage();
     }
 }
@@ -328,7 +313,7 @@ void ImportDialog::next()
         _categoryMatcher->setEnabled( false );
         removePage(_dummy);
 
-        ImportMatcher* matcher = 0;
+        ImportMatcher* matcher = nullptr;
         for( QList<CategoryMatch*>::Iterator it = _categoryMatcher->_matchers.begin();
              it != _categoryMatcher->_matchers.end();
              ++it )
@@ -390,7 +375,7 @@ ImportSettings ImportExport::ImportDialog::settings()
         settings.setImportActions( _md5CheckPage->settings() );
     }
 
-    Q_FOREACH( ImportMatcher* match, _matchers )
+    for ( ImportMatcher* match : _matchers )
         settings.addCategoryMatchSetting( match->settings() );
 
     return settings;

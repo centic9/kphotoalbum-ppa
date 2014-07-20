@@ -38,7 +38,7 @@ class HTMLDialog :public KPageDialog {
     Q_OBJECT
 
 public:
-    HTMLDialog( QWidget* parent );
+    explicit HTMLDialog( QWidget* parent );
     int exec(const DB::FileNameList& list);
 
 protected slots:
@@ -70,6 +70,8 @@ private:
     QSpinBox* _numOfCols;
     QCheckBox* _generateKimFile;
     QCheckBox* _inlineMovies;
+    QCheckBox* _html5Video;
+    QCheckBox* _html5VideoGenerate;
     QMap<int,QString> _themes;
     KComboBox* _themeBox;
     QLabel* _themeInfo;

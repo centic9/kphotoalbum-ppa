@@ -117,7 +117,7 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     // alreadyMatched map is used to make it possible to search for
     // Jesper & None
     QMap<QString, StringSet> alreadyMatched;
-    Q_FOREACH(CategoryMatcher* optionMatcher, _categoryMatchers) {
+    for (CategoryMatcher* optionMatcher : _categoryMatchers) {
         ok = ok && optionMatcher->eval(info, alreadyMatched);
     }
 
@@ -355,7 +355,7 @@ void ImageSearchInfo::compile() const
             }
             if ( exactMatch )
             {
-                DB::CategoryMatcher *exactMatcher = 0;
+                DB::CategoryMatcher *exactMatcher = nullptr;
                 // if andMatcher has exactMatch set, but no CategoryMatchers, then
                 // matching "category / None" is what we want:
                 if ( andMatcher->_elements.count() == 0 )
@@ -381,7 +381,7 @@ void ImageSearchInfo::compile() const
                 else if ( andMatcher->_elements.count() > 1 )
                     orMatcher->addElement( andMatcher );
         }
-        CategoryMatcher* matcher = 0;
+        CategoryMatcher* matcher = nullptr;
         if ( orMatcher->_elements.count() == 1 )
             matcher = orMatcher->_elements[0];
         else if ( orMatcher->_elements.count() > 1 )
@@ -413,7 +413,7 @@ void ImageSearchInfo::debugMatcher() const
         compile();
 
     qDebug("And:");
-    Q_FOREACH(CategoryMatcher* optionMatcher, _categoryMatchers) {
+    for (CategoryMatcher* optionMatcher : _categoryMatchers) {
         optionMatcher->debug(1);
     }
 }
@@ -439,8 +439,8 @@ QList<QList<SimpleCategoryMatcher*> > ImageSearchInfo::query() const
         QList<QList<SimpleCategoryMatcher*> > oldResult = result;
         result.clear();
 
-        Q_FOREACH(QList<SimpleCategoryMatcher*> resultIt, oldResult) {
-            Q_FOREACH(QList<SimpleCategoryMatcher*> currentIt, current) {
+        for (QList<SimpleCategoryMatcher*> resultIt : oldResult) {
+            for (QList<SimpleCategoryMatcher*> currentIt : current) {
                 QList<SimpleCategoryMatcher*> tmp;
                 tmp += resultIt;
                 tmp += currentIt;
@@ -470,9 +470,7 @@ Utilities::StringSet ImageSearchInfo::findAlreadyMatched( const QString &group )
 
 void ImageSearchInfo::deleteMatchers() const
 {
-    Q_FOREACH(CategoryMatcher* matcher, _categoryMatchers) {
-        delete matcher;
-    }
+    qDeleteAll(_categoryMatchers);
     _categoryMatchers.clear();
 }
 
@@ -484,7 +482,7 @@ QList<SimpleCategoryMatcher*> ImageSearchInfo::extractAndMatcher( CategoryMatche
     SimpleCategoryMatcher* simpleMatcher;
 
     if ( ( andMatcher = dynamic_cast<AndCategoryMatcher*>( matcher ) ) ) {
-        Q_FOREACH(CategoryMatcher* child, andMatcher->_elements) {
+        for (CategoryMatcher* child : andMatcher->_elements) {
             SimpleCategoryMatcher* simpleMatcher = dynamic_cast<SimpleCategoryMatcher*>( child );
             Q_ASSERT( simpleMatcher );
             result.append( simpleMatcher );
@@ -508,7 +506,7 @@ QList<QList<SimpleCategoryMatcher*> > ImageSearchInfo::convertMatcher( CategoryM
     OrCategoryMatcher* orMacther;
 
     if ( ( orMacther = dynamic_cast<OrCategoryMatcher*>( item ) ) ) {
-        Q_FOREACH(CategoryMatcher* child, orMacther->_elements) {
+        for (CategoryMatcher* child : orMacther->_elements) {
             result.append( extractAndMatcher( child ) );
         }
     }

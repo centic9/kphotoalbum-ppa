@@ -16,8 +16,9 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef DISPLAYAREA_H
-#define DISPLAYAREA_H
+#ifndef IMAGEDISPLAY_H
+#define IMAGEDISPLAY_H
+
 #include <qpixmap.h>
 #include <QResizeEvent>
 #include <QMouseEvent>
@@ -54,10 +55,10 @@ struct ViewPreloadInfo
 class ImageDisplay :public Viewer::AbstractDisplay, public ImageManager::ImageClientInterface {
 Q_OBJECT
 public:
-    ImageDisplay( QWidget* parent );
+    explicit ImageDisplay( QWidget* parent );
     bool setImage( DB::ImageInfoPtr info, bool forward );
     QImage currentViewAsThumbnail() const;
-    virtual void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
     void setImageList( const DB::FileNameList& list );
 
     void filterNone();
@@ -83,6 +84,7 @@ signals:
     void possibleChange();
     void imageReady();
     void setCaptionInfo(const QString& info);
+    void viewGeometryChanged(QSize viewSize, QRect zoomWindow, double sizeRatio);
 
 protected:
     virtual void mousePressEvent( QMouseEvent* event );
@@ -90,7 +92,7 @@ protected:
     virtual void mouseReleaseEvent( QMouseEvent* event );
     virtual void resizeEvent( QResizeEvent* event );
     virtual void paintEvent( QPaintEvent* event );
-    OVERRIDE void hideEvent(QHideEvent* );
+    void hideEvent(QHideEvent* ) override;
     QPoint mapPos( QPoint );
     QPoint offset( int logicalWidth, int logicalHeight, int physicalWidth, int physicalHeight, double* ratio );
     void xformPainter( QPainter* );
@@ -140,6 +142,6 @@ private:
 }
 
 
-#endif /* DISPLAYAREA_H */
+#endif /* IMAGEDISPLAY_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

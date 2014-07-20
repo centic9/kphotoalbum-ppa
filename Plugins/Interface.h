@@ -22,6 +22,7 @@
 #include <config-kpa-kipi.h>
 #include <libkipi/interface.h>
 #include <QList>
+#include <QVariant>
 #include <libkipi/imagecollection.h>
 #include <libkipi/imageinfo.h>
 #include <libkipi/imagecollectionselector.h>
@@ -40,21 +41,22 @@ class KDE_EXPORT Interface :public KIPI::Interface
     Q_OBJECT
 
 public:
-    explicit Interface( QObject *parent, const char *name=0);
-    virtual KIPI::ImageCollection currentAlbum();
-    virtual KIPI::ImageCollection currentSelection();
-    virtual QList<KIPI::ImageCollection> allAlbums();
-    virtual KIPI::ImageInfo info( const KUrl& );
-    virtual bool addImage( const KUrl&, QString& errmsg );
-    virtual void delImage( const KUrl& );
-    virtual void refreshImages( const KUrl::List& urls );
-    virtual int features() const;
-    virtual KIPI::ImageCollectionSelector* imageCollectionSelector(QWidget *parent);
-    virtual KIPI::UploadWidget* uploadWidget(QWidget *parent);
+    explicit Interface( QObject *parent, const char *name=nullptr);
+    override virtual KIPI::ImageCollection currentAlbum();
+    override virtual KIPI::ImageCollection currentSelection();
+    override virtual QList<KIPI::ImageCollection> allAlbums();
+    override virtual KIPI::ImageInfo info( const KUrl& );
+    override virtual bool addImage( const KUrl&, QString& errmsg );
+    override virtual void delImage( const KUrl& );
+    override virtual void refreshImages( const KUrl::List& urls );
+    override virtual int features() const;
+    override virtual QVariant hostSetting( const QString& settingName );
+    override virtual KIPI::ImageCollectionSelector* imageCollectionSelector(QWidget *parent);
+    override virtual KIPI::UploadWidget* uploadWidget(QWidget *parent);
 
 public slots:
-    void slotSelectionChanged( bool );
-    void pathChanged( const Browser::BreadcrumbList& path );
+    override void slotSelectionChanged( bool );
+    override void pathChanged( const Browser::BreadcrumbList& path );
 
 signals:
     void imagesChanged( const KUrl::List& );

@@ -43,9 +43,9 @@ MainWindow::RunDialog::RunDialog( QWidget* parent )
     layout->addWidget(_cmd);
     _cmd->setMinimumWidth(400);
     // xgettext: no-c-format
-    txt = i18n("<p>Enter the command you want to run on your image file(s).  "
+    txt = i18n("<p>Enter the command you want to run on your image file(s). "
                "KPhotoAlbum will run your command and replace any '%all' tokens "
-               "with a list of your files.  For example, if you entered:</p>"
+               "with a list of your files. For example, if you entered:</p>"
                "<ul><li>cp %all /tmp</li></ul>"
                "<p>Then the files you selected would be copied to the /tmp "
                "directory</p>"
@@ -54,7 +54,7 @@ MainWindow::RunDialog::RunDialog( QWidget* parent )
     _cmd->setWhatsThis(txt);
     label->setWhatsThis(txt);
 
-    connect( this, SIGNAL( okClicked() ), this, SLOT( slotMarkGo() ) );
+    connect( this, SIGNAL(okClicked()), this, SLOT(slotMarkGo()) );
 }
 
 void MainWindow::RunDialog::setImageList( const DB::FileNameList& fileList )
@@ -66,9 +66,9 @@ void MainWindow::RunDialog::slotMarkGo( )
 {
     QString cmdString = _cmd->text();
     // xgettext: no-c-format
-    QRegExp replaceall = QRegExp(i18n("%all"));
+    QRegExp replaceall = QRegExp(i18nc("As in 'Execute a command and replace any occurrence of %all with the filenames of all selected files'","%all"));
     // xgettext: no-c-format
-    QRegExp replaceeach = QRegExp(i18n("%each"));
+    QRegExp replaceeach = QRegExp(i18nc("As in 'Execute a command for each selected file in turn and replace any occurrence of %each with the filename ","%each"));
 
     // Replace the %all argument first
     QStringList fileList;

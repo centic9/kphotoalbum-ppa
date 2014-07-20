@@ -1,3 +1,10 @@
+# Copyright 2012 Johannes Zarl <isilmendil@gmx.net>
+#
+# This software is distributed WITHOUT ANY WARRANTY; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# This file is under the public domain and can be reused without restrictions.
+
 if ( NOT DEFINED BASE_DIR )
 	message ( FATAL_ERROR "UpdateVersion.cmake: BASE_DIR not set. Please supply base working directory!" )
 endif()
@@ -10,6 +17,9 @@ if ( EXISTS "${BASE_DIR}/.git" )
 	git_get_description ( KPA_VERSION GIT_ARGS --dirty )
 	if ( NOT KPA_VERSION )
 		set ( KPA_VERSION "unknown" )
+	endif()
+	if (NOT(CMAKE_BUILD_TYPE STREQUAL "Release"))
+		set ( KPA_VERSION "${KPA_VERSION}-${CMAKE_BUILD_TYPE}" )
 	endif()
 
 	message ( STATUS "Updating version information to ${KPA_VERSION}..." )

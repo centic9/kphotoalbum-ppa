@@ -20,7 +20,6 @@
 #include "Settings/SettingsData.h"
 #include "DB/ImageInfo.h"
 #include "ImageManager/ImageDecoder.h"
-#include "ImageManager/AsyncLoader.h"
 #include <klocale.h>
 #include <qfileinfo.h>
 
@@ -30,7 +29,6 @@
 #include <kapplication.h>
 #include <qdir.h>
 #include <kstandarddirs.h>
-#include <stdlib.h>
 #include <qregexp.h>
 #include <kimageio.h>
 #include <kcmdlineargs.h>
@@ -66,7 +64,6 @@ extern "C" {
 #include <KMimeType>
 #include <QImageReader>
 #include <kcodecs.h>
-#include "config-kpa-nepomuk.h"
 
 /**
  * Add a line label + info text to the result text if info is not empty.
@@ -112,18 +109,17 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
         // Do not add -1 x -1 text
         if (imageSize.width() >= 0 && imageSize.height() >= 0) {
             const double megapix = imageSize.width() * imageSize.height() / 1000000.0;
-            QString info = i18nc("width x height","%1x%2")
-                .arg(QString::number(imageSize.width()))
-                .arg(QString::number(imageSize.height()));
+            QString info = i18nc("width x height","%1x%2"
+                ,QString::number(imageSize.width())
+                ,QString::number(imageSize.height()));
             if (megapix > 0.05) {
-                info += i18nc("short for: x megapixels"," (%1MP)")
-                    .arg(QString::number(megapix, 'f', 1));
+                info += i18nc("short for: x megapixels"," (%1MP)"
+                    ,QString::number(megapix, 'f', 1));
             }
             AddNonEmptyInfo(i18n("<b>Image Size: </b> "), info, &result);
         }
     }
 
-#ifdef HAVE_NEPOMUK
     if ( Settings::SettingsData::instance()->showRating() ) {
         if ( info->rating() != -1 ) {
             if ( ! result.isEmpty() )
@@ -132,9 +128,8 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
                     ).arg( qMin( qMax( static_cast<short int>(0), info->rating() ), static_cast<short int>(10) ) );
         }
     }
-#endif
 
-     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
+    QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
     int link = 0;
      for( QList<DB::CategoryPtr>::Iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
         const QString categoryName = (*categoryIt)->name();
@@ -227,16 +222,16 @@ void Utilities::checkForBackupFile( const QString& fileName, const QString& mess
 
     int code;
     if ( message.isNull() )
-        code = KMessageBox::questionYesNo( 0, i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
+        code = KMessageBox::questionYesNo( nullptr, i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
                 "Should the autosave file be used?", backupName, fileName, backUpFile.size() >> 10 ),
                 i18n("Found Autosave File") );
     else if ( backUpFile.size() > 0 )
-        code = KMessageBox::warningYesNo( 0,i18n( "<p>Error: Cannot use current database file '%1':</p><p>%2</p>"
+        code = KMessageBox::warningYesNo( nullptr,i18n( "<p>Error: Cannot use current database file '%1':</p><p>%2</p>"
                 "<p>Do you want to use autosave (%3 - size %4 KB) instead of exiting?</p>"
                 "<p><small>(Manually verifying and copying the file might be a good idea)</small></p>", fileName, message, backupName, backUpFile.size() >> 10 ),
                 i18n("Recover from Autosave?") );
     else {
-        KMessageBox::error( 0, i18n( "<p>Error: %1</p><p>Also autosave file is empty, check manually "
+        KMessageBox::error( nullptr, i18n( "<p>Error: %1</p><p>Also autosave file is empty, check manually "
                         "if numbered backup files exist and can be used to restore index.xml.</p>", message ) );
         exit(-1);
     }
@@ -268,7 +263,7 @@ void Utilities::copyList( const QStringList& from, const QString& directoryTo )
         if ( ! QFileInfo( destFile ).exists() ) {
             const bool ok = copy( *it, destFile );
             if ( !ok ) {
-                KMessageBox::error( 0, i18n("Unable to copy '%1' to '%2'.", *it , destFile ), i18n("Error Running Demo") );
+                KMessageBox::error( nullptr, i18n("Unable to copy '%1' to '%2'.", *it , destFile ), i18n("Error Running Demo") );
                 exit(-1);
             }
         }
@@ -282,7 +277,7 @@ QString Utilities::setupDemo()
     if ( ! fi.exists() ) {
         bool ok = QDir().mkdir( dir );
         if ( !ok ) {
-            KMessageBox::error( 0, i18n("Unable to create directory '%1' needed for demo.", dir ), i18n("Error Running Demo") );
+            KMessageBox::error( nullptr, i18n("Unable to create directory '%1' needed for demo.", dir ), i18n("Error Running Demo") );
             exit(-1);
         }
     }
@@ -300,7 +295,7 @@ QString Utilities::setupDemo()
     if ( ! QFileInfo( configFile ).exists() ) {
         QFile out( configFile );
         if ( !out.open( QIODevice::WriteOnly ) ) {
-            KMessageBox::error( 0, i18n("Unable to open '%1' for writing.", configFile ), i18n("Error Running Demo") );
+            KMessageBox::error( nullptr, i18n("Unable to open '%1' for writing.", configFile ), i18n("Error Running Demo") );
             exit(-1);
         }
         QTextStream( &out ) << str;
@@ -317,7 +312,7 @@ QString Utilities::setupDemo()
     if ( ! fi.exists() ) {
         bool ok = QDir().mkdir( dir  );
         if ( !ok ) {
-            KMessageBox::error( 0, i18n("Unable to create directory '%1' needed for demo.", dir ), i18n("Error Running Demo") );
+            KMessageBox::error( nullptr, i18n("Unable to create directory '%1' needed for demo.", dir ), i18n("Error Running Demo") );
             exit(-1);
         }
     }
@@ -369,13 +364,13 @@ QString Utilities::locateDataFile(const QString& fileName)
 QString Utilities::readFile( const QString& fileName )
 {
     if ( fileName.isEmpty() ) {
-        KMessageBox::error( 0, i18n("<p>Unable to find file %1</p>", fileName ) );
+        KMessageBox::error( nullptr, i18n("<p>Unable to find file %1</p>", fileName ) );
         return QString();
     }
 
     QFile file( fileName );
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        //KMessageBox::error( 0, i18n("Could not open file %1").arg( fileName ) );
+        //KMessageBox::error( nullptr, i18n("Could not open file %1").arg( fileName ) );
         return QString();
     }
 
@@ -537,7 +532,8 @@ QString dereferenceSymLinks( const QString& fileName )
 
 QString Utilities::stripEndingForwardSlash( const QString& fileName )
 {
-    if ( fileName.endsWith( QString::fromLatin1( "/" ) ) )
+    static QString slash = QString::fromLatin1("/");
+    if ( fileName.endsWith( slash ) )
         return fileName.left( fileName.length()-1);
     else
         return fileName;
@@ -601,9 +597,9 @@ bool operator<( const QPoint& p1, const QPoint& p2)
     return p1.y() < p2.y() || ( p1.y() == p2.y() && p1.x() < p2.x() );
 }
 
-bool Utilities::isVideo( const DB::FileName& fileName )
+const QSet<QString>& Utilities::supportedVideoExtensions()
 {
-    static StringSet videoExtensions;
+    static QSet<QString> videoExtensions;
     if ( videoExtensions.empty() ) {
         videoExtensions.insert( QString::fromLatin1( "3gp" ) );
         videoExtensions.insert( QString::fromLatin1( "avi" ) );
@@ -632,11 +628,15 @@ bool Utilities::isVideo( const DB::FileName& fileName )
         videoExtensions.insert( QString::fromLatin1( "mts" ) );
         videoExtensions.insert( QString::fromLatin1( "ogg" ) );
         videoExtensions.insert( QString::fromLatin1( "ogv" ) );
+        videoExtensions.insert( QString::fromLatin1( "m2ts" ) );
     }
-
+    return videoExtensions;
+}
+bool Utilities::isVideo( const DB::FileName& fileName )
+{
     QFileInfo fi( fileName.relative() );
     QString ext = fi.suffix().toLower();
-    return videoExtensions.contains( ext );
+    return supportedVideoExtensions().contains( ext );
 }
 
 bool Utilities::isRAW( const DB::FileName& fileName )
@@ -687,7 +687,7 @@ void Utilities::saveImage( const DB::FileName& fileName, const QImage& image, co
 {
     const QFileInfo info(fileName.absolute());
     QDir().mkpath(info.path());
-    const bool ok = image.save(fileName.absolute(),format);
+     const bool ok = image.save(fileName.absolute(),format);
     Q_ASSERT(ok); Q_UNUSED(ok);
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

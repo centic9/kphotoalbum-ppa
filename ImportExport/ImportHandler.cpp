@@ -35,11 +35,12 @@
 #include "DB/CategoryCollection.h"
 #include "Utilities/UniqFilenameMapper.h"
 #include "kio/job.h"
+#include <kprogressdialog.h>
 
 using namespace ImportExport;
 
 ImportExport::ImportHandler::ImportHandler()
-    : m_fileMapper(NULL), m_finishedPressed(false), _progress(0), _reportUnreadableFiles( true )
+    : m_fileMapper(nullptr), m_finishedPressed(false), _progress(0), _reportUnreadableFiles( true )
     , m_eventLoop( new QEventLoop )
 
 {
@@ -82,10 +83,11 @@ void ImportExport::ImportHandler::copyFromExternal()
 {
     _pendingCopies = m_settings.selectedImages();
     _totalCopied = 0;
-    _progress = new QProgressDialog( i18n("Copying Images"), i18n("&Cancel"), 0,2 * _pendingCopies.count(), MainWindow::Window::theMainWindow() );
-    _progress->setValue( 0 );
+    _progress = new KProgressDialog( MainWindow::Window::theMainWindow(), i18n("Copying Images") );
+    _progress->progressBar()->setMinimum( 0 );
+    _progress->progressBar()->setMaximum( 2 * _pendingCopies.count() );
     _progress->show();
-    connect( _progress, SIGNAL( canceled() ), this, SLOT( stopCopyingImages() ) );
+    connect( _progress, SIGNAL(cancelClicked()), this, SLOT(stopCopyingImages()) );
     copyNextFromExternal();
 
 }
@@ -113,12 +115,12 @@ void ImportExport::ImportHandler::copyNextFromExternal()
         if ( i == 1 )
             src = src2;
 
-        src.setFileName( fileName.absolute() );
+        src.setFileName( fileName.relative() );
         if ( KIO::NetAccess::exists( src, KIO::NetAccess::SourceSide, MainWindow::Window::theMainWindow() ) ) {
             KUrl dest;
             dest.setPath( m_fileMapper->uniqNameFor(fileName) );
             _job = KIO::file_copy( src, dest, -1, KIO::HideProgressInfo );
-            connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( aCopyJobCompleted( KJob* ) ) );
+            connect( _job, SIGNAL(result(KJob*)), this, SLOT(aCopyJobCompleted(KJob*)) );
             succeeded = true;
             break;
         } else
@@ -134,8 +136,9 @@ bool ImportExport::ImportHandler::copyFilesFromZipFile()
     DB::ImageInfoList images = m_settings.selectedImages();
 
     _totalCopied = 0;
-    _progress = new QProgressDialog( i18n("Copying Images"), i18n("&Cancel"), 0,2 * images.count(), MainWindow::Window::theMainWindow() );
-    _progress->setValue( 0 );
+    _progress = new KProgressDialog( MainWindow::Window::theMainWindow(), i18n("Copying Images") );
+    _progress->progressBar()->setMinimum( 0 );
+    _progress->progressBar()->setMaximum( 2 * _pendingCopies.count() );
     _progress->show();
 
     for( DB::ImageInfoListConstIterator it = images.constBegin(); it != images.constEnd(); ++it ) {
@@ -156,8 +159,8 @@ bool ImportExport::ImportHandler::copyFilesFromZipFile()
         }
 
         qApp->processEvents();
-        _progress->setValue( ++_totalCopied );
-        if ( _progress->wasCanceled() ) {
+        _progress->progressBar()->setValue( ++_totalCopied );
+        if ( _progress->wasCancelled() ) {
             return false;
         }
     }
@@ -166,7 +169,7 @@ bool ImportExport::ImportHandler::copyFilesFromZipFile()
 
 void ImportExport::ImportHandler::updateDB()
 {
-    disconnect( _progress, SIGNAL( canceled() ), this, SLOT( stopCopyingImages() ) );
+    disconnect( _progress, SIGNAL(cancelClicked()), this, SLOT(stopCopyingImages()) );
     _progress->setLabelText( i18n("Updating Database") );
 
     // Run though all images
@@ -179,8 +182,8 @@ void ImportExport::ImportHandler::updateDB()
         else
             addNewRecord( info );
 
-        _progress->setValue( ++_totalCopied );
-        if ( _progress->wasCanceled() )
+        _progress->progressBar()->setValue( ++_totalCopied );
+        if ( _progress->wasCancelled() )
             break;
     }
 
@@ -226,11 +229,11 @@ void ImportExport::ImportHandler::aCopyJobCompleted( KJob* job )
         updateDB();
         m_eventLoop->exit(true);
     }
-    else if ( _progress->wasCanceled() ) {
+    else if ( _progress->wasCancelled() ) {
         m_eventLoop->exit(false);
     }
     else {
-        _progress->setValue( ++_totalCopied );
+        _progress->progressBar()->setValue( ++_totalCopied );
         copyNextFromExternal();
     }
 }
@@ -293,7 +296,7 @@ void ImportExport::ImportHandler::updateCategories( DB::ImageInfoPtr XMLInfo, DB
     // Run though the categories
     const QList<CategoryMatchSetting> matches = m_settings.categoryMatchSetting();
 
-    Q_FOREACH( const CategoryMatchSetting& match, matches ) {
+    for ( const CategoryMatchSetting& match : matches ) {
         QString XMLCategoryName = match.XMLCategoryName();
         QString DBCategoryName = match.DBCategoryName();
         ImportSettings::ImportAction action = m_settings.importAction(DBCategoryName);
@@ -305,7 +308,7 @@ void ImportExport::ImportHandler::updateCategories( DB::ImageInfoPtr XMLInfo, DB
             DBInfo->setCategoryInfo( DBCategoryName, Utilities::StringSet() );
 
         if ( action == ImportSettings::Merge || action == ImportSettings::Replace || forceReplace ) {
-            Q_FOREACH( const QString& item, items ) {
+            for ( const QString& item : items ) {
                 if (match.XMLtoDB().contains( item ) ) {
                     DBInfo->addCategoryInfo( DBCategoryName, match.XMLtoDB()[item] );
                     DBCategoryPtr->addItem( match.XMLtoDB()[item] );

@@ -33,13 +33,14 @@ public:
     static void destroy();
 
 protected:
-    OVERRIDE void placeWindow();
+    void placeWindow() override;
 
 private:
     static MergeToolTip* s_instance;
-    explicit MergeToolTip(QWidget *parent = 0);
+    explicit MergeToolTip(QWidget *parent = nullptr);
 };
 
 } // namespace MainWindow
 
 #endif // MAINWINDOW_MERGETOOLTIP_H
+// vi:expandtab:tabstop=4 shiftwidth=4:

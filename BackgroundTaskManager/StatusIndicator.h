@@ -33,11 +33,11 @@ class StatusIndicator : public KLed
     Q_OBJECT
 
 public:
-    StatusIndicator( QWidget* parent );
-    OVERRIDE bool event(QEvent* event);
+    explicit StatusIndicator( QWidget* parent );
+    bool event(QEvent* event) override;
 
 protected:
-    OVERRIDE void mouseReleaseEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event) override;
 
 private slots:
     void flicker();

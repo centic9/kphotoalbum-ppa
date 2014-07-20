@@ -22,39 +22,60 @@
 #include "DB/ImageInfo.h"
 #include "ImageManager/ImageClientInterface.h"
 class QResizeEvent;
+class QRubberBand;
 
 namespace AnnotationDialog
 {
+class ResizableFrame;
 
 class ImagePreview :public QLabel, public ImageManager::ImageClientInterface {
     Q_OBJECT
 public:
-    ImagePreview( QWidget* parent );
+    explicit ImagePreview( QWidget* parent );
     virtual QSize sizeHint() const;
     void rotate(int angle);
     void setImage( const DB::ImageInfo& info );
     void setImage( const QString& fileName );
     int angle() const;
     void anticipate(DB::ImageInfo &info1);
-    OVERRIDE void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
+    QRect areaPreviewToActual(QRect area) const;
+    QRect minMaxAreaPreview() const;
+    void createTaggedArea(QString category, QString tag, QRect geometry, bool showArea);
+    QSize getActualImageSize();
+
+public slots:
+    void setAreaCreationEnabled(bool state);
+
+signals:
+    void areaCreated(ResizableFrame *area);
 
 protected:
     virtual void resizeEvent( QResizeEvent* );
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
     void reload();
     void setCurrentImage(const QImage &image);
     QImage rotateAndScale( QImage, int width, int height, int angle ) const;
 
+    QRect areaActualToPreview(QRect area) const;
+    void processNewArea();
+    void remapAreas();
+    void rotateAreas(int angle);
 
     class PreviewImage {
     public:
-        bool has(const DB::FileName &fileName) const;
+        bool has(const DB::FileName &fileName, int angle) const;
         QImage &getImage();
-        void set(const DB::FileName &fileName, const QImage &image);
+        void set(const DB::FileName &fileName, const QImage &image, int angle);
         void set(const PreviewImage &other);
+        void setAngle( int angle );
         void reset();
     protected:
         DB::FileName _fileName;
         QImage _image;
+        int _angle;
     };
 
     struct PreloadInfo {
@@ -68,7 +89,7 @@ protected:
     public:
         void preloadImage( const DB::FileName& fileName, int width, int height, int angle);
         void cancelPreload();
-        virtual void pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int angle, const QImage&, const bool loadedOK);
+        void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
     };
     PreviewLoader _preloader;
 
@@ -78,10 +99,23 @@ private:
     PreviewImage _currentImage, _lastImage;
     PreloadInfo _anticipated;
     int _angle;
+    int _minX;
+    int _maxX;
+    int _minY;
+    int _maxY;
+    QPoint _areaStart;
+    QPoint _areaEnd;
+    QPoint _currentPos;
+    QRubberBand *_selectionRect;
+    double _scaleWidth;
+    double _scaleHeight;
+    void createNewArea(QRect geometry, QRect actualGeometry);
+    QRect rotateArea(QRect originalAreaGeometry, int angle);
+    bool _areaCreationEnabled;
+    QMap<QString, QPair<int, QSize>> _imageSizes;
 };
 
 }
-
 
 #endif /* IMAGEPREVIEW_H */
 
