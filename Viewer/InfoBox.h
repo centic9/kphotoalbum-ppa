@@ -22,10 +22,7 @@
 #include <QMouseEvent>
 #include "ViewerWidget.h"
 #include <KTextBrowser>
-#include "config-kpa-nepomuk.h"
-#ifdef HAVE_NEPOMUK
-#   include <nepomuk/kratingwidget.h>
-#endif
+#include <kratingwidget.h>
 #include "Settings/SettingsData.h"
 
 class QMenu;
@@ -39,7 +36,7 @@ class InfoBox :public KTextBrowser {
     Q_OBJECT
 
 public:
-    InfoBox( ViewerWidget* parent );
+    explicit InfoBox( ViewerWidget* parent );
     void setInfo( const QString& text, const QMap<int, QPair<QString,QString> >& linkMap );
     virtual void setSource( const QUrl& which );
     void setSize();
@@ -48,12 +45,16 @@ protected slots:
     void jumpToContext();
     void linkHovered(const QString&);
 
+signals:
+    void tagHovered(QPair<QString, QString> tagData);
+    void noTagHovered();
+
 protected:
-    OVERRIDE void mouseMoveEvent( QMouseEvent* );
-    OVERRIDE void mousePressEvent( QMouseEvent* );
-    OVERRIDE void mouseReleaseEvent( QMouseEvent* );
-    OVERRIDE void resizeEvent( QResizeEvent* );
-    OVERRIDE void contextMenuEvent( QContextMenuEvent* event );
+    void mouseMoveEvent( QMouseEvent* ) override;
+    void mousePressEvent( QMouseEvent* ) override;
+    void mouseReleaseEvent( QMouseEvent* ) override;
+    void resizeEvent( QResizeEvent* ) override;
+    void contextMenuEvent( QContextMenuEvent* event ) override;
     void updateCursor( const QPoint& pos );
     bool atBlackoutPos( bool left, bool right, bool top, bool bottom, Settings::Position windowPos ) const;
     void showBrowser();
@@ -68,9 +69,7 @@ private:
     bool _hoveringOverLink;
     InfoBoxResizer _infoBoxResizer;
     VisibleOptionsMenu* _menu;
-#ifdef HAVE_NEPOMUK
     QList<QPixmap> _ratingPixmap;
-#endif
 };
 
 }

@@ -52,7 +52,7 @@ Viewer::VideoDisplay::VideoDisplay( QWidget* parent )
     setPalette( pal );
     setAutoFillBackground( true );
 
-    _mediaObject = 0;
+    _mediaObject = nullptr;
 }
 
 void Viewer::VideoDisplay::setup()
@@ -76,9 +76,9 @@ void Viewer::VideoDisplay::setup()
     _videoWidget->show();
 
 
-    connect( _mediaObject, SIGNAL( finished() ), this, SIGNAL( stopped() ) );
-    connect( _mediaObject, SIGNAL( stateChanged( Phonon::State, Phonon::State ) ),
-             this, SLOT( phononStateChanged(Phonon::State, Phonon::State) ) );
+    connect( _mediaObject, SIGNAL(finished()), this, SIGNAL(stopped()) );
+    connect( _mediaObject, SIGNAL(stateChanged(Phonon::State,Phonon::State)),
+             this, SLOT(phononStateChanged(Phonon::State,Phonon::State)) );
 }
 
 bool Viewer::VideoDisplay::setImage( DB::ImageInfoPtr info, bool /*forward*/ )
@@ -87,7 +87,7 @@ bool Viewer::VideoDisplay::setImage( DB::ImageInfoPtr info, bool /*forward*/ )
         setup();
 
     _info = info;
-    _mediaObject->setCurrentSource( info->fileName().absolute() );
+    _mediaObject->setCurrentSource( KUrl::fromLocalFile( info->fileName().absolute() ) );
     _mediaObject->play();
 
     return true;
@@ -197,7 +197,7 @@ void Viewer::VideoDisplay::phononStateChanged(Phonon::State newState, Phonon::St
 {
     setVideoWidgetSize();
     if ( newState == Phonon::ErrorState ) {
-        QMessageBox::critical(0, i18n("Error playing media"), _mediaObject->errorString(), QMessageBox::Close);
+        KMessageBox::error( nullptr, _mediaObject->errorString(), i18n("Error playing media") );
     }
 }
 
@@ -209,7 +209,9 @@ void Viewer::VideoDisplay::setVideoWidgetSize()
     QSize videoSize;
     if ( _zoomType == FullZoom ) {
         videoSize = QSize( size().width(), size().height() - _slider->height() );
-        _zoomFactor = videoSize.width() / _videoWidget->sizeHint().width();
+	if (_videoWidget->sizeHint().width() > 0) {
+	  _zoomFactor = videoSize.width() / _videoWidget->sizeHint().width();
+	}
     }
     else {
         videoSize = _videoWidget->sizeHint();

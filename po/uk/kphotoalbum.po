@@ -4,13 +4,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2007, 2008.
-# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013.
+# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2013-02-08 02:42+0100\n"
-"PO-Revision-Date: 2013-02-06 07:21+0200\n"
+"POT-Creation-Date: 2014-07-07 01:42+0000\n"
+"PO-Revision-Date: 2014-07-02 07:27+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -29,7 +29,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ivanpetrouchtchak@yahoo.com,yurchor@ukr.net"
 
-#: AnnotationDialog/Dialog.cpp:78
+#: AnnotationDialog/Dialog.cpp:79
 msgid ""
 "(You have differing descriptions on individual images, setting text here "
 "will override them all)"
@@ -37,163 +37,183 @@ msgstr ""
 "(Описи окремих зображень є різними. Визначення тексту у цьому полі призведе "
 "до перезапису всіх цих описів.)"
 
-#: AnnotationDialog/Dialog.cpp:98
+#: AnnotationDialog/Dialog.cpp:99
 msgid "Label and Dates"
 msgstr "Мітка і дати"
 
-#: AnnotationDialog/Dialog.cpp:100
+#: AnnotationDialog/Dialog.cpp:101
 msgid "Image Preview"
 msgstr "Перегляд зображення"
 
-#: AnnotationDialog/Dialog.cpp:104 AnnotationDialog/Dialog.cpp:108
-#: HTMLGenerator/HTMLDialog.cpp:110 ImportExport/MD5CheckPage.cpp:75
+#: AnnotationDialog/Dialog.cpp:105 AnnotationDialog/Dialog.cpp:109
+#: HTMLGenerator/HTMLDialog.cpp:130 ImportExport/MD5CheckPage.cpp:75
 msgid "Description"
 msgstr "Опис"
 
-#: AnnotationDialog/Dialog.cpp:125
+#: AnnotationDialog/Dialog.cpp:156
 msgid "Revert This Item"
 msgstr "Повернути цей елемент"
 
-#: AnnotationDialog/Dialog.cpp:129
+#: AnnotationDialog/Dialog.cpp:160
 msgid "Clear Form"
 msgstr "Спорожнити форму"
 
-#: AnnotationDialog/Dialog.cpp:135
+#: AnnotationDialog/Dialog.cpp:166
 msgid "Options..."
 msgstr "Параметри..."
 
-#: AnnotationDialog/Dialog.cpp:141
+#: AnnotationDialog/Dialog.cpp:172
 msgid "&Done"
 msgstr "&Виконано"
 
-#: AnnotationDialog/Dialog.cpp:144
+#: AnnotationDialog/Dialog.cpp:175
 msgid "Continue &Later"
 msgstr "Продовжити п&ізніше"
 
-#: AnnotationDialog/Dialog.cpp:151 AnnotationDialog/Dialog.cpp:580
+#: AnnotationDialog/Dialog.cpp:182 AnnotationDialog/Dialog.cpp:698
+msgctxt "@action:button"
 msgid "&Search"
-msgstr "&Пошук"
+msgstr "&Шукати"
 
-#: AnnotationDialog/Dialog.cpp:210
+#: AnnotationDialog/Dialog.cpp:243
 msgid "Label: "
 msgstr "Мітка: "
 
-#: AnnotationDialog/Dialog.cpp:214 ImportExport/MD5CheckPage.cpp:74
+#: AnnotationDialog/Dialog.cpp:247 ImportExport/MD5CheckPage.cpp:74
 msgid "Label"
 msgstr "Підпис"
 
-#: AnnotationDialog/Dialog.cpp:224
+#: AnnotationDialog/Dialog.cpp:257
 msgid "Date: "
 msgstr "Дата: "
 
-#: AnnotationDialog/Dialog.cpp:244
+#: AnnotationDialog/Dialog.cpp:273
 msgid "Time: "
 msgstr "Час: "
 
-#: AnnotationDialog/Dialog.cpp:252
-msgid "Add Time Info..."
-msgstr "Додати інформацію про час..."
+#: AnnotationDialog/Dialog.cpp:279
+msgid "Use Fuzzy Date"
+msgstr "Використати неточну дату"
 
-#: AnnotationDialog/Dialog.cpp:261
+#: AnnotationDialog/Dialog.cpp:281
+msgctxt "@info"
+msgid ""
+"<para>In KPhotoAlbum, images can either have an exact date and time, or a "
+"<emphasis>fuzzy</emphasis> date which happened any time during a specified "
+"time interval. Images produced by digital cameras do normally have an exact "
+"date.</para><para>If you don't know exactly when a photo was taken (e.g. if "
+"the photo comes from an analog camera), then you should set <interface>Use "
+"Fuzzy Date</interface>.</para>"
+msgstr ""
+"<para>У KPhotoAlbum із зображеннями можна пов’язувати точну дату і час або "
+"<emphasis>неточну</emphasis> дату, параметри якої обмежуються вказаним "
+"часовим діапазоном. Із зображеннями, створеними за допомогою цифрових "
+"фотоапаратів, зазвичай пов’язується точна дата.</para><para>Якщо вам не "
+"відомі дані щодо точної дати і часу створення знімка (наприклад знімка "
+"аналоговим фотоапаратом), вам слід позначити пункт <interface>Використатися "
+"неточну дату</interface>.</para>"
+
+#: AnnotationDialog/Dialog.cpp:296
 msgid "Minimum megapixels:"
 msgstr "Мін. к-ть мегапікселів:"
 
-#: AnnotationDialog/Dialog.cpp:275
+#: AnnotationDialog/Dialog.cpp:309
 msgid "Rating:"
 msgstr "Оцінка:"
 
-#: AnnotationDialog/Dialog.cpp:282
+#: AnnotationDialog/Dialog.cpp:316
 msgid "Rating search mode:"
 msgstr "Режим пошуку за оцінкою:"
 
-#: AnnotationDialog/Dialog.cpp:286
+#: AnnotationDialog/Dialog.cpp:320
 msgid "=="
 msgstr "="
 
-#: AnnotationDialog/Dialog.cpp:286
-msgid ">="
-msgstr "⩾"
+#: AnnotationDialog/Dialog.cpp:320
+msgid "&gt;="
+msgstr "&gt;="
 
-#: AnnotationDialog/Dialog.cpp:286
-msgid "<="
-msgstr "⩽"
+#: AnnotationDialog/Dialog.cpp:320
+msgid "&lt;="
+msgstr "&lt;="
 
-#: AnnotationDialog/Dialog.cpp:286
+#: AnnotationDialog/Dialog.cpp:320
 msgid "!="
 msgstr "≠"
 
-#: AnnotationDialog/Dialog.cpp:295
+#: AnnotationDialog/Dialog.cpp:328
 msgid "File Name Pattern: "
 msgstr "Шаблон назв файлів:"
 
-#: AnnotationDialog/Dialog.cpp:298
+#: AnnotationDialog/Dialog.cpp:331
 msgid "File Name Pattern"
 msgstr "Шаблон назв файлів"
 
-#: AnnotationDialog/Dialog.cpp:303
+#: AnnotationDialog/Dialog.cpp:336
 msgid "Search only for RAW files"
 msgstr "Шукати лише файли цифрових негативів"
 
-#: AnnotationDialog/Dialog.cpp:403
+#: AnnotationDialog/Dialog.cpp:516
 #, kde-format
 msgid "KPhotoAlbum Annotations (%1/%2)"
 msgstr "Примітки KPhotoAlbum (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:584 Browser/OverviewPage.cpp:143
+#: AnnotationDialog/Dialog.cpp:702
+msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "Пошук"
 
-#: AnnotationDialog/Dialog.cpp:588
+#: AnnotationDialog/Dialog.cpp:706
 msgid "Done"
 msgstr "Виконано"
 
-#: AnnotationDialog/Dialog.cpp:593
+#: AnnotationDialog/Dialog.cpp:711
 msgid "Annotations"
 msgstr "Примітки"
 
-#: AnnotationDialog/Dialog.cpp:624
+#: AnnotationDialog/Dialog.cpp:743
 msgid "Configure window layout..."
 msgstr "Налаштувати компонування вікна…"
 
-#: AnnotationDialog/Dialog.cpp:625
+#: AnnotationDialog/Dialog.cpp:744
 msgid "Save Current Window Setup"
 msgstr "Зберегти налаштування поточного вікна"
 
-#: AnnotationDialog/Dialog.cpp:626
+#: AnnotationDialog/Dialog.cpp:745
 msgid "Reset layout"
 msgstr "Скинути формат"
 
-#: AnnotationDialog/Dialog.cpp:633 AnnotationDialog/Dialog.cpp:1000
-#: AnnotationDialog/ListSelect.cpp:88
+#: AnnotationDialog/Dialog.cpp:752 AnnotationDialog/Dialog.cpp:1128
+#: AnnotationDialog/ListSelect.cpp:90
 msgid "Sort Alphabetically (Tree)"
 msgstr "Впорядкувати за алфавітом (ієрархія)"
 
-#: AnnotationDialog/Dialog.cpp:637 AnnotationDialog/Dialog.cpp:1004
-#: AnnotationDialog/ListSelect.cpp:94
+#: AnnotationDialog/Dialog.cpp:756 AnnotationDialog/Dialog.cpp:1132
+#: AnnotationDialog/ListSelect.cpp:96
 msgid "Sort Alphabetically (Flat)"
 msgstr "Впорядкувати за алфавітом (плоский список)"
 
-#: AnnotationDialog/Dialog.cpp:641 AnnotationDialog/ListSelect.cpp:100
+#: AnnotationDialog/Dialog.cpp:760 AnnotationDialog/ListSelect.cpp:102
 msgid "Sort by date"
 msgstr "Впорядкувати за датою"
 
-#: AnnotationDialog/Dialog.cpp:657
+#: AnnotationDialog/Dialog.cpp:776
 msgid "Match tags from the first character."
 msgstr "Встановлювати відповідність міток з першого символу."
 
-#: AnnotationDialog/Dialog.cpp:658
+#: AnnotationDialog/Dialog.cpp:777
 msgid "Match tags from word boundaries."
 msgstr "Встановлювати відповідність лише на межі слів."
 
-#: AnnotationDialog/Dialog.cpp:659
+#: AnnotationDialog/Dialog.cpp:778
 msgid "Match tags anywhere."
 msgstr "Встановлювати відповідність міток всюди."
 
-#: AnnotationDialog/Dialog.cpp:677 AnnotationDialog/ListSelect.cpp:106
+#: AnnotationDialog/Dialog.cpp:796 AnnotationDialog/ListSelect.cpp:108
 msgid "Show only selected Ctrl+S"
 msgstr "Показувати лише позначені Ctrl+S"
 
-#: AnnotationDialog/Dialog.cpp:719
+#: AnnotationDialog/Dialog.cpp:838
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
@@ -202,7 +222,7 @@ msgstr ""
 "<p>Не вдалося зберегти компонування вікна.</p>Не вдалося відкрити файл %1 "
 "через таку помилку: %2"
 
-#: AnnotationDialog/Dialog.cpp:726
+#: AnnotationDialog/Dialog.cpp:845
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
@@ -211,7 +231,7 @@ msgstr ""
 "<p>Не вдалося зберегти компонування вікна.</p>Не вдалося виконати запис до "
 "файла %1 через таку помилку: %2"
 
-#: AnnotationDialog/Dialog.cpp:788
+#: AnnotationDialog/Dialog.cpp:906
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
 "recent changes for each affected file?</p>"
@@ -219,7 +239,7 @@ msgstr ""
 "<p>Було зроблено деякі зміни у примітках. Ви справді бажаєте скасувати всі "
 "нещодавні зміни у кожному з файлів, яких вони торкнулися?</p>"
 
-#: AnnotationDialog/Dialog.cpp:877
+#: AnnotationDialog/Dialog.cpp:1007
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
 "it, it is suggested that you read the section in the manual on <a href="
@@ -236,7 +256,7 @@ msgstr ""
 "розділі щодо <a href=\"help:/kphotoalbum/chp-typingIn.html\">введення даних</"
 "a>.</p>"
 
-#: AnnotationDialog/Dialog.cpp:886
+#: AnnotationDialog/Dialog.cpp:1016
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
 "contains lots of functionality which has been optimized for fast usage.</"
@@ -249,66 +269,70 @@ msgstr ""
 "хвилин читанню <a href=\"help:/kphotoalbum/chp-typingIn.html\">документації "
 "щодо цього діалогового вікна</a></p>"
 
-#: AnnotationDialog/Dialog.cpp:1007
+#: AnnotationDialog/Dialog.cpp:1135
 msgid "Sort Most Recently Used"
 msgstr "Впорядкувати нещодавно використані"
 
-#: AnnotationDialog/Dialog.cpp:1010
+#: AnnotationDialog/Dialog.cpp:1138
 msgid "Toggle Sorting"
 msgstr "Перемикнути впорядкування"
 
-#: AnnotationDialog/Dialog.cpp:1015
+#: AnnotationDialog/Dialog.cpp:1143
 msgid "Toggle Showing Selected Items Only"
 msgstr "Перемкнути показ лише вибраних елементів"
 
-#: AnnotationDialog/Dialog.cpp:1020
+#: AnnotationDialog/Dialog.cpp:1148
 msgid "Annotate Next"
 msgstr "Додати примітку до наступного"
 
-#: AnnotationDialog/Dialog.cpp:1024
+#: AnnotationDialog/Dialog.cpp:1152
 msgid "Annotate Previous"
 msgstr "Додати примітку до попереднього"
 
-#: AnnotationDialog/Dialog.cpp:1028
+#: AnnotationDialog/Dialog.cpp:1156
 msgid "OK dialog"
 msgstr "Діалогове вікно «Гаразд»"
 
-#: AnnotationDialog/Dialog.cpp:1032 AnnotationDialog/ListSelect.cpp:302
-#: Settings/CategoryPage.cpp:100
+#: AnnotationDialog/Dialog.cpp:1160 AnnotationDialog/ListSelect.cpp:318
+#: Settings/CategoryPage.cpp:119
 msgid "Delete"
 msgstr "Вилучити"
 
-#: AnnotationDialog/Dialog.cpp:1036
+#: AnnotationDialog/Dialog.cpp:1164
 msgid "Copy tags from previous image"
 msgstr "Копіювати мітки з попереднього зображення"
 
-#: AnnotationDialog/Dialog.cpp:1040 AnnotationDialog/ImagePreviewWidget.cpp:56
-#: MainWindow/Window.cpp:729 Viewer/ViewerWidget.cpp:270
+#: AnnotationDialog/Dialog.cpp:1168 AnnotationDialog/ImagePreviewWidget.cpp:58
+#: MainWindow/Window.cpp:756
 msgid "Rotate counterclockwise"
 msgstr "Повернути проти годинникової стрілки"
 
-#: AnnotationDialog/Dialog.cpp:1043 AnnotationDialog/ImagePreviewWidget.cpp:62
-#: MainWindow/Window.cpp:734 Viewer/ViewerWidget.cpp:260
+#: AnnotationDialog/Dialog.cpp:1171 AnnotationDialog/ImagePreviewWidget.cpp:64
+#: MainWindow/Window.cpp:761
 msgid "Rotate clockwise"
 msgstr "Повернути за годинниковою стрілкою"
 
-#: AnnotationDialog/Dialog.cpp:1046
+#: AnnotationDialog/Dialog.cpp:1174
 msgid "Toggle fullscreen preview"
 msgstr "Увімкнути/Вимкнути повноекранний перегляд"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:42
+#: AnnotationDialog/ImagePreviewWidget.cpp:44
 msgid "Annotate previous image"
 msgstr "Додати примітку до попереднього зображення"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:48
+#: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate next image"
 msgstr "Додати примітку до наступного зображення"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:68
+#: AnnotationDialog/ImagePreviewWidget.cpp:70
 msgid "Copy tags from previously tagged image"
 msgstr "Копіювати мітки з раніше міченого зображення"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:74
+#: AnnotationDialog/ImagePreviewWidget.cpp:76
+msgid "Hide or show areas on the image"
+msgstr "Показати або приховати області на зображенні"
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:84
 msgid "Delete image"
 msgstr "Вилучити зображення"
 
@@ -324,60 +348,60 @@ msgstr "сьогодні"
 msgid "yesterday"
 msgstr "вчора"
 
-#: AnnotationDialog/ListSelect.cpp:75 DB/ImageSearchInfo.cpp:247
+#: AnnotationDialog/ListSelect.cpp:77 DB/ImageSearchInfo.cpp:247
 msgid "or"
 msgstr "або"
 
-#: AnnotationDialog/ListSelect.cpp:76 DB/ImageSearchInfo.cpp:242
+#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:242
 msgid "and"
 msgstr "і"
 
-#: AnnotationDialog/ListSelect.cpp:292
+#: AnnotationDialog/ListSelect.cpp:308
 msgid "No Item Selected"
 msgstr "Не вибрано жодного елемента"
 
-#: AnnotationDialog/ListSelect.cpp:303
+#: AnnotationDialog/ListSelect.cpp:319
 msgid "Rename..."
 msgstr "Перейменувати..."
 
-#: AnnotationDialog/ListSelect.cpp:305
+#: AnnotationDialog/ListSelect.cpp:321
 msgid "<b>Sub Categories</b>"
 msgstr "<b>Підкатегорії</b>"
 
-#: AnnotationDialog/ListSelect.cpp:313
+#: AnnotationDialog/ListSelect.cpp:329
 msgid "Super Categories"
 msgstr "Надкатегорії"
 
-#: AnnotationDialog/ListSelect.cpp:330
+#: AnnotationDialog/ListSelect.cpp:346
 msgid "New Category..."
 msgstr "Створити категорію..."
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:349
 msgid "Create Subcategory..."
 msgstr "Створити підкатегорію..."
 
-#: AnnotationDialog/ListSelect.cpp:339
+#: AnnotationDialog/ListSelect.cpp:355
 #, kde-format
 msgid "Take item out of category %1"
 msgstr "Взяти елемент з категорії %1"
 
-#: AnnotationDialog/ListSelect.cpp:342
+#: AnnotationDialog/ListSelect.cpp:358
 msgid "<b>Sorting</b>"
 msgstr "<b>Впорядкування</b>"
 
-#: AnnotationDialog/ListSelect.cpp:348
+#: AnnotationDialog/ListSelect.cpp:364
 msgid "Usage"
 msgstr "Використання"
 
-#: AnnotationDialog/ListSelect.cpp:349
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Alphabetical (Flat)"
 msgstr "За абеткою (плоский список)"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:366
 msgid "Alphabetical (Tree)"
 msgstr "За абеткою (ієрархія)"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:386
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -387,24 +411,24 @@ msgstr ""
 "вилучення будь-якої інформації про нього з зображення, що містить елемент.</"
 "p>"
 
-#: AnnotationDialog/ListSelect.cpp:374
+#: AnnotationDialog/ListSelect.cpp:390
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "Ви справді бажаєте вилучити %1?"
 
-#: AnnotationDialog/ListSelect.cpp:375 Settings/SubCategoriesPage.cpp:191
+#: AnnotationDialog/ListSelect.cpp:391 Settings/SubCategoriesPage.cpp:191
 msgid "&Delete"
 msgstr "&Вилучити"
 
-#: AnnotationDialog/ListSelect.cpp:383
+#: AnnotationDialog/ListSelect.cpp:405
 msgid "Rename Item"
 msgstr "Перейменувати елемент"
 
-#: AnnotationDialog/ListSelect.cpp:383
+#: AnnotationDialog/ListSelect.cpp:405
 msgid "Enter new name:"
 msgstr "Введіть нову назву:"
 
-#: AnnotationDialog/ListSelect.cpp:387
+#: AnnotationDialog/ListSelect.cpp:409
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -414,32 +438,58 @@ msgstr ""
 "операції також змінить назву «%3» кожного з зображень, що у ній містяться.</"
 "p>"
 
-#: AnnotationDialog/ListSelect.cpp:391
+#: AnnotationDialog/ListSelect.cpp:413
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "Ви справді бажаєте змінити назву %1?"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:444
 msgid "New Super Category"
 msgstr "Створити надкатегорію"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:444
 msgid "New Super Category Name:"
 msgstr "Назва нової надкатегорії:"
 
-#: AnnotationDialog/ListSelect.cpp:426
+#: AnnotationDialog/ListSelect.cpp:453
 msgid "New Sub Category"
 msgstr "Створити підкатегорію"
 
-#: AnnotationDialog/ListSelect.cpp:426
+#: AnnotationDialog/ListSelect.cpp:453
 msgid "New Sub Category Name:"
 msgstr "Назва нової підкатегорії:"
+
+#: AnnotationDialog/ResizableFrame.cpp:46
+msgctxt "area of an image; rectangle that is overlayed upon the image"
+msgid "Remove area"
+msgstr "Вилучити область"
+
+#: AnnotationDialog/ResizableFrame.cpp:293
+#, kde-format
+msgctxt ""
+"As in: remove tag %1 in category %2 [from this marked area of the image]"
+msgid "Remove tag %1 (%2)"
+msgstr "Вилучити мітку %1 (%2)"
+
+#: AnnotationDialog/ResizableFrame.cpp:304
+#, kde-format
+msgctxt ""
+"As in: associate [this marked area of the image] with tag %1 in category %2"
+msgid "Associate with %1 (%2)"
+msgstr "Пов’язати з %1 (%2)"
+
+#: AnnotationDialog/ResizableFrame.cpp:326
+msgctxt ""
+"As in: associate [this marked area of the image] with one of the following "
+"choices/menu items"
+msgid "Associate with"
+msgstr "Пов’язати з"
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
 msgid "Extracting Thumbnail"
 msgstr "Видобування мініатюр"
 
-#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:43
+#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:44
 msgid "Extract Video Thumbnail"
 msgstr "Видобування мініатюр відео"
 
@@ -447,11 +497,11 @@ msgstr "Видобування мініатюр відео"
 msgid "Read Video Length"
 msgstr "Читання даних щодо тривалості відео"
 
-#: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:55
+#: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:58
 msgid "Search for videos without length information"
 msgstr "Шукати відео без даних щодо тривалості"
 
-#: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:59
+#: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:63
 msgid "Searching for videos without video thumbnails"
 msgstr "Шукати відео без мініатюр"
 
@@ -460,38 +510,41 @@ msgid "Not Started"
 msgstr "Не почато"
 
 #: BackgroundTaskManager/JobModel.cpp:97
+msgctxt "@title:column Background job id"
 msgid "ID"
 msgstr "Ід."
 
 #: BackgroundTaskManager/JobModel.cpp:98
+msgctxt "@title:column Background job title"
 msgid "Title"
 msgstr "Заголовок"
 
 #: BackgroundTaskManager/JobModel.cpp:99
+msgctxt "@title:column Additional information on background job"
 msgid "Details"
 msgstr "Подробиці"
 
 #: BackgroundTaskManager/JobModel.cpp:100
+msgctxt "@title:column Elapsed time"
 msgid "Elapsed"
 msgstr "Минуло"
 
-#: BackgroundTaskManager/JobViewer.cpp:31
+#: BackgroundTaskManager/JobViewer.cpp:33
 msgid "Background Job Viewer"
 msgstr "Перегляд фонових завдань"
 
-#: BackgroundTaskManager/JobViewer.cpp:60
+#: BackgroundTaskManager/JobViewer.cpp:66
 msgid "Continue"
 msgstr "Продовжити"
 
 #. i18n: ectx: property (text), widget (QPushButton, pause)
-#: BackgroundTaskManager/JobViewer.cpp:60
-#: BackgroundTaskManager/JobViewer.ui:45 Viewer/ViewerWidget.cpp:505
+#: BackgroundTaskManager/JobViewer.cpp:66
+#: BackgroundTaskManager/JobViewer.ui:45
 msgid "Pause"
 msgstr "Пауза"
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
-#: Viewer/ViewerWidget.cpp:163
 msgid "Close"
 msgstr "Закрити"
 
@@ -500,38 +553,42 @@ msgstr "Закрити"
 msgid ""
 "<p>Active jobs: %1<br/>Pending jobs: %2<hr/><br/>Color codes:"
 "<ul><li><b>blinking green</b>: Active background jobs</li><li><b>gray</b>: "
-"No active jobs</li><li><b>solid yellow</b>: Job queue is paused<li/"
-"><li><b>blinking yellow</b>: Job queue is paused for background jobs, but is "
-"executing a foreground job (like extracting a thumbnail for a video file, "
-"which is currently shown in the thumbnail viewer)</li></p>"
+"No active jobs</li><li><b>solid yellow</b>: Job queue is paused</"
+"li><li><b>blinking yellow</b>: Job queue is paused for background jobs, but "
+"is executing a foreground job (like extracting a thumbnail for a video file, "
+"which is currently shown in the thumbnail viewer)</li></ul></p>"
 msgstr ""
 "<p>Активні завдання: %1<br/>Завдання з черги: %2<hr/><br/>Коди кольорів:"
 "<ul><li><b>зелений з блиманням</b>: активні завдання виконуються у тлі</"
 "li><li><b>сірий</b>: немає активних завдань</li><li><b>суцільний жовтий</b>: "
-"чергу завдань призупинено<li/><li><b>жовтий з блиманням</b>: чергу завдань "
+"чергу завдань призупинено</li><li><b>жовтий з блиманням</b>: чергу завдань "
 "призупинено для завдань у тлі, але виконуються основні завдання (наприклад "
 "створення мініатюри на основі відеофайла, який зараз показано на панелі "
-"перегляду мініатюр)</li></p>"
+"перегляду мініатюр)</li></ul></p>"
 
-#: Browser/AbstractCategoryModel.cpp:46 MainWindow/StatisticsDialog.cpp:129
-#: Plugins/CategoryImageCollection.cpp:34
+#: Browser/AbstractCategoryModel.cpp:46
+msgctxt "As in No persons, no locations etc."
 msgid "None"
 msgstr "Немає"
 
 #: Browser/AbstractCategoryModel.cpp:48
+msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Нічого крім"
 
 #: Browser/AbstractCategoryModel.cpp:51
+msgctxt "Denotes the media type (video,image)"
 msgid "Video"
 msgstr "Відео"
 
 #: Browser/AbstractCategoryModel.cpp:53
+msgctxt "Denotes the media type (video,image)"
 msgid "Image"
 msgstr "Зображення"
 
 #: Browser/AbstractCategoryModel.cpp:100
 #, kde-format
+msgctxt "@item:intable number of images with a specific tag."
 msgid "1 image"
 msgid_plural "%1 images"
 msgstr[0] "%1 зображення"
@@ -541,6 +598,7 @@ msgstr[3] "%1 зображення"
 
 #: Browser/AbstractCategoryModel.cpp:101
 #, kde-format
+msgctxt "@item:intable number of videos with a specific tag."
 msgid "1 video"
 msgid_plural "%1 videos"
 msgstr[0] "%1 відеофайл"
@@ -549,7 +607,7 @@ msgstr[2] "%1 відеофайлів"
 msgstr[3] "%1 відеофайл"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:80
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
 msgid "Images"
 msgstr "Зображення"
 
@@ -557,13 +615,19 @@ msgstr "Зображення"
 msgid "Videos"
 msgstr "Відео"
 
-#: Browser/Breadcrumb.cpp:36 MainWindow/StatisticsDialog.cpp:167
+#: Browser/Breadcrumb.cpp:36
+msgctxt "As in 'all pictures'."
 msgid "All"
 msgstr "Всі"
 
 #: Browser/OverviewPage.cpp:132
 msgid "Exif Info"
 msgstr "Інформація Exif"
+
+#: Browser/OverviewPage.cpp:143
+msgctxt "@action Search button in the browser view."
+msgid "Search"
+msgstr "Шукати"
 
 #: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:29
 msgid "Untagged Images"
@@ -586,6 +650,7 @@ msgid "EXIF Search"
 msgstr "Пошук EXIF"
 
 #: Browser/OverviewPage.cpp:259
+msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "пошук"
 
@@ -669,16 +734,51 @@ msgstr "Пересунути елементи"
 msgid "Widen selection to include all images and videos again"
 msgstr "Розширити вибір, щоб знову включити всі зображення і відеофайли"
 
-#: DateBar/DateBarWidget.cpp:511
+#: DateBar/DateBarWidget.cpp:89
+msgctxt "@info"
+msgid ""
+"<title>The date bar</title><para>The date bar gives you an overview of the "
+"approximate number of images taken in a given time frame.Time units are "
+"shown on the <emphasis>timeline</emphasis>. Above it, a histogram indicates "
+"the number of images for that time range.</para><para>You can interact with "
+"the date bar in several ways:<list><item>Zoom in or out by using the +/- "
+"buttons or Ctrl + scrollwheel.</item><item>Scroll the timeline either by "
+"using the arrow buttons or the scroll wheel, or by dragging it using the "
+"middle mouse button.</item><item>Restrict the current view to a given time "
+"frame by clicking below the timeline and marking the time frame.</"
+"item><item>Clicking on the timeline sets the <emphasis>focus</emphasis> for "
+"the thumbnail view, i.e. jumps to the first thumbnail of the time unit in "
+"focus.</item></list></para>"
+msgstr ""
+"<title>Панель дати</title><para>За допомогою панелі дати ви можете визначити "
+"приблизну кількість знімків, які було зроблено у певний період часу.</"
+"para><para>Одиниці виміру часу буде показано на <emphasis>часовій шкалі</"
+"emphasis>. Над шкалою буде показано гістограму зі значеннями кількості "
+"знімків у показаному діапазоні часу.</para><para>Ви можете керувати панеллю "
+"дати у декілька способів:<list><item>Збільшувати або зменшувати масштаб за "
+"допомогою натискання кнопок «+» і «-» або прокручуванням коліщатка миші з "
+"одночасним утриманням натиснутою клавіші Ctrl.</item><item>Гортати часову "
+"шкалу за допомогою кнопок зі стрілками, прокручування коліщатка миші або "
+"перетягування шкали вказівником миші під час утримання натиснутою середньої "
+"кнопки миші.</item><item>Обмежити список показаних зображень вказаним на "
+"часовій шкалі діапазоном. Щоб вказати діапазон, достатньо клацнути лівою "
+"кнопкою миші під часовою шкалою і позначити точки початку і завершення "
+"діапазону.</item><item>Клацання лівою кнопкою миші над часовою шкалою "
+"встановлює <emphasis>фокусування</emphasis> для панелі мініатюр, тобто "
+"встановлює позначення на першій з мініатюр відповідного часового діапазону.</"
+"item></list></para>"
+
+#: DateBar/DateBarWidget.cpp:552
 msgid "Show Ranges"
 msgstr "Показати діапазон"
 
-#: DateBar/DateBarWidget.cpp:517
+#: DateBar/DateBarWidget.cpp:558
 msgid "Show Resolution Indicator"
 msgstr "Показати індикатор роздільної здатності"
 
-#: DateBar/DateBarWidget.cpp:635
+#: DateBar/DateBarWidget.cpp:682
 #, kde-format
+msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
 msgid_plural "%1 exact"
 msgstr[0] "%1 точно"
@@ -686,8 +786,11 @@ msgstr[1] "%1 точно"
 msgstr[2] "%1 точно"
 msgstr[3] "1 точно"
 
-#: DateBar/DateBarWidget.cpp:636
+#: DateBar/DateBarWidget.cpp:684
 #, kde-format
+msgctxt ""
+"@info:status additional images captured in a date range that overlaps with "
+"the given date range,"
 msgid " + 1 range"
 msgid_plural " + %1 ranges"
 msgstr[0] " + %1 у діапазоні"
@@ -695,8 +798,9 @@ msgstr[1] " + %1 у діапазоні"
 msgstr[2] " + %1 у діапазоні"
 msgstr[3] " + %1 у діапазоні"
 
-#: DateBar/DateBarWidget.cpp:637
+#: DateBar/DateBarWidget.cpp:685
 #, kde-format
+msgctxt "@info:status total image count"
 msgid " = 1 total"
 msgid_plural " = %1 total"
 msgstr[0] " = загалом %1"
@@ -704,8 +808,9 @@ msgstr[1] " = загалом %1"
 msgstr[2] " = загалом %1"
 msgstr[3] " = загалом 1"
 
-#: DateBar/DateBarWidget.cpp:639
+#: DateBar/DateBarWidget.cpp:687
 #, kde-format
+msgctxt "@info:status image count"
 msgid "%1 image/video"
 msgid_plural "%1 images/videos"
 msgstr[0] "%1 зображення/відео"
@@ -713,8 +818,10 @@ msgstr[1] "%1 зображення/відео"
 msgstr[2] "%1 зображень/відео"
 msgstr[3] "1 зображення/відео"
 
-#: DateBar/DateBarWidget.cpp:641
+#: DateBar/DateBarWidget.cpp:689
 #, kde-format
+msgctxt ""
+"@info:status Time range vs. image count (e.g. 'Jun 2012 | 4 images/videos')."
 msgid "%1 | %2"
 msgstr "%1 | %2"
 
@@ -742,15 +849,15 @@ msgstr "2 години"
 msgid "10 Minutes"
 msgstr "10 хвилин"
 
-#: DB/Category.cpp:139 DB/Category.cpp:147 XMLDB/FileReader.cpp:335
+#: DB/Category.cpp:139 DB/Category.cpp:147
 msgid "People"
 msgstr "Люди"
 
-#: DB/Category.cpp:140 DB/Category.cpp:148 XMLDB/FileReader.cpp:336
+#: DB/Category.cpp:140 DB/Category.cpp:148
 msgid "Places"
 msgstr "Місця"
 
-#: DB/Category.cpp:141 XMLDB/FileReader.cpp:337
+#: DB/Category.cpp:141
 msgid "Events"
 msgstr "Події"
 
@@ -789,58 +896,70 @@ msgid "Error Saving Image"
 msgstr "Помилка під час збереження зображення"
 
 #: DB/ImageDate.cpp:343
+msgctxt "Abbreviated month name"
 msgid "jan"
 msgstr "січ"
 
 #: DB/ImageDate.cpp:343
+msgctxt "Abbreviated month name"
 msgid "feb"
 msgstr "лют"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:344
+msgctxt "Abbreviated month name"
 msgid "mar"
 msgstr "бер"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:344
+msgctxt "Abbreviated month name"
 msgid "apr"
 msgstr "кві"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:345
+msgctxt "Abbreviated month name"
 msgid "may"
 msgstr "тра"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:345
+msgctxt "Abbreviated month name"
 msgid "jun"
 msgstr "чер"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:346
+msgctxt "Abbreviated month name"
 msgid "jul"
 msgstr "лип"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:346
+msgctxt "Abbreviated month name"
 msgid "aug"
 msgstr "сер"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:347
+msgctxt "Abbreviated month name"
 msgid "sep"
 msgstr "вер"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:347
+msgctxt "Abbreviated month name"
 msgid "oct"
 msgstr "жов"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:348
+msgctxt "Abbreviated month name"
 msgid "nov"
 msgstr "лис"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:348
+msgctxt "Abbreviated month name"
 msgid "dec"
 msgstr "гру"
 
-#: DB/ImageDB.cpp:145
+#: DB/ImageDB.cpp:146
 msgid "Loading information from images"
 msgstr "Завантаження інформації з зображень"
 
-#: DB/ImageDB.cpp:146
+#: DB/ImageDB.cpp:147
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -867,7 +986,7 @@ msgctxt ""
 msgid "No other %1"
 msgstr "Без інших %1"
 
-#: DB/NewImageFinder.cpp:127
+#: DB/NewImageFinder.cpp:129
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
 "of images, this may take some time.<br/>However, there is only a delay when "
@@ -877,7 +996,7 @@ msgstr ""
 "зображень воно може тривати деякий час.<br/>Але ця затримка виникатиме, лише "
 "якщо знайдено нові зображення.</p>"
 
-#: DB/NewImageFinder.cpp:310
+#: DB/NewImageFinder.cpp:314
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -886,7 +1005,7 @@ msgstr[1] "<p><b>Обчислення контрольної суми для %1 
 msgstr[2] "<p><b>Обчислення контрольної суми для %1 файлів</b></p>"
 msgstr[3] "<p><b>Обчислення контрольної суми для %1 файлів</b></p>"
 
-#: DB/NewImageFinder.cpp:311
+#: DB/NewImageFinder.cpp:315
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -894,7 +1013,7 @@ msgstr ""
 "<p>Збереження контрольної суми для кожного зображення дозволяє KPhotoAlbum "
 "знаходити зображення, навіть якщо ви пересунули їх на диску.</p>"
 
-#: DB/NewImageFinder.cpp:354
+#: DB/NewImageFinder.cpp:358
 msgid "Following files could not be read:"
 msgstr "Список файлів, які неможливо прочитати:"
 
@@ -909,9 +1028,9 @@ msgid ""
 msgstr ""
 "<p>Під час виконання команди сервера SQL сталася помилка. Причиною помилки, "
 "ймовірно, було пошкодження файла бази даних.</p><p>Щоб виправити цю помилку, "
-"скористайтеся пунктом меню Обслуговування->Створити заново базу даних "
-"пошуків EXIF.</p><hr/><p>Для зневаджування. Було виконано таку команду:<br/>"
-"%1</p><p>Отримано наступне повідомлення про помилку:<br/>%2</p>"
+"скористайтеся пунктом меню «Обслуговування → Створити заново базу даних "
+"пошуків EXIF».</p><hr/><p>Для налагоджування. Було виконано таку команду:<br/"
+">%1</p><p>Отримано наступне повідомлення про помилку:<br/>%2</p>"
 
 #: Exif/Database.cpp:85
 msgid "Error Executing Exif Command"
@@ -921,21 +1040,17 @@ msgstr "Помилка під час виконання команди Exif"
 msgid "Rereading EXIF information from all images"
 msgstr "Повторне читання інформації EXIF з усіх зображень"
 
-#: Exif/InfoDialog.cpp:36
+#: Exif/InfoDialog.cpp:38
 msgid "EXIF Information"
 msgstr "Інформація EXIF"
 
-#: Exif/InfoDialog.cpp:65
-msgid "Current EXIF Label Search: "
-msgstr "Поточний пошук у мітках EXIF: "
+#: Exif/InfoDialog.cpp:68
+msgid "EXIF Label Search: "
+msgstr "Пошук міток EXIF: "
 
-#: Exif/InfoDialog.cpp:79
+#: Exif/InfoDialog.cpp:74
 msgid "IPTC character set:"
 msgstr "Набір символів IPTC:"
-
-#: Exif/InfoDialog.cpp:99
-msgid "<No Search>"
-msgstr "<Пошук відсутній>"
 
 #: Exif/ReReadDialog.cpp:35
 msgid "Read EXIF info from files"
@@ -995,6 +1110,7 @@ msgid "Focal Length"
 msgstr "Фокусна відстань"
 
 #: Exif/SearchDialog.cpp:81
+msgctxt "As in 'A range from x to y'"
 msgid "to"
 msgstr "до"
 
@@ -1007,7 +1123,7 @@ msgstr "мм"
 msgid "Camera"
 msgstr "Камера"
 
-#: Exif/SearchDialog.cpp:111 Settings/GeneralPage.cpp:109
+#: Exif/SearchDialog.cpp:111 Settings/GeneralPage.cpp:124
 msgid "Miscellaneous"
 msgstr "Різне"
 
@@ -1056,58 +1172,58 @@ msgstr "Насиченість"
 msgid "No cameras found in the database"
 msgstr "У базі даних не знайдено фотоапаратів"
 
-#: HTMLGenerator/Generator.cpp:47
+#: HTMLGenerator/Generator.cpp:52
 msgid "Generating images for HTML page "
 msgstr "Створення зображень для HTML-сторінки"
 
-#: HTMLGenerator/Generator.cpp:142
+#: HTMLGenerator/Generator.cpp:150
 #, kde-format
 msgid "Error copying %1 to %2"
 msgstr "Помилка копіювання %1 до %2"
 
-#: HTMLGenerator/Generator.cpp:381
+#: HTMLGenerator/Generator.cpp:414
 #, kde-format
 msgid "<a href=\"%1\">prev</a>"
 msgstr "<a href=\"%1\">попер</a>"
 
-#: HTMLGenerator/Generator.cpp:383 HTMLGenerator/Generator.cpp:391
+#: HTMLGenerator/Generator.cpp:416 HTMLGenerator/Generator.cpp:424
 msgid "prev"
 msgstr "попер"
 
-#: HTMLGenerator/Generator.cpp:395
+#: HTMLGenerator/Generator.cpp:428
 #, c-format, kde-format
 msgid "<a href=\"index-%1.html\">index</a>"
 msgstr "<a href=\"index-%1.html\">покажчик</a>"
 
-#: HTMLGenerator/Generator.cpp:404
+#: HTMLGenerator/Generator.cpp:437
 #, kde-format
 msgid "<a href=\"%1\">next</a>"
 msgstr "<a href=\"%1\">наст.</a>"
 
-#: HTMLGenerator/Generator.cpp:406 HTMLGenerator/Generator.cpp:413
+#: HTMLGenerator/Generator.cpp:439 HTMLGenerator/Generator.cpp:446
 msgid "next"
 msgstr "наст."
 
-#: HTMLGenerator/Generator.cpp:536
+#: HTMLGenerator/Generator.cpp:585
 #, kde-format
 msgid "Could not create file '%1'."
 msgstr "Не вдалося створити файл «%1»."
 
-#: HTMLGenerator/Generator.cpp:537
+#: HTMLGenerator/Generator.cpp:586
 msgid "Could Not Create File"
 msgstr "Не вдалося створити файл"
 
-#: HTMLGenerator/Generator.cpp:569
+#: HTMLGenerator/Generator.cpp:618
 #, kde-format
 msgid "<p>Unable to copy %1 to %2</p>"
 msgstr "<p>Неможливо скопіювати %1 до %2</p>"
 
-#: HTMLGenerator/Generator.cpp:601
+#: HTMLGenerator/Generator.cpp:653
 #, kde-format
 msgid "Unable to write image '%1'."
 msgstr "Неможливо записати зображення «%1»."
 
-#: HTMLGenerator/Generator.cpp:678 HTMLGenerator/HTMLDialog.cpp:114
+#: HTMLGenerator/Generator.cpp:730 HTMLGenerator/HTMLDialog.cpp:134
 msgid "Date"
 msgstr "Дата"
 
@@ -1139,67 +1255,84 @@ msgstr "Створити файл експорту .kim"
 msgid "Inline Movies in pages"
 msgstr "Вбудовані ролики у сторінках"
 
-#: HTMLGenerator/HTMLDialog.cpp:106
+#: HTMLGenerator/HTMLDialog.cpp:105
+msgid "Use HTML5 video tag"
+msgstr "Використовувати відеомітку HTML5"
+
+#: HTMLGenerator/HTMLDialog.cpp:116
+msgid ""
+"<p>This selection will generate video files suitable for displaying on web. "
+"avconv and ffmpeg2theora are required for video file generation.</p>"
+msgstr ""
+"<p>Якщо буде позначено цей пункт, програма створюватиме відеофайли, придатні "
+"до показу у інтернеті. Для створення таких відеофайлів слід встановити "
+"пакунки avconv та ffmpeg2theora.</p>"
+
+#: HTMLGenerator/HTMLDialog.cpp:118
+msgid "Generate HTML5 video files (mp4 and ogg)"
+msgstr "Створювати відеофайли HTML5 (mp4 та ogg)"
+
+#: HTMLGenerator/HTMLDialog.cpp:126
 msgid "What to Include"
 msgstr "Що включати"
 
-#: HTMLGenerator/HTMLDialog.cpp:143 HTMLGenerator/HTMLDialog.cpp:144
+#: HTMLGenerator/HTMLDialog.cpp:163 HTMLGenerator/HTMLDialog.cpp:164
 msgid "Layout"
 msgstr "Компонування"
 
-#: HTMLGenerator/HTMLDialog.cpp:153
+#: HTMLGenerator/HTMLDialog.cpp:173
 msgid "Thumbnail size:"
 msgstr "Розмір мініатюри:"
 
-#: HTMLGenerator/HTMLDialog.cpp:168
+#: HTMLGenerator/HTMLDialog.cpp:188
 msgid "Number of columns:"
 msgstr "Кількість стовпчиків:"
 
-#: HTMLGenerator/HTMLDialog.cpp:183
+#: HTMLGenerator/HTMLDialog.cpp:203
 msgid "Theme:"
 msgstr "Тема:"
 
-#: HTMLGenerator/HTMLDialog.cpp:191
+#: HTMLGenerator/HTMLDialog.cpp:211
 msgid "Theme Description"
 msgstr "Опис теми"
 
-#: HTMLGenerator/HTMLDialog.cpp:198
+#: HTMLGenerator/HTMLDialog.cpp:218
 msgid "Image Sizes"
 msgstr "Розміри зображень"
 
-#: HTMLGenerator/HTMLDialog.cpp:207
+#: HTMLGenerator/HTMLDialog.cpp:227
 msgid "Full size"
 msgstr "Повний розмір"
 
-#: HTMLGenerator/HTMLDialog.cpp:250 HTMLGenerator/HTMLDialog.cpp:251
+#: HTMLGenerator/HTMLDialog.cpp:272 HTMLGenerator/HTMLDialog.cpp:273
 msgid "Destination"
 msgstr "Призначення"
 
-#: HTMLGenerator/HTMLDialog.cpp:260
+#: HTMLGenerator/HTMLDialog.cpp:282
 msgid "Base directory:"
 msgstr "Базовий каталог:"
 
-#: HTMLGenerator/HTMLDialog.cpp:278
+#: HTMLGenerator/HTMLDialog.cpp:300
 msgid "Base URL:"
 msgstr "Базова адреса URL:"
 
-#: HTMLGenerator/HTMLDialog.cpp:287
+#: HTMLGenerator/HTMLDialog.cpp:309
 msgid "URL for final destination:"
 msgstr "URL остаточного призначення:"
 
-#: HTMLGenerator/HTMLDialog.cpp:295
+#: HTMLGenerator/HTMLDialog.cpp:317
 msgid "Output directory:"
 msgstr "Каталог виводу:"
 
-#: HTMLGenerator/HTMLDialog.cpp:301
+#: HTMLGenerator/HTMLDialog.cpp:323
 msgid "<b>Hint: Press the help button for descriptions of the fields</b>"
 msgstr "<b>Підказка: натисніть кнопку «Довідка», щоб побачити описи полів</b>"
 
-#: HTMLGenerator/HTMLDialog.cpp:312
+#: HTMLGenerator/HTMLDialog.cpp:334
 msgid "You must select at least one resolution."
 msgstr "Вам слід вибрати принаймні одну роздільну здатність."
 
-#: HTMLGenerator/HTMLDialog.cpp:350
+#: HTMLGenerator/HTMLDialog.cpp:374
 msgid ""
 "<p>You did not specify a base directory. This is the topmost directory for "
 "your images. Under this directory you will find each generated collection in "
@@ -1208,11 +1341,11 @@ msgstr ""
 "<p>Ви не вказали базового каталогу. Це найвищий каталог для ваших зображень. "
 "У цьому каталозі ви знайдете всі створені збірки у окремих підкаталогах.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:354
+#: HTMLGenerator/HTMLDialog.cpp:378
 msgid "No Base Directory Specified"
 msgstr "Не вказано базового каталогу"
 
-#: HTMLGenerator/HTMLDialog.cpp:360
+#: HTMLGenerator/HTMLDialog.cpp:384
 msgid ""
 "<p>You did not specify an output directory. This is a directory containing "
 "the actual images. The directory will be in the base directory specified "
@@ -1221,11 +1354,11 @@ msgstr ""
 "<p>Ви не визначили каталогу виводу. Це каталог, що містить справжні "
 "зображення. Каталогом буде базовий каталог, визначений вище.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:363
+#: HTMLGenerator/HTMLDialog.cpp:387
 msgid "No Output Directory Specified"
 msgstr "Не вказано каталогу виводу"
 
-#: HTMLGenerator/HTMLDialog.cpp:371
+#: HTMLGenerator/HTMLDialog.cpp:395
 #, kde-format
 msgid ""
 "<p>Error while reading information about %1. This is most likely because the "
@@ -1234,12 +1367,12 @@ msgstr ""
 "<p>Помилка під час читання інформації про %1. Скоріше за все, це сталося "
 "через те, що відповідної теки не існує.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:379
+#: HTMLGenerator/HTMLDialog.cpp:403
 #, kde-format
 msgid "<p>%1 does not exist, is not a directory or cannot be written to.</p>"
 msgstr "<p>%1 не існує, не є каталогом або запис туди неможливий.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:389
+#: HTMLGenerator/HTMLDialog.cpp:413
 #, kde-format
 msgid ""
 "<p>Output directory %1 already exists. Usually, this means you should "
@@ -1248,25 +1381,25 @@ msgstr ""
 "<p>Каталог виводу %1 вже існує. Потрібно вказати новий каталог.</"
 "p><p>Спочатку вилучити %2?</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:392
+#: HTMLGenerator/HTMLDialog.cpp:416
 msgid "Directory Exists"
 msgstr "Каталог існує"
 
-#: HTMLGenerator/HTMLDialog.cpp:467
+#: HTMLGenerator/HTMLDialog.cpp:491 MainWindow/SplashScreen.cpp:66
 #, kde-format
 msgid "%1"
 msgstr "%1"
 
-#: HTMLGenerator/HTMLDialog.cpp:478
+#: HTMLGenerator/HTMLDialog.cpp:502
 msgid "Could not find any themes - this is very likely an installation error"
 msgstr "Не вдалося знайти жодної теми - ймовірно, це помилка встановлення"
 
-#: HTMLGenerator/HTMLDialog.cpp:485
+#: HTMLGenerator/HTMLDialog.cpp:509
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
 msgstr "Вказати декілька типових тем, буде використано тему %1"
 
-#: HTMLGenerator/HTMLDialog.cpp:492
+#: HTMLGenerator/HTMLDialog.cpp:516
 msgctxt ""
 "This is to show the author of the theme. E.g. copyright character (&#169;) "
 "by itself will work fine on this context if no proper word is available in "
@@ -1274,7 +1407,7 @@ msgctxt ""
 msgid "by "
 msgstr "Автори: "
 
-#: HTMLGenerator/HTMLDialog.cpp:494
+#: HTMLGenerator/HTMLDialog.cpp:518
 msgid ""
 "\n"
 " "
@@ -1282,38 +1415,55 @@ msgstr ""
 "\n"
 " "
 
-#: ImageManager/ExtractOneVideoFrame.cpp:69
+#: ImageManager/ExtractOneVideoFrame.cpp:86
 msgid "Failed to start"
 msgstr "Не вдалося запустити"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:70
+#: ImageManager/ExtractOneVideoFrame.cpp:87
 msgid "Crashed"
 msgstr "Завершено у аварійному режимі"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:71
+#: ImageManager/ExtractOneVideoFrame.cpp:88
 msgid "Timedout"
 msgstr "Прострочено"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:72
+#: ImageManager/ExtractOneVideoFrame.cpp:89
 msgid "Read error"
 msgstr "Помилка читання"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:73
+#: ImageManager/ExtractOneVideoFrame.cpp:90
 msgid "Write error"
 msgstr "Помилка запису"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:74
+#: ImageManager/ExtractOneVideoFrame.cpp:91
 msgid "Unknown error"
 msgstr "Невідома помилка"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:78
+#: ImageManager/ExtractOneVideoFrame.cpp:95
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr ""
 "<p>Помилка під час спроби видобування мініатюр з відео.<br/>Повідомлення про "
 "помилку: %1</p>"
 
-#: ImageManager/ThumbnailBuilder.cpp:116
+#: ImageManager/ExtractOneVideoFrame.cpp:134
+#, kde-format
+msgid ""
+"Unable to extract video thumbnails from some files. Either the file is "
+"damaged in some way, or the video is ultra short. For your convenience, the "
+"token '%1' has been set on those videos.\n"
+"\n"
+"(You might need to wait till the video extraction led in your status bar has "
+"stopped blinking, to see all affected videos.)"
+msgstr ""
+"Не вдалося створити мініатюри на основі деяких з файлів. Ймовірно, це "
+"пов’язано з пошкодженням даних у файлі або тим, що відео є надто коротким. "
+"Отже, для зручності, ці відео позначено символом «%1».\n"
+"\n"
+"(Вам доведеться зачекати, доки перестане блимати позначка видобування "
+"мініатюр на смужці стану, щоб побачити усі ці надто короткі відео.)"
+
+#: ImageManager/ThumbnailBuilder.cpp:120
 msgid "Building thumbnails"
 msgstr "Створення мініатюр"
 
@@ -1330,8 +1480,8 @@ msgid "Include in .kim file"
 msgstr "Включити у файл .kim"
 
 #: ImportExport/Export.cpp:84
-msgid "Manual copy next to .kim file"
-msgstr "Копіювати вручну до теки файла .kim"
+msgid "Do not copy files, only generate .kim file"
+msgstr "Не копіювати файлів, лише створити файл .kim"
 
 #: ImportExport/Export.cpp:85
 msgid "Automatically copy next to .kim file"
@@ -1417,8 +1567,7 @@ msgstr ""
 msgid "Error creating zip file"
 msgstr "Помилка під час створення файла zip"
 
-#: ImportExport/Export.cpp:212 ImportExport/ImportHandler.cpp:85
-#: ImportExport/ImportHandler.cpp:137
+#: ImportExport/Export.cpp:212
 msgid "&Cancel"
 msgstr "&Скасувати"
 
@@ -1434,12 +1583,12 @@ msgstr "Створення мініатюр"
 msgid "Copying image files"
 msgstr "Копіювання файлів зображень"
 
-#: ImportExport/Export.cpp:334
+#: ImportExport/Export.cpp:335
 #, kde-format
 msgid "Error writing file %1"
 msgstr "Помилка запису файла %1"
 
-#: ImportExport/Export.cpp:364
+#: ImportExport/Export.cpp:365
 msgid ""
 "<p>Other KPhotoAlbum users may now load the import file into their database, "
 "by choosing <b>import</b> in the file menu.</p><p>If they find it on a web "
@@ -1463,7 +1612,7 @@ msgstr ""
 "клацання на посиланні, у іншому випадку сервер мережі просто повідомить "
 "konqueror, що відповідний файл є простим текстом.</p>"
 
-#: ImportExport/Export.cpp:373
+#: ImportExport/Export.cpp:374
 msgid "How to Use the Export File"
 msgstr "Спосіб використання експортованого файла"
 
@@ -1471,21 +1620,7 @@ msgstr "Спосіб використання експортованого фа�
 msgid "Unable to create temporary file"
 msgstr "Неможливо створити каталогтимчасовий файл"
 
-#: ImportExport/ImportDialog.cpp:82
-#, kde-format
-msgid "Error in file %1 on line %2 col %3: %4"
-msgstr "Помилка у файлі %1 у рядку %2 стовпчику %3: %4"
-
-#: ImportExport/ImportDialog.cpp:89
-#, kde-format
-msgid ""
-"Unexpected top element while reading file %1. Expected KPhotoAlbum-export "
-"found %2"
-msgstr ""
-"Неочікуваний найвищий елемент під час читання файла %1. Очікувалося "
-"KPhotoAlbum-export, виявлено %2"
-
-#: ImportExport/ImportDialog.cpp:97
+#: ImportExport/ImportDialog.cpp:86
 msgid ""
 "<p>XML file did not specify the source of the images, this is a strong "
 "indication that the file is corrupted</p>"
@@ -1493,12 +1628,7 @@ msgstr ""
 "<p>Файл XML не визначає джерела зображень, це є вагомою ознакою пошкодженого "
 "файла</p>"
 
-#: ImportExport/ImportDialog.cpp:109
-#, kde-format
-msgid "Unknown element while reading %1, expected image."
-msgstr "Невідомий елемент під час читання %1, очікувалося зображення."
-
-#: ImportExport/ImportDialog.cpp:134
+#: ImportExport/ImportDialog.cpp:119
 msgid ""
 "<h1><font size=\"+2\">Welcome to KPhotoAlbum Import</font></h1>This wizard "
 "will take you through the steps of an import operation. The steps are: "
@@ -1543,71 +1673,72 @@ msgstr ""
 "побачити, яких з позначок немає у вашій базі даних, або, для яких з позначок "
 "є лише часткова відповідність.</li></ol>"
 
-#: ImportExport/ImportDialog.cpp:153
+#: ImportExport/ImportDialog.cpp:138
+msgctxt "@title:tab introduction page"
 msgid "Introduction"
 msgstr "Вступ"
 
-#: ImportExport/ImportDialog.cpp:169 MainWindow/TokenEditor.cpp:63
+#: ImportExport/ImportDialog.cpp:154 MainWindow/TokenEditor.cpp:63
 msgid "Select All"
 msgstr "Вибрати все"
 
-#: ImportExport/ImportDialog.cpp:171
+#: ImportExport/ImportDialog.cpp:156
 msgid "Deselect All"
 msgstr "Зняти позначення з усіх"
 
-#: ImportExport/ImportDialog.cpp:206
+#: ImportExport/ImportDialog.cpp:191
 msgid "Select Which Images to Import"
 msgstr "Виберіть зображення для імпортування"
 
-#: ImportExport/ImportDialog.cpp:218
+#: ImportExport/ImportDialog.cpp:203
 msgid "Destination of images: "
 msgstr "Призначення зображень: "
 
-#: ImportExport/ImportDialog.cpp:232
+#: ImportExport/ImportDialog.cpp:217
 msgid "Destination of Images"
 msgstr "Призначення зображень"
 
-#: ImportExport/ImportDialog.cpp:240
+#: ImportExport/ImportDialog.cpp:225
 #, kde-format
 msgid "The directory must be a subdirectory of %1"
 msgstr "Каталог має бути підкаталогом %1"
 
-#: ImportExport/ImportDialog.cpp:282
+#: ImportExport/ImportDialog.cpp:267
 msgid "Match Categories"
 msgstr "Порівняння категорій"
 
-#: ImportExport/ImportDialog.cpp:314
+#: ImportExport/ImportDialog.cpp:299
 #, kde-format
 msgid "Directory %1 does not exist. Should it be created?"
 msgstr "Каталогу %1 не існує. Чи слід його створити?"
 
-#: ImportExport/ImportDialog.cpp:318
+#: ImportExport/ImportDialog.cpp:303
 #, kde-format
 msgid "Error creating directory %1"
 msgstr "Помилка під час створення каталогу %1"
 
-#: ImportExport/ImportDialog.cpp:404
+#: ImportExport/ImportDialog.cpp:389
 msgid "How to resolve clashes"
 msgstr "Спосіб поводження у конфліктній ситуації"
 
-#: ImportExport/ImportHandler.cpp:85 ImportExport/ImportHandler.cpp:137
+#: ImportExport/ImportHandler.cpp:86 ImportExport/ImportHandler.cpp:139
 msgid "Copying Images"
 msgstr "Копіювання зображень"
 
-#: ImportExport/ImportHandler.cpp:151
+#: ImportExport/ImportHandler.cpp:154
 #, kde-format
 msgid "Error when writing image %1"
 msgstr "Помилка під час запису зображення %1"
 
-#: ImportExport/ImportHandler.cpp:170
+#: ImportExport/ImportHandler.cpp:173
 msgid "Updating Database"
 msgstr "Оновлення бази даних"
 
-#: ImportExport/ImportHandler.cpp:199
+#: ImportExport/ImportHandler.cpp:202
 msgid "Cannot copy from any of the following locations:"
 msgstr "Неможливо копіювати файл з будь-якого з таких місць:"
 
-#: ImportExport/ImportHandler.cpp:200
+#: ImportExport/ImportHandler.cpp:203
 msgid "Continue without Asking"
 msgstr "Продовжити без запитань"
 
@@ -1740,97 +1871,101 @@ msgid "&Maintenance"
 msgstr "&Обслуговування"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:70 Settings/SettingsDialog.cpp:72
+#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:72
 msgid "Plugins"
 msgstr "Додатки"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:72
+#: kphotoalbumui.rc:73
 msgid "Export"
 msgstr "Експортувати"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:76
+#: kphotoalbumui.rc:77
 msgid "Import"
 msgstr "Імпортувати"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:84
+#: kphotoalbumui.rc:85
 msgid "Batch Plugins"
 msgstr "Пакетні додатки"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:88
+#: kphotoalbumui.rc:89
 msgid "Tools"
 msgstr "Інструменти"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:105
+#: kphotoalbumui.rc:106
 msgid "Main Toolbar"
 msgstr "Головний пенал"
 
-#: main.cpp:36
+#: main.cpp:37
 msgid "KPhotoAlbum"
 msgstr "KPhotoAlbum"
 
-#: main.cpp:37
+#: main.cpp:38
 msgid "KDE Photo Album"
 msgstr "Фотоальбом для KDE"
 
-#: main.cpp:39
+#: main.cpp:40
 msgid "Jesper K. Pedersen"
 msgstr "Jesper K. Pedersen"
 
-#: main.cpp:39 main.cpp:40 main.cpp:41 main.cpp:43 main.cpp:44 main.cpp:45
-#: main.cpp:46
+#: main.cpp:40 main.cpp:41 main.cpp:42 main.cpp:44 main.cpp:45 main.cpp:46
+#: main.cpp:47 main.cpp:48
 msgid "Development"
 msgstr "Розробка"
 
-#: main.cpp:40
+#: main.cpp:41
 msgid "Hassan Ibraheem"
 msgstr "Hassan Ibraheem"
 
-#: main.cpp:41
+#: main.cpp:42
 msgid "Miika Turkia"
 msgstr "Miika Turkia"
 
-#: main.cpp:42
+#: main.cpp:43
 msgid "Tuomas Suutari"
 msgstr "Tuomas Suutari"
 
-#: main.cpp:42
+#: main.cpp:43
 msgid "SQL backend and numerous features"
 msgstr "Внутрішній компонент SQL і різноманітні можливості"
 
-#: main.cpp:43
+#: main.cpp:44
 msgid "Jan Kundr&aacute;t"
 msgstr "Jan Kundr&aacute;t"
 
-#: main.cpp:44
+#: main.cpp:45
 msgid "Henner Zeller"
 msgstr "Henner Zeller"
 
-#: main.cpp:45
+#: main.cpp:46
 msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
-#: main.cpp:46
+#: main.cpp:47
 msgid "Johannes Zarl"
 msgstr "Johannes Zarl"
 
-#: main.cpp:49
+#: main.cpp:48
+msgid "Tobias Leupold"
+msgstr "Tobias Leupold"
+
+#: main.cpp:51
 msgid "Will Stephenson"
 msgstr "Will Stephenson"
 
-#: main.cpp:49
+#: main.cpp:51
 msgid "Developing an Icon for KPhotoAlbum"
 msgstr "Розробка піктограми для KPhotoAlbum"
 
-#: main.cpp:50
+#: main.cpp:52
 msgid "Teemu Rytilahti"
 msgstr "Teemu Rytilahti"
 
-#: main.cpp:51
+#: main.cpp:53
 msgid ""
 "Sending patches implementing (.) the \"Set As Wallpaper\" menu in the viewer."
 "(.) Theme support for HTML generation"
@@ -1838,19 +1973,19 @@ msgstr ""
 "Надсилання латок для реалізації (.) меню переглядача «Встановити як тло "
 "стільниці».(.) Підтримка тем для створення HTML"
 
-#: main.cpp:53
+#: main.cpp:55
 msgid "Reimar Imhof"
 msgstr "Reimar Imhof"
 
-#: main.cpp:53
+#: main.cpp:55
 msgid "Patch to sort items in option listboxes"
 msgstr "Латка для впорядкування елементів у списках параметрів"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid "Thomas Schwarzgruber"
 msgstr "Thomas Schwarzgruber"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid ""
 "Patch to sort images in the thumbnail view, plus reading time info out of "
 "EXIF images for existing images"
@@ -1858,11 +1993,11 @@ msgstr ""
 "Латка для впорядкування зображень у перегляді мініатюр, плюс читання "
 "інформації про час з EXIF зображень для існуючих зображень"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid "Marcel Wiesweg"
 msgstr "Marcel Wiesweg"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid ""
 "Patch which speed up loading of thumbnails plus preview in image property "
 "dialog."
@@ -1870,20 +2005,20 @@ msgstr ""
 "Латка, як пришвидшила завантаження мініатюр плюс діалогове вікно перегляду "
 "властивостей зображення."
 
-#: main.cpp:56
+#: main.cpp:58
 msgid "Marco Caldarelli"
 msgstr "Marco Caldarelli"
 
-#: main.cpp:56
+#: main.cpp:58
 msgid "Patch for making it possible to reread EXIF info using a nice dialog."
 msgstr ""
 "Латка для уможливлення перечитування інформації EXIF з приємним діалогом."
 
-#: main.cpp:57
+#: main.cpp:59
 msgid "Jean-Michel FAYARD"
 msgstr "Jean-Michel FAYARD"
 
-#: main.cpp:57
+#: main.cpp:59
 msgid ""
 "(.) Patch with directory info made available through the browser. (.) Patch "
 "for adding a check box for \"and/or\" searches in the search page."
@@ -1892,51 +2027,55 @@ msgstr ""
 "Латка для додавання для визначення способу об’єднання «і/або» елементів "
 "пошуку на пошуковій сторінці."
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "Robert L Krawitz"
 msgstr "Robert L Krawitz"
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "Numerous patches plus profiling KPhotoAlbum again and again."
 msgstr "Велика кількість латок плюс полірування KPhotoAlbum знову і знову."
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Christoph Moseler"
 msgstr "Christoph Moseler"
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Numerous patches for lots of bugs plus patches for a few new features"
 msgstr ""
 "Велика кількість латок, що усунули багато вад, плюс латки, що додавали нові "
 "можливості"
 
-#: main.cpp:60
+#: main.cpp:62
 msgid "Clytie Siddall"
 msgstr "Clytie Siddall"
 
-#: main.cpp:60
+#: main.cpp:62
 msgid "Tremendous help with the English text in the application."
 msgstr "Величезна допомога з англійською у програмі."
 
-#: main.cpp:61
+#: main.cpp:63
 msgid "Wes Hardaker"
 msgstr "Wes Hardaker"
 
-#: main.cpp:61
+#: main.cpp:63
 msgid "Some very useful features to improve workflow"
 msgstr "Декілька дуже корисних можливостей, пов’язаних з процедурою обробки"
 
-#: main.cpp:66
+#: main.cpp:68
 msgid "Config file"
 msgstr "Файл налаштувань"
 
-#: main.cpp:67
+#: main.cpp:69
 msgid "Starts KPhotoAlbum with a prebuilt set of demo images"
 msgstr "Запускає KPhotoAlbum з вбудованим набором демонстраційних зображень"
 
-#: main.cpp:68
+#: main.cpp:70
 msgid "Import file"
 msgstr "Імпортувати файл"
+
+#: main.cpp:71
+msgid "Don't start listening for android devices on startup."
+msgstr "Не шукати пристрої Android одразу після запуску."
 
 #: MainWindow/AutoStackImages.cpp:43
 msgid "Automatically Stack Images"
@@ -1994,15 +2133,15 @@ msgstr "Показати редактор категорій"
 msgid "Make Category Image"
 msgstr "Зробити зображенням категорії"
 
-#: MainWindow/DeleteDialog.cpp:35
+#: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
 msgstr "Вилучення елементів"
 
-#: MainWindow/DeleteDialog.cpp:37
+#: MainWindow/DeleteDialog.cpp:36
 msgid "OK"
 msgstr "Гаразд"
 
-#: MainWindow/DeleteDialog.cpp:63
+#: MainWindow/DeleteDialog.cpp:70
 #, kde-format
 msgid "Removing 1 item"
 msgid_plural "Removing %1 items"
@@ -2011,7 +2150,7 @@ msgstr[1] "Вилучення %1 елементів"
 msgstr[2] "Вилучення %1 елементів"
 msgstr[3] "Вилучення елемента"
 
-#: MainWindow/DeleteDialog.cpp:64
+#: MainWindow/DeleteDialog.cpp:71
 #, kde-format
 msgid ""
 "Selected item will be removed from the database.<br/>What do you want to do "
@@ -2032,7 +2171,7 @@ msgstr[3] ""
 "Позначений %1 елемент буде вилучено з бази даних.<br/>Які дії слід виконати "
 "над відповідними файлами на диску?"
 
-#: MainWindow/DeleteDialog.cpp:70
+#: MainWindow/DeleteDialog.cpp:77
 #, kde-format
 msgid "Move file to Trash"
 msgid_plural "Move %1 files to Trash"
@@ -2041,7 +2180,7 @@ msgstr[1] "Пересунути %1 файли до смітника"
 msgstr[2] "Пересунути %1 файлів до смітника"
 msgstr[3] "Пересунути файл до смітника"
 
-#: MainWindow/DeleteDialog.cpp:71
+#: MainWindow/DeleteDialog.cpp:78
 #, kde-format
 msgid "Delete file from disk"
 msgid_plural "Delete %1 files from disk"
@@ -2050,7 +2189,7 @@ msgstr[1] "Вилучити %1 файли з диска"
 msgstr[2] "Вилучити %1 файлів з диска"
 msgstr[3] "Вилучити файл з диска"
 
-#: MainWindow/DeleteDialog.cpp:72
+#: MainWindow/DeleteDialog.cpp:79
 #, kde-format
 msgid "Only remove the item from database"
 msgid_plural "Only remove %1 items from database"
@@ -2072,7 +2211,7 @@ msgctxt "i for info"
 msgid "i"
 msgstr "і"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:49
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:48
 msgid ""
 "<p>Below is a list of all images that are duplicate in your database.<br/"
 ">Select which you want merged, and which of the duplicates should be kept."
@@ -2084,28 +2223,32 @@ msgstr ""
 "слід залишити.<br/>Мітку та опис з вилучених зображень буде перенесено на "
 "збережені.</p>"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:58
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:57
 msgid "Move to &trash"
 msgstr "Пересунути до с&мітника"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:59
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:58
 msgid "&Delete from disk"
 msgstr "Ви&лучити з диска"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:79
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:59
+msgid "&Block from database"
+msgstr "За&блокувати входження до бази даних"
+
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:80
 msgid "Select &All"
 msgstr "Позна&чити все"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:80
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:81
 msgid "Select &None"
 msgstr "&Нічого не позначати"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:118
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:124
 #, kde-format
 msgid "%1 of %2 selected"
 msgstr "Позначено %1 з %2"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:161
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:167
 msgid "No duplicates found"
 msgstr "Дублікатів не знайдено"
 
@@ -2156,7 +2299,7 @@ msgid ""
 "from a binary package, please tell whoever made the package about this "
 "defect, eventually including the information from the section below.</"
 "p><p>In case you are missing a feature and you did not compile KPhotoAlbum "
-"yourself, please do consider doing so. It really isn't that hard. If you "
+"yourself, please do consider doing so. It really is not that hard. If you "
 "need help compiling KPhotoAlbum, feel free to ask on the <a href=\"http://"
 "mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
 "p><p>The steps to compile KPhotoAlbum can be seen on <a href=\"http://www."
@@ -2172,7 +2315,7 @@ msgstr ""
 "цю ваду, навівши інформацію з тексту нижче.</p><p>Якщо вам потрібна якась із "
 "можливостей програми і ви не збирали KPhotoAlbum самостійно, будь ласка, "
 "спробуйте це зробити. Насправді, це зовсім не складно. Якщо вам потрібна "
-"довідка зі збирання KPhotoAlbum, ви можете задати своє питання у <a href="
+"довідка зі збирання KPhotoAlbum, ви можете поставити своє питання у <a href="
 "\"http://mail.kdab.net/mailman/listinfo/kphotoalbum\">поштовій розсилці "
 "KPhotoAlbum</a></p><p>Кроки збирання KPhotoAlbum можна переглянути на <a "
 "href=\"http://www.kphotoalbum.org/index.php?page=compile\">домашній сторінці "
@@ -2250,30 +2393,31 @@ msgstr ""
 #: MainWindow/FeatureDialog.cpp:98
 #, kde-format
 msgid ""
-"<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</ul></"
-"p>"
-msgstr "<p>Phonon може відтворювати відео таких типів MIME:<ul><li>%1</ul></p>"
+"<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></"
+"ul></p>"
+msgstr ""
+"<p>Phonon може відтворювати відео таких типів MIME:<ul><li>%1</li></ul></p>"
 
 #: MainWindow/FeatureDialog.cpp:100
 msgid ""
 "<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
-"uses <tt>mplayer</tt> to extract thumbnails from videos. These thumbnails "
+"uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails "
 "are used to preview videos in the thumbnail viewer.</p><p>If at all possible "
-"you should install the <b>mplayer2</b> package rather than the <b>mplayer</"
-"b> package, as it has important improvements over the mplayer package. "
-"mplayer (in contrast to mplayer2) often has problems extracting the length "
+"you should install the <b>MPlayer2</b> package rather than the <b>MPlayer</"
+"b> package, as it has important improvements over the MPlayer package. "
+"MPlayer (in contrast to MPlayer2) often has problems extracting the length "
 "of videos and also often fails to extract the thumbnails used for cycling "
-"video thumbnails."
+"video thumbnails.</p>"
 msgstr ""
 "<h1><a name=\"videoPreview\">Підтримка мініатюр відео</a></h1><p>Для "
 "створення мініатюр на основі відеофайлів у KPhotoAlbum використовується "
-"<tt>mplayer</tt>. Створеними мініатюрами можна скористатися для "
+"<tt>MPlayer</tt>. Створеними мініатюрами можна скористатися для "
 "розпізнавання файла на панелі перегляду мініатюр.</p><p>Якщо це можливо, вам "
-"варто встановити пакунок <b>mplayer2</b> замість пакунка <b>mplayer</b>, "
+"варто встановити пакунок <b>MPlayer2</b> замість пакунка <b>MPlayer</b>, "
 "оскільки за допомогою цього пакунка ви зможете скористатися суттєвими "
-"покращеннями у програмі. mplayer (на відміну від mplayer2) часто має "
+"покращеннями у програмі. MPlayer (на відміну від MPlayer2) часто має "
 "проблеми з визначенням тривалості відео і не може створити мініатюри для "
-"циклічних відеозображень."
+"циклічних відеозображень.</p>"
 
 #: MainWindow/FeatureDialog.cpp:205
 msgid "Plug-ins available"
@@ -2296,16 +2440,18 @@ msgid "Video support"
 msgstr "Підтримка відео"
 
 #: MainWindow/FeatureDialog.cpp:214
+msgctxt "Feature available"
 msgid "Yes"
 msgstr "Так"
 
 #: MainWindow/FeatureDialog.cpp:215
+msgctxt "Feature not available"
 msgid "No"
 msgstr "Ні"
 
 #: MainWindow/FeatureDialog.cpp:222
-msgid "Only with mplayer1"
-msgstr "Лише за допомогою mplayer1"
+msgid "Only with MPlayer1"
+msgstr "Лише за допомогою MPlayer1"
 
 #: MainWindow/FeatureDialog.cpp:223
 msgid "Video thumbnail support"
@@ -2394,11 +2540,11 @@ msgstr ""
 #: MainWindow/RunDialog.cpp:46
 #, no-c-format
 msgid ""
-"<p>Enter the command you want to run on your image file(s).  KPhotoAlbum "
-"will run your command and replace any '%all' tokens with a list of your "
-"files.  For example, if you entered:</p><ul><li>cp %all /tmp</li></"
-"ul><p>Then the files you selected would be copied to the /tmp directory</"
-"p><p>You can also use %each to have a command be run once per file.</p>"
+"<p>Enter the command you want to run on your image file(s). KPhotoAlbum will "
+"run your command and replace any '%all' tokens with a list of your files. "
+"For example, if you entered:</p><ul><li>cp %all /tmp</li></ul><p>Then the "
+"files you selected would be copied to the /tmp directory</p><p>You can also "
+"use %each to have a command be run once per file.</p>"
 msgstr ""
 "<p>Введіть команду, яку слід виконати для обробки ваших файлів зображень. "
 "KPhotoAlbum виконає вашу команду і замінить всі елементи «%all» на список "
@@ -2409,44 +2555,41 @@ msgstr ""
 
 #: MainWindow/RunDialog.cpp:69
 #, no-c-format
+msgctxt ""
+"As in 'Execute a command and replace any occurrence of %all with the "
+"filenames of all selected files'"
 msgid "%all"
 msgstr "%all"
 
 #: MainWindow/RunDialog.cpp:71
 #, no-c-format
+msgctxt ""
+"As in 'Execute a command for each selected file in turn and replace any "
+"occurrence of %each with the filename "
 msgid "%each"
 msgstr "%each"
 
 #: MainWindow/SearchBar.cpp:32
+msgctxt "@label:textbox label on the search bar"
 msgid "Search:"
 msgstr "Пошук:"
-
-#: MainWindow/SplashScreen.cpp:67
-#, kde-format
-msgid "Version %1"
-msgstr "Версія %1"
-
-#: MainWindow/SplashScreen.cpp:69
-#, kde-format
-msgid "Version: %1"
-msgstr "Версія: %1"
 
 #: MainWindow/StatisticsDialog.cpp:43
 msgid ""
 "<h1>Description</h1><table><tr><td># of Items</td><td>This is the number of "
 "different items in the category</td></tr><tr><td>Tags Total</td><td>This is "
 "a count of how many tags was made,<br/>i.e. a simple counting though all the "
-"images</tr></tr><tr><td>Tags Per Picture</td><td>This tells you how many "
-"tags are on each picture on average</td></tr></table><br/><br/>Don't get too "
-"attached to this dialog, it has the problem that it counts categories AND "
-"subcategories,<br/>so if an image has been taken in Las Vegas, Nevada, USA, "
-"then 3 tags are counted for that image,<br/>while it should only be one.<br/"
-">I'm not really sure if it is worth fixing that bug (as it is pretty hard to "
-"fix),<br/>so maybe the dialog will simply go away again"
+"images</td></tr><tr><td>Tags Per Picture</td><td>This tells you how many "
+"tags are on each picture on average</td></tr></table><br/><br/>Do not get "
+"too attached to this dialog, it has the problem that it counts categories "
+"AND subcategories,<br/>so if an image has been taken in Las Vegas, Nevada, "
+"USA, then 3 tags are counted for that image,<br/>while it should only be one."
+"<br/>I am not really sure if it is worth fixing that bug (as it is pretty "
+"hard to fix),<br/>so maybe the dialog will simply go away again"
 msgstr ""
 "<h1>Опис</h1><table><tr><td>К-ть елементів</td><td>Це кількість різних "
 "елементів у категорії</td></tr><tr><td>Загалом міток</td><td>Це кількість "
-"вказаних міток,<br/>тобто загальна кількість міток у всіх зображеннях</tr></"
+"вказаних міток,<br/>тобто загальна кількість міток у всіх зображеннях</td></"
 "tr><tr><td>Міток на зображення</td><td>Це число є середньою кількість міток "
 "на одне зображення</td></tr></table><br/><br/>Не дуже-то й покладайтесь на "
 "це діалогове вікно: у ньому перелічено категорії разом з підкатегоріями,<br/"
@@ -2497,11 +2640,21 @@ msgstr "Категорія:"
 msgid "Tag:"
 msgstr "Мітка:"
 
+#: MainWindow/StatisticsDialog.cpp:129
+msgctxt "@item:inlistbox meaning 'no category'"
+msgid "None"
+msgstr "Немає"
+
+#: MainWindow/StatisticsDialog.cpp:167
+msgctxt "As in 'all images'"
+msgid "All"
+msgstr "Всі"
+
 #: MainWindow/StatisticsDialog.cpp:212
 msgid "Total"
 msgstr "Загалом"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:703
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:730
 msgid "Remove Tokens"
 msgstr "Вилучити позначки"
 
@@ -2513,7 +2666,7 @@ msgstr "Виберіть позначки, які слід вилучити з �
 msgid "Select None"
 msgstr "Не вибирати жодного"
 
-#: MainWindow/WelcomeDialog.cpp:55
+#: MainWindow/WelcomeDialog.cpp:56
 msgid ""
 "<h1>Welcome to KPhotoAlbum</h1><p>KPhotoAlbum is a powerful free tool to "
 "archive, tag and manage your photos and videos. It will not modify or change "
@@ -2535,19 +2688,19 @@ msgstr ""
 "KPhotoAlbum за допомогою тестового набору зображень, натисніть кнопку "
 "«Завантажити демонстрацію».</p>"
 
-#: MainWindow/WelcomeDialog.cpp:70
+#: MainWindow/WelcomeDialog.cpp:71
 msgid "Create My Own Database..."
 msgstr "Створити мою власну базу даних..."
 
-#: MainWindow/WelcomeDialog.cpp:73
+#: MainWindow/WelcomeDialog.cpp:74
 msgid "Load Demo"
 msgstr "Завантажити демонстрацію"
 
-#: MainWindow/WelcomeDialog.cpp:76
+#: MainWindow/WelcomeDialog.cpp:77
 msgid "Check My Feature Set"
 msgstr "Ознайомитися з набором можливостей"
 
-#: MainWindow/WelcomeDialog.cpp:112
+#: MainWindow/WelcomeDialog.cpp:113
 msgid ""
 "<h1>KPhotoAlbum database creation</h1><p>You need to show where the photos "
 "and videos are for KPhotoAlbum to find them. They all need to be under one "
@@ -2569,25 +2722,25 @@ msgstr ""
 "даних KPhotoAlbum і маєте десь кореневу теку цієї бази, вкажіть її "
 "KPhotoAlbum, щоб поновити користування програмою.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:127
+#: MainWindow/WelcomeDialog.cpp:128
 msgid "Image/Video root directory: "
 msgstr "Кореневий каталог зображень/відеофайлів: "
 
-#: MainWindow/WelcomeDialog.cpp:157
+#: MainWindow/WelcomeDialog.cpp:158
 msgid "Directory does not exist, create it?"
 msgstr "Теки не існує, чи слід її створити?"
 
-#: MainWindow/WelcomeDialog.cpp:161
+#: MainWindow/WelcomeDialog.cpp:162
 #, kde-format
 msgid "Could not create directory %1"
 msgstr "Не вдалося створити каталог %1"
 
-#: MainWindow/WelcomeDialog.cpp:168
+#: MainWindow/WelcomeDialog.cpp:169
 #, kde-format
 msgid "%1 exists, but is not a directory"
 msgstr "%1 існує, але це не каталог"
 
-#: MainWindow/WelcomeDialog.cpp:187
+#: MainWindow/WelcomeDialog.cpp:188
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum does not seem to be build with support for all its features. "
@@ -2600,31 +2753,31 @@ msgstr ""
 "p><p>Детально про те, як усунути цю проблему, будь ласка, виберіть у меню "
 "<b>Довідка</b> пункт <b>Стан можливостей KPhotoAlbum</b>.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:191 MainWindow/WelcomeDialog.cpp:195
+#: MainWindow/WelcomeDialog.cpp:192 MainWindow/WelcomeDialog.cpp:196
 msgid "Feature Check"
 msgstr "Перевірка можливостей"
 
-#: MainWindow/WelcomeDialog.cpp:194
+#: MainWindow/WelcomeDialog.cpp:195
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Вітаємо — всі динамічні можливості було увімкнено."
 
-#: MainWindow/Window.cpp:136
+#: MainWindow/Window.cpp:137
 msgid "Loading Database"
 msgstr "Завантаження бази даних"
 
-#: MainWindow/Window.cpp:142
+#: MainWindow/Window.cpp:143
 msgid "Loading Main Window"
 msgstr "Завантаження головного вікна"
 
-#: MainWindow/Window.cpp:231
+#: MainWindow/Window.cpp:233
 msgid "Searching for New Files"
 msgstr "Пошук нових файлів"
 
-#: MainWindow/Window.cpp:237
+#: MainWindow/Window.cpp:239
 msgid "Loading Plug-ins"
 msgstr "Завантаження додатків"
 
-#: MainWindow/Window.cpp:258
+#: MainWindow/Window.cpp:260
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
@@ -2632,7 +2785,7 @@ msgstr ""
 "Базу даних EXIF неможливо відкрити. Перевірте, чи можливий запис до "
 "кореневого каталогу зображень."
 
-#: MainWindow/Window.cpp:267
+#: MainWindow/Window.cpp:274
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -2647,19 +2800,19 @@ msgstr ""
 "забажаєте повернутися і переглянути демонстрацію ще раз, ви можете зберегти "
 "її з усіма змінами, які ви виконали під час поточного сеансу.</p>"
 
-#: MainWindow/Window.cpp:272
+#: MainWindow/Window.cpp:279
 msgid "Delete Demo Database"
 msgstr "Вилучити демонстраційну базу даних"
 
-#: MainWindow/Window.cpp:287
+#: MainWindow/Window.cpp:294
 msgid "Do you want to save the changes?"
 msgstr "Чи бажаєте ви зберегти зміни?"
 
-#: MainWindow/Window.cpp:288
+#: MainWindow/Window.cpp:295
 msgid "Save Changes?"
 msgstr "Зберегти зміни?"
 
-#: MainWindow/Window.cpp:326
+#: MainWindow/Window.cpp:334
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
@@ -2667,258 +2820,263 @@ msgstr ""
 "Деякі з вибраних зображень вже належать до певних стосів. Ви бажаєте "
 "вилучити їх з відповідних стосів і створити зовсім новий стос?"
 
-#: MainWindow/Window.cpp:328 MainWindow/Window.cpp:333
+#: MainWindow/Window.cpp:336 MainWindow/Window.cpp:341
 msgid "Stacking Error"
 msgstr "Помилка під час створення стосу"
 
-#: MainWindow/Window.cpp:332
+#: MainWindow/Window.cpp:340
 msgid "Unknown error, stack creation failed."
 msgstr "Невідома помилка, спроба створення стосу зазнала невдачі."
 
-#: MainWindow/Window.cpp:410 MainWindow/Window.cpp:534
-#: MainWindow/Window.cpp:1249
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
+#: MainWindow/Window.cpp:1280
 msgid "No item is selected."
 msgstr "Не вибрано жодного елемента."
 
-#: MainWindow/Window.cpp:410 MainWindow/Window.cpp:534
-#: MainWindow/Window.cpp:1250
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
+#: MainWindow/Window.cpp:1281
 msgid "No Selection"
 msgstr "Нема вибраного"
 
-#: MainWindow/Window.cpp:459
+#: MainWindow/Window.cpp:466
 msgid "Saving..."
 msgstr "Збереження..."
 
-#: MainWindow/Window.cpp:463
+#: MainWindow/Window.cpp:470
 msgid "Saving... Done"
 msgstr "Збереження... Виконано"
 
-#: MainWindow/Window.cpp:598
+#: MainWindow/Window.cpp:616
 msgid "There are no images to be shown."
 msgstr "Немає зображень для показу."
 
-#: MainWindow/Window.cpp:664
+#: MainWindow/Window.cpp:691
 msgid "Generate HTML..."
 msgstr "Створити HTML..."
 
-#: MainWindow/Window.cpp:668
+#: MainWindow/Window.cpp:695
 msgid "Import..."
 msgstr "Імпортувати..."
 
-#: MainWindow/Window.cpp:671
+#: MainWindow/Window.cpp:698
 msgid "Export/Copy Images..."
 msgstr "Експортувати/копіювати зображення..."
 
-#: MainWindow/Window.cpp:697
+#: MainWindow/Window.cpp:724
+msgctxt "Delete selected images"
 msgid "Delete Selected"
-msgstr "Вилучити вибрані"
+msgstr "Вилучити позначене"
 
-#: MainWindow/Window.cpp:706
+#: MainWindow/Window.cpp:733
 msgid "Open List of Files..."
 msgstr "Відкрити список файлів..."
 
-#: MainWindow/Window.cpp:710
+#: MainWindow/Window.cpp:737
 msgid "Annotate Individual Items"
 msgstr "Додати примітки до окремих елементів"
 
-#: MainWindow/Window.cpp:714
+#: MainWindow/Window.cpp:741
 msgid "Annotate Multiple Items at a Time"
 msgstr "Додати примітки до декількох елементів за раз"
 
-#: MainWindow/Window.cpp:718
+#: MainWindow/Window.cpp:745
 msgid "Merge Images into a Stack"
 msgstr "Об’єднати зображення до стосу"
 
-#: MainWindow/Window.cpp:722
+#: MainWindow/Window.cpp:749
 msgid "Remove Images from Stack"
 msgstr "Вилучити зображення зі стосу"
 
-#: MainWindow/Window.cpp:725 Viewer/ViewerWidget.cpp:151
+#: MainWindow/Window.cpp:752
 msgid "Set as First Image in Stack"
 msgstr "Зробити першим зображенням у стосі"
 
-#: MainWindow/Window.cpp:740
+#: MainWindow/Window.cpp:767
 msgid "View"
 msgstr "Перегляд"
 
-#: MainWindow/Window.cpp:744
+#: MainWindow/Window.cpp:771
 msgid "View (In New Window)"
 msgstr "Переглянути (у новому вікні)"
 
-#: MainWindow/Window.cpp:747
+#: MainWindow/Window.cpp:774
 msgid "Run Slide Show"
 msgstr "Почати показ слайдів"
 
-#: MainWindow/Window.cpp:752
+#: MainWindow/Window.cpp:779
 msgid "Run Randomized Slide Show"
 msgstr "Почати показ випадкових слайдів"
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:785
 msgid "Collapse all stacks"
 msgstr "Згорнути всі стоси"
 
-#: MainWindow/Window.cpp:764
+#: MainWindow/Window.cpp:791
 msgid "Expand all stacks"
 msgstr "Розгорнути всі стоси"
 
-#: MainWindow/Window.cpp:769
+#: MainWindow/Window.cpp:796
 msgid "Show &Oldest First"
 msgstr "Показувати най&старше першим"
 
-#: MainWindow/Window.cpp:774
+#: MainWindow/Window.cpp:801
 msgid "Show &Newest First"
 msgstr "Показувати най&новіше першим"
 
-#: MainWindow/Window.cpp:779
+#: MainWindow/Window.cpp:806
 msgid "Sort Selected by Date && Time"
 msgstr "Впорядкувати вибрані за датою і часом"
 
-#: MainWindow/Window.cpp:782
+#: MainWindow/Window.cpp:809
 msgid "Limit View to Selection"
 msgstr "Обмежити перегляд позначеними"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:812
 msgid "Jump to Context"
 msgstr "Перейти до контексту"
 
-#: MainWindow/Window.cpp:790
+#: MainWindow/Window.cpp:817
 msgid "Lock Images"
 msgstr "Замкнути зображення"
 
-#: MainWindow/Window.cpp:793
+#: MainWindow/Window.cpp:820
 msgid "Unlock"
 msgstr "Розблокувати"
 
-#: MainWindow/Window.cpp:796
+#: MainWindow/Window.cpp:823
 msgid "Change Password..."
 msgstr "Змінити пароль..."
 
-#: MainWindow/Window.cpp:800
+#: MainWindow/Window.cpp:827
 msgid "Lock Away All Other Items"
 msgstr "Замкнути всі інші елементи"
 
-#: MainWindow/Window.cpp:803
+#: MainWindow/Window.cpp:830
 msgid "Lock Away Current Set of Items"
 msgstr "Замкнути поточний набір елементів"
 
-#: MainWindow/Window.cpp:807
+#: MainWindow/Window.cpp:834
 msgid "Display Images and Videos Not on Disk"
 msgstr "Показати зображення і відеофайли, відсутні на диску"
 
-#: MainWindow/Window.cpp:810
+#: MainWindow/Window.cpp:837
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Показати зображення і відеофайли з неповними датами..."
 
-#: MainWindow/Window.cpp:814
+#: MainWindow/Window.cpp:841
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Показати зображення і відеофайли зі зміненою контрольною сумою MD5"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:845
 msgid "Merge duplicates"
 msgstr "Об’єднати дублікати"
 
-#: MainWindow/Window.cpp:820
+#: MainWindow/Window.cpp:847
 msgid "Recalculate Checksum"
 msgstr "Переобчислити контрольну суму"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:850
 msgid "Rescan for Images and Videos"
 msgstr "Повторний пошук зображень і відеофайлів"
 
-#: MainWindow/Window.cpp:826
+#: MainWindow/Window.cpp:853
 msgid "Recreate Exif Search Database"
 msgstr "Створити заново базу даних пошуків EXIF"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:856
 msgid "Read EXIF Info From Files..."
 msgstr "Читати інформацію EXIF з файлів..."
 
-#: MainWindow/Window.cpp:831
+#: MainWindow/Window.cpp:858
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Повторно створити базу даних для пошуку за Exif (KPhotoAlbum має бути "
 "зібрано з підтримкою Exif)"
 
-#: MainWindow/Window.cpp:832
+#: MainWindow/Window.cpp:859
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Читання даних EXIF з файлів… (KPhotoAlbum має бути зібрано з підтримкою Exif)"
 
-#: MainWindow/Window.cpp:838
+#: MainWindow/Window.cpp:865
+msgid "Sort All by Date && Time"
+msgstr "Впорядкувати усі за датою і часом"
+
+#: MainWindow/Window.cpp:869
 msgid "Automatically Stack Selected Images..."
 msgstr "Автоматично стосувати позначені зображення…"
 
-#: MainWindow/Window.cpp:841
+#: MainWindow/Window.cpp:872
 msgid "Build Thumbnails"
 msgstr "Створити мініатюри"
 
-#: MainWindow/Window.cpp:844
+#: MainWindow/Window.cpp:875
 msgid "Statistics"
 msgstr "Статистика"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:884
 msgid "Enable All Messages"
 msgstr "Увімкнути всі повідомлення"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:887
 msgid "Configure Current View"
 msgstr "Налаштувати поточний перегляд"
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:896
 msgid "Tree"
 msgstr "Дерево"
 
-#: MainWindow/Window.cpp:870
+#: MainWindow/Window.cpp:901
 msgid "Tree with User Icons"
 msgstr "Дерево з піктограмами користувача"
 
-#: MainWindow/Window.cpp:876 MainWindow/Window.cpp:882
+#: MainWindow/Window.cpp:907 MainWindow/Window.cpp:913
 msgid "Icons"
 msgstr "Піктограми"
 
-#: MainWindow/Window.cpp:894
+#: MainWindow/Window.cpp:925
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Показувати підказки у вікні мініатюр"
 
-#: MainWindow/Window.cpp:900
+#: MainWindow/Window.cpp:931
 msgid "Run KPhotoAlbum Demo"
 msgstr "Запустити демонстрацію KPhotoAlbum"
 
-#: MainWindow/Window.cpp:903
+#: MainWindow/Window.cpp:934
 msgid "KPhotoAlbum Feature Status"
 msgstr "Стан можливостей KPhotoAlbum"
 
-#: MainWindow/Window.cpp:906
+#: MainWindow/Window.cpp:937
 msgid "Show Demo Videos"
 msgstr "Показати демонстраційні відео"
 
-#: MainWindow/Window.cpp:911
+#: MainWindow/Window.cpp:942
 msgid "Show Exif Info"
 msgstr "Показати інформацію Exif"
 
-#: MainWindow/Window.cpp:914
+#: MainWindow/Window.cpp:945
 msgid "Recreate Selected Thumbnails"
 msgstr "Наново створити вибрані мініатюри"
 
-#: MainWindow/Window.cpp:917
+#: MainWindow/Window.cpp:948
 msgid "Use next video thumbnail"
 msgstr "Використати наступну відеомініатюру"
 
-#: MainWindow/Window.cpp:921
+#: MainWindow/Window.cpp:952
 msgid "Use previous video thumbnail"
 msgstr "Використати попередню відеомініатюру"
 
-#: MainWindow/Window.cpp:947
+#: MainWindow/Window.cpp:978
 msgid "Auto saving...."
 msgstr "Автозбереження...."
 
-#: MainWindow/Window.cpp:949
+#: MainWindow/Window.cpp:980
 msgid "Auto saving.... Done"
 msgstr "Автозбереження.... Готово"
 
-#: MainWindow/Window.cpp:1041
+#: MainWindow/Window.cpp:1072
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -2927,7 +3085,7 @@ msgstr ""
 "<p>Не вдалося відкрити вказаний файл index.xml, оскільки вказаного каталогу "
 "не існує.<br />%1</p>"
 
-#: MainWindow/Window.cpp:1049
+#: MainWindow/Window.cpp:1080
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -2936,51 +3094,51 @@ msgstr ""
 "<p>Вказаного файла покажчика не існує, бажаєте створити файл з наведеною "
 "нижче назвою?<br />%1/index.xml</p>"
 
-#: MainWindow/Window.cpp:1119
+#: MainWindow/Window.cpp:1150
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
-"last party.</p><p>In other words, anyone with access to the index.xml file "
-"can easily circumvent this password.</b></p>"
+"last party.</p><p><b>In other words, anyone with access to the index.xml "
+"file can easily circumvent this password.</b></p>"
 msgstr ""
 "<p>Парольний захист придатний лише для того, щоб дозволити вашій маленькій "
 "сестричці дивитися фотографії, не надаючи їй доступу до тих незручних фоток "
-"з вашої останньої вечірки.</p><p>Інакше кажучи, кожен, хто має доступ до "
+"з вашої останньої вечірки.</p><p><b>Інакше кажучи, кожен, хто має доступ до "
 "файла index.xml, легко може дізнатися цей пароль.</b></p>"
 
-#: MainWindow/Window.cpp:1124
+#: MainWindow/Window.cpp:1155
 msgid "Password Protection"
 msgstr "Захист паролем"
 
-#: MainWindow/Window.cpp:1138
+#: MainWindow/Window.cpp:1169
 msgid "Type in Password to Unlock"
 msgstr "Щоб розблокувати, введіть пароль"
 
-#: MainWindow/Window.cpp:1147 MainWindow/Window.cpp:1181
+#: MainWindow/Window.cpp:1178 MainWindow/Window.cpp:1212
 msgid "Invalid password."
 msgstr "Неправильний пароль."
 
-#: MainWindow/Window.cpp:1172
+#: MainWindow/Window.cpp:1203
 msgid "Type in Old Password"
 msgstr "Введіть старий пароль"
 
-#: MainWindow/Window.cpp:1184
+#: MainWindow/Window.cpp:1215
 msgid "Type in New Password"
 msgstr "Введіть новий пароль"
 
-#: MainWindow/Window.cpp:1195 Settings/SettingsDialog.cpp:65
+#: MainWindow/Window.cpp:1226 Settings/SettingsDialog.cpp:65
 msgid "General"
 msgstr "Загальне"
 
-#: MainWindow/Window.cpp:1196 Settings/SettingsDialog.cpp:70
+#: MainWindow/Window.cpp:1227 Settings/SettingsDialog.cpp:70
 msgid "Viewer"
 msgstr "Переглядач"
 
-#: MainWindow/Window.cpp:1209
+#: MainWindow/Window.cpp:1240
 msgid "Annotation Dialog"
 msgstr "Діалогове вікно приміток"
 
-#: MainWindow/Window.cpp:1367
+#: MainWindow/Window.cpp:1398
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
@@ -2988,7 +3146,7 @@ msgstr ""
 "<p>Ви справді бажаєте увімкнути всі позначки там, де ви раніше позначили "
 "пункт більше-не-показувати?</p>"
 
-#: MainWindow/Window.cpp:1378
+#: MainWindow/Window.cpp:1409
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -3005,15 +3163,15 @@ msgstr ""
 "продовжувати роботу, але, ймовірно, програма аварійно завершить роботу "
 "пізніше через те, що не було виконано команди make install.</p>"
 
-#: MainWindow/Window.cpp:1378
+#: MainWindow/Window.cpp:1409
 msgid "Internal Error"
 msgstr "Внутрішня помилка"
 
-#: MainWindow/Window.cpp:1560
+#: MainWindow/Window.cpp:1594
 msgid "Open List of Files"
 msgstr "Відкрити список файлів"
 
-#: MainWindow/Window.cpp:1560
+#: MainWindow/Window.cpp:1594
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3021,57 +3179,80 @@ msgstr ""
 "Ви можете відкрити набір файлів з кореневою теки зображень KPhotoAlbum за "
 "допомогою показаного тут списку файлів."
 
-#: MainWindow/Window.cpp:1576
+#: MainWindow/Window.cpp:1610
 msgid "No images matching your input were found."
 msgstr "Не знайдено жодного зображення, що відповідає введеному критерію."
 
-#: MainWindow/Window.cpp:1576
+#: MainWindow/Window.cpp:1610
 msgid "No Matches"
 msgstr "Немає відповідників"
 
-#: MainWindow/Window.cpp:1750
+#: MainWindow/Window.cpp:1787
 msgid ""
-"<p>Unable to find mplayer on the system</p><p>KPhotoAlbum needs mplayer to "
-"extract video thumbnails among other things. Please install the mplayer2 "
-"package</p>"
+"<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
+"will not be able to display video thumbnails and video lengths. Please "
+"install the MPlayer2 package</p>"
 msgstr ""
-"<p>На вашому комп’ютері не вдалося знайти mplayer</p><p>Для видобування "
-"мініатюр з відеофайлів KPhotoAlbum, окрім інших програм, потрібен mplayer. "
-"Будь ласка, встановіть пакунок mplayer2.</p>"
+"<p>На вашому комп’ютері не вдалося знайти MPlayer</p><p>Для показу мініатюр "
+"та даних щодо тривалості відтворення з відеофайлів KPhotoAlbum, окрім інших "
+"програм, потрібен MPlayer. Будь ласка, встановіть пакунок MPlayer2.</p>"
 
-#: MainWindow/Window.cpp:1758
+#: MainWindow/Window.cpp:1790
+msgid "Video thumbnails are not available"
+msgstr "Показ мініатюр відео неможливий"
+
+#: MainWindow/Window.cpp:1796
 msgid ""
-"<p>You have mplayer installed on your system, but it is unfortunately not "
-"version 2. mplayer2 is on most systems a separate package, please install "
+"<p>You have MPlayer installed on your system, but it is unfortunately not "
+"version 2. MPlayer2 is on most systems a separate package, please install "
 "that if at all possible, as that version has much better support for "
-"extracting thumbnails from videos."
+"extracting thumbnails from videos.</p>"
 msgstr ""
-"<p>У вашій системі встановлено mplayer, але, на жаль, не версії 2. mplayer2 "
+"<p>У вашій системі встановлено MPlayer, але, на жаль, не версії 2. MPlayer2 "
 "у більшості систем є окремим пакунком. Будь ласка, встановіть його, якщо це "
 "можливо, оскільки у цій версії передбачено набагато кращі можливості зі "
-"створення зображень мініатюр на основі відео."
+"створення зображень мініатюр на основі відео.</p>"
 
-#: MainWindow/Window.cpp:1761
-msgid "mplayer is too old"
-msgstr "mplayer є надто застарілим"
+#: MainWindow/Window.cpp:1799
+msgid "MPlayer is too old"
+msgstr "MPlayer є надто застарілим"
+
+#: MainWindow/Window.cpp:1821
+msgid ""
+"<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
+"the Android client you can view your images from your desktop.</p><p><a href="
+"\"https://www.youtube.com/results?search_query=kphotoalbum+on+android\">See "
+"youtube video</a> or <a href=\"https://play.google.com/store/apps/details?"
+"id=org.kde.kphotoalbum\">install from google play</a></p>"
+msgstr ""
+"<p>А ви знаєте, що у KPhotoAlbum вбудовано клієнт Android?<br/>За його "
+"допомогою ви можете переглядати ваші знімки на комп’ютері.</p><p><a href="
+"\"https://www.youtube.com/results?search_query=kphotoalbum+on+android"
+"\">Ознайомтеся з відео на youtube</a> або <a href=\"https://play.google.com/"
+"store/apps/details?id=org.kde.kphotoalbum\">встановіть додаток з google "
+"play</a>.</p>"
+
+#: Plugins/CategoryImageCollection.cpp:34 Plugins/ImageCollection.cpp:57
+msgctxt "The 'name' of an unnamed image collection."
+msgid "None"
+msgstr "Немає"
 
 #: Plugins/ImageCollection.cpp:44
-msgid "unknown (Selection)"
-msgstr "невідомо (Вибране)"
+msgctxt "As in 'an unknown set of images, created from the selection'."
+msgid "Unknown (Selection)"
+msgstr "невідомо (позначене)"
 
 #: Plugins/ImageCollection.cpp:47
+msgctxt "As in 'A selection of [a generated context description]'"
 msgid " (Selection)"
-msgstr " (Вибране)"
+msgstr " (позначене)"
 
-#: Plugins/ImageCollection.cpp:52 Plugins/ImageCollection.cpp:55
-msgid "unknown"
+#: Plugins/ImageCollection.cpp:52
+msgctxt "A set of images with no description."
+msgid "Unknown"
 msgstr "невідомо"
 
-#: Plugins/ImageCollection.cpp:59
-msgid "none"
-msgstr "немає"
-
-#: Plugins/Interface.cpp:101
+#: Plugins/Interface.cpp:144
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3080,7 +3261,58 @@ msgstr ""
 "<p>Зображення слід розмістити у вкладеній теці вашого фотоальбому, який "
 "розміщено у теці %1. Шлях до зображення був %2</p>"
 
-#: Settings/CategoryItem.cpp:116
+#: RemoteControl/ConnectionIndicator.cpp:37
+msgid ""
+"This icon indicates if KPhotoAlbum is connected to an android device.\n"
+"Click on the icon to toggle listening for clients in the local area "
+"network.\n"
+"If the local area network doesn't allow broadcast packages between the "
+"android client and KPhotoAlbum, then right click on the icon and specify the "
+"android device's address.\n"
+"The android client can be downloaded from google play."
+msgstr ""
+"Ця піктограма є індикатором з’єднання KPhotoAlbum із пристроєм під "
+"керуванням Android.\n"
+"Натисніть піктограму, щоб перемкнути стан очікування на з’єднання з "
+"клієнтською частиною у локальній мережі.\n"
+"Якщо правилами локальної мережі заборонено обмір трансляційними пакунками "
+"даних між клієнтом Android та KPhotoAlbum, наведіть вказівник миші на "
+"піктограму, клацніть правою кнопкою і вкажіть адресу пристрою Android.\n"
+"Клієнтський додаток Android можна отримати з google play."
+
+#: RemoteControl/ConnectionIndicator.cpp:93
+msgid "Android device address: "
+msgstr "Адреса пристрою Android: "
+
+#: RemoteControl/Server.cpp:45
+msgid "Unable to bind to socket"
+msgstr "Не вдалося прив’язатися до сокета"
+
+#: RemoteControl/Server.cpp:46
+msgid ""
+"Unable to listen for remote Android connections. This is likely because you "
+"have another KPhotoAlbum application running."
+msgstr ""
+"Не вдалося розпочати очікувати на віддалені з’єднання з Android. Ймовірною "
+"причиною є запуск декількох копій програми KPhotoAlbum одночасно."
+
+#: RemoteControl/Server.cpp:80
+msgid "Invalid Version"
+msgstr "Некоректна версія"
+
+#: RemoteControl/Server.cpp:81
+#, kde-format
+msgid ""
+"Version mismatch between Remote Client and KPhotoAlbum on the desktop.\n"
+"Desktop protocol version: %1\n"
+"Remote Control protocol version: %2"
+msgstr ""
+"Невідповідність версій між клієнтом та програмою KPhotoAlbum, встановленою "
+"на комп’ютері.\n"
+"Версія протоколу на комп’ютері: %1\n"
+"Версія протоколу клієнта: %2"
+
+#: Settings/CategoryItem.cpp:130
 msgid ""
 "<p>Due to a shortcoming in KPhotoAlbum, you need to save your database after "
 "renaming categories; otherwise all the filenames of the category thumbnails "
@@ -3094,43 +3326,60 @@ msgstr ""
 "натисніть кнопку «Скасувати» (і категорію не буде перейменовано), або "
 "натисніть кнопку «Продовжити», а наступним кроком збережіть базу даних.</p>"
 
-#: Settings/CategoryPage.cpp:51
+#: Settings/CategoryPage.cpp:55
 msgid "Label:"
 msgstr "Надпис:"
 
-#: Settings/CategoryPage.cpp:62
+#: Settings/CategoryPage.cpp:68
+msgid "Positionable tags:"
+msgstr "Мітки з позицією:"
+
+#: Settings/CategoryPage.cpp:71
+msgid "Coordinates can be added to tags in this category"
+msgstr "У цій категорії можна додати до міток координати"
+
+#: Settings/CategoryPage.cpp:79
 msgid "Icon:"
 msgstr "Піктограма:"
 
-#: Settings/CategoryPage.cpp:73
+#: Settings/CategoryPage.cpp:91
 msgid "Thumbnail Size: "
 msgstr "Розмір мініатюр: "
 
-#: Settings/CategoryPage.cpp:84
+#: Settings/CategoryPage.cpp:103
 msgid "Preferred view:"
 msgstr "Бажаний спосіб перегляду:"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "List View"
 msgstr "Перегляд списком"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "List View with Custom Thumbnails"
 msgstr "Перегляд списком з нетиповими мініатюрами"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "Icon View"
 msgstr "Перегляд з піктограмами"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "Icon View with Custom Thumbnails"
 msgstr "Перегляд з піктограмами з нетиповими мініатюрами"
 
-#: Settings/CategoryPage.cpp:97
+#: Settings/CategoryPage.cpp:116
 msgid "New"
 msgstr "Новий"
 
-#: Settings/CategoryPage.cpp:169
+#: Settings/CategoryPage.cpp:164
+#, kde-format
+msgid ""
+"<p>Do you really want to make '%1' non-positionable?</p><p>All areas linked "
+"against this category will be deleted!</p>"
+msgstr ""
+"<p>Ви справді хочете зробити «%1» позбавленим позиції?</p><p>Усі записи "
+"областей, пов’язані із цією категорією буде вилучено!</p>"
+
+#: Settings/CategoryPage.cpp:211
 #, kde-format
 msgid "<p>Really delete category '%1'?</p>"
 msgstr "<p>Ви справді бажаєте вилучити категорію «%1»?</p>"
@@ -3172,7 +3421,7 @@ msgid ""
 msgstr ""
 "<p>KPhotoAlbum здатний створювати резервні копії файла index.xml, шляхом "
 "збереження копій з назвами index.xml~1~ index.xml~2~ та інші, і тут ви "
-"можете задати кількість файлів резервних копій, які слід зберігати. Якщо "
+"можете вказати кількість файлів резервних копій, які слід зберігати. Якщо "
 "буде досягнуто максимальну кількість резервних копій, KPhotoAlbum вилучить "
 "найстарішу резервну копію.</p><p>Файл index.xml може досягати значного "
 "розміру, якщо у вас багато зображень, у такому випадку корисно зробити так, "
@@ -3203,31 +3452,31 @@ msgstr "Інформація EXIF/IPTC, яку слід показувати у 
 msgid "Character set for image metadata:"
 msgstr "Набір символів для метаданих зображення:"
 
-#: Settings/FileVersionDetectionPage.cpp:39
+#: Settings/FileVersionDetectionPage.cpp:38
 msgid "New File Searches"
 msgstr "Нові пошуки файлів"
 
-#: Settings/FileVersionDetectionPage.cpp:44
+#: Settings/FileVersionDetectionPage.cpp:43
 msgid "Search for new images and videos on startup"
 msgstr "Шукати нові зображення і відеофайли під час запуску"
 
-#: Settings/FileVersionDetectionPage.cpp:47
+#: Settings/FileVersionDetectionPage.cpp:46
 msgid "Ignore file extensions when searching for new images and videos"
 msgstr "Ігнорувати суфікси назв файлів під час пошуку нових зображень та відео"
 
-#: Settings/FileVersionDetectionPage.cpp:50
+#: Settings/FileVersionDetectionPage.cpp:49
 msgid "Skip symbolic links when searching for new images"
 msgstr "Пропускати символічні посилання під час пошуку нових зображень"
 
-#: Settings/FileVersionDetectionPage.cpp:53
+#: Settings/FileVersionDetectionPage.cpp:52
 msgid "Do not read RAW files if a matching JPEG/TIFF file exists"
 msgstr "Не читати файли RAW, якщо існують відповідні файли JPEG/TIFF"
 
-#: Settings/FileVersionDetectionPage.cpp:57
+#: Settings/FileVersionDetectionPage.cpp:56
 msgid "Directories to exclude from new file search:"
 msgstr "Каталоги, у яких не слід виконувати пошук нових файлів:"
 
-#: Settings/FileVersionDetectionPage.cpp:64
+#: Settings/FileVersionDetectionPage.cpp:63
 msgid ""
 "<p>KPhotoAlbum is capable of searching for new images and videos when "
 "started, this does, however, take some time, so instead you may wish to "
@@ -3237,9 +3486,9 @@ msgstr ""
 "<p>KPhotoAlbum здатний шукати нові зображення і відеофайли під час запуску, "
 "і це, звичайно ж, триватиме деякий час, тому замість цього ви можете вручну "
 "запускати пошук нових зображень у KPhotoAlbum за допомогою меню "
-"<b>Обслуговування->Повторний пошук зображень і відеофайлів</b></p>"
+"<b>Обслуговування → Повторний пошук зображень і відеофайлів</b></p>"
 
-#: Settings/FileVersionDetectionPage.cpp:69
+#: Settings/FileVersionDetectionPage.cpp:68
 msgid ""
 "<p>KPhotoAlbum will normally search new images and videos by their file "
 "extension. If this option is set, <em>all</em> files neither in the database "
@@ -3253,12 +3502,12 @@ msgstr ""
 "файла. Така обробка буде значно тривалішою за пошук файлів за суфіксом назви!"
 "</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:75
+#: Settings/FileVersionDetectionPage.cpp:74
 msgid ""
 "<p>KPhotoAlbum attempts to read all image files whether actual files or "
 "symbolic links. If you wish to ignore symbolic links, check this option. "
 "This is useful if for some reason you have e.g. both the original files and "
-"and symbolic links to these files within your image directory.</p>"
+"symbolic links to these files within your image directory.</p>"
 msgstr ""
 "<p>KPhotoAlbum намагається виконати читання всіх файлів, звичайних або "
 "символічних посилань. Якщо ви хочете, щоб програма пропускала символічні "
@@ -3266,12 +3515,12 @@ msgstr ""
 "каталозі зображень, наприклад, є початкові версії файлів і символічні "
 "посилання на ці файли.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:80
+#: Settings/FileVersionDetectionPage.cpp:79
 msgid ""
-"<p>KPhotoAlbum is capable of reading certain kinds of RAW images.  Some "
-"cameras store both a RAW image and a matching JPEG or TIFF image.  This "
+"<p>KPhotoAlbum is capable of reading certain kinds of RAW images. Some "
+"cameras store both a RAW image and a matching JPEG or TIFF image. This "
 "causes duplicate images to be stored in KPhotoAlbum, which may be "
-"undesirable.  If this option is checked, KPhotoAlbum will not read RAW files "
+"undesirable. If this option is checked, KPhotoAlbum will not read RAW files "
 "for which matching image files also exist.</p>"
 msgstr ""
 "<p>KPhotoAlbum здатний читати деякі типи зображень RAW. Деякі фотоапарати "
@@ -3280,7 +3529,7 @@ msgstr ""
 "небажано. Якщо позначити цей параметр, KPhotoAlbum не буде читати файли RAW, "
 "для яких наявні відповідники у інших форматах.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:86
+#: Settings/FileVersionDetectionPage.cpp:85
 msgid ""
 "<p>Directories defined here (separated by comma <tt>,</tt>) are skipped when "
 "searching for new photos. Thumbnail directories of different tools should be "
@@ -3291,35 +3540,35 @@ msgstr ""
 "мініатюр, створених за допомогою інших програм. Наприклад, <tt>xml,"
 "ThumbNails,.thumbs,.thumbnails</tt>.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:95
+#: Settings/FileVersionDetectionPage.cpp:94
 msgid "File Version Detection Settings"
 msgstr "Параметри виявлення версій файлів"
 
-#: Settings/FileVersionDetectionPage.cpp:99
+#: Settings/FileVersionDetectionPage.cpp:98
 msgid "Try to detect multiple versions of files"
 msgstr "Спробувати виявити різні версії одного файла"
 
-#: Settings/FileVersionDetectionPage.cpp:102
+#: Settings/FileVersionDetectionPage.cpp:101
 msgid "File versions search regexp:"
 msgstr "Формальний вираз пошуку версій файлів:"
 
-#: Settings/FileVersionDetectionPage.cpp:108
+#: Settings/FileVersionDetectionPage.cpp:107
 msgid "Original file replacement text:"
 msgstr "Текст у початковому файлі:"
 
-#: Settings/FileVersionDetectionPage.cpp:114
+#: Settings/FileVersionDetectionPage.cpp:113
 msgid "Move meta-data (i.e. delete tags from the original):"
 msgstr "Пересувати метадані (тобто вилучені мітки з початкового файла):"
 
-#: Settings/FileVersionDetectionPage.cpp:117
+#: Settings/FileVersionDetectionPage.cpp:116
 msgid "Automatically stack new versions of images"
 msgstr "Автоматично стосувати нові версії зображень"
 
-#: Settings/FileVersionDetectionPage.cpp:120
+#: Settings/FileVersionDetectionPage.cpp:119
 msgid ""
 "<p>When KPhotoAlbum searches for new files and finds a file that matches the "
 "<i>modified file search regexp</i> it is assumed that an original version of "
-"the image may exist.  The regexp pattern will be replaced with the "
+"the image may exist. The regexp pattern will be replaced with the "
 "<i>original file replacement text</i> and if that file exists, all "
 "associated metadata (category information, ratings, etc) will be copied or "
 "moved from the original file to the new one.</p>"
@@ -3332,7 +3581,7 @@ msgstr ""
 "категорію, оцінки тощо) буде скопійовано або пересунуто з початкового файла "
 "до файла копії.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:127
+#: Settings/FileVersionDetectionPage.cpp:126
 msgid ""
 "<p>A perl regular expression that should match a modified file. <ul><li>A "
 "dot matches a single character (<tt>\\.</tt> matches a dot)</li>   <li>You "
@@ -3350,7 +3599,7 @@ msgstr ""
 "<li>Ви можете згрупувати частини виразу за допомогою круглих дужок.</li> </"
 "ul>Приклад: <tt>-modified\\.(jpg|tiff)</tt> </p>"
 
-#: Settings/FileVersionDetectionPage.cpp:137
+#: Settings/FileVersionDetectionPage.cpp:136
 msgid ""
 "<p>A string that is used to replace the match from the <i>File versions "
 "search regexp</i>. This can be a semicolon (<tt>;</tt>) separated list. Each "
@@ -3363,7 +3612,7 @@ msgstr ""
 "використано всі замінники, аж доки не буде знайдено початковий файл або не "
 "буде вичерпано перелік варіантів.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:143
+#: Settings/FileVersionDetectionPage.cpp:142
 msgid ""
 "<p>The tagging is moved from the original file to the new file. This way "
 "only the latest version of an image is tagged.</p>"
@@ -3371,7 +3620,7 @@ msgstr ""
 "<p>Мітки з початкового файла буде призначено до нового файла. Таким чином, "
 "мітки використовуватимуться лише для найновішої версії зображення.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:147
+#: Settings/FileVersionDetectionPage.cpp:146
 msgid ""
 "<p>If this option is set, new versions of an image are automatically stacked "
 "and placed to the top of the stack. This way the new image is shown when the "
@@ -3381,22 +3630,22 @@ msgstr ""
 "стосу зображення на його верхівку. Таким чином, у згорнутому стосі буде "
 "показано лише нове зображення, — типова поведінка KPhotoAlbum.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:155
+#: Settings/FileVersionDetectionPage.cpp:154
 msgctxt ""
 "Configure the feature to make a copy of a file first and then open the "
 "copied file with an external application"
 msgid "Copy File and Open with an External Application"
 msgstr "Скопіювати файл і відкрити його за допомогою зовнішньої програми"
 
-#: Settings/FileVersionDetectionPage.cpp:159
+#: Settings/FileVersionDetectionPage.cpp:158
 msgid "Copy file search regexp:"
 msgstr "Формальний вираз пошуку файлів копій:"
 
-#: Settings/FileVersionDetectionPage.cpp:165
+#: Settings/FileVersionDetectionPage.cpp:164
 msgid "Copy file replacement text:"
 msgstr "Текст у файлі копії:"
 
-#: Settings/FileVersionDetectionPage.cpp:171
+#: Settings/FileVersionDetectionPage.cpp:170
 msgid ""
 "<p>KPhotoAlbum can make a copy of an image before opening it with an "
 "external application. This configuration defines how the new file is named.</"
@@ -3413,65 +3662,76 @@ msgstr ""
 "замінника <i>\"-mod.\\1\"</i> вміст файла test.jpg буде скопійовано до файла "
 "test-mod.jpg, який і буде відкрито у вибраній вами програмі.</p>"
 
-#: Settings/GeneralPage.cpp:40
+#: Settings/GeneralPage.cpp:41
 msgid "Loading New Images"
 msgstr "Завантаження нових зображень"
 
-#: Settings/GeneralPage.cpp:48
+#: Settings/GeneralPage.cpp:49
 msgid "Trust image dates:"
 msgstr "Довіряти датам створення зображень:"
 
-#: Settings/GeneralPage.cpp:50
+#: Settings/GeneralPage.cpp:51
+msgctxt "As in 'always trust image dates'"
 msgid "Always"
 msgstr "Завжди"
 
-#: Settings/GeneralPage.cpp:50
+#: Settings/GeneralPage.cpp:52
+msgctxt "As in 'ask whether to trust image dates'"
 msgid "Ask"
 msgstr "Запитати"
 
-#: Settings/GeneralPage.cpp:50 Settings/ThumbnailsPage.cpp:98
+#: Settings/GeneralPage.cpp:53
+msgctxt "As in 'never trust image dates'"
 msgid "Never"
 msgstr "Ніколи"
 
-#: Settings/GeneralPage.cpp:57
+#: Settings/GeneralPage.cpp:60
 msgid "Use EXIF orientation information"
 msgstr "Використовувати інформацію про орієнтацію з EXIF"
 
-#: Settings/GeneralPage.cpp:61
+#: Settings/GeneralPage.cpp:65
 msgid "Use EXIF description"
 msgstr "Використовувати опис з EXIF"
 
-#: Settings/GeneralPage.cpp:66
+#: Settings/GeneralPage.cpp:69
+msgid "Strip out camera generated default descriptions"
+msgstr "Вилучити створені фотоапаратом типові описи"
+
+#: Settings/GeneralPage.cpp:81
 msgid "Use the embedded thumbnail in RAW file or halfsized RAW"
 msgstr ""
 "Використовувати вбудовану у файл негатива мініатюру або половинний розмір "
 "негатива"
 
-#: Settings/GeneralPage.cpp:70
+#: Settings/GeneralPage.cpp:85
 msgid "Required size for the thumbnail:"
 msgstr "Обов’язковий розмір мініатюри:"
 
-#: Settings/GeneralPage.cpp:84
+#: Settings/GeneralPage.cpp:99
 msgid "Histogram"
 msgstr "Гістограма"
 
-#: Settings/GeneralPage.cpp:91
+#: Settings/GeneralPage.cpp:106
 msgid "Show histogram:"
 msgstr "Показувати гістограму:"
 
-#: Settings/GeneralPage.cpp:96
+#: Settings/GeneralPage.cpp:111
 msgid "Size of histogram columns in date bar:"
 msgstr "Розмір стовпчиків гістограми у блоці дат"
 
-#: Settings/GeneralPage.cpp:117
+#: Settings/GeneralPage.cpp:132
 msgid "Show splash screen"
 msgstr "Показувати вікно вітання"
 
-#: Settings/GeneralPage.cpp:122
+#: Settings/GeneralPage.cpp:137
 msgid "Category for virtual albums:"
 msgstr "Категорія для віртуальних альбомів:"
 
-#: Settings/GeneralPage.cpp:137
+#: Settings/GeneralPage.cpp:147
+msgid "Listen for Android devices on startup"
+msgstr "Шукати пристрої Android під час запуску"
+
+#: Settings/GeneralPage.cpp:155
 msgid ""
 "<p>KPhotoAlbum will try to read the image date from EXIF information in the "
 "image. If that fails it will try to get the date from the file's time stamp."
@@ -3493,7 +3753,7 @@ msgstr ""
 "зможете вирішувати чи було отримано зображення з сканера, чи з фотоапарата "
 "кожного сеансу окремо.</p>"
 
-#: Settings/GeneralPage.cpp:148
+#: Settings/GeneralPage.cpp:166
 msgid ""
 "<p>JPEG images may contain information about rotation. If you have a reason "
 "for not using this information to get a default rotation of your images, "
@@ -3505,7 +3765,7 @@ msgstr ""
 "ваших зображень, зніміть позначку.</p><p>Увага: ваш цифровий фотоапарат може "
 "взагалі не записувати цю інформацію до зображення.</p>"
 
-#: Settings/GeneralPage.cpp:154
+#: Settings/GeneralPage.cpp:172
 msgid ""
 "<p>JPEG images may contain a description. Check this checkbox to specify if "
 "you want to use this as a default description for your images.</p>"
@@ -3513,7 +3773,7 @@ msgstr ""
 "<p>Зображення JPEG можуть містити описи. Зробіть тут позначку, щоб вказати, "
 "що ви бажаєте використовувати цей опис як типовий опис зображень.</p>"
 
-#: Settings/GeneralPage.cpp:159
+#: Settings/GeneralPage.cpp:177
 msgid ""
 "<p>KPhotoAlbum shares plugins with other imaging applications, some of which "
 "have the concept of albums. KPhotoAlbum does not have this concept; "
@@ -3546,9 +3806,40 @@ msgstr ""
 "додаток, якому слід знати про всі альбоми.</li></ul></p><p>Більшість "
 "користувачів, скоріше за все, використають тут «Події».</p>"
 
-#: Settings/GeneralPage.cpp:175
+#: Settings/GeneralPage.cpp:193
 msgid "Show the KPhotoAlbum splash screen on start up"
 msgstr "Показувати вітальне вікно під час запуску KPhotoAlbum"
+
+#: Settings/GeneralPage.cpp:196
+msgid ""
+"<p>KPhotoAlbum is capable of showing your images on android devices. "
+"KPhotoAlbum will automatically pair with the app from android. This, "
+"however, requires that KPhotoAlbum on your desktop is listening for "
+"multicast messages. Checking this checkbox will make KPhotoAlbum do so "
+"automatically on start up. Alternatively, you can click the connection icon "
+"in the status bar to start listening."
+msgstr ""
+"<p>Програма KPhotoAlbum може показувати ваші знімки з пристроїв під "
+"керуванням Android. KPhotoAlbum автоматично встановлюватиме зв’язок з "
+"додатком Android. Втім, для цього встановлена на вашому комп’ютері програма "
+"KPhotoAlbum має очікувати на надходження трансляційних повідомлень. Якщо ви "
+"позначите цей пункт, KPhotoAlbum розпочинатиме чекати на такі повідомлення "
+"після запуску автоматично. Якщо пункт не буде позначено, ви зможете наказати "
+"програмі розпочати очікування за допомогою натискання піктограми з’єднання "
+"на смужці стану вікна програми."
+
+#: Settings/GeneralPage.cpp:202
+msgid ""
+"<p>Some cameras automatically store generic comments in each image. These "
+"comments can be ignored automatically.</p><p>Enter the comments that you "
+"want to ignore in the input field, one per line. Be sure to add the exact "
+"comment, including all whitespace.</p>"
+msgstr ""
+"<p>На деяких фотоапаратах у кожному зображенні автоматично зберігаються "
+"типові коментарі. Ви можете наказати програмі автоматично ігнорувати такі "
+"коментарі.</p><p>Вкажіть коментарі, які слід проігнорувати у цьому полі для "
+"введення, по одному на рядок. Коментар слід вказати повністю, разом з усіма "
+"пробілами.</p>"
 
 #: Settings/PluginsPage.cpp:39
 msgid "Choose Plugins to load:"
@@ -3558,7 +3849,7 @@ msgstr "Виберіть додатки для завантаження:"
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "Не завантажувати додатки, доки не відкрито меню додатків"
 
-#: Settings/SettingsData.cpp:201
+#: Settings/SettingsData.cpp:213
 msgid ""
 "When reading time information of images, their EXIF info is used. Exif info "
 "may, however, not be supported by your KPhotoAlbum installation, or no valid "
@@ -3576,7 +3867,7 @@ msgstr ""
 "допомогою сканера. Отже, питання, на яке ви маєте дати відповідь звучить "
 "так: чи слід KPhotoAlbum покладатися на часові штампи ваших зображень?"
 
-#: Settings/SettingsData.cpp:207
+#: Settings/SettingsData.cpp:219
 msgid "Trust Time Stamps?"
 msgstr "Довіряти часовим штампам?"
 
@@ -3714,8 +4005,13 @@ msgid "Display categories in thumbnail view"
 msgstr "Показувати категорії у перегляді мініатюр"
 
 #: Settings/ThumbnailsPage.cpp:94
-msgid "Auto display limit: "
-msgstr "Автоматичне обмеження показу: "
+msgid "Threshold for automatic thumbnail view: "
+msgstr "Порогове значення для автоматичного перегляду мініатюр: "
+
+#: Settings/ThumbnailsPage.cpp:98
+msgctxt "Describing: 'ThumbnailView will not be automatically shown'"
+msgid "Disabled"
+msgstr "Вимкнено"
 
 #: Settings/ThumbnailsPage.cpp:109
 msgid ""
@@ -3724,7 +4020,7 @@ msgid ""
 "thumbnails. This window includes a small preview image. This option "
 "configures the image size.</p>"
 msgstr ""
-"<p>Якщо ви виберете <b>Параметри -&gt; Показувати підказки</b> у перегляді "
+"<p>Якщо ви виберете <b>Параметри → Показувати підказки</b> у перегляді "
 "мініатюр, ви бачитимете маленьке віконечко, що показуватиме інформацію щодо "
 "мініатюр. Це віконечко міститиме зменшене зображення. Цей параметр визначає "
 "розмір цього зображення.</p>"
@@ -3880,7 +4176,10 @@ msgstr "Запуск у повноекранному режимі"
 msgid "Size:"
 msgstr "Розмір:"
 
-#: ThumbnailView/Delegate.cpp:252
+#: ThumbnailView/Delegate.cpp:254
+msgctxt ""
+"No video length could be determined, so we just display 'video' instead of "
+"the video length."
 msgid "video"
 msgstr "відео"
 
@@ -3899,16 +4198,17 @@ msgid ""
 "<p><b>Really reorder thumbnails?</b></p><p>By dragging images around in the "
 "thumbnail viewer, you actually reorder them. This is very useful where you "
 "do not know the exact date for the images. On the other hand, if the images "
-"have valid timestamps, you should use <b>Images -&gt; Sort Selected By Date "
-"and Time</b>.</p>"
+"have valid timestamps, you should use <b>Maintenance -&gt; Sort All By Date "
+"and Time</b> or <b>View -&gt; Sort Selected By Date and Time</b>.</p>"
 msgstr ""
 "<p><b>Ви справді бажаєте перевпорядкувати мініатюри?</b></p><p>Ви можете "
 "змінити порядок мініатюр перетягуванням зображень у переглядачів мініатюр. "
 "Це корисно у випадку, якщо ви не знаєте точної дати знімків. З іншого боку, "
-"якщо зображення мають коректні часові штампи, вам слід використовувати меню "
-"<b>Зображення -&gt; Впорядкувати вибрані за датою і часом</b>.</p>"
+"якщо зображення мають коректні часові позначки, вам слід скористатися "
+"пунктом меню <b>Обслуговування → Впорядкувати усі за датою і часом</b> або "
+"<b>Зображення → Впорядкувати вибрані за датою і часом</b>.</p>"
 
-#: ThumbnailView/ThumbnailDND.cpp:99
+#: ThumbnailView/ThumbnailDND.cpp:100
 msgid "Reorder Thumbnails"
 msgstr "Перевпорядкувати мініатюри"
 
@@ -3954,7 +4254,7 @@ msgstr ""
 "існуючих <b>Людей</b>, <b>Місць</b> і <b>Подій</b>.\n"
 "Для цього можна використати діалогове вікно приміток. \n"
 "Щоб додати нову категорію або вилучити одну з існуючих, відкрийте діалогове "
-"вікно <b>Параметри-&gt;Налаштувати KPhotoAlbum</b>, а потім виберіть\n"
+"вікно <b>Параметри→Налаштувати KPhotoAlbum</b>, а потім виберіть\n"
 "<b>Категорії</b> на бічній панелі.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
@@ -3981,7 +4281,7 @@ msgid ""
 "</ul>\n"
 "</p>\n"
 msgstr ""
-"<p>Під час створення HTML вам слід задати базовий каталог для\n"
+"<p>Під час створення HTML вам слід вказати базовий каталог для\n"
 "зображень. Тут ви можете визначити будь-який протокол, що підтримується KDE, "
 "на зразок ftp або\n"
 "fish.</p>\n"
@@ -4033,7 +4333,7 @@ msgstr ""
 #. i18n: ectx: @info:tipoftheday
 #: tips:65
 msgid ""
-"<p>It's possible to associate images with categories. That way when "
+"<p>It is possible to associate images with categories. That way when "
 "browsing, say people, you\n"
 "may get a small icon for each person with e.g. the person's face.</p>\n"
 "<p>To specify an icon for a person, load the person in the viewer, zoom to\n"
@@ -4069,7 +4369,7 @@ msgstr ""
 #: tips:85
 msgid ""
 "<p>To hear more about latest changes in KPhotoAlbum and to get help in using "
-"and developing KPhotoAlbum, you're welcome to join the KPhotoAlbum mailing "
+"and developing KPhotoAlbum, you are welcome to join the KPhotoAlbum mailing "
 "list at <a href=\"http://mail.kdab.com/mailman/listinfo/kphotoalbum\">http://"
 "mail.kdab.com/mailman/listinfo/kphotoalbum</a>.</p>\n"
 msgstr ""
@@ -4089,7 +4389,7 @@ msgid ""
 "a></p>\n"
 msgstr ""
 "<p>Щоб обговорити KPhotoAlbum з іншими користувачами та розробниками або "
-"задати питання, які вас цікавлять, скористайтеся нашим каналом IRC, "
+"поставити питання, які вас цікавлять, скористайтеся нашим каналом IRC, "
 "<b>#kphotoalbum@freenode</b> або <a href=\"http://webchat.freenode.net/?"
 "channels=kphotoalbum\">http://webchat.freenode.net/?channels=kphotoalbum</"
 "a></p>\n"
@@ -4216,39 +4516,39 @@ msgstr ""
 msgid "Error Deleting Files"
 msgstr "Помилка під час вилучення файлів"
 
-#: Utilities/Util.cpp:101
+#: Utilities/Util.cpp:98
 msgid "<b>File Name: </b> "
 msgstr "<b>Назва файла: </b> "
 
-#: Utilities/Util.cpp:105
+#: Utilities/Util.cpp:102
 msgid "<b>Date: </b> "
 msgstr "<b>Дата: </b> "
 
-#: Utilities/Util.cpp:115
+#: Utilities/Util.cpp:112
 #, kde-format
 msgctxt "width x height"
 msgid "%1x%2"
 msgstr "%1⨯%2"
 
-#: Utilities/Util.cpp:119
+#: Utilities/Util.cpp:116
 #, kde-format
 msgctxt "short for: x megapixels"
 msgid " (%1MP)"
 msgstr " (%1 Мпк)"
 
-#: Utilities/Util.cpp:122
+#: Utilities/Util.cpp:119
 msgid "<b>Image Size: </b> "
 msgstr "<b>Розмір зображення: </b> "
 
-#: Utilities/Util.cpp:168
+#: Utilities/Util.cpp:163
 msgid "<b>Label: </b> "
 msgstr "<b>Мітка: </b> "
 
-#: Utilities/Util.cpp:172
+#: Utilities/Util.cpp:167
 msgid "<b>Description: </b> "
 msgstr "<b>Опис: </b> "
 
-#: Utilities/Util.cpp:230
+#: Utilities/Util.cpp:225
 #, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
@@ -4257,11 +4557,11 @@ msgstr ""
 "Існує файл автоматичної копії «%1» (розмір — %3 кБ), він новіший за «%2». Чи "
 "слід використовувати файл автоматичної копії?"
 
-#: Utilities/Util.cpp:232
+#: Utilities/Util.cpp:227
 msgid "Found Autosave File"
 msgstr "Знайдено файл автоматичної копії"
 
-#: Utilities/Util.cpp:234
+#: Utilities/Util.cpp:229
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -4273,11 +4573,11 @@ msgstr ""
 "завершення роботи програми?</p><p><small>(Можливо, варто перевірити і "
 "скопіювати потрібний вам файл вручну)</small></p>"
 
-#: Utilities/Util.cpp:237
+#: Utilities/Util.cpp:232
 msgid "Recover from Autosave?"
 msgstr "Відновити з автоматичної копії?"
 
-#: Utilities/Util.cpp:239
+#: Utilities/Util.cpp:234
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
@@ -4287,52 +4587,58 @@ msgstr ""
 "вручну, чи існують нумеровані файли резервних копій, якими можна "
 "скористатися для відновлення index.xml.</p>"
 
-#: Utilities/Util.cpp:271
+#: Utilities/Util.cpp:266
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "Не вдалося скопіювати «%1» у «%2»."
 
-#: Utilities/Util.cpp:271 Utilities/Util.cpp:285 Utilities/Util.cpp:303
-#: Utilities/Util.cpp:320 XMLDB/FileReader.cpp:346
+#: Utilities/Util.cpp:266 Utilities/Util.cpp:280 Utilities/Util.cpp:298
+#: Utilities/Util.cpp:315 XMLDB/FileReader.cpp:393
 msgid "Error Running Demo"
 msgstr "Помилка під час запуску демонстрації"
 
-#: Utilities/Util.cpp:285 Utilities/Util.cpp:320
+#: Utilities/Util.cpp:280 Utilities/Util.cpp:315
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr "Не вдалося створити каталог «%1» потрібний для демонстрації."
 
-#: Utilities/Util.cpp:303
+#: Utilities/Util.cpp:298
 #, kde-format
 msgid "Unable to open '%1' for writing."
 msgstr "Не вдалося відкрити «%1» для запису."
 
-#: Utilities/Util.cpp:372
+#: Utilities/Util.cpp:367
 #, kde-format
 msgid "<p>Unable to find file %1</p>"
 msgstr "<p>Не вдалося знайти файл %1</p>"
 
 #: Viewer/CategoryImageConfig.cpp:42
+msgctxt "@title:window"
 msgid "Configure Category Image"
 msgstr "Налаштувати категорію зображення"
 
 #: Viewer/CategoryImageConfig.cpp:44
+msgctxt "@action:button As in 'Set the category image'"
 msgid "Set"
 msgstr "Встановити"
 
 #: Viewer/CategoryImageConfig.cpp:54
-msgid "Group:"
-msgstr "Група:"
+msgctxt "@label:listbox As in 'select the tag category'"
+msgid "Category:"
+msgstr "Категорія:"
 
 #: Viewer/CategoryImageConfig.cpp:61
-msgid "Member:"
-msgstr "Член:"
+msgctxt "@label:listbox As in 'select a tag'"
+msgid "Tag:"
+msgstr "Мітка:"
 
 #: Viewer/CategoryImageConfig.cpp:70
+msgctxt "@label The current category image"
 msgid "Current image:"
 msgstr "Поточне зображення:"
 
 #: Viewer/CategoryImageConfig.cpp:78
+msgctxt "@label Preview of the new category imape"
 msgid "New image:"
 msgstr "Нове зображення:"
 
@@ -4348,14 +4654,22 @@ msgstr "[ масштаб x%1 ]"
 
 #: Viewer/SpeedDisplay.cpp:44
 #, kde-format
+msgctxt "OSD for slideshow, num of seconds per image"
 msgid "<p><center><font size=\"+4\">%1&nbsp;s</font></center></p>"
 msgstr "<p><center><font size=\"+4\">%1&nbsp;с</font></center></p>"
 
 #: Viewer/SpeedDisplay.cpp:50
-msgid "<p><center><font size=\"+4\">Starting Slideshow</font></center></p>"
-msgstr "<p><center><font size=\"+4\">Запуск показу слайдів</font></center></p>"
+msgctxt "OSD for slideshow"
+msgid ""
+"<p><center><font size=\"+4\">Starting Slideshow<br/>Ctrl++ makes the "
+"slideshow faster<br/>Ctrl + - makes the slideshow slower</font></center></p>"
+msgstr ""
+"<p><center><font size=\"+4\">Розпочинаємо показ слайдів<br/>Ctrl + + "
+"пришвидшує показ слайдів<br/>Ctrl + - уповільнює показ слайдів</font></"
+"center></p>"
 
 #: Viewer/SpeedDisplay.cpp:70
+msgctxt "OSD for slideshow"
 msgid "<p><center><font size=\"+4\">Ending Slideshow</font></center></p>"
 msgstr ""
 "<p><center><font size=\"+4\">Завершення показу слайдів</font></center></p>"
@@ -4364,245 +4678,344 @@ msgstr ""
 msgid "Error playing media"
 msgstr "Помилка під час відтворення"
 
-#: Viewer/ViewerWidget.cpp:146
+#: Viewer/ViewerWidget.cpp:154
+msgctxt "@action:inmenu"
 msgid "Annotate..."
-msgstr "Анотувати..."
+msgstr "Анотувати…"
 
-#: Viewer/ViewerWidget.cpp:157
+#: Viewer/ViewerWidget.cpp:159
+msgctxt "@action:inmenu"
+msgid "Set as First Image in Stack"
+msgstr "Зробити першим зображенням у стосі"
+
+#: Viewer/ViewerWidget.cpp:165
+msgctxt "@action:inmenu"
 msgid "Show EXIF Viewer"
 msgstr "Показати переглядач EXIF"
 
-#: Viewer/ViewerWidget.cpp:188
+#: Viewer/ViewerWidget.cpp:170
+msgctxt "@action:inmenu"
+msgid "Copy image to..."
+msgstr "Копіювати зображення до…"
+
+#: Viewer/ViewerWidget.cpp:176
+msgctxt "@action:inmenu"
+msgid "Close"
+msgstr "Закрити"
+
+#: Viewer/ViewerWidget.cpp:201
+msgctxt "@title:inmenu"
 msgid "Set as Wallpaper"
 msgstr "Встановити тло стільниці"
 
-#: Viewer/ViewerWidget.cpp:191
+#: Viewer/ViewerWidget.cpp:204
+msgctxt "@action:inmenu"
 msgid "Centered"
-msgstr "По центру"
+msgstr "За центром"
 
-#: Viewer/ViewerWidget.cpp:195
+#: Viewer/ViewerWidget.cpp:208
+msgctxt "@action:inmenu"
 msgid "Tiled"
 msgstr "Плиткою"
 
-#: Viewer/ViewerWidget.cpp:199
+#: Viewer/ViewerWidget.cpp:212
+msgctxt "@action:inmenu"
 msgid "Center Tiled"
-msgstr "Плиткою по центру"
+msgstr "Плиткою за центром"
 
-#: Viewer/ViewerWidget.cpp:203
+#: Viewer/ViewerWidget.cpp:216
+msgctxt "@action:inmenu"
 msgid "Centered Maxpect"
 msgstr "По центру пропорційно"
 
-#: Viewer/ViewerWidget.cpp:207
+#: Viewer/ViewerWidget.cpp:220
+msgctxt "@action:inmenu"
 msgid "Tiled Maxpect"
 msgstr "Плиткою пропорційно"
 
-#: Viewer/ViewerWidget.cpp:211
+#: Viewer/ViewerWidget.cpp:224
+msgctxt "@action:inmenu"
 msgid "Scaled"
-msgstr "Масштабовано"
+msgstr "Масштабоване"
 
-#: Viewer/ViewerWidget.cpp:215
+#: Viewer/ViewerWidget.cpp:228
+msgctxt "@action:inmenu"
 msgid "Centered Auto Fit"
-msgstr "Вмістити по центру"
+msgstr "Вмістити за центром"
 
-#: Viewer/ViewerWidget.cpp:257
+#: Viewer/ViewerWidget.cpp:270
+msgctxt "@title:inmenu"
 msgid "Rotate"
-msgstr "Обернути"
+msgstr "Повернути"
 
-#: Viewer/ViewerWidget.cpp:265
+#: Viewer/ViewerWidget.cpp:273
+msgctxt "@action:inmenu"
+msgid "Rotate clockwise"
+msgstr "Повернути за годинниковою стрілкою"
+
+#: Viewer/ViewerWidget.cpp:278
+msgctxt "@action:inmenu"
 msgid "Flip Over"
 msgstr "Віддзеркалити"
 
-#: Viewer/ViewerWidget.cpp:280
+#: Viewer/ViewerWidget.cpp:284
+msgctxt "@action:inmenu"
+msgid "Rotate counterclockwise"
+msgstr "Повернути проти годинникової стрілки"
+
+#: Viewer/ViewerWidget.cpp:294
+msgctxt "@title:inmenu As in 'skip 2 images'"
 msgid "Skip"
 msgstr "Пропустити"
 
-#: Viewer/ViewerWidget.cpp:283
+#: Viewer/ViewerWidget.cpp:297
+msgctxt "@action:inmenu Go to first image"
 msgid "First"
-msgstr "Перший"
+msgstr "Перше"
 
-#: Viewer/ViewerWidget.cpp:289
+#: Viewer/ViewerWidget.cpp:303
+msgctxt "@action:inmenu Go to last image"
 msgid "Last"
-msgstr "Останній"
+msgstr "Останнє"
 
-#: Viewer/ViewerWidget.cpp:295
+#: Viewer/ViewerWidget.cpp:309
+msgctxt "@action:inmenu"
 msgid "Show Next"
-msgstr "Показати наступний"
+msgstr "Показати наступне"
 
-#: Viewer/ViewerWidget.cpp:305
+#: Viewer/ViewerWidget.cpp:319
+msgctxt "@action:inmenu"
 msgid "Skip 10 Forward"
 msgstr "На 10 вперед"
 
-#: Viewer/ViewerWidget.cpp:311
+#: Viewer/ViewerWidget.cpp:325
+msgctxt "@action:inmenu"
 msgid "Skip 100 Forward"
 msgstr "На 100 вперед"
 
-#: Viewer/ViewerWidget.cpp:317
+#: Viewer/ViewerWidget.cpp:331
+msgctxt "@action:inmenu"
 msgid "Skip 1000 Forward"
 msgstr "На 1000 вперед"
 
-#: Viewer/ViewerWidget.cpp:323
+#: Viewer/ViewerWidget.cpp:337
+msgctxt "@action:inmenu"
 msgid "Show Previous"
 msgstr "Показати попереднє"
 
-#: Viewer/ViewerWidget.cpp:329
+#: Viewer/ViewerWidget.cpp:346
+msgctxt "@action:inmenu"
 msgid "Skip 10 Backward"
 msgstr "На 10 назад"
 
-#: Viewer/ViewerWidget.cpp:335
+#: Viewer/ViewerWidget.cpp:352
+msgctxt "@action:inmenu"
 msgid "Skip 100 Backward"
 msgstr "На 100 назад"
 
-#: Viewer/ViewerWidget.cpp:341
+#: Viewer/ViewerWidget.cpp:358
+msgctxt "@action:inmenu"
 msgid "Skip 1000 Backward"
 msgstr "На 1000 назад"
 
-#: Viewer/ViewerWidget.cpp:347
+#: Viewer/ViewerWidget.cpp:364
+msgctxt "@action:inmenu"
 msgid "Delete Image"
 msgstr "Вилучити зображення"
 
-#: Viewer/ViewerWidget.cpp:352
+#: Viewer/ViewerWidget.cpp:369
+msgctxt "@action:inmenu"
 msgid "Remove Image from Display List"
 msgstr "Вилучити зображення зі списку показу"
 
-#: Viewer/ViewerWidget.cpp:362
+#: Viewer/ViewerWidget.cpp:379
+msgctxt "@action:inmenu"
 msgid "Zoom"
 msgstr "Масштабування"
 
-#: Viewer/ViewerWidget.cpp:366
+#: Viewer/ViewerWidget.cpp:383
+msgctxt "@action:inmenu"
 msgid "Zoom In"
 msgstr "Збільшити"
 
-#: Viewer/ViewerWidget.cpp:371
+#: Viewer/ViewerWidget.cpp:388
+msgctxt "@action:inmenu"
 msgid "Zoom Out"
 msgstr "Зменшити"
 
-#: Viewer/ViewerWidget.cpp:376
+#: Viewer/ViewerWidget.cpp:393
+msgctxt "@action:inmenu"
 msgid "Full View"
 msgstr "Перегляд на повний розмір"
 
-#: Viewer/ViewerWidget.cpp:381
+#: Viewer/ViewerWidget.cpp:398
+msgctxt "@action:inmenu"
 msgid "Pixel for Pixel View"
 msgstr "Перегляд піксель у піксель"
 
-#: Viewer/ViewerWidget.cpp:386
+#: Viewer/ViewerWidget.cpp:403
+msgctxt "@action:inmenu"
 msgid "Toggle Full Screen"
 msgstr "Перемикач повноекранного режиму"
 
-#: Viewer/ViewerWidget.cpp:397
+#: Viewer/ViewerWidget.cpp:414
+msgctxt "@title:inmenu"
 msgid "Slideshow"
 msgstr "Показ слайдів"
 
-#: Viewer/ViewerWidget.cpp:400 Viewer/ViewerWidget.cpp:846
+#: Viewer/ViewerWidget.cpp:417 Viewer/ViewerWidget.cpp:872
+msgctxt "@action:inmenu"
 msgid "Run Slideshow"
 msgstr "Запустити показ слайдів"
 
-#: Viewer/ViewerWidget.cpp:405
+#: Viewer/ViewerWidget.cpp:422
+msgctxt "@action:inmenu"
 msgid "Run Faster"
 msgstr "Швидше"
 
-#: Viewer/ViewerWidget.cpp:410
+#: Viewer/ViewerWidget.cpp:427
+msgctxt "@action:inmenu"
 msgid "Run Slower"
 msgstr "Повільніше"
 
-#: Viewer/ViewerWidget.cpp:444
+#: Viewer/ViewerWidget.cpp:461
 msgid "File not available"
 msgstr "Файл недоступний"
 
-#: Viewer/ViewerWidget.cpp:503
+#: Viewer/ViewerWidget.cpp:523
+msgctxt "@action:inmenu Start video playback"
 msgid "Play"
 msgstr "Пуск"
 
-#: Viewer/ViewerWidget.cpp:791
+#: Viewer/ViewerWidget.cpp:525
+msgctxt "@action:inmenu Pause video playback"
+msgid "Pause"
+msgstr "Пауза"
+
+#: Viewer/ViewerWidget.cpp:817
+msgctxt "Basically 'enter a category name'"
 msgid "<b>Setting Category: </b>"
 msgstr "<b>Встановлення категорії: </b>"
 
-#: Viewer/ViewerWidget.cpp:799
+#: Viewer/ViewerWidget.cpp:825
+msgctxt "Basically 'enter a tag name'"
 msgid "<b>Assigning: </b>"
 msgstr "<b>Прив’язка: </b> "
 
-#: Viewer/ViewerWidget.cpp:853
+#: Viewer/ViewerWidget.cpp:879
+msgctxt "@action:inmenu"
 msgid "Stop Slideshow"
 msgstr "Зупинити показ слайдів"
 
-#: Viewer/ViewerWidget.cpp:1280
+#: Viewer/ViewerWidget.cpp:1306
+msgctxt "@title:inmenu"
 msgid "Seek"
 msgstr "Пошук"
 
-#: Viewer/ViewerWidget.cpp:1284
+#: Viewer/ViewerWidget.cpp:1310
+msgctxt "@action:inmenu"
 msgid "10 minutes backward"
 msgstr "на 10 хвилин назад"
 
-#: Viewer/ViewerWidget.cpp:1285
+#: Viewer/ViewerWidget.cpp:1311
+msgctxt "@action:inmenu"
 msgid "1 minute backward"
 msgstr "на 1 хвилину назад"
 
-#: Viewer/ViewerWidget.cpp:1286
+#: Viewer/ViewerWidget.cpp:1312
+msgctxt "@action:inmenu"
 msgid "10 seconds backward"
 msgstr "на 10 секунд назад"
 
-#: Viewer/ViewerWidget.cpp:1287
+#: Viewer/ViewerWidget.cpp:1313
+msgctxt "@action:inmenu"
 msgid "1 seconds backward"
 msgstr "на 1 секунду назад"
 
-#: Viewer/ViewerWidget.cpp:1288
+#: Viewer/ViewerWidget.cpp:1314
+msgctxt "@action:inmenu"
 msgid "100 milliseconds backward"
 msgstr "на 100 мілісекунд назад"
 
-#: Viewer/ViewerWidget.cpp:1289
+#: Viewer/ViewerWidget.cpp:1315
+msgctxt "@action:inmenu"
 msgid "100 milliseconds forward"
 msgstr "на 100 мілісекунд вперед"
 
-#: Viewer/ViewerWidget.cpp:1290
+#: Viewer/ViewerWidget.cpp:1316
+msgctxt "@action:inmenu"
 msgid "1 seconds forward"
 msgstr "на 1 секунду вперед"
 
-#: Viewer/ViewerWidget.cpp:1291
+#: Viewer/ViewerWidget.cpp:1317
+msgctxt "@action:inmenu"
 msgid "10 seconds forward"
 msgstr "на 10 секунд вперед"
 
-#: Viewer/ViewerWidget.cpp:1292
+#: Viewer/ViewerWidget.cpp:1318
+msgctxt "@action:inmenu"
 msgid "1 minute forward"
 msgstr "на 1 хвилину вперед"
 
-#: Viewer/ViewerWidget.cpp:1293
+#: Viewer/ViewerWidget.cpp:1319
+msgctxt "@action:inmenu"
 msgid "10 minutes forward"
 msgstr "на 10 хвилин вперед"
 
-#: Viewer/ViewerWidget.cpp:1316
+#: Viewer/ViewerWidget.cpp:1342
+msgctxt "@action:inmenu Stop video playback"
 msgid "Stop"
 msgstr "Зупинити"
 
-#: Viewer/ViewerWidget.cpp:1322
-msgid "Toggle playback"
-msgstr "Увімкнути/Вимкнути відтворення"
+#: Viewer/ViewerWidget.cpp:1355
+msgctxt "@action:inmenu"
+msgid "Use current frame in thumbnail view"
+msgstr "Використовувати поточну рамку у перегляді мініатюр"
 
-#: Viewer/ViewerWidget.cpp:1334
+#: Viewer/ViewerWidget.cpp:1360
+msgctxt "@action:inmenu Restart video playback."
 msgid "Restart"
 msgstr "Перезапустити"
 
-#: Viewer/ViewerWidget.cpp:1349
+#: Viewer/ViewerWidget.cpp:1375
+msgctxt "@title:inmenu"
 msgid "Filters"
 msgstr "Фільтри"
 
-#: Viewer/ViewerWidget.cpp:1352
+#: Viewer/ViewerWidget.cpp:1378
+msgctxt "@action:inmenu"
 msgid "Remove All Filters"
 msgstr "Вилучити всі фільтри"
 
-#: Viewer/ViewerWidget.cpp:1356
+#: Viewer/ViewerWidget.cpp:1382
+msgctxt "@action:inmenu"
 msgid "Apply Grayscale Filter"
 msgstr "Застосувати фільтр перетворення на відтінки сірого"
 
-#: Viewer/ViewerWidget.cpp:1361
+#: Viewer/ViewerWidget.cpp:1387
+msgctxt "@action:inmenu"
 msgid "Apply Contrast Stretching Filter"
 msgstr "Застосувати фільтр розтягування контрастності"
 
-#: Viewer/ViewerWidget.cpp:1366
+#: Viewer/ViewerWidget.cpp:1392
+msgctxt "@action:inmenu"
 msgid "Apply Histogram Equalization Filter"
 msgstr "Застосувати фільтр вирівнювання гістограми"
 
-#: Viewer/ViewerWidget.cpp:1371
+#: Viewer/ViewerWidget.cpp:1397
+msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr "Застосувати фільтр перетворення на чорно-біле"
+
+#: Viewer/ViewerWidget.cpp:1546
+msgctxt "@title:window"
+msgid "Copy image to..."
+msgstr "Копіювання зображення…"
+
+#: Viewer/ViewerWidget.cpp:1547
+msgctxt "@action:button"
+msgid "Copy"
+msgstr "Копіювати"
 
 #: Viewer/VisibleOptionsMenu.cpp:33
 msgid "Show..."
@@ -4648,31 +5061,52 @@ msgstr "Показати розмір зображення"
 msgid "Show Rating"
 msgstr "Показати оцінку"
 
-#: XMLDB/Database.cpp:594
+#: XMLDB/FileReader.cpp:56
 #, kde-format
 msgid ""
-"<p>Unknown tag %1, while reading configuration file.</p><p>Expected one of: "
-"Options, Drawings</p>"
+"<p>The database file indicates a file format version of %1. This version of "
+"KPhotoAlbum uses the database file format version %2.</p><p>It is possible "
+"that some information will be lost during import, or that the database can "
+"not be read at all.</p>"
 msgstr ""
-"<p>Під час читання файла налаштувань знайдено невідому мітку %1.</"
-"p><p>Очікувалася одна з таких: Options, Drawings</p>"
+"<p>У файлі бази даних вказано версію формату %1. У цій версії KPhotoAlbum "
+"версія формату файла бази даних має бути рівною %2.</p><p>Під час "
+"імпортування даних може бути втрачено частину інформації або отримати базу "
+"даних, яку не можна буде прочитати взагалі.</p>"
 
-#: XMLDB/FileReader.cpp:80
+#: XMLDB/FileReader.cpp:61 XMLDB/FileReader.cpp:71
+msgid "index.xml version mismatch"
+msgstr "Невідповідність версії index.xml"
+
+#: XMLDB/FileReader.cpp:66
+#, kde-format
+msgid ""
+"<p>The database file indicates a file format version of %1. This version of "
+"KPhotoAlbum uses the database file format version %2.</p><p>If you save the "
+"database using this version of KPhotoAlbum, you won't be able to open it "
+"with older versions of KPhotoAlbum.</p>"
+msgstr ""
+"<p>У файлі бази даних вказано версію формату файла %1. У цій версії "
+"KPhotoAlbum використовується версія файла формату бази даних %2.</p><p>Якщо "
+"ви збережете базу даних за допомогою цієї версії KPhotoAlbum, нею вже не "
+"можна буде скористатися у старіших версіях KPhotoAlbum.</p>"
+
+#: XMLDB/FileReader.cpp:113
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "Помилка у файлі %1: неочікуваний елемент: '%2'"
 
-#: XMLDB/FileReader.cpp:86
+#: XMLDB/FileReader.cpp:119
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "Не вдалося знайти мітку «Options» у файлі налаштувань %1."
 
-#: XMLDB/FileReader.cpp:88
+#: XMLDB/FileReader.cpp:121
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "Не вдалося знайти мітку «Images» у файлі налаштувань %1."
 
-#: XMLDB/FileReader.cpp:261
+#: XMLDB/FileReader.cpp:312
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -4681,9 +5115,8 @@ msgid ""
 "select the images that you have reason to believe have a correct date in "
 "either their EXIF data or on the file, and execute <b>Maintenance->Read EXIF "
 "Info</b> to reread the information.</p><p>Finally, once all images have "
-"their dates set, you can execute <b>Images->Sort Selected by Date & Time</b> "
-"to sort them in the database. Note that you should expand all stacks for "
-"sorting.</p>"
+"their dates set, you can execute <b>Maintenance->Sort All by Date & Time</b> "
+"to sort them in the database. </p>"
 msgstr ""
 "<p>Ваші зображення або відеофайли не впорядковано, це означає, що навігація "
 "за допомогою панелі дати буде працювати не в оптимальному режимі.</p><p>У "
@@ -4692,12 +5125,13 @@ msgstr ""
 "зображень, у яких відсутня інформація про дату.</p><p>Потім ви можете "
 "вибрати зображення, які, як ви маєте підстави думати, містять правильну "
 "інформацію про дату або у їх мітках EXIF або у самому файлі, і вибрати пункт "
-"меню <b>Обслуговування->Читати інформацію EXIF</b>, що перечитати інформацію "
-"з цих файлів.</p><p>Зрештою, коли всі зображення матимуть встановлені дати, "
-"ви можете скористатися пунктом меню <b>Зображення->Впорядкувати вибрані за "
-"датою і часом</b>, щоб впорядкувати зображення у базі даних.</p>"
+"меню <b>Обслуговування → Читати інформацію EXIF</b>, що перечитати "
+"інформацію з цих файлів.</p><p>Зрештою, коли всі зображення матимуть "
+"встановлені дати, ви можете скористатися пунктом меню <b>Обслуговування → "
+"Впорядкувати усі за датою і часом</b>, щоб впорядкувати зображення у базі "
+"даних.</p>"
 
-#: XMLDB/FileReader.cpp:272
+#: XMLDB/FileReader.cpp:322
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -4714,11 +5148,11 @@ msgstr ""
 "Після того, як ви це зробите, програма надасть вам перелік можливостей "
 "заповнення відсутньої інформації.</p>"
 
-#: XMLDB/FileReader.cpp:279
+#: XMLDB/FileReader.cpp:329
 msgid "Images/Videos Are Not Sorted"
 msgstr "Зображення/Відео не впорядковано"
 
-#: XMLDB/FileReader.cpp:294
+#: XMLDB/FileReader.cpp:344
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -4735,11 +5169,11 @@ msgstr ""
 "у полі мініатюр утвориться зайвий простір навколо зображень — нічого "
 "більшого — отже виконувати цю операцію зовсім не обов’язково.</p>"
 
-#: XMLDB/FileReader.cpp:299
+#: XMLDB/FileReader.cpp:349
 msgid "Not All Images Have Size Information"
 msgstr "Не всі зображення мають інформацію про розмір"
 
-#: XMLDB/FileReader.cpp:322
+#: XMLDB/FileReader.cpp:372
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -4762,38 +5196,38 @@ msgstr ""
 "KDEDIRS вже встановлено, просто додайте рядок так, неначе ви встановлювали "
 "змінну середовища <b>PATH</b>.</p>"
 
-#: XMLDB/FileReader.cpp:329
+#: XMLDB/FileReader.cpp:379
 msgid "No default setup file found"
 msgstr "Не знайдено типового файла налаштування"
 
-#: XMLDB/FileReader.cpp:346
+#: XMLDB/FileReader.cpp:393
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Неможливо відкрити файл «%1» для читання"
 
-#: XMLDB/FileReader.cpp:357
+#: XMLDB/FileReader.cpp:406
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "рядок %1 на позиції %2 у файлі %3: %4"
 
-#: XMLDB/FileReader.cpp:359
+#: XMLDB/FileReader.cpp:408
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Не вдалося відновити дані з резервної копії: %1"
 
-#: XMLDB/FileReader.cpp:368
+#: XMLDB/FileReader.cpp:419
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Помилка у файлі %1: Не знайдено жодного елемента"
 
-#: XMLDB/FileReader.cpp:374
+#: XMLDB/FileReader.cpp:425
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
 "Помилка у файлі %1: як найвищий елемента очікувався «KPhotoAlbum», але було "
 "виявлено «%2»"
 
-#: XMLDB/FileWriter.cpp:48
+#: XMLDB/FileWriter.cpp:47
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
@@ -4802,7 +5236,7 @@ msgstr ""
 "<p>Не вдалося зберегти базу даних зображень до XML.</p>Не вдалося відкрити "
 "файл %1 через таку помилку: %2"
 
-#: XMLDB/FileWriter.cpp:75
+#: XMLDB/FileWriter.cpp:85
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
@@ -4811,7 +5245,7 @@ msgstr ""
 "<p>Не вдалося вилучити застарілу базу даних зображень.</p><p>Будь ласка, "
 "повторіть спробу або замініть файл %1 на файла %2 вручну.</p>"
 
-#: XMLDB/FileWriter.cpp:85
+#: XMLDB/FileWriter.cpp:95
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
@@ -4830,3 +5264,37 @@ msgstr "Помилка під час створення zip-файла %1"
 #, kde-format
 msgid "Error writing file %1 to zip file %2"
 msgstr "Помилка під час додавання файла %1 до архіву zip %2"
+
+#: XMLDB/XmlReader.cpp:46
+msgid "Error reading next element"
+msgstr "Помилка під час спроби читання елемента «next»"
+
+#: XMLDB/XmlReader.cpp:49
+#, kde-format
+msgid "Expected to read a start or stop element, but read %1"
+msgstr ""
+"Мало бути прочитано елемент «start» або «stop», втім, прочитано елемент %1"
+
+#: XMLDB/XmlReader.cpp:54
+#, kde-format
+msgid "Expected to read %1, but read %2"
+msgstr "Мало бути прочитано %1, втім, прочитано %2"
+
+#: XMLDB/XmlReader.cpp:65
+#, kde-format
+msgid "Expected to read an end element but read %1"
+msgstr "Мало бути прочитано елемент «end», втім, прочитано %1"
+
+#: XMLDB/XmlReader.cpp:83
+#, kde-format
+msgid "Expected to read start element '%1'"
+msgstr "Мало бути прочитано елемент «start» «%1»"
+
+#: XMLDB/XmlReader.cpp:88
+#, kde-format
+msgid ""
+"On line %1, column %2:\n"
+"%3"
+msgstr ""
+"У рядку %1, позиція %2:\n"
+"%3"

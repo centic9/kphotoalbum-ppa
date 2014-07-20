@@ -39,7 +39,7 @@ class DuplicateMerger : public KDialog
     Q_OBJECT
     
 public:
-    explicit DuplicateMerger(QWidget *parent = 0);
+    explicit DuplicateMerger(QWidget *parent = nullptr);
     ~DuplicateMerger();
 
 private slots:
@@ -52,7 +52,7 @@ private:
     void findDuplicates();
     void addRow(const DB::MD5& );
     void selectAll(bool b);
-    void tellThatNoDupplicatesWasFound();
+    void tellThatNoDuplicatesWereFound();
 
     QMap<DB::MD5, DB::FileNameList> m_matches;
 
@@ -60,9 +60,11 @@ private:
     QVBoxLayout* m_scrollLayout;
     QList<DuplicateMatch*> m_selectors;
     QRadioButton* _trash;
+    QRadioButton *_deleteFromDisk;
     QLabel* m_selectionCount;
 };
 
 
 } // namespace MainWindow
 #endif // MAINWINDOW_DUPLICATEMERGER_H
+// vi:expandtab:tabstop=4 shiftwidth=4:

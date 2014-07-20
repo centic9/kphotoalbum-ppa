@@ -52,7 +52,7 @@ DuplicateMatch::DuplicateMatch(const DB::FileNameList& files )
 
     m_merge = new QCheckBox(i18n("Merge these images"));
     rightSideLayout->addWidget(m_merge);
-    m_merge->setChecked(true);
+    m_merge->setChecked(false);
     connect( m_merge, SIGNAL(toggled(bool)), this, SIGNAL(selectionChanged()));
 
     QWidget* options = new QWidget;
@@ -93,9 +93,9 @@ DuplicateMatch::DuplicateMatch(const DB::FileNameList& files )
     ImageManager::AsyncLoader::instance()->load(request);
 }
 
-void DuplicateMatch::pixmapLoaded(const DB::FileName&, const QSize&, const QSize&, int, const QImage& image, const bool)
+void DuplicateMatch::pixmapLoaded(ImageManager::ImageRequest* /*request*/, const QImage& image)
 {
-    m_image->setPixmap( QPixmap::fromImage(image));
+    m_image->setPixmap(QPixmap::fromImage(image));
 }
 
 void DuplicateMatch::setSelected(bool b)
@@ -121,16 +121,22 @@ void DuplicateMatch::execute(Utilities::DeleteMethod method)
         }
     }
 
-    DB::FileNameList list;
+    DB::FileNameList deleteList, dupList;
     Q_FOREACH( QRadioButton* button, m_buttons ) {
         if (button->isChecked())
             continue;
         DB::FileName fileName = button->property("data").value<DB::FileName>();
         DB::ImageDB::instance()->copyData(fileName, destination);
-        list.append(fileName);
+        // can we safely delete the file?
+        if ( fileName != destination )
+            deleteList.append(fileName);
+        else
+            dupList.append(fileName);
     }
 
-    Utilities::DeleteFiles::deleteFiles(list, method);
+    Utilities::DeleteFiles::deleteFiles(deleteList, method);
+    // remove duplicate DB-entries without removing or blocking the file:
+    DB::ImageDB::instance()->deleteList(dupList);
 }
 
 bool DuplicateMatch::eventFilter(QObject* obj, QEvent* event)
@@ -150,3 +156,4 @@ bool DuplicateMatch::eventFilter(QObject* obj, QEvent* event)
 } // namespace MainWindow
 
 #include "DuplicateMatch.moc"
+// vi:expandtab:tabstop=4 shiftwidth=4:

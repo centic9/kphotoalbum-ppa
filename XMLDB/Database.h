@@ -16,8 +16,9 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef XMLDB_DATABSE_H
-#define XMLDB_DATABSE_H
+#ifndef XMLDB_DATABASE_H
+#define XMLDB_DATABASE_H
+
 #include "DB/ImageSearchInfo.h"
 #include "DB/ImageInfoList.h"
 #include <qstringlist.h>
@@ -29,6 +30,7 @@
 #include "DB/MD5Map.h"
 #include <qdom.h>
 #include <DB/FileNameList.h>
+#include "FileReader.h"
 
 namespace DB
 {
@@ -41,38 +43,38 @@ namespace XMLDB {
         Q_OBJECT
 
     public:
-        OVERRIDE uint totalCount() const;
-        OVERRIDE DB::FileNameList search(
+        uint totalCount() const override;
+        DB::FileNameList search(
             const DB::ImageSearchInfo&,
-            bool requireOnDisk=false) const;
-        OVERRIDE void renameCategory( const QString& oldName, const QString newName );
+            bool requireOnDisk=false) const override;
+        void renameCategory( const QString& oldName, const QString newName ) override;
 
-        OVERRIDE QMap<QString,uint> classify( const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask );
-        OVERRIDE DB::FileNameList images();
-        OVERRIDE void addImages( const DB::ImageInfoList& images );
-        OVERRIDE void renameImage( DB::ImageInfoPtr info, const DB::FileName& newName );
+        QMap<QString,uint> classify( const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask ) override;
+        DB::FileNameList images() override;
+        void addImages( const DB::ImageInfoList& images ) override;
+        void renameImage( DB::ImageInfoPtr info, const DB::FileName& newName ) override;
 
-        OVERRIDE void addToBlockList(const DB::FileNameList& list);
-        OVERRIDE bool isBlocking( const DB::FileName& fileName );
-        OVERRIDE void deleteList(const DB::FileNameList& list);
-        OVERRIDE DB::ImageInfoPtr info( const DB::FileName& fileName ) const;
-        OVERRIDE DB::MemberMap& memberMap();
-        OVERRIDE void save( const QString& fileName, bool isAutoSave );
-        OVERRIDE DB::MD5Map* md5Map();
-        OVERRIDE void sortAndMergeBackIn(const DB::FileNameList& idList);
-        OVERRIDE DB::CategoryCollection* categoryCollection();
-        OVERRIDE KSharedPtr<DB::ImageDateCollection> rangeCollection();
-        OVERRIDE void reorder(
+        void addToBlockList(const DB::FileNameList& list) override;
+        bool isBlocking( const DB::FileName& fileName ) override;
+        void deleteList(const DB::FileNameList& list) override;
+        DB::ImageInfoPtr info( const DB::FileName& fileName ) const override;
+        DB::MemberMap& memberMap() override;
+        void save( const QString& fileName, bool isAutoSave ) override;
+        DB::MD5Map* md5Map() override;
+        void sortAndMergeBackIn(const DB::FileNameList& idList) override;
+        DB::CategoryCollection* categoryCollection() override;
+        KSharedPtr<DB::ImageDateCollection> rangeCollection() override;
+        void reorder(
             const DB::FileName& item,
             const DB::FileNameList& cutList,
-            bool after);
+            bool after) override;
 
-        static DB::ImageInfoPtr createImageInfo( const DB::FileName& fileName, const QDomElement& elm, Database* db = 0 );
-        static void possibleLoadCompressedCategories( const QDomElement& , DB::ImageInfoPtr info, Database* db );
-        OVERRIDE bool stack(const DB::FileNameList& items);
-        OVERRIDE void unstack(const DB::FileNameList& images);
-        OVERRIDE DB::FileNameList getStackFor(const DB::FileName& referenceId) const;
-        OVERRIDE void copyData( const DB::FileName& from, const DB::FileName& to);
+        static DB::ImageInfoPtr createImageInfo( const DB::FileName& fileName, ReaderPtr, Database* db = nullptr );
+        static void possibleLoadCompressedCategories( ReaderPtr reader , DB::ImageInfoPtr info, Database* db );
+        bool stack(const DB::FileNameList& items) override;
+        void unstack(const DB::FileNameList& images) override;
+        DB::FileNameList getStackFor(const DB::FileName& referenceId) const override;
+        void copyData( const DB::FileName& from, const DB::FileName& to) override;
 
     protected:
         DB::FileNameList searchPrivate(
@@ -83,7 +85,7 @@ namespace XMLDB {
 
         DB::ImageInfoList takeImagesFromSelection(const DB::FileNameList& list);
         void insertList( const DB::FileName& id, const DB::ImageInfoList& list, bool after );
-        static void readOptions( DB::ImageInfoPtr info, QDomElement elm );
+        static void readOptions( DB::ImageInfoPtr info, ReaderPtr reader );
 
 
     protected slots:
@@ -115,6 +117,6 @@ namespace XMLDB {
     };
 }
 
-#endif /* XMLDB_DATABSE_H */
+#endif /* XMLDB_DATABASE_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

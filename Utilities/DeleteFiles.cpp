@@ -54,7 +54,7 @@ bool DeleteFiles::_deleteFiles(const DB::FileNameList &files, DeleteMethod metho
     KUrl::List listKUrlToDelete;
     KUrl KUrlToDelete;
 
-    Q_FOREACH(const DB::FileName fileName, files) {
+    Q_FOREACH(const DB::FileName &fileName, files) {
         ImageManager::ThumbnailCache::instance()->removeThumbnail( fileName );
 
         if ( DB::ImageInfo::imageOnDisk( fileName ) ) {
@@ -76,7 +76,7 @@ bool DeleteFiles::_deleteFiles(const DB::FileNameList &files, DeleteMethod metho
             job = KIO::trash( listKUrlToDelete );
         else
             job = KIO::del( listKUrlToDelete );
-        connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotKIOJobCompleted( KJob* ) ) );
+        connect( job, SIGNAL(result(KJob*)), this, SLOT(slotKIOJobCompleted(KJob*)) );
     }
 
     if(!listToDelete.isEmpty()) {

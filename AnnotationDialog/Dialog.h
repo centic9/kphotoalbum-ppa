@@ -16,20 +16,20 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef IMAGECONFIG_H
-#define IMAGECONFIG_H
+#ifndef ANNOTATIONDIALOG_DIALOG_H
+#define ANNOTATIONDIALOG_DIALOG_H
+
 #include "Utilities/Set.h"
 #include "ListSelect.h"
 #include "DB/ImageSearchInfo.h"
-#include <qdialog.h>
 #include <QList>
 #include <QSpinBox>
 #include "DB/ImageInfoList.h"
 #include "DB/Category.h"
 #include "enums.h"
-#include "config-kpa-nepomuk.h"
 #include "ImagePreviewWidget.h"
 #include <QCheckBox>
+#include <kdialog.h>
 
 class QStackedWidget;
 class KActionCollection;
@@ -47,9 +47,7 @@ class KPushButton;
 class KLineEdit;
 class KPushButton;
 
-#ifdef HAVE_NEPOMUK
 class KRatingWidget;
-#endif
 
 namespace Viewer
 {
@@ -67,16 +65,21 @@ namespace AnnotationDialog
 class ImagePreview;
 class KDateEdit;
 class ShortCutManager;
+class ResizableFrame;
 
-class Dialog :public QDialog {
+class Dialog :public KDialog {
     Q_OBJECT
 public:
-    Dialog( QWidget* parent );
+    explicit Dialog( QWidget* parent );
     ~Dialog();
     int configure( DB::ImageInfoList list,  bool oneAtATime );
-    DB::ImageSearchInfo search( DB::ImageSearchInfo* search = 0 );
-    DB::FileNameSet rotatedFiles() const;
+    DB::ImageSearchInfo search( DB::ImageSearchInfo* search = nullptr );
     KActionCollection* actions();
+    QPair<QString, QString> lastSelectedPositionableTag() const;
+    QList<QPair<QString, QString>> positionableTagCandidates() const;
+    void addTagToCandidateList(QString category, QString tag);
+    void removeTagFromCandidateList(QString category, QString tag);
+    QString localizedCategory(QString category) const;
 
 protected slots:
     void slotRevert();
@@ -90,13 +93,22 @@ protected slots:
     void slotRenameOption( DB::Category* , const QString& , const QString&  );
     virtual void reject();
     void rotate( int angle );
-    void slotAddTimeInfo();
+    void slotSetFuzzyDate();
     void slotDeleteImage();
     void slotResetLayout();
     void slotStartDateChanged( const DB::ImageDate& );
     void slotCopyPrevious();
+    void slotShowAreas(bool showAreas);
     void slotRatingChanged( unsigned int );
     void togglePreview();
+    void descriptionPageUpDownPressed(QKeyEvent *event);
+    void slotNewArea(ResizableFrame *area);
+    void positionableTagSelected(QString category, QString tag);
+    void positionableTagDeselected(QString category, QString tag);
+    void positionableTagRenamed(QString category, QString oldTag, QString newTag);
+
+signals:
+    void imageRotated(const DB::FileName& id);
 
 protected:
     QDockWidget* createDock( const QString& title, const QString& name, Qt::DockWidgetArea location, QWidget* widget );
@@ -121,7 +133,7 @@ protected:
     void loadWindowLayout();
     void setupActions();
     void setUpCategoryListBoxForMultiImageSelection( ListSelect*, const DB::ImageInfoList& images );
-    QPair<StringSet,StringSet> selectionForMultiSelect( ListSelect*, const DB::ImageInfoList& images );
+    std::tuple<Utilities::StringSet, Utilities::StringSet> selectionForMultiSelect( ListSelect*, const DB::ImageInfoList& images );
     void saveAndClose();
     void ShowHideSearch( bool show );
 
@@ -137,13 +149,13 @@ private:
     QSplitter* _splitter;
     int _accept;
     QList<QDockWidget*> _dockWidgets;
-    DB::FileNameSet _rotatedFiles;
 
     // Widgets
     QMainWindow* _dockWindow;
     KLineEdit* _imageLabel;
     KDateEdit* _startDate;
     KDateEdit* _endDate;
+    QLabel* _endDateLabel;
     QLabel* _imageFilePatternLabel;
     KLineEdit* _imageFilePattern;
 
@@ -155,18 +167,16 @@ private:
     KTextEdit* _description;
     QTimeEdit* _time;
     QLabel* _timeLabel;
-    KPushButton* _addTime;
-#ifdef HAVE_NEPOMUK
+    QCheckBox* _isFuzzyDate;
     KRatingWidget* _rating;
     KComboBox* _ratingSearchMode;
     QLabel* _ratingSearchLabel;
-#endif
     bool _ratingChanged;
     QSpinBox* _megapixel;
     QLabel* _megapixelLabel;
     QCheckBox* _searchRAW;
     QString conflictText;
-    QString firstDescription;
+    QString _firstDescription;
 
     KActionCollection* _actions;
 
@@ -175,10 +185,17 @@ private:
      * Used in slotResetLayout().
      */
     QByteArray _dockWindowCleanState;
+    void tidyAreas();
+    QPair<QString, QString> _lastSelectedPositionableTag;
+    QList<QPair<QString, QString>> _positionableTagCandidates;
+    QMap<QString, ListSelect*> _listSelectList;
+    QMap<QString, QString> _categoryL10n;
+
+    bool _positionableCategories;
 };
 
 }
 
-#endif /* IMAGECONFIG_H */
+#endif /* ANNOTATIONDIALOG_DIALOG_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

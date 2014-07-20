@@ -26,13 +26,12 @@
 #include <QPainter>
 #include "ThumbnailModel.h"
 #include <KLocale>
-ThumbnailView::Delegate::Delegate(ThumbnailFactory* factory )
-    :ThumbnailComponent( factory )
+ThumbnailView::Delegate::Delegate(ThumbnailFactory* factory , QObject *parent)
+    :QStyledItemDelegate(parent), ThumbnailComponent( factory )
 {
-
 }
 
-OVERRIDE void ThumbnailView::Delegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
+void ThumbnailView::Delegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
     paintCellBackground( painter, option.rect );
     if ( widget()->isGridResizing())
@@ -71,7 +70,10 @@ void ThumbnailView::Delegate::paintCellPixmap( QPainter* painter, const QStyleOp
     paintStackedIndicator(painter, pixmapRect, index);
 
     // Paint transparent pixels over the widget for selection.
-    if ( widget()->selectionModel()->isSelected( index ) )
+    const QItemSelectionModel *selectionModel = widget()->selectionModel();
+    if ( selectionModel->isSelected( index ) )
+        painter->fillRect( option.rect, QColor(58,98,134, 127) );
+    else if ( selectionModel->hasSelection() && selectionModel->currentIndex() == index )
         painter->fillRect( option.rect, QColor(58,98,134, 127) );
 }
 
@@ -249,7 +251,7 @@ QString ThumbnailView::Delegate::videoLengthText(const DB::ImageInfoPtr &imageIn
 {
     const int length = imageInfo->videoLength();
     if ( length < 0 )
-        return i18n("video");
+        return i18nc("No video length could be determined, so we just display 'video' instead of the video length.","video");
 
     const int hours = length/60/60;
     const int minutes = (length/60)%60;

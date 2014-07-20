@@ -30,6 +30,12 @@
 #include <QFileInfo>
 #include <QDebug>
 
+#ifdef DEBUG_KIPI
+#define Debug qDebug
+#else
+#define Debug if (0) qDebug
+#endif
+
 #define KEXIV_ORIENTATION_UNSPECIFIED   0
 #define KEXIV_ORIENTATION_NORMAL        1
 #define KEXIV_ORIENTATION_HFLIP         2
@@ -249,13 +255,13 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                 }
                 DB::GpsCoordinates coord(map[QLatin1String("longitude")].toDouble(), map[QLatin1String("latitude")].toDouble(), altitude, precision);
                 _info->setGeoPosition(coord);
-                map.remove(QLatin1String("longitude"));
-                map.remove(QLatin1String("latitude"));
-                map.remove(QLatin1String("altitude"));
-                map.remove(QLatin1String("positionPrecision"));
             } else {
                 qWarning("Geo coordinates incomplete. Need at least 'longitude' and 'latitude', optionally 'altitude' and 'positionPrecision'");
             }
+            map.remove(QLatin1String("longitude"));
+            map.remove(QLatin1String("latitude"));
+            map.remove(QLatin1String("altitude"));
+            map.remove(QLatin1String("positionPrecision"));
         }
         if ( map.contains(QLatin1String("tagspath")) )
         {
@@ -264,9 +270,9 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
             DB::MemberMap &memberMap = DB::ImageDB::instance()->memberMap();
             Q_FOREACH( const QString &path, tagspaths )
             {
-                qDebug() << "Adding tags: " << path;
+                Debug() << "Adding tags: " << path;
                 QStringList tagpath = path.split( QLatin1String("/"), QString::SkipEmptyParts );
-                // Note: maybe taggspaths with only one component or with unknown first component
+                // Note: maybe tagspaths with only one component or with unknown first component
                 //  should be added to the "keywords"/"Events" category?
                 if ( tagpath.size() < 2 )
                 {
@@ -286,7 +292,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                     {
                         if ( ! cat->items().contains( currentTag ) )
                         {
-                            qDebug() << "Adding tag " << currentTag << " to category " << categoryName;
+                            Debug() << "Adding tag " << currentTag << " to category " << categoryName;
                             // before we can use a tag, we have to add it
                             cat->addItem( currentTag );
                         }
@@ -308,7 +314,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                         }
                         previousTag = currentTag;
                     }
-                    qDebug() << "Adding tag " << previousTag << " in category " << categoryName
+                    Debug() << "Adding tag " << previousTag << " in category " << categoryName
                         << " to image " << _info->label();
                     // previousTag must be a valid category (see addItem() above...)
                     _info->addCategoryInfo( categoryName, previousTag );

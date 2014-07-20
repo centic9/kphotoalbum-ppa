@@ -7,13 +7,13 @@
 # Rinse de Vries <RinseDeVries@home.nl>, 2006.
 # Bram Schoenmakers <bramschoenmakers@kde.nl>, 2006.
 # Freek de Kruijf <freekdekruijf@kde.nl>, 2008, 2009, 2010, 2011, 2012.
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2012, 2013.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2012, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2013-02-08 02:42+0100\n"
-"PO-Revision-Date: 2013-02-06 09:57+0100\n"
+"POT-Creation-Date: 2014-07-07 01:42+0000\n"
+"PO-Revision-Date: 2014-07-02 09:36+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
 "Language: nl\n"
@@ -25,13 +25,17 @@ msgstr ""
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Rinse de Vries,Sander Koning,Freek de Kruijf - 2008 t/m 2013"
+msgstr ""
+"Rinse de Vries,Sander Koning,Freek de Kruijf - 2008 t/m 2014,Ronald "
+"Stroethoff"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "rinsedevries@kde.nl,sanderkoning@kde.nl,freekdekruijf@kde.nl"
+msgstr ""
+"rinsedevries@kde.nl,sanderkoning@kde.nl,freekdekruijf@kde.nl,stroet43@zonnet."
+"nl"
 
-#: AnnotationDialog/Dialog.cpp:78
+#: AnnotationDialog/Dialog.cpp:79
 msgid ""
 "(You have differing descriptions on individual images, setting text here "
 "will override them all)"
@@ -39,163 +43,183 @@ msgstr ""
 "(U hebt verschillende beschrijvingen op individuele afbeeldingen, hier tekst "
 "instellen zal over allen heen schrijven)"
 
-#: AnnotationDialog/Dialog.cpp:98
+#: AnnotationDialog/Dialog.cpp:99
 msgid "Label and Dates"
-msgstr "Beschrijvingen en datums"
+msgstr "Labels en datums"
 
-#: AnnotationDialog/Dialog.cpp:100
+#: AnnotationDialog/Dialog.cpp:101
 msgid "Image Preview"
 msgstr "Afbeeldingsvoorbeeld"
 
-#: AnnotationDialog/Dialog.cpp:104 AnnotationDialog/Dialog.cpp:108
-#: HTMLGenerator/HTMLDialog.cpp:110 ImportExport/MD5CheckPage.cpp:75
+#: AnnotationDialog/Dialog.cpp:105 AnnotationDialog/Dialog.cpp:109
+#: HTMLGenerator/HTMLDialog.cpp:130 ImportExport/MD5CheckPage.cpp:75
 msgid "Description"
 msgstr "Beschrijving"
 
-#: AnnotationDialog/Dialog.cpp:125
+#: AnnotationDialog/Dialog.cpp:156
 msgid "Revert This Item"
 msgstr "Dit item terugdraaien"
 
-#: AnnotationDialog/Dialog.cpp:129
+#: AnnotationDialog/Dialog.cpp:160
 msgid "Clear Form"
 msgstr "Formulier wissen"
 
-#: AnnotationDialog/Dialog.cpp:135
+#: AnnotationDialog/Dialog.cpp:166
 msgid "Options..."
 msgstr "Opties..."
 
-#: AnnotationDialog/Dialog.cpp:141
+#: AnnotationDialog/Dialog.cpp:172
 msgid "&Done"
 msgstr "Geree&d"
 
-#: AnnotationDialog/Dialog.cpp:144
+#: AnnotationDialog/Dialog.cpp:175
 msgid "Continue &Later"
 msgstr "&Later doorgaan"
 
-#: AnnotationDialog/Dialog.cpp:151 AnnotationDialog/Dialog.cpp:580
+#: AnnotationDialog/Dialog.cpp:182 AnnotationDialog/Dialog.cpp:698
+msgctxt "@action:button"
 msgid "&Search"
 msgstr "&Zoeken"
 
-#: AnnotationDialog/Dialog.cpp:210
+#: AnnotationDialog/Dialog.cpp:243
 msgid "Label: "
-msgstr "Beschrijving: "
+msgstr "Label: "
 
-#: AnnotationDialog/Dialog.cpp:214 ImportExport/MD5CheckPage.cpp:74
+#: AnnotationDialog/Dialog.cpp:247 ImportExport/MD5CheckPage.cpp:74
 msgid "Label"
 msgstr "Label"
 
-#: AnnotationDialog/Dialog.cpp:224
+#: AnnotationDialog/Dialog.cpp:257
 msgid "Date: "
 msgstr "Datum: "
 
-#: AnnotationDialog/Dialog.cpp:244
+#: AnnotationDialog/Dialog.cpp:273
 msgid "Time: "
 msgstr "Tijd: "
 
-#: AnnotationDialog/Dialog.cpp:252
-msgid "Add Time Info..."
-msgstr "Tijdsinformatie toevoegen..."
+#: AnnotationDialog/Dialog.cpp:279
+msgid "Use Fuzzy Date"
+msgstr "Onduidelijke datum gebruiken"
 
-#: AnnotationDialog/Dialog.cpp:261
+#: AnnotationDialog/Dialog.cpp:281
+msgctxt "@info"
+msgid ""
+"<para>In KPhotoAlbum, images can either have an exact date and time, or a "
+"<emphasis>fuzzy</emphasis> date which happened any time during a specified "
+"time interval. Images produced by digital cameras do normally have an exact "
+"date.</para><para>If you don't know exactly when a photo was taken (e.g. if "
+"the photo comes from an analog camera), then you should set <interface>Use "
+"Fuzzy Date</interface>.</para>"
+msgstr ""
+"<para>In KPhotoAlbum kunnen afbeeldingen ofwel een exacte datum en tijd "
+"hebben of een <emphasis>onduidelijke</emphasis> datum die plaatsvond op elke "
+"tijd tijdens een gespecificeerd tijdsinterval. Afbeeldingen gemaakt met "
+"digitale cameras hebben normaal een exacte datum.</para><para>Als u niet "
+"exact weet wanneer een foto was genomen (bijv. of de foto van een analoge "
+"camera afkomstig is), dan zou u <interface>Onduidelijke datum gebruiken</"
+"interface> instellen.</para>"
+
+#: AnnotationDialog/Dialog.cpp:296
 msgid "Minimum megapixels:"
 msgstr "Minimum aantal megapixels:"
 
-#: AnnotationDialog/Dialog.cpp:275
+#: AnnotationDialog/Dialog.cpp:309
 msgid "Rating:"
 msgstr "Waardering:"
 
-#: AnnotationDialog/Dialog.cpp:282
+#: AnnotationDialog/Dialog.cpp:316
 msgid "Rating search mode:"
 msgstr "Zoekmodus voor waardering:"
 
-#: AnnotationDialog/Dialog.cpp:286
+#: AnnotationDialog/Dialog.cpp:320
 msgid "=="
 msgstr "=="
 
-#: AnnotationDialog/Dialog.cpp:286
-msgid ">="
-msgstr ">="
+#: AnnotationDialog/Dialog.cpp:320
+msgid "&gt;="
+msgstr "&gt;="
 
-#: AnnotationDialog/Dialog.cpp:286
-msgid "<="
-msgstr "<="
+#: AnnotationDialog/Dialog.cpp:320
+msgid "&lt;="
+msgstr "&lt;="
 
-#: AnnotationDialog/Dialog.cpp:286
+#: AnnotationDialog/Dialog.cpp:320
 msgid "!="
 msgstr "!="
 
-#: AnnotationDialog/Dialog.cpp:295
+#: AnnotationDialog/Dialog.cpp:328
 msgid "File Name Pattern: "
 msgstr "Bestandsnaampatroon: "
 
-#: AnnotationDialog/Dialog.cpp:298
+#: AnnotationDialog/Dialog.cpp:331
 msgid "File Name Pattern"
 msgstr "Bestandsnaampatroon"
 
-#: AnnotationDialog/Dialog.cpp:303
+#: AnnotationDialog/Dialog.cpp:336
 msgid "Search only for RAW files"
 msgstr "Alleen naar RAW-bestanden zoeken"
 
-#: AnnotationDialog/Dialog.cpp:403
+#: AnnotationDialog/Dialog.cpp:516
 #, kde-format
 msgid "KPhotoAlbum Annotations (%1/%2)"
 msgstr "KPhotoAlbum Annotaties (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:584 Browser/OverviewPage.cpp:143
+#: AnnotationDialog/Dialog.cpp:702
+msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "Zoeken"
 
-#: AnnotationDialog/Dialog.cpp:588
+#: AnnotationDialog/Dialog.cpp:706
 msgid "Done"
 msgstr "Gereed"
 
-#: AnnotationDialog/Dialog.cpp:593
+#: AnnotationDialog/Dialog.cpp:711
 msgid "Annotations"
 msgstr "Annotaties"
 
-#: AnnotationDialog/Dialog.cpp:624
+#: AnnotationDialog/Dialog.cpp:743
 msgid "Configure window layout..."
 msgstr "Vensterindeling instellen"
 
-#: AnnotationDialog/Dialog.cpp:625
+#: AnnotationDialog/Dialog.cpp:744
 msgid "Save Current Window Setup"
 msgstr "Huidige vensterinstelling opslaan"
 
-#: AnnotationDialog/Dialog.cpp:626
+#: AnnotationDialog/Dialog.cpp:745
 msgid "Reset layout"
 msgstr "Indeling terugzetten"
 
-#: AnnotationDialog/Dialog.cpp:633 AnnotationDialog/Dialog.cpp:1000
-#: AnnotationDialog/ListSelect.cpp:88
+#: AnnotationDialog/Dialog.cpp:752 AnnotationDialog/Dialog.cpp:1128
+#: AnnotationDialog/ListSelect.cpp:90
 msgid "Sort Alphabetically (Tree)"
 msgstr "Alfabetisch sorteren (boomstructuur)"
 
-#: AnnotationDialog/Dialog.cpp:637 AnnotationDialog/Dialog.cpp:1004
-#: AnnotationDialog/ListSelect.cpp:94
+#: AnnotationDialog/Dialog.cpp:756 AnnotationDialog/Dialog.cpp:1132
+#: AnnotationDialog/ListSelect.cpp:96
 msgid "Sort Alphabetically (Flat)"
 msgstr "Alfabetisch sorteren (vlak)"
 
-#: AnnotationDialog/Dialog.cpp:641 AnnotationDialog/ListSelect.cpp:100
+#: AnnotationDialog/Dialog.cpp:760 AnnotationDialog/ListSelect.cpp:102
 msgid "Sort by date"
 msgstr "Sorteer op datum"
 
-#: AnnotationDialog/Dialog.cpp:657
+#: AnnotationDialog/Dialog.cpp:776
 msgid "Match tags from the first character."
 msgstr "Tags laten overeenkomen vanaf het eerste teken."
 
-#: AnnotationDialog/Dialog.cpp:658
+#: AnnotationDialog/Dialog.cpp:777
 msgid "Match tags from word boundaries."
 msgstr "Tags laten overeenkomen vanaf woordgrenzen."
 
-#: AnnotationDialog/Dialog.cpp:659
+#: AnnotationDialog/Dialog.cpp:778
 msgid "Match tags anywhere."
 msgstr "Tags overal laten overeenkomen"
 
-#: AnnotationDialog/Dialog.cpp:677 AnnotationDialog/ListSelect.cpp:106
+#: AnnotationDialog/Dialog.cpp:796 AnnotationDialog/ListSelect.cpp:108
 msgid "Show only selected Ctrl+S"
 msgstr "Alleen geselecteerde Ctrl+S tonen"
 
-#: AnnotationDialog/Dialog.cpp:719
+#: AnnotationDialog/Dialog.cpp:838
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
@@ -204,7 +228,7 @@ msgstr ""
 "<p>Kon de vensterindeling niet opslaan.</p>Bestand %1 kon niet worden "
 "geopend vanwege de volgende fout: %2"
 
-#: AnnotationDialog/Dialog.cpp:726
+#: AnnotationDialog/Dialog.cpp:845
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
@@ -213,7 +237,7 @@ msgstr ""
 "<p>Kon de vensterindeling niet opslaan.</p>Naar bestand %1 kon niet worden "
 "geschreven vanwege de volgende fout: %2"
 
-#: AnnotationDialog/Dialog.cpp:788
+#: AnnotationDialog/Dialog.cpp:906
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
 "recent changes for each affected file?</p>"
@@ -221,7 +245,7 @@ msgstr ""
 "<p>Enkele annotaties zijn gewijzigd. Wit u alle recentelijk gemaakte "
 "bewerkingen voor alle betreffende bestanden ongedaan maken?</p>"
 
-#: AnnotationDialog/Dialog.cpp:877
+#: AnnotationDialog/Dialog.cpp:1007
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
 "it, it is suggested that you read the section in the manual on <a href="
@@ -238,7 +262,7 @@ msgstr ""
 "ervan vinden in <a href=\"help:/kphotoalbum/chp-typingIn.html\">deze sectie</"
 "a> van het handboek.</p>"
 
-#: AnnotationDialog/Dialog.cpp:886
+#: AnnotationDialog/Dialog.cpp:1016
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
 "contains lots of functionality which has been optimized for fast usage.</"
@@ -251,66 +275,70 @@ msgstr ""
 "kphotoalbum/chp-typingIn.html\">documentatie over dit venster</a> te lezen.</"
 "p>"
 
-#: AnnotationDialog/Dialog.cpp:1007
+#: AnnotationDialog/Dialog.cpp:1135
 msgid "Sort Most Recently Used"
 msgstr "Op meest recent gebruikt sorteren"
 
-#: AnnotationDialog/Dialog.cpp:1010
+#: AnnotationDialog/Dialog.cpp:1138
 msgid "Toggle Sorting"
 msgstr "Sorteren omschakelen"
 
-#: AnnotationDialog/Dialog.cpp:1015
+#: AnnotationDialog/Dialog.cpp:1143
 msgid "Toggle Showing Selected Items Only"
 msgstr "Alleen tonen van geselecteerde items aan/uit"
 
-#: AnnotationDialog/Dialog.cpp:1020
+#: AnnotationDialog/Dialog.cpp:1148
 msgid "Annotate Next"
 msgstr "Volgende annoteren"
 
-#: AnnotationDialog/Dialog.cpp:1024
+#: AnnotationDialog/Dialog.cpp:1152
 msgid "Annotate Previous"
 msgstr "Vorige annoteren"
 
-#: AnnotationDialog/Dialog.cpp:1028
+#: AnnotationDialog/Dialog.cpp:1156
 msgid "OK dialog"
 msgstr "OK-dialoog"
 
-#: AnnotationDialog/Dialog.cpp:1032 AnnotationDialog/ListSelect.cpp:302
-#: Settings/CategoryPage.cpp:100
+#: AnnotationDialog/Dialog.cpp:1160 AnnotationDialog/ListSelect.cpp:318
+#: Settings/CategoryPage.cpp:119
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: AnnotationDialog/Dialog.cpp:1036
+#: AnnotationDialog/Dialog.cpp:1164
 msgid "Copy tags from previous image"
 msgstr "Tags vanuit vorige afbeelding kopiëren"
 
-#: AnnotationDialog/Dialog.cpp:1040 AnnotationDialog/ImagePreviewWidget.cpp:56
-#: MainWindow/Window.cpp:729 Viewer/ViewerWidget.cpp:270
+#: AnnotationDialog/Dialog.cpp:1168 AnnotationDialog/ImagePreviewWidget.cpp:58
+#: MainWindow/Window.cpp:756
 msgid "Rotate counterclockwise"
 msgstr "Linksom draaien"
 
-#: AnnotationDialog/Dialog.cpp:1043 AnnotationDialog/ImagePreviewWidget.cpp:62
-#: MainWindow/Window.cpp:734 Viewer/ViewerWidget.cpp:260
+#: AnnotationDialog/Dialog.cpp:1171 AnnotationDialog/ImagePreviewWidget.cpp:64
+#: MainWindow/Window.cpp:761
 msgid "Rotate clockwise"
 msgstr "Rechtsom draaien"
 
-#: AnnotationDialog/Dialog.cpp:1046
+#: AnnotationDialog/Dialog.cpp:1174
 msgid "Toggle fullscreen preview"
 msgstr "Volledig scherm voorbeeld omschakelen"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:42
+#: AnnotationDialog/ImagePreviewWidget.cpp:44
 msgid "Annotate previous image"
 msgstr "Vorige afbeelding annoteren"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:48
+#: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate next image"
 msgstr "Volgende afbeelding annoteren"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:68
+#: AnnotationDialog/ImagePreviewWidget.cpp:70
 msgid "Copy tags from previously tagged image"
 msgstr "Tags vanuit vorige getagde afbeelding kopiëren"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:74
+#: AnnotationDialog/ImagePreviewWidget.cpp:76
+msgid "Hide or show areas on the image"
+msgstr "Gebieden in de afbeelding verbergen of tonen"
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:84
 msgid "Delete image"
 msgstr "Afbeelding verwijderen"
 
@@ -326,60 +354,60 @@ msgstr "vandaag"
 msgid "yesterday"
 msgstr "gisteren"
 
-#: AnnotationDialog/ListSelect.cpp:75 DB/ImageSearchInfo.cpp:247
+#: AnnotationDialog/ListSelect.cpp:77 DB/ImageSearchInfo.cpp:247
 msgid "or"
 msgstr "of"
 
-#: AnnotationDialog/ListSelect.cpp:76 DB/ImageSearchInfo.cpp:242
+#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:242
 msgid "and"
 msgstr "en"
 
-#: AnnotationDialog/ListSelect.cpp:292
+#: AnnotationDialog/ListSelect.cpp:308
 msgid "No Item Selected"
 msgstr "Geen item geselecteerd"
 
-#: AnnotationDialog/ListSelect.cpp:303
+#: AnnotationDialog/ListSelect.cpp:319
 msgid "Rename..."
 msgstr "Hernoemen..."
 
-#: AnnotationDialog/ListSelect.cpp:305
+#: AnnotationDialog/ListSelect.cpp:321
 msgid "<b>Sub Categories</b>"
 msgstr "<b>Subcategorieën</b>"
 
-#: AnnotationDialog/ListSelect.cpp:313
+#: AnnotationDialog/ListSelect.cpp:329
 msgid "Super Categories"
 msgstr "Supercategorieën"
 
-#: AnnotationDialog/ListSelect.cpp:330
+#: AnnotationDialog/ListSelect.cpp:346
 msgid "New Category..."
 msgstr "Nieuwe categorie..."
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:349
 msgid "Create Subcategory..."
 msgstr "Subcategorie aanmaken..."
 
-#: AnnotationDialog/ListSelect.cpp:339
+#: AnnotationDialog/ListSelect.cpp:355
 #, kde-format
 msgid "Take item out of category %1"
 msgstr "Item uit categorie %1 halen"
 
-#: AnnotationDialog/ListSelect.cpp:342
+#: AnnotationDialog/ListSelect.cpp:358
 msgid "<b>Sorting</b>"
 msgstr "<b>Sorteren</b>"
 
-#: AnnotationDialog/ListSelect.cpp:348
+#: AnnotationDialog/ListSelect.cpp:364
 msgid "Usage"
 msgstr "Gebruik"
 
-#: AnnotationDialog/ListSelect.cpp:349
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Alphabetical (Flat)"
 msgstr "Alfabetisch (vlak)"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:366
 msgid "Alphabetical (Tree)"
 msgstr "Alfabetisch (boomstructuur)"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:386
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -389,24 +417,24 @@ msgstr ""
 "alle bijhorende informatie verwijderen uit alle afbeeldingen die het item "
 "bevatten</p>"
 
-#: AnnotationDialog/ListSelect.cpp:374
+#: AnnotationDialog/ListSelect.cpp:390
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "%1 verwijderen?"
 
-#: AnnotationDialog/ListSelect.cpp:375 Settings/SubCategoriesPage.cpp:191
+#: AnnotationDialog/ListSelect.cpp:391 Settings/SubCategoriesPage.cpp:191
 msgid "&Delete"
 msgstr "Verwij&deren"
 
-#: AnnotationDialog/ListSelect.cpp:383
+#: AnnotationDialog/ListSelect.cpp:405
 msgid "Rename Item"
 msgstr "Item hernoemen"
 
-#: AnnotationDialog/ListSelect.cpp:383
+#: AnnotationDialog/ListSelect.cpp:405
 msgid "Enter new name:"
 msgstr "Nieuwe naam invoeren:"
 
-#: AnnotationDialog/ListSelect.cpp:387
+#: AnnotationDialog/ListSelect.cpp:409
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -415,32 +443,58 @@ msgstr ""
 "<p>Wilt u \"%1\" echt hernoemen in \"%2\"?<br/>Dit zal ook \"%3\" hernoemen "
 "in elke afbeelding die dit item bevat.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:391
+#: AnnotationDialog/ListSelect.cpp:413
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "\"%1\" hernoemen?"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:444
 msgid "New Super Category"
 msgstr "Nieuwe supercategorie"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:444
 msgid "New Super Category Name:"
 msgstr "Naam nieuwe supercategorie:"
 
-#: AnnotationDialog/ListSelect.cpp:426
+#: AnnotationDialog/ListSelect.cpp:453
 msgid "New Sub Category"
 msgstr "Nieuwe subcategorie"
 
-#: AnnotationDialog/ListSelect.cpp:426
+#: AnnotationDialog/ListSelect.cpp:453
 msgid "New Sub Category Name:"
 msgstr "Naam nieuwe subcategorie:"
+
+#: AnnotationDialog/ResizableFrame.cpp:46
+msgctxt "area of an image; rectangle that is overlayed upon the image"
+msgid "Remove area"
+msgstr "Gebied verwijderen"
+
+#: AnnotationDialog/ResizableFrame.cpp:293
+#, kde-format
+msgctxt ""
+"As in: remove tag %1 in category %2 [from this marked area of the image]"
+msgid "Remove tag %1 (%2)"
+msgstr "Tag %1 verwijderen (%2)"
+
+#: AnnotationDialog/ResizableFrame.cpp:304
+#, kde-format
+msgctxt ""
+"As in: associate [this marked area of the image] with tag %1 in category %2"
+msgid "Associate with %1 (%2)"
+msgstr "Met %1 (%2) verbinden"
+
+#: AnnotationDialog/ResizableFrame.cpp:326
+msgctxt ""
+"As in: associate [this marked area of the image] with one of the following "
+"choices/menu items"
+msgid "Associate with"
+msgstr "Verbinden met"
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
 msgid "Extracting Thumbnail"
 msgstr "Miniaturen worden geëxtraheerd"
 
-#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:43
+#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:44
 msgid "Extract Video Thumbnail"
 msgstr "Videominiatuur extraheren"
 
@@ -448,11 +502,11 @@ msgstr "Videominiatuur extraheren"
 msgid "Read Video Length"
 msgstr "Lees de lengte van de video"
 
-#: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:55
+#: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:58
 msgid "Search for videos without length information"
 msgstr "Zoek naar video's zonder informatie over de lengte"
 
-#: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:59
+#: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:63
 msgid "Searching for videos without video thumbnails"
 msgstr "Bezig met zoeken naar video's zonder bijbehorende miniaturen"
 
@@ -461,38 +515,41 @@ msgid "Not Started"
 msgstr "Niet gestart"
 
 #: BackgroundTaskManager/JobModel.cpp:97
+msgctxt "@title:column Background job id"
 msgid "ID"
 msgstr "ID"
 
 #: BackgroundTaskManager/JobModel.cpp:98
+msgctxt "@title:column Background job title"
 msgid "Title"
 msgstr "Titel"
 
 #: BackgroundTaskManager/JobModel.cpp:99
+msgctxt "@title:column Additional information on background job"
 msgid "Details"
 msgstr "Details"
 
 #: BackgroundTaskManager/JobModel.cpp:100
+msgctxt "@title:column Elapsed time"
 msgid "Elapsed"
 msgstr "Verstreken"
 
-#: BackgroundTaskManager/JobViewer.cpp:31
+#: BackgroundTaskManager/JobViewer.cpp:33
 msgid "Background Job Viewer"
 msgstr "Taakviewer in de achtergrond"
 
-#: BackgroundTaskManager/JobViewer.cpp:60
+#: BackgroundTaskManager/JobViewer.cpp:66
 msgid "Continue"
 msgstr "Doorgaan"
 
 #. i18n: ectx: property (text), widget (QPushButton, pause)
-#: BackgroundTaskManager/JobViewer.cpp:60
-#: BackgroundTaskManager/JobViewer.ui:45 Viewer/ViewerWidget.cpp:505
+#: BackgroundTaskManager/JobViewer.cpp:66
+#: BackgroundTaskManager/JobViewer.ui:45
 msgid "Pause"
 msgstr "Pauzeren"
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
-#: Viewer/ViewerWidget.cpp:163
 msgid "Close"
 msgstr "Sluiten"
 
@@ -501,38 +558,42 @@ msgstr "Sluiten"
 msgid ""
 "<p>Active jobs: %1<br/>Pending jobs: %2<hr/><br/>Color codes:"
 "<ul><li><b>blinking green</b>: Active background jobs</li><li><b>gray</b>: "
-"No active jobs</li><li><b>solid yellow</b>: Job queue is paused<li/"
-"><li><b>blinking yellow</b>: Job queue is paused for background jobs, but is "
-"executing a foreground job (like extracting a thumbnail for a video file, "
-"which is currently shown in the thumbnail viewer)</li></p>"
+"No active jobs</li><li><b>solid yellow</b>: Job queue is paused</"
+"li><li><b>blinking yellow</b>: Job queue is paused for background jobs, but "
+"is executing a foreground job (like extracting a thumbnail for a video file, "
+"which is currently shown in the thumbnail viewer)</li></ul></p>"
 msgstr ""
 "<p>Actieve taken: %1<br/>Wachtende taken: %2<hr/><br/>Kleurcodes:"
 "<ul><li><b>knipperend groen</b>: Actieve achtergrondtaken</li><li><b>grijs</"
 "b>: Geen actieve taken</li><li><b>geel</b>: Wachtrij met taken is "
-"gepauzeerd<li/><li><b>knipperend geel</b>: Wachtrij met taken is gepauzeerd "
+"gepauzeerd</li><li><b>knipperend geel</b>: Wachtrij met taken is gepauzeerd "
 "voor achtergrondtaken, maar is in uitvoering als een voorgrondtaak (zoals "
 "een miniatuur voor een videobestand maken, die nu wordt getoond in de "
-"miniaturenviewer)</li></p>"
+"miniaturenviewer)</li></ul></p>"
 
-#: Browser/AbstractCategoryModel.cpp:46 MainWindow/StatisticsDialog.cpp:129
-#: Plugins/CategoryImageCollection.cpp:34
+#: Browser/AbstractCategoryModel.cpp:46
+msgctxt "As in No persons, no locations etc."
 msgid "None"
 msgstr "Geen"
 
 #: Browser/AbstractCategoryModel.cpp:48
+msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Geen andere"
 
 #: Browser/AbstractCategoryModel.cpp:51
+msgctxt "Denotes the media type (video,image)"
 msgid "Video"
 msgstr "Video"
 
 #: Browser/AbstractCategoryModel.cpp:53
+msgctxt "Denotes the media type (video,image)"
 msgid "Image"
 msgstr "Afbeelding"
 
 #: Browser/AbstractCategoryModel.cpp:100
 #, kde-format
+msgctxt "@item:intable number of images with a specific tag."
 msgid "1 image"
 msgid_plural "%1 images"
 msgstr[0] "1 afbeelding"
@@ -540,13 +601,14 @@ msgstr[1] "%1 afbeeldingen"
 
 #: Browser/AbstractCategoryModel.cpp:101
 #, kde-format
+msgctxt "@item:intable number of videos with a specific tag."
 msgid "1 video"
 msgid_plural "%1 videos"
-msgstr[0] "1 video"
+msgstr[0] "Video"
 msgstr[1] "%1 video's"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:80
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
 msgid "Images"
 msgstr "Afbeeldingen"
 
@@ -554,13 +616,19 @@ msgstr "Afbeeldingen"
 msgid "Videos"
 msgstr "Video's"
 
-#: Browser/Breadcrumb.cpp:36 MainWindow/StatisticsDialog.cpp:167
+#: Browser/Breadcrumb.cpp:36
+msgctxt "As in 'all pictures'."
 msgid "All"
 msgstr "Alles"
 
 #: Browser/OverviewPage.cpp:132
 msgid "Exif Info"
 msgstr "EXIF-informatie"
+
+#: Browser/OverviewPage.cpp:143
+msgctxt "@action Search button in the browser view."
+msgid "Search"
+msgstr "Zoeken"
 
 #: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:29
 msgid "Untagged Images"
@@ -583,6 +651,7 @@ msgid "EXIF Search"
 msgstr "EXIF-zoekopdracht"
 
 #: Browser/OverviewPage.cpp:259
+msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "zoeken"
 
@@ -649,44 +718,82 @@ msgid "Widen selection to include all images and videos again"
 msgstr ""
 "Selectie breder maken om alle afbeeldingen en video's opnieuw in te sluiten"
 
-#: DateBar/DateBarWidget.cpp:511
+#: DateBar/DateBarWidget.cpp:89
+msgctxt "@info"
+msgid ""
+"<title>The date bar</title><para>The date bar gives you an overview of the "
+"approximate number of images taken in a given time frame.Time units are "
+"shown on the <emphasis>timeline</emphasis>. Above it, a histogram indicates "
+"the number of images for that time range.</para><para>You can interact with "
+"the date bar in several ways:<list><item>Zoom in or out by using the +/- "
+"buttons or Ctrl + scrollwheel.</item><item>Scroll the timeline either by "
+"using the arrow buttons or the scroll wheel, or by dragging it using the "
+"middle mouse button.</item><item>Restrict the current view to a given time "
+"frame by clicking below the timeline and marking the time frame.</"
+"item><item>Clicking on the timeline sets the <emphasis>focus</emphasis> for "
+"the thumbnail view, i.e. jumps to the first thumbnail of the time unit in "
+"focus.</item></list></para>"
+msgstr ""
+"<title>De datumbalk</title><para>De datumbalk geeft u bij benadering een "
+"overzicht van het aantal in een tijdsbestek genomen afbeeldingen. "
+"Tijdseenheden worden op de <emphasis>tijdlijn</emphasis> getoond. Een "
+"histogram erboven geeft het aantal afbeeldingen voor die tijdreeks aan. </"
+"para><para>U kunt met de datumbalk op verschillende manieren werken:"
+"<list><item>In- of uitzoomen met de knoppen +/- of Ctrl + muiswiel.</"
+"item><item>De tijdslijn verschuiven ofwel door de pijltjestoetsen of het "
+"muiswiel te gebruiken of door het te verslepen met de middelste muisknop.</"
+"item><item>De huidige weergave beperken tot een gegeven tijdsframe door "
+"onder de tijdslijn te klikken en het tijdsframe te markeren.</"
+"item><item>Klikken op de tijdslijn stelt de <emphasis>focus</emphasis> in op "
+"de miniaturenweergave, dwz. springt naar de eerste miniatuur van de "
+"tijdseenheid in focus.</item></list></para>"
+
+#: DateBar/DateBarWidget.cpp:552
 msgid "Show Ranges"
 msgstr "Bereiken tonen"
 
-#: DateBar/DateBarWidget.cpp:517
+#: DateBar/DateBarWidget.cpp:558
 msgid "Show Resolution Indicator"
 msgstr "Resolutie-indicatie tonen"
 
-#: DateBar/DateBarWidget.cpp:635
+#: DateBar/DateBarWidget.cpp:682
 #, kde-format
+msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
 msgid_plural "%1 exact"
 msgstr[0] "1 exact"
 msgstr[1] "%1 exact"
 
-#: DateBar/DateBarWidget.cpp:636
+#: DateBar/DateBarWidget.cpp:684
 #, kde-format
+msgctxt ""
+"@info:status additional images captured in a date range that overlaps with "
+"the given date range,"
 msgid " + 1 range"
 msgid_plural " + %1 ranges"
 msgstr[0] " + 1 reeks"
 msgstr[1] " + %1 reeksen"
 
-#: DateBar/DateBarWidget.cpp:637
+#: DateBar/DateBarWidget.cpp:685
 #, kde-format
+msgctxt "@info:status total image count"
 msgid " = 1 total"
 msgid_plural " = %1 total"
 msgstr[0] " = 1 totaal"
 msgstr[1] " = %1 totaal"
 
-#: DateBar/DateBarWidget.cpp:639
+#: DateBar/DateBarWidget.cpp:687
 #, kde-format
+msgctxt "@info:status image count"
 msgid "%1 image/video"
 msgid_plural "%1 images/videos"
 msgstr[0] "%1 afbeelding/video"
 msgstr[1] "%1 afbeeldingen/video's"
 
-#: DateBar/DateBarWidget.cpp:641
+#: DateBar/DateBarWidget.cpp:689
 #, kde-format
+msgctxt ""
+"@info:status Time range vs. image count (e.g. 'Jun 2012 | 4 images/videos')."
 msgid "%1 | %2"
 msgstr "%1 | %2"
 
@@ -714,15 +821,15 @@ msgstr "2 uren"
 msgid "10 Minutes"
 msgstr "10 minuten"
 
-#: DB/Category.cpp:139 DB/Category.cpp:147 XMLDB/FileReader.cpp:335
+#: DB/Category.cpp:139 DB/Category.cpp:147
 msgid "People"
 msgstr "Personen"
 
-#: DB/Category.cpp:140 DB/Category.cpp:148 XMLDB/FileReader.cpp:336
+#: DB/Category.cpp:140 DB/Category.cpp:148
 msgid "Places"
 msgstr "Plaatsen"
 
-#: DB/Category.cpp:141 XMLDB/FileReader.cpp:337
+#: DB/Category.cpp:141
 msgid "Events"
 msgstr "Gebeurtenissen"
 
@@ -761,58 +868,70 @@ msgid "Error Saving Image"
 msgstr "Fout bij opslaan van afbeelding"
 
 #: DB/ImageDate.cpp:343
+msgctxt "Abbreviated month name"
 msgid "jan"
 msgstr "jan"
 
 #: DB/ImageDate.cpp:343
+msgctxt "Abbreviated month name"
 msgid "feb"
 msgstr "feb"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:344
+msgctxt "Abbreviated month name"
 msgid "mar"
 msgstr "mrt"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:344
+msgctxt "Abbreviated month name"
 msgid "apr"
 msgstr "apr"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:345
+msgctxt "Abbreviated month name"
 msgid "may"
 msgstr "mei"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:345
+msgctxt "Abbreviated month name"
 msgid "jun"
 msgstr "jun"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:346
+msgctxt "Abbreviated month name"
 msgid "jul"
 msgstr "jul"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:346
+msgctxt "Abbreviated month name"
 msgid "aug"
 msgstr "aug"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:347
+msgctxt "Abbreviated month name"
 msgid "sep"
 msgstr "sep"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:347
+msgctxt "Abbreviated month name"
 msgid "oct"
 msgstr "okt"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:348
+msgctxt "Abbreviated month name"
 msgid "nov"
 msgstr "nov"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:348
+msgctxt "Abbreviated month name"
 msgid "dec"
 msgstr "dec"
 
-#: DB/ImageDB.cpp:145
+#: DB/ImageDB.cpp:146
 msgid "Loading information from images"
 msgstr "Informatie uit afbeeldingen wordt geladen"
 
-#: DB/ImageDB.cpp:146
+#: DB/ImageDB.cpp:147
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -839,7 +958,7 @@ msgctxt ""
 msgid "No other %1"
 msgstr "Geen andere %1"
 
-#: DB/NewImageFinder.cpp:127
+#: DB/NewImageFinder.cpp:129
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
 "of images, this may take some time.<br/>However, there is only a delay when "
@@ -849,14 +968,14 @@ msgstr ""
 "aantal afbeeldingen kan dit enige tijd in beslag nemen.<br/>Dit geldt echter "
 "alleen als er nieuwe afbeeldingen zijn gevonden.</p>"
 
-#: DB/NewImageFinder.cpp:310
+#: DB/NewImageFinder.cpp:314
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] "<p><b>Bezig de controlesom te bereken voor %1 bestand</b></p>"
 msgstr[1] "<p><b>Bezig de controlesom te bereken voor %1 bestanden</b></p>"
 
-#: DB/NewImageFinder.cpp:311
+#: DB/NewImageFinder.cpp:315
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -864,7 +983,7 @@ msgstr ""
 "<p>Door een controlesom op te slaan voor elke afbeelding kan KPhotoAlbum "
 "afbeeldingen terugvinden als ze op de schijf zijn verplaatst.</p>"
 
-#: DB/NewImageFinder.cpp:354
+#: DB/NewImageFinder.cpp:358
 msgid "Following files could not be read:"
 msgstr "De volgende bestanden konden niet worden gelezen:"
 
@@ -891,21 +1010,17 @@ msgstr "Fout bij het uitvoeren van een Exif-commando"
 msgid "Rereading EXIF information from all images"
 msgstr "EXIF-informatie wordt opnieuw ingelezen"
 
-#: Exif/InfoDialog.cpp:36
+#: Exif/InfoDialog.cpp:38
 msgid "EXIF Information"
 msgstr "EXIF-informatie"
 
-#: Exif/InfoDialog.cpp:65
-msgid "Current EXIF Label Search: "
-msgstr "Huidige EXIF-zoekopdracht: "
+#: Exif/InfoDialog.cpp:68
+msgid "EXIF Label Search: "
+msgstr "Zoekopdracht naar EXIF-label: "
 
-#: Exif/InfoDialog.cpp:79
+#: Exif/InfoDialog.cpp:74
 msgid "IPTC character set:"
 msgstr "IPTC-tekenreeks:"
-
-#: Exif/InfoDialog.cpp:99
-msgid "<No Search>"
-msgstr "<Geen zoekopdracht>"
 
 #: Exif/ReReadDialog.cpp:35
 msgid "Read EXIF info from files"
@@ -965,6 +1080,7 @@ msgid "Focal Length"
 msgstr "Brandpuntsafstand"
 
 #: Exif/SearchDialog.cpp:81
+msgctxt "As in 'A range from x to y'"
 msgid "to"
 msgstr "tot"
 
@@ -977,7 +1093,7 @@ msgstr "mm"
 msgid "Camera"
 msgstr "Camera"
 
-#: Exif/SearchDialog.cpp:111 Settings/GeneralPage.cpp:109
+#: Exif/SearchDialog.cpp:111 Settings/GeneralPage.cpp:124
 msgid "Miscellaneous"
 msgstr "Diversen"
 
@@ -1026,58 +1142,58 @@ msgstr "Verzadiging"
 msgid "No cameras found in the database"
 msgstr "Geen camera's gevonden in de database"
 
-#: HTMLGenerator/Generator.cpp:47
+#: HTMLGenerator/Generator.cpp:52
 msgid "Generating images for HTML page "
 msgstr "Afbeeldingen voor HTML-pagina worden aangemaakt"
 
-#: HTMLGenerator/Generator.cpp:142
+#: HTMLGenerator/Generator.cpp:150
 #, kde-format
 msgid "Error copying %1 to %2"
 msgstr "Fout bij kopiëren van %1 naar %2"
 
-#: HTMLGenerator/Generator.cpp:381
+#: HTMLGenerator/Generator.cpp:414
 #, kde-format
 msgid "<a href=\"%1\">prev</a>"
 msgstr "<a href=\"%1\">vorige</a>"
 
-#: HTMLGenerator/Generator.cpp:383 HTMLGenerator/Generator.cpp:391
+#: HTMLGenerator/Generator.cpp:416 HTMLGenerator/Generator.cpp:424
 msgid "prev"
 msgstr "vorige"
 
-#: HTMLGenerator/Generator.cpp:395
+#: HTMLGenerator/Generator.cpp:428
 #, c-format, kde-format
 msgid "<a href=\"index-%1.html\">index</a>"
 msgstr "<a href=\"index-%1.html\">index</a>"
 
-#: HTMLGenerator/Generator.cpp:404
+#: HTMLGenerator/Generator.cpp:437
 #, kde-format
 msgid "<a href=\"%1\">next</a>"
 msgstr "<a href=\"%1\">volgende</a>"
 
-#: HTMLGenerator/Generator.cpp:406 HTMLGenerator/Generator.cpp:413
+#: HTMLGenerator/Generator.cpp:439 HTMLGenerator/Generator.cpp:446
 msgid "next"
 msgstr "volgende"
 
-#: HTMLGenerator/Generator.cpp:536
+#: HTMLGenerator/Generator.cpp:585
 #, kde-format
 msgid "Could not create file '%1'."
 msgstr "Bestand '%1' kon niet worden aangemaakt."
 
-#: HTMLGenerator/Generator.cpp:537
+#: HTMLGenerator/Generator.cpp:586
 msgid "Could Not Create File"
 msgstr "Bestand kon niet worden aangemaakt"
 
-#: HTMLGenerator/Generator.cpp:569
+#: HTMLGenerator/Generator.cpp:618
 #, kde-format
 msgid "<p>Unable to copy %1 to %2</p>"
 msgstr "<p>'%1' kan niet worden gekopieerd naar '%2'.</p>"
 
-#: HTMLGenerator/Generator.cpp:601
+#: HTMLGenerator/Generator.cpp:653
 #, kde-format
 msgid "Unable to write image '%1'."
 msgstr "Afbeelding '%1' kon niet worden opgeslagen."
 
-#: HTMLGenerator/Generator.cpp:678 HTMLGenerator/HTMLDialog.cpp:114
+#: HTMLGenerator/Generator.cpp:730 HTMLGenerator/HTMLDialog.cpp:134
 msgid "Date"
 msgstr "Datum"
 
@@ -1109,67 +1225,84 @@ msgstr ".kim-exportbestand aanmaken"
 msgid "Inline Movies in pages"
 msgstr "Inline films in pagina's"
 
-#: HTMLGenerator/HTMLDialog.cpp:106
+#: HTMLGenerator/HTMLDialog.cpp:105
+msgid "Use HTML5 video tag"
+msgstr "HTML5 videotag gebruiken"
+
+#: HTMLGenerator/HTMLDialog.cpp:116
+msgid ""
+"<p>This selection will generate video files suitable for displaying on web. "
+"avconv and ffmpeg2theora are required for video file generation.</p>"
+msgstr ""
+"<p>Deze selectie zal videobestanden genereren geschikt om te worden getoond "
+"op het web. avconv en ffmpeg2theora zijn vereist voor de generatie van "
+"videobestanden.</p>"
+
+#: HTMLGenerator/HTMLDialog.cpp:118
+msgid "Generate HTML5 video files (mp4 and ogg)"
+msgstr "Genereer HTML5 videobestanden (mp4 en ogg)"
+
+#: HTMLGenerator/HTMLDialog.cpp:126
 msgid "What to Include"
 msgstr "Wat wordt ingesloten"
 
-#: HTMLGenerator/HTMLDialog.cpp:143 HTMLGenerator/HTMLDialog.cpp:144
+#: HTMLGenerator/HTMLDialog.cpp:163 HTMLGenerator/HTMLDialog.cpp:164
 msgid "Layout"
 msgstr "Opmaak"
 
-#: HTMLGenerator/HTMLDialog.cpp:153
+#: HTMLGenerator/HTMLDialog.cpp:173
 msgid "Thumbnail size:"
 msgstr "Miniatuurgrootte:"
 
-#: HTMLGenerator/HTMLDialog.cpp:168
+#: HTMLGenerator/HTMLDialog.cpp:188
 msgid "Number of columns:"
 msgstr "Aantal kolommen:"
 
-#: HTMLGenerator/HTMLDialog.cpp:183
+#: HTMLGenerator/HTMLDialog.cpp:203
 msgid "Theme:"
 msgstr "Thema:"
 
-#: HTMLGenerator/HTMLDialog.cpp:191
+#: HTMLGenerator/HTMLDialog.cpp:211
 msgid "Theme Description"
 msgstr "Themabeschrijving"
 
-#: HTMLGenerator/HTMLDialog.cpp:198
+#: HTMLGenerator/HTMLDialog.cpp:218
 msgid "Image Sizes"
 msgstr "Afbeeldingsformaten"
 
-#: HTMLGenerator/HTMLDialog.cpp:207
+#: HTMLGenerator/HTMLDialog.cpp:227
 msgid "Full size"
 msgstr "Volledige grootte"
 
-#: HTMLGenerator/HTMLDialog.cpp:250 HTMLGenerator/HTMLDialog.cpp:251
+#: HTMLGenerator/HTMLDialog.cpp:272 HTMLGenerator/HTMLDialog.cpp:273
 msgid "Destination"
 msgstr "Bestemming"
 
-#: HTMLGenerator/HTMLDialog.cpp:260
+#: HTMLGenerator/HTMLDialog.cpp:282
 msgid "Base directory:"
 msgstr "Basismap:"
 
-#: HTMLGenerator/HTMLDialog.cpp:278
+#: HTMLGenerator/HTMLDialog.cpp:300
 msgid "Base URL:"
 msgstr "Basisadres:"
 
-#: HTMLGenerator/HTMLDialog.cpp:287
+#: HTMLGenerator/HTMLDialog.cpp:309
 msgid "URL for final destination:"
 msgstr "URL-adres voor de bestemming:"
 
-#: HTMLGenerator/HTMLDialog.cpp:295
+#: HTMLGenerator/HTMLDialog.cpp:317
 msgid "Output directory:"
 msgstr "Uitvoermap:"
 
-#: HTMLGenerator/HTMLDialog.cpp:301
+#: HTMLGenerator/HTMLDialog.cpp:323
 msgid "<b>Hint: Press the help button for descriptions of the fields</b>"
 msgstr "<b>Tip: druk op de Help-knop voor een beschrijving van de velden.</b>"
 
-#: HTMLGenerator/HTMLDialog.cpp:312
+#: HTMLGenerator/HTMLDialog.cpp:334
 msgid "You must select at least one resolution."
 msgstr "Selecteer tenminste één resolutie."
 
-#: HTMLGenerator/HTMLDialog.cpp:350
+#: HTMLGenerator/HTMLDialog.cpp:374
 msgid ""
 "<p>You did not specify a base directory. This is the topmost directory for "
 "your images. Under this directory you will find each generated collection in "
@@ -1179,11 +1312,11 @@ msgstr ""
 "afbeeldingen. In deze map vindt u elke aangemaakte collectie in een aparte "
 "map.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:354
+#: HTMLGenerator/HTMLDialog.cpp:378
 msgid "No Base Directory Specified"
 msgstr "Geen basismap opgegeven"
 
-#: HTMLGenerator/HTMLDialog.cpp:360
+#: HTMLGenerator/HTMLDialog.cpp:384
 msgid ""
 "<p>You did not specify an output directory. This is a directory containing "
 "the actual images. The directory will be in the base directory specified "
@@ -1193,11 +1326,11 @@ msgstr ""
 "afbeeldingen bevat. Deze map komt in de basismap die u hierboven hebt "
 "opgegeven.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:363
+#: HTMLGenerator/HTMLDialog.cpp:387
 msgid "No Output Directory Specified"
 msgstr "Geen uitvoermap opgegeven"
 
-#: HTMLGenerator/HTMLDialog.cpp:371
+#: HTMLGenerator/HTMLDialog.cpp:395
 #, kde-format
 msgid ""
 "<p>Error while reading information about %1. This is most likely because the "
@@ -1206,13 +1339,13 @@ msgstr ""
 "<p>Fout bij het lezen van informatie over %1. Mogelijk bestaat de map niet.</"
 "p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:379
+#: HTMLGenerator/HTMLDialog.cpp:403
 #, kde-format
 msgid "<p>%1 does not exist, is not a directory or cannot be written to.</p>"
 msgstr ""
 "<p>%1 bestaat niet, is geen map, of er kan niet in worden opgeslagen.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:389
+#: HTMLGenerator/HTMLDialog.cpp:413
 #, kde-format
 msgid ""
 "<p>Output directory %1 already exists. Usually, this means you should "
@@ -1221,27 +1354,27 @@ msgstr ""
 "<p>Uitvoermap %1 bestaat al. Normaal betekent dit dat u een nieuwe map moet "
 "opgegeven.</p><p>Wilt u %2 eerst verwijderen?</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:392
+#: HTMLGenerator/HTMLDialog.cpp:416
 msgid "Directory Exists"
 msgstr "Map bestaat al"
 
-#: HTMLGenerator/HTMLDialog.cpp:467
+#: HTMLGenerator/HTMLDialog.cpp:491 MainWindow/SplashScreen.cpp:66
 #, kde-format
 msgid "%1"
 msgstr "%1"
 
-#: HTMLGenerator/HTMLDialog.cpp:478
+#: HTMLGenerator/HTMLDialog.cpp:502
 msgid "Could not find any themes - this is very likely an installation error"
 msgstr ""
 "Er zijn geen thema's gevonden. Mogelijk zit er een fout in de installatie"
 
-#: HTMLGenerator/HTMLDialog.cpp:485
+#: HTMLGenerator/HTMLDialog.cpp:509
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
 msgstr ""
 "Meer dan één thema is ingesteld als standaard, thema %1 zal worden gebruikt"
 
-#: HTMLGenerator/HTMLDialog.cpp:492
+#: HTMLGenerator/HTMLDialog.cpp:516
 msgctxt ""
 "This is to show the author of the theme. E.g. copyright character (&#169;) "
 "by itself will work fine on this context if no proper word is available in "
@@ -1249,7 +1382,7 @@ msgctxt ""
 msgid "by "
 msgstr "door "
 
-#: HTMLGenerator/HTMLDialog.cpp:494
+#: HTMLGenerator/HTMLDialog.cpp:518
 msgid ""
 "\n"
 " "
@@ -1257,36 +1390,53 @@ msgstr ""
 "\n"
 " "
 
-#: ImageManager/ExtractOneVideoFrame.cpp:69
+#: ImageManager/ExtractOneVideoFrame.cpp:86
 msgid "Failed to start"
 msgstr "Starten is mislukt"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:70
+#: ImageManager/ExtractOneVideoFrame.cpp:87
 msgid "Crashed"
 msgstr "Gecrasht"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:71
+#: ImageManager/ExtractOneVideoFrame.cpp:88
 msgid "Timedout"
 msgstr "Tijdslimiet is verlopen"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:72
+#: ImageManager/ExtractOneVideoFrame.cpp:89
 msgid "Read error"
 msgstr "Leesfout"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:73
+#: ImageManager/ExtractOneVideoFrame.cpp:90
 msgid "Write error"
 msgstr "Schrijffout"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:74
+#: ImageManager/ExtractOneVideoFrame.cpp:91
 msgid "Unknown error"
 msgstr "Onbekende fout"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:78
+#: ImageManager/ExtractOneVideoFrame.cpp:95
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr "<p>Fout bij videominiaturen extraheren.<br/>Fout was: %1</p>"
 
-#: ImageManager/ThumbnailBuilder.cpp:116
+#: ImageManager/ExtractOneVideoFrame.cpp:134
+#, kde-format
+msgid ""
+"Unable to extract video thumbnails from some files. Either the file is "
+"damaged in some way, or the video is ultra short. For your convenience, the "
+"token '%1' has been set on those videos.\n"
+"\n"
+"(You might need to wait till the video extraction led in your status bar has "
+"stopped blinking, to see all affected videos.)"
+msgstr ""
+"Videominiaturen extraheren uit sommige bestanden lukt niet. Ofwel het "
+"bestand is op een bepaalde manier beschadigd of de video is zeer kort. Voor "
+"uw gemak is het token '%1' ingesteld op deze video's.\n"
+"\n"
+"(U zou kunnen wachten totdat de led voor extractie van video's in uw "
+"statusbalk is gestopt met knipperen om alle betrokken video's te zien)"
+
+#: ImageManager/ThumbnailBuilder.cpp:120
 msgid "Building thumbnails"
 msgstr "Miniaturen aanmaken"
 
@@ -1303,8 +1453,8 @@ msgid "Include in .kim file"
 msgstr "Invoegen in het .kim-bestand"
 
 #: ImportExport/Export.cpp:84
-msgid "Manual copy next to .kim file"
-msgstr "Handmatig naast het .kim-bestand kopiëren"
+msgid "Do not copy files, only generate .kim file"
+msgstr "Kopieer geen bestanden, genereer alleen .kim-bestanden"
 
 #: ImportExport/Export.cpp:85
 msgid "Automatically copy next to .kim file"
@@ -1343,7 +1493,7 @@ msgstr ""
 "optie enkel tijd tijdens het importeren/exporteren.</p><p>Met andere "
 "woorden, selecteer deze optie niet als uw afbeeldingen zijn opgeslagen als "
 "jpg, png of gif, maar selecteer deze optie wel als uw afbeeldingen zijn "
-"opgeslagen als TIFF of bmp.</p>"
+"opgeslagen als tiff.</p>"
 
 #: ImportExport/Export.cpp:127
 msgid "<p>Generate thumbnail images</p>"
@@ -1390,8 +1540,7 @@ msgstr ""
 msgid "Error creating zip file"
 msgstr "Fout bij het aanmaken van het zip-bestand"
 
-#: ImportExport/Export.cpp:212 ImportExport/ImportHandler.cpp:85
-#: ImportExport/ImportHandler.cpp:137
+#: ImportExport/Export.cpp:212
 msgid "&Cancel"
 msgstr "&Annuleren"
 
@@ -1407,12 +1556,12 @@ msgstr "Miniaturen worden aangemaakt"
 msgid "Copying image files"
 msgstr "Afbeeldingsbestanden worden gekopieerd"
 
-#: ImportExport/Export.cpp:334
+#: ImportExport/Export.cpp:335
 #, kde-format
 msgid "Error writing file %1"
 msgstr "Fout bij het opslaan van bestand %1"
 
-#: ImportExport/Export.cpp:364
+#: ImportExport/Export.cpp:365
 msgid ""
 "<p>Other KPhotoAlbum users may now load the import file into their database, "
 "by choosing <b>import</b> in the file menu.</p><p>If they find it on a web "
@@ -1435,7 +1584,7 @@ msgstr ""
 "uw webserver Konqueror vertelt dat dit een KPhotoAlbum-bestand is. Anders "
 "vertelt de webserver dat het een platte-tekst-bestand is.</p>"
 
-#: ImportExport/Export.cpp:373
+#: ImportExport/Export.cpp:374
 msgid "How to Use the Export File"
 msgstr "Hoe het exportbestand te gebruiken"
 
@@ -1443,21 +1592,7 @@ msgstr "Hoe het exportbestand te gebruiken"
 msgid "Unable to create temporary file"
 msgstr "Het aanmaken van het tijdelijk bestand is mislukt"
 
-#: ImportExport/ImportDialog.cpp:82
-#, kde-format
-msgid "Error in file %1 on line %2 col %3: %4"
-msgstr "Fout in bestand %1 op regel %2 kolom %3: %4"
-
-#: ImportExport/ImportDialog.cpp:89
-#, kde-format
-msgid ""
-"Unexpected top element while reading file %1. Expected KPhotoAlbum-export "
-"found %2"
-msgstr ""
-"Onverwacht topelement tijdens het lezen van bestand %1. KPhotoAlbum-export "
-"werd verwacht, %2 werd gevonden"
-
-#: ImportExport/ImportDialog.cpp:97
+#: ImportExport/ImportDialog.cpp:86
 msgid ""
 "<p>XML file did not specify the source of the images, this is a strong "
 "indication that the file is corrupted</p>"
@@ -1465,12 +1600,7 @@ msgstr ""
 "<p>XML-bestand bevat geen specificatie van de afbeeldingenbron. Dit is een "
 "sterke aanwijzing dat het bestand is beschadigd.</p>"
 
-#: ImportExport/ImportDialog.cpp:109
-#, kde-format
-msgid "Unknown element while reading %1, expected image."
-msgstr "Onbekend element bij het lezen van %1. Image werd verwacht."
-
-#: ImportExport/ImportDialog.cpp:134
+#: ImportExport/ImportDialog.cpp:119
 msgid ""
 "<h1><font size=\"+2\">Welcome to KPhotoAlbum Import</font></h1>This wizard "
 "will take you through the steps of an import operation. The steps are: "
@@ -1505,78 +1635,79 @@ msgstr ""
 "categorieën. Bijvoorbeeld, stel dat u een bestand laadt met een categorie "
 "genaamd <tt>Blomst</tt> (Deens voor bloem), dan wilt u uiteraard dat deze "
 "aansluit op uw categorie genaamd <tt>Bloemen</tt>. </li> <li>Bij de laatste "
-"stappen laat u de individuele tekens van de categorieën met elkaar "
+"stappen laat u de individuele tokens van de categorieën met elkaar "
 "overeenkomen. Ik kan mij zelf bijvoorbeeld <tt>Jesper</tt> noemen in mijn "
 "afbeeldingendatabase, terwijl u me misschien bij mijn volledige naam noemt; "
-"<tt>Jesper K. Pedersen</tt>. In deze stap worden de tekens die niet "
-"overeenkomen rood gemarkeerd. U kunt dan in een oogwenk zien welke tekens "
+"<tt>Jesper K. Pedersen</tt>. In deze stap worden de tokens die niet "
+"overeenkomen rood gemarkeerd. U kunt dan in een oogwenk zien welke tokens "
 "slechts gedeeltelijk overeen komen.</li></ol>"
 
-#: ImportExport/ImportDialog.cpp:153
+#: ImportExport/ImportDialog.cpp:138
+msgctxt "@title:tab introduction page"
 msgid "Introduction"
 msgstr "Inleiding"
 
-#: ImportExport/ImportDialog.cpp:169 MainWindow/TokenEditor.cpp:63
+#: ImportExport/ImportDialog.cpp:154 MainWindow/TokenEditor.cpp:63
 msgid "Select All"
 msgstr "Alles selecteren"
 
-#: ImportExport/ImportDialog.cpp:171
+#: ImportExport/ImportDialog.cpp:156
 msgid "Deselect All"
 msgstr "Alles deselecteren"
 
-#: ImportExport/ImportDialog.cpp:206
+#: ImportExport/ImportDialog.cpp:191
 msgid "Select Which Images to Import"
 msgstr "Selecteer de afbeeldingen om te importeren"
 
-#: ImportExport/ImportDialog.cpp:218
+#: ImportExport/ImportDialog.cpp:203
 msgid "Destination of images: "
 msgstr "Bestemming van de afbeeldingen: "
 
-#: ImportExport/ImportDialog.cpp:232
+#: ImportExport/ImportDialog.cpp:217
 msgid "Destination of Images"
 msgstr "Bestemming van de afbeeldingen"
 
-#: ImportExport/ImportDialog.cpp:240
+#: ImportExport/ImportDialog.cpp:225
 #, kde-format
 msgid "The directory must be a subdirectory of %1"
 msgstr "De map dient een submap te zijn van %1"
 
-#: ImportExport/ImportDialog.cpp:282
+#: ImportExport/ImportDialog.cpp:267
 msgid "Match Categories"
 msgstr "Categorieën laten overeenkomen"
 
-#: ImportExport/ImportDialog.cpp:314
+#: ImportExport/ImportDialog.cpp:299
 #, kde-format
 msgid "Directory %1 does not exist. Should it be created?"
 msgstr "De map %1 bestaat niet. Wilt u deze aanmaken?"
 
-#: ImportExport/ImportDialog.cpp:318
+#: ImportExport/ImportDialog.cpp:303
 #, kde-format
 msgid "Error creating directory %1"
 msgstr "Fout bij aanmaken van map %1"
 
-#: ImportExport/ImportDialog.cpp:404
+#: ImportExport/ImportDialog.cpp:389
 msgid "How to resolve clashes"
 msgstr "Hoe botsingen af te handelen"
 
-#: ImportExport/ImportHandler.cpp:85 ImportExport/ImportHandler.cpp:137
+#: ImportExport/ImportHandler.cpp:86 ImportExport/ImportHandler.cpp:139
 msgid "Copying Images"
 msgstr "Afbeeldingen kopiëren"
 
-#: ImportExport/ImportHandler.cpp:151
+#: ImportExport/ImportHandler.cpp:154
 #, kde-format
 msgid "Error when writing image %1"
 msgstr "Fout bij opslaan van afbeelding %1"
 
-#: ImportExport/ImportHandler.cpp:170
+#: ImportExport/ImportHandler.cpp:173
 msgid "Updating Database"
 msgstr "Database wordt bijgewerkt"
 
-#: ImportExport/ImportHandler.cpp:199
+#: ImportExport/ImportHandler.cpp:202
 msgid "Cannot copy from any of the following locations:"
 msgstr "Kan niet kopiëren vanuit de volgende locaties:"
 
-#: ImportExport/ImportHandler.cpp:200
+#: ImportExport/ImportHandler.cpp:203
 msgid "Continue without Asking"
 msgstr "Doorgaan zonder te vragen"
 
@@ -1703,97 +1834,101 @@ msgid "&Maintenance"
 msgstr "&Onderhoud"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:70 Settings/SettingsDialog.cpp:72
+#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:72
 msgid "Plugins"
 msgstr "Plug-ins"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:72
+#: kphotoalbumui.rc:73
 msgid "Export"
 msgstr "Exporteren"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:76
+#: kphotoalbumui.rc:77
 msgid "Import"
 msgstr "Importeren"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:84
+#: kphotoalbumui.rc:85
 msgid "Batch Plugins"
 msgstr "Batch-plugins"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:88
+#: kphotoalbumui.rc:89
 msgid "Tools"
 msgstr "Hulpmiddelen"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:105
+#: kphotoalbumui.rc:106
 msgid "Main Toolbar"
 msgstr "Hoofdwerkbalk"
 
-#: main.cpp:36
+#: main.cpp:37
 msgid "KPhotoAlbum"
 msgstr "KPhotoAlbum"
 
-#: main.cpp:37
+#: main.cpp:38
 msgid "KDE Photo Album"
 msgstr "KDE Foto Album"
 
-#: main.cpp:39
+#: main.cpp:40
 msgid "Jesper K. Pedersen"
 msgstr "Jesper K. Pedersen"
 
-#: main.cpp:39 main.cpp:40 main.cpp:41 main.cpp:43 main.cpp:44 main.cpp:45
-#: main.cpp:46
+#: main.cpp:40 main.cpp:41 main.cpp:42 main.cpp:44 main.cpp:45 main.cpp:46
+#: main.cpp:47 main.cpp:48
 msgid "Development"
 msgstr "Ontwikkeling"
 
-#: main.cpp:40
+#: main.cpp:41
 msgid "Hassan Ibraheem"
 msgstr "Hassan Ibraheem"
 
-#: main.cpp:41
+#: main.cpp:42
 msgid "Miika Turkia"
 msgstr "Miika Turkia"
 
-#: main.cpp:42
+#: main.cpp:43
 msgid "Tuomas Suutari"
 msgstr "Tuomas Suutari"
 
-#: main.cpp:42
+#: main.cpp:43
 msgid "SQL backend and numerous features"
 msgstr "SQL-backend en diverse functies"
 
-#: main.cpp:43
+#: main.cpp:44
 msgid "Jan Kundr&aacute;t"
 msgstr "Jan Kundr&aacute;t"
 
-#: main.cpp:44
+#: main.cpp:45
 msgid "Henner Zeller"
 msgstr "Henner Zeller"
 
-#: main.cpp:45
+#: main.cpp:46
 msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
-#: main.cpp:46
+#: main.cpp:47
 msgid "Johannes Zarl"
 msgstr "Johannes Zarl"
 
-#: main.cpp:49
+#: main.cpp:48
+msgid "Tobias Leupold"
+msgstr "Tobias Leupold"
+
+#: main.cpp:51
 msgid "Will Stephenson"
 msgstr "Will Stephenson"
 
-#: main.cpp:49
+#: main.cpp:51
 msgid "Developing an Icon for KPhotoAlbum"
 msgstr "Ontwierp een pictogram voor KPhotoAlbum"
 
-#: main.cpp:50
+#: main.cpp:52
 msgid "Teemu Rytilahti"
 msgstr "Teemu Rytilahti"
 
-#: main.cpp:51
+#: main.cpp:53
 msgid ""
 "Sending patches implementing (.) the \"Set As Wallpaper\" menu in the viewer."
 "(.) Theme support for HTML generation"
@@ -1802,19 +1937,19 @@ msgstr ""
 "achtergrondafbeelding instellen\" in de viewer.(.) Thema-ondersteuning voor "
 "HTML-generatie"
 
-#: main.cpp:53
+#: main.cpp:55
 msgid "Reimar Imhof"
 msgstr "Reimar Imhof"
 
-#: main.cpp:53
+#: main.cpp:55
 msgid "Patch to sort items in option listboxes"
 msgstr "Patch voor het sorteren van items in de optievelden"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid "Thomas Schwarzgruber"
 msgstr "Thomas Schwarzgruber"
 
-#: main.cpp:54
+#: main.cpp:56
 msgid ""
 "Patch to sort images in the thumbnail view, plus reading time info out of "
 "EXIF images for existing images"
@@ -1822,11 +1957,11 @@ msgstr ""
 "Patch voor het sorteren van afbeeldingen in de miniatuurweergave en het "
 "lezen van tijdsinformatie uit de EXIF-gegevens van bestaande afbeeldingen"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid "Marcel Wiesweg"
 msgstr "Marcel Wiesweg"
 
-#: main.cpp:55
+#: main.cpp:57
 msgid ""
 "Patch which speed up loading of thumbnails plus preview in image property "
 "dialog."
@@ -1834,21 +1969,21 @@ msgstr ""
 "Patch voor het versnellen van het inladen van miniaturen en het voorbeeld in "
 "de dialoog met afbeeldingseigenschappen."
 
-#: main.cpp:56
+#: main.cpp:58
 msgid "Marco Caldarelli"
 msgstr "Marco Caldarelli"
 
-#: main.cpp:56
+#: main.cpp:58
 msgid "Patch for making it possible to reread EXIF info using a nice dialog."
 msgstr ""
 "Patch voor het mogelijk maken dat EXIF-informatie via een handig dialoog "
 "opnieuw wordt gelezen."
 
-#: main.cpp:57
+#: main.cpp:59
 msgid "Jean-Michel FAYARD"
 msgstr "Jean-Michel FAYARD"
 
-#: main.cpp:57
+#: main.cpp:59
 msgid ""
 "(.) Patch with directory info made available through the browser. (.) Patch "
 "for adding a check box for \"and/or\" searches in the search page."
@@ -1856,50 +1991,54 @@ msgstr ""
 "Patch met mapinformatie beschikbaar gemaakt via de browser. Patch voor het "
 "toevoegen van een keuzevakje voor \"en/of\"-zoekopdrachten in de zoekpagina."
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "Robert L Krawitz"
 msgstr "Robert L Krawitz"
 
-#: main.cpp:58
+#: main.cpp:60
 msgid "Numerous patches plus profiling KPhotoAlbum again and again."
 msgstr "Diverse patches en het telkens opnieuw profileren van KPhotoAlbum."
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Christoph Moseler"
 msgstr "Christoph Moseler"
 
-#: main.cpp:59
+#: main.cpp:61
 msgid "Numerous patches for lots of bugs plus patches for a few new features"
 msgstr "Diverse patches voor veel programmafouten en enkele nieuwe functies"
 
-#: main.cpp:60
+#: main.cpp:62
 msgid "Clytie Siddall"
 msgstr "Clytie Siddall"
 
-#: main.cpp:60
+#: main.cpp:62
 msgid "Tremendous help with the English text in the application."
 msgstr ""
 "Hielp veelvuldig bij het verbeteren van de Engelse teksten in het programma."
 
-#: main.cpp:61
+#: main.cpp:63
 msgid "Wes Hardaker"
 msgstr "Wes Hardaker"
 
-#: main.cpp:61
+#: main.cpp:63
 msgid "Some very useful features to improve workflow"
 msgstr "Enige nuttige mogelijkheden om workflow te verbeteren"
 
-#: main.cpp:66
+#: main.cpp:68
 msgid "Config file"
 msgstr "Configuratiebestand"
 
-#: main.cpp:67
+#: main.cpp:69
 msgid "Starts KPhotoAlbum with a prebuilt set of demo images"
 msgstr "Start KPhotoAlbum met een vooringestelde set demo-afbeeldingen"
 
-#: main.cpp:68
+#: main.cpp:70
 msgid "Import file"
 msgstr "Bestand importeren"
+
+#: main.cpp:71
+msgid "Don't start listening for android devices on startup."
+msgstr "Bij programmastart niet luisteren naar Android apparaten."
 
 #: MainWindow/AutoStackImages.cpp:43
 msgid "Automatically Stack Images"
@@ -1961,22 +2100,22 @@ msgstr "Categoriebewerker tonen"
 msgid "Make Category Image"
 msgstr "Categorieafbeelding maken"
 
-#: MainWindow/DeleteDialog.cpp:35
+#: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
 msgstr "Items verwijderen"
 
-#: MainWindow/DeleteDialog.cpp:37
+#: MainWindow/DeleteDialog.cpp:36
 msgid "OK"
 msgstr "OK"
 
-#: MainWindow/DeleteDialog.cpp:63
+#: MainWindow/DeleteDialog.cpp:70
 #, kde-format
 msgid "Removing 1 item"
 msgid_plural "Removing %1 items"
 msgstr[0] "1 item verwijderen"
 msgstr[1] "%1 items verwijderen"
 
-#: MainWindow/DeleteDialog.cpp:64
+#: MainWindow/DeleteDialog.cpp:71
 #, kde-format
 msgid ""
 "Selected item will be removed from the database.<br/>What do you want to do "
@@ -1991,21 +2130,21 @@ msgstr[1] ""
 "De geselecteerde %1 items zullen worden verwijderd uit de database.<br/>Wat "
 "wilt u doen met de bestanden op de schijf?"
 
-#: MainWindow/DeleteDialog.cpp:70
+#: MainWindow/DeleteDialog.cpp:77
 #, kde-format
 msgid "Move file to Trash"
 msgid_plural "Move %1 files to Trash"
 msgstr[0] "Bestand naar de prullenbak verplaatsen"
 msgstr[1] "%1 bestanden naar de prullenbak verplaatsen"
 
-#: MainWindow/DeleteDialog.cpp:71
+#: MainWindow/DeleteDialog.cpp:78
 #, kde-format
 msgid "Delete file from disk"
 msgid_plural "Delete %1 files from disk"
 msgstr[0] "Bestand van schijf verwijderen"
 msgstr[1] "%1 bestanden van schijf verwijderen"
 
-#: MainWindow/DeleteDialog.cpp:72
+#: MainWindow/DeleteDialog.cpp:79
 #, kde-format
 msgid "Only remove the item from database"
 msgid_plural "Only remove %1 items from database"
@@ -2025,7 +2164,7 @@ msgctxt "i for info"
 msgid "i"
 msgstr "i"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:49
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:48
 msgid ""
 "<p>Below is a list of all images that are duplicate in your database.<br/"
 ">Select which you want merged, and which of the duplicates should be kept."
@@ -2037,28 +2176,32 @@ msgstr ""
 "behouden moet worden.<br/>De tag en beschrijving van de verwijderde "
 "afbeeldingen zullen worden overgebracht naar de bewaarde afbeelding</p>"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:58
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:57
 msgid "Move to &trash"
 msgstr "Naar &prullenbak"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:59
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:58
 msgid "&Delete from disk"
 msgstr "Van schijf verwij&deren"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:79
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:59
+msgid "&Block from database"
+msgstr "Uit database &blokkeren"
+
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:80
 msgid "Select &All"
 msgstr "&Alles selecteren"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:80
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:81
 msgid "Select &None"
 msgstr "&Niets selecteren"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:118
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:124
 #, kde-format
 msgid "%1 of %2 selected"
 msgstr "%1 van %2 geselecteerd"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:161
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:167
 msgid "No duplicates found"
 msgstr "Geen duplicaten gevonden"
 
@@ -2109,7 +2252,7 @@ msgid ""
 "from a binary package, please tell whoever made the package about this "
 "defect, eventually including the information from the section below.</"
 "p><p>In case you are missing a feature and you did not compile KPhotoAlbum "
-"yourself, please do consider doing so. It really isn't that hard. If you "
+"yourself, please do consider doing so. It really is not that hard. If you "
 "need help compiling KPhotoAlbum, feel free to ask on the <a href=\"http://"
 "mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
 "p><p>The steps to compile KPhotoAlbum can be seen on <a href=\"http://www."
@@ -2206,29 +2349,29 @@ msgstr ""
 #: MainWindow/FeatureDialog.cpp:98
 #, kde-format
 msgid ""
-"<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</ul></"
-"p>"
+"<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></"
+"ul></p>"
 msgstr ""
-"<p>Phonon kan mediatypen van deze mimetypes afspelen:<ul><li>%1</ul></p>"
+"<p>Phonon kan mediatypen van deze mimetypes afspelen:<ul><li>%1</li></ul></p>"
 
 #: MainWindow/FeatureDialog.cpp:100
 msgid ""
 "<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
-"uses <tt>mplayer</tt> to extract thumbnails from videos. These thumbnails "
+"uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails "
 "are used to preview videos in the thumbnail viewer.</p><p>If at all possible "
-"you should install the <b>mplayer2</b> package rather than the <b>mplayer</"
-"b> package, as it has important improvements over the mplayer package. "
-"mplayer (in contrast to mplayer2) often has problems extracting the length "
+"you should install the <b>MPlayer2</b> package rather than the <b>MPlayer</"
+"b> package, as it has important improvements over the MPlayer package. "
+"MPlayer (in contrast to MPlayer2) often has problems extracting the length "
 "of videos and also often fails to extract the thumbnails used for cycling "
-"video thumbnails."
+"video thumbnails.</p>"
 msgstr ""
 "<h1><a name=\"videoPreview\">Ondersteuning van video-miniaturen</a></"
-"h1><p>KPhotoAlbum gebruikt <tt>mplayer</tt> om miniaturen uit video's te "
+"h1><p>KPhotoAlbum gebruikt <tt>MPlayer</tt> om miniaturen uit video's te "
 "extraheren. Deze miniaturen worden gebruikt om voorbeelden van video's in de "
 "viewer van miniaturen te bekijken.</p><p>Indien mogelijk zou u het pakket "
-"<b>mplayer2</b> in plaats van het pakket <b>mplayer</b>, als belangrijkste "
-"verbetering op het mplayer pakket moeten installeren. mplayer (in "
-"tegenstelling tot mplayer2) heeft vaak problemen om de lengte van video's te "
+"<b>MPlayer2</b> in plaats van het pakket <b>MPlayer</b>, als belangrijkste "
+"verbetering op het MPlayer pakket moeten installeren. MPlayer (in "
+"tegenstelling tot MPlayer2) heeft vaak problemen om de lengte van video's te "
 "verkrijgen, evenals het vaak mislukt om de miniaturen te extraheren die "
 "worden gebruikt om door de video-miniaturen te lopen."
 
@@ -2253,16 +2396,18 @@ msgid "Video support"
 msgstr "Ondersteuning video"
 
 #: MainWindow/FeatureDialog.cpp:214
+msgctxt "Feature available"
 msgid "Yes"
 msgstr "Ja"
 
 #: MainWindow/FeatureDialog.cpp:215
+msgctxt "Feature not available"
 msgid "No"
 msgstr "Nee"
 
 #: MainWindow/FeatureDialog.cpp:222
-msgid "Only with mplayer1"
-msgstr "Alleen met mplayer1"
+msgid "Only with MPlayer1"
+msgstr "Alleen met MPlayer1"
 
 #: MainWindow/FeatureDialog.cpp:223
 msgid "Video thumbnail support"
@@ -2349,15 +2494,15 @@ msgstr ""
 #: MainWindow/RunDialog.cpp:46
 #, no-c-format
 msgid ""
-"<p>Enter the command you want to run on your image file(s).  KPhotoAlbum "
-"will run your command and replace any '%all' tokens with a list of your "
-"files.  For example, if you entered:</p><ul><li>cp %all /tmp</li></"
-"ul><p>Then the files you selected would be copied to the /tmp directory</"
-"p><p>You can also use %each to have a command be run once per file.</p>"
+"<p>Enter the command you want to run on your image file(s). KPhotoAlbum will "
+"run your command and replace any '%all' tokens with a list of your files. "
+"For example, if you entered:</p><ul><li>cp %all /tmp</li></ul><p>Then the "
+"files you selected would be copied to the /tmp directory</p><p>You can also "
+"use %each to have a command be run once per file.</p>"
 msgstr ""
-"<p>Voer het commando in dat u wilt uitvoeren op uw afbeeldingsbestand(en).  "
+"<p>Voer het commando in dat u wilt uitvoeren op uw afbeeldingsbestand(en). "
 "KPhotoAlbum zal uw commando uitvoeren en elk '%alle' tokens vervangen door "
-"een lijst van uw bestanden.  Bijvoorbeeld, als u hebt ingevoerd:</"
+"een lijst van uw bestanden. Bijvoorbeeld, als u hebt ingevoerd:</"
 "p><ul><li>cp %alle /tmp</li></ul><p>dan zullen de door u geselecteerde "
 "bestanden worden gekopieerd naar de /tmp map</p><p>U kunt ook '%elk' "
 "gebruiken voor een commando dat eenmalig voor elk bestand wordt uitgevoerd.</"
@@ -2365,51 +2510,48 @@ msgstr ""
 
 #: MainWindow/RunDialog.cpp:69
 #, no-c-format
+msgctxt ""
+"As in 'Execute a command and replace any occurrence of %all with the "
+"filenames of all selected files'"
 msgid "%all"
-msgstr "%alle"
+msgstr "%alles"
 
 #: MainWindow/RunDialog.cpp:71
 #, no-c-format
+msgctxt ""
+"As in 'Execute a command for each selected file in turn and replace any "
+"occurrence of %each with the filename "
 msgid "%each"
 msgstr "%elk"
 
 #: MainWindow/SearchBar.cpp:32
+msgctxt "@label:textbox label on the search bar"
 msgid "Search:"
 msgstr "Zoeken:"
-
-#: MainWindow/SplashScreen.cpp:67
-#, kde-format
-msgid "Version %1"
-msgstr "Versie %1"
-
-#: MainWindow/SplashScreen.cpp:69
-#, kde-format
-msgid "Version: %1"
-msgstr "Versie: %1"
 
 #: MainWindow/StatisticsDialog.cpp:43
 msgid ""
 "<h1>Description</h1><table><tr><td># of Items</td><td>This is the number of "
 "different items in the category</td></tr><tr><td>Tags Total</td><td>This is "
 "a count of how many tags was made,<br/>i.e. a simple counting though all the "
-"images</tr></tr><tr><td>Tags Per Picture</td><td>This tells you how many "
-"tags are on each picture on average</td></tr></table><br/><br/>Don't get too "
-"attached to this dialog, it has the problem that it counts categories AND "
-"subcategories,<br/>so if an image has been taken in Las Vegas, Nevada, USA, "
-"then 3 tags are counted for that image,<br/>while it should only be one.<br/"
-">I'm not really sure if it is worth fixing that bug (as it is pretty hard to "
-"fix),<br/>so maybe the dialog will simply go away again"
+"images</td></tr><tr><td>Tags Per Picture</td><td>This tells you how many "
+"tags are on each picture on average</td></tr></table><br/><br/>Do not get "
+"too attached to this dialog, it has the problem that it counts categories "
+"AND subcategories,<br/>so if an image has been taken in Las Vegas, Nevada, "
+"USA, then 3 tags are counted for that image,<br/>while it should only be one."
+"<br/>I am not really sure if it is worth fixing that bug (as it is pretty "
+"hard to fix),<br/>so maybe the dialog will simply go away again"
 msgstr ""
 "<h1>Beschrijving</h1><table><tr><td>Aantal items</td><td>Dit is het aantal "
 "verschillende items in de categorie</td></tr><tr><td>Totaal aan tags</"
 "td><td>Dit is een telling van het aantal gemaakte tags,<br/>bijv. een "
-"simpele telling door alle afbeeldingen</tr></tr><tr><td>Tags per plaatje</"
+"simpele telling door alle afbeeldingen</td></tr><tr><td>Tags per plaatje</"
 "td><td>Dit vertelt hoeveel tags er gemiddeld aan elk plaatje hangt</td></"
 "tr></table><br/><br/>Bindt u niet al te erg aan deze dialoog, het heeft het "
 "probleem dat het categorieën telt EN subcategorieën,<br/>zodat als een "
 "afbeelding in Amsterdam, Noord-Holland, Nederland is genomen dan worden er 3 "
-"tags geteld voor die afbeelding,<br/>terwijl het er één zou moeten zijn.</"
-"br>Ik ben er niet zeker van of dit het waard is om te verbeteren als fout "
+"tags geteld voor die afbeelding,<br/>terwijl het er één zou moeten zijn.<br/"
+">Ik ben er niet zeker van of dit het waard is om te verbeteren als fout "
 "(omdat het behoorlijk moeilijk is om te verbeteren),<br/> het kan dus zijn "
 "dat deze dialoog eenvoudig weer verdwijnt"
 
@@ -2454,24 +2596,34 @@ msgstr "Categorie:"
 msgid "Tag:"
 msgstr "Tag:"
 
+#: MainWindow/StatisticsDialog.cpp:129
+msgctxt "@item:inlistbox meaning 'no category'"
+msgid "None"
+msgstr "Geen"
+
+#: MainWindow/StatisticsDialog.cpp:167
+msgctxt "As in 'all images'"
+msgid "All"
+msgstr "Alles"
+
 #: MainWindow/StatisticsDialog.cpp:212
 msgid "Total"
 msgstr "Totaal"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:703
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:730
 msgid "Remove Tokens"
-msgstr "Tekens verwijderen"
+msgstr "Tokens verwijderen"
 
 #: MainWindow/TokenEditor.cpp:45
 msgid "Select tokens to remove from all images and videos:"
 msgstr ""
-"Selecteer de tekens die u uit alle afbeeldingen en video's wilt verwijderen:"
+"Selecteer de tokens die u uit alle afbeeldingen en video's wilt verwijderen:"
 
 #: MainWindow/TokenEditor.cpp:64
 msgid "Select None"
 msgstr "Niets selecteren"
 
-#: MainWindow/WelcomeDialog.cpp:55
+#: MainWindow/WelcomeDialog.cpp:56
 msgid ""
 "<h1>Welcome to KPhotoAlbum</h1><p>KPhotoAlbum is a powerful free tool to "
 "archive, tag and manage your photos and videos. It will not modify or change "
@@ -2492,19 +2644,19 @@ msgstr ""
 "p><p>Als u zich veiliger voelt door eerst KPhotoAlbum uit te proberen met "
 "een vooraf opgebouwde set afbeeldingen, druk dan op de knop Demo laden.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:70
+#: MainWindow/WelcomeDialog.cpp:71
 msgid "Create My Own Database..."
 msgstr "Mijn eigen database aanmaken..."
 
-#: MainWindow/WelcomeDialog.cpp:73
+#: MainWindow/WelcomeDialog.cpp:74
 msgid "Load Demo"
 msgstr "Demo laden"
 
-#: MainWindow/WelcomeDialog.cpp:76
+#: MainWindow/WelcomeDialog.cpp:77
 msgid "Check My Feature Set"
 msgstr "Controleer mijn set van mogelijkheden"
 
-#: MainWindow/WelcomeDialog.cpp:112
+#: MainWindow/WelcomeDialog.cpp:113
 msgid ""
 "<h1>KPhotoAlbum database creation</h1><p>You need to show where the photos "
 "and videos are for KPhotoAlbum to find them. They all need to be under one "
@@ -2517,7 +2669,7 @@ msgid ""
 "to start using it again.</p>"
 msgstr ""
 "<h1>Aanmaken van de KPhotoAlbum-database</h1><p>Het is nodig om aan "
-"KPhotoAlbum te laten zien waar de foto's en video's zijn te vinden. Ze  "
+"KPhotoAlbum te laten zien waar de foto's en video's zijn te vinden. Ze "
 "moeten allemaal onder één basis map aanwezig zijn, bijvoorbeeld /home/"
 "gebruiker/Afbeeldingen. In deze map kunt u zoveel submappen hebben als u "
 "wilt, KPhotoAlbum zal ze allemaal voor u vinden.</p><p>Voel u veilig, "
@@ -2526,25 +2678,25 @@ msgstr ""
 "p><p>Als u al ergens een bestaande KPhotoAlbum-database en basismap hebt, "
 "laat KPhotoAlbum dan naar die map wijzen om deze weer te gaan gebruiken.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:127
+#: MainWindow/WelcomeDialog.cpp:128
 msgid "Image/Video root directory: "
 msgstr "Hoofdmap voor afbeeldingen/video's: "
 
-#: MainWindow/WelcomeDialog.cpp:157
+#: MainWindow/WelcomeDialog.cpp:158
 msgid "Directory does not exist, create it?"
 msgstr "Map bestaat niet. Aanmaken?"
 
-#: MainWindow/WelcomeDialog.cpp:161
+#: MainWindow/WelcomeDialog.cpp:162
 #, kde-format
 msgid "Could not create directory %1"
 msgstr "Map %1 kon niet worden aangemaakt"
 
-#: MainWindow/WelcomeDialog.cpp:168
+#: MainWindow/WelcomeDialog.cpp:169
 #, kde-format
 msgid "%1 exists, but is not a directory"
 msgstr "%1 bestaat, maar is geen map"
 
-#: MainWindow/WelcomeDialog.cpp:187
+#: MainWindow/WelcomeDialog.cpp:188
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum does not seem to be build with support for all its features. "
@@ -2557,31 +2709,31 @@ msgstr ""
 "<p>Voor details over hoe dit probleem kan worden opgelost, kies menuoptie "
 "<b>Help</b>|<b>Status van KPhotoAlbum-functies</b>.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:191 MainWindow/WelcomeDialog.cpp:195
+#: MainWindow/WelcomeDialog.cpp:192 MainWindow/WelcomeDialog.cpp:196
 msgid "Feature Check"
 msgstr "Functionaliteitscontrole"
 
-#: MainWindow/WelcomeDialog.cpp:194
+#: MainWindow/WelcomeDialog.cpp:195
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Gefeliciteerd: alle dynamische mogelijkheden zijn geactiveerd."
 
-#: MainWindow/Window.cpp:136
+#: MainWindow/Window.cpp:137
 msgid "Loading Database"
 msgstr "Database wordt geladen"
 
-#: MainWindow/Window.cpp:142
+#: MainWindow/Window.cpp:143
 msgid "Loading Main Window"
 msgstr "Hoofdvenster wordt geladen"
 
-#: MainWindow/Window.cpp:231
+#: MainWindow/Window.cpp:233
 msgid "Searching for New Files"
 msgstr "Naar nieuwe bestanden zoeken"
 
-#: MainWindow/Window.cpp:237
+#: MainWindow/Window.cpp:239
 msgid "Loading Plug-ins"
 msgstr "Plugins laden"
 
-#: MainWindow/Window.cpp:258
+#: MainWindow/Window.cpp:260
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
@@ -2589,7 +2741,7 @@ msgstr ""
 "De EXIF-database kon niet worden geopend. Controleer of de hoofdmap van de "
 "afbeeldingen schrijfbaar is."
 
-#: MainWindow/Window.cpp:267
+#: MainWindow/Window.cpp:274
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -2603,19 +2755,19 @@ msgstr ""
 "daar blijven staan en enige schijfruimte in beslag nemen. Echter, als u de "
 "database laat staan kunt u hem altijd in een later stadium weer openen.</p>"
 
-#: MainWindow/Window.cpp:272
+#: MainWindow/Window.cpp:279
 msgid "Delete Demo Database"
 msgstr "Demo-database verwijderen"
 
-#: MainWindow/Window.cpp:287
+#: MainWindow/Window.cpp:294
 msgid "Do you want to save the changes?"
 msgstr "Wilt u de wijzigingen opslaan?"
 
-#: MainWindow/Window.cpp:288
+#: MainWindow/Window.cpp:295
 msgid "Save Changes?"
 msgstr "Wijzigingen opslaan?"
 
-#: MainWindow/Window.cpp:326
+#: MainWindow/Window.cpp:334
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
@@ -2623,259 +2775,264 @@ msgstr ""
 "Sommige van de geselecteerde afbeeldingen behoren bij een stapel. Wilt u "
 "deze daaruit verwijderen en een compleet nieuwe aanmaken?"
 
-#: MainWindow/Window.cpp:328 MainWindow/Window.cpp:333
+#: MainWindow/Window.cpp:336 MainWindow/Window.cpp:341
 msgid "Stacking Error"
 msgstr "Stacking-fout"
 
-#: MainWindow/Window.cpp:332
+#: MainWindow/Window.cpp:340
 msgid "Unknown error, stack creation failed."
 msgstr "Onbekende fout, stack aanmaken is mislukt."
 
-#: MainWindow/Window.cpp:410 MainWindow/Window.cpp:534
-#: MainWindow/Window.cpp:1249
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
+#: MainWindow/Window.cpp:1280
 msgid "No item is selected."
 msgstr "Er is geen item geselecteerd."
 
-#: MainWindow/Window.cpp:410 MainWindow/Window.cpp:534
-#: MainWindow/Window.cpp:1250
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
+#: MainWindow/Window.cpp:1281
 msgid "No Selection"
 msgstr "Geen selectie"
 
-#: MainWindow/Window.cpp:459
+#: MainWindow/Window.cpp:466
 msgid "Saving..."
 msgstr "Bezig met opslaan..."
 
-#: MainWindow/Window.cpp:463
+#: MainWindow/Window.cpp:470
 msgid "Saving... Done"
 msgstr "Opslaan... gereed"
 
-#: MainWindow/Window.cpp:598
+#: MainWindow/Window.cpp:616
 msgid "There are no images to be shown."
 msgstr "Er zijn geen afbeeldingen om weer te geven."
 
-#: MainWindow/Window.cpp:664
+#: MainWindow/Window.cpp:691
 msgid "Generate HTML..."
 msgstr "HTML aanmaken..."
 
-#: MainWindow/Window.cpp:668
+#: MainWindow/Window.cpp:695
 msgid "Import..."
 msgstr "Importeren..."
 
-#: MainWindow/Window.cpp:671
+#: MainWindow/Window.cpp:698
 msgid "Export/Copy Images..."
 msgstr "Afbeeldingen exporteren/kopiëren..."
 
-#: MainWindow/Window.cpp:697
+#: MainWindow/Window.cpp:724
+msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "Selectie verwijderen"
 
-#: MainWindow/Window.cpp:706
+#: MainWindow/Window.cpp:733
 msgid "Open List of Files..."
 msgstr "Lijst met bestanden openen..."
 
-#: MainWindow/Window.cpp:710
+#: MainWindow/Window.cpp:737
 msgid "Annotate Individual Items"
 msgstr "Individuele items annoteren"
 
-#: MainWindow/Window.cpp:714
+#: MainWindow/Window.cpp:741
 msgid "Annotate Multiple Items at a Time"
 msgstr "Meerdere items tegelijk annoteren"
 
-#: MainWindow/Window.cpp:718
+#: MainWindow/Window.cpp:745
 msgid "Merge Images into a Stack"
 msgstr "Afbeeldingen in een stack zetten"
 
-#: MainWindow/Window.cpp:722
+#: MainWindow/Window.cpp:749
 msgid "Remove Images from Stack"
 msgstr "Afbeeldingen uit stack verwijderen"
 
-#: MainWindow/Window.cpp:725 Viewer/ViewerWidget.cpp:151
+#: MainWindow/Window.cpp:752
 msgid "Set as First Image in Stack"
 msgstr "Als eerste afbeelding in een stapel zetten"
 
-#: MainWindow/Window.cpp:740
+#: MainWindow/Window.cpp:767
 msgid "View"
 msgstr "Tonen"
 
-#: MainWindow/Window.cpp:744
+#: MainWindow/Window.cpp:771
 msgid "View (In New Window)"
 msgstr "Tonen (in nieuw venster)"
 
-#: MainWindow/Window.cpp:747
+#: MainWindow/Window.cpp:774
 msgid "Run Slide Show"
-msgstr "Diashow tonen"
+msgstr "Diavoorstelling tonen"
 
-#: MainWindow/Window.cpp:752
+#: MainWindow/Window.cpp:779
 msgid "Run Randomized Slide Show"
 msgstr "Dia's in willekeurige volgorde"
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:785
 msgid "Collapse all stacks"
 msgstr "Alle stapels invouwen"
 
-#: MainWindow/Window.cpp:764
+#: MainWindow/Window.cpp:791
 msgid "Expand all stacks"
 msgstr "Alle stapels uitbreiden"
 
-#: MainWindow/Window.cpp:769
+#: MainWindow/Window.cpp:796
 msgid "Show &Oldest First"
 msgstr "&Oudste als eerste tonen"
 
-#: MainWindow/Window.cpp:774
+#: MainWindow/Window.cpp:801
 msgid "Show &Newest First"
 msgstr "&Nieuwste als eerste tonen"
 
-#: MainWindow/Window.cpp:779
+#: MainWindow/Window.cpp:806
 msgid "Sort Selected by Date && Time"
 msgstr "Selectie sorteren op datum en tijd"
 
-#: MainWindow/Window.cpp:782
+#: MainWindow/Window.cpp:809
 msgid "Limit View to Selection"
 msgstr "Weergave beperken tot selectie"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:812
 msgid "Jump to Context"
 msgstr "Naar context gaan"
 
-#: MainWindow/Window.cpp:790
+#: MainWindow/Window.cpp:817
 msgid "Lock Images"
 msgstr "Afbeeldingen vergrendelen"
 
-#: MainWindow/Window.cpp:793
+#: MainWindow/Window.cpp:820
 msgid "Unlock"
-msgstr "Vergrendeling opheffen"
+msgstr "Ontgrendelen"
 
-#: MainWindow/Window.cpp:796
+#: MainWindow/Window.cpp:823
 msgid "Change Password..."
 msgstr "Wachtwoord wijzigen..."
 
-#: MainWindow/Window.cpp:800
+#: MainWindow/Window.cpp:827
 msgid "Lock Away All Other Items"
 msgstr "Alle andere items wegzetten"
 
-#: MainWindow/Window.cpp:803
+#: MainWindow/Window.cpp:830
 msgid "Lock Away Current Set of Items"
 msgstr "Huidige set items wegzetten"
 
-#: MainWindow/Window.cpp:807
+#: MainWindow/Window.cpp:834
 msgid "Display Images and Videos Not on Disk"
 msgstr "Afbeeldingen en video's die niet op schijf staan weergeven"
 
-#: MainWindow/Window.cpp:810
+#: MainWindow/Window.cpp:837
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Afbeeldingen en video's met onvolledige datums weergeven..."
 
-#: MainWindow/Window.cpp:814
+#: MainWindow/Window.cpp:841
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Afbeeldingen en video's met gewijzigde MD5-controlesommen weergeven"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:845
 msgid "Merge duplicates"
 msgstr "Duplicaten samenvoegen"
 
-#: MainWindow/Window.cpp:820
+#: MainWindow/Window.cpp:847
 msgid "Recalculate Checksum"
 msgstr "Controlesom herberekenen"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:850
 msgid "Rescan for Images and Videos"
 msgstr "Opnieuw naar afbeeldingen en video's zoeken"
 
-#: MainWindow/Window.cpp:826
+#: MainWindow/Window.cpp:853
 msgid "Recreate Exif Search Database"
 msgstr "EXIF-database opnieuw aanmaken"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:856
 msgid "Read EXIF Info From Files..."
 msgstr "EXIF-informatie van bestanden lezen..."
 
-#: MainWindow/Window.cpp:831
+#: MainWindow/Window.cpp:858
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "EXIF-zoekdatabase opnieuw aanmaken (het is nodig om KPhotoAlbum met Exif-"
 "ondersteuning te compileren)"
 
-#: MainWindow/Window.cpp:832
+#: MainWindow/Window.cpp:859
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "EXIF-informatie uit bestanden lezen... (het is nodig om KPhotoAlbum met Exif-"
 "ondersteuning te compileren)"
 
-#: MainWindow/Window.cpp:838
+#: MainWindow/Window.cpp:865
+msgid "Sort All by Date && Time"
+msgstr "Alles sorteren op datum && tijd"
+
+#: MainWindow/Window.cpp:869
 msgid "Automatically Stack Selected Images..."
 msgstr "Geselecteerde afbeeldingen automatisch stapelen..."
 
-#: MainWindow/Window.cpp:841
+#: MainWindow/Window.cpp:872
 msgid "Build Thumbnails"
 msgstr "Miniaturen aanmaken"
 
-#: MainWindow/Window.cpp:844
+#: MainWindow/Window.cpp:875
 msgid "Statistics"
 msgstr "Statistieken"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:884
 msgid "Enable All Messages"
 msgstr "Alle berichten activeren"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:887
 msgid "Configure Current View"
 msgstr "Huidige weergave instellen"
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:896
 msgid "Tree"
 msgstr "Boomstructuur"
 
-#: MainWindow/Window.cpp:870
+#: MainWindow/Window.cpp:901
 msgid "Tree with User Icons"
 msgstr "Boomstructuur met gebruikerpictogrammen"
 
-#: MainWindow/Window.cpp:876 MainWindow/Window.cpp:882
+#: MainWindow/Window.cpp:907 MainWindow/Window.cpp:913
 msgid "Icons"
 msgstr "Pictogrammen"
 
-#: MainWindow/Window.cpp:894
+#: MainWindow/Window.cpp:925
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Tekstballonnen in miniaturenvenster tonen"
 
-#: MainWindow/Window.cpp:900
+#: MainWindow/Window.cpp:931
 msgid "Run KPhotoAlbum Demo"
 msgstr "KPhotoAlbum-demo starten"
 
-#: MainWindow/Window.cpp:903
+#: MainWindow/Window.cpp:934
 msgid "KPhotoAlbum Feature Status"
 msgstr "Status van KPhotoAlbum-functies"
 
-#: MainWindow/Window.cpp:906
+#: MainWindow/Window.cpp:937
 msgid "Show Demo Videos"
 msgstr "Demovideo's tonen"
 
-#: MainWindow/Window.cpp:911
+#: MainWindow/Window.cpp:942
 msgid "Show Exif Info"
 msgstr "EXIF-informatie tonen"
 
-#: MainWindow/Window.cpp:914
+#: MainWindow/Window.cpp:945
 msgid "Recreate Selected Thumbnails"
 msgstr "Geselecteerde miniaturen opnieuw aanmaken"
 
-#: MainWindow/Window.cpp:917
+#: MainWindow/Window.cpp:948
 msgid "Use next video thumbnail"
 msgstr "Volgende videominiatuur gebruiken"
 
-#: MainWindow/Window.cpp:921
+#: MainWindow/Window.cpp:952
 msgid "Use previous video thumbnail"
 msgstr "Vorige videominiatuur gebruiken"
 
-#: MainWindow/Window.cpp:947
+#: MainWindow/Window.cpp:978
 msgid "Auto saving...."
 msgstr "Autom. opslaan...."
 
-#: MainWindow/Window.cpp:949
+#: MainWindow/Window.cpp:980
 msgid "Auto saving.... Done"
 msgstr "Autom. opslaan... gereed"
 
-#: MainWindow/Window.cpp:1041
+#: MainWindow/Window.cpp:1072
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -2884,7 +3041,7 @@ msgstr ""
 "<p>Kon de gegeven index.xml niet openen omdat de gegeven map niet bestaat."
 "<br />%1</p>"
 
-#: MainWindow/Window.cpp:1049
+#: MainWindow/Window.cpp:1080
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -2893,52 +3050,52 @@ msgstr ""
 "<p>Het gegeven index-bestand bestaat niet, wilt u het volgende aanmaken?<br /"
 ">%1/index.xml</p>"
 
-#: MainWindow/Window.cpp:1119
+#: MainWindow/Window.cpp:1150
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
-"last party.</p><p>In other words, anyone with access to the index.xml file "
-"can easily circumvent this password.</b></p>"
+"last party.</p><p><b>In other words, anyone with access to the index.xml "
+"file can easily circumvent this password.</b></p>"
 msgstr ""
 "<p> De wachtwoordbescherming is enkel bedoeld om toe te laten dat uw kleine "
 "zusje uw afbeeldingen mag bekijken, zonder dat ze bij de beschamende foto's "
-"kan komen van uw laatste feestje.</p> <p>Met andere woorden, iedereen die "
+"kan komen van uw laatste feestje.</p><p><b>Met andere woorden, iedereen die "
 "toegang heeft tot het bestand index.html kan dit wachtwoord op eenvoudige "
-"wijze omzeilen.</b>"
+"wijze omzeilen.</b></p>"
 
-#: MainWindow/Window.cpp:1124
+#: MainWindow/Window.cpp:1155
 msgid "Password Protection"
 msgstr "Wachtwoordbescherming"
 
-#: MainWindow/Window.cpp:1138
+#: MainWindow/Window.cpp:1169
 msgid "Type in Password to Unlock"
 msgstr "Voer het wachtwoord in om de vergrendeling op te heffen"
 
-#: MainWindow/Window.cpp:1147 MainWindow/Window.cpp:1181
+#: MainWindow/Window.cpp:1178 MainWindow/Window.cpp:1212
 msgid "Invalid password."
 msgstr "Onjuist wachtwoord."
 
-#: MainWindow/Window.cpp:1172
+#: MainWindow/Window.cpp:1203
 msgid "Type in Old Password"
 msgstr "Oud wachtwoord invoeren"
 
-#: MainWindow/Window.cpp:1184
+#: MainWindow/Window.cpp:1215
 msgid "Type in New Password"
 msgstr "Nieuw wachtwoord invoeren"
 
-#: MainWindow/Window.cpp:1195 Settings/SettingsDialog.cpp:65
+#: MainWindow/Window.cpp:1226 Settings/SettingsDialog.cpp:65
 msgid "General"
 msgstr "Algemeen"
 
-#: MainWindow/Window.cpp:1196 Settings/SettingsDialog.cpp:70
+#: MainWindow/Window.cpp:1227 Settings/SettingsDialog.cpp:70
 msgid "Viewer"
 msgstr "Weergave"
 
-#: MainWindow/Window.cpp:1209
+#: MainWindow/Window.cpp:1240
 msgid "Annotation Dialog"
 msgstr "Annotatiedialoog"
 
-#: MainWindow/Window.cpp:1367
+#: MainWindow/Window.cpp:1398
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
@@ -2946,7 +3103,7 @@ msgstr ""
 "<p>Wilt u alle berichten activeren waar u eerder het keuzevakje 'Niet "
 "opnieuw tonen' hebt geselecteerd?</p>"
 
-#: MainWindow/Window.cpp:1378
+#: MainWindow/Window.cpp:1409
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -2962,15 +3119,15 @@ msgstr ""
 "p><p>KPhotoAlbum zal doorgaan, maar het is niet geheel onmogelijk dat het "
 "later zal crashen vanwege de ontbrekende 'make install'.</p>"
 
-#: MainWindow/Window.cpp:1378
+#: MainWindow/Window.cpp:1409
 msgid "Internal Error"
 msgstr "Interne fout"
 
-#: MainWindow/Window.cpp:1560
+#: MainWindow/Window.cpp:1594
 msgid "Open List of Files"
 msgstr "Lijst met bestanden openen"
 
-#: MainWindow/Window.cpp:1560
+#: MainWindow/Window.cpp:1594
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -2978,57 +3135,79 @@ msgstr ""
 "U kunt een set bestanden uit de basismap van KPhotoAlbum door hier een lijst "
 "te maken."
 
-#: MainWindow/Window.cpp:1576
+#: MainWindow/Window.cpp:1610
 msgid "No images matching your input were found."
 msgstr "Er kwamen geen afbeeldingen overeen met uw invoer."
 
-#: MainWindow/Window.cpp:1576
+#: MainWindow/Window.cpp:1610
 msgid "No Matches"
 msgstr "Geen overeenkomsten"
 
-#: MainWindow/Window.cpp:1750
+#: MainWindow/Window.cpp:1787
 msgid ""
-"<p>Unable to find mplayer on the system</p><p>KPhotoAlbum needs mplayer to "
-"extract video thumbnails among other things. Please install the mplayer2 "
-"package</p>"
+"<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
+"will not be able to display video thumbnails and video lengths. Please "
+"install the MPlayer2 package</p>"
 msgstr ""
-"<p>Kan mplayer niet op het systeem vinden</p><p>KPhotoAlbum heeft onder "
-"andere mplayer nodig om videominiaturen te extraheren. Installeer het pakket "
-"mplayer2</p>"
+"<p>Kan MPlayer niet op het systeem vinden</p><p>KPhotoAlbum heeft onder "
+"andere MPlayer nodig om videominiaturen lengtes van video's te tonen. "
+"Installeer het pakket MPlayer2</p>"
 
-#: MainWindow/Window.cpp:1758
+#: MainWindow/Window.cpp:1790
+msgid "Video thumbnails are not available"
+msgstr "Videominiaturen zijn niet beschikbaar"
+
+#: MainWindow/Window.cpp:1796
 msgid ""
-"<p>You have mplayer installed on your system, but it is unfortunately not "
-"version 2. mplayer2 is on most systems a separate package, please install "
+"<p>You have MPlayer installed on your system, but it is unfortunately not "
+"version 2. MPlayer2 is on most systems a separate package, please install "
 "that if at all possible, as that version has much better support for "
-"extracting thumbnails from videos."
+"extracting thumbnails from videos.</p>"
 msgstr ""
-"<p>U hebt mplayer op uw systeem geïnstalleerd, maar het is helaas niet "
-"versie 2. mplayer2 is op de meeste systemen een apart pakket, installeer dat "
+"<p>U hebt MPlayer op uw systeem geïnstalleerd, maar het is helaas niet "
+"versie 2. MPlayer2 is op de meeste systemen een apart pakket, installeer dat "
 "indien mogelijk, omdat die versie veel beter ondersteuning biedt voor het "
-"extraheren van miniaturen uit video's."
+"extraheren van miniaturen uit video's.</p>"
 
-#: MainWindow/Window.cpp:1761
-msgid "mplayer is too old"
-msgstr "mplayer is te oud"
+#: MainWindow/Window.cpp:1799
+msgid "MPlayer is too old"
+msgstr "MPlayer is te oud"
+
+#: MainWindow/Window.cpp:1821
+msgid ""
+"<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
+"the Android client you can view your images from your desktop.</p><p><a href="
+"\"https://www.youtube.com/results?search_query=kphotoalbum+on+android\">See "
+"youtube video</a> or <a href=\"https://play.google.com/store/apps/details?"
+"id=org.kde.kphotoalbum\">install from google play</a></p>"
+msgstr ""
+"<p>Weet u dat er een Android-client is voor KPhotoAlbum?<br/>Met de Andorid-"
+"client kunt u uw afbeeldingen zien vanaf uw bureaublad.</p><p><a href="
+"\"https://www.youtube.com/results?search_query=kphotoalbum+on+android\">Zie "
+"de youtube-video</a> of <a href=\"https://play.google.com/store/apps/details?"
+"id=org.kde.kphotoalbum\">installeer deze vanaf Google Play</a></p>"
+
+#: Plugins/CategoryImageCollection.cpp:34 Plugins/ImageCollection.cpp:57
+msgctxt "The 'name' of an unnamed image collection."
+msgid "None"
+msgstr "Geen"
 
 #: Plugins/ImageCollection.cpp:44
-msgid "unknown (Selection)"
-msgstr "onbekend (selectie)"
+msgctxt "As in 'an unknown set of images, created from the selection'."
+msgid "Unknown (Selection)"
+msgstr "Onbekend (selectie)"
 
 #: Plugins/ImageCollection.cpp:47
+msgctxt "As in 'A selection of [a generated context description]'"
 msgid " (Selection)"
-msgstr " (selectie)"
+msgstr " (Selectie)"
 
-#: Plugins/ImageCollection.cpp:52 Plugins/ImageCollection.cpp:55
-msgid "unknown"
-msgstr "onbekend"
+#: Plugins/ImageCollection.cpp:52
+msgctxt "A set of images with no description."
+msgid "Unknown"
+msgstr "Onbekend"
 
-#: Plugins/ImageCollection.cpp:59
-msgid "none"
-msgstr "geen"
-
-#: Plugins/Interface.cpp:101
+#: Plugins/Interface.cpp:144
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3037,7 +3216,59 @@ msgstr ""
 "<p>Afbeeldingen dienen te worden geplaatst in een submap van uw fotoalbum. "
 "Deze map vindt u in %1. Het afbeeldingspad was %2.</p>"
 
-#: Settings/CategoryItem.cpp:116
+#: RemoteControl/ConnectionIndicator.cpp:37
+msgid ""
+"This icon indicates if KPhotoAlbum is connected to an android device.\n"
+"Click on the icon to toggle listening for clients in the local area "
+"network.\n"
+"If the local area network doesn't allow broadcast packages between the "
+"android client and KPhotoAlbum, then right click on the icon and specify the "
+"android device's address.\n"
+"The android client can be downloaded from google play."
+msgstr ""
+"Dit pictogram geeft aan of KPhotoAlbum is verbonden met een android-"
+"apparaat.\n"
+"Klik op het pictogram om het luisteren naar clients in het lokale netwerk "
+"(lan) in of uit te schakelen.\n"
+"Als het lokale netwerk geen broadcast pakketten tussen de android-client en "
+"KPhotoAlbum toestaat, klik dan rechts op het pictogram en specificeer het "
+"adres van het android apparaat.\n"
+"De android-client kan gedownload worden vanaf Google Play."
+
+#: RemoteControl/ConnectionIndicator.cpp:93
+msgid "Android device address: "
+msgstr "Adres van android apparaat: "
+
+#: RemoteControl/Server.cpp:45
+msgid "Unable to bind to socket"
+msgstr "Kan niet verbinden met socket"
+
+#: RemoteControl/Server.cpp:46
+msgid ""
+"Unable to listen for remote Android connections. This is likely because you "
+"have another KPhotoAlbum application running."
+msgstr ""
+"Kan niet naar Android verbindingen op afstand luisteren. Dit wordt "
+"waarschijnlijk veroorzaakt omdat u een andere KPhotoAlbum toepassing actief "
+"hebt."
+
+#: RemoteControl/Server.cpp:80
+msgid "Invalid Version"
+msgstr "Ongeldige versie"
+
+#: RemoteControl/Server.cpp:81
+#, kde-format
+msgid ""
+"Version mismatch between Remote Client and KPhotoAlbum on the desktop.\n"
+"Desktop protocol version: %1\n"
+"Remote Control protocol version: %2"
+msgstr ""
+"Verschillende versies tussen client op afstand en KPhotoAlbum op het "
+"bureaublad.\n"
+"Protocolversie op het bureaublad: %1\n"
+"Protocolversie van client op afstand: %2"
+
+#: Settings/CategoryItem.cpp:130
 msgid ""
 "<p>Due to a shortcoming in KPhotoAlbum, you need to save your database after "
 "renaming categories; otherwise all the filenames of the category thumbnails "
@@ -3051,43 +3282,60 @@ msgstr ""
 "zullen gaan.</p> <p>Klik daarom nu op annuleren (en er zal niets worden "
 "hernoemd) of klik op Doorgaan en als volgende stap, sla de database op.</p>"
 
-#: Settings/CategoryPage.cpp:51
+#: Settings/CategoryPage.cpp:55
 msgid "Label:"
 msgstr "Label:"
 
-#: Settings/CategoryPage.cpp:62
+#: Settings/CategoryPage.cpp:68
+msgid "Positionable tags:"
+msgstr "Te positioneren tags:"
+
+#: Settings/CategoryPage.cpp:71
+msgid "Coordinates can be added to tags in this category"
+msgstr "Aan tags in deze categorie kunnen coördinaten worden toegevoegd"
+
+#: Settings/CategoryPage.cpp:79
 msgid "Icon:"
 msgstr "Pictogram:"
 
-#: Settings/CategoryPage.cpp:73
+#: Settings/CategoryPage.cpp:91
 msgid "Thumbnail Size: "
 msgstr "Miniatuurgrootte: "
 
-#: Settings/CategoryPage.cpp:84
+#: Settings/CategoryPage.cpp:103
 msgid "Preferred view:"
 msgstr "Voorkeurweergave:"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "List View"
 msgstr "Lijstweergave"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "List View with Custom Thumbnails"
 msgstr "Lijstweergave met aangepaste miniaturen"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "Icon View"
 msgstr "Pictogramweergave"
 
-#: Settings/CategoryPage.cpp:90
+#: Settings/CategoryPage.cpp:109
 msgid "Icon View with Custom Thumbnails"
 msgstr "Pictogramweergave met aangepaste miniaturen"
 
-#: Settings/CategoryPage.cpp:97
+#: Settings/CategoryPage.cpp:116
 msgid "New"
 msgstr "Nieuw"
 
-#: Settings/CategoryPage.cpp:169
+#: Settings/CategoryPage.cpp:164
+#, kde-format
+msgid ""
+"<p>Do you really want to make '%1' non-positionable?</p><p>All areas linked "
+"against this category will be deleted!</p>"
+msgstr ""
+"<p>Wilt u '%1' niet te positioneren maken?</p><p>Alle gebieden gekoppeld aan "
+"deze categorie zullen verwijderd worden!</p>"
+
+#: Settings/CategoryPage.cpp:211
 #, kde-format
 msgid "<p>Really delete category '%1'?</p>"
 msgstr "<p>Categorie '%1' verwijderen?</p>"
@@ -3157,35 +3405,35 @@ msgstr "EXIF/IPTC-informatie om te tonen in de EXIF-dialoog"
 
 #: Settings/ExifPage.cpp:48
 msgid "Character set for image metadata:"
-msgstr "Tekenreeks voor meta-data van de afbeelding:"
+msgstr "Tekenreeks voor metagegevens van de afbeelding:"
 
-#: Settings/FileVersionDetectionPage.cpp:39
+#: Settings/FileVersionDetectionPage.cpp:38
 msgid "New File Searches"
 msgstr "Zoeken naar nieuwe bestanden"
 
-#: Settings/FileVersionDetectionPage.cpp:44
+#: Settings/FileVersionDetectionPage.cpp:43
 msgid "Search for new images and videos on startup"
 msgstr "Nieuwe afbeeldingen en video's opzoeken bij programmastart"
 
-#: Settings/FileVersionDetectionPage.cpp:47
+#: Settings/FileVersionDetectionPage.cpp:46
 msgid "Ignore file extensions when searching for new images and videos"
 msgstr ""
 "Bestandsextensies negeren bij zoeken naar nieuwe afbeeldingen en video's"
 
-#: Settings/FileVersionDetectionPage.cpp:50
+#: Settings/FileVersionDetectionPage.cpp:49
 msgid "Skip symbolic links when searching for new images"
 msgstr "Symbolische koppelingen overslaan bij zoeken naar nieuwe afbeeldingen"
 
-#: Settings/FileVersionDetectionPage.cpp:53
+#: Settings/FileVersionDetectionPage.cpp:52
 msgid "Do not read RAW files if a matching JPEG/TIFF file exists"
 msgstr ""
 "RAW-bestanden niet lezen als er een overeenkomstig JPEG/TIFF-bestand bestaat"
 
-#: Settings/FileVersionDetectionPage.cpp:57
+#: Settings/FileVersionDetectionPage.cpp:56
 msgid "Directories to exclude from new file search:"
 msgstr "Mappen die uitgezonderd moeten worden van het nieuwe zoeken:"
 
-#: Settings/FileVersionDetectionPage.cpp:64
+#: Settings/FileVersionDetectionPage.cpp:63
 msgid ""
 "<p>KPhotoAlbum is capable of searching for new images and videos when "
 "started, this does, however, take some time, so instead you may wish to "
@@ -3198,7 +3446,7 @@ msgstr ""
 "Selecteer hiervoor menuoptie <b>Onderhoud -> Opnieuw naar afbeeldingen "
 "zoeken</b>.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:69
+#: Settings/FileVersionDetectionPage.cpp:68
 msgid ""
 "<p>KPhotoAlbum will normally search new images and videos by their file "
 "extension. If this option is set, <em>all</em> files neither in the database "
@@ -3213,12 +3461,12 @@ msgstr ""
 "aanzienlijk meer tijd vergen dan het zoeken van bestanden via de extensie!</"
 "p>"
 
-#: Settings/FileVersionDetectionPage.cpp:75
+#: Settings/FileVersionDetectionPage.cpp:74
 msgid ""
 "<p>KPhotoAlbum attempts to read all image files whether actual files or "
 "symbolic links. If you wish to ignore symbolic links, check this option. "
 "This is useful if for some reason you have e.g. both the original files and "
-"and symbolic links to these files within your image directory.</p>"
+"symbolic links to these files within your image directory.</p>"
 msgstr ""
 "<p>KPhotoAlbum probeert alle afbeeldingsbestanden te lezen of dit nu echte "
 "bestanden zijn of symbolische koppelingen. Als u symbolische koppelingen "
@@ -3226,73 +3474,73 @@ msgstr ""
 "reden zowel originele bestanden en symbolische koppelingen naar deze "
 "bestanden in uw map met afbeeldingen.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:80
+#: Settings/FileVersionDetectionPage.cpp:79
 msgid ""
-"<p>KPhotoAlbum is capable of reading certain kinds of RAW images.  Some "
-"cameras store both a RAW image and a matching JPEG or TIFF image.  This "
+"<p>KPhotoAlbum is capable of reading certain kinds of RAW images. Some "
+"cameras store both a RAW image and a matching JPEG or TIFF image. This "
 "causes duplicate images to be stored in KPhotoAlbum, which may be "
-"undesirable.  If this option is checked, KPhotoAlbum will not read RAW files "
+"undesirable. If this option is checked, KPhotoAlbum will not read RAW files "
 "for which matching image files also exist.</p>"
 msgstr ""
 "<p>KPhotoAlbum kan een aantal raw-formaten lezen. Sommige camera's slaan de "
-"foto's op in raw-formaat en een overeenkomende jpeg- of tiff-afbeelding. "
+"foto's op in raw-formaat en een overeenkomende JPEG- of TIFF-afbeelding. "
 "Hierdoor zullen afbeeldingen dubbel worden opgeslagen in KPhotoAlbum. Als u "
 "deze optie inschakelt zal KPhotoAlbum de raw-bestanden waarvoor een "
 "overeenkomend afbeeldingsbestand bestaat niet lezen.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:86
+#: Settings/FileVersionDetectionPage.cpp:85
 msgid ""
 "<p>Directories defined here (separated by comma <tt>,</tt>) are skipped when "
 "searching for new photos. Thumbnail directories of different tools should be "
 "configured here. E.g. <tt>xml,ThumbNails,.thumbs,.thumbnails</tt>.</p>"
 msgstr ""
-"<p>Hier gedefinieerde mappen (gescheiden door een komma <tt>,</tt>) worden  "
+"<p>Hier gedefinieerde mappen (gescheiden door een komma <tt>,</tt>) worden "
 "overgeslagen bij het zoeken naar nieuwe foto's. Mappen met miniaturen van "
 "verschillende hulpmiddelen zouden hier geconfigureerd moeten zijn. Bijv. "
 "<tt>xml,ThumbNails,.thumbs,.thumbnails</tt>.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:95
+#: Settings/FileVersionDetectionPage.cpp:94
 msgid "File Version Detection Settings"
 msgstr "Instellingen voor versiedetectie"
 
-#: Settings/FileVersionDetectionPage.cpp:99
+#: Settings/FileVersionDetectionPage.cpp:98
 msgid "Try to detect multiple versions of files"
 msgstr "Probeer meervoudige versies van bestanden te detecteren"
 
-#: Settings/FileVersionDetectionPage.cpp:102
+#: Settings/FileVersionDetectionPage.cpp:101
 msgid "File versions search regexp:"
 msgstr "Regexp voor versiezoeken van bestand:"
 
-#: Settings/FileVersionDetectionPage.cpp:108
+#: Settings/FileVersionDetectionPage.cpp:107
 msgid "Original file replacement text:"
 msgstr "Vervangingstekst voor oorspronkelijk bestand:"
 
-#: Settings/FileVersionDetectionPage.cpp:114
+#: Settings/FileVersionDetectionPage.cpp:113
 msgid "Move meta-data (i.e. delete tags from the original):"
 msgstr "Verplaats metagegevens (dwz. verwijder tags uit het origineel):"
 
-#: Settings/FileVersionDetectionPage.cpp:117
+#: Settings/FileVersionDetectionPage.cpp:116
 msgid "Automatically stack new versions of images"
 msgstr "Nieuwe versies van afbeeldingen automatisch stapelen"
 
-#: Settings/FileVersionDetectionPage.cpp:120
+#: Settings/FileVersionDetectionPage.cpp:119
 msgid ""
 "<p>When KPhotoAlbum searches for new files and finds a file that matches the "
 "<i>modified file search regexp</i> it is assumed that an original version of "
-"the image may exist.  The regexp pattern will be replaced with the "
+"the image may exist. The regexp pattern will be replaced with the "
 "<i>original file replacement text</i> and if that file exists, all "
 "associated metadata (category information, ratings, etc) will be copied or "
 "moved from the original file to the new one.</p>"
 msgstr ""
 "<p>Als KPhotoAlbum zoekt naar nieuwe bestanden en een bestand vindt dat "
 "overeenkomt met de <i>regexp voor gewijzigd bestand zoeken</i> dan wordt er "
-"aangenomen dat er een originele versie van de afbeeling kan bestaan.  Het "
+"aangenomen dat er een originele versie van de afbeeling kan bestaan. Het "
 "regexp-patroon zal worden vervangen door de <i>originele bestandsvervanging</"
 "i> tekst en als dat bestand bestaat, zal daarmee geassocieerde metagegevens "
 "(categorie-informatie, waarderingen, etc.) worden gekopieerd of verplaatst "
 "van het originele bestand naar het nieuwe.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:127
+#: Settings/FileVersionDetectionPage.cpp:126
 msgid ""
 "<p>A perl regular expression that should match a modified file. <ul><li>A "
 "dot matches a single character (<tt>\\.</tt> matches a dot)</li>   <li>You "
@@ -3304,14 +3552,14 @@ msgid ""
 msgstr ""
 "<p>Een reguliere expressie in perl die overeen zou moeten komen met een "
 "gewijzigd bestand. <ul><li>Een punt komt overeen met een enkel teken (<tt>\\."
-"</tt> komt overeen met een punt)</li>   <li>U kunt aantallen gebruiken "
-"<tt>*</tt>,<tt>+</tt>,<tt>?</tt> of u kunt meervoudige overeenkomsten  "
-"hebben met een expressie door accolades te gebruiken (bijv. <tt>e{0,1}</tt> "
-"komt overeen met 0 of 1 overeenkomsten met het teken \"e\").</li>   <li>U "
-"kunt delen van de expressie groeperen met haakjes.</li> </ul>Voorbeeld: <tt>-"
+"</tt> komt overeen met een punt)</li> <li>U kunt aantallen gebruiken <tt>*</"
+"tt>,<tt>+</tt>,<tt>?</tt> of u kunt meervoudige overeenkomsten hebben met "
+"een expressie door accolades te gebruiken (bijv. <tt>e{0,1}</tt> komt "
+"overeen met 0 of 1 overeenkomsten met het teken \"e\").</li> <li>U kunt "
+"delen van de expressie groeperen met haakjes.</li> </ul>Voorbeeld: <tt>-"
 "modified\\.(jpg|tiff)</tt> </p>"
 
-#: Settings/FileVersionDetectionPage.cpp:137
+#: Settings/FileVersionDetectionPage.cpp:136
 msgid ""
 "<p>A string that is used to replace the match from the <i>File versions "
 "search regexp</i>. This can be a semicolon (<tt>;</tt>) separated list. Each "
@@ -3324,7 +3572,7 @@ msgstr ""
 "overeenkomst te vervangen in de naam van het nieuwe bestand totdat een "
 "origineel bestand is gevonden of we uit opties lopen.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:143
+#: Settings/FileVersionDetectionPage.cpp:142
 msgid ""
 "<p>The tagging is moved from the original file to the new file. This way "
 "only the latest version of an image is tagged.</p>"
@@ -3333,7 +3581,7 @@ msgstr ""
 "bestand. Op deze manier krijgt alleen de laatste versie van een afbeelding "
 "de tags.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:147
+#: Settings/FileVersionDetectionPage.cpp:146
 msgid ""
 "<p>If this option is set, new versions of an image are automatically stacked "
 "and placed to the top of the stack. This way the new image is shown when the "
@@ -3344,22 +3592,22 @@ msgstr ""
 "de nieuwe afbeelding getoond wanneer de stapel in een ingevouwen status is - "
 "de standaard status in KPhotoAlbum.</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:155
+#: Settings/FileVersionDetectionPage.cpp:154
 msgctxt ""
 "Configure the feature to make a copy of a file first and then open the "
 "copied file with an external application"
 msgid "Copy File and Open with an External Application"
 msgstr "Bestand kopiëren en met een externe applicatie openen"
 
-#: Settings/FileVersionDetectionPage.cpp:159
+#: Settings/FileVersionDetectionPage.cpp:158
 msgid "Copy file search regexp:"
 msgstr "Regexp voor bestand zoeken kopiëren:"
 
-#: Settings/FileVersionDetectionPage.cpp:165
+#: Settings/FileVersionDetectionPage.cpp:164
 msgid "Copy file replacement text:"
 msgstr "Bestandvervangingstekst kopiëren:"
 
-#: Settings/FileVersionDetectionPage.cpp:171
+#: Settings/FileVersionDetectionPage.cpp:170
 msgid ""
 "<p>KPhotoAlbum can make a copy of an image before opening it with an "
 "external application. This configuration defines how the new file is named.</"
@@ -3376,63 +3624,74 @@ msgstr ""
 "vervangingstekst <i>\"-mod.\\1\"</i> zou test.jpg kopiëren naar test-mod.jpg "
 "en het nieuwe bestand openen in de geselecteerde toepassing.</p>"
 
-#: Settings/GeneralPage.cpp:40
+#: Settings/GeneralPage.cpp:41
 msgid "Loading New Images"
 msgstr "Nieuwe afbeeldingen laden"
 
-#: Settings/GeneralPage.cpp:48
+#: Settings/GeneralPage.cpp:49
 msgid "Trust image dates:"
 msgstr "Afbeeldingdatums overnemen:"
 
-#: Settings/GeneralPage.cpp:50
+#: Settings/GeneralPage.cpp:51
+msgctxt "As in 'always trust image dates'"
 msgid "Always"
 msgstr "Altijd"
 
-#: Settings/GeneralPage.cpp:50
+#: Settings/GeneralPage.cpp:52
+msgctxt "As in 'ask whether to trust image dates'"
 msgid "Ask"
 msgstr "Vragen"
 
-#: Settings/GeneralPage.cpp:50 Settings/ThumbnailsPage.cpp:98
+#: Settings/GeneralPage.cpp:53
+msgctxt "As in 'never trust image dates'"
 msgid "Never"
 msgstr "Nooit"
 
-#: Settings/GeneralPage.cpp:57
+#: Settings/GeneralPage.cpp:60
 msgid "Use EXIF orientation information"
 msgstr "EXIF-informatie voor oriëntatie gebruiken"
 
-#: Settings/GeneralPage.cpp:61
+#: Settings/GeneralPage.cpp:65
 msgid "Use EXIF description"
 msgstr "EXIF-beschrijving gebruiken"
 
-#: Settings/GeneralPage.cpp:66
+#: Settings/GeneralPage.cpp:69
+msgid "Strip out camera generated default descriptions"
+msgstr "Streep de door de camera gemaakte standaard beschrijvingen weg"
+
+#: Settings/GeneralPage.cpp:81
 msgid "Use the embedded thumbnail in RAW file or halfsized RAW"
 msgstr "De ingebedde miniatuur gebruiken in het RAW-bestand of halfgrootte RAW"
 
-#: Settings/GeneralPage.cpp:70
+#: Settings/GeneralPage.cpp:85
 msgid "Required size for the thumbnail:"
 msgstr "Vereiste grootte van de miniatuur:"
 
-#: Settings/GeneralPage.cpp:84
+#: Settings/GeneralPage.cpp:99
 msgid "Histogram"
 msgstr "Histogram"
 
-#: Settings/GeneralPage.cpp:91
+#: Settings/GeneralPage.cpp:106
 msgid "Show histogram:"
 msgstr "Histogram tonen:"
 
-#: Settings/GeneralPage.cpp:96
+#: Settings/GeneralPage.cpp:111
 msgid "Size of histogram columns in date bar:"
 msgstr "Grootte van histogramvakken in datumbalk:"
 
-#: Settings/GeneralPage.cpp:117
+#: Settings/GeneralPage.cpp:132
 msgid "Show splash screen"
 msgstr "Opstartscherm tonen"
 
-#: Settings/GeneralPage.cpp:122
+#: Settings/GeneralPage.cpp:137
 msgid "Category for virtual albums:"
 msgstr "Categorie voor virtuele albums:"
 
-#: Settings/GeneralPage.cpp:137
+#: Settings/GeneralPage.cpp:147
+msgid "Listen for Android devices on startup"
+msgstr "Bij programmastart luisteren naar Android apparaten"
+
+#: Settings/GeneralPage.cpp:155
 msgid ""
 "<p>KPhotoAlbum will try to read the image date from EXIF information in the "
 "image. If that fails it will try to get the date from the file's time stamp."
@@ -3453,7 +3712,7 @@ msgstr ""
 "met <b>Ja</b>. Antwoord anders met <b>Vragen</b>. U kunt dan bij elke sessie "
 "beslissen of de afbeeldingen afkomstig zijn van de scanner of de camera.</p>"
 
-#: Settings/GeneralPage.cpp:148
+#: Settings/GeneralPage.cpp:166
 msgid ""
 "<p>JPEG images may contain information about rotation. If you have a reason "
 "for not using this information to get a default rotation of your images, "
@@ -3465,7 +3724,7 @@ msgstr ""
 "keuzevakje.</p> <p>Opmerking: uw digitale camera maakt mogelijk deze "
 "informatie niet aan.</p>"
 
-#: Settings/GeneralPage.cpp:154
+#: Settings/GeneralPage.cpp:172
 msgid ""
 "<p>JPEG images may contain a description. Check this checkbox to specify if "
 "you want to use this as a default description for your images.</p>"
@@ -3474,7 +3733,7 @@ msgstr ""
 "kunt u bepalen of u dit wilt gebruiken als standaardbeschrijving van uw "
 "foto's.</p>"
 
-#: Settings/GeneralPage.cpp:159
+#: Settings/GeneralPage.cpp:177
 msgid ""
 "<p>KPhotoAlbum shares plugins with other imaging applications, some of which "
 "have the concept of albums. KPhotoAlbum does not have this concept; "
@@ -3508,9 +3767,37 @@ msgstr ""
 "<p>De meeste gebruikers willen hier waarschijnlijk Gebeurtenissen opgeven.</"
 "p>"
 
-#: Settings/GeneralPage.cpp:175
+#: Settings/GeneralPage.cpp:193
 msgid "Show the KPhotoAlbum splash screen on start up"
 msgstr "Geef het opstartscherm van KPhotoAlbum weer tijdens het opstarten"
+
+#: Settings/GeneralPage.cpp:196
+msgid ""
+"<p>KPhotoAlbum is capable of showing your images on android devices. "
+"KPhotoAlbum will automatically pair with the app from android. This, "
+"however, requires that KPhotoAlbum on your desktop is listening for "
+"multicast messages. Checking this checkbox will make KPhotoAlbum do so "
+"automatically on start up. Alternatively, you can click the connection icon "
+"in the status bar to start listening."
+msgstr ""
+"<p>KPhotoAlbum kan uw afbeeldingen op Android apparaten tonen. KPhotoAlbum "
+"zal automatisch koppelen met de app op Android. Dit vereist echter dat "
+"KPhotoAlbum op uw bureaublad luistert naar multicast berichten. Activeren "
+"van dit keuzevakje maakt dat KPhotoAlbum dat automatisch doet bij opstarten. "
+"Alternatief kunt u klikken op het pictogram voor de verbinding in de "
+"statusbalk om het luisteren te starten."
+
+#: Settings/GeneralPage.cpp:202
+msgid ""
+"<p>Some cameras automatically store generic comments in each image. These "
+"comments can be ignored automatically.</p><p>Enter the comments that you "
+"want to ignore in the input field, one per line. Be sure to add the exact "
+"comment, including all whitespace.</p>"
+msgstr ""
+"<p>Sommige camera's slaan automatisch algemeen commentaar op in elke "
+"afbeelding. Dit commentaar kan automatisch genegeerd worden.</p><p>Voer het "
+"commentaar in dat u wilt negeren in het invoerveld, een per regel. Ga na dat "
+"het exacte commentaar is toegevoegd, inclusief alle witruimte.</p>"
 
 #: Settings/PluginsPage.cpp:39
 msgid "Choose Plugins to load:"
@@ -3520,7 +3807,7 @@ msgstr "Kies de te laden plugins:"
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "Laden van plugins uitstellen totdat het pluginmenu is geopend"
 
-#: Settings/SettingsData.cpp:201
+#: Settings/SettingsData.cpp:213
 msgid ""
 "When reading time information of images, their EXIF info is used. Exif info "
 "may, however, not be supported by your KPhotoAlbum installation, or no valid "
@@ -3537,7 +3824,7 @@ msgstr ""
 "Dus is de vraag of KPhotoAlbum de tijdstippen van uw afbeeldingen mag "
 "vertrouwen?"
 
-#: Settings/SettingsData.cpp:207
+#: Settings/SettingsData.cpp:219
 msgid "Trust Time Stamps?"
 msgstr "Tijdaanduidingen overnemen?"
 
@@ -3675,8 +3962,13 @@ msgid "Display categories in thumbnail view"
 msgstr "Categorieën tonen in miniaturenweergave"
 
 #: Settings/ThumbnailsPage.cpp:94
-msgid "Auto display limit: "
-msgstr "Limiet voor automatische weergave: "
+msgid "Threshold for automatic thumbnail view: "
+msgstr "Drempel voor automatische miniaturenweergave: "
+
+#: Settings/ThumbnailsPage.cpp:98
+msgctxt "Describing: 'ThumbnailView will not be automatically shown'"
+msgid "Disabled"
+msgstr "Uitgeschakeld"
 
 #: Settings/ThumbnailsPage.cpp:109
 msgid ""
@@ -3840,7 +4132,10 @@ msgstr "Opstarten in volledig scherm"
 msgid "Size:"
 msgstr "Grootte:"
 
-#: ThumbnailView/Delegate.cpp:252
+#: ThumbnailView/Delegate.cpp:254
+msgctxt ""
+"No video length could be determined, so we just display 'video' instead of "
+"the video length."
 msgid "video"
 msgstr "video"
 
@@ -3859,16 +4154,17 @@ msgid ""
 "<p><b>Really reorder thumbnails?</b></p><p>By dragging images around in the "
 "thumbnail viewer, you actually reorder them. This is very useful where you "
 "do not know the exact date for the images. On the other hand, if the images "
-"have valid timestamps, you should use <b>Images -&gt; Sort Selected By Date "
-"and Time</b>.</p>"
+"have valid timestamps, you should use <b>Maintenance -&gt; Sort All By Date "
+"and Time</b> or <b>View -&gt; Sort Selected By Date and Time</b>.</p>"
 msgstr ""
 "<p><b>Miniaturen opnieuw sorteren?</b></p> <p>Door afbeeldingen naar andere "
 "plekken in de miniatuurweergave te slepen kunt u ze ordenen. Dit is handig "
 "als u bijvoorbeeld niet de exacte datums van de afbeeldingen weet. Maar als "
 "de afbeeldingen een juiste tijdaanduiding bevatten, dan kunt u beter gebruik "
-"maken van <b>Afbeeldingen -&gt; Selectie sorteren op datum en tijd</b>.</p>"
+"maken van <b>Onderhoud -&gt; Alles sorteren op datum en tijd</b> of <b>Beeld "
+"-&gt; Geselecteerde sorteren op datum en tijd</b>.</p>"
 
-#: ThumbnailView/ThumbnailDND.cpp:99
+#: ThumbnailView/ThumbnailDND.cpp:100
 msgid "Reorder Thumbnails"
 msgstr "Miniaturen opnieuw sorteren"
 
@@ -3996,7 +4292,7 @@ msgstr ""
 #. i18n: ectx: @info:tipoftheday
 #: tips:65
 msgid ""
-"<p>It's possible to associate images with categories. That way when "
+"<p>It is possible to associate images with categories. That way when "
 "browsing, say people, you\n"
 "may get a small icon for each person with e.g. the person's face.</p>\n"
 "<p>To specify an icon for a person, load the person in the viewer, zoom to\n"
@@ -4032,7 +4328,7 @@ msgstr ""
 #: tips:85
 msgid ""
 "<p>To hear more about latest changes in KPhotoAlbum and to get help in using "
-"and developing KPhotoAlbum, you're welcome to join the KPhotoAlbum mailing "
+"and developing KPhotoAlbum, you are welcome to join the KPhotoAlbum mailing "
 "list at <a href=\"http://mail.kdab.com/mailman/listinfo/kphotoalbum\">http://"
 "mail.kdab.com/mailman/listinfo/kphotoalbum</a>.</p>\n"
 msgstr ""
@@ -4182,39 +4478,39 @@ msgstr ""
 msgid "Error Deleting Files"
 msgstr "Fout bij verwijderen van bestanden"
 
-#: Utilities/Util.cpp:101
+#: Utilities/Util.cpp:98
 msgid "<b>File Name: </b> "
 msgstr "<b>Bestandsnaam: </b> "
 
-#: Utilities/Util.cpp:105
+#: Utilities/Util.cpp:102
 msgid "<b>Date: </b> "
 msgstr "<b>Datum: </b> "
 
-#: Utilities/Util.cpp:115
+#: Utilities/Util.cpp:112
 #, kde-format
 msgctxt "width x height"
 msgid "%1x%2"
 msgstr "%1x%2"
 
-#: Utilities/Util.cpp:119
+#: Utilities/Util.cpp:116
 #, kde-format
 msgctxt "short for: x megapixels"
 msgid " (%1MP)"
 msgstr " (%1Mpx)"
 
-#: Utilities/Util.cpp:122
+#: Utilities/Util.cpp:119
 msgid "<b>Image Size: </b> "
 msgstr "<b>Afbeeldingsgrootte: </b> "
 
-#: Utilities/Util.cpp:168
+#: Utilities/Util.cpp:163
 msgid "<b>Label: </b> "
 msgstr "<b>Label: </b> "
 
-#: Utilities/Util.cpp:172
+#: Utilities/Util.cpp:167
 msgid "<b>Description: </b> "
 msgstr "<b>Beschrijving: </b> "
 
-#: Utilities/Util.cpp:230
+#: Utilities/Util.cpp:225
 #, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
@@ -4223,11 +4519,11 @@ msgstr ""
 "Auto-opslagbestand '%1' bestaat (grootte %3 KB) en is nieuwer dan '%2'. Wilt "
 "u het auto-opslagbestand gebruiken?"
 
-#: Utilities/Util.cpp:232
+#: Utilities/Util.cpp:227
 msgid "Found Autosave File"
 msgstr "Auto-opslagbestand gevonden"
 
-#: Utilities/Util.cpp:234
+#: Utilities/Util.cpp:229
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -4239,11 +4535,11 @@ msgstr ""
 "van beëindigen?</p><p><small>(Handmatig het bestand controleren en kopiëren "
 "kan een goed idee zijn)</small></p>"
 
-#: Utilities/Util.cpp:237
+#: Utilities/Util.cpp:232
 msgid "Recover from Autosave?"
 msgstr "Uit auto-opslagbestand herstellen?"
 
-#: Utilities/Util.cpp:239
+#: Utilities/Util.cpp:234
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
@@ -4253,52 +4549,58 @@ msgstr ""
 "of er genummerde reservekopibestanden bestaan en gebruikt kunnen worden om "
 "index.xml te herstellen.</p>"
 
-#: Utilities/Util.cpp:271
+#: Utilities/Util.cpp:266
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "'%1' kan niet worden gekopieerd naar '%2'."
 
-#: Utilities/Util.cpp:271 Utilities/Util.cpp:285 Utilities/Util.cpp:303
-#: Utilities/Util.cpp:320 XMLDB/FileReader.cpp:346
+#: Utilities/Util.cpp:266 Utilities/Util.cpp:280 Utilities/Util.cpp:298
+#: Utilities/Util.cpp:315 XMLDB/FileReader.cpp:393
 msgid "Error Running Demo"
 msgstr "Fout bij het uitvoeren van de demo"
 
-#: Utilities/Util.cpp:285 Utilities/Util.cpp:320
+#: Utilities/Util.cpp:280 Utilities/Util.cpp:315
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr "Het aanmaken van map '%1' voor de demo is mislukt."
 
-#: Utilities/Util.cpp:303
+#: Utilities/Util.cpp:298
 #, kde-format
 msgid "Unable to open '%1' for writing."
 msgstr "%1 kon niet worden opgeslagen."
 
-#: Utilities/Util.cpp:372
+#: Utilities/Util.cpp:367
 #, kde-format
 msgid "<p>Unable to find file %1</p>"
 msgstr "<p>Het bestand %1 is niet gevonden</p>"
 
 #: Viewer/CategoryImageConfig.cpp:42
+msgctxt "@title:window"
 msgid "Configure Category Image"
 msgstr "Categorieafbeelding instellen"
 
 #: Viewer/CategoryImageConfig.cpp:44
+msgctxt "@action:button As in 'Set the category image'"
 msgid "Set"
 msgstr "Instellen"
 
 #: Viewer/CategoryImageConfig.cpp:54
-msgid "Group:"
-msgstr "Groep:"
+msgctxt "@label:listbox As in 'select the tag category'"
+msgid "Category:"
+msgstr "Categorie:"
 
 #: Viewer/CategoryImageConfig.cpp:61
-msgid "Member:"
-msgstr "Lid:"
+msgctxt "@label:listbox As in 'select a tag'"
+msgid "Tag:"
+msgstr "Tag:"
 
 #: Viewer/CategoryImageConfig.cpp:70
+msgctxt "@label The current category image"
 msgid "Current image:"
 msgstr "Huidige afbeelding:"
 
 #: Viewer/CategoryImageConfig.cpp:78
+msgctxt "@label Preview of the new category imape"
 msgid "New image:"
 msgstr "Nieuwe afbeelding:"
 
@@ -4314,261 +4616,369 @@ msgstr "[ zoom x%1 ]"
 
 #: Viewer/SpeedDisplay.cpp:44
 #, kde-format
+msgctxt "OSD for slideshow, num of seconds per image"
 msgid "<p><center><font size=\"+4\">%1&nbsp;s</font></center></p>"
 msgstr "<p><center><font size=\"+4\">%1&nbsp;s</font></center></p>"
 
 #: Viewer/SpeedDisplay.cpp:50
-msgid "<p><center><font size=\"+4\">Starting Slideshow</font></center></p>"
-msgstr "<p><center><font size=\"+4\">Diashow wordt gestart</font></center></p>"
+msgctxt "OSD for slideshow"
+msgid ""
+"<p><center><font size=\"+4\">Starting Slideshow<br/>Ctrl++ makes the "
+"slideshow faster<br/>Ctrl + - makes the slideshow slower</font></center></p>"
+msgstr ""
+"<p><center><font size=\"+4\">Diavoorstelling wordt opgestart<br/>Ctrl++ "
+"maakt de diavoorstelling sneller<br/>Ctrl + - maakt de diavoorstelling "
+"langzamer</font></center></p>"
 
 #: Viewer/SpeedDisplay.cpp:70
+msgctxt "OSD for slideshow"
 msgid "<p><center><font size=\"+4\">Ending Slideshow</font></center></p>"
 msgstr ""
-"<p><center><font size=\"+4\">Diashow wordt beëindigd</font></center></p>"
+"<p><center><font size=\"+4\">Diavoorstelling wordt beëindigd</font></"
+"center></p>"
 
 #: Viewer/VideoDisplay.cpp:200
 msgid "Error playing media"
 msgstr "Fout bij afspelen van medium"
 
-#: Viewer/ViewerWidget.cpp:146
+#: Viewer/ViewerWidget.cpp:154
+msgctxt "@action:inmenu"
 msgid "Annotate..."
 msgstr "Annoteren..."
 
-#: Viewer/ViewerWidget.cpp:157
+#: Viewer/ViewerWidget.cpp:159
+msgctxt "@action:inmenu"
+msgid "Set as First Image in Stack"
+msgstr "Als eerste afbeelding in een stapel zetten"
+
+#: Viewer/ViewerWidget.cpp:165
+msgctxt "@action:inmenu"
 msgid "Show EXIF Viewer"
 msgstr "EXIF-viewer openen"
 
-#: Viewer/ViewerWidget.cpp:188
+#: Viewer/ViewerWidget.cpp:170
+msgctxt "@action:inmenu"
+msgid "Copy image to..."
+msgstr "Afbeelding kopiëren naar..."
+
+#: Viewer/ViewerWidget.cpp:176
+msgctxt "@action:inmenu"
+msgid "Close"
+msgstr "Sluiten"
+
+#: Viewer/ViewerWidget.cpp:201
+msgctxt "@title:inmenu"
 msgid "Set as Wallpaper"
 msgstr "Als achtergrondafbeelding instellen"
 
-#: Viewer/ViewerWidget.cpp:191
+#: Viewer/ViewerWidget.cpp:204
+msgctxt "@action:inmenu"
 msgid "Centered"
 msgstr "Gecentreerd"
 
-#: Viewer/ViewerWidget.cpp:195
+#: Viewer/ViewerWidget.cpp:208
+msgctxt "@action:inmenu"
 msgid "Tiled"
-msgstr "Tegels"
+msgstr "In tegelvorm"
 
-#: Viewer/ViewerWidget.cpp:199
+#: Viewer/ViewerWidget.cpp:212
+msgctxt "@action:inmenu"
 msgid "Center Tiled"
 msgstr "Tegels, gecentreerd"
 
-#: Viewer/ViewerWidget.cpp:203
+#: Viewer/ViewerWidget.cpp:216
+msgctxt "@action:inmenu"
 msgid "Centered Maxpect"
 msgstr "Max. grootte, gecentreerd"
 
-#: Viewer/ViewerWidget.cpp:207
+#: Viewer/ViewerWidget.cpp:220
+msgctxt "@action:inmenu"
 msgid "Tiled Maxpect"
 msgstr "Max. grootte, getegeld"
 
-#: Viewer/ViewerWidget.cpp:211
+#: Viewer/ViewerWidget.cpp:224
+msgctxt "@action:inmenu"
 msgid "Scaled"
 msgstr "Geschaald"
 
-#: Viewer/ViewerWidget.cpp:215
+#: Viewer/ViewerWidget.cpp:228
+msgctxt "@action:inmenu"
 msgid "Centered Auto Fit"
 msgstr "Gecentreerd, autopassend"
 
-#: Viewer/ViewerWidget.cpp:257
+#: Viewer/ViewerWidget.cpp:270
+msgctxt "@title:inmenu"
 msgid "Rotate"
 msgstr "Draaien"
 
-#: Viewer/ViewerWidget.cpp:265
+#: Viewer/ViewerWidget.cpp:273
+msgctxt "@action:inmenu"
+msgid "Rotate clockwise"
+msgstr "Rechtsom draaien"
+
+#: Viewer/ViewerWidget.cpp:278
+msgctxt "@action:inmenu"
 msgid "Flip Over"
 msgstr "Omkeren"
 
-#: Viewer/ViewerWidget.cpp:280
+#: Viewer/ViewerWidget.cpp:284
+msgctxt "@action:inmenu"
+msgid "Rotate counterclockwise"
+msgstr "Linksom draaien"
+
+#: Viewer/ViewerWidget.cpp:294
+msgctxt "@title:inmenu As in 'skip 2 images'"
 msgid "Skip"
 msgstr "Overslaan"
 
-#: Viewer/ViewerWidget.cpp:283
+#: Viewer/ViewerWidget.cpp:297
+msgctxt "@action:inmenu Go to first image"
 msgid "First"
 msgstr "Eerste"
 
-#: Viewer/ViewerWidget.cpp:289
+#: Viewer/ViewerWidget.cpp:303
+msgctxt "@action:inmenu Go to last image"
 msgid "Last"
 msgstr "Laatste"
 
-#: Viewer/ViewerWidget.cpp:295
+#: Viewer/ViewerWidget.cpp:309
+msgctxt "@action:inmenu"
 msgid "Show Next"
 msgstr "Volgende"
 
-#: Viewer/ViewerWidget.cpp:305
+#: Viewer/ViewerWidget.cpp:319
+msgctxt "@action:inmenu"
 msgid "Skip 10 Forward"
 msgstr "10 vooruit"
 
-#: Viewer/ViewerWidget.cpp:311
+#: Viewer/ViewerWidget.cpp:325
+msgctxt "@action:inmenu"
 msgid "Skip 100 Forward"
 msgstr "100 vooruit"
 
-#: Viewer/ViewerWidget.cpp:317
+#: Viewer/ViewerWidget.cpp:331
+msgctxt "@action:inmenu"
 msgid "Skip 1000 Forward"
 msgstr "1000 vooruit"
 
-#: Viewer/ViewerWidget.cpp:323
+#: Viewer/ViewerWidget.cpp:337
+msgctxt "@action:inmenu"
 msgid "Show Previous"
 msgstr "Vorige"
 
-#: Viewer/ViewerWidget.cpp:329
+#: Viewer/ViewerWidget.cpp:346
+msgctxt "@action:inmenu"
 msgid "Skip 10 Backward"
 msgstr "10 terug"
 
-#: Viewer/ViewerWidget.cpp:335
+#: Viewer/ViewerWidget.cpp:352
+msgctxt "@action:inmenu"
 msgid "Skip 100 Backward"
 msgstr "100 terug"
 
-#: Viewer/ViewerWidget.cpp:341
+#: Viewer/ViewerWidget.cpp:358
+msgctxt "@action:inmenu"
 msgid "Skip 1000 Backward"
 msgstr "1000 terug"
 
-#: Viewer/ViewerWidget.cpp:347
+#: Viewer/ViewerWidget.cpp:364
+msgctxt "@action:inmenu"
 msgid "Delete Image"
 msgstr "Afbeelding verwijderen"
 
-#: Viewer/ViewerWidget.cpp:352
+#: Viewer/ViewerWidget.cpp:369
+msgctxt "@action:inmenu"
 msgid "Remove Image from Display List"
 msgstr "Afbeeldingen uit de getoonde lijst verwijderen"
 
-#: Viewer/ViewerWidget.cpp:362
+#: Viewer/ViewerWidget.cpp:379
+msgctxt "@action:inmenu"
 msgid "Zoom"
 msgstr "Zoomen"
 
-#: Viewer/ViewerWidget.cpp:366
+#: Viewer/ViewerWidget.cpp:383
+msgctxt "@action:inmenu"
 msgid "Zoom In"
 msgstr "Inzoomen"
 
-#: Viewer/ViewerWidget.cpp:371
+#: Viewer/ViewerWidget.cpp:388
+msgctxt "@action:inmenu"
 msgid "Zoom Out"
 msgstr "Uitzoomen"
 
-#: Viewer/ViewerWidget.cpp:376
+#: Viewer/ViewerWidget.cpp:393
+msgctxt "@action:inmenu"
 msgid "Full View"
 msgstr "Volledige weergave"
 
-#: Viewer/ViewerWidget.cpp:381
+#: Viewer/ViewerWidget.cpp:398
+msgctxt "@action:inmenu"
 msgid "Pixel for Pixel View"
 msgstr "Pixels voor pixelweergave"
 
-#: Viewer/ViewerWidget.cpp:386
+#: Viewer/ViewerWidget.cpp:403
+msgctxt "@action:inmenu"
 msgid "Toggle Full Screen"
 msgstr "Volledig scherm aan/uit"
 
-#: Viewer/ViewerWidget.cpp:397
+#: Viewer/ViewerWidget.cpp:414
+msgctxt "@title:inmenu"
 msgid "Slideshow"
 msgstr "Diavoorstelling"
 
-#: Viewer/ViewerWidget.cpp:400 Viewer/ViewerWidget.cpp:846
+#: Viewer/ViewerWidget.cpp:417 Viewer/ViewerWidget.cpp:872
+msgctxt "@action:inmenu"
 msgid "Run Slideshow"
-msgstr "Diashow starten"
+msgstr "Diavoorstelling starten"
 
-#: Viewer/ViewerWidget.cpp:405
+#: Viewer/ViewerWidget.cpp:422
+msgctxt "@action:inmenu"
 msgid "Run Faster"
 msgstr "Sneller"
 
-#: Viewer/ViewerWidget.cpp:410
+#: Viewer/ViewerWidget.cpp:427
+msgctxt "@action:inmenu"
 msgid "Run Slower"
 msgstr "Langzamer"
 
-#: Viewer/ViewerWidget.cpp:444
+#: Viewer/ViewerWidget.cpp:461
 msgid "File not available"
 msgstr "Bestand niet beschikbaar"
 
-#: Viewer/ViewerWidget.cpp:503
+#: Viewer/ViewerWidget.cpp:523
+msgctxt "@action:inmenu Start video playback"
 msgid "Play"
 msgstr "Afspelen"
 
-#: Viewer/ViewerWidget.cpp:791
+#: Viewer/ViewerWidget.cpp:525
+msgctxt "@action:inmenu Pause video playback"
+msgid "Pause"
+msgstr "Pauzeren"
+
+#: Viewer/ViewerWidget.cpp:817
+msgctxt "Basically 'enter a category name'"
 msgid "<b>Setting Category: </b>"
 msgstr "<b>Instellingscategorie: </b>"
 
-#: Viewer/ViewerWidget.cpp:799
+#: Viewer/ViewerWidget.cpp:825
+msgctxt "Basically 'enter a tag name'"
 msgid "<b>Assigning: </b>"
 msgstr "<b>Toekennen: </b> "
 
-#: Viewer/ViewerWidget.cpp:853
+#: Viewer/ViewerWidget.cpp:879
+msgctxt "@action:inmenu"
 msgid "Stop Slideshow"
 msgstr "Diavoorstelling stoppen"
 
-#: Viewer/ViewerWidget.cpp:1280
+#: Viewer/ViewerWidget.cpp:1306
+msgctxt "@title:inmenu"
 msgid "Seek"
 msgstr "Spoelen"
 
-#: Viewer/ViewerWidget.cpp:1284
+#: Viewer/ViewerWidget.cpp:1310
+msgctxt "@action:inmenu"
 msgid "10 minutes backward"
 msgstr "10 minuten achteruit"
 
-#: Viewer/ViewerWidget.cpp:1285
+#: Viewer/ViewerWidget.cpp:1311
+msgctxt "@action:inmenu"
 msgid "1 minute backward"
 msgstr "1 minuut achteruit"
 
-#: Viewer/ViewerWidget.cpp:1286
+#: Viewer/ViewerWidget.cpp:1312
+msgctxt "@action:inmenu"
 msgid "10 seconds backward"
 msgstr "10 seconden achteruit"
 
-#: Viewer/ViewerWidget.cpp:1287
+#: Viewer/ViewerWidget.cpp:1313
+msgctxt "@action:inmenu"
 msgid "1 seconds backward"
 msgstr "1 seconde achteruit"
 
-#: Viewer/ViewerWidget.cpp:1288
+#: Viewer/ViewerWidget.cpp:1314
+msgctxt "@action:inmenu"
 msgid "100 milliseconds backward"
 msgstr "100 milliseconden achteruit"
 
-#: Viewer/ViewerWidget.cpp:1289
+#: Viewer/ViewerWidget.cpp:1315
+msgctxt "@action:inmenu"
 msgid "100 milliseconds forward"
 msgstr "100 milliseconden vooruit"
 
-#: Viewer/ViewerWidget.cpp:1290
+#: Viewer/ViewerWidget.cpp:1316
+msgctxt "@action:inmenu"
 msgid "1 seconds forward"
 msgstr "1 seconde vooruit"
 
-#: Viewer/ViewerWidget.cpp:1291
+#: Viewer/ViewerWidget.cpp:1317
+msgctxt "@action:inmenu"
 msgid "10 seconds forward"
 msgstr "10 seconden vooruit"
 
-#: Viewer/ViewerWidget.cpp:1292
+#: Viewer/ViewerWidget.cpp:1318
+msgctxt "@action:inmenu"
 msgid "1 minute forward"
 msgstr "1 minuut vooruit"
 
-#: Viewer/ViewerWidget.cpp:1293
+#: Viewer/ViewerWidget.cpp:1319
+msgctxt "@action:inmenu"
 msgid "10 minutes forward"
 msgstr "10 minuten vooruit"
 
-#: Viewer/ViewerWidget.cpp:1316
+#: Viewer/ViewerWidget.cpp:1342
+msgctxt "@action:inmenu Stop video playback"
 msgid "Stop"
 msgstr "Stoppen"
 
-#: Viewer/ViewerWidget.cpp:1322
-msgid "Toggle playback"
-msgstr "Schakel afspelen om"
+#: Viewer/ViewerWidget.cpp:1355
+msgctxt "@action:inmenu"
+msgid "Use current frame in thumbnail view"
+msgstr "Huidig frame in miniaturenweergave gebruiken"
 
-#: Viewer/ViewerWidget.cpp:1334
+#: Viewer/ViewerWidget.cpp:1360
+msgctxt "@action:inmenu Restart video playback."
 msgid "Restart"
 msgstr "Herstarten"
 
-#: Viewer/ViewerWidget.cpp:1349
+#: Viewer/ViewerWidget.cpp:1375
+msgctxt "@title:inmenu"
 msgid "Filters"
 msgstr "Filters"
 
-#: Viewer/ViewerWidget.cpp:1352
+#: Viewer/ViewerWidget.cpp:1378
+msgctxt "@action:inmenu"
 msgid "Remove All Filters"
 msgstr "Alle filters verwijderen"
 
-#: Viewer/ViewerWidget.cpp:1356
+#: Viewer/ViewerWidget.cpp:1382
+msgctxt "@action:inmenu"
 msgid "Apply Grayscale Filter"
 msgstr "Grijsschaalfilter toepassen"
 
-#: Viewer/ViewerWidget.cpp:1361
+#: Viewer/ViewerWidget.cpp:1387
+msgctxt "@action:inmenu"
 msgid "Apply Contrast Stretching Filter"
 msgstr "Filter voor het het uitrekken van het contrast toepassen"
 
-#: Viewer/ViewerWidget.cpp:1366
+#: Viewer/ViewerWidget.cpp:1392
+msgctxt "@action:inmenu"
 msgid "Apply Histogram Equalization Filter"
 msgstr "Filter voor het gladder maken van het histogram toepassen"
 
-#: Viewer/ViewerWidget.cpp:1371
+#: Viewer/ViewerWidget.cpp:1397
+msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr "Monochroomfilter toepassen"
+
+#: Viewer/ViewerWidget.cpp:1546
+msgctxt "@title:window"
+msgid "Copy image to..."
+msgstr "Afbeelding kopiëren naar..."
+
+#: Viewer/ViewerWidget.cpp:1547
+msgctxt "@action:button"
+msgid "Copy"
+msgstr "Kopiëren"
 
 #: Viewer/VisibleOptionsMenu.cpp:33
 msgid "Show..."
@@ -4614,31 +5024,52 @@ msgstr "Afbeeldingsgrootte tonen"
 msgid "Show Rating"
 msgstr "Waardering tonen"
 
-#: XMLDB/Database.cpp:594
+#: XMLDB/FileReader.cpp:56
 #, kde-format
 msgid ""
-"<p>Unknown tag %1, while reading configuration file.</p><p>Expected one of: "
-"Options, Drawings</p>"
+"<p>The database file indicates a file format version of %1. This version of "
+"KPhotoAlbum uses the database file format version %2.</p><p>It is possible "
+"that some information will be lost during import, or that the database can "
+"not be read at all.</p>"
 msgstr ""
-"<p>Onbekende tag %1 gevonden tijdens lezen van configuratiebestand. </"
-"p><p>'Options' of 'Drawings' werd verwacht.</p>"
+"<p>Het databasebestand geeft een bestandsformaat met versie %1 aan. Deze "
+"versie van KPhotoAlbum gebruikt het databasebestandsformaat versie %2.</"
+"p><p>Het is mogelijk dat enige informatie verloren zal gaan bij het "
+"importeren of dat de database helemaal niet gelezen kan worden.</p>"
 
-#: XMLDB/FileReader.cpp:80
+#: XMLDB/FileReader.cpp:61 XMLDB/FileReader.cpp:71
+msgid "index.xml version mismatch"
+msgstr "De versie van index.xml komt niet overeen"
+
+#: XMLDB/FileReader.cpp:66
+#, kde-format
+msgid ""
+"<p>The database file indicates a file format version of %1. This version of "
+"KPhotoAlbum uses the database file format version %2.</p><p>If you save the "
+"database using this version of KPhotoAlbum, you won't be able to open it "
+"with older versions of KPhotoAlbum.</p>"
+msgstr ""
+"<p>Het databasebestand geeft een bestandsformaat met versie %1 aan. Deze "
+"versie van KPhotoAlbum gebruikt het databasebestandsformaat versie %2.</"
+"p><p>Als u de database opslaat met deze versie van KPhotoAlbum dan zult u "
+"niet in staat zijn om deze te openen met oudere versies van KPhotoAlbum.</p>"
+
+#: XMLDB/FileReader.cpp:113
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "Fout in bestand %1: onverwacht element '%2'"
 
-#: XMLDB/FileReader.cpp:86
+#: XMLDB/FileReader.cpp:119
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "Tag 'Options' is niet gevonden in configuratiebestand %1."
 
-#: XMLDB/FileReader.cpp:88
+#: XMLDB/FileReader.cpp:121
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "Tag 'Images' is niet gevonden in configuratiebestand %1."
 
-#: XMLDB/FileReader.cpp:261
+#: XMLDB/FileReader.cpp:312
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -4647,9 +5078,8 @@ msgid ""
 "select the images that you have reason to believe have a correct date in "
 "either their EXIF data or on the file, and execute <b>Maintenance->Read EXIF "
 "Info</b> to reread the information.</p><p>Finally, once all images have "
-"their dates set, you can execute <b>Images->Sort Selected by Date & Time</b> "
-"to sort them in the database. Note that you should expand all stacks for "
-"sorting.</p>"
+"their dates set, you can execute <b>Maintenance->Sort All by Date & Time</b> "
+"to sort them in the database. </p>"
 msgstr ""
 "<p>Uw afbeeldingen/video's zijn niet gesorteerd. Dit betekent dat het "
 "navigeren met behulp van de datumbalk niet optimaal zal werken.</p> <p>In "
@@ -4658,12 +5088,11 @@ msgstr ""
 "p><p>U kunt dan de afbeeldingen selecteren waarvan u denkt dat ze een "
 "onjuiste datum hebben in de EXIF-gegevens of op het bestand. Voer vervolgens "
 "menu-optie <b>Onderhoud->EXIF-info lezen</b> om de informatie opnieuw in te "
-"lezen.</p><p>Tot slot, als alle afbeeldingen een datum hebben kunt u "
-"menuoptie <b>Afbeeldingen->Selectie op datum & tijd sorteren</b> selecteren "
-"om ze in de database te sorteren.Merk op dat u alle stapels zou moeten "
-"vergroten voor sorteren</p>"
+"lezen.</p><p>Tot slot, als alle afbeeldingen een datum hebben kunt u menu-"
+"item <b>Onderhoud->Alles sorteren op datum & tijd</b> selecteren om ze in de "
+"database te sorteren.</p>"
 
-#: XMLDB/FileReader.cpp:272
+#: XMLDB/FileReader.cpp:322
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -4680,11 +5109,11 @@ msgstr ""
 "Nadat u dit gedaan hebt zult u worden gevraagd hoe u de ontbrekende "
 "informatie wilt corrigeren.</p>"
 
-#: XMLDB/FileReader.cpp:279
+#: XMLDB/FileReader.cpp:329
 msgid "Images/Videos Are Not Sorted"
 msgstr "Afbeeldingen/video's zijn niet gesorteerd"
 
-#: XMLDB/FileReader.cpp:294
+#: XMLDB/FileReader.cpp:344
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -4701,11 +5130,11 @@ msgstr ""
 "afbeeldingen ontstaan in de miniaturenweergave. Dat is alles, dus het "
 "oplossen van dit probleem is niet urgent.</p>"
 
-#: XMLDB/FileReader.cpp:299
+#: XMLDB/FileReader.cpp:349
 msgid "Not All Images Have Size Information"
 msgstr "Niet alle afbeeldingen bevatten informatie over hun afmetingen"
 
-#: XMLDB/FileReader.cpp:322
+#: XMLDB/FileReader.cpp:372
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -4727,38 +5156,38 @@ msgstr ""
 "ingesteld, voeg dan de installatiemap toe zoals u gewend bent bij het "
 "instellen van de omgevingsvariabele <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:329
+#: XMLDB/FileReader.cpp:379
 msgid "No default setup file found"
 msgstr "Geen standaard configuratiebestand gevonden"
 
-#: XMLDB/FileReader.cpp:346
+#: XMLDB/FileReader.cpp:393
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "'%1' kon niet worden geopend"
 
-#: XMLDB/FileReader.cpp:357
+#: XMLDB/FileReader.cpp:406
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "regel %1 kolom %2 in bestand %3: %4"
 
-#: XMLDB/FileReader.cpp:359
+#: XMLDB/FileReader.cpp:408
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "De backup herstellen is mislukt: %1"
 
-#: XMLDB/FileReader.cpp:368
+#: XMLDB/FileReader.cpp:419
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Fout in bestand %1: geen elementen gevonden"
 
-#: XMLDB/FileReader.cpp:374
+#: XMLDB/FileReader.cpp:425
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
 "Fout in bestand %1: KPhotoAlbum werd als topelement verwacht, maar '%2' werd "
 "gevonden"
 
-#: XMLDB/FileWriter.cpp:48
+#: XMLDB/FileWriter.cpp:47
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
@@ -4767,7 +5196,7 @@ msgstr ""
 "<p>Kon de database voor afbeeldingen niet opslaan in XML.</p>Bestand %1 kon "
 "niet geopend worden vanwege de volgende fout: %2"
 
-#: XMLDB/FileWriter.cpp:75
+#: XMLDB/FileWriter.cpp:85
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
@@ -4777,7 +5206,7 @@ msgstr ""
 "p><p>Probeer het aub opnieuw of vervang het bestand %1 handmatig door "
 "bestand %2!</p>"
 
-#: XMLDB/FileWriter.cpp:85
+#: XMLDB/FileWriter.cpp:95
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
@@ -4796,6 +5225,89 @@ msgstr "Fout bij aanmaken van zip-bestand %1"
 #, kde-format
 msgid "Error writing file %1 to zip file %2"
 msgstr "Fout bij het schrijven van bestand %1 naar zip-bestand %2"
+
+#: XMLDB/XmlReader.cpp:46
+msgid "Error reading next element"
+msgstr "Fout bij het lezen van het volgende element"
+
+#: XMLDB/XmlReader.cpp:49
+#, kde-format
+msgid "Expected to read a start or stop element, but read %1"
+msgstr "Lezen van een start- of stopelement verwacht, maar gelezen %1"
+
+#: XMLDB/XmlReader.cpp:54
+#, kde-format
+msgid "Expected to read %1, but read %2"
+msgstr "Verwacht te lezen %1, maar gelezen %2"
+
+#: XMLDB/XmlReader.cpp:65
+#, kde-format
+msgid "Expected to read an end element but read %1"
+msgstr "Lezen van een eind-element verwacht, maar een %1 gelezen"
+
+#: XMLDB/XmlReader.cpp:83
+#, kde-format
+msgid "Expected to read start element '%1'"
+msgstr "Lezen van een startelement '%1' verwacht"
+
+#: XMLDB/XmlReader.cpp:88
+#, kde-format
+msgid ""
+"On line %1, column %2:\n"
+"%3"
+msgstr ""
+"Op regel %1, kolom %2:\n"
+"%3"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

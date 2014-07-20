@@ -33,9 +33,9 @@ DB::CategoryPtr XMLDB::XMLCategoryCollection::categoryForName( const QString& na
 void XMLDB::XMLCategoryCollection::addCategory( DB::CategoryPtr category )
 {
     _categories.append( category );
-    connect( category.data(), SIGNAL( changed() ), this, SIGNAL( categoryCollectionChanged() ) );
-    connect( category.data(), SIGNAL( itemRemoved( const QString& ) ), this, SLOT( itemRemoved( const QString& ) ) );
-    connect( category.data(), SIGNAL( itemRenamed( const QString&, const QString& ) ), this, SLOT( itemRenamed( const QString&, const QString& ) ) );
+    connect( category.data(), SIGNAL(changed()), this, SIGNAL(categoryCollectionChanged()) );
+    connect( category.data(), SIGNAL(itemRemoved(QString)), this, SLOT(itemRemoved(QString)) );
+    connect( category.data(), SIGNAL(itemRenamed(QString,QString)), this, SLOT(itemRenamed(QString,QString)) );
     emit categoryCollectionChanged();
 }
 
@@ -83,9 +83,9 @@ QList<DB::CategoryPtr> XMLDB::XMLCategoryCollection::categories() const
 }
 
 void XMLDB::XMLCategoryCollection::addCategory( const QString& text, const QString& icon,
-                                                DB::Category::ViewType type, int thumbnailSize, bool show )
+                                                DB::Category::ViewType type, int thumbnailSize, bool show, bool positionable )
 {
-    addCategory( DB::CategoryPtr( new XMLCategory( text, icon, type, thumbnailSize, show ) ) );
+    addCategory( DB::CategoryPtr( new XMLCategory( text, icon, type, thumbnailSize, show, positionable ) ) );
 }
 
 void XMLDB::XMLCategoryCollection::initIdMap()

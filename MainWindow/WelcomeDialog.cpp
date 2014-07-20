@@ -33,6 +33,7 @@
 #include "kshell.h"
 #include <kapplication.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 
 using namespace MainWindow;
 
@@ -76,9 +77,9 @@ WelcomeDialog::WelcomeDialog( QWidget* parent )
     QPushButton* checkFeatures = new QPushButton( i18n("Check My Feature Set") );
     lay3->addWidget( checkFeatures );
 
-    connect( loadDemo, SIGNAL( clicked() ), this, SLOT( slotLoadDemo() ) );
-    connect( createSetup, SIGNAL( clicked() ), this, SLOT( createSetup() ) );
-    connect( checkFeatures, SIGNAL( clicked() ), this, SLOT( checkFeatures() ) );
+    connect( loadDemo, SIGNAL(clicked()), this, SLOT(slotLoadDemo()) );
+    connect( createSetup, SIGNAL(clicked()), this, SLOT(createSetup()) );
+    connect( checkFeatures, SIGNAL(clicked()), this, SLOT(checkFeatures()) );
 }
 
 
@@ -128,13 +129,13 @@ FileDialog::FileDialog( QWidget* parent ) :KDialog( parent )
     lay2->addWidget( label );
 
     _lineEdit = new KLineEdit( top );
-    _lineEdit->setText( QString::fromLatin1( "~/Images" ) );
+    _lineEdit->setText( KGlobalSettings::picturesPath() );
     lay2->addWidget( _lineEdit );
 
     QPushButton* button = new QPushButton( QString::fromLatin1("..."), top );
     button->setMaximumWidth( 30 );
     lay2->addWidget( button );
-    connect( button, SIGNAL( clicked() ), this, SLOT( slotBrowseForDirecory() ) );
+    connect( button, SIGNAL(clicked()), this, SLOT(slotBrowseForDirecory()) );
 }
 
 void FileDialog::slotBrowseForDirecory()

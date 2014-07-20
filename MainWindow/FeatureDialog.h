@@ -27,7 +27,7 @@ class FeatureDialog : public KDialog {
     Q_OBJECT
 
 public:
-    FeatureDialog( QWidget* parent );
+    explicit FeatureDialog( QWidget* parent );
     static bool hasAllFeaturesAvailable();
     static QString featureString();
     static QStringList supportedVideoMimeTypes();
@@ -44,7 +44,7 @@ protected:
 class HelpBrowser :public KTextBrowser
 {
 public:
-    explicit HelpBrowser( QWidget* parent, const char* name = 0 );
+    explicit HelpBrowser( QWidget* parent, const char* name = nullptr );
     virtual void setSource( const QUrl& name );
 };
 

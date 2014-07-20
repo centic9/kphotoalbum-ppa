@@ -38,7 +38,7 @@
 using namespace Settings;
 
 Viewer::InfoBox::InfoBox( Viewer::ViewerWidget* viewer )
-    :KTextBrowser( viewer ), _viewer( viewer ), _hoveringOverLink( false ), _infoBoxResizer( this ), _menu(0)
+    :KTextBrowser( viewer ), _viewer( viewer ), _hoveringOverLink( false ), _infoBoxResizer( this ), _menu(nullptr)
 {
     setFrameStyle( Box | Plain );
     setLineWidth(1);
@@ -55,13 +55,12 @@ Viewer::InfoBox::InfoBox( Viewer::ViewerWidget* viewer )
     _jumpToContext = new QToolButton( this );
     _jumpToContext->setIcon( KIcon( QString::fromLatin1( "kphotoalbum" ) ) );
     _jumpToContext->setFixedSize( 16, 16 );
-    connect( _jumpToContext, SIGNAL( clicked() ), this, SLOT( jumpToContext() ) );
-    connect( this, SIGNAL( highlighted(const QString&) ),
-             SLOT( linkHovered(const QString&) ));
+    connect( _jumpToContext, SIGNAL(clicked()), this, SLOT(jumpToContext()) );
+    connect( this, SIGNAL(highlighted(QString)),
+             SLOT(linkHovered(QString)));
     _jumpToContext->setCursor( Qt::ArrowCursor );
 
-#ifdef HAVE_NEPOMUK
-    KRatingWidget* rating = new KRatingWidget( 0 );
+    KRatingWidget* rating = new KRatingWidget( nullptr );
 
     // Unfortunately, the KRatingWidget now thinks that it has some absurdly big
     // dimensions. This call will persuade it to stay reasonably small.
@@ -76,17 +75,14 @@ Viewer::InfoBox::InfoBox( Viewer::ViewerWidget* viewer )
         _ratingPixmap.append( pixmap ) ;
     }
     delete rating;
-#endif
 }
 
 QVariant Viewer::InfoBox::loadResource( int type, const QUrl& name )
 {
-#ifdef HAVE_NEPOMUK
     if ( name.scheme() == QString::fromLatin1( "KRatingWidget" ) ) {
         short int rating = name.host().toShort();
         return _ratingPixmap[ rating ];
     }
-#endif
     return KTextBrowser::loadResource( type, name );
 }
 
@@ -168,6 +164,12 @@ void Viewer::InfoBox::mouseMoveEvent( QMouseEvent* e)
 
 void Viewer::InfoBox::linkHovered( const QString& linkName )
 {
+    if (linkName == QString()) {
+        emit noTagHovered();
+    } else {
+        emit tagHovered(_linkMap[linkName.toInt()]);
+    }
+
     _hoveringOverLink = !linkName.isNull();
 }
 
@@ -270,8 +272,8 @@ void Viewer::InfoBox::hackLinkColorForQt44()
 void Viewer::InfoBox::contextMenuEvent( QContextMenuEvent* event )
 {
     if ( !_menu ) {
-        _menu = new VisibleOptionsMenu( _viewer, new KActionCollection((QObject*)0) );
-        connect( _menu, SIGNAL( visibleOptionsChanged() ), _viewer, SLOT( updateInfoBox() ) );
+        _menu = new VisibleOptionsMenu( _viewer, new KActionCollection((QObject*)nullptr) );
+        connect( _menu, SIGNAL(visibleOptionsChanged()), _viewer, SLOT(updateInfoBox()) );
     }
     _menu->exec(event->globalPos());
 }

@@ -15,8 +15,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef THUMBNAILPAGE_H
-#define THUMBNAILPAGE_H
+#ifndef THUMBNAILSPAGE_H
+#define THUMBNAILSPAGE_H
 #include <QWidget>
 
 class KColorButton;
@@ -30,7 +30,7 @@ class SettingsData;
 class ThumbnailsPage :public QWidget
 {
 public:
-    ThumbnailsPage( QWidget* parent );
+    explicit ThumbnailsPage( QWidget* parent );
     void loadSettings( Settings::SettingsData* );
     void saveSettings( Settings::SettingsData* );
     bool thumbnailSizeChanged( Settings::SettingsData* opt ) const;
@@ -52,6 +52,6 @@ private:
 }
 
 
-#endif /* THUMBNAILPAGE_H */
+#endif /* THUMBNAILSPAGE_H */
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

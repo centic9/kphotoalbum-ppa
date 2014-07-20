@@ -107,7 +107,7 @@ using namespace Settings;
 const WindowType Settings::MainWindow       = "MainWindow";
 const WindowType Settings::AnnotationDialog = "AnnotationDialog";
 
-SettingsData* SettingsData::_instance = 0;
+SettingsData* SettingsData::_instance = nullptr;
 
 SettingsData* SettingsData::instance()
 {
@@ -136,6 +136,14 @@ SettingsData::SettingsData( const QString& imageDirectory )
     _imageDirectory = imageDirectory.endsWith(s) ? imageDirectory : imageDirectory + s;
 
     _smoothScale = value( "Viewer", "smoothScale", true );
+
+    // Split the list of EXIF comments that should be stripped automatically to a list
+
+    QStringList commentsToStrip = value( "General", "commentsToStrip", QString::fromLatin1("") ).split(QString::fromLatin1("-,-"), QString::SkipEmptyParts );
+    for (QString &comment : commentsToStrip )
+        comment.replace( QString::fromLatin1(",,"), QString::fromLatin1(",") );
+
+    _EXIFCommentsToStrip = commentsToStrip;
 }
 
 /////////////////
@@ -144,6 +152,8 @@ SettingsData::SettingsData( const QString& imageDirectory )
 
 property_copy( useEXIFRotate         , setUseEXIFRotate         , bool          , General, true                       )
 property_copy( useEXIFComments       , setUseEXIFComments       , bool          , General, true                       )
+property_copy( stripEXIFComments     , setStripEXIFComments     , bool          , General, false                      )
+property_copy( commentsToStrip       , setCommentsToStrip       , QString       , General, QString::fromLatin1("")    )
 property_copy( searchForImagesOnStart, setSearchForImagesOnStart, bool          , General, true                       )
 property_copy( ignoreFileExtension   , setIgnoreFileExtension   , bool          , General, false                      )
 property_copy( skipSymlinks,           setSkipSymlinks          , bool          , General, false                      )
@@ -158,6 +168,8 @@ property_copy( autoSave              , setAutoSave              , int           
 property_copy( backupCount           , setBackupCount           , int           , General, 5                          )
 property_enum( tTimeStamps           , setTTimeStamps           , TimeStampTrust, General, Always                     )
 property_copy( excludeDirectories    , setExcludeDirectories    , QString       , General, QString::fromLatin1("xml,ThumbNails,.thumbs") )
+property_copy( recentAndroidAddress  , setRecentAndroidAddress  , QString       , General, QString()                  )
+property_copy( listenForAndroidDevicesOnStartup, setListenForAndroidDevicesOnStartup, bool, General, true);
 
 getValueFunc( QSize,histogramSize,  General,QSize(15,30) )
 getValueFunc( ViewSortType,viewSortType,  General,(int)SortLastUse )
@@ -204,7 +216,7 @@ bool SettingsData::trustTimeStamps()
                                "As a backup, KPhotoAlbum may use the timestamp of the image - this may, "
                                "however, not be valid in case the image is scanned in. "
                                "So the question is, should KPhotoAlbum trust the time stamp on your images?" );
-            int answer = KMessageBox::questionYesNo( 0, txt, i18n("Trust Time Stamps?") );
+            int answer = KMessageBox::questionYesNo( nullptr, txt, i18n("Trust Time Stamps?") );
             QApplication::restoreOverrideCursor();
             if ( answer == KMessageBox::Yes )
                 _trustTimeStamps = true;
@@ -367,6 +379,14 @@ property_ref_(
         groupForDatabase( "HTML Settings" ),
         true )
 property_ref_(
+        HTML5Video, setHTML5Video, int,
+        groupForDatabase( "HTML Settings" ),
+        true )
+property_ref_(
+        HTML5VideoGenerate, setHTML5VideoGenerate, int,
+        groupForDatabase( "HTML Settings" ),
+        true )
+property_ref_(
         HTMLThumbSize, setHTMLThumbSize, int,
         groupForDatabase( "HTML Settings" ),
         128 )
@@ -489,4 +509,15 @@ double Settings::SettingsData::getThumbnailAspectRatio() const
     }
     return ratio;
 }
+
+QStringList Settings::SettingsData::EXIFCommentsToStrip()
+{
+    return _EXIFCommentsToStrip;
+}
+
+void Settings::SettingsData::setEXIFCommentsToStrip(QStringList EXIFCommentsToStrip)
+{
+    _EXIFCommentsToStrip = EXIFCommentsToStrip;
+}
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

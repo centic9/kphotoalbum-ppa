@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef SETTINGS_SETTINGS_H
-#   define SETTINGS_SETTINGS_H
+#ifndef SETTINGS_SETTINGSDATA_H
+#define SETTINGS_SETTINGSDATA_H
 
 #include <QPixmap>
 #include "DB/ImageSearchInfo.h"
@@ -71,6 +71,8 @@ public:
     property_ref ( histogramSize         , setHistogramSize         , QSize );
     property_copy( useEXIFRotate         , setUseEXIFRotate         , bool );
     property_copy( useEXIFComments       , setUseEXIFComments       , bool );
+    property_copy( stripEXIFComments     , setStripEXIFComments     , bool );
+    property_copy( commentsToStrip       , setCommentsToStrip       , QString);
     property_copy( searchForImagesOnStart, setSearchForImagesOnStart, bool );
     property_copy( ignoreFileExtension   , setIgnoreFileExtension   , bool );
     property_copy( skipSymlinks          , setSkipSymlinks          , bool );
@@ -87,6 +89,8 @@ public:
     property_copy( matchType             , setMatchType             , AnnotationDialog::MatchType      );
     property_copy( tTimeStamps           , setTTimeStamps           , TimeStampTrust );
     property_copy( excludeDirectories    , setExcludeDirectories    , QString );
+    property_copy( recentAndroidAddress  , setRecentAndroidAddress  , QString );
+    property_copy( listenForAndroidDevicesOnStartup, setListenForAndroidDevicesOnStartup, bool);
 
     ////////////////////////////////
     //// File Version Detection ////
@@ -189,6 +193,8 @@ public:
     property_ref( HTMLTheme, setHTMLTheme, int);
     property_ref( HTMLKimFile, setHTMLKimFile, int);
     property_ref( HTMLInlineMovies, setHTMLInlineMovies, int);
+    property_ref( HTML5Video, setHTML5Video, int);
+    property_ref( HTML5VideoGenerate, setHTML5VideoGenerate, int);
     property_ref( HTMLThumbSize, setHTMLThumbSize, int);
     property_ref( HTMLNumOfCols, setHTMLNumOfCols, int);
     property_ref( HTMLSizes, setHTMLSizes, QString);
@@ -213,6 +219,9 @@ public:
 
     double getThumbnailAspectRatio() const;
 
+    QStringList EXIFCommentsToStrip();
+    void setEXIFCommentsToStrip(QStringList EXIFCommentsToStrip);
+
 signals:
     void locked( bool lock, bool exclude );
     void viewSortTypeChanged( Settings::ViewSortType );
@@ -228,6 +237,8 @@ private:
     static SettingsData* _instance;
 
     friend class DB::CategoryCollection;
+
+    QStringList _EXIFCommentsToStrip;
 };
 } // end of namespace
 
@@ -236,5 +247,5 @@ private:
 #undef property_ref
 
 
-#endif /* SETTINGS_SETTINGS_H */
+#endif /* SETTINGS_SETTINGSDATA_H */
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -27,6 +27,7 @@ class QComboBox;
 class QSpinBox;
 class KIconButton;
 class QLineEdit;
+class QCheckBox;
 
 namespace DB { class MemberMap; }
 
@@ -41,7 +42,7 @@ class CategoryPage :public QWidget
 {
     Q_OBJECT
 public:
-    CategoryPage( QWidget* parent );
+    explicit CategoryPage( QWidget* parent );
     void enableDisable( bool );
     void saveSettings( Settings::SettingsData* opt, DB::MemberMap* memberMap );
     void loadSettings( Settings::SettingsData* opt );
@@ -52,6 +53,7 @@ signals:
 private slots:
     void edit( QListWidgetItem* );
     void slotLabelChanged( const QString& );
+    void positionableChanged( bool );
     void slotIconChanged( const QString& );
     void thumbnailSizeChanged( int );
     void slotPreferredViewChanged( int );
@@ -62,6 +64,8 @@ private:
     QListWidget* _categories;
     QLabel* _labelLabel;
     QLineEdit* _text;
+    QLabel* _positionableLabel;
+    QCheckBox* _positionable;
     QLabel* _iconLabel;
     KIconButton* _icon;
     QLabel* _thumbnailSizeInCategoryLabel;

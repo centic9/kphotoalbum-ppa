@@ -18,7 +18,7 @@
 #ifndef THUMBNAILMODEL_H
 #define THUMBNAILMODEL_H
 #include "ImageManager/ImageClientInterface.h"
-#include "ImageManager/ImageRequest.h"
+#include "ImageManager/enums.h"
 #include <QAbstractListModel>
 #include "ThumbnailComponent.h"
 #include "ThumbnailView/enums.h"
@@ -36,11 +36,11 @@ class ThumbnailModel :public QAbstractListModel, public ImageManager::ImageClien
     Q_OBJECT
 
 public:
-    ThumbnailModel( ThumbnailFactory* factory );
+    explicit ThumbnailModel( ThumbnailFactory* factory );
 
     // -------------------------------------------------- QAbstractListModel
-    OVERRIDE int rowCount(const QModelIndex&) const;
-    OVERRIDE QVariant data(const QModelIndex&, int) const;
+    int rowCount(const QModelIndex&) const override;
+    QVariant data(const QModelIndex&, int) const override;
     void reset();
     QString thumbnailText( const QModelIndex& index ) const;
     void updateCell( int row );
@@ -48,7 +48,7 @@ public:
     void updateCell( const DB::FileName& id );
 
     // -------------------------------------------------- ImageClient API
-    OVERRIDE void pixmapLoaded( const DB::FileName&, const QSize& size, const QSize& fullSize, int, const QImage&, const bool loadedOK);
+    void pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image) override;
     bool thumbnailStillNeeded( int row ) const;
 
 
@@ -144,6 +144,9 @@ private: // Instance variables.
 
     DB::FileName m_overrideFileName;
     QPixmap m_overrideImage;
+    // placeholder pixmaps to be displayed before thumbnails are loaded:
+    QPixmap m_ImagePlaceholder;
+    QPixmap m_VideoPlaceholder;
 };
 
 }

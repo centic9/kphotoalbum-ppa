@@ -22,6 +22,7 @@
 #include "ImageLoaderThread.h"
 #include "ImageManager/ImageClientInterface.h"
 #include "Utilities/Util.h"
+#include <MainWindow/FeatureDialog.h>
 
 #include <kurl.h>
 #include <qpixmapcache.h>
@@ -30,7 +31,7 @@
 #include <BackgroundTaskManager/JobManager.h>
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
 
-ImageManager::AsyncLoader* ImageManager::AsyncLoader::_instance = 0;
+ImageManager::AsyncLoader* ImageManager::AsyncLoader::_instance = nullptr;
 
 // -- Manager --
 
@@ -48,6 +49,7 @@ ImageManager::AsyncLoader* ImageManager::AsyncLoader::instance()
 // corrected before the thread starts.
 void ImageManager::AsyncLoader::init()
 {
+
     // Use up to three cores for thumbnail generation. No more than three as that
     // likely will make it less efficient due to three cores hitting the harddisk at the same time.
     // This might limit the throughput on SSD systems, but we likely have a few years before people
@@ -56,6 +58,8 @@ void ImageManager::AsyncLoader::init()
     // as that'd mean that a dual-core box would only have one core decoding images, which would be
     // suboptimal.
     // In case of only one core in the computer, use one core for thumbnail generation
+    // TODO(isilmendil): It seems that many people have their images on NFS-mounts.
+    //                   Should we somehow detect this and allocate less threads there?
     const int cores = qMax( 1, qMin( 3, QThread::idealThreadCount() ) );
 
     for ( int i = 0; i < cores; ++i) {
@@ -65,20 +69,32 @@ void ImageManager::AsyncLoader::init()
     }
 }
 
-void ImageManager::AsyncLoader::load( ImageRequest* request )
+bool ImageManager::AsyncLoader::load( ImageRequest* request )
 {
-    if ( Utilities::isVideo( request->fileSystemFileName() ) )
+    // silently ignore images not (currently) on disk:
+    if ( ! request->fileSystemFileName().exists() )
+        return false;
+
+    if ( Utilities::isVideo( request->fileSystemFileName() ) ) {
+    	if ( MainWindow::FeatureDialog::mplayerBinary().isNull() )
+    	    return false;
         loadVideo( request );
-    else
+    } else {
         loadImage( request );
+    }
+    return true;
 }
 
 void ImageManager::AsyncLoader::loadVideo( ImageRequest* request)
 {
+    if ( MainWindow::FeatureDialog::mplayerBinary().isNull() )
+        return;
+
     BackgroundTaskManager::Priority priority =
             (request->priority() > ThumbnailInvisible)
               ?  BackgroundTaskManager::ForegroundThumbnailRequest
               : BackgroundTaskManager::BackgroundVideoThumbnailRequest;
+
     BackgroundTaskManager::JobManager::instance()->addJob(
                 new BackgroundJobs::HandleVideoThumbnailRequestJob(request,priority));
 }
@@ -96,6 +112,7 @@ void ImageManager::AsyncLoader::loadImage( ImageRequest* request )
         return; // We are currently loading it, calm down and wait please ;-)
     }
 
+    // if request is "fresh" (not yet pending):
     if (_loadList.addRequest( request ))
         _sleepers.wakeOne();
 }
@@ -103,9 +120,8 @@ void ImageManager::AsyncLoader::loadImage( ImageRequest* request )
 void ImageManager::AsyncLoader::stop( ImageClientInterface* client, StopAction action )
 {
     // remove from pending map.
-    _lock.lock();
+    QMutexLocker requestLocker( &_lock );
     _loadList.cancelRequests( client, action );
-    _lock.unlock();
 
     // PENDING(blackie) Reintroduce this
     // VideoManager::instance().stop( client, action );
@@ -115,14 +131,14 @@ void ImageManager::AsyncLoader::stop( ImageClientInterface* client, StopAction a
 
 int ImageManager::AsyncLoader::activeCount() const
 {
-    QMutexLocker dummy(const_cast<QMutex*>(&_lock));
+    QMutexLocker dummy( &_lock );
     return _currentLoading.count();
 }
 
 ImageManager::ImageRequest* ImageManager::AsyncLoader::next()
 {
-    QMutexLocker dummy(&_lock );
-    ImageRequest* request = 0;
+    QMutexLocker dummy( &_lock );
+    ImageRequest* request = nullptr;
     while ( !( request = _loadList.popNext() ) )
         _sleepers.wait( &_lock );
     _currentLoading.insert( request );
@@ -141,18 +157,23 @@ void ImageManager::AsyncLoader::customEvent( QEvent* ev )
 
         ImageRequest* request = iev->loadInfo();
 
-        _lock.lock();
+        QMutexLocker requestLocker( &_lock );
         const bool requestStillNeeded = _loadList.isRequestStillValid( request );
         _loadList.removeRequest(request);
         _currentLoading.remove( request );
-        _lock.unlock();
+        requestLocker.unlock();
 
         QImage image = iev->image();
         if ( !request->loadedOK() ) {
-            // PENDING(blackie) This stinks! It looks bad, but I don't have more energy to fix it.
-            KIcon icon( QString::fromLatin1( "file-broken" ) );
-            QPixmap pix = icon.pixmap( icon.actualSize( QSize( request->width(), request->height() ) ) );
-            image = pix.toImage();
+            if ( m_brokenImage.size() != request->size() ) {
+                KIcon brokenFileIcon( QLatin1String("file-broken") );
+                if ( brokenFileIcon.isNull() ) {
+                    brokenFileIcon = KIcon( QLatin1String("image-x-generic") );
+                }
+                m_brokenImage = brokenFileIcon.pixmap( request->size() ).toImage();
+            }
+
+            image = m_brokenImage;
         }
 
         if ( request->isThumbnailRequest() )
@@ -160,9 +181,7 @@ void ImageManager::AsyncLoader::customEvent( QEvent* ev )
 
 
         if ( requestStillNeeded && request->client() ) {
-            request->client()->pixmapLoaded( request->databaseFileName(), request->size(),
-                                             request->fullSize(), request->angle(),
-                                             image, request->loadedOK());
+            request->client()->pixmapLoaded(request, image);
         }
         delete request;
     }

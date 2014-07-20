@@ -28,17 +28,21 @@ class CategoryItem :public QListWidgetItem
 {
 public:
     CategoryItem( const QString& category, const QString& text, const QString& icon,
-                  DB::Category::ViewType type, int thumbnailSize, QListWidget* parent );
+                  DB::Category::ViewType type, int thumbnailSize, QListWidget* parent,
+                  bool positionable = false );
+
     void setLabel( const QString& label );
+    void setPositionable( bool positionable );
     void submit( DB::MemberMap* memberMap );
     void removeFromDatabase();
 
-    QString text() const;
-    QString icon() const;
+    override QString text() const;
+    bool positionable() const;
+    override QString icon() const;
     int thumbnailSize() const;
     DB::Category::ViewType viewType() const;
 
-    void setIcon( const QString& icon );
+    override void setIcon( const QString& icon );
     void setThumbnailSize( int size );
     void setViewType( DB::Category::ViewType type );
 
@@ -46,8 +50,10 @@ protected:
     void renameCategory(DB::MemberMap* memberMap);
 
 private:
-    QString _categoryOrig, _textOrig, _iconOrig;
-    QString _category, _text, _icon;
+    QString _categoryOrig, _iconOrig;
+    bool _positionable;
+    bool _positionableOrig;
+    QString _category, _icon;
     DB::Category::ViewType _type, _typeOrig;
     int _thumbnailSize, _thumbnailSizeOrig;
 };

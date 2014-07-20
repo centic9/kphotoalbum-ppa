@@ -51,7 +51,7 @@ void Import::imageImport( const KUrl& url )
 }
 
 ImportExport::Import::Import()
-    :m_tmp(0)
+    :m_tmp(nullptr)
 {
 }
 
@@ -65,8 +65,8 @@ void ImportExport::Import::downloadUrl( const KUrl& url )
         return;
     }
     KIO::TransferJob* job = KIO::get( url );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( downloadKimJobCompleted( KJob* ) ) );
-    connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ), this, SLOT( data( KIO::Job*, const QByteArray& ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(downloadKimJobCompleted(KJob*)) );
+    connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(data(KIO::Job*,QByteArray)) );
 }
 
 void ImportExport::Import::downloadKimJobCompleted( KJob* job )
@@ -91,7 +91,7 @@ void ImportExport::Import::exec(const QString& fileName )
         return;
     }
 
-    bool ok = dialog.exec( &kimFileReader, fileName, m_kimFileUrl );
+    bool ok = dialog.exec( &kimFileReader, m_kimFileUrl );
 
     if ( ok ) {
         ImportHandler handler;

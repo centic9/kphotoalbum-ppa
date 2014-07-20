@@ -81,11 +81,11 @@ ExportConfig::ExportConfig()
 
     QVBoxLayout* boxLay = new QVBoxLayout( grp );
     _include = new QRadioButton( i18n("Include in .kim file"), grp );
-    _manually = new QRadioButton( i18n("Manual copy next to .kim file"), grp );
+    _manually = new QRadioButton( i18n("Do not copy files, only generate .kim file"), grp );
     _auto = new QRadioButton( i18n("Automatically copy next to .kim file"), grp );
     _link = new QRadioButton( i18n("Hard link next to .kim file"), grp );
     _symlink = new QRadioButton( i18n("Symbolic link next to .kim file"), grp );
-    _manually->setChecked( true );
+    _auto->setChecked( true );
 
     boxLay->addWidget( _include );
     boxLay->addWidget( _manually );
@@ -99,7 +99,7 @@ ExportConfig::ExportConfig()
 
     // Generate thumbnails
     _generateThumbnails = new QCheckBox( i18n("Generate thumbnails"), top );
-    _generateThumbnails->setChecked(true);
+    _generateThumbnails->setChecked( false );
     lay1->addWidget( _generateThumbnails );
 
     // Enforece max size
@@ -115,7 +115,7 @@ ExportConfig::ExportConfig()
     hlay->addWidget( _maxSize );
     _maxSize->setValue( 800 );
 
-    connect( _enforeMaxSize, SIGNAL( toggled( bool ) ), _maxSize, SLOT( setEnabled( bool ) ) );
+    connect( _enforeMaxSize, SIGNAL(toggled(bool)), _maxSize, SLOT(setEnabled(bool)) );
     _maxSize->setEnabled( false );
 
     QString txt = i18n( "<p>If your images are stored in a non-compressed file format then you may check this; "
@@ -195,7 +195,7 @@ Export::Export(
     _zip = new KZip( zipFile );
     _zip->setCompression( compress ? KZip::DeflateCompression : KZip::NoCompression );
     if ( ! _zip->open( QIODevice::WriteOnly ) ) {
-        KMessageBox::error( 0, i18n("Error creating zip file") );
+        KMessageBox::error( nullptr, i18n("Error creating zip file") );
         *ok = false;
         return;
     }
@@ -247,7 +247,7 @@ void Export::generateThumbnails(const DB::FileNameList& list)
     _loopEntered = false;
     _subdir = QString::fromLatin1( "Thumbnails/" );
     _filesRemaining = list.size(); // Used to break the event loop.
-    Q_FOREACH(const DB::FileName& fileName, list) {
+    for (const DB::FileName& fileName : list) {
         ImageManager::ImageRequest* request = new ImageManager::ImageRequest( fileName, QSize( 128, 128 ), fileName.info()->angle(), this );
         request->setPriority( ImageManager::BatchTask );
         ImageManager::AsyncLoader::instance()->load( request );
@@ -268,7 +268,7 @@ void Export::copyImages(const DB::FileNameList& list)
     _progressDialog->setLabelText( i18n("Copying image files") );
 
     _filesRemaining = 0;
-    Q_FOREACH(const DB::FileName& fileName, list) {
+    for (const DB::FileName& fileName : list) {
         QString file = fileName.absolute();
         QString zippedName = _filenameMapper.uniqNameFor(fileName);
 
@@ -310,9 +310,10 @@ void Export::copyImages(const DB::FileNameList& list)
     }
 }
 
-void Export::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/, const QSize& /*fullSize*/, int /*angle*/, const QImage& image, const bool loadedOK)
+void Export::pixmapLoaded(ImageManager::ImageRequest* request, const QImage& image)
 {
-    if ( !loadedOK )
+    const DB::FileName fileName = request->databaseFileName();
+    if ( !request->loadedOK() )
         return;
 
     const QString ext = (Utilities::isVideo( fileName ) || Utilities::isRAW( fileName )) ? QString::fromLatin1( "jpg" ) : QFileInfo( _filenameMapper.uniqNameFor(fileName) ).completeSuffix();
@@ -331,7 +332,7 @@ void Export::pixmapLoaded( const DB::FileName& fileName, const QSize& /*size*/, 
         QString file = _destdir + QString::fromLatin1( "/" ) + _filenameMapper.uniqNameFor(fileName);
         QFile out( file );
         if ( !out.open( QIODevice::WriteOnly ) ) {
-            KMessageBox::error( 0, i18n("Error writing file %1", file ) );
+            KMessageBox::error( nullptr, i18n("Error writing file %1", file ) );
             *_ok = false;
         }
         out.write( data, data.size() );
@@ -370,7 +371,7 @@ void Export::showUsageDialog()
               "This will make your web server tell konqueror that it is a KPhotoAlbum file when clicking on the link, "
               "otherwise the web server will just tell konqueror that it is a plain text file.</p>" );
 
-    KMessageBox::information( 0, txt, i18n("How to Use the Export File"), QString::fromLatin1("export_how_to_use_the_export_file") );
+    KMessageBox::information( nullptr, txt, i18n("How to Use the Export File"), QString::fromLatin1("export_how_to_use_the_export_file") );
 }
 
 

@@ -29,6 +29,7 @@
 #include "MainWindow/SplashScreen.h"
 #include <klocale.h>
 #include <kdebug.h>
+#include "RemoteControl/RemoteInterface.h"
 
 #include "version.h"
 
@@ -44,6 +45,7 @@ int main( int argc, char** argv ) {
     aboutData.addAuthor( ki18n("Henner Zeller"),ki18n("Development"), "h.zeller@acm.org");
     aboutData.addAuthor( ki18n("Andreas Neustifter"),ki18n("Development"), "andreas.neustifter@gmail.com");
     aboutData.addAuthor( ki18n("Johannes Zarl"),ki18n("Development"), "isilmendil@gmx.net");
+    aboutData.addAuthor( ki18n("Tobias Leupold"),ki18n("Development"), "tobias.leupold@web.de");
 
 
     aboutData.addCredit( ki18n("Will Stephenson"), ki18n("Developing an Icon for KPhotoAlbum"), "will@stevello.free-online.co.uk" );
@@ -66,12 +68,12 @@ int main( int argc, char** argv ) {
     options.add("c ", ki18n("Config file"));
     options.add("demo", ki18n( "Starts KPhotoAlbum with a prebuilt set of demo images" ));
     options.add("import ", ki18n( "Import file" ));
+    options.add("nolisten-network", ki18n( "Don't start listening for android devices on startup." ));
     KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
 
     new MainWindow::SplashScreen();
-
 
     // FIXME: There is no point in using try here, because exceptions
     // and Qt event loop don't mix. Rather exceptions should be
@@ -82,7 +84,13 @@ int main( int argc, char** argv ) {
         // qApp->setMainWidget( view );
         view->setGeometry( Settings::SettingsData::instance()->windowGeometry( Settings::MainWindow ) );
 
+        (void) RemoteControl::RemoteInterface::instance();
+
         int code = app.exec();
+        // I've heard multiple people complain about a crash in this line.
+        // unfortunately valgrind doesn't tell me why that should be, and I haven't seen it myself.
+        // Anyway, the line is really only needed when searching for memory leaks.
+        // delete view;
         return code;
     }
     catch (...) {

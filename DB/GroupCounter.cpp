@@ -87,7 +87,7 @@ void GroupCounter::count( const StringSet& categories )
     for( StringSet::const_iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
         if ( _memberToGroup.contains(*categoryIt)) {
             const QStringList groups = _memberToGroup[*categoryIt];
-            Q_FOREACH( const QString& group, groups ) {
+            for ( const QString& group : groups ) {
                 if ( !countedGroupDict.contains( group ) ) {
                     countedGroupDict.insert( group );
                     (_groupCount[group])++;
@@ -95,7 +95,7 @@ void GroupCounter::count( const StringSet& categories )
             }
         }
         // The item Nevada should itself go into the group Nevada.
-        if ( !countedGroupDict.contains( *categoryIt ) == 0 && _groupCount.contains( *categoryIt ) ) {
+        if ( !countedGroupDict.contains( *categoryIt ) && _groupCount.contains( *categoryIt ) ) {
              countedGroupDict.insert( *categoryIt);
              (_groupCount[*categoryIt])++;
         }
@@ -106,9 +106,9 @@ QMap<QString,uint> GroupCounter::result()
 {
     QMap<QString,uint> res;
 
-    Q_FOREACH( const QString& key, _groupCount.keys()) {
-        if ( _groupCount[key] != 0 )
-            res.insert( key, _groupCount[key] );
+    for( QHash<QString,uint>::const_iterator it = _groupCount.constBegin(); it != _groupCount.constEnd(); ++it) {
+        if ( it.value() != 0 )
+            res.insert( it.key(), it.value() );
     }
     return res;
 }

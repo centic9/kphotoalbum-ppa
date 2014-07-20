@@ -27,7 +27,7 @@
 
 using namespace ImportExport;
 
-MiniViewer* MiniViewer::_instance = 0;
+MiniViewer* MiniViewer::_instance = nullptr;
 
 void MiniViewer::show( QImage img, DB::ImageInfoPtr info, QWidget* parent )
 {
@@ -54,7 +54,7 @@ void MiniViewer::closeEvent( QCloseEvent* )
 
 void MiniViewer::slotClose()
 {
-    _instance = 0;
+    _instance = nullptr;
     deleteLater();
 }
 
@@ -67,7 +67,7 @@ MiniViewer::MiniViewer( QWidget* parent ): QDialog( parent )
     vlay->addLayout(hlay);
     hlay->addStretch(1);
     QPushButton* but = new QPushButton( i18n("Close"), this );
-    connect( but, SIGNAL( clicked() ), this, SLOT( slotClose() ) );
+    connect( but, SIGNAL(clicked()), this, SLOT(slotClose()) );
     hlay->addWidget( but );
 }
 

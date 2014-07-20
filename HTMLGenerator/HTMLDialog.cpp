@@ -102,6 +102,26 @@ void HTMLDialog::createContentPage()
     _inlineMovies->setChecked( Settings::SettingsData::instance()->HTMLInlineMovies() );
     lay1->addWidget( _inlineMovies );
 
+    _html5Video = new QCheckBox( i18n( "Use HTML5 video tag" ), contentPage );
+    _html5Video->setChecked( Settings::SettingsData::instance()->HTML5Video() );
+    lay1->addWidget( _html5Video );
+
+    QString avconv = KStandardDirs::findExe( QString::fromLatin1( "avconv" ) );
+    const QString ffmpeg2theora = KStandardDirs::findExe(QString::fromLatin1("ffmpeg2theora"));
+ 
+    KStandardDirs::findExe( QString::fromLatin1( "avconv" ) );
+    if ( avconv.isNull() )
+        avconv = KStandardDirs::findExe( QString::fromLatin1( "ffmpeg" ) );
+
+    QString txt = i18n( "<p>This selection will generate video files suitable for displaying on web. "
+                "avconv and ffmpeg2theora are required for video file generation.</p>" );
+    _html5VideoGenerate = new QCheckBox( i18n( "Generate HTML5 video files (mp4 and ogg)" ), contentPage );
+    _html5VideoGenerate->setChecked( Settings::SettingsData::instance()->HTML5VideoGenerate() );
+    lay1->addWidget( _html5VideoGenerate );
+    _html5VideoGenerate->setWhatsThis( txt );
+    if ( avconv.isNull() || ffmpeg2theora.isNull() )
+        _html5VideoGenerate->setEnabled( false );
+
     // What to include
     QGroupBox* whatToInclude = new QGroupBox( i18n( "What to Include" ), contentPage );
     lay1->addWidget( whatToInclude );
@@ -191,7 +211,7 @@ void HTMLDialog::createLayoutPage()
     _themeInfo = new QLabel( i18n("Theme Description"), layoutPage );
     _themeInfo->setWordWrap(true);
     lay2->addWidget( _themeInfo, 3, 1 );
-    connect(_themeBox, SIGNAL(currentIndexChanged( int )), this, SLOT(displayThemeDescription( int )));  // update theme description whenever ComboBox changes
+    connect(_themeBox, SIGNAL(currentIndexChanged(int)), this, SLOT(displayThemeDescription(int)));  // update theme description whenever ComboBox changes
     populateThemesCombo();   
     
     // Image sizes
@@ -241,6 +261,8 @@ void HTMLDialog::createLayoutPage()
     _cbs << size800 << size1024 << size1280 << size640 << size1600 << size320 << sizeOrig;
 
     lay1->addStretch(1);
+    QGridLayout* lay6 = new QGridLayout;
+    lay1->addLayout( lay6 );
 }
 
 void HTMLDialog::createDestinationPage()
@@ -271,7 +293,7 @@ void HTMLDialog::createDestinationPage()
     lay3->addWidget( but );
     but->setFixedWidth( 25 );
 
-    connect( but, SIGNAL( clicked() ), this, SLOT( selectDir() ) );
+    connect( but, SIGNAL(clicked()), this, SLOT(selectDir()) );
     _baseDir->setText( Settings::SettingsData::instance()->HTMLBaseDir() );
 
     // Base URL
@@ -309,7 +331,7 @@ void HTMLDialog::slotOk()
         return;
 
     if( activeResolutions().count() < 1 ) {
-        KMessageBox::error( 0, i18n( "You must select at least one resolution." ) );
+        KMessageBox::error( nullptr, i18n( "You must select at least one resolution." ) );
         return;
     }
 
@@ -323,6 +345,8 @@ void HTMLDialog::slotOk()
     Settings::SettingsData::instance()->setHTMLTheme( _themeBox->currentIndex() );
     Settings::SettingsData::instance()->setHTMLKimFile( _generateKimFile->isChecked() );
     Settings::SettingsData::instance()->setHTMLInlineMovies( _inlineMovies->isChecked() );
+    Settings::SettingsData::instance()->setHTML5Video( _html5Video->isChecked() );
+    Settings::SettingsData::instance()->setHTML5VideoGenerate( _html5VideoGenerate->isChecked() );
     Settings::SettingsData::instance()->setHTMLThumbSize( _thumbSize->value() );
     Settings::SettingsData::instance()->setHTMLNumOfCols( _numOfCols->value() );
     Settings::SettingsData::instance()->setHTMLSizes( activeSizes() );
@@ -529,6 +553,8 @@ Setup HTMLGenerator::HTMLDialog::setup() const
 
     setup.setResolutions( activeResolutions() );
     setup.setInlineMovies( _inlineMovies->isChecked() );
+    setup.setHtml5Video( _html5Video->isChecked() );
+    setup.setHtml5VideoGenerate( _html5VideoGenerate->isChecked() );
     return setup;
 }
 

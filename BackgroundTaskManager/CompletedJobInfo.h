@@ -26,9 +26,9 @@ namespace BackgroundTaskManager {
 class CompletedJobInfo : public JobInfo
 {
 public:
-    CompletedJobInfo(JobInfo* other);
-    OVERRIDE QString title() const;
-    OVERRIDE QString details() const;
+    explicit CompletedJobInfo(JobInfo* other);
+    QString title() const override;
+    QString details() const override;
 
 private:
     QString m_title;

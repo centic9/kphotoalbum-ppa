@@ -22,6 +22,7 @@
 #include <DB/Category.h>
 #include <DB/ImageSearchInfo.h>
 
+namespace RemoteControl { class RemoteInterface; }
 namespace Browser
 {
 
@@ -34,15 +35,16 @@ class FlatCategoryModel :public AbstractCategoryModel
 {
 public:
     FlatCategoryModel( const DB::CategoryPtr& category, const DB::ImageSearchInfo& info );
-    OVERRIDE int rowCount( const QModelIndex& index ) const;
+    int rowCount( const QModelIndex& index ) const override;
 
-    OVERRIDE int columnCount( const QModelIndex& ) const;
-    OVERRIDE QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-    OVERRIDE QModelIndex parent ( const QModelIndex & index ) const;
+    int columnCount( const QModelIndex& ) const override;
+    QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const override;
+    QModelIndex parent ( const QModelIndex & index ) const override;
 
-    OVERRIDE QString indexToName(const QModelIndex& ) const;
+    QString indexToName(const QModelIndex& ) const override;
 
 private:
+    friend class RemoteControl::RemoteInterface;
     QStringList _items;
 };
 

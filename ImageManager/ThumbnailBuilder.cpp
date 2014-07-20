@@ -27,7 +27,7 @@
 #include <QTimer>
 #include <DB/ImageInfoPtr.h>
 
-ImageManager::ThumbnailBuilder* ImageManager::ThumbnailBuilder::m_instance = 0;
+ImageManager::ThumbnailBuilder* ImageManager::ThumbnailBuilder::m_instance = nullptr;
 
 ImageManager::ThumbnailBuilder::ThumbnailBuilder( MainWindow::StatusBar* statusBar, QObject* parent )
     :QObject( parent ), m_statusBar( statusBar ),  m_isBuilding( false )
@@ -48,10 +48,11 @@ void ImageManager::ThumbnailBuilder::cancelRequests()
     m_startBuildTimer->stop();
 }
 
-void ImageManager::ThumbnailBuilder::pixmapLoaded( const DB::FileName& fileName, const QSize& size, const QSize& fullSize, int, const QImage&, const bool loadedOK)
+void ImageManager::ThumbnailBuilder::pixmapLoaded(ImageManager::ImageRequest* request, const QImage& /*image*/)
 {
-    Q_UNUSED(size)
-    Q_UNUSED(loadedOK)
+    const DB::FileName fileName = request->databaseFileName();
+    const QSize fullSize = request->fullSize();
+
     if ( fullSize.width() != -1 ) {
         DB::ImageInfoPtr info = DB::ImageDB::instance()->info( fileName );
         info->setSize( fullSize );
@@ -75,7 +76,7 @@ void ImageManager::ThumbnailBuilder::buildMissing()
 {
     const DB::FileNameList images = DB::ImageDB::instance()->images();
     DB::FileNameList needed;
-    Q_FOREACH( const DB::FileName& fileName, images ) {
+    for ( const DB::FileName& fileName : images ) {
         if ( ! ImageManager::ThumbnailCache::instance()->contains( fileName ) )
             needed.append( fileName );
     }
@@ -99,21 +100,24 @@ void ImageManager::ThumbnailBuilder::doThumbnailBuild()
     m_isBuilding = true;
     int numberOfThumbnailsToBuild = 0;
 
-    Q_FOREACH(const DB::FileName& fileName, m_thumbnailsToBuild ) {
+    for (const DB::FileName& fileName : m_thumbnailsToBuild ) {
         DB::ImageInfoPtr info = fileName.info();
         if ( info->isNull())
             continue;
 
-        ++numberOfThumbnailsToBuild;
         ImageManager::ImageRequest* request
             = new ImageManager::PreloadRequest( fileName,
                                               ThumbnailView::CellGeometry::preferredIconSize(), info->angle(),
                                               this );
         request->setIsThumbnailRequest(true);
         request->setPriority( ImageManager::BuildThumbnails );
-        ImageManager::AsyncLoader::instance()->load( request );
+        if (ImageManager::AsyncLoader::instance()->load( request ))
+            ++numberOfThumbnailsToBuild;
     }
-    m_statusBar->startProgress( i18n("Building thumbnails"), qMax( numberOfThumbnailsToBuild - 1, 1 ) );
+    if (numberOfThumbnailsToBuild == 0)
+        m_statusBar->setProgressBarVisible(false);
+    else
+        m_statusBar->startProgress( i18n("Building thumbnails"), qMax( numberOfThumbnailsToBuild - 1, 1 ) );
     m_count = 0;
 }
 

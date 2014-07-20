@@ -45,9 +45,7 @@
 #include <qlabel.h>
 #include <qpoint.h>
 
-#ifdef HAVE_NEPOMUK
-#   include <nepomuk/kratingwidget.h>
-#endif
+#include <kratingwidget.h>
 
 #include "DB/CategoryCollection.h"
 #include "DB/ImageDB.h"
@@ -63,6 +61,9 @@
 #include "Utilities/Util.h"
 #include "Viewer/ViewerWidget.h"
 #include "enums.h"
+#include "ResizableFrame.h"
+
+#include "DescriptionEdit.h"
 #include <QDebug>
 
 using Utilities::StringSet;
@@ -73,7 +74,7 @@ using Utilities::StringSet;
  */
 
 AnnotationDialog::Dialog::Dialog( QWidget* parent )
-    : QDialog( parent ),
+    : KDialog( parent ),
     _ratingChanged( false ),
     conflictText( i18n("(You have differing descriptions on individual images, setting text here will override them all)" ) )
 {
@@ -81,8 +82,8 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     ShortCutManager shortCutManager;
 
     // The widget stack
-    _stack = new QStackedWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    _stack = new QStackedWidget( mainWidget() );
+    QVBoxLayout* layout = new QVBoxLayout( mainWidget() );
     layout->addWidget( _stack );
 
     // The Viewer
@@ -99,7 +100,7 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
 
     createDock( i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget() );
 
-    _description = new KTextEdit;
+    _description = new DescriptionEdit(this);
     _description->setProperty( "WantsFocus", true );
     _description->setObjectName( i18n("Description") );
     _description->setCheckSpellingEnabled( true );
@@ -108,17 +109,47 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     QDockWidget* dock = createDock( i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, _description );
     shortCutManager.addDock( dock, _description );
 
-    // -------------------------------------------------- Categrories
-     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-     for( QList<DB::CategoryPtr>::ConstIterator categoryIt = categories.constBegin(); categoryIt != categories.constEnd(); ++categoryIt ) {
+    connect( _description, SIGNAL(pageUpDownPressed(QKeyEvent*)), this, SLOT(descriptionPageUpDownPressed(QKeyEvent*)) );
+
+    // -------------------------------------------------- Categories
+    QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
+
+    // Let's first assume we don't have positionable categories
+    _positionableCategories = false;
+
+    for( QList<DB::CategoryPtr>::ConstIterator categoryIt = categories.constBegin(); categoryIt != categories.constEnd(); ++categoryIt ) {
         ListSelect* sel = createListSel( *categoryIt );
+
+        // Create a QMap of all ListSelect instances, so that we can easily
+        // check if a specific (positioned) tag is (still) selected later
+        _listSelectList[(*categoryIt)->name()] = sel;
+
         QDockWidget* dock = createDock( (*categoryIt)->text(), (*categoryIt)->name(), Qt::BottomDockWidgetArea, sel );
         shortCutManager.addDock( dock, sel->lineEdit() );
+
         if ( (*categoryIt)->isSpecialCategory() )
             dock->hide();
+
+        // Pass the positionable selection to the object
+        sel->setPositionable( (*categoryIt)->positionable() );
+
+        if ( sel->positionable() ) {
+            connect( sel, SIGNAL(positionableTagSelected(QString,QString)), this, SLOT(positionableTagSelected(QString,QString)) );
+            connect( sel, SIGNAL(positionableTagDeselected(QString,QString)), this, SLOT(positionableTagDeselected(QString,QString)) );
+            connect( sel, SIGNAL(positionableTagRenamed(QString,QString,QString)), this, SLOT(positionableTagRenamed(QString,QString,QString)) );
+
+            // We have at least one positionable category
+            _positionableCategories = true;
+        }
+
+        // The category could have a localized name. Perhaps, this could be
+        // also handy for something else, so let's do this for all categories
+        _categoryL10n[(*categoryIt)->name()] = (*categoryIt)->text();
     }
 
     // -------------------------------------------------- The buttons.
+    // don't use default buttons (Ok, Cancel):
+    setButtons( None );
     QHBoxLayout* lay1 = new QHBoxLayout;
     layout->addLayout( lay1 );
 
@@ -148,22 +179,24 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     lay1->addWidget( cancelBut );
 
     // It is unfortunately not possible to ask KAcceleratorManager not to setup the OK and cancel keys.
-    shortCutManager.addTaken( i18n("&Search") );
+    shortCutManager.addTaken( i18nc("@action:button","&Search") );
     shortCutManager.addTaken( _okBut->text() );
     shortCutManager.addTaken( _continueLaterBut->text());
     shortCutManager.addTaken( cancelBut->text() );
 
-    connect( _revertBut, SIGNAL( clicked() ), this, SLOT( slotRevert() ) );
-    connect( _okBut, SIGNAL( clicked() ), this, SLOT( doneTagging() ) );
-    connect( _continueLaterBut, SIGNAL( clicked() ), this, SLOT( continueLater() ) );
-    connect( cancelBut, SIGNAL( clicked() ), this, SLOT( reject() ) );
-    connect( _clearBut, SIGNAL( clicked() ), this, SLOT(slotClear() ) );
-    connect( optionsBut, SIGNAL( clicked() ), this, SLOT( slotOptions() ) );
+    connect( _revertBut, SIGNAL(clicked()), this, SLOT(slotRevert()) );
+    connect( _okBut, SIGNAL(clicked()), this, SLOT(doneTagging()) );
+    connect( _continueLaterBut, SIGNAL(clicked()), this, SLOT(continueLater()) );
+    connect( cancelBut, SIGNAL(clicked()), this, SLOT(reject()) );
+    connect( _clearBut, SIGNAL(clicked()), this, SLOT(slotClear()) );
+    connect( optionsBut, SIGNAL(clicked()), this, SLOT(slotOptions()) );
 
-    connect( _preview, SIGNAL( imageRotated( int ) ), this, SLOT( rotate( int ) ) );
-    connect( _preview, SIGNAL( indexChanged( int ) ), this, SLOT( slotIndexChanged( int ) ) );
-    connect( _preview, SIGNAL( imageDeleted( const DB::ImageInfo& ) ), this, SLOT( slotDeleteImage() ) );
-    connect( _preview, SIGNAL( copyPrevClicked() ), this, SLOT( slotCopyPrevious() ) );
+    connect( _preview, SIGNAL(imageRotated(int)), this, SLOT(rotate(int)) );
+    connect( _preview, SIGNAL(indexChanged(int)), this, SLOT(slotIndexChanged(int)) );
+    connect( _preview, SIGNAL(imageDeleted(DB::ImageInfo)), this, SLOT(slotDeleteImage()) );
+    connect( _preview, SIGNAL(copyPrevClicked()), this, SLOT(slotCopyPrevious()) );
+    connect( _preview, SIGNAL(areaVisibilityChanged(bool)), this, SLOT(slotShowAreas(bool)) );
+    connect( _preview->preview(), SIGNAL(areaCreated(ResizableFrame*)), this, SLOT(slotNewArea(ResizableFrame*)) );
 
     // Disable so no button accept return (which would break with the line edits)
     _revertBut->setAutoDefault( false );
@@ -226,34 +259,36 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
 
     _startDate = new ::AnnotationDialog::KDateEdit( true );
     lay4->addWidget( _startDate, 1 );
-    connect( _startDate, SIGNAL( dateChanged( const DB::ImageDate& ) ), this, SLOT( slotStartDateChanged( const DB::ImageDate& ) ) );
+    connect( _startDate, SIGNAL(dateChanged(DB::ImageDate)), this, SLOT(slotStartDateChanged(DB::ImageDate)) );
     shortCutManager.addLabel(label );
     label->setBuddy( _startDate);
 
-    label = new QLabel( QString::fromLatin1( "-" ) );
-    lay4->addWidget( label );
+    _endDateLabel = new QLabel( QString::fromLatin1( "-" ) );
+    lay4->addWidget( _endDateLabel );
 
     _endDate = new ::AnnotationDialog::KDateEdit( false );
     lay4->addWidget( _endDate, 1 );
-    lay4->addStretch(1);
 
     // Time
-    QHBoxLayout* lay7 = new QHBoxLayout;
-    lay2->addLayout( lay7 );
-
     _timeLabel = new QLabel( i18n("Time: ") );
-    lay7->addWidget( _timeLabel );
+    lay4->addWidget( _timeLabel );
 
     _time= new QTimeEdit;
-    lay7->addWidget( _time );
-    lay7->addStretch(1);
-    _time->hide();
+    lay4->addWidget( _time );
 
-    _addTime= new KPushButton(i18n("Add Time Info..."));
-    lay7->addWidget( _addTime );
-    lay7->addStretch(1);
-    _addTime->hide();
-    connect(_addTime,SIGNAL(clicked()), this, SLOT(slotAddTimeInfo()));
+    _isFuzzyDate = new QCheckBox( i18n("Use Fuzzy Date") );
+    _isFuzzyDate->setWhatsThis( i18nc("@info",
+                "<para>In KPhotoAlbum, images can either have an exact date and time"
+                ", or a <emphasis>fuzzy</emphasis> date which happened any time during"
+                " a specified time interval. Images produced by digital cameras"
+                " do normally have an exact date.</para>"
+                "<para>If you don't know exactly when a photo was taken"
+                " (e.g. if the photo comes from an analog camera), then you should set"
+                " <interface>Use Fuzzy Date</interface>.</para>") );
+    _isFuzzyDate->setToolTip( _isFuzzyDate->whatsThis() );
+    lay4->addWidget( _isFuzzyDate );
+    lay4->addStretch(1);
+    connect(_isFuzzyDate,SIGNAL(stateChanged(int)),this,SLOT(slotSetFuzzyDate()));
 
     QHBoxLayout* lay8 = new QHBoxLayout;
     lay2->addLayout( lay8 );
@@ -271,22 +306,20 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     QHBoxLayout* lay9 = new QHBoxLayout;
     lay2->addLayout( lay9 );
 
-#ifdef HAVE_NEPOMUK
     label = new QLabel( i18n("Rating:") );
     lay9->addWidget( label );
     _rating = new KRatingWidget;
     _rating->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
     lay9->addWidget( _rating, 0, Qt::AlignCenter );
-    connect( _rating, SIGNAL( ratingChanged( unsigned int ) ), this, SLOT( slotRatingChanged( unsigned int ) ) );
+    connect( _rating, SIGNAL(ratingChanged(uint)), this, SLOT(slotRatingChanged(uint)) );
 
     _ratingSearchLabel = new QLabel( i18n("Rating search mode:") );
     lay9->addWidget( _ratingSearchLabel );
 
     _ratingSearchMode = new KComboBox( lay9 );
-    _ratingSearchMode->addItems( QStringList() << i18n("==") << i18n(">=") << i18n("<=") << i18n("!=") );
+    _ratingSearchMode->addItems( QStringList() << i18n("==") << i18n("&gt;=") << i18n("&lt;=") << i18n("!=") );
     _ratingSearchLabel->setBuddy( _ratingSearchMode );
     lay9->addWidget( _ratingSearchMode );
-#endif
 
     // File name search pattern
     QHBoxLayout* lay10 = new QHBoxLayout;
@@ -358,26 +391,61 @@ void AnnotationDialog::Dialog::slotCopyPrevious()
     // FIXME: it would be better to compute the "previous image" in a better way, but let's stick with this for now...
     DB::ImageInfo& old_info = _editList[ _current - 1 ];
 
+    _positionableTagCandidates.clear();
+    _lastSelectedPositionableTag.first = QString();
+    _lastSelectedPositionableTag.second = QString();
+    QList<ResizableFrame *> allAreas = _preview->preview()->findChildren<ResizableFrame *>();
+
     for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->setSelection( old_info.itemsOfCategory( (*it)->category() ) );
+
+        // Also set all positionable tag candidates
+
+        if ( (*it)->positionable() ) {
+            QString category = (*it)->category();
+            QSet<QString> selectedTags = old_info.itemsOfCategory( category );
+
+            for ( const auto tag : selectedTags ) {
+                QRect area = _editList[_current].areaForTag(category, tag);
+                if (area.isNull()) {
+                    // no associated area yet
+                    addTagToCandidateList(category, tag);
+                }
+            }
+
+            // Check all areas for a linked tag in this category that is probably not selected anymore
+            for(ResizableFrame *area : allAreas) {
+                QPair<QString, QString> tagData = area->tagData();
+
+                if (tagData.first == category) {
+                    if (! selectedTags.contains(tagData.second)) {
+                        // The linked tag is not selected anymore, so remove it
+                        area->removeTagData();
+                    }
+                }
+            }
+        }
     }
 }
 
 void AnnotationDialog::Dialog::load()
 {
+    // Remove all areas
+    tidyAreas();
+    // Empty the positionable tag candidate list
+    _positionableTagCandidates.clear();
+
     DB::ImageInfo& info = _editList[ _current ];
     _startDate->setDate( info.date().start().date() );
 
     if( info.date().hasValidTime() ) {
         _time->show();
-        _timeLabel->show();
-        _addTime->hide();
         _time->setTime( info.date().start().time());
+        _isFuzzyDate->setChecked(false);
     }
     else {
         _time->hide();
-        _timeLabel->hide();
-        _addTime->show();
+        _isFuzzyDate->setChecked(true);
     }
 
     if ( info.date().start().date() == info.date().end().date() )
@@ -388,19 +456,65 @@ void AnnotationDialog::Dialog::load()
     _imageLabel->setText( info.label() );
     _description->setPlainText( info.description() );
 
-#ifdef HAVE_NEPOMUK
     if ( _setup == InputSingleImageConfigMode )
         _rating->setRating( qMax( static_cast<short int>(0), info.rating() ) );
     _ratingChanged = false;
-#endif
+
+    // A category areas have been linked against could have been deleted
+    // or un-marked as positionable in the meantime, so ...
+    QMap<QString, bool> categoryIsPositionable;
 
     for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
         (*it)->setSelection( info.itemsOfCategory( (*it)->category() ) );
         (*it)->rePopulate();
+
+        // Get all selected positionable tags and add them to the candidate list
+        if ((*it)->positionable()) {
+            QSet<QString> selectedTags = (*it)->itemsOn();
+            QSet<QString>::iterator tagName;
+
+            for (tagName = selectedTags.begin(); tagName != selectedTags.end(); ++tagName) {
+                addTagToCandidateList( (*it)->category(), *tagName );
+            }
+        }
+
+        // ... create a list of all categories and their positionability ...
+        categoryIsPositionable[(*it)->category()] = (*it)->positionable();
+    }
+
+    // Create all tagged areas
+
+    QMap<QString, QMap<QString, QRect>> taggedAreas = info.taggedAreas();
+    QMapIterator<QString, QMap<QString, QRect>> areasInCategory(taggedAreas);
+
+    while (areasInCategory.hasNext()) {
+        areasInCategory.next();
+        QString category = areasInCategory.key();
+
+        // ... and check if the respective category is actually there yet and still positionable
+        // (operator[] will insert an empty item if the category has been deleted
+        // and is thus missing in the QMap, but the respective key won't be true)
+        if (categoryIsPositionable[category]) {
+            QMapIterator<QString, QRect> areaData(areasInCategory.value());
+            while (areaData.hasNext()) {
+                areaData.next();
+                QString tag = areaData.key();
+
+                // Be sure that the corresponding tag is still checked. The category could have
+                // been un-marked as positionable in the meantime and the tag could have been
+                // deselected, without triggering positionableTagDeselected and the area thus
+                // still remaining. If the category is then re-marked as positionable, the area would
+                // show up without the tag being selected.
+                if(_listSelectList[category]->tagIsChecked(tag)) {
+                    _preview->preview()->createTaggedArea(category, tag, areaData.value(), _preview->showAreas());
+                }
+            }
+        }
     }
 
     if ( _setup == InputSingleImageConfigMode )
         setWindowTitle( i18n("KPhotoAlbum Annotations (%1/%2)", _current+1, _origList.count() ) );
+    _preview->canCreateAreas( _setup == InputSingleImageConfigMode && ! info.isVideo() && _positionableCategories );
 }
 
 void AnnotationDialog::Dialog::writeToInfo()
@@ -410,6 +524,13 @@ void AnnotationDialog::Dialog::writeToInfo()
     }
 
     DB::ImageInfo& info = _editList[ _current ];
+
+    if (! info.size().isValid()) {
+        // The actual image size has been fetched by ImagePreview, so we can add it to
+        // the database silenty, so that it's saved if the database will be saved.
+        info.setSize(_preview->preview()->getActualImageSize());
+    }
+
     if ( _time->isHidden() ) {
         if ( _endDate->date().isValid() )
             info.setDate( DB::ImageDate( QDateTime( _startDate->date(), QTime(0,0,0) ),
@@ -419,21 +540,35 @@ void AnnotationDialog::Dialog::writeToInfo()
                                      QDateTime( _startDate->date(), QTime( 23,59,59) ) ) );
     }
     else
-        info.setDate( DB::ImageDate( _startDate->date(), _endDate->date(), _time->time() ) );
+        info.setDate( DB::ImageDate( QDateTime( _startDate->date(), _time->time() ) ) );
 
+    // Generate a list of all tagged areas
+
+    QMap<QString, QMap<QString, QRect>> taggedAreas;
+    QPair<QString, QString> tagData;
+
+    foreach (ResizableFrame *area, _preview->preview()->findChildren<ResizableFrame *>()) {
+        tagData = area->tagData();
+
+        if ( !tagData.first.isEmpty() ) {
+            taggedAreas[tagData.first][tagData.second] = area->actualCoordinates();
+        }
+    }
 
     info.setLabel( _imageLabel->text() );
     info.setDescription( _description->toPlainText() );
-    for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
+
+    for (QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it) {
         info.setCategoryInfo( (*it)->category(), (*it)->itemsOn() );
+        if ((*it)->positionable()) {
+            info.setPositionedTags((*it)->category(), taggedAreas[(*it)->category()]);
+        }
     }
 
-#ifdef HAVE_NEPOMUK
     if ( _ratingChanged ) {
         info.setRating( _rating->rating() );
         _ratingChanged = false;
     }
-#endif
 }
 
 void AnnotationDialog::Dialog::ShowHideSearch( bool show )
@@ -443,10 +578,11 @@ void AnnotationDialog::Dialog::ShowHideSearch( bool show )
     _searchRAW->setVisible( show );
     _imageFilePatternLabel->setVisible( show );
     _imageFilePattern->setVisible( show );
-#ifdef HAVE_NEPOMUK
+    _isFuzzyDate->setChecked( show );
+    _isFuzzyDate->setVisible( !show );
+    slotSetFuzzyDate();
     _ratingSearchMode->setVisible( show );
     _ratingSearchLabel->setVisible( show );
-#endif
 }
 
 
@@ -479,43 +615,30 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
         load();
     }
     else {
-        uint descrCount = 0;
-        uint matchCount = 0;
         _preview->configure( &_editList, false );
+        _preview->canCreateAreas( false );
         _startDate->setDate( QDate() );
         _endDate->setDate( QDate() );
         _time->hide();
-        _addTime->show();
-#ifdef HAVE_NEPOMUK
         _rating->setRating( 0 );
         _ratingChanged = false;
-#endif
 
         for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it )
             setUpCategoryListBoxForMultiImageSelection( *it, list );
 
-        _imageLabel->setText( QString::fromLatin1("") );
-        _imageFilePattern->setText( QString::fromLatin1("") );
+        _imageLabel->setText(QString());
+        _imageFilePattern->setText(QString());
+        _firstDescription = _editList[0].description();
 
-        // Checking all the description fields if there is text and whether the descriptions mach
-        Q_FOREACH( DB::ImageInfo info, _editList ) {
-            descrCount++;
-            if ( !info.description().isEmpty() ) {
-                if ( firstDescription.isEmpty() ) {
-                    firstDescription = info.description();
-                    matchCount++;
-                } else if ( !firstDescription.compare( info.description() ) ) {
-                    matchCount++;
-                }
-            }
-        }
-        if ( !firstDescription.isEmpty() ) {
-            if ( descrCount == matchCount )
-                _description->setPlainText( firstDescription );
-            else
-                _description->setPlainText( conflictText );
-        } else
-            _description->setPlainText( QString::fromLatin1( "" ) );
+        const bool allTextEqual =
+                std::all_of(_editList.begin(), _editList.end(),
+                            [=] (const DB::ImageInfo& item) -> bool {
+                                   return item.description() == _firstDescription;
+                });
+
+        if ( !allTextEqual )
+            _firstDescription = conflictText;
+        _description->setPlainText( _firstDescription );
     }
 
     showHelpDialog( oneAtATime ? InputSingleImageConfigMode : InputMultiImageConfigMode );
@@ -535,10 +658,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
 
     _preview->setImage(Utilities::locateDataFile(QString::fromLatin1("pics/search.jpg")));
 
-#ifdef HAVE_NEPOMUK
-        _ratingChanged = false ;
-#endif
-
+    _ratingChanged = false ;
     showHelpDialog( SearchMode );
     int ok = exec();
     if ( ok == QDialog::Accepted )  {
@@ -551,7 +671,6 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
             _oldSearch.setCategoryMatchText( (*it)->category(), (*it)->text() );
         }
-#ifdef HAVE_NEPOMUK
         //FIXME: for the user to search for 0-rated images, he must first change the rating to anything > 0
         //then change back to 0 .
         if( _ratingChanged)
@@ -559,9 +678,8 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
 
         _ratingChanged = false;
         _oldSearch.setSearchMode( _ratingSearchMode->currentIndex() );
-#endif
-    _oldSearch.setMegaPixel( _megapixel->value() );
-    _oldSearch.setSearchRAW( _searchRAW->isChecked() );
+        _oldSearch.setMegaPixel( _megapixel->value() );
+        _oldSearch.setSearchRAW( _searchRAW->isChecked() );
         return _oldSearch;
     }
     else
@@ -577,11 +695,11 @@ void AnnotationDialog::Dialog::setup()
     }
 
     if ( _setup == SearchMode )  {
-        _okBut->setGuiItem( KGuiItem(i18n("&Search"), QString::fromLatin1("find")) );
+        _okBut->setGuiItem( KGuiItem(i18nc("@action:button","&Search"), QString::fromLatin1("find")) );
         _continueLaterBut->hide();
         _revertBut->hide();
         _clearBut->show();
-        setWindowTitle( i18n("Search") );
+        setWindowTitle( i18nc("@title:window title of the 'find images' window","Search") );
         loadInfo( _oldSearch );
     }
     else {
@@ -613,6 +731,7 @@ void AnnotationDialog::Dialog::loadInfo( const DB::ImageSearchInfo& info )
     }
 
     _imageLabel->setText( info.label() );
+    _description->setText(info.description());
 }
 
 void AnnotationDialog::Dialog::slotOptions()
@@ -647,9 +766,9 @@ void AnnotationDialog::Dialog::slotOptions()
     alphaFlatSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaFlat );
     dateSort->setChecked( Settings::SettingsData::instance()->viewSortType() == Settings::SortLastUse );
     menu->addActions( sortTypes->actions() );
-    connect( dateSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortDate() ) );
-    connect( alphaTreeSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortAlphaTree() ) );
-    connect( alphaFlatSort, SIGNAL( triggered() ), _optionList.at(0), SLOT( slotSortAlphaFlat() ) );
+    connect( dateSort, SIGNAL(triggered()), _optionList.at(0), SLOT(slotSortDate()) );
+    connect( alphaTreeSort, SIGNAL(triggered()), _optionList.at(0), SLOT(slotSortAlphaTree()) );
+    connect( alphaFlatSort, SIGNAL(triggered()), _optionList.at(0), SLOT(slotSortAlphaFlat()) );
 
     // create MatchType entries
     menu->addSeparator();
@@ -680,7 +799,7 @@ void AnnotationDialog::Dialog::slotOptions()
         showSelectedOnly->setChecked( ShowSelectionOnlyManager::instance().selectionIsLimited() );
         menu->addAction( showSelectedOnly );
 
-        connect( showSelectedOnly, SIGNAL( triggered() ), &ShowSelectionOnlyManager::instance(), SLOT( toggle() ) );
+        connect( showSelectedOnly, SIGNAL(triggered()), &ShowSelectionOnlyManager::instance(), SLOT(toggle()) );
     }
 
     // execute menu & handle response:
@@ -704,7 +823,7 @@ int AnnotationDialog::Dialog::exec()
     this->setFocus(); // Set temporary focus before show() is called so that extra cursor is not shown on any "random" input widget
     show(); // We need to call show before we call setupFocus() otherwise the widget will not yet all have been moved in place.
     setupFocus();
-    const int ret = QDialog::exec();
+    const int ret = KDialog::exec();
     hideTornOfWindows();
     return ret;
 }
@@ -734,13 +853,12 @@ void AnnotationDialog::Dialog::slotSaveWindowSetup()
 void AnnotationDialog::Dialog::closeEvent( QCloseEvent* e )
 {
     e->ignore();
-    firstDescription.clear();
     reject();
 }
 
 void AnnotationDialog::Dialog::hideTornOfWindows()
 {
-    Q_FOREACH( QDockWidget* dock, _dockWidgets ) {
+    for( QDockWidget* dock : _dockWidgets ) {
         if ( dock->isFloating() )
             dock->hide();
     }
@@ -748,7 +866,7 @@ void AnnotationDialog::Dialog::hideTornOfWindows()
 
 void AnnotationDialog::Dialog::showTornOfWindows()
 {
-    Q_FOREACH (QDockWidget* dock, _dockWidgets ) {
+    for (QDockWidget* dock: _dockWidgets ) {
         if ( dock->isFloating() )
             dock->show();
     }
@@ -759,10 +877,10 @@ AnnotationDialog::ListSelect* AnnotationDialog::Dialog::createListSel( const DB:
 {
     ListSelect* sel = new ListSelect( category, _dockWindow );
     _optionList.append( sel );
-    connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL( itemRemoved( DB::Category*, const QString& ) ),
-             this, SLOT( slotDeleteOption( DB::Category*, const QString& ) ) );
-    connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL( itemRenamed( DB::Category* , const QString& , const QString&  ) ),
-             this, SLOT( slotRenameOption( DB::Category* , const QString& , const QString&  ) ) );
+    connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL(itemRemoved(DB::Category*,QString)),
+             this, SLOT(slotDeleteOption(DB::Category*,QString)) );
+    connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL(itemRenamed(DB::Category*,QString,QString)),
+             this, SLOT(slotRenameOption(DB::Category*,QString,QString)) );
 
     return sel;
 }
@@ -794,6 +912,7 @@ void AnnotationDialog::Dialog::reject()
 
 void AnnotationDialog::Dialog::closeDialog()
 {
+    tidyAreas();
     _accept = QDialog::Rejected;
     QDialog::reject();
 }
@@ -813,13 +932,14 @@ bool AnnotationDialog::Dialog::hasChanges()
         changed |= ( !_endDate->date().isNull() );
 
         for( QList<ListSelect*>::Iterator it = _optionList.begin(); it != _optionList.end(); ++it ) {
-            QPair<StringSet, StringSet> origSelection = selectionForMultiSelect( *it, _origList );
-            changed |= origSelection.first != (*it)->itemsOn();
-            changed |= origSelection.second != (*it)->itemsUnchanged();
+            StringSet on, partialOn;
+            std::tie(on, partialOn) = selectionForMultiSelect( *it, _origList );
+            changed |= (on != (*it)->itemsOn());
+            changed |= (partialOn != (*it)->itemsUnchanged());
         }
 
         changed |= ( !_imageLabel->text().isEmpty() );
-        changed |= ( !_description->toPlainText().isEmpty() && _description->toPlainText().compare( conflictText ) && _description->toPlainText().compare( firstDescription ));
+        changed |= ( _description->toPlainText() != _firstDescription );
         changed |= _ratingChanged;
     }
     return changed;
@@ -832,15 +952,25 @@ void AnnotationDialog::Dialog::rotate( int angle )
     }
     else {
         DB::ImageInfo& info = _editList[ _current ];
-        info.rotate(angle);
-        _rotatedFiles.insert( info.fileName() );
+        info.rotate( angle, DB::RotateImageInfoOnly );
+        emit imageRotated( info.fileName() );
     }
 }
 
-void AnnotationDialog::Dialog::slotAddTimeInfo()
+void AnnotationDialog::Dialog::slotSetFuzzyDate()
 {
-    _addTime->hide();
-    _time->show();
+    if ( _isFuzzyDate->isChecked() )
+    {
+        _time->hide();
+        _timeLabel->hide();
+        _endDate->show();
+        _endDateLabel->show();
+    } else {
+        _time->show();
+        _timeLabel->show();
+        _endDate->hide();
+        _endDateLabel->hide();
+    }
 }
 
 void AnnotationDialog::Dialog::slotDeleteImage()
@@ -912,7 +1042,7 @@ void AnnotationDialog::Dialog::setupFocus()
     QList<QWidget*> orderedList;
 
     // Iterate through all widgets in our dialog.
-    Q_FOREACH( QObject* obj, list ) {
+    for ( QObject* obj : list ) {
         QWidget* current = static_cast<QWidget*>( obj );
         if ( !current->property("WantsFocus").isValid() || !current->isVisible() )
             continue;
@@ -939,11 +1069,10 @@ void AnnotationDialog::Dialog::setupFocus()
 
 
     // now setup tab order.
-    QWidget* prev = 0;
-    QWidget* first = 0;
+    QWidget* prev = nullptr;
+    QWidget* first = nullptr;
     for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
         if ( prev ) {
-            qDebug() << "tabbing " << prev->objectName() << " -> " << (*orderedIt)->objectName();
             setTabOrder( prev, *orderedIt );
         } else {
             first = *orderedIt;
@@ -952,7 +1081,6 @@ void AnnotationDialog::Dialog::setupFocus()
     }
 
     if ( first ) {
-        qDebug() << "tabbing " << prev->objectName() << " -> " << first->objectName();
         setTabOrder( prev, first );
     }
 
@@ -995,54 +1123,54 @@ void AnnotationDialog::Dialog::setupActions()
 {
     _actions = new KActionCollection( this );
 
-    KAction* action = 0;
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphatree"), _optionList.at(0), SLOT( slotSortAlphaTree() ) );
+    KAction* action = nullptr;
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphatree"), _optionList.at(0), SLOT(slotSortAlphaTree()) );
     action->setText( i18n("Sort Alphabetically (Tree)") );
     action->setShortcut(Qt::CTRL+Qt::Key_F4);
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphaflat"), _optionList.at(0), SLOT( slotSortAlphaFlat() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-alphaflat"), _optionList.at(0), SLOT(slotSortAlphaFlat()) );
     action->setText( i18n("Sort Alphabetically (Flat)") );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-MRU"), _optionList.at(0), SLOT( slotSortDate() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-sort-MRU"), _optionList.at(0), SLOT(slotSortDate()) );
     action->setText( i18n("Sort Most Recently Used") );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-sort"),  _optionList.at(0), SLOT( toggleSortType() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-sort"),  _optionList.at(0), SLOT(toggleSortType()) );
     action->setText( i18n("Toggle Sorting") );
     action->setShortcut( Qt::CTRL+Qt::Key_T );
 
     action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-showing-selected-only"),
-                                  &ShowSelectionOnlyManager::instance(), SLOT( toggle() ) );
+                                  &ShowSelectionOnlyManager::instance(), SLOT(toggle()) );
     action->setText( i18n("Toggle Showing Selected Items Only") );
     action->setShortcut( Qt::CTRL+Qt::Key_S );
 
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-next-image"),  _preview, SLOT( slotNext() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-next-image"),  _preview, SLOT(slotNext()) );
     action->setText(  i18n("Annotate Next") );
     action->setShortcut(  Qt::Key_PageDown );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-prev-image"),  _preview, SLOT( slotPrev() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-prev-image"),  _preview, SLOT(slotPrev()) );
     action->setText(  i18n("Annotate Previous") );
     action->setShortcut(  Qt::Key_PageUp );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-OK-dialog"),  this, SLOT( doneTagging() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-OK-dialog"),  this, SLOT(doneTagging()) );
     action->setText(  i18n("OK dialog") );
     action->setShortcut(  Qt::CTRL+Qt::Key_Return );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-delete-image"),  this, SLOT( slotDeleteImage() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-delete-image"),  this, SLOT(slotDeleteImage()) );
     action->setText(  i18n("Delete") );
     action->setShortcut(  Qt::CTRL+Qt::Key_Delete );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-copy-previous"),  this, SLOT( slotCopyPrevious() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-copy-previous"),  this, SLOT(slotCopyPrevious()) );
     action->setText(  i18n("Copy tags from previous image") );
     action->setShortcut(  Qt::ALT+Qt::Key_Insert );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-rotate-left"),  _preview, SLOT( rotateLeft() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-rotate-left"),  _preview, SLOT(rotateLeft()) );
     action->setText(  i18n("Rotate counterclockwise") );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-rotate-right"),  _preview, SLOT( rotateRight() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-rotate-right"),  _preview, SLOT(rotateRight()) );
     action->setText(  i18n("Rotate clockwise") );
 
-    action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-viewer"), this, SLOT( togglePreview() ) );
+    action = _actions->addAction( QString::fromLatin1("annotationdialog-toggle-viewer"), this, SLOT(togglePreview()) );
     action->setText( i18n("Toggle fullscreen preview") );
     action->setShortcut( Qt::CTRL + Qt::Key_Space );
 
@@ -1059,11 +1187,12 @@ KActionCollection* AnnotationDialog::Dialog::actions()
 
 void AnnotationDialog::Dialog::setUpCategoryListBoxForMultiImageSelection( ListSelect* listSel, const DB::ImageInfoList& images )
 {
-    QPair<StringSet,StringSet> selection = selectionForMultiSelect( listSel, images );
-    listSel->setSelection( selection.first, selection.second );
+    StringSet on, partialOn;
+    std::tie(on,partialOn)  = selectionForMultiSelect( listSel, images );
+    listSel->setSelection( on, partialOn );
 }
 
-QPair<StringSet,StringSet> AnnotationDialog::Dialog::selectionForMultiSelect( ListSelect* listSel, const DB::ImageInfoList& images )
+std::tuple<StringSet,StringSet> AnnotationDialog::Dialog::selectionForMultiSelect( ListSelect* listSel, const DB::ImageInfoList& images )
 {
     const QString category = listSel->category();
     const StringSet allItems = DB::ImageDB::instance()->categoryCollection()->categoryForName( category )->itemsInclCategories().toSet();
@@ -1077,8 +1206,9 @@ QPair<StringSet,StringSet> AnnotationDialog::Dialog::selectionForMultiSelect( Li
     }
 
     const StringSet itemsOnAllImages = allItems - itemsNotSelectedOnAllImages;
+    const StringSet itemsPartiallyOn = itemsOnSomeImages - itemsOnAllImages;
 
-    return qMakePair( itemsOnAllImages, itemsOnSomeImages - itemsOnAllImages );
+    return std::make_tuple( itemsOnAllImages,  itemsPartiallyOn );
 }
 
 void AnnotationDialog::Dialog::slotRatingChanged( unsigned int )
@@ -1093,6 +1223,8 @@ void AnnotationDialog::Dialog::continueLater()
 
 void AnnotationDialog::Dialog::saveAndClose()
 {
+    tidyAreas();
+
     _fullScreenPreview->stopPlayback();
 
     if (_origList.isEmpty()) {
@@ -1136,19 +1268,14 @@ void AnnotationDialog::Dialog::saveAndClose()
                 info->setDescription( _description->toPlainText() );
             }
 
-#ifdef HAVE_NEPOMUK
             if( _ratingChanged)
             {
               info->setRating( _rating->rating() );
             }
-#endif
 
             info->delaySavingChanges(false);
-            firstDescription.clear();
         }
-#ifdef HAVE_NEPOMUK
         _ratingChanged = false;
-#endif
     }
     _accept = QDialog::Accepted;
 
@@ -1176,9 +1303,130 @@ void AnnotationDialog::Dialog::togglePreview()
     }
 }
 
-DB::FileNameSet AnnotationDialog::Dialog::rotatedFiles() const
+void AnnotationDialog::Dialog::tidyAreas()
 {
-    return _rotatedFiles;
+    // Remove all areas marked on the preview image
+    foreach (ResizableFrame *area, _preview->preview()->findChildren<ResizableFrame *>()) {
+        area->deleteLater();
+    }
+}
+
+void AnnotationDialog::Dialog::slotNewArea(ResizableFrame *area)
+{
+    area->setDialog(this);
+}
+
+void AnnotationDialog::Dialog::positionableTagSelected(QString category, QString tag)
+{
+    // Set the selected tag as the last selected positionable tag
+    _lastSelectedPositionableTag.first = category;
+    _lastSelectedPositionableTag.second = tag;
+
+    // Add the tag to the positionable tag candidate list
+    addTagToCandidateList(category, tag);
+}
+
+void AnnotationDialog::Dialog::positionableTagDeselected(QString category, QString tag)
+{
+    // Remove the tag from the candidate list
+    removeTagFromCandidateList(category, tag);
+
+    // Search for areas linked against the tag on this image
+    if (_setup == InputSingleImageConfigMode) {
+        QPair<QString, QString> deselectedTag = QPair<QString, QString>(category, tag);
+
+        QList<ResizableFrame *> allAreas = _preview->preview()->findChildren<ResizableFrame *>();
+        foreach (ResizableFrame *area, allAreas) {
+            if (area->tagData() == deselectedTag) {
+                area->removeTagData();
+                // Only one area can be associated with the tag, so we can return here
+                return;
+            }
+        }
+    }
+    // Removal of tagged areas in InputMultiImageConfigMode is done in DB::ImageInfo::removeCategoryInfo
+}
+
+void AnnotationDialog::Dialog::addTagToCandidateList(QString category, QString tag)
+{
+    _positionableTagCandidates << QPair<QString, QString>(category, tag);
+}
+
+void AnnotationDialog::Dialog::removeTagFromCandidateList(QString category, QString tag)
+{
+    // Is the deselected tag the last selected positionable tag?
+    if (_lastSelectedPositionableTag.first == category and _lastSelectedPositionableTag.second == tag) {
+        _lastSelectedPositionableTag = QPair<QString, QString>();
+    }
+
+    // Remove the tag from the candidate list
+    _positionableTagCandidates.removeAt(
+        _positionableTagCandidates.indexOf(
+            QPair<QString, QString>(category, tag)
+        )
+    );
+}
+
+QPair<QString, QString> AnnotationDialog::Dialog::lastSelectedPositionableTag() const
+{
+    return _lastSelectedPositionableTag;
+}
+
+QList<QPair<QString, QString>> AnnotationDialog::Dialog::positionableTagCandidates() const
+{
+    return _positionableTagCandidates;
+}
+
+void AnnotationDialog::Dialog::slotShowAreas(bool showAreas)
+{
+    QList<ResizableFrame *> allAreas = _preview->preview()->findChildren<ResizableFrame *>();
+    foreach (ResizableFrame *area, allAreas) {
+        area->setVisible(showAreas);
+    }
+}
+
+void AnnotationDialog::Dialog::positionableTagRenamed(QString category, QString oldTag, QString newTag)
+{
+    // Is the renamed tag the last selected positionable tag?
+    if (_lastSelectedPositionableTag.first == category and _lastSelectedPositionableTag.second == oldTag) {
+        _lastSelectedPositionableTag.second = newTag;
+    }
+
+    // Check the candidate list for the tag
+    QPair<QString, QString> oldTagData = QPair<QString, QString>(category, oldTag);
+    if (_positionableTagCandidates.contains(oldTagData)) {
+        // The tag is in the list, so update it
+        _positionableTagCandidates.removeAt(_positionableTagCandidates.indexOf(oldTagData));
+        _positionableTagCandidates << QPair<QString, QString>(category, newTag);
+    }
+
+    // Check if an area on the current image contains the changed tag
+    QList<ResizableFrame *> allAreas = _preview->preview()->findChildren<ResizableFrame *>();
+    foreach (ResizableFrame *area, allAreas) {
+        if (area->tagData() == oldTagData) {
+            area->setTagData(category, newTag);
+            // Only one area can contain the tag, so we can break here.
+            break;
+        }
+    }
+}
+
+QString AnnotationDialog::Dialog::localizedCategory(QString category) const
+{
+    if (_categoryL10n.contains(category)) {
+        return _categoryL10n[category];
+    } else {
+        return category;
+    }
+}
+
+void AnnotationDialog::Dialog::descriptionPageUpDownPressed(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_PageUp) {
+        _actions->action(QString::fromLatin1("annotationdialog-prev-image"))->trigger();
+    } else if (event->key() == Qt::Key_PageDown) {
+        _actions->action(QString::fromLatin1("annotationdialog-next-image"))->trigger();
+    }
 }
 
 #include "Dialog.moc"

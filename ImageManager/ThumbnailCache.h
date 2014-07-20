@@ -22,7 +22,12 @@
 #include <QImage>
 #include <DB/FileName.h>
 
+template <class Key, class T>
+class QCache;
+
 namespace ImageManager {
+
+class ThumbnailMapping;
 
 class ThumbnailCache :public QObject
 {
@@ -30,6 +35,7 @@ class ThumbnailCache :public QObject
 
 public:
     static ThumbnailCache* instance();
+    static void deleteInstance();
     ThumbnailCache();
     void insert( const DB::FileName& name, const QImage& image );
     QPixmap lookup( const DB::FileName& name ) const;
@@ -42,6 +48,7 @@ public slots:
     void flush();
 
 private:
+    ~ThumbnailCache();
     QString fileNameForIndex( int index ) const;
     QString thumbnailPath( const QString& fileName ) const;
 
@@ -51,6 +58,10 @@ private:
     int m_currentOffset;
     QTimer* m_timer;
     mutable int m_unsaved;
+    /**
+     * Holds an in-memory cache of thumbnail files.
+     */
+    mutable QCache<int,ThumbnailMapping> *m_memcache;
 };
 
 }

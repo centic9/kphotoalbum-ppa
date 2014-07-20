@@ -18,7 +18,10 @@
 */
 
 #include "PriorityQueue.h"
+#include "Utilities/AlgorithmHelper.h"
+#include <functional>
 
+using namespace Utilities;
 namespace BackgroundTaskManager {
 
 PriorityQueue::PriorityQueue()
@@ -26,21 +29,15 @@ PriorityQueue::PriorityQueue()
     m_jobs.resize(SIZE_OF_PRIORITY_QUEUE);
 }
 
+
 bool PriorityQueue::isEmpty() const
 {
-    Q_FOREACH( const QueueType& queue, m_jobs) {
-        if ( !queue.isEmpty() )
-            return false;
-    }
-    return true;
+    return all_of( m_jobs, std::mem_fn(&QueueType::isEmpty) );
 }
 
 int PriorityQueue::count() const
 {
-    int total = 0;
-    Q_FOREACH( const QueueType& queue, m_jobs)
-        total += queue.count();
-    return total;
+    return sum( m_jobs, std::mem_fn(&QueueType::length ) );
 }
 
 void PriorityQueue::enqueue(JobInterface *job, Priority priority)
@@ -50,27 +47,25 @@ void PriorityQueue::enqueue(JobInterface *job, Priority priority)
 
 JobInterface *PriorityQueue::dequeue()
 {
-    // Q_FOREACH doens't work here as it returns a copy of the iterated elements
-    for( QVector<QueueType>::Iterator it = m_jobs.begin(); it != m_jobs.end(); ++it ) {
-        QueueType& queue = *it;
+    for( QueueType& queue : m_jobs ) {
         if ( !queue.isEmpty() )
             return queue.dequeue();
     }
     Q_ASSERT( false && "Queue was empty");
-    return 0;
+    return nullptr;
 }
 
 JobInterface *PriorityQueue::peek(int index) const
 {
     int offset = 0;
-    Q_FOREACH( const QueueType& queue, m_jobs) {
+    for ( const QueueType& queue : m_jobs) {
         if ( index-offset < queue.count() )
             return queue[index-offset];
         else
             offset += queue.count();
     }
     Q_ASSERT( false && "index beyond queue");
-    return 0;
+    return nullptr;
 }
 
 bool PriorityQueue::hasForegroundTasks() const

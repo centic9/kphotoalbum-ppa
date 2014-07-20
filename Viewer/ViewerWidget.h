@@ -57,7 +57,7 @@ public:
     enum UsageType { InlineViewer, ViewerWindow };
 
     ViewerWidget( UsageType type = ViewerWindow,
-                  QMap<Qt::Key, QPair<QString,QString> > *macroStore = 0);
+                  QMap<Qt::Key, QPair<QString,QString> > *macroStore = nullptr);
     ~ViewerWidget();
     static ViewerWidget* latest();
     void load( const DB::FileNameList& list, int index = 0 );
@@ -68,20 +68,23 @@ public:
     KActionCollection* actions();
 
 public slots:
-    OVERRIDE bool close(bool alsoDelete = false );
+    bool close(bool alsoDelete = false );
     void updateInfoBox();
     void test();
     void moveInfoBox( int );
     void stopPlayback();
+    void remapAreas(QSize viewSize, QRect zoomWindow, double sizeRatio);
+    void copyTo();
 
 signals:
     void soughtTo( const DB::FileName& id );
+    void imageRotated(const DB::FileName& id);
 
 protected:
-    OVERRIDE void contextMenuEvent ( QContextMenuEvent * e );
-    OVERRIDE void resizeEvent( QResizeEvent* );
-    OVERRIDE void keyPressEvent( QKeyEvent* );
-    OVERRIDE void wheelEvent( QWheelEvent* event );
+    void contextMenuEvent ( QContextMenuEvent * e ) override;
+    void resizeEvent( QResizeEvent* ) override;
+    void keyPressEvent( QKeyEvent* ) override;
+    void wheelEvent( QWheelEvent* event ) override;
 
     void moveInfoBox();
     void setAsWallpaper(int mode);
@@ -207,6 +210,8 @@ private:
     QPointer<Exif::InfoDialog> _exifViewer;
 #endif
 
+    KAction* _copyTo;
+
     InfoBox* _infoBox;
     QImage _currentImage;
 
@@ -237,6 +242,9 @@ private:
     QString _lastCategory;
     QMap<Qt::Key, QPair<QString,QString> >* _inputMacros;
     QMap<Qt::Key, QPair<QString,QString> >* _myInputMacros;
+
+    void addTaggedAreas();
+    QMap<QString, QString> _categoryL10n;
 };
 
 }
