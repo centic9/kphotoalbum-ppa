@@ -1,8 +1,21 @@
-kphotoalbum (4.4-2build1) saucy; urgency=low
+kphotoalbum (4.5-1) unstable; urgency=low
 
-  * No change rebuild for libkipi transition
+  * Team upload.
+  * New upstream release.
+  * Add the pkg-config build dependency.
+  * Update watch file.
+  * Remove mplayerthumbs suggest, as it is not used since 4.4; thanks to
+    Johannes Zarl for the notice. (Closes: #713010)
+  * Switch khelpcenter recommend to khelpcenter4 (which exists).
+  * Fix Vcs-Browser header.
+  * Bump Standards-Version to 3.9.5, no changes required.
+  * Update copyright.
+  * Add the libav-tools recommend, since avconv can be used.
+  * Bump the cmake build dependency to 2.8.3, as indicated in the upstream
+    build system.
+  * Depend on ${perl:Depends}, since there are perl scripts.
 
- -- Scott Kitterman <scott@kitterman.com>  Fri, 28 Jun 2013 00:20:40 -0400
+ -- Pino Toscano <pino@debian.org>  Thu, 11 Sep 2014 07:19:39 +0200
 
 kphotoalbum (4.4-2) unstable; urgency=low
 
