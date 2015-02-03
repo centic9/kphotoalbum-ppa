@@ -46,6 +46,7 @@ public:
 
     bool isValid() const { return !isNull(); }
     bool isNull() const;
+    bool isFuzzy() const;
     QString toString( bool withTime = true ) const;
     bool hasValidTime() const;
 
@@ -58,7 +59,7 @@ protected:
     static QString formatRegexp();
 
 private:
-    QDateTime _start, _end;
+    QDateTime m_start, m_end;
 };
 
 }

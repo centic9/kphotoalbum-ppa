@@ -107,33 +107,33 @@ using namespace Settings;
 const WindowType Settings::MainWindow       = "MainWindow";
 const WindowType Settings::AnnotationDialog = "AnnotationDialog";
 
-SettingsData* SettingsData::_instance = nullptr;
+SettingsData* SettingsData::s_instance = nullptr;
 
 SettingsData* SettingsData::instance()
 {
-    if ( ! _instance )
+    if ( ! s_instance )
         qFatal("instance called before loading a setup!");
 
-    return _instance;
+    return s_instance;
 }
 
 bool SettingsData::ready()
 {
-    return _instance;
+    return s_instance;
 }
 
 void SettingsData::setup( const QString& imageDirectory )
 {
-    if ( !_instance )
-        _instance = new SettingsData( imageDirectory );
+    if ( !s_instance )
+        s_instance = new SettingsData( imageDirectory );
 }
 
 SettingsData::SettingsData( const QString& imageDirectory )
 {
-    _hasAskedAboutTimeStamps = false;
+    m_hasAskedAboutTimeStamps = false;
 
     QString s = STR( "/" );
-    _imageDirectory = imageDirectory.endsWith(s) ? imageDirectory : imageDirectory + s;
+    m_imageDirectory = imageDirectory.endsWith(s) ? imageDirectory : imageDirectory + s;
 
     _smoothScale = value( "Viewer", "smoothScale", true );
 
@@ -143,7 +143,7 @@ SettingsData::SettingsData( const QString& imageDirectory )
     for (QString &comment : commentsToStrip )
         comment.replace( QString::fromLatin1(",,"), QString::fromLatin1(",") );
 
-    _EXIFCommentsToStrip = commentsToStrip;
+    m_EXIFCommentsToStrip = commentsToStrip;
 }
 
 /////////////////
@@ -208,7 +208,7 @@ bool SettingsData::trustTimeStamps()
     else if ( tTimeStamps() == Never )
         return false;
     else {
-        if (!_hasAskedAboutTimeStamps ) {
+        if (!m_hasAskedAboutTimeStamps ) {
             QApplication::setOverrideCursor( Qt::ArrowCursor );
             QString txt = i18n("When reading time information of images, their EXIF info is used. "
                                "Exif info may, however, not be supported by your KPhotoAlbum installation, "
@@ -219,12 +219,12 @@ bool SettingsData::trustTimeStamps()
             int answer = KMessageBox::questionYesNo( nullptr, txt, i18n("Trust Time Stamps?") );
             QApplication::restoreOverrideCursor();
             if ( answer == KMessageBox::Yes )
-                _trustTimeStamps = true;
+                m_trustTimeStamps = true;
             else
-                _trustTimeStamps = false;
-            _hasAskedAboutTimeStamps = true;
+                m_trustTimeStamps = false;
+            m_hasAskedAboutTimeStamps = true;
         }
-        return _trustTimeStamps;
+        return m_trustTimeStamps;
     }
 }
 
@@ -251,15 +251,48 @@ property_copy( showNewestThumbnailFirst, setShowNewestFirst        , bool       
 property_copy( thumbnailDisplayGrid    , setThumbnailDisplayGrid   , bool                , Thumbnails, false      )
 property_copy( previewSize             , setPreviewSize            , int                 , Thumbnails, 256        )
 property_copy( thumbnailSpace          , setThumbnailSpace         , int                 , Thumbnails, 4          )
+// not available via GUI, but should be consistent (and maybe confgurable for powerusers):
+property_copy( minimumThumbnailSize    , setMinimumThumbnailSize   , int                 , Thumbnails, 32         )
+property_copy( maximumThumbnailSize    , setMaximumThumbnailSize   , int                 , Thumbnails, 4096       )
 property_enum( thumbnailAspectRatio    , setThumbnailAspectRatio   , ThumbnailAspectRatio, Thumbnails, Aspect_4_3 )
 property_ref(  backgroundColor         , setBackgroundColor        , QString             , Thumbnails, QColor(Qt::darkGray).name() )
+property_copy( incrementalThumbnails   , setIncrementalThumbnails  , bool                , Thumbnails, true       )
 
-getValueFunc_( int, thumbSize, groupForDatabase("Thumbnails"), "thumbSize", 150)
+// database specific so that changing it doesn't invalidate the thumbnail cache for other databases:
+getValueFunc_( int, thumbnailSize, groupForDatabase("Thumbnails"), "thumbSize", 150)
 
-void SettingsData::setThumbSize( int value )
+void SettingsData::setThumbnailSize( int value )
+{
+    // enforce limits:
+    value = qBound( minimumThumbnailSize(), value, maximumThumbnailSize());
+
+    if ( value != thumbnailSize() )
+         emit thumbnailSizeChanged(value);
+    setValue( groupForDatabase("Thumbnails"), "thumbSize", value );
+}
+
+int SettingsData::actualThumbnailSize() const                       \
+{
+    // this is database specific since it's a derived value of thumbnailSize
+    int retval = value( groupForDatabase("Thumbnails"), "actualThumbSize", 0 );
+    // if no value has been set, use thumbnailSize
+    if ( retval == 0 )
+        retval = thumbnailSize();
+    return retval;
+}
+
+void SettingsData::setActualThumbnailSize( int value )
 {
     QPixmapCache::clear();
-    setValue( groupForDatabase("Thumbnails"), "thumbSize", value );
+
+    // enforce limits:
+    value = qBound( minimumThumbnailSize(), value, thumbnailSize());
+
+    if ( value != actualThumbnailSize())
+    {
+        setValue( groupForDatabase("Thumbnails"), "actualThumbSize", value );
+        emit actualThumbnailSizeChanged(value);
+    }
 }
 
 
@@ -339,6 +372,15 @@ property_copy( updateImageDate          , setUpdateImageDate          , bool , E
 property_copy( useModDateIfNoExif       , setUseModDateIfNoExif       , bool , ExifImport, true );
 property_copy( updateOrientation        , setUpdateOrientation        , bool , ExifImport, false );
 property_copy( updateDescription        , setUpdateDescription        , bool , ExifImport, false );
+
+/////////////////////////
+//// Face Management ////
+/////////////////////////
+
+#ifdef HAVE_KFACE
+property_copy(faceDetectionAccuracy   , setFaceDetectionAccuracy   , int, FaceManagement, 80);
+property_copy(faceDetectionSensitivity, setFaceDetectionSensitivity, int, FaceManagement, 80);
+#endif
 
 ///////////////////////
 //// Miscellaneous ////
@@ -431,7 +473,7 @@ void  SettingsData::setToDate( const QDate& date)
 
 QString SettingsData::imageDirectory() const
 {
-    return _imageDirectory;
+    return m_imageDirectory;
 }
 
 QString SettingsData::groupForDatabase( const char* setting ) const
@@ -478,7 +520,8 @@ QRect SettingsData::windowGeometry( WindowType win ) const
 
 bool Settings::SettingsData::hasUntaggedCategoryFeatureConfigured() const
 {
-    return DB::ImageDB::instance()->categoryCollection()->categoryNames().contains( untaggedCategory() );
+    return DB::ImageDB::instance()->categoryCollection()->categoryNames().contains( untaggedCategory() )
+            &&  DB::ImageDB::instance()->categoryCollection()->categoryForName( untaggedCategory())->items().contains( untaggedTag() );
 }
 
 double Settings::SettingsData::getThumbnailAspectRatio() const
@@ -512,12 +555,12 @@ double Settings::SettingsData::getThumbnailAspectRatio() const
 
 QStringList Settings::SettingsData::EXIFCommentsToStrip()
 {
-    return _EXIFCommentsToStrip;
+    return m_EXIFCommentsToStrip;
 }
 
 void Settings::SettingsData::setEXIFCommentsToStrip(QStringList EXIFCommentsToStrip)
 {
-    _EXIFCommentsToStrip = EXIFCommentsToStrip;
+    m_EXIFCommentsToStrip = EXIFCommentsToStrip;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

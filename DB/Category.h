@@ -23,6 +23,7 @@
 #include <qobject.h>
 #include <ksharedptr.h>
 #include "kiconloader.h"
+#include <QDate>
 
 class QImage;
 class QPixmap;
@@ -41,11 +42,29 @@ class Category :public QObject, public KShared
 public:
     enum ViewType { TreeView, ThumbedTreeView, IconView, ThumbedIconView };
 
+    /**
+     * Returns a map of all standard categories and their localized versions
+     */
+    static QMap<QString,QString> standardCategories();
+    /**
+     * Returns a map of all localized standard category names and their C locale version
+     */
+    static QMap<QString,QString> localizedCategoriesToC();
+    /**
+     * Returns the localized name for a category if it's a standard category with a localized name
+     * or the given name if there isn't a localized version
+     */
+    static QString localizedCategoryName(QString category);
+    /**
+     * Returns the C locale name for a category if it's a standard category with a localized name
+     * or the given name if there isn't a C locale version for this category
+     */
+    static QString unLocalizedCategoryName(QString category);
+
     virtual QString name() const = 0;
     virtual void setName( const QString& name ) = 0;
 
     virtual QString text() const;
-    static QMap<QString,QString> standardCategories();
 
     virtual void setPositionable(bool) = 0;
     virtual bool positionable() const = 0;
@@ -78,7 +97,8 @@ public:
     QPixmap categoryImage( const QString& category, QString, int width, int height ) const;
     void setCategoryImage( const QString& category, QString, const QImage& image );
     QString fileForCategoryImage ( const QString& category, QString member ) const;
-
+    virtual void setBirthDate(const QString& item, const QDate& birthDate) = 0;
+    virtual QDate birthDate(const QString& item) const = 0;
 
 private:
     QString defaultIconName() const;

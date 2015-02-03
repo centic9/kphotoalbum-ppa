@@ -36,8 +36,8 @@ ThumbnailView::GridResizeInteraction::GridResizeInteraction( ThumbnailFactory* f
 
 bool ThumbnailView::GridResizeInteraction::mousePressEvent( QMouseEvent* event )
 {
-    _resizing = true;
-    _mousePressPos = event->pos();
+    m_resizing = true;
+    m_mousePressPos = event->pos();
     enterGridResizingMode();
     return true;
 }
@@ -45,8 +45,10 @@ bool ThumbnailView::GridResizeInteraction::mousePressEvent( QMouseEvent* event )
 
 bool ThumbnailView::GridResizeInteraction::mouseMoveEvent( QMouseEvent* event )
 {
-    QPoint dist = event->pos() - _mousePressPos;
-    setCellSize( qMax( 32, _origWidth + dist.x()/5 ) );
+    // no need to query this more than once (can't be changed in the GUI):
+    static int _minimum_ = Settings::SettingsData::instance()->minimumThumbnailSize();
+    QPoint dist = event->pos() - m_mousePressPos;
+    setCellSize( qMax( _minimum_, m_origWidth + dist.x()/5 ) );
     return true;
 }
 
@@ -54,13 +56,19 @@ bool ThumbnailView::GridResizeInteraction::mouseMoveEvent( QMouseEvent* event )
 bool ThumbnailView::GridResizeInteraction::mouseReleaseEvent( QMouseEvent* )
 {
     leaveGridResizingMode();
-    _resizing = false;
+    m_resizing = false;
     return true;
 }
 
 void ThumbnailView::GridResizeInteraction::setCellSize(int size)
 {
-    Settings::SettingsData::instance()->setThumbSize( size );
+    const int baseSize = Settings::SettingsData::instance()->thumbnailSize();
+
+    // snap to base size:
+    if ( qAbs( size - baseSize ) < 10 )
+        size = baseSize;
+
+    Settings::SettingsData::instance()->setActualThumbnailSize( size );
     model()->reset();
     cellGeometryInfo()->calculateCellSize();
 }
@@ -68,33 +76,22 @@ void ThumbnailView::GridResizeInteraction::setCellSize(int size)
 
 bool ThumbnailView::GridResizeInteraction::isResizingGrid()
 {
-    return _resizing;
+    return m_resizing;
 }
 
 
 void ThumbnailView::GridResizeInteraction::leaveGridResizingMode()
 {
-    int code =  KMessageBox::questionYesNo( MainWindow::Window::theMainWindow(),
-                                            i18n("Really resize grid, it will result in all thumbnails being regenerated?"),
-                                            i18n("Really resize grid?"),
-                                            KStandardGuiItem::yes(), KStandardGuiItem::no(),
-                                            QLatin1String("resizeGrid"));
-    if ( code == KMessageBox::Yes ) {
-        KGlobal::config()->sync();
-        model()->reset();
-        cellGeometryInfo()->flushCache();
-        ImageManager::ThumbnailCache::instance()->flush();
-        model()->updateVisibleRowInfo();
-        widget()->setCurrentIndex( model()->index( m_currentRow, 0 ) );
-        ImageManager::ThumbnailBuilder::instance()->buildAll( ImageManager::StartDelayed );
-    }
-    else
-        setCellSize( _origWidth );
+    KGlobal::config()->sync();
+    model()->reset();
+    cellGeometryInfo()->flushCache();
+    model()->updateVisibleRowInfo();
+    widget()->setCurrentIndex( model()->index( m_currentRow, 0 ) );
 }
 
 void ThumbnailView::GridResizeInteraction::enterGridResizingMode()
 {
-    _origWidth = widget()->cellWidth();
+    m_origWidth = widget()->cellWidth();
     ImageManager::ThumbnailBuilder::instance()->cancelRequests();
     m_currentRow = widget()->currentIndex().row();
     widget()->verticalScrollBar()->setValue(0);

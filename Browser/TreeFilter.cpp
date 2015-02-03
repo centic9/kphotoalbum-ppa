@@ -18,19 +18,19 @@
 
 #include "TreeFilter.h"
 
-TreeFilter::TreeFilter( QObject* parent)
+Browser::TreeFilter::TreeFilter( QObject* parent)
     : QSortFilterProxyModel(parent)
 {
 
 }
 
-bool TreeFilter::filterAcceptsRow( int row, const QModelIndex & parent ) const
+bool Browser::TreeFilter::filterAcceptsRow( int row, const QModelIndex & parent ) const
 {
     bool match = false;
     bool openAllChildren = false;
 
     // If parent is open then child should be included.
-    if ( _matchedMap[parent] ) {
+    if ( m_matchedMap[parent] ) {
         match = true;
         openAllChildren = true;
      }
@@ -53,12 +53,12 @@ bool TreeFilter::filterAcceptsRow( int row, const QModelIndex & parent ) const
     }
 
 
-    _matchedMap[sourceModel()->index( row, 0, parent )] = openAllChildren;
+    m_matchedMap[sourceModel()->index( row, 0, parent )] = openAllChildren;
     return match;
 }
 
-void TreeFilter::resetCache()
+void Browser::TreeFilter::resetCache()
 {
-    _matchedMap.clear();
+    m_matchedMap.clear();
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

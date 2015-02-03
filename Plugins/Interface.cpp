@@ -16,16 +16,16 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-kpa-kipi.h>
-
-#ifdef HASKIPI
-#include "Plugins/Interface.h"
+#include "Interface.h"
 #include <QList>
 #include <klocale.h>
 #include <kimageio.h>
+#include <KIO/PreviewJob>
 #include <libkipi/imagecollection.h>
 #include "Browser/BrowserWidget.h"
+#include "Browser/TreeCategoryModel.h"
 #include "ImageManager/RawImageDecoder.h"
+#include "ImageManager/ThumbnailCache.h"
 #include "MainWindow/Window.h"
 #include "Plugins/CategoryImageCollection.h"
 #include "Plugins/ImageCollection.h"
@@ -33,6 +33,7 @@
 #include "Plugins/ImageInfo.h"
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
+#include "DB/CategoryCollection.h"
 #include "UploadWidget.h"
 #include "Utilities/Util.h"
 namespace KIPI { class UploadWidget; }
@@ -93,7 +94,17 @@ int Plugins::Interface::features() const
         KIPI::HostAcceptNewImages |
         KIPI::ImagesHasTitlesWritable |
         KIPI::HostSupportsTags |
+        KIPI::HostSupportsThumbnails |
         KIPI::HostSupportsRating;
+}
+
+QAbstractItemModel * Plugins::Interface::getTagTree() const
+{
+    // this seems only really be used by the geolocation plugin:
+    DB::ImageSearchInfo matchAll;
+    return new Browser::TreeCategoryModel( DB::ImageDB::instance()->categoryCollection()->categoryForName( QString::fromUtf8( "Places" ) )
+                                           , matchAll
+                                           );
 }
 
 QVariant Plugins::Interface::hostSetting( const QString& settingName )
@@ -184,6 +195,45 @@ KIPI::UploadWidget* Plugins::Interface::uploadWidget(QWidget* parent)
     return new Plugins::UploadWidget(parent);
 }
 
+void Plugins::Interface::thumbnail(const KUrl &url, int size)
+{
+    DB::FileName file = DB::FileName::fromAbsolutePath( url.path() );
+    if (size <= Settings::SettingsData::instance()->thumbnailSize()
+            && ImageManager::ThumbnailCache::instance()->contains(file))
+    {
+        // look up in the cache
+        QPixmap thumb = ImageManager::ThumbnailCache::instance()->lookup( file );
+        emit gotThumbnail( url, thumb);
+    } else {
+        // for bigger thumbnails, fall back to previewJob:
+        KFileItem f = KFileItem(KFileItem::Unknown, KFileItem::Unknown, url, true);
+        KFileItemList fl;
+        fl.append(f);
+        KIO::PreviewJob *job = KIO::filePreview( fl, QSize(size,size));
+
+        connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)),
+                this, SLOT(gotKDEPreview(KFileItem,QPixmap)));
+
+        connect(job, SIGNAL(failed(KFileItem)),
+                this, SLOT(failedKDEPreview(KFileItem)));
+    }
+}
+
+void Plugins::Interface::thumbnails(const KUrl::List &list, int size)
+{
+    for (const KUrl url : list)
+       thumbnail( url, size );
+}
+
+void Plugins::Interface::gotKDEPreview(const KFileItem& item, const QPixmap& pix)
+{
+    emit gotThumbnail(item.url(), pix);
+}
+
+void Plugins::Interface::failedKDEPreview(const KFileItem& item)
+{
+    emit gotThumbnail(item.url(), QPixmap());
+}
+
 #include "Interface.moc"
-#endif // KIPI
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -46,10 +46,9 @@ protected:
     void mergePreviousImageSelection();
 
 private:
-    QTreeWidget* _listView;
-    UsageMode _mode;
-    ListSelect* _listSelect;
-    bool _showingSelectionOnly;
+    QTreeWidget* m_listView;
+    UsageMode m_mode;
+    ListSelect* m_listSelect;
 };
 
 }

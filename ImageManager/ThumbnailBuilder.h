@@ -40,20 +40,20 @@ class ThumbnailBuilder :public QObject, public ImageManager::ImageClientInterfac
 
 public:
     static ThumbnailBuilder* instance();
-    void buildAll(ThumbnailBuildStart when );
-    void buildMissing();
 
     void pixmapLoaded(ImageRequest* request, const QImage& image) override;
     void requestCanceled() override;
 
 public slots:
+    void buildAll(ThumbnailBuildStart when=ImageManager::StartDelayed );
+    void buildMissing();
     void cancelRequests( );
     void scheduleThumbnailBuild( const DB::FileNameList& list, ThumbnailBuildStart when );
     void doThumbnailBuild();
 
 private:
     friend class MainWindow::Window;
-    static ThumbnailBuilder* m_instance;
+    static ThumbnailBuilder* s_instance;
     ThumbnailBuilder( MainWindow::StatusBar* statusBar, QObject* parent );
     MainWindow::StatusBar* m_statusBar;
     int m_count;

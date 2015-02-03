@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2014 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,6 +30,25 @@
 #include "ElementWriter.h"
 #include "CompressFileInfo.h"
 
+//
+//
+//
+//  +++++++++++++++++++++++++++++++ REMEMBER ++++++++++++++++++++++++++++++++
+//
+//
+//
+//
+// Update XMLDB::Database::fileVersion every time you update the file format!
+//
+//
+//
+//
+//
+//
+//
+//
+// (sorry for the noise, but it is really important :-)
+
 using Utilities::StringSet;
 
 void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
@@ -40,7 +59,7 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
         NumberedBackup().makeNumberedBackup();
 
     // prepare XML document for saving:
-    _db->_categoryCollection.initIdMap();
+    m_db->m_categoryCollection.initIdMap();
     QFile out(fileName + QString::fromAscii(".tmp"));
     if ( !out.open(QIODevice::WriteOnly | QIODevice::Text)) {
         KMessageBox::sorry( messageParent(),
@@ -56,17 +75,7 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
 
     {
         ElementWriter dummy(writer, QString::fromLatin1("KPhotoAlbum"));
-        bool usePositionableTags = false;
-        for ( DB::CategoryPtr category : DB::ImageDB::instance()->categoryCollection()->categories() )
-        {
-            if ( category->positionable() )
-            {
-                usePositionableTags = true;
-                break;
-            }
-        }
-        writer.writeAttribute( QString::fromLatin1( "version" ),
-                usePositionableTags ? QString::fromLatin1( "4" ) : QString::fromLatin1( "3" ) );
+        writer.writeAttribute( QString::fromLatin1( "version" ), QString::number(Database::fileVersion()));
         writer.writeAttribute( QString::fromLatin1( "compressed" ), QString::number(useCompressedFileFormat()));
 
         saveCategories( writer );
@@ -120,15 +129,27 @@ void XMLDB::FileWriter::saveCategories( QXmlStreamWriter& writer )
             writer.writeAttribute( QString::fromLatin1( "positionable" ), QString::number(category->positionable()) );
 
             if ( shouldSaveCategory( name ) ) {
+                /*
+                FIXME (l3u):
+                Correct me if I'm wrong, but we don't need this, as the tags used as groups are
+                added to the respective category anyway when they're created, so there's no need to
+                re-add them here. Apart from this, adding an empty group (one without members) does
+                add an empty tag ("") doing so.
+                */
+                /*
                 QStringList list =
                         Utilities::mergeListsUniqly(category->items(),
-                                                    _db->_members.groups(name));
+                                                    m_db->_members.groups(name));
+                */
 
-                Q_FOREACH(const QString &categoryName, list) {
+                Q_FOREACH(const QString &tagName, category->items()) {
                     ElementWriter dummy( writer, QString::fromLatin1("value") );
-                    writer.writeAttribute( QString::fromLatin1("value"), categoryName );
+                    writer.writeAttribute( QString::fromLatin1("value"), tagName );
                     writer.writeAttribute( QString::fromLatin1( "id" ),
-                                           QString::number(static_cast<XMLCategory*>( category.data() )->idForName( categoryName ) ));
+                                           QString::number(static_cast<XMLCategory*>( category.data() )->idForName( tagName ) ));
+                    QDate birthDate = category->birthDate(tagName);
+                    if (!birthDate.isNull())
+                        writer.writeAttribute( QString::fromUtf8("birthDate"), birthDate.toString(Qt::ISODate) );
                 }
             }
         }
@@ -137,10 +158,10 @@ void XMLDB::FileWriter::saveCategories( QXmlStreamWriter& writer )
 
 void XMLDB::FileWriter::saveImages( QXmlStreamWriter& writer )
 {
-    DB::ImageInfoList list = _db->_images;
+    DB::ImageInfoList list = m_db->m_images;
 
     // Copy files from clipboard to end of overview, so we don't loose them
-    Q_FOREACH(const DB::ImageInfoPtr &infoPtr, _db->_clipboard) {
+    Q_FOREACH(const DB::ImageInfoPtr &infoPtr, m_db->m_clipboard) {
         list.append(infoPtr);
     }
 
@@ -156,7 +177,7 @@ void XMLDB::FileWriter::saveImages( QXmlStreamWriter& writer )
 void XMLDB::FileWriter::saveBlockList( QXmlStreamWriter& writer )
 {
     ElementWriter dummy( writer, QString::fromLatin1( "blocklist" ) );
-    Q_FOREACH(const DB::FileName &block, _db->_blockList) {
+    Q_FOREACH(const DB::FileName &block, m_db->m_blockList) {
         ElementWriter dummy( writer,  QString::fromLatin1( "block" ) );
         writer.writeAttribute( QString::fromLatin1( "file" ), block.relative() );
     }
@@ -164,19 +185,33 @@ void XMLDB::FileWriter::saveBlockList( QXmlStreamWriter& writer )
 
 void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
 {
-    if ( _db->_members.isEmpty() )
+    if ( m_db->m_members.isEmpty() )
         return;
 
     ElementWriter dummy( writer, QString::fromLatin1( "member-groups" ) );
-    for( QMap< QString,QMap<QString,StringSet> >::ConstIterator memberMapIt= _db->_members.memberMap().constBegin();
-         memberMapIt != _db->_members.memberMap().constEnd(); ++memberMapIt )
+    for( QMap< QString,QMap<QString,StringSet> >::ConstIterator memberMapIt= m_db->m_members.memberMap().constBegin();
+         memberMapIt != m_db->m_members.memberMap().constEnd(); ++memberMapIt )
     {
         const QString categoryName = memberMapIt.key();
+
+        // FIXME (l3u): This can happen when an empty sub-category (group) is present.
+        //              Would be fine to fix the reason why this happens in the first place.
+        if (categoryName.isEmpty()) {
+            continue;
+        }
+
         if ( !shouldSaveCategory( categoryName ) )
             continue;
 
         QMap<QString,StringSet> groupMap = memberMapIt.value();
         for( QMap<QString,StringSet>::ConstIterator groupMapIt= groupMap.constBegin(); groupMapIt != groupMap.constEnd(); ++groupMapIt ) {
+
+            // FIXME (l3u): This can happen when an empty sub-category (group) is present.
+            //              Would be fine to fix the reason why this happens in the first place.
+            if (groupMapIt.key().isEmpty()) {
+                continue;
+            }
+
             StringSet members = groupMapIt.value();
             if ( useCompressedFileFormat() ) {
                 ElementWriter dummy( writer, QString::fromLatin1( "member" ) );
@@ -184,7 +219,7 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
                 writer.writeAttribute( QString::fromLatin1( "group-name" ), groupMapIt.key() );
                 QStringList idList;
                 Q_FOREACH(const QString& member, members) {
-                    DB::CategoryPtr catPtr = _db->_categoryCollection.categoryForName( memberMapIt.key() );
+                    DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName( memberMapIt.key() );
                     XMLCategory* category = static_cast<XMLCategory*>( catPtr.data() );
                     idList.append( QString::number( category->idForName( member ) ) );
                 }
@@ -196,6 +231,14 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
                     writer.writeAttribute( QString::fromLatin1( "category" ), memberMapIt.key() );
                     writer.writeAttribute( QString::fromLatin1( "group-name" ), groupMapIt.key() );
                     writer.writeAttribute( QString::fromLatin1( "member" ), member );
+                }
+
+                // Add an entry even if the group is empty
+                // (this is not necessary for the compressed format)
+                if (members.size() == 0) {
+                    ElementWriter dummy(writer, QString::fromLatin1("member"));
+                    writer.writeAttribute(QString::fromLatin1("category"), memberMapIt.key());
+                    writer.writeAttribute(QString::fromLatin1("group-name"), groupMapIt.key());
                 }
             }
         }
@@ -245,14 +288,6 @@ void XMLDB::FileWriter::save( QXmlStreamWriter& writer, const DB::ImageInfoPtr& 
     if ( info->stackId() ) {
         writer.writeAttribute( QString::fromLatin1("stackId"), QString::number(info->stackId()));
         writer.writeAttribute( QString::fromLatin1("stackOrder"), QString::number(info->stackOrder()));
-    }
-
-    const DB::GpsCoordinates& geoPos = info->geoPosition();
-    if ( !geoPos.isNull() ) {
-        writer.writeAttribute( QLatin1String("gpsPrec"), QString::number(geoPos.precision()));
-        writer.writeAttribute( QLatin1String("gpsLon"), QString::number(geoPos.longitude()));
-        writer.writeAttribute( QLatin1String("gpsLat"), QString::number(geoPos.latitude()));
-        writer.writeAttribute( QLatin1String("gpsAlt"), QString::number(geoPos.altitude()));
     }
 
     if ( info->isVideo() )
@@ -370,13 +405,13 @@ bool XMLDB::FileWriter::shouldSaveCategory( const QString& categoryName ) const
         return cache[categoryName];
 
     // A few bugs has shown up, where an invalid category name has crashed KPA. I therefore checks for sauch invalid names here.
-    if ( !_db->_categoryCollection.categoryForName( categoryName ) ) {
+    if ( !m_db->m_categoryCollection.categoryForName( categoryName ) ) {
         qWarning("Invalid category name: %s", qPrintable(categoryName));
         cache.insert(categoryName,false);
         return false;
     }
 
-    const bool shouldSave =  dynamic_cast<XMLCategory*>( _db->_categoryCollection.categoryForName( categoryName ).data() )->shouldSave();
+    const bool shouldSave =  dynamic_cast<XMLCategory*>( m_db->m_categoryCollection.categoryForName( categoryName ).data() )->shouldSave();
     cache.insert(categoryName,shouldSave);
     return shouldSave;
 }

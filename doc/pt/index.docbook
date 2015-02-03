@@ -4,7 +4,7 @@
 >KPhotoAlbum</application
 >">
   <!ENTITY kappname "&kphotoalbum;">
-  <!ENTITY package "kdeextragear-2">
+  <!ENTITY package "extragear-graphics">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % Portuguese "INCLUDE"
 > 
@@ -16,12 +16,13 @@
   <!ENTITY viewer SYSTEM "viewer.docbook">
   <!ENTITY datebar SYSTEM "datebar.docbook">
   <!ENTITY options SYSTEM "options.docbook">
+  <!ENTITY workflows SYSTEM "workflows.docbook">
   <!ENTITY generating-html SYSTEM "generating-html.docbook">
   <!ENTITY importexport SYSTEM "importexport.docbook">
   <!ENTITY plugins SYSTEM "plugins.docbook">
 ]>
 
-<book lang="&language;">
+<book id="kphotoalbum" lang="&language;">
   
   <bookinfo>
     <title
@@ -33,6 +34,12 @@
 >Jesper K.</firstname
 > <surname
 >Pedersen</surname
+> </author>
+      <author
+><firstname
+>Miika</firstname
+> <surname
+>Turkia</surname
 > </author>
       
       <othercredit role="translator"
@@ -59,15 +66,32 @@
 >Jesper K. Pedersen</holder>
       
     </copyright>
+    <copyright>
+      <year
+>2012</year>
+      <holder
+>Miika Turkia</holder>
+    </copyright>
     
     <date
->2004-08-06</date>
+>2012-02-23</date>
     <releaseinfo
->2.0</releaseinfo>
+>4.2</releaseinfo>
     
-    <abstract
-><para
->This is the user manual for &kphotoalbum;. If you are not the type who likes reading documentation, but rather just want to try out things, here are a few alternatives: <itemizedlist>
+    <abstract>
+    <para
+><inlinemediaobject>
+    <imageobject
+><imagedata fileref="splash-large.png" format="PNG" scalefit="1"/></imageobject>
+    <textobject
+><phrase
+>Logótipo do &kphotoalbum;</phrase
+></textobject>
+    </inlinemediaobject
+></para>
+    
+    <para
+>Este é o manual do utilizador para o &kphotoalbum; &mdash; uma aplicação de classificação de imagens digitais que permite a anotação, navegação, pesquisa e visualização de imagens e vídeos digitais. Se não for do tipo de pessoa que goste de ler a documentação, mas que gostaria de experimentar as coisas, existem algumas alternativas: <itemizedlist>
           <listitem
 ><para
 >Vá à <ulink url="http://www.kphotoalbum.org/"
@@ -76,25 +100,27 @@
 ></listitem>
           <listitem
 ><para
->Start &kphotoalbum;, and accepts its offer for a demo (If this is your first time you start it), or go to <guimenu
->Help</guimenu
-> menu and select <guimenuitem
->Run &kphotoalbum; demo</guimenuitem
->. That will load &kphotoalbum; with a number of images, and let you browse around.</para
+>Inicie o &kphotoalbum;, e aceite a oferta da demonstração do mesmo (Se for a primeira vez que o inicia), ou então vá ao menu <guimenu
+>Ajuda</guimenu
+> e seleccione <guimenuitem
+>Executar a demonstração do &kphotoalbum;</guimenuitem
+>. Isto irá carregar o &kphotoalbum; com uma quantidade de imagens, permitindo a navegação pelas mesmas.</para
 ></listitem>
         </itemizedlist
 ></para>
 
    <para
->If you prefer to print out this document, then you may find it as on long HTML document at <ulink url="http://www.kphotoalbum.org/"
->&kphotoalbum;'s Homepage</ulink
-></para>
+>Se preferir imprimir este documento, então poderá encontrá-lo a nível 'online' na <ulink url="http://www.kphotoalbum.org/"
+>Página Web do &kphotoalbum;</ulink
+>. Também deverá estar disponível uma versão em PDF na <ulink url="http://docs.kde.org"
+>documentação do &kde;</ulink
+>.</para>
 </abstract>
     <keywordset>
       <keyword
 >KDE</keyword>
       <keyword
->kdeextragear-2</keyword>
+>extragear-graphics</keyword>
       <keyword
 >KPhotoAlbum</keyword>
       <keyword
@@ -112,6 +138,7 @@
   &importexport;
   &plugins;
   &options;
+  &workflows;
 
 
   <!-- ====================================================================== -->
@@ -127,6 +154,15 @@
 ></para>
   </chapter>
 
+  <chapter id="credits-and-license">
+    <title
+>Créditos e Licença</title>
+    <para
+>Tradução de José Nuno Pires <email
+>zepires@gmail.com</email
+></para
+> 
+&underFDL; &underGPL; </chapter>
 
 </book>
 

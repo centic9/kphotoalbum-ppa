@@ -16,32 +16,29 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-kpa-kipi.h>
-#ifdef HASKIPI
-#include "Plugins/CategoryImageCollection.h"
+#include "CategoryImageCollection.h"
 #include <klocale.h>
 #include "DB/ImageDB.h"
 Plugins::CategoryImageCollection::CategoryImageCollection( const DB::ImageSearchInfo& context, const QString& category,
                                                   const QString& value )
-    : Plugins::ImageCollection( CategoryImageCollection::SubClass ), _context( context ), _category( category ),
-      _value( value )
+    : Plugins::ImageCollection( CategoryImageCollection::SubClass ), m_context( context ), m_category( category ),
+      m_value( value )
 {
 }
 
 QString Plugins::CategoryImageCollection::name()
 {
-    if ( _value == QString::fromLatin1( "**NONE**" ) )
+    if ( m_value == QString::fromLatin1( "**NONE**" ) )
         return i18nc("The 'name' of an unnamed image collection.", "None" );
     else
-        return _value;
+        return m_value;
 }
 
 KUrl::List Plugins::CategoryImageCollection::images()
 {
-    DB::ImageSearchInfo context( _context );
-    context.addAnd( _category, _value );
+    DB::ImageSearchInfo context( m_context );
+    context.addAnd( m_category, m_value );
     QStringList list = DB::ImageDB::instance()->search( context, true ).toStringList(DB::AbsolutePath);
     return stringListToUrlList( list );
 }
-#endif // KIPI
 // vi:expandtab:tabstop=4 shiftwidth=4:

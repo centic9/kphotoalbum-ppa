@@ -18,7 +18,12 @@
 
 #ifndef SETTINGSDIALOG_H
 #define SETTINGSDIALOG_H
+
+// KDE includes
 #include <KPageDialog>
+
+// Local includes
+#include "config-kpa-kface.h"
 
 namespace KIPI { class ConfigWidget; }
 namespace Exif { class TreeView; }
@@ -28,7 +33,7 @@ namespace Settings
 class ViewerSizeConfig;
 class CategoryItem;
 class CategoryPage;
-class SubCategoriesPage;
+class TagGroupsPage;
 class GeneralPage;
 class ThumbnailsPage;
 class ViewerPage;
@@ -36,6 +41,9 @@ class FileVersionDetectionPage;
 class PluginsPage;
 class ExifPage;
 class DatabaseBackendPage;
+#ifdef HAVE_KFACE
+class FaceManagementPage;
+#endif
 
 class SettingsDialog :public KPageDialog {
     Q_OBJECT
@@ -55,16 +63,19 @@ protected slots:
     void slotMyOK();
 
 private:
-    Settings::GeneralPage* _generalPage;
-    Settings::FileVersionDetectionPage* _fileVersionDetectionPage;
-    Settings::ThumbnailsPage* _thumbnailsPage;
-    Settings::CategoryPage* _categoryPage;
-    Settings::SubCategoriesPage* _subCategoriesPage;
-    Settings::ViewerPage* _viewerPage;
-    Settings::PluginsPage* _pluginsPage;
-    Settings::ExifPage* _exifPage;
-    Settings::DatabaseBackendPage* _databaseBackendPage;
-    KPageWidgetItem* _backendPage;
+    Settings::GeneralPage* m_generalPage;
+    Settings::FileVersionDetectionPage* m_fileVersionDetectionPage;
+    Settings::ThumbnailsPage* m_thumbnailsPage;
+    Settings::CategoryPage* m_categoryPage;
+    Settings::TagGroupsPage* m_tagGroupsPage;
+    Settings::ViewerPage* m_viewerPage;
+    Settings::PluginsPage* m_pluginsPage;
+    Settings::ExifPage* m_exifPage;
+    Settings::DatabaseBackendPage* m_databaseBackendPage;
+#ifdef HAVE_KFACE
+    Settings::FaceManagementPage *m_faceManagementPage;
+#endif
+    KPageWidgetItem* m_backendPage;
 };
 
 }

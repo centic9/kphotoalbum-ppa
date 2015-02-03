@@ -21,21 +21,22 @@
 #include <QKeyEvent>
 #include <QTreeWidgetItemIterator>
 #include <QTreeWidgetItem>
+#include <QDebug>
 
 AnnotationDialog::CompletableLineEdit::CompletableLineEdit( ListSelect* parent )
     :KLineEdit( parent )
 {
-    _listSelect = parent;
+    m_listSelect = parent;
 }
 
 void AnnotationDialog::CompletableLineEdit::setListView( QTreeWidget* listView )
 {
-    _listView = listView;
+    m_listView = listView;
 }
 
 void AnnotationDialog::CompletableLineEdit::setMode( UsageMode mode )
 {
-    _mode = mode;
+    m_mode = mode;
 }
 
 void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
@@ -45,13 +46,13 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
         return;
     }
 
-    if ( _mode == SearchMode && ( ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) ) { //Confirm autocomplete, deselect all text
+    if ( m_mode == SearchMode && ( ev->key() == Qt::Key_Return || ev->key() == Qt::Key_Enter) ) { //Confirm autocomplete, deselect all text
         handleSpecialKeysInSearch( ev );
-        _listSelect->showOnlyItemsMatching( QString() ); // Show all again after confirming autocomplete suggestion.
+        m_listSelect->showOnlyItemsMatching( QString() ); // Show all again after confirming autocomplete suggestion.
         return;
     }
 
-    if ( _mode != SearchMode && isSpecialKey( ev ) )
+    if ( m_mode != SearchMode && isSpecialKey( ev ) )
         return; // Don't insert the special character.
 
     if ( ev->key() == Qt::Key_Space && ev->modifiers() & Qt::ControlModifier ) {
@@ -69,14 +70,14 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
         else
             KLineEdit::keyPressEvent( ev );
         if ( prevContent != text() )
-            _listSelect->showOnlyItemsMatching( text() );
+            m_listSelect->showOnlyItemsMatching( text() );
         return;
     }
 
     // &,|, or ! should result in the current item being inserted
-    if ( _mode == SearchMode && isSpecialKey( ev ) )  {
+    if ( m_mode == SearchMode && isSpecialKey( ev ) )  {
         handleSpecialKeysInSearch( ev );
-        _listSelect->showOnlyItemsMatching( QString() ); // Show all again after a special caracter.
+        m_listSelect->showOnlyItemsMatching( QString() ); // Show all again after a special caracter.
         return;
     }
 
@@ -89,15 +90,20 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
     // Find the text of the current item
     int itemStart = 0;
     QString input = text();
-    if ( _mode == SearchMode )  {
+    if ( m_mode == SearchMode )  {
         input = input.left( cursorPosition() );
-        itemStart = input.lastIndexOf( QRegExp(QString::fromLatin1("[!&|]")) ) +1;
+        itemStart = input.lastIndexOf(QRegExp(QString::fromLatin1("[!&|]"))) + 1;
+
+        if (itemStart > 0) {
+            itemStart++;
+        }
+
         input = input.mid( itemStart );
     }
 
     // Find the text in the listView
     QTreeWidgetItem* item = findItemInListView( input );
-    if ( !item && _mode == SearchMode )  {
+    if ( !item && m_mode == SearchMode )  {
         // revert
         setText( prevContent );
         setCursorPosition( cursorPos );
@@ -108,10 +114,10 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
 
     if ( item ) {
         selectItemAndUpdateLineEdit( item, itemStart, input );
-        _listSelect->showOnlyItemsMatching( input );
+        m_listSelect->showOnlyItemsMatching( input );
     }
-    else if (_mode != SearchMode )
-        _listSelect->showOnlyItemsMatching( input );
+    else if (m_mode != SearchMode )
+        m_listSelect->showOnlyItemsMatching( input );
 }
 
 /**
@@ -119,7 +125,7 @@ void AnnotationDialog::CompletableLineEdit::keyPressEvent( QKeyEvent* ev )
  */
 QTreeWidgetItem *AnnotationDialog::CompletableLineEdit::findItemInListView( const QString& text )
 {
-    for ( QTreeWidgetItemIterator itemIt( _listView ); *itemIt; ++itemIt ) {
+    for ( QTreeWidgetItemIterator itemIt( m_listView ); *itemIt; ++itemIt ) {
         if ( itemMatchesText( *itemIt, text ) )
             return *itemIt;
     }
@@ -143,21 +149,40 @@ bool AnnotationDialog::CompletableLineEdit::isSpecialKey( QKeyEvent* ev )
 void AnnotationDialog::CompletableLineEdit::handleSpecialKeysInSearch( QKeyEvent* ev )
 {
     int cursorPos = cursorPosition();
+    QString txt;
+    int additionalLength;
 
-    QString txt = text().left(cursorPos) + ev->text() + text().mid( cursorPos );
-    setText( txt );
-    if(!isSpecialKey(ev) ) cursorPos--; //Special handling for ENTER to position the cursor correctly
-    setCursorPosition( cursorPos + ev->text().length() );
+    if (! isSpecialKey(ev)) {
+        txt = text().left(cursorPos) + ev->text() + text().mid(cursorPos);
+        additionalLength = 0;
+    } else {
+        txt = text() + QString::fromUtf8(" %1 ").arg(ev->text());
+        cursorPos += 2;
+        additionalLength = 2;
+    }
+    setText(txt);
+
+    if (! isSpecialKey(ev)) {
+        //Special handling for ENTER to position the cursor correctly
+        setText(text().left(text().size() - 1));
+        cursorPos--;
+    }
+
+    setCursorPosition( cursorPos + ev->text().length() + additionalLength);
     deselect();
 
     // Select the item in the listView - not perfect but acceptable for now.
-    int start = txt.lastIndexOf( QRegExp(QString::fromLatin1("[!&|]")), cursorPosition() -2 ) +1;
-    QString input = txt.mid( start, cursorPosition()-start-1 );
+    int start = txt.lastIndexOf(QRegExp(QString::fromLatin1("[!&|]")), cursorPosition() - 2) + 1;
+    if (start > 0) {
+        start++;
+    }
+    QString input = txt.mid(start, cursorPosition() - start);
 
-    if ( !input.isEmpty() ) {
-        QTreeWidgetItem  * item = findItemInListView( input );
-        if ( item )
-            item->setSelected( true );
+    if (! input.isEmpty()) {
+        QTreeWidgetItem* item = findItemInListView(input);
+        if (item) {
+            item->setCheckState(0, Qt::Checked);
+        }
     }
 }
 
@@ -166,15 +191,15 @@ void AnnotationDialog::CompletableLineEdit::selectPrevNextMatch( bool next )
     int itemStart = text().lastIndexOf( QRegExp(QString::fromLatin1("[!&|]")) ) +1;
     QString input = text().mid( itemStart );
 
-    QList<QTreeWidgetItem*> items = _listView->findItems( input, Qt::MatchContains, 0 );
+    QList<QTreeWidgetItem*> items = m_listView->findItems( input, Qt::MatchContains, 0 );
     if ( items.isEmpty() )
         return;
     QTreeWidgetItem* item = items.at(0);
 
     if ( next )
-        item = _listView->itemBelow(item);
+        item = m_listView->itemBelow(item);
     else
-        item = _listView->itemAbove(item);
+        item = m_listView->itemAbove(item);
 
     if ( item )
         selectItemAndUpdateLineEdit( item, itemStart, text().left( selectionStart() ) );
@@ -183,8 +208,8 @@ void AnnotationDialog::CompletableLineEdit::selectPrevNextMatch( bool next )
 void AnnotationDialog::CompletableLineEdit::selectItemAndUpdateLineEdit( QTreeWidgetItem* item,
                                                                          const int itemStart, const QString& inputText )
 {
-    _listView->setCurrentItem( item );
-    _listView->scrollToItem( item );
+    m_listView->setCurrentItem( item );
+    m_listView->scrollToItem( item );
 
     QString txt = text().left(itemStart) + item->text(0) + text().mid( cursorPosition() );
 

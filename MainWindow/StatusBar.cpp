@@ -20,6 +20,7 @@
 #include <QToolButton>
 #include <QTimer>
 #include <QProgressBar>
+#include <QSlider>
 #include "DB/ImageDB.h"
 #include "ImageCounter.h"
 #include "Settings/SettingsData.h"
@@ -31,6 +32,8 @@
 #include <KIcon>
 #include "BackgroundTaskManager/StatusIndicator.h"
 #include "RemoteControl/ConnectionIndicator.h"
+#include "ThumbnailView/ThumbnailFacade.h"
+#include <KLocale>
 
 MainWindow::StatusBar::StatusBar()
     : KStatusBar()
@@ -52,8 +55,8 @@ void MainWindow::StatusBar::setupGUI()
 
     KHBox* indicators = new KHBox( this );
     indicators->setSpacing(10);
-    _dirtyIndicator = new DirtyIndicator( indicators );
-    connect( DB::ImageDB::instance(), SIGNAL(dirty()), _dirtyIndicator, SLOT(markDirtySlot()) );
+    mp_dirtyIndicator = new DirtyIndicator( indicators );
+    connect( DB::ImageDB::instance(), SIGNAL(dirty()), mp_dirtyIndicator, SLOT(markDirtySlot()) );
 
     new RemoteControl::ConnectionIndicator(indicators);
 
@@ -72,36 +75,63 @@ void MainWindow::StatusBar::setupGUI()
     connect( m_cancel, SIGNAL(clicked()), this, SIGNAL(cancelRequest()) );
     connect( m_cancel, SIGNAL(clicked()), this, SLOT(hideStatusBar()) );
 
-    _lockedIndicator = new QLabel( indicators );
+    m_lockedIndicator = new QLabel( indicators );
 
     addPermanentWidget( indicators, 0 );
 
-    _partial = new ImageCounter( this );
-    addPermanentWidget( _partial, 0 );
+    mp_partial = new ImageCounter( this );
+    addPermanentWidget( mp_partial, 0 );
 
-    _selected = new ImageCounter( this );
-    addPermanentWidget( _selected, 0);
+    mp_selected = new ImageCounter( this );
+    addPermanentWidget( mp_selected, 0);
 
     ImageCounter* total = new ImageCounter( this );
     addPermanentWidget( total, 0 );
     total->setTotal( DB::ImageDB::instance()->totalCount() );
     connect( DB::ImageDB::instance(), SIGNAL(totalChanged(uint)), total, SLOT(setTotal(uint)) );
 
-    _pathIndicator = new BreadcrumbViewer;
-    addWidget( _pathIndicator, 1 );
+    mp_pathIndicator = new BreadcrumbViewer;
+    addWidget( mp_pathIndicator, 1 );
 
     setProgressBarVisible( false );
+
+    m_thumbnailSizeSlider = ThumbnailView::ThumbnailFacade::instance()->createResizeSlider();
+    addPermanentWidget( m_thumbnailSizeSlider, 0 );
+    // prevent stretching:
+    m_thumbnailSizeSlider->setMaximumSize( m_thumbnailSizeSlider->size());
+    m_thumbnailSizeSlider->setMinimumSize( m_thumbnailSizeSlider->size());
+    m_thumbnailSizeSlider->hide();
+
+    m_thumbnailsSmaller = new QToolButton;
+    m_thumbnailsSmaller->setIcon(KIcon(QString::fromUtf8("zoom-out")));
+    m_thumbnailsSmaller->setToolTip(i18n("Decrease thumbnail storage size"));
+    addPermanentWidget(m_thumbnailsSmaller, 0);
+    m_thumbnailsSmaller->setEnabled(false);
+    m_thumbnailsSmaller->hide();
+
+    m_thumbnailsBigger = new QToolButton;
+    m_thumbnailsBigger->setIcon(KIcon(QString::fromUtf8("zoom-in")));
+    m_thumbnailsBigger->setToolTip(i18n("Increase thumbnail storage size"));
+    addPermanentWidget(m_thumbnailsBigger, 0);
+    m_thumbnailsBigger->setEnabled(false);
+    m_thumbnailsBigger->hide();
+
+    connect(m_thumbnailSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(checkSliderValue(int)));
+    connect(m_thumbnailsSmaller, SIGNAL(clicked()),
+            m_thumbnailSizeSlider, SLOT(decreaseThumbnailSize()));
+    connect(m_thumbnailsBigger, SIGNAL(clicked()),
+            m_thumbnailSizeSlider, SLOT(increaseThumbnailSize()));
 }
 
 void MainWindow::StatusBar::setLocked( bool locked )
 {
     static QPixmap* lockedPix = new QPixmap( SmallIcon( QString::fromLatin1( "object-locked" ) ) );
-    _lockedIndicator->setFixedWidth( lockedPix->width() );
+    m_lockedIndicator->setFixedWidth( lockedPix->width() );
 
     if ( locked )
-        _lockedIndicator->setPixmap( *lockedPix );
+        m_lockedIndicator->setPixmap( *lockedPix );
     else
-        _lockedIndicator->setPixmap( QPixmap() );
+        m_lockedIndicator->setPixmap( QPixmap() );
 
 }
 
@@ -132,6 +162,21 @@ void MainWindow::StatusBar::setProgressBarVisible( bool show )
     m_cancel->setVisible(show);
 }
 
+void MainWindow::StatusBar::showThumbnailSlider()
+{
+    m_thumbnailSizeSlider->setVisible( true );
+    m_thumbnailsBigger->show();
+    m_thumbnailsSmaller->show();
+    checkSliderValue(0);
+}
+
+void MainWindow::StatusBar::hideThumbnailSlider()
+{
+    m_thumbnailSizeSlider->setVisible( false );
+    m_thumbnailsBigger->hide();
+    m_thumbnailsSmaller->hide();
+}
+
 void MainWindow::StatusBar::hideStatusBar()
 {
     setProgressBarVisible( false );
@@ -142,4 +187,12 @@ void MainWindow::StatusBar::showStatusBar()
 {
     setProgressBarVisible( true );
 }
+
+void MainWindow::StatusBar::checkSliderValue(int)
+{
+    bool visible = m_thumbnailSizeSlider->value() == m_thumbnailSizeSlider->maximum();
+    m_thumbnailsSmaller->setEnabled(visible);
+    m_thumbnailsBigger->setEnabled(visible);
+}
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -7,14 +7,16 @@ if(POLICY CMP0017)
 endif()
 
 # provide drop-down menu for build-type in cmake-gui:
-if(NOT ${CMAKE_VERSION} VERSION_LESS "2.8.0")
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";Debug;Release;RelWithDebInfo;MinSizeRel")
-endif()
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";Debug;Release;RelWithDebInfo;MinSizeRel")
 
 SET(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
 )
+
+# in case we are installing to a non-standard path, expect that other libs are installed there as well:
+LIST(INSERT CMAKE_PREFIX_PATH 0 "${CMAKE_INSTALL_PREFIX}")
+LIST(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_INSTALL_PREFIX}/share/apps/cmake/modules")
 
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
@@ -41,14 +43,6 @@ include(CheckCXX11Features)
 SET(CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} ${CXX11_COMPILER_FLAGS}"
 )
-
-if(NOT HAS_CXX11_CLASS_OVERRIDE)
-    add_definitions(-Doverride=)
-endif()
-
-if(NOT HAS_CXX11_NULLPTR)
-    add_definitions(-Dnullptr=0)
-endif()
 
 INCLUDE_DIRECTORIES(
     ${KDE4_INCLUDES}
@@ -83,6 +77,34 @@ if(MARBLE_FOUND)
     INCLUDE_DIRECTORIES(${MARBLE_INCLUDE_DIR})
 endif(MARBLE_FOUND)
 
+# Kface 3.5.0 ships with a usable kface-config.cmake
+# and face detection/recognition support in KPA depends on KFace >= 3.5.0, anyway.
+macro_optional_find_package(Kface 3.5.0 QUIET CONFIG)
+macro_bool_to_01(Kface_FOUND HAVE_KFACE)
+if(Kface_FOUND)
+    message(STATUS "Found KFace version ${Kface_VERSION} (optional)")
+    message(STATUS "  Face detection and recognition features will be built.")
+    INCLUDE_DIRECTORIES(${Kface_INCLUDE_DIR})
+else()
+    message(STATUS "Did not find KFace >= 3.5.0 (optional)")
+    message(STATUS "  Face detection and recognition features won't be built.")
+endif(Kface_FOUND)
+
+if(EXIV2_FOUND)
+    macro_optional_find_package(KGeoMap QUIET)
+else()
+	message(STATUS "Not searching KGeoMap because of missing dependency Exiv2...")
+endif()
+macro_bool_to_01(KGEOMAP_FOUND HAVE_KGEOMAP)
+if(KGEOMAP_FOUND)
+    message(STATUS "Found KGeoMap ${KGEOMAP_VERSION} (optional)")
+    message(STATUS "  Geographic map features will be built.")
+    INCLUDE_DIRECTORIES(${KGEOMAP_INCLUDE_DIR})
+else()
+    message(STATUS "Did not find KGeoMap (optional)")
+    message(STATUS "  Geographic map features won't be built.")
+endif(KGEOMAP_FOUND)
+
 add_custom_target(
     UpdateVersion ALL
     COMMAND ${CMAKE_COMMAND} -DBASE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/UpdateVersion.cmake"
@@ -104,13 +126,14 @@ set(libSettings_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ViewerSizeConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoryItem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoryPage.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/SubCategoriesPage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/TagGroupsPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/GeneralPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/FileVersionDetectionPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ThumbnailsPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ViewerPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/DatabaseBackendPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/UntaggedGroupBox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoriesGroupsWidget.cpp
 )
 
 set(libxmldb_SRCS
@@ -131,6 +154,7 @@ set(libThumbnailView_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailWidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/GridResizeInteraction.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/GridResizeSlider.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/SelectionInteraction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/MouseTrackingInteraction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/CellGeometry.cpp
@@ -145,7 +169,6 @@ set(libThumbnailView_SRCS
 )
 
 set(libPlugins_SRCS)
-
 if(KIPI_FOUND)
     set(libPlugins_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Interface.cpp
@@ -222,6 +245,9 @@ set(libMainWindow_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMerger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMatch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/MergeToolTip.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CopyPopup.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/BirthDatesDialog.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CalendarPopup.cpp
 )
 
 set(libImageManager_SRCS
@@ -313,7 +339,6 @@ set(libBrowser_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Browser/CenteringIconView.cpp
 )
 
-
 set(libexif_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Database.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/InfoDialog.cpp
@@ -361,6 +386,24 @@ set(libRemoteControl_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ConnectionIndicator.cpp
 )
 
+set(libFaceManagement_SRCS)
+if(Kface_FOUND)
+    set(libFaceManagement_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/FaceManagement/Detector.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/FaceManagement/Recognizer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Settings/FaceManagementPage.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/ProposedFaceDialog.cpp
+    )
+endif(Kface_FOUND)
+
+set(libMap_SRCS)
+if(KGEOMAP_FOUND)
+    set(libMap_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapView.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapMarkerModelHelper.cpp
+    )
+endif(KGEOMAP_FOUND)
+
 add_subdirectory(images)
 add_subdirectory(icons)
 add_subdirectory(demo)
@@ -400,6 +443,8 @@ set(kphotoalbum_SRCS
     ${libBackgroundTaskManager_SRCS}
     ${libBackgroundJobs_SRCS}
     ${libRemoteControl_SRCS}
+    ${libFaceManagement_SRCS}
+    ${libMap_SRCS}
 )
 
 kde4_add_executable(kphotoalbum ${kphotoalbum_SRCS})
@@ -428,6 +473,14 @@ if(MARBLE_FOUND)
     target_link_libraries(kphotoalbum ${MARBLE_LIBRARIES})
 endif(MARBLE_FOUND)
 
+if(Kface_FOUND)
+	target_link_libraries(kphotoalbum ${KFACE_LIBRARIES} )
+endif(Kface_FOUND)
+
+if(KGEOMAP_FOUND)
+    target_link_libraries(kphotoalbum ${KGEOMAP_LIBRARIES} )
+endif()
+
 install(TARGETS kphotoalbum ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
@@ -441,6 +494,8 @@ configure_file(config-kpa-kdcraw.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-
 configure_file(config-kpa-exiv2.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-exiv2.h)
 configure_file(config-kpa-kipi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kipi.h)
 configure_file(config-kpa-marble.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-marble.h)
+configure_file(config-kpa-kface.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kface.h)
+configure_file(config-kpa-kgeomap.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kgeomap.h)
 
 include(MacroOptionalAddSubdirectory)
 macro_optional_add_subdirectory( po )

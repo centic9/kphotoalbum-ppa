@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2014-07-07 01:42+0000\n"
+"POT-Creation-Date: 2015-01-19 01:47+0000\n"
 "PO-Revision-Date: 2008-03-28 15:32+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@yahoo.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
@@ -30,79 +30,105 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "raviratlami@aol.in"
 
-#: AnnotationDialog/Dialog.cpp:79
+#: AnnotationDialog/Dialog.cpp:90
 msgid ""
 "(You have differing descriptions on individual images, setting text here "
 "will override them all)"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:99
+#: AnnotationDialog/Dialog.cpp:110
 msgid "Label and Dates"
 msgstr "लेबल और तिथियाँ"
 
-#: AnnotationDialog/Dialog.cpp:101
+#: AnnotationDialog/Dialog.cpp:112
 msgid "Image Preview"
 msgstr "छवि पूर्वावलोकन"
 
-#: AnnotationDialog/Dialog.cpp:105 AnnotationDialog/Dialog.cpp:109
+#: AnnotationDialog/Dialog.cpp:116 AnnotationDialog/Dialog.cpp:126
 #: HTMLGenerator/HTMLDialog.cpp:130 ImportExport/MD5CheckPage.cpp:75
 msgid "Description"
 msgstr "वर्णन"
 
-#: AnnotationDialog/Dialog.cpp:156
+#: AnnotationDialog/Dialog.cpp:120
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>A descriptive text of the image.</para><para>If <emphasis>Use EXIF "
+"description</emphasis> is enabled under <interface>Settings|Configure "
+"KPhotoAlbum...|General</interface>, a description embedded in the image EXIF "
+"information is imported to this field if available.</para>"
+msgstr ""
+
+#: AnnotationDialog/Dialog.cpp:147 DB/ImageDB.cpp:147
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: AnnotationDialog/Dialog.cpp:152 AnnotationDialog/Dialog.cpp:154
+#, fuzzy
+#| msgid "apr"
+msgid "Map"
+msgstr "अप्रै."
+
+#: AnnotationDialog/Dialog.cpp:161
+msgctxt "@info:whatsthis"
+msgid ""
+"The map widget allows you to view the location of images if GPS coordinates "
+"are found in the EXIF information."
+msgstr ""
+
+#: AnnotationDialog/Dialog.cpp:204
 msgid "Revert This Item"
 msgstr "इस वस्तु को पलटें"
 
-#: AnnotationDialog/Dialog.cpp:160
+#: AnnotationDialog/Dialog.cpp:208
 msgid "Clear Form"
 msgstr "फॉर्म साफ करें"
 
-#: AnnotationDialog/Dialog.cpp:166
+#: AnnotationDialog/Dialog.cpp:214
 #, fuzzy
 #| msgid "Options"
 msgid "Options..."
 msgstr "विकल्प"
 
-#: AnnotationDialog/Dialog.cpp:172
+#: AnnotationDialog/Dialog.cpp:220
 #, fuzzy
 #| msgid "None"
 msgid "&Done"
 msgstr "कुछ नहीं"
 
-#: AnnotationDialog/Dialog.cpp:175
+#: AnnotationDialog/Dialog.cpp:223
 msgid "Continue &Later"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:182 AnnotationDialog/Dialog.cpp:698
+#: AnnotationDialog/Dialog.cpp:230 AnnotationDialog/Dialog.cpp:767
 #, fuzzy
 #| msgid "&Search"
 msgctxt "@action:button"
 msgid "&Search"
 msgstr "ढूंढें (&S)"
 
-#: AnnotationDialog/Dialog.cpp:243
+#: AnnotationDialog/Dialog.cpp:291
 msgid "Label: "
 msgstr "लेबल:"
 
-#: AnnotationDialog/Dialog.cpp:247 ImportExport/MD5CheckPage.cpp:74
+#: AnnotationDialog/Dialog.cpp:295 ImportExport/MD5CheckPage.cpp:74
 #, fuzzy
 #| msgid "Label:"
 msgid "Label"
 msgstr "लेबल:"
 
-#: AnnotationDialog/Dialog.cpp:257
+#: AnnotationDialog/Dialog.cpp:305
 msgid "Date: "
 msgstr "तारीख़:"
 
-#: AnnotationDialog/Dialog.cpp:273
+#: AnnotationDialog/Dialog.cpp:321
 msgid "Time: "
 msgstr "समय:"
 
-#: AnnotationDialog/Dialog.cpp:279
+#: AnnotationDialog/Dialog.cpp:327
 msgid "Use Fuzzy Date"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:281
+#: AnnotationDialog/Dialog.cpp:329
 msgctxt "@info"
 msgid ""
 "<para>In KPhotoAlbum, images can either have an exact date and time, or a "
@@ -113,137 +139,137 @@ msgid ""
 "Fuzzy Date</interface>.</para>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:296
+#: AnnotationDialog/Dialog.cpp:344
 msgid "Minimum megapixels:"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:309
+#: AnnotationDialog/Dialog.cpp:357
 msgid "Rating:"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:316
+#: AnnotationDialog/Dialog.cpp:364
 msgid "Rating search mode:"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "=="
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "&gt;="
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "&lt;="
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "!="
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:328
+#: AnnotationDialog/Dialog.cpp:376
 msgid "File Name Pattern: "
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:331
+#: AnnotationDialog/Dialog.cpp:379
 msgid "File Name Pattern"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:336
+#: AnnotationDialog/Dialog.cpp:384
 #, fuzzy
 #| msgid "Searching for New Files"
 msgid "Search only for RAW files"
 msgstr "नई फ़ाइलों के लिए ढूंढा जा रहा है"
 
-#: AnnotationDialog/Dialog.cpp:516
+#: AnnotationDialog/Dialog.cpp:570
 #, kde-format
 msgid "KPhotoAlbum Annotations (%1/%2)"
 msgstr "केफोटोएलबम एनोटेशन्स (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:702
+#: AnnotationDialog/Dialog.cpp:772
 #, fuzzy
 #| msgid "Search"
 msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "ढूंढें"
 
-#: AnnotationDialog/Dialog.cpp:706
+#: AnnotationDialog/Dialog.cpp:776
 #, fuzzy
 #| msgid "None"
 msgid "Done"
 msgstr "कुछ नहीं"
 
-#: AnnotationDialog/Dialog.cpp:711
+#: AnnotationDialog/Dialog.cpp:782
 msgid "Annotations"
 msgstr "व्याख्याएँ"
 
-#: AnnotationDialog/Dialog.cpp:743
+#: AnnotationDialog/Dialog.cpp:814
 msgid "Configure window layout..."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:744
+#: AnnotationDialog/Dialog.cpp:815
 msgid "Save Current Window Setup"
 msgstr "मौज़ूदा विंडो सेटअप सहेजें"
 
-#: AnnotationDialog/Dialog.cpp:745
+#: AnnotationDialog/Dialog.cpp:816
 msgid "Reset layout"
 msgstr "ले-आउट रीसेट करें"
 
-#: AnnotationDialog/Dialog.cpp:752 AnnotationDialog/Dialog.cpp:1128
-#: AnnotationDialog/ListSelect.cpp:90
+#: AnnotationDialog/Dialog.cpp:823 AnnotationDialog/Dialog.cpp:1201
+#: AnnotationDialog/ListSelect.cpp:91
 #, fuzzy
 #| msgid "Sort Alphabetically"
 msgid "Sort Alphabetically (Tree)"
 msgstr "अकारादि क्रम में जमाएं"
 
-#: AnnotationDialog/Dialog.cpp:756 AnnotationDialog/Dialog.cpp:1132
-#: AnnotationDialog/ListSelect.cpp:96
+#: AnnotationDialog/Dialog.cpp:827 AnnotationDialog/Dialog.cpp:1205
+#: AnnotationDialog/ListSelect.cpp:97
 #, fuzzy
 #| msgid "Sort Alphabetically"
 msgid "Sort Alphabetically (Flat)"
 msgstr "अकारादि क्रम में जमाएं"
 
-#: AnnotationDialog/Dialog.cpp:760 AnnotationDialog/ListSelect.cpp:102
+#: AnnotationDialog/Dialog.cpp:831 AnnotationDialog/ListSelect.cpp:103
 msgid "Sort by date"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:776
+#: AnnotationDialog/Dialog.cpp:847
 msgid "Match tags from the first character."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:777
+#: AnnotationDialog/Dialog.cpp:848
 msgid "Match tags from word boundaries."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:778
+#: AnnotationDialog/Dialog.cpp:849
 msgid "Match tags anywhere."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:796 AnnotationDialog/ListSelect.cpp:108
+#: AnnotationDialog/Dialog.cpp:867 AnnotationDialog/ListSelect.cpp:109
 msgid "Show only selected Ctrl+S"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:838
+#: AnnotationDialog/Dialog.cpp:910
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
 "of the following error: %2"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:845
+#: AnnotationDialog/Dialog.cpp:917
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
 "of the following error: %2"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:906
+#: AnnotationDialog/Dialog.cpp:978
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
 "recent changes for each affected file?</p>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:1007
+#: AnnotationDialog/Dialog.cpp:1080
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
 "it, it is suggested that you read the section in the manual on <a href="
@@ -253,7 +279,7 @@ msgid ""
 "kphotoalbum/chp-typingIn.html\">typing in</a>.</p>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:1016
+#: AnnotationDialog/Dialog.cpp:1089
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
 "contains lots of functionality which has been optimized for fast usage.</"
@@ -261,74 +287,132 @@ msgid ""
 "\"help:/kphotoalbum/chp-typingIn.html\">documentation for this dialog</a></p>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:1135
+#: AnnotationDialog/Dialog.cpp:1208
 msgid "Sort Most Recently Used"
 msgstr "अभी हाल ही में इस्तेमाल किए छांटें"
 
-#: AnnotationDialog/Dialog.cpp:1138
+#: AnnotationDialog/Dialog.cpp:1211
 msgid "Toggle Sorting"
 msgstr "छांटना टॉगल करें"
 
-#: AnnotationDialog/Dialog.cpp:1143
+#: AnnotationDialog/Dialog.cpp:1216
 msgid "Toggle Showing Selected Items Only"
 msgstr "सिर्फ चयनित वस्तुओं को दिखाना टॉगल करें"
 
-#: AnnotationDialog/Dialog.cpp:1148
+#: AnnotationDialog/Dialog.cpp:1221
 msgid "Annotate Next"
 msgstr "अगला व्याख्यान"
 
-#: AnnotationDialog/Dialog.cpp:1152
+#: AnnotationDialog/Dialog.cpp:1225
 msgid "Annotate Previous"
 msgstr "पिछला व्याख्यान"
 
-#: AnnotationDialog/Dialog.cpp:1156
+#: AnnotationDialog/Dialog.cpp:1229
 msgid "OK dialog"
 msgstr "ठीक है संवाद"
 
-#: AnnotationDialog/Dialog.cpp:1160 AnnotationDialog/ListSelect.cpp:318
-#: Settings/CategoryPage.cpp:119
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: Settings/CategoryPage.cpp:79
 msgid "Delete"
 msgstr "मिटाएँ"
 
-#: AnnotationDialog/Dialog.cpp:1164
+#: AnnotationDialog/Dialog.cpp:1237
 msgid "Copy tags from previous image"
 msgstr "पिछली छवि से टैग नक़ल करें"
 
-#: AnnotationDialog/Dialog.cpp:1168 AnnotationDialog/ImagePreviewWidget.cpp:58
-#: MainWindow/Window.cpp:756
+#: AnnotationDialog/Dialog.cpp:1241 AnnotationDialog/ImagePreviewWidget.cpp:64
+#: MainWindow/Window.cpp:762
 msgid "Rotate counterclockwise"
 msgstr "घड़ी की विपरीत दिशा में घुमाएँ"
 
-#: AnnotationDialog/Dialog.cpp:1171 AnnotationDialog/ImagePreviewWidget.cpp:64
-#: MainWindow/Window.cpp:761
+#: AnnotationDialog/Dialog.cpp:1244 AnnotationDialog/ImagePreviewWidget.cpp:70
+#: MainWindow/Window.cpp:767
 msgid "Rotate clockwise"
 msgstr "घड़ी की दिशा में घुमाएँ"
 
-#: AnnotationDialog/Dialog.cpp:1174
+#: AnnotationDialog/Dialog.cpp:1247
 #, fuzzy
 #| msgid "Toggle Full Screen"
 msgid "Toggle fullscreen preview"
 msgstr "पूरा स्क्रीन टॉगल करें"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:44
+#: AnnotationDialog/ImagePreview.cpp:474
+#, kde-format
+msgid ""
+"<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
+"\"%2\" belongs to is not positionable.</p><p>If you want to use this tag, "
+"change this in the settings dialog. If this tag shouldn't be in the "
+"recognition database anymore, it can be deleted in the settings.</p>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreview.cpp:490
+#, kde-format
+msgid ""
+"<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
+"\"%2\" belongs to does not exist.</p><p>If you want to use this tag, add "
+"this category and mark it as positionable. If this tag shouldn't be in the "
+"recognition database anymore, it can be deleted in the settings dialog.</p>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate previous image"
 msgstr "पिछली छवि एन्नोटेट करें"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:50
+#: AnnotationDialog/ImagePreviewWidget.cpp:56
 msgid "Annotate next image"
 msgstr "अगली छवि एनोटेट करें"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:70
+#: AnnotationDialog/ImagePreviewWidget.cpp:76
 msgid "Copy tags from previously tagged image"
 msgstr "पिछले टैग किए छवि में से टैग नक़ल करें"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:76
+#: AnnotationDialog/ImagePreviewWidget.cpp:77
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Set the same tags on this image than on the previous one. The image "
+"date, label, rating, and description are left unchanged.</para>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:101
+msgid "Delete image"
+msgstr "छवि मिटाएँ"
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:116
+msgid "Train face recognition database automatically"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:300
+msgctxt "@info:tooltip"
 msgid "Hide or show areas on the image"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:84
-msgid "Delete image"
-msgstr "छवि मिटाएँ"
+#: AnnotationDialog/ImagePreviewWidget.cpp:302
+msgctxt "@info:tooltip"
+msgid "Search for faces on the current image"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:304
+msgctxt "@info:whatsthis"
+msgid ""
+"If a tag for an area found by the face detector is set manually, the face "
+"recognition database will be trained automatically with that tag."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:311
+msgctxt "@info:tooltip"
+msgid ""
+"If you enable <emphasis>positionable tags</emphasis> for at least one "
+"category in <interface>Settings|Configure KPhotoAlbum...|Categories</"
+"interface>, you can associate specific image areas with tags."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:317
+msgctxt "@info"
+msgid ""
+"To use face detection, enable <emphasis>positionable tags</emphasis> for at "
+"least one category in <interface>Settings|Configure KPhotoAlbum...|"
+"Categories</interface>."
+msgstr ""
 
 #: AnnotationDialog/KDateEdit.cpp:88
 msgid "tomorrow"
@@ -342,142 +426,171 @@ msgstr "आज"
 msgid "yesterday"
 msgstr "कल"
 
-#: AnnotationDialog/ListSelect.cpp:77 DB/ImageSearchInfo.cpp:247
+#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:251
 msgid "or"
 msgstr "या"
 
-#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:242
+#: AnnotationDialog/ListSelect.cpp:79 DB/ImageSearchInfo.cpp:246
 msgid "and"
 msgstr "और"
 
-#: AnnotationDialog/ListSelect.cpp:308
+#: AnnotationDialog/ListSelect.cpp:312
 msgid "No Item Selected"
 msgstr "कोई वस्तु चुना नहीं गया"
 
-#: AnnotationDialog/ListSelect.cpp:319
+#: AnnotationDialog/ListSelect.cpp:323
 msgid "Rename..."
 msgstr "नाम बदलें..."
 
-#: AnnotationDialog/ListSelect.cpp:321
+#: AnnotationDialog/ListSelect.cpp:325
 msgid "<b>Sub Categories</b>"
 msgstr "<b>उप श्रेणियाँ</b>"
 
-#: AnnotationDialog/ListSelect.cpp:329
+#: AnnotationDialog/ListSelect.cpp:333
 msgid "Super Categories"
 msgstr "सुपर श्रेणियाँ"
 
-#: AnnotationDialog/ListSelect.cpp:346
+#: AnnotationDialog/ListSelect.cpp:350
 msgid "New Category..."
 msgstr "नई श्रेणी..."
 
-#: AnnotationDialog/ListSelect.cpp:349
+#: AnnotationDialog/ListSelect.cpp:353
 msgid "Create Subcategory..."
 msgstr "उप-श्रेणी बनाएँ..."
 
-#: AnnotationDialog/ListSelect.cpp:355
+#: AnnotationDialog/ListSelect.cpp:359
 #, kde-format
 msgid "Take item out of category %1"
 msgstr "वर्ग %1 से वस्तु को बाहर करें"
 
-#: AnnotationDialog/ListSelect.cpp:358
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "<b>Sorting</b>"
 msgstr "<b>छांटना</b>"
 
-#: AnnotationDialog/ListSelect.cpp:364
+#: AnnotationDialog/ListSelect.cpp:368
 msgid "Usage"
 msgstr "उपयोग"
 
-#: AnnotationDialog/ListSelect.cpp:365
+#: AnnotationDialog/ListSelect.cpp:369
 #, fuzzy
 #| msgid "Alphabetical"
 msgid "Alphabetical (Flat)"
 msgstr "अकारादि"
 
-#: AnnotationDialog/ListSelect.cpp:366
+#: AnnotationDialog/ListSelect.cpp:370
 #, fuzzy
 #| msgid "Alphabetical"
 msgid "Alphabetical (Tree)"
 msgstr "अकारादि"
 
-#: AnnotationDialog/ListSelect.cpp:386
+#: AnnotationDialog/ListSelect.cpp:390
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
 "any information about it from any image containing the item.</p>"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:394
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "सचमुच %1 को मिटाएँ?"
 
-#: AnnotationDialog/ListSelect.cpp:391 Settings/SubCategoriesPage.cpp:191
+#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:781
 msgid "&Delete"
 msgstr "मिटाएँ (&D)"
 
-#: AnnotationDialog/ListSelect.cpp:405
+#: AnnotationDialog/ListSelect.cpp:417
 msgid "Rename Item"
 msgstr "वस्तु का नाम बदलें"
 
-#: AnnotationDialog/ListSelect.cpp:405
+#: AnnotationDialog/ListSelect.cpp:417
 msgid "Enter new name:"
 msgstr "नया नाम भरें:"
 
-#: AnnotationDialog/ListSelect.cpp:409
+#: AnnotationDialog/ListSelect.cpp:421
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
 "\"%3\" on any image containing it.</p>"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:413
+#: AnnotationDialog/ListSelect.cpp:425
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "सचमुच %1 का नाम बदलें ?"
 
-#: AnnotationDialog/ListSelect.cpp:444
+#: AnnotationDialog/ListSelect.cpp:461
 msgid "New Super Category"
 msgstr "नया सुपर श्रेणी"
 
-#: AnnotationDialog/ListSelect.cpp:444
+#: AnnotationDialog/ListSelect.cpp:461
 msgid "New Super Category Name:"
 msgstr "नया सुपर श्रेणी नाम:"
 
-#: AnnotationDialog/ListSelect.cpp:453
+#: AnnotationDialog/ListSelect.cpp:470
 msgid "New Sub Category"
 msgstr "नया उप वर्ग"
 
-#: AnnotationDialog/ListSelect.cpp:453
+#: AnnotationDialog/ListSelect.cpp:470
 msgid "New Sub Category Name:"
 msgstr "नया उप वर्ग नाम:"
 
-#: AnnotationDialog/ResizableFrame.cpp:46
+#: AnnotationDialog/ProposedFaceDialog.cpp:58
+#, kde-format
+msgid "Is this %1 (%2)?"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:84
 #, fuzzy
 #| msgid "Remove Tokens"
 msgctxt "area of an image; rectangle that is overlayed upon the image"
 msgid "Remove area"
 msgstr "टोकन मिटाएँ"
 
-#: AnnotationDialog/ResizableFrame.cpp:293
+#: AnnotationDialog/ResizableFrame.cpp:95
+msgid "Try to recognize this face"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:338
 #, kde-format
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:304
-#, kde-format
-msgctxt ""
-"As in: associate [this marked area of the image] with tag %1 in category %2"
-msgid "Associate with %1 (%2)"
+#: AnnotationDialog/ResizableFrame.cpp:350
+#: AnnotationDialog/ResizableFrame.cpp:370
+msgid "Associate with"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:326
+#: AnnotationDialog/ResizableFrame.cpp:379
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
 "choices/menu items"
 msgid "Associate with"
 msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:402
+#, kde-format
+msgid "Train the recognition database with the face of %1"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:427
+#, fuzzy, kde-format
+#| msgid "%1 to %2  %3"
+msgctxt ""
+"%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the tag's "
+"category"
+msgid "%1 %2 (%3)"
+msgstr "%1 से %2  %3"
+
+#: AnnotationDialog/ResizableFrame.cpp:432
+#, fuzzy, kde-format
+#| msgid "%1 (by %2)"
+msgctxt "%1 is the tag name and %2 is the tag's category"
+msgid "%1 (%2)"
+msgstr "%1 (द्वारा %2)"
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
 #, fuzzy
@@ -547,6 +660,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
+#: MainWindow/BirthDatesDialog.cpp:71
 msgid "Close"
 msgstr "बंद करें"
 
@@ -610,7 +724,7 @@ msgstr[0] "१ वीडियो"
 msgstr[1] "%1 वीडियो"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:82
 msgid "Images"
 msgstr "छवियाँ"
 
@@ -797,130 +911,130 @@ msgstr "2 घंटे"
 msgid "10 Minutes"
 msgstr "10 मिनट"
 
-#: DB/Category.cpp:139 DB/Category.cpp:147
+#: DB/Category.cpp:140
 msgid "People"
 msgstr "व्यक्ति"
 
-#: DB/Category.cpp:140 DB/Category.cpp:148
+#: DB/Category.cpp:141
 msgid "Places"
 msgstr "स्थान"
 
-#: DB/Category.cpp:141
+#: DB/Category.cpp:142
 msgid "Events"
 msgstr ""
 
-#: DB/Category.cpp:142
+#: DB/Category.cpp:143 Settings/CategoryPage.cpp:220
 msgid "Folder"
 msgstr "फ़ोल्डर"
 
-#: DB/Category.cpp:143
+#: DB/Category.cpp:144 Settings/CategoryPage.cpp:221
 msgid "Tokens"
 msgstr "टोकन"
 
-#: DB/Category.cpp:144
+#: DB/Category.cpp:145 Settings/CategoryPage.cpp:222
 msgid "Media Type"
 msgstr "मीडिया क़िस्म"
 
-#: DB/Category.cpp:149
+#: DB/Category.cpp:147 Settings/CategoryPage.cpp:223
 msgid "Keywords"
 msgstr "की-वर्डस"
 
-#: DB/Category.cpp:198
+#: DB/Category.cpp:228
 #, kde-format
 msgid "Unable to create directory '%1'."
 msgstr "डिरेक्ट्री '%1' बनाने में अक्षम."
 
-#: DB/Category.cpp:198
+#: DB/Category.cpp:228
 msgid "Unable to Create Directory"
 msgstr "डिरेक्ट्री बनाने में अक्षम"
 
-#: DB/Category.cpp:205
+#: DB/Category.cpp:235
 #, kde-format
 msgid "Error when saving image '%1'."
 msgstr "छवि '%1' को सहेजने में त्रुटि हुई."
 
-#: DB/Category.cpp:205
+#: DB/Category.cpp:235
 msgid "Error Saving Image"
 msgstr "छवि सहेजने में त्रुटि हुई."
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:348
 #, fuzzy
 #| msgid "jan"
 msgctxt "Abbreviated month name"
 msgid "jan"
 msgstr "जन."
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:348
 #, fuzzy
 #| msgid "feb"
 msgctxt "Abbreviated month name"
 msgid "feb"
 msgstr "फर."
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:349
 #, fuzzy
 #| msgid "mar"
 msgctxt "Abbreviated month name"
 msgid "mar"
 msgstr "मार्च"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:349
 #, fuzzy
 #| msgid "apr"
 msgctxt "Abbreviated month name"
 msgid "apr"
 msgstr "अप्रै."
 
-#: DB/ImageDate.cpp:345
+#: DB/ImageDate.cpp:350
 #, fuzzy
 #| msgid "may"
 msgctxt "Abbreviated month name"
 msgid "may"
 msgstr "मई"
 
-#: DB/ImageDate.cpp:345
+#: DB/ImageDate.cpp:350
 #, fuzzy
 #| msgid "jun"
 msgctxt "Abbreviated month name"
 msgid "jun"
 msgstr "जून"
 
-#: DB/ImageDate.cpp:346
+#: DB/ImageDate.cpp:351
 #, fuzzy
 #| msgid "jul"
 msgctxt "Abbreviated month name"
 msgid "jul"
 msgstr "जु."
 
-#: DB/ImageDate.cpp:346
+#: DB/ImageDate.cpp:351
 #, fuzzy
 #| msgid "aug"
 msgctxt "Abbreviated month name"
 msgid "aug"
 msgstr "अग."
 
-#: DB/ImageDate.cpp:347
+#: DB/ImageDate.cpp:352
 #, fuzzy
 #| msgid "sep"
 msgctxt "Abbreviated month name"
 msgid "sep"
 msgstr "सित."
 
-#: DB/ImageDate.cpp:347
+#: DB/ImageDate.cpp:352
 #, fuzzy
 #| msgid "oct"
 msgctxt "Abbreviated month name"
 msgid "oct"
 msgstr "अक्तू."
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:353
 #, fuzzy
 #| msgid "nov"
 msgctxt "Abbreviated month name"
 msgid "nov"
 msgstr "नवं."
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:353
 #, fuzzy
 #| msgid "dec"
 msgctxt "Abbreviated month name"
@@ -931,11 +1045,7 @@ msgstr "दिसं."
 msgid "Loading information from images"
 msgstr "छवियों से जानकारी लोड की जा रही है"
 
-#: DB/ImageDB.cpp:147
-msgid "Cancel"
-msgstr "रद्द करें"
-
-#: DB/ImageSearchInfo.cpp:239
+#: DB/ImageSearchInfo.cpp:243
 #, fuzzy, kde-format
 #| msgid "No %1"
 msgctxt ""
@@ -945,11 +1055,11 @@ msgctxt ""
 msgid "No %1"
 msgstr "%1 नहीं"
 
-#: DB/ImageSearchInfo.cpp:248
+#: DB/ImageSearchInfo.cpp:252
 msgid "not"
 msgstr "नहीं"
 
-#: DB/ImageSearchInfo.cpp:252
+#: DB/ImageSearchInfo.cpp:256
 #, fuzzy, kde-format
 #| msgid "No other %1"
 msgctxt ""
@@ -960,31 +1070,31 @@ msgctxt ""
 msgid "No other %1"
 msgstr "कोई %1 नहीं"
 
-#: DB/NewImageFinder.cpp:129
+#: DB/NewImageFinder.cpp:142
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
 "of images, this may take some time.<br/>However, there is only a delay when "
 "new images are found.</p>"
 msgstr ""
 
-#: DB/NewImageFinder.cpp:314
+#: DB/NewImageFinder.cpp:327
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: DB/NewImageFinder.cpp:315
+#: DB/NewImageFinder.cpp:328
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
 msgstr ""
 
-#: DB/NewImageFinder.cpp:358
+#: DB/NewImageFinder.cpp:371
 msgid "Following files could not be read:"
 msgstr "निम्न फ़ाइलों को पढ़ा नहीं जा सका:"
 
-#: Exif/Database.cpp:77
+#: Exif/Database.cpp:96
 #, kde-format
 msgid ""
 "<p>There was an error while executing the SQL backend command. The error is "
@@ -994,11 +1104,11 @@ msgid ""
 "message obtained was:<br/>%2</p>"
 msgstr ""
 
-#: Exif/Database.cpp:85
+#: Exif/Database.cpp:104
 msgid "Error Executing Exif Command"
 msgstr ""
 
-#: Exif/Database.cpp:308
+#: Exif/Database.cpp:404
 #, fuzzy
 #| msgid "Loading information from images"
 msgid "Rereading EXIF information from all images"
@@ -1058,7 +1168,7 @@ msgstr ""
 msgid "Override image dates"
 msgstr "छवि तिथियाँ ओवरराइड करें"
 
-#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:93
+#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:107
 msgid "Settings"
 msgstr "विन्यास"
 
@@ -1351,21 +1461,21 @@ msgstr ""
 msgid "Directory Exists"
 msgstr "डिरेक्ट्री मौजूद है"
 
-#: HTMLGenerator/HTMLDialog.cpp:491 MainWindow/SplashScreen.cpp:66
+#: HTMLGenerator/HTMLDialog.cpp:493 MainWindow/SplashScreen.cpp:66
 #, kde-format
 msgid "%1"
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:502
+#: HTMLGenerator/HTMLDialog.cpp:504
 msgid "Could not find any themes - this is very likely an installation error"
 msgstr "कोई प्रसंग नहीं मिला- बहुत संभव है कि यह संस्थापना त्रुटि है"
 
-#: HTMLGenerator/HTMLDialog.cpp:509
+#: HTMLGenerator/HTMLDialog.cpp:511
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:516
+#: HTMLGenerator/HTMLDialog.cpp:518
 msgctxt ""
 "This is to show the author of the theme. E.g. copyright character (&#169;) "
 "by itself will work fine on this context if no proper word is available in "
@@ -1373,44 +1483,44 @@ msgctxt ""
 msgid "by "
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:518
+#: HTMLGenerator/HTMLDialog.cpp:520
 msgid ""
 "\n"
 " "
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:86
+#: ImageManager/ExtractOneVideoFrame.cpp:85
 msgid "Failed to start"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:87
+#: ImageManager/ExtractOneVideoFrame.cpp:86
 msgid "Crashed"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:88
+#: ImageManager/ExtractOneVideoFrame.cpp:87
 msgid "Timedout"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:89
+#: ImageManager/ExtractOneVideoFrame.cpp:88
 msgid "Read error"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:90
+#: ImageManager/ExtractOneVideoFrame.cpp:89
 msgid "Write error"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:91
+#: ImageManager/ExtractOneVideoFrame.cpp:90
 #, fuzzy
 #| msgid "Unknown"
 msgid "Unknown error"
 msgstr "अज्ञात"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:95
+#: ImageManager/ExtractOneVideoFrame.cpp:94
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:134
+#: ImageManager/ExtractOneVideoFrame.cpp:133
 #, kde-format
 msgid ""
 "Unable to extract video thumbnails from some files. Either the file is "
@@ -1614,47 +1724,51 @@ msgstr "छवियों का गंतव्य"
 msgid "The directory must be a subdirectory of %1"
 msgstr "डिरेक्ट्री को %1 की सबडिरेक्ट्री होना चाहिए"
 
-#: ImportExport/ImportDialog.cpp:267
+#: ImportExport/ImportDialog.cpp:230
+msgid "This directory is reserved for category images."
+msgstr ""
+
+#: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
 msgstr "श्रेणियाँ मिलाएं"
 
-#: ImportExport/ImportDialog.cpp:299
+#: ImportExport/ImportDialog.cpp:303
 #, fuzzy, kde-format
 #| msgid "Directory %1 does not exists. Should it be created?"
 msgid "Directory %1 does not exist. Should it be created?"
 msgstr "डिरेक्ट्री %1 मौजूद नहीं है. क्या इसे बनाया जाए?"
 
-#: ImportExport/ImportDialog.cpp:303
+#: ImportExport/ImportDialog.cpp:307
 #, kde-format
 msgid "Error creating directory %1"
 msgstr "डिरेक्ट्री %1 तैयार करने में त्रुटि"
 
-#: ImportExport/ImportDialog.cpp:389
+#: ImportExport/ImportDialog.cpp:393
 #, fuzzy
 #| msgid "How to Handle Images"
 msgid "How to resolve clashes"
 msgstr "छवियाँ कैसे हैंडल करें"
 
-#: ImportExport/ImportHandler.cpp:86 ImportExport/ImportHandler.cpp:139
+#: ImportExport/ImportHandler.cpp:95 ImportExport/ImportHandler.cpp:148
 msgid "Copying Images"
 msgstr "छवियों की नक़ल की जा रही है"
 
-#: ImportExport/ImportHandler.cpp:154
+#: ImportExport/ImportHandler.cpp:163
 #, kde-format
 msgid "Error when writing image %1"
 msgstr "छवि %1 को लिखने के दौरान त्रुटि"
 
-#: ImportExport/ImportHandler.cpp:173
+#: ImportExport/ImportHandler.cpp:182
 msgid "Updating Database"
 msgstr "डाटाबेस अद्यतन किया जा रहा है"
 
-#: ImportExport/ImportHandler.cpp:202
+#: ImportExport/ImportHandler.cpp:228
 #, fuzzy
 #| msgid "Can't copy file from any of the following locations:"
 msgid "Cannot copy from any of the following locations:"
 msgstr "फ़ाइलों को निम्न स्थानों से किसी से भी नक़ल नहीं किया जा सका:"
 
-#: ImportExport/ImportHandler.cpp:203
+#: ImportExport/ImportHandler.cpp:229
 msgid "Continue without Asking"
 msgstr "बिना पूछे जारी रखें"
 
@@ -1765,32 +1879,32 @@ msgid "&Maintenance"
 msgstr "मेंटेनेंस (&M)"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:72
+#: kphotoalbumui.rc:72 Settings/SettingsDialog.cpp:83
 msgid "Plugins"
 msgstr "प्लगइन्स"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:73
+#: kphotoalbumui.rc:74
 msgid "Export"
 msgstr "निर्यात"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:77
+#: kphotoalbumui.rc:78
 msgid "Import"
 msgstr "आयात"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:85
+#: kphotoalbumui.rc:86
 msgid "Batch Plugins"
 msgstr "बैच प्लगइन्स"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:89
+#: kphotoalbumui.rc:90
 msgid "Tools"
 msgstr "औज़ार"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:106
+#: kphotoalbumui.rc:107
 msgid "Main Toolbar"
 msgstr "मुख्य औज़ार पट्टी"
 
@@ -2013,6 +2127,32 @@ msgstr ""
 msgid "Skip images that are already in a stack"
 msgstr ""
 
+#: MainWindow/BirthDatesDialog.cpp:38
+#, fuzzy
+#| msgid "Configure View"
+msgid "Configure Birth Dates"
+msgstr "कॉन्फ़िगर दृश्य"
+
+#: MainWindow/BirthDatesDialog.cpp:41
+msgid ""
+"Set the date of birth for items (say people) here,\n"
+"and then see their age when viewing the images."
+msgstr ""
+
+#: MainWindow/BirthDatesDialog.cpp:53
+#, fuzzy
+#| msgid "Current Item"
+msgid "Current Category"
+msgstr "मौजूदा वस्तु"
+
+#: MainWindow/BirthDatesDialog.cpp:57
+msgid "Filter (Alt+f)"
+msgstr ""
+
+#: MainWindow/CalendarPopup.cpp:37
+msgid "unset"
+msgstr ""
+
 #: MainWindow/CategoryImagePopup.cpp:61
 msgid "Show Category Editor"
 msgstr "वर्ग संपादक दिखाएँ"
@@ -2022,6 +2162,43 @@ msgstr "वर्ग संपादक दिखाएँ"
 #| msgid "Configure Category Image"
 msgid "Make Category Image"
 msgstr "श्रेणी छवि कॉन्फ़िगर करें"
+
+#: MainWindow/CopyPopup.cpp:31
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy image(s) to..."
+msgstr "छवियाँ निर्यात/नक़ल करें..."
+
+#: MainWindow/CopyPopup.cpp:38
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy currently selected image to..."
+msgstr "छवियाँ निर्यात/नक़ल करें..."
+
+#: MainWindow/CopyPopup.cpp:41
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy all selected images to..."
+msgstr "छवियाँ निर्यात/नक़ल करें..."
+
+#: MainWindow/CopyPopup.cpp:69 Viewer/ViewerWidget.cpp:1547
+msgctxt "@action:button"
+msgid "Copy"
+msgstr ""
+
+#: MainWindow/CopyPopup.cpp:72 Viewer/ViewerWidget.cpp:1546
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgctxt "@title:window"
+msgid "Copy image to..."
+msgstr "छवियाँ निर्यात/नक़ल करें..."
+
+#: MainWindow/CopyPopup.cpp:76
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgctxt "@title:window"
+msgid "Copy images to..."
+msgstr "छवियाँ निर्यात/नक़ल करें..."
 
 #: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
@@ -2163,18 +2340,18 @@ msgstr ""
 msgid "Invoke External Program"
 msgstr "बाहरी प्रोग्राम चलाएँ"
 
-#: MainWindow/FeatureDialog.cpp:38
+#: MainWindow/FeatureDialog.cpp:40
 msgid "Feature Status"
 msgstr "एआरटीएस स्थिति"
 
-#: MainWindow/FeatureDialog.cpp:43
+#: MainWindow/FeatureDialog.cpp:45
 #, kde-format
 msgid ""
 "<h1>Overview</h1><p>Below you may see the list of compile- and runtime "
 "features KPhotoAlbum has, and their status:</p>%1"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:46
+#: MainWindow/FeatureDialog.cpp:48
 msgid ""
 "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
 "yourself, then please review the sections below to learn what to install to "
@@ -2184,7 +2361,7 @@ msgid ""
 "p><p>In case you are missing a feature and you did not compile KPhotoAlbum "
 "yourself, please do consider doing so. It really is not that hard. If you "
 "need help compiling KPhotoAlbum, feel free to ask on the <a href=\"http://"
-"mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
+"mail.kdab.com/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
 "p><p>The steps to compile KPhotoAlbum can be seen on <a href=\"http://www."
 "kphotoalbum.org/index.php?page=compile\">the KPhotoAlbum home page</a>. If "
 "you have never compiled a KDE application, then please ensure that you have "
@@ -2192,7 +2369,7 @@ msgid ""
 "like kdelibs<i>-devel</i></p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:62
+#: MainWindow/FeatureDialog.cpp:64
 msgid ""
 "<h1><a name=\"kipi\">Plug-ins support</a></h1><p>KPhotoAlbum has a plug-in "
 "system with lots of extensions. You may among other things find plug-ins for:"
@@ -2203,24 +2380,38 @@ msgid ""
 "href=\"http://userbase.kde.org/KIPI\">KDE Userbase Wiki</a></p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:75
+#: MainWindow/FeatureDialog.cpp:77
 msgid ""
 "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information like "
 "the date the image was shot, the shooting angle, focal length, and shutter-"
 "speed in what is known as EXIF information.</p><p>KPhotoAlbum uses the <a "
-"href=\"http://freshmeat.net/projects/exiv2/\">EXIV2 library</a> to read EXIF "
-"information from images</p>"
+"href=\"http://www.exiv2.org/\">EXIV2 library</a> to read EXIF information "
+"from images</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:83
+#: MainWindow/FeatureDialog.cpp:85
 msgid ""
-"<h1><a name=\"database\">SQL database support</a></h1><p>KPhotoAlbum allows "
-"you to search using a certain number of EXIF tags. For this KPhotoAlbum "
-"needs an Sqlite database. In addition the qt package for sqlite (e.g.qt-sql-"
-"sqlite) must be installed.</p>"
+"<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
+"allows you to search using a certain number of EXIF tags. For this "
+"KPhotoAlbum needs an Sqlite database. In addition the qt package for sqlite "
+"(e.g.qt-sql-sqlite) must be installed.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:88
+#: MainWindow/FeatureDialog.cpp:90
+msgid ""
+"<h1><a name=\"kface\">Face detection and recognition support</a></h1><p>If "
+"KPhotoAlbum has been built with support for libkface, face detection and "
+"recognition features are enabled in the annotation dialog.</p>"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:95
+msgid ""
+"<h1><a name=\"geomap\">Map view for geotagged images</a></h1><p>If "
+"KPhotoAlbum has been built with support for libkgeomap, KPhotoAlbum can show "
+"images with GPS information on a map.</p>"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:100
 msgid ""
 "<h1><a name=\"video\">Video support</a></h1><p>KPhotoAlbum relies on Qt's "
 "Phonon architecture for displaying videos; this in turn relies on GStreamer. "
@@ -2229,20 +2420,20 @@ msgid ""
 "video support</a>.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:96
+#: MainWindow/FeatureDialog.cpp:108
 msgid ""
 "<p>No video mime types found, which indicates that either Qt was compiled "
 "without phonon support, or there were missing codecs</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:98
+#: MainWindow/FeatureDialog.cpp:110
 #, kde-format
 msgid ""
 "<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></"
 "ul></p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:100
+#: MainWindow/FeatureDialog.cpp:112
 msgid ""
 "<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
 "uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails "
@@ -2254,55 +2445,57 @@ msgid ""
 "video thumbnails.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:205
+#: MainWindow/FeatureDialog.cpp:225
 #, fuzzy
 #| msgid "Plug-ins available"
 msgid "Plug-ins available"
 msgstr "उपलब्ध प्लगइन"
 
-#: MainWindow/FeatureDialog.cpp:206
+#: MainWindow/FeatureDialog.cpp:226
 #, fuzzy
 #| msgid "EXIF info supported"
 msgid "EXIF info supported"
 msgstr "एक्जइफ जानकारी समर्थन"
 
-#: MainWindow/FeatureDialog.cpp:207
-#, fuzzy
-#| msgid "SQL Database Support"
-msgid "SQL database support"
-msgstr "एसक्यूएल डाटाबेस समर्थन"
-
-#: MainWindow/FeatureDialog.cpp:208
+#: MainWindow/FeatureDialog.cpp:227
 #, fuzzy
 #| msgid "Sqlite Database Support (used for EXIF searches)"
 msgid "Sqlite database support (used for EXIF searches)"
 msgstr "एसक्यूलाइट डाटाबेस समर्थन (एक्जइफ खोज के लिए प्रयोग में)"
 
-#: MainWindow/FeatureDialog.cpp:210
+#: MainWindow/FeatureDialog.cpp:228
+msgid "Face detection and recognition support"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:229
+msgid "Map view for geotagged images."
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:230
 #, fuzzy
 #| msgid "AVI video support"
 msgid "Video support"
 msgstr "एवीआई वीडियो समर्थन"
 
-#: MainWindow/FeatureDialog.cpp:214
+#: MainWindow/FeatureDialog.cpp:234
 #, fuzzy
 #| msgid "Yes"
 msgctxt "Feature available"
 msgid "Yes"
 msgstr "हाँ"
 
-#: MainWindow/FeatureDialog.cpp:215
+#: MainWindow/FeatureDialog.cpp:235
 #, fuzzy
 #| msgid "No"
 msgctxt "Feature not available"
 msgid "No"
 msgstr "नहीं"
 
-#: MainWindow/FeatureDialog.cpp:222
+#: MainWindow/FeatureDialog.cpp:242
 msgid "Only with MPlayer1"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:223
+#: MainWindow/FeatureDialog.cpp:243
 #, fuzzy
 #| msgid "Video Thumbnails support"
 msgid "Video thumbnail support"
@@ -2459,8 +2652,7 @@ msgid ""
 "specify it here."
 msgstr ""
 
-#: MainWindow/StatisticsDialog.cpp:116 Settings/SubCategoriesPage.cpp:40
-#: Settings/UntaggedGroupBox.cpp:36
+#: MainWindow/StatisticsDialog.cpp:116 Settings/UntaggedGroupBox.cpp:36
 msgid "Category:"
 msgstr "वर्गः"
 
@@ -2486,7 +2678,19 @@ msgstr ""
 msgid "Total"
 msgstr "कुलः %1"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:730
+#: MainWindow/StatusBar.cpp:107
+#, fuzzy
+#| msgid "Thumbnail image size:"
+msgid "Decrease thumbnail storage size"
+msgstr "लघुछवि छवि का आकार:"
+
+#: MainWindow/StatusBar.cpp:114
+#, fuzzy
+#| msgid "Thumbnail image size:"
+msgid "Increase thumbnail storage size"
+msgstr "लघुछवि छवि का आकार:"
+
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:736
 msgid "Remove Tokens"
 msgstr "टोकन मिटाएँ"
 
@@ -2572,29 +2776,29 @@ msgstr "विशेषता जांच"
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr ""
 
-#: MainWindow/Window.cpp:137
+#: MainWindow/Window.cpp:139
 msgid "Loading Database"
 msgstr "डाटाबेस लोड किया जा रहा है"
 
-#: MainWindow/Window.cpp:143
+#: MainWindow/Window.cpp:145
 msgid "Loading Main Window"
 msgstr "मुख्य विंडो लोड किया जा रहा है"
 
-#: MainWindow/Window.cpp:233
+#: MainWindow/Window.cpp:236
 msgid "Searching for New Files"
 msgstr "नई फ़ाइलों के लिए ढूंढा जा रहा है"
 
-#: MainWindow/Window.cpp:239
+#: MainWindow/Window.cpp:242
 msgid "Loading Plug-ins"
 msgstr "प्लगइन लोड किया जा रहा है"
 
-#: MainWindow/Window.cpp:260
+#: MainWindow/Window.cpp:263
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
 msgstr ""
 
-#: MainWindow/Window.cpp:274
+#: MainWindow/Window.cpp:277
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -2603,310 +2807,322 @@ msgid ""
 "around with the changes you made through this session.</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:279
+#: MainWindow/Window.cpp:282
 msgid "Delete Demo Database"
 msgstr "डेमो डाटाबेस मिटाएँ"
 
-#: MainWindow/Window.cpp:294
+#: MainWindow/Window.cpp:297
 msgid "Do you want to save the changes?"
 msgstr "क्या आप परिवर्तनों को सहेजना चाहते हैं?"
 
-#: MainWindow/Window.cpp:295
+#: MainWindow/Window.cpp:298
 msgid "Save Changes?"
 msgstr "परिवर्तन सहेजें?"
 
-#: MainWindow/Window.cpp:334
+#: MainWindow/Window.cpp:336
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
 msgstr ""
 
-#: MainWindow/Window.cpp:336 MainWindow/Window.cpp:341
+#: MainWindow/Window.cpp:338 MainWindow/Window.cpp:343
 msgid "Stacking Error"
 msgstr ""
 
-#: MainWindow/Window.cpp:340
+#: MainWindow/Window.cpp:342
 msgid "Unknown error, stack creation failed."
 msgstr ""
 
-#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
-#: MainWindow/Window.cpp:1280
+#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:1307
 msgid "No item is selected."
 msgstr "कोई वस्तु चुना नहीं गया."
 
-#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
-#: MainWindow/Window.cpp:1281
+#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:1308
 msgid "No Selection"
 msgstr "कोई चयन नहीं"
 
-#: MainWindow/Window.cpp:466
+#: MainWindow/Window.cpp:468
 msgid "Saving..."
 msgstr "सहेजा जा रहा है..."
 
-#: MainWindow/Window.cpp:470
+#: MainWindow/Window.cpp:472
 msgid "Saving... Done"
 msgstr "सहेजा जा रहा है... सम्पन्न"
 
-#: MainWindow/Window.cpp:616
+#: MainWindow/Window.cpp:622
 msgid "There are no images to be shown."
 msgstr "दिखाने के लिए वहां कोई छवि नहीं है."
 
-#: MainWindow/Window.cpp:691
+#: MainWindow/Window.cpp:697
 msgid "Generate HTML..."
 msgstr "एचटीएमएल बनाएँ..."
 
-#: MainWindow/Window.cpp:695
+#: MainWindow/Window.cpp:701
 msgid "Import..."
 msgstr "आयात करें..."
 
-#: MainWindow/Window.cpp:698
+#: MainWindow/Window.cpp:704
 msgid "Export/Copy Images..."
 msgstr "छवियाँ निर्यात/नक़ल करें..."
 
-#: MainWindow/Window.cpp:724
+#: MainWindow/Window.cpp:730
 #, fuzzy
 #| msgid "Delete Selected"
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "चयनित को मिटाएँ"
 
-#: MainWindow/Window.cpp:733
+#: MainWindow/Window.cpp:739
 msgid "Open List of Files..."
 msgstr "फ़ाइलों की सूची खोलें..."
 
-#: MainWindow/Window.cpp:737
+#: MainWindow/Window.cpp:743
 msgid "Annotate Individual Items"
 msgstr "अलग अलग वस्तुओं की व्याख्या"
 
-#: MainWindow/Window.cpp:741
+#: MainWindow/Window.cpp:747
 msgid "Annotate Multiple Items at a Time"
 msgstr "बहुत से वस्तुओं की व्याख्या एक ही समय में"
 
-#: MainWindow/Window.cpp:745
+#: MainWindow/Window.cpp:751
 msgid "Merge Images into a Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:749
+#: MainWindow/Window.cpp:755
 msgid "Remove Images from Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:752
+#: MainWindow/Window.cpp:758
 msgid "Set as First Image in Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:767
+#: MainWindow/Window.cpp:773
 msgid "View"
 msgstr "दृश्य"
 
-#: MainWindow/Window.cpp:771
+#: MainWindow/Window.cpp:777
 msgid "View (In New Window)"
 msgstr "दृश्य (नए विंडो में)"
 
-#: MainWindow/Window.cpp:774
+#: MainWindow/Window.cpp:780
 msgid "Run Slide Show"
 msgstr "स्लाइड शो चलाएँ"
 
-#: MainWindow/Window.cpp:779
+#: MainWindow/Window.cpp:785
 msgid "Run Randomized Slide Show"
 msgstr "स्लाइड शो बेतरतीब चलाएँ"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:791
 msgid "Collapse all stacks"
 msgstr ""
 
-#: MainWindow/Window.cpp:791
+#: MainWindow/Window.cpp:797
 msgid "Expand all stacks"
 msgstr ""
 
-#: MainWindow/Window.cpp:796
+#: MainWindow/Window.cpp:802
 msgid "Show &Oldest First"
 msgstr "सबसे पुराने को पहले दिखाएँ (&O)"
 
-#: MainWindow/Window.cpp:801
+#: MainWindow/Window.cpp:807
 msgid "Show &Newest First"
 msgstr "सबसे नए को पहले दिखाएं (&N)"
 
-#: MainWindow/Window.cpp:806
+#: MainWindow/Window.cpp:812
 msgid "Sort Selected by Date && Time"
 msgstr "तारीख़ व समय द्वारा छांटना चुना गया (&&)"
 
-#: MainWindow/Window.cpp:809
+#: MainWindow/Window.cpp:815
 #, fuzzy
 #| msgid "Limit View to Marked"
 msgid "Limit View to Selection"
 msgstr "दृश्य को चिह्नित तक सीमित करें"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:818
 msgid "Jump to Context"
 msgstr "संदर्भ पर जाएँ"
 
-#: MainWindow/Window.cpp:817
+#: MainWindow/Window.cpp:823
 msgid "Lock Images"
 msgstr "छवियाँ तालाबंद करें"
 
-#: MainWindow/Window.cpp:820
+#: MainWindow/Window.cpp:826
 msgid "Unlock"
 msgstr "तालाखोलें"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:829
 msgid "Change Password..."
 msgstr "पासवर्ड बदलें..."
 
-#: MainWindow/Window.cpp:827
+#: MainWindow/Window.cpp:833
 msgid "Lock Away All Other Items"
 msgstr "सभी अन्य वस्तुओं को तालाबंद करें"
 
-#: MainWindow/Window.cpp:830
+#: MainWindow/Window.cpp:836
 msgid "Lock Away Current Set of Items"
 msgstr "मौजूदा वस्तुओं के सेट को तालाबंद करें"
 
-#: MainWindow/Window.cpp:834
+#: MainWindow/Window.cpp:840
 msgid "Display Images and Videos Not on Disk"
 msgstr "उन छवियों व वीडियो को दिखाएं जो डिस्क पर मौज़ूद नहीं है"
 
-#: MainWindow/Window.cpp:837
+#: MainWindow/Window.cpp:843
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "अपूर्ण तारीख़ वाले छवियों व वीडियो दिखाएं..."
 
-#: MainWindow/Window.cpp:841
+#: MainWindow/Window.cpp:847
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "परिवर्तित एमडी५ सम युक्त छवियों व वीडियो को दिखाएं"
 
-#: MainWindow/Window.cpp:845
+#: MainWindow/Window.cpp:851
 msgid "Merge duplicates"
 msgstr ""
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:853
 msgid "Recalculate Checksum"
 msgstr "चेकसम फिर से गणना करें"
 
-#: MainWindow/Window.cpp:850
+#: MainWindow/Window.cpp:856
 msgid "Rescan for Images and Videos"
 msgstr "छवियों तथा वीडियो को फिर से स्कैन करें"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:859
 #, fuzzy
 #| msgid "Update EXIF search database"
 msgid "Recreate Exif Search Database"
 msgstr "एक्जिफ सर्च डाटाबेस अद्यतन करें"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:862
 msgid "Read EXIF Info From Files..."
 msgstr "फ़ाइलों से एक्सइफ जानकारी पढ़ें..."
 
-#: MainWindow/Window.cpp:858
+#: MainWindow/Window.cpp:864
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 
-#: MainWindow/Window.cpp:859
+#: MainWindow/Window.cpp:865
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:871
 #, fuzzy
 #| msgid "Sort Selected by Date && Time"
 msgid "Sort All by Date && Time"
 msgstr "तारीख़ व समय द्वारा छांटना चुना गया (&&)"
 
-#: MainWindow/Window.cpp:869
+#: MainWindow/Window.cpp:875
 msgid "Automatically Stack Selected Images..."
 msgstr ""
 
-#: MainWindow/Window.cpp:872
+#: MainWindow/Window.cpp:878
+msgid "Edit Birth Dates..."
+msgstr ""
+
+#: MainWindow/Window.cpp:881
 msgid "Build Thumbnails"
 msgstr "लघु छवि बनाएँ"
 
-#: MainWindow/Window.cpp:875
+#: MainWindow/Window.cpp:884
 msgid "Statistics"
 msgstr ""
 
-#: MainWindow/Window.cpp:884
+#: MainWindow/Window.cpp:893
 msgid "Enable All Messages"
 msgstr "सभी संदेश सक्षम करें"
 
-#: MainWindow/Window.cpp:887
+#: MainWindow/Window.cpp:896
 #, fuzzy
 #| msgid "Configure View"
 msgid "Configure Current View"
 msgstr "कॉन्फ़िगर दृश्य"
 
-#: MainWindow/Window.cpp:896
+#: MainWindow/Window.cpp:905
 #, fuzzy
 #| msgid "Theme:"
 msgid "Tree"
 msgstr "प्रसंगः"
 
-#: MainWindow/Window.cpp:901
+#: MainWindow/Window.cpp:910
 msgid "Tree with User Icons"
 msgstr ""
 
-#: MainWindow/Window.cpp:907 MainWindow/Window.cpp:913
+#: MainWindow/Window.cpp:915
 #, fuzzy
 #| msgid "Icon:"
 msgid "Icons"
 msgstr "प्रतीकः"
 
-#: MainWindow/Window.cpp:925
+#: MainWindow/Window.cpp:927
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "लघुछवि विंडो में औजारयुक्ति दिखाएं"
 
-#: MainWindow/Window.cpp:931
+#: MainWindow/Window.cpp:933
 msgid "Run KPhotoAlbum Demo"
 msgstr "केफोटोएलबम डेमो चलाएं"
 
-#: MainWindow/Window.cpp:934
+#: MainWindow/Window.cpp:936
 msgid "KPhotoAlbum Feature Status"
 msgstr "केफोटोएलबम विशेषता स्थिति"
 
-#: MainWindow/Window.cpp:937
+#: MainWindow/Window.cpp:939
 #, fuzzy
 #| msgid "Show Videos"
 msgid "Show Demo Videos"
 msgstr "वीडियो दिखाएँ"
 
-#: MainWindow/Window.cpp:942
+#: MainWindow/Window.cpp:944
 msgid "Show Exif Info"
 msgstr "एक्जइफ जानकारी दिखाएँ"
 
-#: MainWindow/Window.cpp:945
+#: MainWindow/Window.cpp:947
 msgid "Recreate Selected Thumbnails"
 msgstr "चयनित लघु-छवियां फिर से बनाएं"
 
-#: MainWindow/Window.cpp:948
+#: MainWindow/Window.cpp:950
 #, fuzzy
 #| msgid "Generate thumbnails"
 msgid "Use next video thumbnail"
 msgstr "लघु छवि तैयार करें"
 
-#: MainWindow/Window.cpp:952
+#: MainWindow/Window.cpp:954
 msgid "Use previous video thumbnail"
 msgstr ""
 
-#: MainWindow/Window.cpp:978
+#: MainWindow/Window.cpp:980
 msgid "Auto saving...."
 msgstr "स्वचालित सहेजा जा रहा है..."
 
-#: MainWindow/Window.cpp:980
+#: MainWindow/Window.cpp:982
 msgid "Auto saving.... Done"
 msgstr "स्वचालित सहेजा जा रहा है... सम्पन्न"
 
-#: MainWindow/Window.cpp:1072
+#: MainWindow/Window.cpp:1076
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
 "%1</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1080
+#: MainWindow/Window.cpp:1084
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
 "index.xml</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1150
+#: MainWindow/Window.cpp:1100
+msgid ""
+"<p>You have configured a tag for untagged images, but either the tag itself "
+"or its category does not exist in the database.</p><p>Please review your "
+"untagged tag setting under <interface>Settings|Configure KPhotoAlbum...|"
+"Categories</interface></p>"
+msgstr ""
+
+#: MainWindow/Window.cpp:1177
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
@@ -2914,45 +3130,45 @@ msgid ""
 "file can easily circumvent this password.</b></p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1155
+#: MainWindow/Window.cpp:1182
 msgid "Password Protection"
 msgstr "पासवर्ड सुरक्षा"
 
-#: MainWindow/Window.cpp:1169
+#: MainWindow/Window.cpp:1196
 msgid "Type in Password to Unlock"
 msgstr "ताला खोलने के लिए पासवर्ड टाइप करें"
 
-#: MainWindow/Window.cpp:1178 MainWindow/Window.cpp:1212
+#: MainWindow/Window.cpp:1205 MainWindow/Window.cpp:1239
 msgid "Invalid password."
 msgstr "अवैध पासवर्ड."
 
-#: MainWindow/Window.cpp:1203
+#: MainWindow/Window.cpp:1230
 msgid "Type in Old Password"
 msgstr "पुराना पासवर्ड टाइप करें"
 
-#: MainWindow/Window.cpp:1215
+#: MainWindow/Window.cpp:1242
 msgid "Type in New Password"
 msgstr "नया पासवर्ड टाइप करें"
 
-#: MainWindow/Window.cpp:1226 Settings/SettingsDialog.cpp:65
+#: MainWindow/Window.cpp:1253 Settings/SettingsDialog.cpp:76
 msgid "General"
 msgstr "सामान्य"
 
-#: MainWindow/Window.cpp:1227 Settings/SettingsDialog.cpp:70
+#: MainWindow/Window.cpp:1254 Settings/SettingsDialog.cpp:81
 msgid "Viewer"
 msgstr "प्रदर्शक"
 
-#: MainWindow/Window.cpp:1240
+#: MainWindow/Window.cpp:1267
 msgid "Annotation Dialog"
 msgstr "एनोटेशन संवाद"
 
-#: MainWindow/Window.cpp:1398
+#: MainWindow/Window.cpp:1421
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1409
+#: MainWindow/Window.cpp:1432
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -2962,44 +3178,51 @@ msgid ""
 "on due to the missing make install.</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1409
+#: MainWindow/Window.cpp:1432
 #, fuzzy
 #| msgid "Invoke External Program"
 msgid "Internal Error"
 msgstr "बाहरी प्रोग्राम चलाएँ"
 
-#: MainWindow/Window.cpp:1594
+#: MainWindow/Window.cpp:1617
 msgid "Open List of Files"
 msgstr "फ़ाइलों की सूची खोलें"
 
-#: MainWindow/Window.cpp:1594
+#: MainWindow/Window.cpp:1617
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
 msgstr ""
 
-#: MainWindow/Window.cpp:1610
+#: MainWindow/Window.cpp:1633
 msgid "No images matching your input were found."
 msgstr "आपके इनपुट से मेल खाती कोई छवि नहीं मिली."
 
-#: MainWindow/Window.cpp:1610
+#: MainWindow/Window.cpp:1633
 msgid "No Matches"
 msgstr "कोई जोड़ नहीं"
 
-#: MainWindow/Window.cpp:1787
+#: MainWindow/Window.cpp:1794
+#, fuzzy, no-c-format, kde-format
+#| msgid "Thumbnail image size:"
+msgctxt "@info:status"
+msgid "Thumbnail width: %1px (storage size: %2px)"
+msgstr "लघुछवि छवि का आकार:"
+
+#: MainWindow/Window.cpp:1833
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
 "install the MPlayer2 package</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1790
+#: MainWindow/Window.cpp:1836
 #, fuzzy
 #| msgid "File not available"
 msgid "Video thumbnails are not available"
 msgstr "फ़ाइल उपलब्ध नहीं"
 
-#: MainWindow/Window.cpp:1796
+#: MainWindow/Window.cpp:1842
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3007,11 +3230,11 @@ msgid ""
 "extracting thumbnails from videos.</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1799
+#: MainWindow/Window.cpp:1845
 msgid "MPlayer is too old"
 msgstr ""
 
-#: MainWindow/Window.cpp:1821
+#: MainWindow/Window.cpp:1867
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3020,35 +3243,72 @@ msgid ""
 "id=org.kde.kphotoalbum\">install from google play</a></p>"
 msgstr ""
 
-#: Plugins/CategoryImageCollection.cpp:34 Plugins/ImageCollection.cpp:57
+#: Map/MapView.cpp:62
+msgid "Save the current map settings"
+msgstr ""
+
+#: Map/MapView.cpp:68
+msgid "Go to last map position"
+msgstr ""
+
+#: Map/MapView.cpp:137
+#, fuzzy
+#| msgid "Settings"
+msgid "Settings saved"
+msgstr "विन्यास"
+
+#: Map/MapView.cpp:137
+msgid "Map view"
+msgstr ""
+
+#: Map/MapView.cpp:148
+#, fuzzy
+#| msgid "Loading information from images"
+msgid "<i>Loading coordinates from the images ...</i>"
+msgstr "छवियों से जानकारी लोड की जा रही है"
+
+#: Map/MapView.cpp:157
+msgid "<i>This image does not contain geographic coordinates.</i>"
+msgstr ""
+
+#: Map/MapView.cpp:162
+msgid ""
+"<i>Some of the selected images do not contain geographic coordinates.</i>"
+msgstr ""
+
+#: Map/MapView.cpp:168
+msgid "<i>None of the selected images contain geographic coordinates.</i>"
+msgstr ""
+
+#: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:55
 #, fuzzy
 #| msgid "None"
 msgctxt "The 'name' of an unnamed image collection."
 msgid "None"
 msgstr "कुछ नहीं"
 
-#: Plugins/ImageCollection.cpp:44
+#: Plugins/ImageCollection.cpp:42
 #, fuzzy
 #| msgid "No Selection"
 msgctxt "As in 'an unknown set of images, created from the selection'."
 msgid "Unknown (Selection)"
 msgstr "कोई चयन नहीं"
 
-#: Plugins/ImageCollection.cpp:47
+#: Plugins/ImageCollection.cpp:45
 #, fuzzy
 #| msgid "No Selection"
 msgctxt "As in 'A selection of [a generated context description]'"
 msgid " (Selection)"
 msgstr "कोई चयन नहीं"
 
-#: Plugins/ImageCollection.cpp:52
+#: Plugins/ImageCollection.cpp:50
 #, fuzzy
 #| msgid "Unknown"
 msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "अज्ञात"
 
-#: Plugins/Interface.cpp:144
+#: Plugins/Interface.cpp:155
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3096,7 +3356,7 @@ msgid ""
 "Remote Control protocol version: %2"
 msgstr ""
 
-#: Settings/CategoryItem.cpp:130
+#: Settings/CategoryItem.cpp:160
 msgid ""
 "<p>Due to a shortcoming in KPhotoAlbum, you need to save your database after "
 "renaming categories; otherwise all the filenames of the category thumbnails "
@@ -3105,61 +3365,152 @@ msgid ""
 "</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:55
-msgid "Label:"
-msgstr "लेबल:"
-
-#: Settings/CategoryPage.cpp:68
-msgid "Positionable tags:"
-msgstr ""
-
-#: Settings/CategoryPage.cpp:71
-msgid "Coordinates can be added to tags in this category"
-msgstr ""
-
-#: Settings/CategoryPage.cpp:79
-msgid "Icon:"
-msgstr "प्रतीकः"
-
-#: Settings/CategoryPage.cpp:91
-msgid "Thumbnail Size: "
-msgstr "लघु छवि आकारः"
-
-#: Settings/CategoryPage.cpp:103
-msgid "Preferred view:"
-msgstr "पसंदीदा दृश्य:"
-
-#: Settings/CategoryPage.cpp:109
-msgid "List View"
-msgstr "सूची दृश्य"
-
-#: Settings/CategoryPage.cpp:109
-msgid "List View with Custom Thumbnails"
-msgstr "मनपसंद लघुछवियों के साथ सूची दृश्य"
-
-#: Settings/CategoryPage.cpp:109
-msgid "Icon View"
-msgstr "प्रतीक दृश्य"
-
-#: Settings/CategoryPage.cpp:109
-msgid "Icon View with Custom Thumbnails"
-msgstr "मनपसंद लघुछवियों के साथ प्रतीक दृश्य"
-
-#: Settings/CategoryPage.cpp:116
+#: Settings/CategoryPage.cpp:75
 msgid "New"
 msgstr "नया"
 
-#: Settings/CategoryPage.cpp:164
-#, kde-format
-msgid ""
-"<p>Do you really want to make '%1' non-positionable?</p><p>All areas linked "
-"against this category will be deleted!</p>"
+#: Settings/CategoryPage.cpp:83
+#, fuzzy
+#| msgid "Rename..."
+msgid "Rename"
+msgstr "नाम बदलें..."
+
+#: Settings/CategoryPage.cpp:115
+msgid "Positionable tags:"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:211
+#: Settings/CategoryPage.cpp:117
+msgid "Tags in this category can be associated with an area of the image"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:123
+msgid "Icon:"
+msgstr "प्रतीकः"
+
+#: Settings/CategoryPage.cpp:133
+#, fuzzy
+#| msgid "Thumbnail Size: "
+msgid "Thumbnail Size:"
+msgstr "लघु छवि आकारः"
+
+#: Settings/CategoryPage.cpp:144
+msgid "Preferred view:"
+msgstr "पसंदीदा दृश्य:"
+
+#: Settings/CategoryPage.cpp:149
+msgid "List View"
+msgstr "सूची दृश्य"
+
+#: Settings/CategoryPage.cpp:150
+msgid "List View with Custom Thumbnails"
+msgstr "मनपसंद लघुछवियों के साथ सूची दृश्य"
+
+#: Settings/CategoryPage.cpp:151
+msgid "Icon View"
+msgstr "प्रतीक दृश्य"
+
+#: Settings/CategoryPage.cpp:152
+msgid "Icon View with Custom Thumbnails"
+msgstr "मनपसंद लघुछवियों के साथ प्रतीक दृश्य"
+
+#: Settings/CategoryPage.cpp:173
+msgid "<i>Choose a category to edit it</i>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:187
+#, fuzzy
+#| msgid "<b>Sub Categories</b>"
+msgid "Settings for category"
+msgstr "<b>उप श्रेणियाँ</b>"
+
+#: Settings/CategoryPage.cpp:190
 #, kde-format
-msgid "<p>Really delete category '%1'?</p>"
+msgid "<i>Pending change: rename to \"%1\"</i>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:227
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"special category name which is reserved and can't be used for a normal "
+"category.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:231 Settings/CategoryPage.cpp:242
+#: Settings/CategoryPage.cpp:256 Settings/CategoryPage.cpp:273
+#, fuzzy
+#| msgid "Invalid driver."
+msgid "Invalid category name"
+msgstr "अवैध ड्राइवर."
+
+#: Settings/CategoryPage.cpp:239
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
+"this name already exists.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:251
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"standard category which comes with a localized name. The localized name for "
+"\"%2\" is \"%1\", so this category already has this name.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:268
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"standard category which comes with a localized name. The localized name for "
+"\"%2\" is \"%3\" and this category already exists.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:281
+#, kde-format
+msgid ""
+"<p>\"%1\" is a standard category which comes with a localized name. The "
+"localized name for \"%1\" is \"%2\", this name will be used instead.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:285
+msgid "Localized category name entered"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:302
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
+"pending rename action on the category \"%2\". Please save this change first."
+"</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:306
+msgid "Unsaved pending renaming action"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:335
+#, kde-format
+msgid ""
+"<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
+"linked against this category will be deleted!</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:384
+#, fuzzy
+#| msgid "New Category..."
+msgid "New category"
+msgstr "नई श्रेणी..."
+
+#: Settings/CategoryPage.cpp:416
+#, fuzzy, kde-format
+#| msgid "<p>Really delete category '%1'?</p>"
+msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>सचमुच में मिटा दें श्रेणी '%1' को?</p>"
+
+#: Settings/CategoryPage.cpp:429
+msgid "<i>choose a category to edit it</i>"
+msgstr ""
 
 #: Settings/DatabaseBackendPage.cpp:36
 msgid "Choose speed over readability for index.xml file"
@@ -3219,6 +3570,76 @@ msgstr "एक्जइफ संवाद में दिखाने हे�
 #: Settings/ExifPage.cpp:48
 msgid "Character set for image metadata:"
 msgstr ""
+
+#: Settings/FaceManagementPage.cpp:49
+#, fuzzy
+#| msgid "No Selection"
+msgid "Face detection"
+msgstr "कोई चयन नहीं"
+
+#: Settings/FaceManagementPage.cpp:57
+msgid "Accuracy"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:61
+msgid "fast"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:71
+msgid "accurate"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:76
+msgid "Sensitivity"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:80
+msgid "more false positives"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:90
+msgid "more missed faces"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:102
+msgid "Face recognition"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:111
+#, fuzzy
+#| msgid "Database backend"
+msgid "Database entry"
+msgstr "डाटाबेस बैकएण्ड"
+
+#: Settings/FaceManagementPage.cpp:126
+#, fuzzy
+#| msgid "Delete Selected"
+msgid "Delete selected"
+msgstr "चयनित को मिटाएँ"
+
+#: Settings/FaceManagementPage.cpp:132
+#, fuzzy
+#| msgid "Updating Database"
+msgid "Erase database"
+msgstr "डाटाबेस अद्यतन किया जा रहा है"
+
+#: Settings/FaceManagementPage.cpp:137
+msgid ""
+"<b>Caution:</b> Changes to category names or category deletions are not "
+"adopted by the recognition database until the changes are saved!"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:207
+#, fuzzy
+#| msgid "Do you want to save the changes?"
+msgid "Do you really want to delete the selected tags?"
+msgstr "क्या आप परिवर्तनों को सहेजना चाहते हैं?"
+
+#: Settings/FaceManagementPage.cpp:232
+#, fuzzy
+#| msgid "Do you want to save the changes?"
+msgid "Do you really want to erase the database?"
+msgstr "क्या आप परिवर्तनों को सहेजना चाहते हैं?"
 
 #: Settings/FileVersionDetectionPage.cpp:38
 msgid "New File Searches"
@@ -3551,151 +3972,279 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "समय चिह्न पर भरोसा करें?"
 
-#: Settings/SettingsDialog.cpp:66
+#: Settings/SettingsDialog.cpp:77
 #, fuzzy
 #| msgid "Version %1"
 msgid "File Searching & Versions"
 msgstr "संस्करण %1"
 
-#: Settings/SettingsDialog.cpp:67
+#: Settings/SettingsDialog.cpp:78
 msgid "Thumbnail View"
 msgstr "लघु छवि दृश्य"
 
-#: Settings/SettingsDialog.cpp:68
+#: Settings/SettingsDialog.cpp:79
 msgid "Categories"
 msgstr "श्रेणियाँ"
 
-#: Settings/SettingsDialog.cpp:69
-msgid "Subcategories"
-msgstr "उपश्रेणियाँ"
+#: Settings/SettingsDialog.cpp:80
+#, fuzzy
+#| msgid "New Group"
+msgid "Tag Groups"
+msgstr "नया समूह"
 
-#: Settings/SettingsDialog.cpp:76
+#: Settings/SettingsDialog.cpp:87
 #, fuzzy
 #| msgid "EXIF Information"
 msgid "EXIF/IPTC Information"
 msgstr "एक्सइफ जानकारी"
 
-#: Settings/SettingsDialog.cpp:78
+#: Settings/SettingsDialog.cpp:89
 msgid "Database backend"
 msgstr "डाटाबेस बैकएण्ड"
 
-#: Settings/SubCategoriesPage.cpp:53
-msgid "Super Categories:"
-msgstr "सुपर वर्ग:"
-
-#: Settings/SubCategoriesPage.cpp:62
-msgid "Items of Category:"
-msgstr "वर्ग की वस्तुएं:"
-
-#: Settings/SubCategoriesPage.cpp:72
-msgid "Add Super Category..."
-msgstr "सुपर वर्ग जोड़ें..."
-
-#: Settings/SubCategoriesPage.cpp:74
-msgid "Rename Super Category..."
-msgstr "सुपर वर्ग का नाम बदलें..."
-
-#: Settings/SubCategoriesPage.cpp:76
-msgid "Delete Super Category"
-msgstr "सुपर वर्ग मिटाएं"
-
-#: Settings/SubCategoriesPage.cpp:80
-msgid ""
-"<b>Notice:</b> It is also possible to set up subcategories in the annotation "
-"dialog, simply by dragging items."
+#: Settings/SettingsDialog.cpp:91
+msgid "Face management"
 msgstr ""
 
-#: Settings/SubCategoriesPage.cpp:159 Settings/SubCategoriesPage.cpp:176
+#: Settings/TagGroupsPage.cpp:49
+#, fuzzy
+#| msgid "Categories"
+msgctxt "@label"
+msgid "Categories and groups:"
+msgstr "श्रेणियाँ"
+
+#: Settings/TagGroupsPage.cpp:60
+msgctxt "@label/rich"
+msgid "<emphasis>Select a group on the left side to add tags to it</emphasis>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:73
+msgctxt "@label/rich"
+msgid ""
+"<emphasis>There are pending changes of category names.<nl> Please save the "
+"changes before working on tag groups.</emphasis>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:81
+msgctxt "@action:inmenu"
+msgid "Add group ..."
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:260
+#, fuzzy, kde-format
+#| msgid "Really delete group %1?"
+msgctxt "@action:inmenu"
+msgid "Rename group \"%1\""
+msgstr "सचमुच समूह %1 मिटाएँ?"
+
+#: Settings/TagGroupsPage.cpp:262
+#, fuzzy, kde-format
+#| msgid "Delete Group"
+msgctxt "@action:inmenu"
+msgid "Delete group \"%1\""
+msgstr "समूह मिटाएँ"
+
+#: Settings/TagGroupsPage.cpp:330
+#, fuzzy, kde-format
+#| msgid "Take item out of category %1"
+msgctxt "@label"
+msgid "Tags in group \"%1\" of category \"%2\""
+msgstr "वर्ग %1 से वस्तु को बाहर करें"
+
+#: Settings/TagGroupsPage.cpp:349
+#, fuzzy
+#| msgid "New Group"
+msgctxt "@title:window"
 msgid "New Group"
 msgstr "नया समूह"
 
-#: Settings/SubCategoriesPage.cpp:159 Settings/SubCategoriesPage.cpp:176
+#: Settings/TagGroupsPage.cpp:350
+#, fuzzy
+#| msgid "Group name:"
+msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "समूह नामः"
 
-#: Settings/SubCategoriesPage.cpp:191
+#: Settings/TagGroupsPage.cpp:367
 #, kde-format
-msgid "Really delete group %1?"
-msgstr "सचमुच समूह %1 मिटाएँ?"
+msgctxt "@info"
+msgid "<p>The group \"%1\" already exists.</p>"
+msgstr ""
 
-#: Settings/SubCategoriesPage.cpp:191
+#: Settings/TagGroupsPage.cpp:368
+msgctxt "@title:window"
+msgid "Cannot add group"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:446 Settings/TagGroupsPage.cpp:469
+#, fuzzy
+#| msgid "Delete Group"
+msgctxt "@title:window"
+msgid "Rename Group"
+msgstr "समूह मिटाएँ"
+
+#: Settings/TagGroupsPage.cpp:447
+#, fuzzy
+#| msgid "Group name:"
+msgctxt "@label:textbox"
+msgid "New group name:"
+msgstr "समूह नामः"
+
+#: Settings/TagGroupsPage.cpp:464
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>Cannot rename group \"%1\" to \"%2\": \"%2\" already exists in "
+"category \"%3\"</para>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:526
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>Really delete group \"%1\"?</para><para>Sub-categories of this group "
+"will be moved to the super category of \"%1\" (\"%2\").<nl/> All other "
+"memberships of the sub-categories will stay intact.</para>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:532
+#, fuzzy, kde-format
+#| msgid "<p>Really delete category '%1'?</p>"
+msgctxt "@info"
+msgid "<para>Really delete group \"%1\"?</para>"
+msgstr "<p>सचमुच में मिटा दें श्रेणी '%1' को?</p>"
+
+#: Settings/TagGroupsPage.cpp:537
+#, fuzzy
+#| msgid "Delete Group"
+msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "समूह मिटाएँ"
 
-#: Settings/ThumbnailsPage.cpp:36
+#: Settings/TagGroupsPage.cpp:715
+#, fuzzy, kde-format
+#| msgid "Rename..."
+msgctxt "@action:inmenu"
+msgid "Rename \"%1\""
+msgstr "नाम बदलें..."
+
+#: Settings/TagGroupsPage.cpp:717
+#, fuzzy, kde-format
+#| msgid "Delete"
+msgctxt "@action:inmenu"
+msgid "Delete \"%1\""
+msgstr "मिटाएँ"
+
+#: Settings/TagGroupsPage.cpp:727
+#, fuzzy
+#| msgid "New Sub Category Name:"
+msgctxt "@title:window"
+msgid "New Tag Name"
+msgstr "नया उप वर्ग नाम:"
+
+#: Settings/TagGroupsPage.cpp:728
+#, fuzzy
+#| msgid "Database name:"
+msgctxt "@label:textbox"
+msgid "Tag name:"
+msgstr "डाटाबेस का नामः"
+
+#: Settings/TagGroupsPage.cpp:776
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>Do you really want to delete \"%1\"?</para><para>Deleting the item "
+"will remove any information about it from any image containing the item.</"
+"para>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:780
+#, fuzzy, kde-format
+#| msgid "Really Delete %1?"
+msgctxt "@title:window"
+msgid "Really delete %1?"
+msgstr "सचमुच %1 को मिटाएँ?"
+
+#: Settings/ThumbnailsPage.cpp:37
 msgid "Tooltip preview image size:"
 msgstr "औजारयुक्ति पूर्वावलोकन छवि आकार:"
 
-#: Settings/ThumbnailsPage.cpp:40
+#: Settings/ThumbnailsPage.cpp:41
 msgid "No Image Preview"
 msgstr "छवि पूर्वावलोकन नहीं"
 
-#: Settings/ThumbnailsPage.cpp:46
+#: Settings/ThumbnailsPage.cpp:47
 msgid "Thumbnail image size:"
 msgstr "लघुछवि छवि का आकार:"
 
-#: Settings/ThumbnailsPage.cpp:55
+#: Settings/ThumbnailsPage.cpp:56
+#, fuzzy
+#| msgid "Build Thumbnails"
+msgid "Build thumbnails on demand"
+msgstr "लघु छवि बनाएँ"
+
+#: Settings/ThumbnailsPage.cpp:61
 msgid "Thumbnail table cells aspect ratio"
 msgstr "लघुछवि तालिका कक्ष ऑस्पेक्ट अनुपात"
 
-#: Settings/ThumbnailsPage.cpp:57
+#: Settings/ThumbnailsPage.cpp:63
 msgid "1:1"
 msgstr "1:1"
 
-#: Settings/ThumbnailsPage.cpp:57
+#: Settings/ThumbnailsPage.cpp:63
 msgid "4:3"
 msgstr "4:3"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "3:2"
 msgstr "3:2"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "16:9"
 msgstr "16:9"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "3:4"
 msgstr "3:4"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "2:3"
 msgstr "2:3"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "9:16"
 msgstr "9:16"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:70
 msgid "Space around cells"
 msgstr "कक्षों के चारों ओर जगह"
 
-#: Settings/ThumbnailsPage.cpp:72
+#: Settings/ThumbnailsPage.cpp:78
 msgid "Background Color"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:79
+#: Settings/ThumbnailsPage.cpp:85
 msgid "Display grid around thumbnails"
 msgstr "लघुछवियों के चारों ओर ग्रिड दिखाएं"
 
-#: Settings/ThumbnailsPage.cpp:84
+#: Settings/ThumbnailsPage.cpp:90
 msgid "Display labels in thumbnail view"
 msgstr "लघुछवि दृश्य में लेबल प्रदर्शित करें"
 
-#: Settings/ThumbnailsPage.cpp:89
+#: Settings/ThumbnailsPage.cpp:95
 msgid "Display categories in thumbnail view"
 msgstr "लघुछवि दृश्य में श्रेणी प्रदर्शित करें"
 
-#: Settings/ThumbnailsPage.cpp:94
+#: Settings/ThumbnailsPage.cpp:100
 msgid "Threshold for automatic thumbnail view: "
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:98
+#: Settings/ThumbnailsPage.cpp:104
 msgctxt "Describing: 'ThumbnailView will not be automatically shown'"
 msgid "Disabled"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:109
+#: Settings/ThumbnailsPage.cpp:115
 msgid ""
 "<p>If you select <b>Settings -&gt; Show Tooltips</b> in the thumbnail view, "
 "then you will see a small tool tip window displaying information about the "
@@ -3703,45 +4252,57 @@ msgid ""
 "configures the image size.</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:116
+#: Settings/ThumbnailsPage.cpp:122
 msgid ""
-"<p>Thumbnail image size. You may also set the size simply by dragging the "
-"thumbnail view using the middle mouse button.</p>"
+"<p>Thumbnail image size. Changing the thumbnail size here triggers a rebuild "
+"of the thumbnail database.</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:120
+#: Settings/ThumbnailsPage.cpp:126
+msgid ""
+"<p>If this is set, thumbnails are built on demand. As you browse your image "
+"database, only those thumbnails that are needed are actually built. This "
+"means that when you change the thumbnail size, KPhotoAlbum will remain "
+"responsive even if you have lots of images.</p><p>If this is not set, "
+"KPhotoAlbum will always build the thumbnails for all images as soon as "
+"possible. This means that when new images are found, KPhotoAlbum will "
+"immediately build thumbnails for them and you won't have a delay later while "
+"browsing.</p>"
+msgstr ""
+
+#: Settings/ThumbnailsPage.cpp:135
 msgid ""
 "<p>Choose what aspect ratio the cells holding thumbnails should have.</p>"
 msgstr "<p>वह आस्पेक्ट अनुपात चुनें जिनमें कक्षों में लघुछवियाँ होंगी.</p>"
 
-#: Settings/ThumbnailsPage.cpp:123
+#: Settings/ThumbnailsPage.cpp:138
 msgid "<p>How thick the cell padding should be.</p>"
 msgstr "<p>कक्ष की पैडिंग कितनी मोटी होगी.</p>"
 
-#: Settings/ThumbnailsPage.cpp:126
+#: Settings/ThumbnailsPage.cpp:141
 msgid "<p>Background color to use in the thumbnail viewer</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:130
+#: Settings/ThumbnailsPage.cpp:145
 msgid ""
 "<p>If you want to see grid around your thumbnail images, select this option."
 "</p>"
 msgstr ""
 "<p>यदि आप अपने लघुछवियों के चारों ओर ग्रिड देखना चाहते हैं तो इस विकल्प को चुनें.</p>"
 
-#: Settings/ThumbnailsPage.cpp:134
+#: Settings/ThumbnailsPage.cpp:149
 msgid ""
 "<p>Checking this option will show the base name for the file under "
 "thumbnails in the thumbnail view.</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:138
+#: Settings/ThumbnailsPage.cpp:153
 msgid ""
 "<p>Checking this option will show the Categories for the file under "
 "thumbnails in the thumbnail view</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:142
+#: Settings/ThumbnailsPage.cpp:157
 msgid ""
 "<p>When you are browsing, and the count gets below the value specified here, "
 "the thumbnails will be shown automatically. The alternative is to continue "
@@ -3842,15 +4403,17 @@ msgctxt ""
 msgid "video"
 msgstr "१ वीडियो"
 
-#: ThumbnailView/GridResizeInteraction.cpp:78
-msgid "Really resize grid, it will result in all thumbnails being regenerated?"
+#: ThumbnailView/GridResizeSlider.cpp:150
+msgid ""
+"Really resize the stored thumbnail size? It will result in all thumbnails "
+"being regenerated!"
 msgstr ""
 
-#: ThumbnailView/GridResizeInteraction.cpp:79
+#: ThumbnailView/GridResizeSlider.cpp:152
 #, fuzzy
-#| msgid "Really delete group %1?"
-msgid "Really resize grid?"
-msgstr "सचमुच समूह %1 मिटाएँ?"
+#| msgid "Reorder Thumbnails"
+msgid "Really resize the thumbnails?"
+msgstr "लघुछवियाँ रीऑर्डर किया जा रहा है"
 
 #: ThumbnailView/ThumbnailDND.cpp:93
 msgid ""
@@ -3887,17 +4450,19 @@ msgstr ""
 #: tips:15
 msgid ""
 "<p>It is possible to create new categories - that are alternatives\n"
-"to <b>People</b>, <b>Places</b>, and <b>Events</b> - in the annotation\n"
-"dialog. \n"
-"To add new categories or remove existing ones, go to the <b>Settings-&gt;"
-"Configure KPhotoAlbum</b> dialog, and choose\n"
-"<b>Categories</b> in the side bar.</p>\n"
+"to <resource>People</resource>, <resource>Places</resource>, and "
+"<resource>Events</resource> - in the annotation\n"
+"dialog.\n"
+"To add new categories or remove existing ones, go to the <interface>Settings|"
+"Configure KPhotoAlbum...</interface> dialog, and choose\n"
+"<interface>Categories</interface> in the side bar.</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:25
 msgid ""
-"<p>You may rename or delete a person, location, keyword or similar by\n"
+"<p>You may rename or delete a tag (i.e. a person, location, keyword or "
+"similar) by\n"
 "right-clicking on the item in the image property dialog.</p>\n"
 msgstr ""
 
@@ -3919,40 +4484,46 @@ msgstr ""
 #. i18n: ectx: @info:tipoftheday
 #: tips:47
 msgid ""
-"<p>New images are automatically marked as <tt>Untagged</tt>. You can easily\n"
-"search for these images from main window by clicking the appropriate icon. "
-"Once\n"
-"you are done tagging an image just click <tt>Done</tt> and the Untagged flag "
-"is\n"
-"automatically removed. On the other hand, the <tt>Continue Later</tt> "
-"button\n"
-"finishes the tagging but leaves the Untagged flag intact.</p>\n"
+"<p>New images are automatically marked as <emphasis>untagged</emphasis>.</"
+"br>\n"
+"You can easily search for these images from main window by clicking the "
+"appropriate icon.</p>\n"
+"<p>\n"
+"Once you are done tagging an image just click <interface>Done</interface> "
+"and the\n"
+"<emphasis>untagged</emphasis> flag is automatically removed. On the other "
+"hand, the\n"
+"<interface>Continue Later</interface> button finishes the tagging but leaves "
+"the\n"
+"<emphasis>untagged</emphasis> flag intact.</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:57
+#: tips:59
 msgid ""
 "<p>You can reorder images on your hard disk after having loaded them into\n"
-"KPhotoAlbum - KPhotoAlbum will still remember them, as it calculates "
+"KPhotoAlbum. KPhotoAlbum will still remember them, as it calculates "
 "checksums for\n"
 "the images.</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:65
+#: tips:67
 msgid ""
-"<p>It is possible to associate images with categories. That way when "
-"browsing, say people, you\n"
-"may get a small icon for each person with e.g. the person's face.</p>\n"
+"<p>It is possible to associate images with categories.</p>\n"
+"<p>That way when browsing, say people, you may get a small icon for each "
+"person with\n"
+"e.g. the person's face.</p>\n"
 "<p>To specify an icon for a person, load the person in the viewer, zoom to\n"
 "the part which you want to make into an icon, and choose\n"
-"<b>Show Category Editor</b>. This will bring up a dialog where you can\n"
+"<interface>Show Category Editor</interface>. This will bring up a dialog "
+"where you can\n"
 "find the person, and set the image.\n"
 "</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:77
+#: tips:80
 msgid ""
 "<p>You may close the image annotation dialog (the one where you specify\n"
 "people, places, etc. for the images) by pressing Ctrl+Enter.\n"
@@ -3960,7 +4531,7 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:85
+#: tips:88
 msgid ""
 "<p>To hear more about latest changes in KPhotoAlbum and to get help in using "
 "and developing KPhotoAlbum, you are welcome to join the KPhotoAlbum mailing "
@@ -3969,7 +4540,7 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:91
+#: tips:94
 msgid ""
 "<p>To discuss KPhotoAlbum with other users and developers and ask any "
 "questions that come into your mind, feel free to join our IRC channel "
@@ -3979,29 +4550,30 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:97
+#: tips:100
 msgid ""
 "<p>You may reorder images by dragging and dropping one image onto\n"
-"another. If you drop it on the left edge, it will end up in front of\n"
+"another.</p>\n"
+"<p>If you drop it on the left edge, it will end up in front of\n"
 "the other, if you drop it on the right edge it will be inserted behind.</p>\n"
 "<p align=\"right\">-- Tip contributed by Eivind Kjorstad</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:106
+#: tips:110
 msgid ""
 "<p>\n"
 "On the thumbnail view, you can resize the grid to your needs just by "
-"clicking \n"
+"clicking\n"
 "the middle mouse button and dragging around. On most systems you can "
-"emulate \n"
-"the middle mouse button by left and right clicking at the same time. \n"
+"emulate\n"
+"the middle mouse button by left and right clicking at the same time.\n"
 "</p>\n"
 "<p align=\"right\">-- Tip contributed by Rafael Beccar</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:117
+#: tips:121
 msgid ""
 "<p>You can rate images using the numbers from 0 to 5 on the keyboard whilst "
 "in\n"
@@ -4010,39 +4582,90 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:126
+#: tips:130
 msgid ""
 "<p>Sometimes it is useful to group several related images into an image "
 "stack.\n"
 "You can merge several images into a stack by first selecting them on "
 "Thumbnail\n"
-"View and then pressing <tt>Ctrl+3</tt> or selecting <tt>Merge Images into a\n"
-"Stack</tt> from menu.</p>\n"
+"View and then pressing <shortcut>Ctrl+3</shortcut> or selecting "
+"<interface>Merge Images into a\n"
+"Stack</interface> from menu.</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:135
+#: tips:139
 msgid ""
 "<p>When searching for new images, KPhotoAlbum can automatically put new "
 "versions\n"
 "of images into stacks by looking at their filenames. To configure this "
 "feature,\n"
-"choose \"Configure KPhotoalbum...\" from the Settings menu and set "
+"choose <interface>Settings|Configure KPhotoalbum...</interface> and set "
 "appropriate\n"
-"values in the \"File Searching & Versions\" tab.</p>\n"
+"values in the <interface>File Searching &amp; Versions</interface> tab.</p>\n"
 "<p>\n"
 "<ul>\n"
-"<li>Enable the checkbox \"Try to detect multiple versions of files\"</li>\n"
-"<li>Enter a regular expression for your modified files:<br/><tt>^(.*)-"
-"adjusted\\.(.*)</tt></li>\n"
-"<li>Enter a regular expression for your original file:<br/><tt>\\1.\\2</tt></"
-"li>\n"
+"<li>Enable the checkbox <interface>Try to detect multiple versions of files</"
+"interface></li>\n"
+"<li>Enter a regular expression for your modified files:<br/><bcode>^(.*)-"
+"adjusted\\.(.*)</bcode></li>\n"
+"<li>Enter a regular expression for your original file:<br/><bcode>\\1.\\2</"
+"bcode></li>\n"
 "</ul>\n"
 "</p>\n"
 msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:152
+#: tips:155
+msgid ""
+"<p>KPhotoAlbum can display the age of people on an image.</p>\n"
+"<p>\n"
+"To enable this, enter the birthdate of a person under <interface>Maintenance|"
+"Edit Birth Dates</interface>.\n"
+"The age of the person will then be shown in the info box of the viewer "
+"window.\n"
+"</p>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:165
+msgid ""
+"<p>KPhotoAlbum can detect and recognize faces on images.</p>\n"
+"<p>\n"
+"To use this functionality, use the <interface>Search for faces on the "
+"current image</interface>\n"
+"button below the image preview in the annotation dialog.\n"
+"</p>\n"
+"<note>To see if face recognition support is enabled, open the feature "
+"dialog\n"
+"(<interface>Help|KPhotoAlbum feature status</interface>), and check the "
+"item\n"
+"<resource>Face detection and recognition support</resource>.\n"
+"</note>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:179
+msgid ""
+"<p>You can associate tags to an area of an image (e.g. to connect a name to "
+"a face).</p>\n"
+"<p>\n"
+"To do so, make sure that the checkbox <interface>Positionable Tags</"
+"interface> under\n"
+"<interface>Settings|Configure KPhotoAlbum...|Categories</interface> is "
+"enabled for the\n"
+"given category.\n"
+"</p>\n"
+"<p>\n"
+"When this is done, you can drag the mouse on the image preview of the "
+"annotation dialog to\n"
+"mark an area. Open the context menu (right mouse button) on the area to "
+"associate it with a tag.\n"
+"</p>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:194
 msgid ""
 "<p>This is the last tip. If you know any additional tips or tricks, then "
 "please\n"
@@ -4080,15 +4703,37 @@ msgstr ""
 msgid "<b>Image Size: </b> "
 msgstr "<b>छवि आकार: </b> "
 
-#: Utilities/Util.cpp:163
+#: Utilities/Util.cpp:164
 msgid "<b>Label: </b> "
 msgstr "<b>लेबल: </b> "
 
-#: Utilities/Util.cpp:167
+#: Utilities/Util.cpp:168
 msgid "<b>Description: </b> "
 msgstr "<b>वर्णन: </b> "
 
-#: Utilities/Util.cpp:225
+#: Utilities/Util.cpp:247
+#, kde-format
+msgid "1 day"
+msgid_plural "%1 days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Utilities/Util.cpp:249
+#, fuzzy, kde-format
+#| msgid "1 Month"
+msgid "1 month"
+msgid_plural "%1 month"
+msgstr[0] "1 माह"
+msgstr[1] "1 माह"
+
+#: Utilities/Util.cpp:251
+#, kde-format
+msgid "1 year"
+msgid_plural "%1 years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Utilities/Util.cpp:311
 #, fuzzy, kde-format
 #| msgid ""
 #| "Backup file '%1' exists and is newer than '%2'. Should I use the backup "
@@ -4098,13 +4743,13 @@ msgid ""
 "autosave file be used?"
 msgstr "बैकअप फ़ाइल '%1' मौज़ूद है तथा '%2' से नया है. क्या मैं बैकअप फ़ाइल का इस्तेमाल करूँ?"
 
-#: Utilities/Util.cpp:227
+#: Utilities/Util.cpp:313
 #, fuzzy
 #| msgid "Found Backup File"
 msgid "Found Autosave File"
 msgstr "बैकअप फ़ाइल मिला"
 
-#: Utilities/Util.cpp:229
+#: Utilities/Util.cpp:315
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -4112,38 +4757,38 @@ msgid ""
 "verifying and copying the file might be a good idea)</small></p>"
 msgstr ""
 
-#: Utilities/Util.cpp:232
+#: Utilities/Util.cpp:318
 msgid "Recover from Autosave?"
 msgstr ""
 
-#: Utilities/Util.cpp:234
+#: Utilities/Util.cpp:320
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
 "backup files exist and can be used to restore index.xml.</p>"
 msgstr ""
 
-#: Utilities/Util.cpp:266
+#: Utilities/Util.cpp:352
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "'%1' की नक़ल '%2' में करने में अक्षम"
 
-#: Utilities/Util.cpp:266 Utilities/Util.cpp:280 Utilities/Util.cpp:298
-#: Utilities/Util.cpp:315 XMLDB/FileReader.cpp:393
+#: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:472
 msgid "Error Running Demo"
 msgstr "डेमो चलाने में त्रुटि"
 
-#: Utilities/Util.cpp:280 Utilities/Util.cpp:315
+#: Utilities/Util.cpp:366 Utilities/Util.cpp:401
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr "डेमो के लिए आवश्यक डिरेक्ट्री '%1' बनाने में अक्षम"
 
-#: Utilities/Util.cpp:298
+#: Utilities/Util.cpp:384
 #, kde-format
 msgid "Unable to open '%1' for writing."
 msgstr "'%1' को लिखने के लिए नहीं खोल सका."
 
-#: Utilities/Util.cpp:367
+#: Utilities/Util.cpp:453
 #, kde-format
 msgid "<p>Unable to find file %1</p>"
 msgstr "<p>फ़ाइल %1 ढूंढने में अक्षम</p>"
@@ -4197,6 +4842,10 @@ msgstr ""
 #, kde-format
 msgid "[ zoom x%1 ]"
 msgstr "[ जूम x%1 ]"
+
+#: Viewer/InfoBox.cpp:85
+msgid "Show the geographic position of this image on a map"
+msgstr ""
 
 #: Viewer/SpeedDisplay.cpp:44
 #, fuzzy, kde-format
@@ -4672,18 +5321,6 @@ msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:1546
-#, fuzzy
-#| msgid "Export/Copy Images..."
-msgctxt "@title:window"
-msgid "Copy image to..."
-msgstr "छवियाँ निर्यात/नक़ल करें..."
-
-#: Viewer/ViewerWidget.cpp:1547
-msgctxt "@action:button"
-msgid "Copy"
-msgstr ""
-
 #: Viewer/VisibleOptionsMenu.cpp:33
 #, fuzzy
 #| msgid "Show"
@@ -4732,44 +5369,52 @@ msgstr "छवि आकार दिखाएं"
 msgid "Show Rating"
 msgstr "सीमाएँ दिखाएं"
 
-#: XMLDB/FileReader.cpp:56
-#, kde-format
+#: XMLDB/FileReader.cpp:58
 msgid ""
-"<p>The database file indicates a file format version of %1. This version of "
-"KPhotoAlbum uses the database file format version %2.</p><p>It is possible "
-"that some information will be lost during import, or that the database can "
-"not be read at all.</p>"
+"<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
+"p><p>Chances are you will be able to read this file, but when writing it "
+"back, information saved in the newer version will be lost</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:61 XMLDB/FileReader.cpp:71
+#: XMLDB/FileReader.cpp:61
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:66
-#, kde-format
-msgid ""
-"<p>The database file indicates a file format version of %1. This version of "
-"KPhotoAlbum uses the database file format version %2.</p><p>If you save the "
-"database using this version of KPhotoAlbum, you won't be able to open it "
-"with older versions of KPhotoAlbum.</p>"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:106
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "फ़ाइल %1 में त्रुटि: अप्रत्याशित एलिमेंट: '%2'"
 
-#: XMLDB/FileReader.cpp:119
+#: XMLDB/FileReader.cpp:112
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "कॉन्फ़िगरेशन फ़ाइल %1 में 'विकल्प' टैग पाने में असफल."
 
-#: XMLDB/FileReader.cpp:121
+#: XMLDB/FileReader.cpp:114
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "कॉन्फ़िगरेशन फ़ाइल %1 में 'छवि' टैग पाने में असफल."
 
-#: XMLDB/FileReader.cpp:312
+#: XMLDB/FileReader.cpp:212
+msgid ""
+"<p>This version of KPhotoAlbum will fix some issues with old category names "
+"by renaming them. As a consequence, existing tag and category thumbnails "
+"have to be moved accordingly.</p><p>If you select \"Yes\", please be sure to "
+"save the database as your next step. If you select \"No\", you won't see the "
+"thumbnails for the respective categories now. If you do so, please don't "
+"save the database. Otherwise, the thumbnails will be lost!</p><p>Should the "
+"existing category and tag thumbnails be updated now?</p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:220 XMLDB/FileReader.cpp:277
+msgid "index.xml Update"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:278
+msgid "Don't forget to save your database now!"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:391
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -4782,7 +5427,7 @@ msgid ""
 "to sort them in the database. </p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:322
+#: XMLDB/FileReader.cpp:401
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -4792,11 +5437,11 @@ msgid ""
 "to do to correct all the missing information.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:329
+#: XMLDB/FileReader.cpp:408
 msgid "Images/Videos Are Not Sorted"
 msgstr "छवियों/वीडियो को छांटा नहीं गया है"
 
-#: XMLDB/FileReader.cpp:344
+#: XMLDB/FileReader.cpp:423
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -4806,11 +5451,11 @@ msgid ""
 "that is all - so there is no urgency in doing it.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:349
+#: XMLDB/FileReader.cpp:428
 msgid "Not All Images Have Size Information"
 msgstr "सभी छवियों में आकार जानकारी नहीं है"
 
-#: XMLDB/FileReader.cpp:372
+#: XMLDB/FileReader.cpp:451
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -4823,52 +5468,52 @@ msgid ""
 "setting the <b>PATH</b> environment variable</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:379
+#: XMLDB/FileReader.cpp:458
 msgid "No default setup file found"
 msgstr "कोई डिफ़ॉल्ट सेटअप फ़ाइल नहीं मिला"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:472
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "'%1' को पढ़ने के लिए खोलने में अक्षम"
 
-#: XMLDB/FileReader.cpp:406
+#: XMLDB/FileReader.cpp:485
 #, fuzzy, kde-format
 #| msgid "Error on line %1 column %2 in file %3: %4"
 msgid "line %1 column %2 in file %3: %4"
 msgstr "पंक्ति %1 स्तम्भ %2 फ़ाइल %3 में त्रुटि: %4"
 
-#: XMLDB/FileReader.cpp:408
+#: XMLDB/FileReader.cpp:487
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:419
+#: XMLDB/FileReader.cpp:498
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "फ़ाइल %1 में त्रुटि: कोई एलिमेंट नहीं मिला"
 
-#: XMLDB/FileReader.cpp:425
+#: XMLDB/FileReader.cpp:504
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
 "फ़ाइल %1 में त्रुटि: प्रत्याशित था 'केफोटोएलबम' की तरह शीर्ष एलिमेंट, परंतु मिला '%2'"
 
-#: XMLDB/FileWriter.cpp:47
+#: XMLDB/FileWriter.cpp:66
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
 "because of the following error: %2"
 msgstr ""
 
-#: XMLDB/FileWriter.cpp:85
+#: XMLDB/FileWriter.cpp:94
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
 "replace the file %1 with file %2 manually!</p>"
 msgstr ""
 
-#: XMLDB/FileWriter.cpp:95
+#: XMLDB/FileWriter.cpp:104
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
@@ -4886,39 +5531,92 @@ msgstr "ज़िप फ़ाइल %1 तैयार करने में �
 msgid "Error writing file %1 to zip file %2"
 msgstr "फ़ाइल %1 में लिखने में त्रुटि"
 
-#: XMLDB/XmlReader.cpp:46
+#: XMLDB/XmlReader.cpp:47
 #, fuzzy
 #| msgid "Error creating zip file"
 msgid "Error reading next element"
 msgstr "ज़िप फ़ाइल तैयार करने में त्रुटि"
 
-#: XMLDB/XmlReader.cpp:49
+#: XMLDB/XmlReader.cpp:50
 #, kde-format
 msgid "Expected to read a start or stop element, but read %1"
 msgstr ""
 
-#: XMLDB/XmlReader.cpp:54
+#: XMLDB/XmlReader.cpp:55
 #, kde-format
 msgid "Expected to read %1, but read %2"
 msgstr ""
 
-#: XMLDB/XmlReader.cpp:65
+#: XMLDB/XmlReader.cpp:66
 #, kde-format
 msgid "Expected to read an end element but read %1"
 msgstr ""
 
-#: XMLDB/XmlReader.cpp:83
+#: XMLDB/XmlReader.cpp:84
 #, kde-format
 msgid "Expected to read start element '%1'"
 msgstr ""
 
-#: XMLDB/XmlReader.cpp:88
-#, fuzzy, kde-format
-#| msgid "Error on line %1 column %2 in file %3: %4"
+#: XMLDB/XmlReader.cpp:90
+#, kde-format
 msgid ""
-"On line %1, column %2:\n"
-"%3"
-msgstr "पंक्ति %1 स्तम्भ %2 फ़ाइल %3 में त्रुटि: %4"
+"<p>An error was encountered on line %1, column %2:<nl/><message>%3</"
+"message></p>"
+msgstr ""
+
+#: XMLDB/XmlReader.cpp:93
+#, kde-format
+msgid "<p>Additional error information:<nl/><message>%1</message></p>"
+msgstr ""
+
+#: XMLDB/XmlReader.cpp:95
+#, fuzzy
+#| msgid "Converting database"
+msgid "Error while reading database file"
+msgstr "डाटाबेस परिवर्तित किया जा रहा है"
+
+#, fuzzy
+
+
+
+
+#, fuzzy
+
+
+
+
+#, fuzzy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#, fuzzy
+
+
+
+
+
 
 
 
@@ -5137,12 +5835,6 @@ msgstr "पंक्ति %1 स्तम्भ %2 फ़ाइल %3 में
 
 
 
-
-
-
-
-
-
 #, fuzzy
 
 
@@ -5161,14 +5853,6 @@ msgstr "पंक्ति %1 स्तम्भ %2 फ़ाइल %3 में
 
 
 
-
-
-
-
-
-
-
-#, fuzzy
 
 
 
