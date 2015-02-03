@@ -31,9 +31,13 @@ QStringList ImageDetails::categories() const
     return m_categories.keys();
 }
 
-QStringList ImageDetails::itemsOfCategory(const QString category)
+QStringList ImageDetails::itemsOfCategory(const QString& category)
 {
-    return m_categories[category];
+    auto list = m_categories[category];
+    QStringList res;
+    std::transform(list.begin(), list.end(), std::back_inserter(res),
+                   [] (CategoryItemDetails& item) { return item.name; });
+    return res;
 }
 
 void ImageDetails::clear()
@@ -45,7 +49,7 @@ void ImageDetails::clear()
     emit updated();
 }
 
-void ImageDetails::setData(const ImageDetailsCommand& data)
+void ImageDetails::setData(const ImageDetailsResult& data)
 {
     m_fileName = data.fileName;
     m_date = data.date;
@@ -54,4 +58,13 @@ void ImageDetails::setData(const ImageDetailsCommand& data)
     emit updated();
 }
 
+QString ImageDetails::age(const QString& category, const QString &item)
+{
+    auto list = m_categories[category];
+    auto res = std::find_if(list.begin(), list.end(),
+                            [&category, &item] (const CategoryItemDetails& candidate) {
+        return candidate.name == item;
+    } );
+    return (*res).age;
+}
 } // namespace RemoteControl

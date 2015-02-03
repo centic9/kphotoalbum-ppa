@@ -68,6 +68,12 @@ public:
 
 public slots:
     void gotoDate( const DB::ImageDate& date, bool includeRanges );
+    /**
+     * @brief setExternallyResizing
+     * Used by the GridResizeSlider to indicate that the grid is being resized.
+     * @param state true, if the grid is being resized by an external widget, false if not
+     */
+    void setExternallyResizing( bool state );
 
 signals:
     void showImage( const DB::FileName& id );
@@ -117,15 +123,16 @@ private:
      * Therefore we need this variable to disable the emission of the date
      * change while setting the date.
      */
-    bool _isSettingDate;
+    bool m_isSettingDate;
 
 
-    GridResizeInteraction _gridResizeInteraction;
-    bool _wheelResizing;
-    SelectionInteraction _selectionInteraction;
-    MouseTrackingInteraction _mouseTrackingHandler;
-    MouseInteraction* _mouseHandler;
-    ThumbnailDND* _dndHandler;
+    GridResizeInteraction m_gridResizeInteraction;
+    bool m_wheelResizing;
+    bool m_externallyResizing;
+    SelectionInteraction m_selectionInteraction;
+    MouseTrackingInteraction m_mouseTrackingHandler;
+    MouseInteraction* m_mouseHandler;
+    ThumbnailDND* m_dndHandler;
     bool m_pressOnStackIndicator;
 
     QTimer* m_dateChangedTimer;
@@ -134,7 +141,7 @@ private:
     friend class KeyboardEventHandler;
     friend class ThumbnailDND;
     friend class ThumbnailModel;
-    KeyboardEventHandler* _keyboardHandler;
+    KeyboardEventHandler* m_keyboardHandler;
     QScopedPointer<VideoThumbnailCycler> m_videoThumbnailCycler;
 };
 

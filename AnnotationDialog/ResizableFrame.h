@@ -15,63 +15,118 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-// Initially shamelessly stolen from http://qt-project.org/forums/viewthread/24104
+
+// The basic resizable QFrame has been shamelessly stolen from
+// http://qt-project.org/forums/viewthread/24104
 // Big thanks to Mr. kripton :-)
 
 #ifndef RESIZABLEFRAME_H
 #define RESIZABLEFRAME_H
 
+// Qt includes
 #include <QFrame>
-#include "Dialog.h"
 #include <QTreeWidgetItem>
+
+// Local includes
+#include "enums.h"
+#include "Dialog.h"
 #include "ListSelect.h"
+#include "config-kpa-kface.h"
 
 class QMouseEvent;
 
 namespace AnnotationDialog {
+
+#ifdef HAVE_KFACE
+class ProposedFaceDialog;
+#endif
 
 class ResizableFrame : public QFrame
 {
     Q_OBJECT
 
 public:
-    explicit ResizableFrame(QWidget *parent = 0);
+    explicit ResizableFrame(QWidget* parent = 0);
     ~ResizableFrame();
     void setActualCoordinates(QRect actualCoordinates);
     QRect actualCoordinates() const;
     void checkGeometry();
     void checkShowContextMenu();
-    void setDialog(Dialog *dialog);
+    void setDialog(Dialog* dialog);
     QPair<QString, QString> tagData() const;
     void removeTagData();
-    void setTagData(QString category, QString tag);
+    void setTagData(QString category, QString tag, ChangeOrigin changeOrigin = ManualChange);
+    void setProposedTagData(QPair<QString, QString> tagData);
+    QPair<QString, QString> proposedTagData() const;
+    void removeProposedTagData();
+#ifdef HAVE_KFACE
+    /**
+     * If the face has been detected by the face detector, this method is called.
+     * In this case, the marking is considered "good enough" for the recognition
+     * database to be trained on this face.
+     *
+     * When a user manually marks a person, this should not be called.
+     */
+    void markAsFace();
+    void proposedFaceDialogRemoved();
+
+public slots:
+    void acceptTag();
+#endif
 
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void contextMenuEvent(QContextMenuEvent *event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event);
+#ifdef HAVE_KFACE
+    void enterEvent(QEvent*);
+    void leaveEvent(QEvent*);
+
+protected slots:
+    void checkUnderMouse();
+#endif
 
 private slots:
-    void associateLastSelectedTag();
-    void associateTag(QAction *action);
+    void associateTag();
+    void associateTag(QAction* action);
     void remove();
     void removeTag();
+#ifdef HAVE_KFACE
+    void updateRecognitionDatabase();
+    void recognize();
+#endif
 
-private:
-    QPoint _dragStartPosition;
-    QRect _dragStartGeometry;
-    QRect _minMaxCoordinates;
-    QRect _actualCoordinates;
+private: // Functions
     void getMinMaxCoordinates();
-    QAction *_lastTagAct;
-    QAction *_removeAct;
-    QAction *_removeTagAct;
-    Dialog *_dialog;
-    QPair<QString, QString> _tagData;
+    QAction* createAssociateTagAction(
+        const QPair<QString, QString>& tag, QString prefix = QString()
+    );
+
+private: // Variables
+    QPoint m_dragStartPosition;
+    QRect m_dragStartGeometry;
+    QRect m_minMaxCoordinates;
+    QRect m_actualCoordinates;
+    QAction* m_removeAct;
+    QAction* m_removeTagAct;
+    Dialog* m_dialog;
+    QPair<QString, QString> m_tagData;
+    QPair<QString, QString> m_proposedTagData;
+    ImagePreview* m_preview;
+#ifdef HAVE_KFACE
+    QAction* m_updateRecognitionDatabaseAct;
+    QAction* m_recognizeAct;
+    ImagePreviewWidget* m_previewWidget;
+    bool m_changed;
+    bool m_trained;
+    bool m_detectedFace;
+    ProposedFaceDialog* m_proposedFaceDialog;
+#endif
 };
 
 }
 
 #endif // RESIZABLEFRAME_H
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

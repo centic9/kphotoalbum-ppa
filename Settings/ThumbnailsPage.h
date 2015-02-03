@@ -24,6 +24,7 @@ class QLabel;
 class QCheckBox;
 class KComboBox;
 class QSpinBox;
+class QDoubleSpinBox;
 namespace Settings {
 class SettingsData;
 
@@ -33,20 +34,18 @@ public:
     explicit ThumbnailsPage( QWidget* parent );
     void loadSettings( Settings::SettingsData* );
     void saveSettings( Settings::SettingsData* );
-    bool thumbnailSizeChanged( Settings::SettingsData* opt ) const;
 
 private:
-    QSpinBox* _previewSize;
-    QSpinBox* _thumbnailSize;
-    KComboBox* _thumbnailAspectRatio;
-    QSpinBox* _thumbnailSpace;
-    QCheckBox* _thumbnailDarkBackground;
-    QCheckBox* _thumbnailDisplayGrid;
-    QCheckBox* _displayLabels;
-    QCheckBox* _displayCategories;
-    QSpinBox* _autoShowThumbnailView;
-    QLabel* _thumbnailMegabyteInfo;
-    KColorButton* _backgroundColor;
+    QSpinBox* m_previewSize;
+    QSpinBox* m_thumbnailSize;
+    KComboBox* m_thumbnailAspectRatio;
+    QSpinBox* m_thumbnailSpace;
+    QCheckBox* m_thumbnailDisplayGrid;
+    QCheckBox* m_displayLabels;
+    QCheckBox* m_displayCategories;
+    QSpinBox* m_autoShowThumbnailView;
+    KColorButton* m_backgroundColor;
+    QCheckBox* m_incrementalThumbnails;
 };
 
 }

@@ -19,7 +19,7 @@
 #ifndef KPA_VERSION_H
 #define KPA_VERSION_H
 
-#define KPA_VERSION "4.5"
+#define KPA_VERSION "4.6"
 
 #endif /* KPA_VERSION_H */
 

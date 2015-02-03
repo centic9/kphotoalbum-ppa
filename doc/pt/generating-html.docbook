@@ -1,23 +1,23 @@
   <chapter id="chp-generating-html">
     <title
->Generating HTML</title>
+>Gerar &HTML;</title>
     <para
->&kphotoalbum; offers two possibilities for generating HTML from your photo album. One is the implementation build into &kphotoalbum;, the other is available as an plugin (see <xref linkend="chp-plugins"/>). This section will describe the build in version, which you may find in the menubar <menuchoice
+>O &kphotoalbum; oferece duas formas de gerar HTML a partir do seu álbum de fotografias. Uma é a implementação incluída no &kphotoalbum;; a outra está disponível como um 'plugin' (veja em <xref linkend="chp-plugins"/>). Esta secção irá descrever a versão incorporada, que poderá encontrar na opção do menu <menuchoice
 ><guimenu
->File</guimenu
+>Ficheiro</guimenu
 ><guimenuitem
->Generate HTML</guimenuitem
+>Gerar &HTML;</guimenuitem
 ></menuchoice
 ></para>
     
     <para
->Before HTML pages are generated, you need to specify a bit of information, split over the three pages <guilabel
->Content</guilabel
+>Antes de as páginas em &HTML; serem geradas, você precisa de indicar algumas informações, repartidas nas três páginas <guilabel
+>Conteúdo</guilabel
 >, <guilabel
->Layout</guilabel
-> and <guilabel
->Destination</guilabel
->. The following section describes each page in detail.</para>
+>Disposição</guilabel
+> e <guilabel
+>Destino</guilabel
+>. A seguinte secção descreve cada página em detalhe.</para>
 
     <sect1 id="the_content_page">
       <title
@@ -25,18 +25,26 @@
 >Conteúdo</guilabel
 ></title>
       <para
->In the content page you specify which information should be generated to the HTML pages.</para>
+>Na página de conteúdo, você indica quais as informações que deverão ser geradas para as páginas em &HTML;.</para>
+
+	<figure id="html-content">
+	<title
+>Configuração do Conteúdo do Gerador de HTML</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-content.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
->First you specify the title of the overview pages, plus a description generated on these pages. See <ulink url="http://www.kphotoalbum.org/rounded-theme/index.html"
->&kphotoalbum; example HTML pages</ulink
-> to see an example of this.</para>
+>Primeiro, você indica o título das páginas de visão geral, para além de uma descrição gerada para estas. Se o tema que seleccionar suportar notas de 'copyright', podê-las-á indicar aqui. </para>
 
       <para
->Next you specify whether a &kphotoalbum; export file should be generated, and put on the overview page. See <xref linkend="chp-importExport"/> for details on export files.</para>
+>A seguir, poderá indicar se é gerado um ficheiro de exportação do &kphotoalbum; e se é colocado na página geral. Veja o <xref linkend="chp-importExport"/> para mais detalhes sobre os ficheiros de exportação. Também poderá indicar se deseja incorporar os vídeos ou transferi-los à parte.</para>
 
       <para
->Finally you may specify which information should be generated on the HTML pages. This way you may skip generating information which might be obvious to the reader of the pages (say these images was from the party we all attended). Notice, &kphotoalbum; does currently not allow you to exclude certain categories from the export file, so don't rely on this as a way of excluding information you do not want readers of your pages to see.</para>
+>Finalmente, poderá indicar que informações deverão ser geradas nas páginas em &HTML;. Desta forma, você poderá ignorar a geração de informação que possa ser óbvia para o leitor das páginas (imagine que as imagens são da festa a que todos foram). Convém notar que o &kphotoalbum; não lhe permite de momento excluir certas categorias do ficheiro de exportação, por isso não confie nisto como uma forma de excluir dado que não quer que os leitores das suas páginas vejam.</para>
     </sect1>
 
     <sect1 id="the_layout_page">
@@ -45,7 +53,17 @@
 >Disposição</guilabel
 ></title>
       <para
->On the layout page you specify what your HTML pages should look like. Most of the options on this page are straight forward, and do not need further description here.</para>
+>Na página de disposição, você indica como é que as suas páginas em &HTML; deverão ficar. A maior parte das opções desta página são relativamente simples e você não irá precisar de mais descrições aqui.</para>
+
+	<figure id="html-layout">
+	<title
+>Configuração da Disposição do Gerador de HTML</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-layout.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
 
       <para
 >No fundo desta página é possível indicar várias resoluções para as imagens. Desta forma, as pessoas que vejam as suas páginas não são forçadas a transferir as imagens com grandes resoluções, como por exemplo 1600x1200, para as ver num monitor que não dê mais do que 800x600.</para>
@@ -60,15 +78,25 @@
 >Destino</guilabel
 ></title>
       <para
->On the destination page you specify several directories and URL's specifying where your pages goes.</para>
+>Na página de destino, você indica várias pastas e URL's que correspondem aos locais para onde vão as suas páginas.</para>
 
       <para
 >A filosofia será que você indica uma pasta de base para todos os itens gerados e para cada categoria de itens, indica uma nova subpasta.</para>
 
+	<figure id="html-destination">
+	<title
+>Configuração do Destino do Gerador de HTML</title>
+	<mediaobject>
+	<imageobject>
+	<imagedata fileref="html-destination.png" format="PNG"/>
+	</imageobject>
+	</mediaobject>
+	</figure>
+
       <para
->First you need to specify the base directory for all your images. This directory will be remembered from session to session, and allows you to once and for all tell where all subsequent images should go. Here you may specify a directory, or any <ulink url="help:/kioslave/index.html"
->protocol</ulink
-> supported by KDE. Examples includes: <itemizedlist>
+>Primeiro, você precisa de indicar a pasta de base para todas as suas imagens. Esta pasta será recordada de sessão para sessão e permite-lhe indicar de uma vez por todas para onde todas as imagens subsequentes irão. Aqui poderá indicar uma pasta ou qualquer <ulink url="help:/kioslave/index.html"
+>protocolo</ulink
+> suportado pelo &kde;. Os exemplos incluem: <itemizedlist>
           <listitem
 ><para
 >ftp://servidor/area-envio/imagens (enviar através de FTP)</para
@@ -85,12 +113,12 @@
       </para>
       
       <para
->Once you are done generating your images, you may want to check whether they are really available to your audience. If you specify a URL in the <guilabel
->Base URL</guilabel
-> line edit, a web browser will be spawned once HTML pages has been generated. The URL you specify here should match the directory you specified above. Thus the web browser will be started on the subdirectories of this URL.</para>
+>Logo que tenha acabado de gerar as suas imagens, você poderá querer verificar se elas estão de facto disponíveis para a sua audiência. Se indicar um URL no campo <guilabel
+>URL de Base</guilabel
+>, será aberto um navegador Web logo que as páginas &HTML; tenham sido geradas. O URL que indicar aqui deverá corresponder à pasta indicada acima. Deste modo, o navegador Web será aberto nas subpastas deste URL.</para>
       
       <para
->Once you have generated HTML pages, your pages may still not be in their final destination, you may still need special upload procedures out of the control of &kphotoalbum;. For the Import feature (see <xref linkend="chp-importExport"/>) to work, you need to specify the final destination of the pages. Again this does not include the subdirectory of the current generation.</para>
+>Logo que tenha gerado as páginas em &HTML;, as suas páginas poderão ainda não estar no seu destino final, dado que poderá necessitar de procedimentos especiais de envio fora do controlo do &kphotoalbum;. Para a funcionalidade de Importação (ver em <xref linkend="chp-importExport"/>) funcionar, o utilizador precisa de indicar o destino final das páginas. Mais uma vez, isto não inclui a subpasta dos itens gerados neste momento.</para>
 
       <para
 >Os três campos de texto descritos acima são URLs e pastas de base. Nestas localizações, uma subpasta nova será criada com o nome que indicou na <guilabel

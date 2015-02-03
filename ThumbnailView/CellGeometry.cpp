@@ -32,7 +32,18 @@ ThumbnailView::CellGeometry::CellGeometry( ThumbnailFactory* factory )
  */
 QSize ThumbnailView::CellGeometry::preferredIconSize()
 {
-    int width = Settings::SettingsData::instance()->thumbSize();
+    int width = Settings::SettingsData::instance()->actualThumbnailSize();
+    int height = width * Settings::SettingsData::instance()->getThumbnailAspectRatio();
+    return QSize( width, height);
+}
+
+/**
+ * Return base size of the pixmap.
+ * I.e. the unscaled thumbnail size, as it is set in the settings page.
+ */
+QSize ThumbnailView::CellGeometry::baseIconSize()
+{
+    int width = Settings::SettingsData::instance()->thumbnailSize();
     int height = width * Settings::SettingsData::instance()->getThumbnailAspectRatio();
     return QSize( width, height);
 }

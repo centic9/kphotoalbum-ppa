@@ -29,39 +29,53 @@
 #include <QPair>
 #include "Types.h"
 #include <QMap>
+#include <memory>
+#include <QPainter>
 
 namespace RemoteControl
 {
+class SerializerInterface;
 
-const int VERSION = 4;
+const int VERSION = 7;
+
+enum class CommandType {
+    ThumbnailResult,
+    CategoryListResult,
+    SearchRequest,
+    SearchResult,
+    ThumbnailRequest,
+    ThumbnailCancelRequest,
+    TimeCommand,
+    ImageDetailsRequest,
+    ImageDetailsResult,
+    CategoryItemsResult,
+    StaticImageRequest,
+    StaticImageResult,
+    ToggleTokenRequest
+};
+
 
 class RemoteCommand
 {
 public:
-    RemoteCommand(const QString& id);
-    virtual ~RemoteCommand() = default;
-    virtual void encode(QDataStream&) const = 0;
-    virtual void decode(QDataStream&) = 0;
-    QString id() const;
+    RemoteCommand(CommandType type);
+    virtual ~RemoteCommand();
+    virtual void encode(QDataStream&) const;
+    virtual void decode(QDataStream&);
+    CommandType commandType() const;
 
-    static RemoteCommand& command(const QString& id);
-
-protected:
-    void encodeImage(QDataStream& stream, const QImage& image) const;
-    void encodeImageWithTransparentPixels(QDataStream& stream, const QImage& image) const;
-    QImage decodeImage(QDataStream& stream) const;
+    void addSerializer(SerializerInterface* serializer);
+    static std::unique_ptr<RemoteCommand> create(CommandType commandType);
 
 private:
-    QString m_id;
+    QList<SerializerInterface*> m_serializers;
+    CommandType m_type;
 };
 
-class ImageUpdateCommand :public RemoteCommand
+class ThumbnailResult :public RemoteCommand
 {
 public:
-    ImageUpdateCommand(ImageId imageId = {}, const QString& label = {}, const QImage& image = QImage(), ViewType type = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
+    ThumbnailResult(ImageId imageId = {}, const QString& label = {}, const QImage& image = QImage(), ViewType type = {});
     ImageId imageId;
     QString label;
     QImage image;
@@ -76,35 +90,26 @@ struct Category {
     CategoryViewType viewType;
 };
 
-class CategoryListCommand :public RemoteCommand
+class CategoryListResult :public RemoteCommand
 {
 public:
-    CategoryListCommand();
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
+    CategoryListResult();
     QList<Category> categories;
 };
 
-class SearchCommand :public RemoteCommand
+class SearchRequest :public RemoteCommand
 {
 public:
-    SearchCommand(SearchType type = {}, const SearchInfo& searchInfo = {}, int size = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
+    SearchRequest(SearchType type = {}, const SearchInfo& searchInfo = {}, int size = {});
     SearchType type;
     SearchInfo searchInfo;
     int size; // Only used for SearchType::Categories
 };
 
-class SearchResultCommand :public RemoteCommand
+class SearchResult :public RemoteCommand
 {
 public:
-    SearchResultCommand(SearchType type = {}, const QList<int>& result = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
+    SearchResult(SearchType type = {}, const QList<int>& result = {});
     SearchType type;
     QList<int> result;
 };
@@ -113,21 +118,15 @@ class ThumbnailRequest :public RemoteCommand
 {
 public:
     ThumbnailRequest(ImageId imageId = {}, const QSize& size = {}, ViewType type = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
     ImageId imageId;
     QSize size;
     ViewType type;
 };
 
-class CancelRequestCommand :public RemoteCommand
+class ThumbnailCancelRequest :public RemoteCommand
 {
 public:
-    CancelRequestCommand(ImageId imageId = {}, ViewType type = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
+    ThumbnailCancelRequest(ImageId imageId = {}, ViewType type = {});
     ImageId imageId;
     ViewType type;
 };
@@ -136,80 +135,64 @@ class TimeCommand :public RemoteCommand
 {
 public:
     TimeCommand();
-    static QString id();
     void encode(QDataStream& stream) const override;
     void decode(QDataStream& stream) override;
 };
 
-class RequestDetails :public RemoteCommand
+class ImageDetailsRequest :public RemoteCommand
 {
 public:
-    RequestDetails(ImageId imageId = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    ImageDetailsRequest(ImageId imageId = {});
     ImageId imageId;
 };
 
-class ImageDetailsCommand :public RemoteCommand
+struct CategoryItemDetails {
+    CategoryItemDetails(const QString& name = {}, const QString& age = {})
+        : name(name), age(age) {}
+    QString name;
+    QString age;
+};
+
+using CategoryItemDetailsList = QList<CategoryItemDetails>;
+
+class ImageDetailsResult :public RemoteCommand
 {
 public:
-    ImageDetailsCommand();
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    ImageDetailsResult();
     QString fileName;
     QString date;
     QString description;
-    QMap<QString,QStringList> categories;
+    QMap<QString,CategoryItemDetailsList> categories;
 };
 
-class CategoryItems :public RemoteCommand
+class CategoryItemsResult :public RemoteCommand
 {
 public:
-    CategoryItems(const QStringList items = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    CategoryItemsResult(const QStringList& items = {});
     QStringList items;
 };
 
-class RequestHomePageImages :public RemoteCommand
+class StaticImageRequest :public RemoteCommand
 {
 public:
-    RequestHomePageImages(int size = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    StaticImageRequest(int size = {});
     int size;
 };
 
-class HomePageData :public RemoteCommand
+class StaticImageResult :public RemoteCommand
 {
 public:
-    HomePageData(const QImage& homeIcon = {}, const QImage& kphotoalbumIcon = {}, const QImage& discoverIcon = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    StaticImageResult(const QImage& homeIcon = {}, const QImage& kphotoalbumIcon = {}, const QImage& discoverIcon = {});
     QImage homeIcon;
     QImage kphotoalbumIcon;
     QImage discoverIcon;
 };
 
-class ToggleTokenCommand :public RemoteCommand
+class ToggleTokenRequest :public RemoteCommand
 {
 public:
     enum State {On, Off};
-    ToggleTokenCommand(ImageId imageId = {}, const QString& token = {}, State state = {});
-    static QString id();
-    void encode(QDataStream& stream) const override;
-    void decode(QDataStream& stream) override;
-
+    ToggleTokenRequest(ImageId imageId = {}, const QString& token = {}, State state = {});
     ImageId imageId;
     QString token;
     State state;

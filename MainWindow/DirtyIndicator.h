@@ -31,6 +31,7 @@ class DirtyIndicator :public QLabel
 
 public:
     static void markDirty();
+    static void suppressMarkDirty(bool state);
 
 public slots:
     void markDirtySlot();
@@ -47,9 +48,11 @@ private:
     bool isSaveDirty() const;
     bool isAutoSaveDirty() const;
 
-    QPixmap _dirtyPix;
-    static bool _autoSaveDirty;
-    static bool _saveDirty;
+    QPixmap m_dirtyPix;
+    static bool s_autoSaveDirty;
+    static bool s_saveDirty;
+
+    static bool s_suppressMarkDirty;
 };
 
 }

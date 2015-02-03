@@ -16,9 +16,7 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "Plugins/ImageCollection.h"
-#include <config-kpa-kipi.h>
-#ifdef HASKIPI
+#include "ImageCollection.h"
 #include "MainWindow/Window.h"
 #include "DB/ImageDB.h"
 #include "Settings/SettingsData.h"
@@ -27,14 +25,14 @@
 #include "DB/ImageInfo.h"
 
 Plugins::ImageCollection::ImageCollection( Type tp )
-    : _tp( tp )
+    : m_type( tp )
 {
 }
 
 QString Plugins::ImageCollection::name()
 {
     QString res;
-    switch ( _tp ) {
+    switch ( m_type ) {
     case CurrentAlbum:
         res = MainWindow::Window::theMainWindow()->currentContext().toString();
         break;
@@ -66,7 +64,7 @@ QString Plugins::ImageCollection::comment()
 
 KUrl::List Plugins::ImageCollection::images()
 {
-    switch ( _tp ) {
+    switch ( m_type ) {
     case CurrentAlbum:
         return stringListToUrlList( DB::ImageDB::instance()->currentScope( false ).toStringList(DB::AbsolutePath));
 
@@ -152,5 +150,4 @@ KUrl Plugins::ImageCollection::uploadRoot()
     return url;
 }
 
-#endif // KIPI
 // vi:expandtab:tabstop=4 shiftwidth=4:

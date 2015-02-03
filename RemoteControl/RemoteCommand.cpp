@@ -22,223 +22,150 @@
 #include <QMap>
 #include <QDebug>
 #include <QPainter>
+#include <functional>
+#include <memory>
+#include "Serializer.h"
 
 using namespace RemoteControl;
 
-RemoteCommand::RemoteCommand(const QString& id)
-    :m_id(id)
+#define ENUMSTREAM(TYPE) \
+QDataStream &operator<<(QDataStream &stream, TYPE type) \
+{\
+    stream << (qint32) type;\
+    return stream;\
+}\
+\
+QDataStream &operator>>(QDataStream &stream, TYPE& type)\
+{\
+    stream >> (qint32&) type;\
+    return stream;\
+}\
+
+ENUMSTREAM(ViewType)
+ENUMSTREAM(SearchType)
+ENUMSTREAM(ToggleTokenRequest::State)
+
+RemoteCommand::RemoteCommand(CommandType type)
+    : m_type(type)
 {
 }
 
-QString RemoteCommand::id() const
+RemoteCommand::~RemoteCommand()
 {
-    return m_id;
+    qDeleteAll(m_serializers);
 }
 
-RemoteCommand& RemoteCommand::command(const QString& id)
+void RemoteCommand::encode(QDataStream& stream) const
 {
-    static QMap<QString, RemoteCommand*> map;
-    if (map.isEmpty()) {
-        QList<RemoteCommand*> commands;
-        commands << new ImageUpdateCommand
-                 << new CategoryListCommand
-                 << new SearchCommand
-                 << new SearchResultCommand
-                 << new ThumbnailRequest
-                 << new CancelRequestCommand
-                 << new TimeCommand
-                 << new RequestDetails
-                 << new ImageDetailsCommand
-                 << new CategoryItems
-                 << new RequestHomePageImages
-                 << new HomePageData
-                 << new ToggleTokenCommand;
-                // Remember to bounce the protocol version number
+    for (SerializerInterface* serializer : m_serializers)
+        serializer->encode(stream);
+}
 
-        for (RemoteCommand* command : commands )
-             map.insert(command->id(), command);
+void RemoteCommand::decode(QDataStream& stream)
+{
+    for (SerializerInterface* serializer : m_serializers)
+        serializer->decode(stream);
+}
+
+CommandType RemoteCommand::commandType() const
+{
+    return m_type;
+}
+
+void RemoteCommand::addSerializer(SerializerInterface *serializer)
+{
+    m_serializers.append(serializer);
+}
+
+using CommandFacory = std::function<std::unique_ptr<RemoteCommand>()>;
+#define ADDFACTORY(COMMAND)\
+   factories.insert(CommandType::COMMAND, \
+       []() { return std::unique_ptr<RemoteCommand>(new COMMAND);} )
+
+std::unique_ptr<RemoteCommand> RemoteCommand::create(CommandType id)
+{
+    static QMap<CommandType, CommandFacory> factories;
+    if (factories.isEmpty()) {
+        ADDFACTORY(ThumbnailResult);
+        ADDFACTORY(CategoryListResult);
+        ADDFACTORY(SearchRequest);
+        ADDFACTORY(SearchResult);
+        ADDFACTORY(ThumbnailRequest);
+        ADDFACTORY(ThumbnailCancelRequest);
+        ADDFACTORY(TimeCommand);
+        ADDFACTORY(ImageDetailsRequest);
+        ADDFACTORY(ImageDetailsResult);
+        ADDFACTORY(CategoryItemsResult);
+        ADDFACTORY(StaticImageRequest);
+        ADDFACTORY(StaticImageResult);
+        ADDFACTORY(ToggleTokenRequest);
     }
-
-    Q_ASSERT(map.contains(id));
-    return *map[id];
+    Q_ASSERT(factories.contains(id));
+    return factories[id]();
 }
 
-void RemoteCommand::encodeImage(QDataStream& stream, const QImage& image) const
+ThumbnailResult::ThumbnailResult(ImageId _imageId, const QString& _label, const QImage& _image, ViewType _type)
+    :RemoteCommand(CommandType::ThumbnailResult), imageId(_imageId), label(_label), image(_image), type(_type)
 {
-    image.save(stream.device(),"JPEG");
+    addSerializer(new Serializer<ImageId>(imageId));
+    addSerializer(new Serializer<QString>(label));
+    addSerializer(new Serializer<QImage>(image));
+    addSerializer(new Serializer<ViewType>(type));
 }
 
-void RemoteCommand::encodeImageWithTransparentPixels(QDataStream &stream, const QImage &image) const
+QDataStream& operator<<(QDataStream& stream, const Category& category)
 {
-    QImage result(image.width(), image.height(), QImage::Format_RGB32);
-    result.fill(Qt::black);
-    QPainter p(&result);
-    p.drawImage(0,0, image);
-    p.end();
-    encodeImage(stream, result);
+    stream << category.name << category.text << category.enabled << (int) category.viewType;
+    fastStreamImage(stream, category.icon, BackgroundType::Transparent);
+    return stream;
 }
 
-QImage RemoteCommand::decodeImage(QDataStream& stream) const
+QDataStream& operator>>(QDataStream& stream, Category& category)
 {
-    QImage result;
-    result.load(stream.device(), "JPEG");
-    return result;
+    stream >> category.name >> category.text >> category.enabled >> (int&) category.viewType;
+    category.icon.load(stream.device(), "JPEG");
+    return stream;
 }
 
-ImageUpdateCommand::ImageUpdateCommand(ImageId imageId, const QString& label, const QImage& image, ViewType type)
-    :RemoteCommand(id()), imageId(imageId), label(label), image(image), type(type)
+CategoryListResult::CategoryListResult()
+    : RemoteCommand(CommandType::CategoryListResult)
 {
+    addSerializer(new Serializer<QList<Category>>(categories));
 }
 
-QString ImageUpdateCommand::id()
+SearchRequest::SearchRequest(SearchType _type, const SearchInfo& _searchInfo, int _size)
+    :RemoteCommand(CommandType::SearchRequest), type(_type), searchInfo(_searchInfo), size(_size)
 {
-    return QString::fromUtf8("Image Update");
+    addSerializer(new Serializer<SearchType>(type));
+    addSerializer(new Serializer<SearchInfo>(searchInfo));
+    addSerializer(new Serializer<int>(size));
 }
 
-void ImageUpdateCommand::encode(QDataStream& stream) const
+SearchResult::SearchResult(SearchType _type, const QList<int>& _result)
+    :RemoteCommand(CommandType::SearchResult), type(_type), result(_result)
 {
-    stream << imageId << label;
-    encodeImage(stream,image);
-    stream << (int) type;
+    addSerializer(new Serializer<SearchType>(type));
+    addSerializer(new Serializer<QList<int>>(result));
 }
 
-void ImageUpdateCommand::decode(QDataStream& stream)
+ThumbnailRequest::ThumbnailRequest(ImageId _imageId, const QSize& _size, ViewType _type)
+    :RemoteCommand(CommandType::ThumbnailRequest), imageId(_imageId), size(_size), type(_type)
 {
-    stream >> imageId >> label;
-    image = decodeImage(stream);
-    stream >> (int&) type;
+    addSerializer(new Serializer<ImageId>(imageId));
+    addSerializer(new Serializer<QSize>(size));
+    addSerializer(new Serializer<ViewType>(type));
 }
 
-
-CategoryListCommand::CategoryListCommand()
-    : RemoteCommand(id())
+RemoteControl::ThumbnailCancelRequest::ThumbnailCancelRequest(ImageId _imageId, ViewType _type)
+    :RemoteCommand(CommandType::ThumbnailCancelRequest), imageId(_imageId), type(_type)
 {
+    addSerializer(new Serializer<ImageId>(imageId));
+    addSerializer(new Serializer<ViewType>(type));
 }
-
-QString CategoryListCommand::id()
-{
-    return QString::fromUtf8("Category List");
-}
-
-void CategoryListCommand::encode(QDataStream& stream) const
-{
-    stream << categories.count();
-    for (const Category& category : categories) {
-        stream << category.name << category.text << category.enabled << (int) category.viewType;
-        encodeImageWithTransparentPixels(stream, category.icon);
-    }
-}
-
-void CategoryListCommand::decode(QDataStream& stream)
-{
-    int count;
-    stream >> count;
-    categories.clear();
-    for (int i=0; i<count; ++i) {
-        QString name;
-        QString text;
-        QImage icon;
-        bool enabled;
-        CategoryViewType viewType;
-        stream >> name >> text >> enabled >> (int&) viewType;
-        icon = decodeImage(stream);
-        categories.append({name, text, icon, enabled, viewType});
-    }
-}
-
-
-SearchCommand::SearchCommand(SearchType type, const SearchInfo& searchInfo, int size)
-    :RemoteCommand(id()), type(type), searchInfo(searchInfo), size(size)
-{
-}
-
-QString SearchCommand::id()
-{
-    return QString::fromUtf8("SearchCommand");
-}
-
-void SearchCommand::encode(QDataStream& stream) const
-{
-    stream << (int) type << searchInfo << size;
-}
-
-void SearchCommand::decode(QDataStream& stream)
-{
-    stream >> (int&) type >> searchInfo >> size;
-}
-
-
-SearchResultCommand::SearchResultCommand(SearchType type, const QList<int>& result)
-    :RemoteCommand(id()), type(type), result(result)
-{
-}
-
-QString SearchResultCommand::id()
-{
-    return QString::fromUtf8("Image Search Result");
-}
-
-void SearchResultCommand::encode(QDataStream& stream) const
-{
-    stream << (int) type << result;
-}
-
-void SearchResultCommand::decode(QDataStream& stream)
-{
-    stream >> (int&) type >> result;
-}
-
-
-ThumbnailRequest::ThumbnailRequest(ImageId imageId, const QSize& size, ViewType type)
-    :RemoteCommand(id()), imageId(imageId), size(size), type(type)
-{
-}
-
-QString ThumbnailRequest::id()
-{
-    return QString::fromUtf8("ThumbnailRequest");
-}
-
-void ThumbnailRequest::encode(QDataStream& stream) const
-{
-    stream << imageId << size << (int) type;
-}
-
-void ThumbnailRequest::decode(QDataStream& stream)
-{
-    stream >> imageId >> size >> (int&) type;
-}
-
-
-RemoteControl::CancelRequestCommand::CancelRequestCommand(ImageId imageId, ViewType type)
-    :RemoteCommand(id()), imageId(imageId), type(type)
-{
-}
-
-QString CancelRequestCommand::id()
-{
-    return QString::fromUtf8("CancelRequest");
-}
-
-void CancelRequestCommand::encode(QDataStream& stream) const
-{
-    stream << imageId << (int) type;
-}
-
-void CancelRequestCommand::decode(QDataStream& stream)
-{
-    stream >> imageId >> (int&) type;
-}
-
 
 TimeCommand::TimeCommand()
-    :RemoteCommand(id())
+    :RemoteCommand(CommandType::TimeCommand)
 {
-}
-
-QString TimeCommand::id()
-{
-    return QString::fromUtf8("TimeDump");
 }
 
 static void printElapsed()
@@ -259,132 +186,58 @@ void TimeCommand::decode(QDataStream&)
 }
 
 
-RequestDetails::RequestDetails(ImageId imageId)
-    :RemoteCommand(id()), imageId(imageId)
+ImageDetailsRequest::ImageDetailsRequest(ImageId _imageId)
+    :RemoteCommand(CommandType::ImageDetailsRequest), imageId(_imageId)
 {
+    addSerializer(new Serializer<ImageId>(imageId));
 }
 
-QString RequestDetails::id()
+ImageDetailsResult::ImageDetailsResult()
+    :RemoteCommand(CommandType::ImageDetailsResult)
 {
-    return QString::fromUtf8("RequestDetails");
+    addSerializer(new Serializer<QString>(fileName));
+    addSerializer(new Serializer<QString>(date));
+    addSerializer(new Serializer<QString>(description));
+    addSerializer(new Serializer<QMap<QString,CategoryItemDetailsList>>(categories));
 }
 
-void RequestDetails::encode(QDataStream& stream) const
+                   //// WHAT WHAT WHAT
+QDataStream& operator<<(QDataStream& stream, const CategoryItemDetails& item)
 {
-    stream << imageId;
+    stream << item.name << item.age;
+    return stream;
 }
 
-void RequestDetails::decode(QDataStream& stream)
+QDataStream& operator>>(QDataStream& stream, CategoryItemDetails& item)
 {
-    stream >> imageId;
+    stream >> item.name >> item.age;
+    return stream;
 }
 
-
-ImageDetailsCommand::ImageDetailsCommand()
-    :RemoteCommand(id())
+CategoryItemsResult::CategoryItemsResult(const QStringList& _items)
+    :RemoteCommand(CommandType::CategoryItemsResult), items(_items)
 {
+    addSerializer(new Serializer<QStringList>(items));
 }
 
-QString ImageDetailsCommand::id()
+StaticImageRequest::StaticImageRequest(int _size)
+    :RemoteCommand(CommandType::StaticImageRequest), size(_size)
 {
-    return QString::fromUtf8("ImageDetailsCommand");
+    addSerializer(new Serializer<int>(size));
 }
 
-void ImageDetailsCommand::encode(QDataStream& stream) const
+StaticImageResult::StaticImageResult(const QImage& _homeIcon, const QImage& _kphotoalbumIcon, const QImage& _discoverIcon)
+    :RemoteCommand(CommandType::StaticImageResult), homeIcon(_homeIcon), kphotoalbumIcon(_kphotoalbumIcon), discoverIcon(_discoverIcon)
 {
-    stream << fileName << date << description << categories;
+    addSerializer(new Serializer<QImage>(homeIcon, BackgroundType::Transparent));
+    addSerializer(new Serializer<QImage>(kphotoalbumIcon, BackgroundType::Transparent));
+    addSerializer(new Serializer<QImage>(discoverIcon, BackgroundType::Transparent));
 }
 
-void ImageDetailsCommand::decode(QDataStream& stream)
+ToggleTokenRequest::ToggleTokenRequest(ImageId _imageId, const QString& _token, State _state)
+    :RemoteCommand(CommandType::ToggleTokenRequest), imageId(_imageId), token(_token), state(_state)
 {
-    stream >> fileName >> date >> description >> categories;
-}
-
-
-
-CategoryItems::CategoryItems(const QStringList items)
-    :RemoteCommand(id()), items(items)
-{
-}
-
-QString CategoryItems::id()
-{
-    return QString::fromUtf8("CategoryItems");
-}
-
-void CategoryItems::encode(QDataStream& stream) const
-{
-    stream << items;
-}
-
-void CategoryItems::decode(QDataStream& stream)
-{
-    stream >> items;
-}
-
-
-RequestHomePageImages::RequestHomePageImages(int size)
-    :RemoteCommand(id()), size(size)
-{
-}
-
-QString RequestHomePageImages::id()
-{
-    return QString::fromUtf8("RequestHomePageImage");
-}
-
-void RequestHomePageImages::encode(QDataStream& stream) const
-{
-    stream << size;
-}
-
-void RequestHomePageImages::decode(QDataStream& stream)
-{
-    stream >> size;
-}
-
-
-HomePageData::HomePageData(const QImage& homeIcon, const QImage& kphotoalbumIcon, const QImage& discoverIcon)
-    :RemoteCommand(id()), homeIcon(homeIcon), kphotoalbumIcon(kphotoalbumIcon), discoverIcon(discoverIcon)
-{
-}
-
-QString HomePageData::id()
-{
-    return QString::fromUtf8("HomePageData");
-}
-
-void HomePageData::encode(QDataStream& stream) const
-{
-    encodeImageWithTransparentPixels(stream, homeIcon);
-    encodeImageWithTransparentPixels(stream, kphotoalbumIcon);
-    encodeImageWithTransparentPixels(stream, discoverIcon);
-}
-
-void HomePageData::decode(QDataStream& stream)
-{
-    homeIcon = decodeImage(stream);
-    kphotoalbumIcon = decodeImage(stream);
-    discoverIcon = decodeImage(stream);
-}
-
-
-ToggleTokenCommand::ToggleTokenCommand(ImageId imageId, const QString &token, State state)
-    :RemoteCommand(id()), imageId(imageId), token(token), state(state)
-{
-}
-
-QString ToggleTokenCommand::id()
-{
-    return QString::fromUtf8("SetTokenCommand");
-}
-
-void ToggleTokenCommand::encode(QDataStream &stream) const
-{
-    stream << imageId << token << (int) state;
-}
-
-void ToggleTokenCommand::decode(QDataStream &stream)
-{
-    stream >> imageId >> token >> (int&) state;
+    addSerializer(new Serializer<ImageId>(imageId));
+    addSerializer(new Serializer<QString>(token));
+    addSerializer(new Serializer<State>(state));
 }

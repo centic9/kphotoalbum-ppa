@@ -29,6 +29,9 @@
 #include <kurl.h>
 #include <kdemacros.h>
 
+class QPixmap;
+class KFileItem;
+
 namespace Browser {
 class BreadcrumbList;
 }
@@ -42,21 +45,29 @@ class KDE_EXPORT Interface :public KIPI::Interface
 
 public:
     explicit Interface( QObject *parent, const char *name=nullptr);
-    override virtual KIPI::ImageCollection currentAlbum();
-    override virtual KIPI::ImageCollection currentSelection();
-    override virtual QList<KIPI::ImageCollection> allAlbums();
-    override virtual KIPI::ImageInfo info( const KUrl& );
-    override virtual bool addImage( const KUrl&, QString& errmsg );
-    override virtual void delImage( const KUrl& );
-    override virtual void refreshImages( const KUrl::List& urls );
-    override virtual int features() const;
-    override virtual QVariant hostSetting( const QString& settingName );
-    override virtual KIPI::ImageCollectionSelector* imageCollectionSelector(QWidget *parent);
-    override virtual KIPI::UploadWidget* uploadWidget(QWidget *parent);
+    virtual KIPI::ImageCollection currentAlbum() override;
+    virtual KIPI::ImageCollection currentSelection() override;
+    virtual QList<KIPI::ImageCollection> allAlbums() override;
+    virtual KIPI::ImageInfo info( const KUrl& ) override;
+    virtual bool addImage( const KUrl&, QString& errmsg ) override;
+    virtual void delImage( const KUrl& ) override;
+    virtual void refreshImages( const KUrl::List& urls ) override;
+    virtual int features() const override;
+    virtual QAbstractItemModel * getTagTree() const override;
+    virtual QVariant hostSetting( const QString& settingName ) override;
+    virtual KIPI::ImageCollectionSelector* imageCollectionSelector(QWidget *parent) override;
+    virtual KIPI::UploadWidget* uploadWidget(QWidget *parent) override;
+
+    virtual void thumbnail(const KUrl &url, int size) override;
+    virtual void thumbnails(const KUrl::List &list, int size) override;
 
 public slots:
-    override void slotSelectionChanged( bool );
-    override void pathChanged( const Browser::BreadcrumbList& path );
+    void slotSelectionChanged( bool );
+    void pathChanged( const Browser::BreadcrumbList& path );
+
+private slots:
+    void gotKDEPreview(const KFileItem& item, const QPixmap& pix);
+    void failedKDEPreview(const KFileItem& item);
 
 signals:
     void imagesChanged( const KUrl::List& );
