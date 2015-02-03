@@ -28,7 +28,7 @@ class UntaggedGroupBox :public QGroupBox
 {
     Q_OBJECT
 public:
-    explicit UntaggedGroupBox( QWidget* parent );
+    explicit UntaggedGroupBox( QWidget* parent = 0);
     void loadSettings( Settings::SettingsData* opt );
     void saveSettings( Settings::SettingsData* opt );
 
@@ -37,8 +37,8 @@ private slots:
     void populateTagsCombo();
 
 private:
-    QComboBox* _category;
-    QComboBox* _tag;
+    QComboBox* m_category;
+    QComboBox* m_tag;
 };
 
 }

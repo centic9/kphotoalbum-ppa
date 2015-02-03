@@ -69,13 +69,14 @@ namespace XMLDB {
             const DB::FileNameList& cutList,
             bool after) override;
 
-        static DB::ImageInfoPtr createImageInfo( const DB::FileName& fileName, ReaderPtr, Database* db = nullptr );
-        static void possibleLoadCompressedCategories( ReaderPtr reader , DB::ImageInfoPtr info, Database* db );
+        static DB::ImageInfoPtr createImageInfo( const DB::FileName& fileName, ReaderPtr, Database* db = nullptr, const QMap<QString,QString> *newToOldCategory = nullptr );
+        static void possibleLoadCompressedCategories( ReaderPtr reader , DB::ImageInfoPtr info, Database* db, const QMap<QString,QString> *newToOldCategory = nullptr );
         bool stack(const DB::FileNameList& items) override;
         void unstack(const DB::FileNameList& images) override;
         DB::FileNameList getStackFor(const DB::FileName& referenceId) const override;
         void copyData( const DB::FileName& from, const DB::FileName& to) override;
 
+        static int fileVersion();
     protected:
         DB::FileNameList searchPrivate(
             const DB::ImageSearchInfo&,
@@ -85,7 +86,7 @@ namespace XMLDB {
 
         DB::ImageInfoList takeImagesFromSelection(const DB::FileNameList& list);
         void insertList( const DB::FileName& id, const DB::ImageInfoList& list, bool after );
-        static void readOptions( DB::ImageInfoPtr info, ReaderPtr reader );
+        static void readOptions( DB::ImageInfoPtr info, ReaderPtr reader, const QMap<QString,QString> *newToOldCategory = nullptr );
 
 
     protected slots:
@@ -100,20 +101,20 @@ namespace XMLDB {
 
         Database( const QString& configFile );
 
-        QString _fileName;
-        DB::ImageInfoList _images;
-        DB::FileNameList _blockList;
-        DB::ImageInfoList _missingTimes;
-        XMLCategoryCollection _categoryCollection;
-        DB::MemberMap _members;
-        DB::MD5Map _md5map;
+        QString m_fileName;
+        DB::ImageInfoList m_images;
+        DB::FileNameList m_blockList;
+        DB::ImageInfoList m_missingTimes;
+        XMLCategoryCollection m_categoryCollection;
+        DB::MemberMap m_members;
+        DB::MD5Map m_md5map;
 
-        DB::StackID _nextStackId;
+        DB::StackID m_nextStackId;
         typedef QMap<DB::StackID, DB::FileNameList> StackMap;
-        mutable  StackMap _stackMap;
+        mutable  StackMap m_stackMap;
 
         // used for checking if any images are without image attribute from the database.
-        static bool _anyImageWithEmptySize;
+        static bool s_anyImageWithEmptySize;
     };
 }
 

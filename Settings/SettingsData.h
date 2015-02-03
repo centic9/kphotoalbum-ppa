@@ -24,6 +24,7 @@
 #include "DB/Category.h"
 #include <config-kpa-exiv2.h>
 #include <AnnotationDialog/enums.h>
+#include <config-kpa-kface.h>
 
 #ifdef HAVE_EXIV2
 #   include "Exif/Info.h"
@@ -117,10 +118,14 @@ public:
     property_copy( thumbnailDisplayGrid    , setThumbnailDisplayGrid   , bool );
     property_copy( previewSize             , setPreviewSize            , int );
     property_ref(  backgroundColor         , setBackgroundColor        , QString );
+    property_copy( incrementalThumbnails   , setIncrementalThumbnails  , bool );
 
     // Border space around thumbnails.
     property_copy( thumbnailSpace          , setThumbnailSpace         , int );
-    property_copy( thumbSize               , setThumbSize              , int );
+    property_copy( thumbnailSize           , setThumbnailSize          , int );
+    property_copy( minimumThumbnailSize    , setMinimumThumbnailSize   , int );
+    property_copy( maximumThumbnailSize    , setMaximumThumbnailSize   , int );
+    property_copy( actualThumbnailSize     , setActualThumbnailSize    , int );
     property_copy( thumbnailAspectRatio    , setThumbnailAspectRatio   , ThumbnailAspectRatio );
 
     ////////////////
@@ -165,6 +170,15 @@ public:
     property_ref( exifForViewer, setExifForViewer, StringSet );
     property_ref( exifForDialog, setExifForDialog, StringSet );
     property_ref( iptcCharset  , setIptcCharset  , QString   );
+#endif
+
+    /////////////////////////
+    //// Face Management ////
+    /////////////////////////
+
+#ifdef HAVE_KFACE
+    property_copy(faceDetectionAccuracy   , setFaceDetectionAccuracy   , int);
+    property_copy(faceDetectionSensitivity, setFaceDetectionSensitivity, int);
 #endif
 
     /////////////////////
@@ -227,18 +241,20 @@ signals:
     void viewSortTypeChanged( Settings::ViewSortType );
     void matchTypeChanged( AnnotationDialog::MatchType );
     void histogramSizeChanged( const QSize& );
+    void thumbnailSizeChanged( int );
+    void actualThumbnailSizeChanged( int );
 
 private:
     SettingsData( const QString& imageDirectory  );
 
-    bool _trustTimeStamps;
-    bool _hasAskedAboutTimeStamps;
-    QString _imageDirectory;
-    static SettingsData* _instance;
+    bool m_trustTimeStamps;
+    bool m_hasAskedAboutTimeStamps;
+    QString m_imageDirectory;
+    static SettingsData* s_instance;
 
     friend class DB::CategoryCollection;
 
-    QStringList _EXIFCommentsToStrip;
+    QStringList m_EXIFCommentsToStrip;
 };
 } // end of namespace
 

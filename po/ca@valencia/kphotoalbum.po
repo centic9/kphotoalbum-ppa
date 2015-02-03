@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2014-07-07 01:42+0000\n"
+"POT-Creation-Date: 2015-01-19 01:47+0000\n"
 "PO-Revision-Date: 2014-02-08 12:03+0100\n"
 "Last-Translator: Josep Ma. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -30,7 +30,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "txemaq@gmail.com"
 
-#: AnnotationDialog/Dialog.cpp:79
+#: AnnotationDialog/Dialog.cpp:90
 msgid ""
 "(You have differing descriptions on individual images, setting text here "
 "will override them all)"
@@ -38,65 +38,92 @@ msgstr ""
 "(Compta amb diferents descripcions de les imatges individuals, establint el "
 "text ací ho substituireu tot)."
 
-#: AnnotationDialog/Dialog.cpp:99
+#: AnnotationDialog/Dialog.cpp:110
 msgid "Label and Dates"
 msgstr "Etiqueta i dates"
 
-#: AnnotationDialog/Dialog.cpp:101
+#: AnnotationDialog/Dialog.cpp:112
 msgid "Image Preview"
 msgstr "Vista prèvia de la imatge"
 
-#: AnnotationDialog/Dialog.cpp:105 AnnotationDialog/Dialog.cpp:109
+#: AnnotationDialog/Dialog.cpp:116 AnnotationDialog/Dialog.cpp:126
 #: HTMLGenerator/HTMLDialog.cpp:130 ImportExport/MD5CheckPage.cpp:75
 msgid "Description"
 msgstr "Descripció"
 
-#: AnnotationDialog/Dialog.cpp:156
+#: AnnotationDialog/Dialog.cpp:120
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>A descriptive text of the image.</para><para>If <emphasis>Use EXIF "
+"description</emphasis> is enabled under <interface>Settings|Configure "
+"KPhotoAlbum...|General</interface>, a description embedded in the image EXIF "
+"information is imported to this field if available.</para>"
+msgstr ""
+
+#: AnnotationDialog/Dialog.cpp:147 DB/ImageDB.cpp:147
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#: AnnotationDialog/Dialog.cpp:152 AnnotationDialog/Dialog.cpp:154
+#, fuzzy
+#| msgctxt "Abbreviated month name"
+#| msgid "apr"
+msgid "Map"
+msgstr "abr"
+
+#: AnnotationDialog/Dialog.cpp:161
+msgctxt "@info:whatsthis"
+msgid ""
+"The map widget allows you to view the location of images if GPS coordinates "
+"are found in the EXIF information."
+msgstr ""
+
+#: AnnotationDialog/Dialog.cpp:204
 msgid "Revert This Item"
 msgstr "Desfés este element"
 
-#: AnnotationDialog/Dialog.cpp:160
+#: AnnotationDialog/Dialog.cpp:208
 msgid "Clear Form"
 msgstr "Neteja el formulari"
 
-#: AnnotationDialog/Dialog.cpp:166
+#: AnnotationDialog/Dialog.cpp:214
 msgid "Options..."
 msgstr "Opcions..."
 
-#: AnnotationDialog/Dialog.cpp:172
+#: AnnotationDialog/Dialog.cpp:220
 msgid "&Done"
 msgstr "&Fet"
 
-#: AnnotationDialog/Dialog.cpp:175
+#: AnnotationDialog/Dialog.cpp:223
 msgid "Continue &Later"
 msgstr "Continua més &tard"
 
-#: AnnotationDialog/Dialog.cpp:182 AnnotationDialog/Dialog.cpp:698
+#: AnnotationDialog/Dialog.cpp:230 AnnotationDialog/Dialog.cpp:767
 msgctxt "@action:button"
 msgid "&Search"
 msgstr "&Cerca"
 
-#: AnnotationDialog/Dialog.cpp:243
+#: AnnotationDialog/Dialog.cpp:291
 msgid "Label: "
 msgstr "Etiqueta: "
 
-#: AnnotationDialog/Dialog.cpp:247 ImportExport/MD5CheckPage.cpp:74
+#: AnnotationDialog/Dialog.cpp:295 ImportExport/MD5CheckPage.cpp:74
 msgid "Label"
 msgstr "Etiqueta"
 
-#: AnnotationDialog/Dialog.cpp:257
+#: AnnotationDialog/Dialog.cpp:305
 msgid "Date: "
 msgstr "Data: "
 
-#: AnnotationDialog/Dialog.cpp:273
+#: AnnotationDialog/Dialog.cpp:321
 msgid "Time: "
 msgstr "Hora: "
 
-#: AnnotationDialog/Dialog.cpp:279
+#: AnnotationDialog/Dialog.cpp:327
 msgid "Use Fuzzy Date"
 msgstr "Usa la data aproximada"
 
-#: AnnotationDialog/Dialog.cpp:281
+#: AnnotationDialog/Dialog.cpp:329
 msgctxt "@info"
 msgid ""
 "<para>In KPhotoAlbum, images can either have an exact date and time, or a "
@@ -114,107 +141,107 @@ msgstr ""
 "d'una càmera analògica), llavors caldria establir <interface>Usa la data "
 "aproximada</interface>.</para>"
 
-#: AnnotationDialog/Dialog.cpp:296
+#: AnnotationDialog/Dialog.cpp:344
 msgid "Minimum megapixels:"
 msgstr "Megapíxels mínims:"
 
-#: AnnotationDialog/Dialog.cpp:309
+#: AnnotationDialog/Dialog.cpp:357
 msgid "Rating:"
 msgstr "Valoració:"
 
-#: AnnotationDialog/Dialog.cpp:316
+#: AnnotationDialog/Dialog.cpp:364
 msgid "Rating search mode:"
 msgstr "Mode de cerca de valoració:"
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "=="
 msgstr "=="
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "&gt;="
 msgstr "&gt;="
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "&lt;="
 msgstr "&lt;="
 
-#: AnnotationDialog/Dialog.cpp:320
+#: AnnotationDialog/Dialog.cpp:368
 msgid "!="
 msgstr "!="
 
-#: AnnotationDialog/Dialog.cpp:328
+#: AnnotationDialog/Dialog.cpp:376
 msgid "File Name Pattern: "
 msgstr "Patró de nom de fitxer: "
 
-#: AnnotationDialog/Dialog.cpp:331
+#: AnnotationDialog/Dialog.cpp:379
 msgid "File Name Pattern"
 msgstr "Patró de nom de fitxer"
 
-#: AnnotationDialog/Dialog.cpp:336
+#: AnnotationDialog/Dialog.cpp:384
 msgid "Search only for RAW files"
 msgstr "S'estan només els fitxers RAW"
 
-#: AnnotationDialog/Dialog.cpp:516
+#: AnnotationDialog/Dialog.cpp:570
 #, kde-format
 msgid "KPhotoAlbum Annotations (%1/%2)"
 msgstr "Anotacions del KPhotoAlbum (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:702
+#: AnnotationDialog/Dialog.cpp:772
 msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "Cerca"
 
-#: AnnotationDialog/Dialog.cpp:706
+#: AnnotationDialog/Dialog.cpp:776
 msgid "Done"
 msgstr "Fet"
 
-#: AnnotationDialog/Dialog.cpp:711
+#: AnnotationDialog/Dialog.cpp:782
 msgid "Annotations"
 msgstr "Anotacions"
 
-#: AnnotationDialog/Dialog.cpp:743
+#: AnnotationDialog/Dialog.cpp:814
 msgid "Configure window layout..."
 msgstr "Configura la disposició de la finestra..."
 
-#: AnnotationDialog/Dialog.cpp:744
+#: AnnotationDialog/Dialog.cpp:815
 msgid "Save Current Window Setup"
 msgstr "Guarda l'arranjament actual de les finestres"
 
-#: AnnotationDialog/Dialog.cpp:745
+#: AnnotationDialog/Dialog.cpp:816
 msgid "Reset layout"
 msgstr "Reinicia la disposició"
 
-#: AnnotationDialog/Dialog.cpp:752 AnnotationDialog/Dialog.cpp:1128
-#: AnnotationDialog/ListSelect.cpp:90
+#: AnnotationDialog/Dialog.cpp:823 AnnotationDialog/Dialog.cpp:1201
+#: AnnotationDialog/ListSelect.cpp:91
 msgid "Sort Alphabetically (Tree)"
 msgstr "Ordena alfabèticament (arbre)"
 
-#: AnnotationDialog/Dialog.cpp:756 AnnotationDialog/Dialog.cpp:1132
-#: AnnotationDialog/ListSelect.cpp:96
+#: AnnotationDialog/Dialog.cpp:827 AnnotationDialog/Dialog.cpp:1205
+#: AnnotationDialog/ListSelect.cpp:97
 msgid "Sort Alphabetically (Flat)"
 msgstr "Ordena alfabèticament (pla)"
 
-#: AnnotationDialog/Dialog.cpp:760 AnnotationDialog/ListSelect.cpp:102
+#: AnnotationDialog/Dialog.cpp:831 AnnotationDialog/ListSelect.cpp:103
 msgid "Sort by date"
 msgstr "Ordena per data"
 
-#: AnnotationDialog/Dialog.cpp:776
+#: AnnotationDialog/Dialog.cpp:847
 msgid "Match tags from the first character."
 msgstr "Coincidència d'etiquetes des del primer caràcter."
 
-#: AnnotationDialog/Dialog.cpp:777
+#: AnnotationDialog/Dialog.cpp:848
 msgid "Match tags from word boundaries."
 msgstr "Coincidència d'etiquetes des de límits de paraula."
 
-#: AnnotationDialog/Dialog.cpp:778
+#: AnnotationDialog/Dialog.cpp:849
 msgid "Match tags anywhere."
 msgstr "Coincidència d'etiquetes a qualsevol lloc."
 
-#: AnnotationDialog/Dialog.cpp:796 AnnotationDialog/ListSelect.cpp:108
+#: AnnotationDialog/Dialog.cpp:867 AnnotationDialog/ListSelect.cpp:109
 msgid "Show only selected Ctrl+S"
 msgstr "Mostra només els seleccionats Ctrl+S"
 
-#: AnnotationDialog/Dialog.cpp:838
+#: AnnotationDialog/Dialog.cpp:910
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
@@ -223,7 +250,7 @@ msgstr ""
 "<p>No s'ha pogut guardar la disposició de la finestra.</p>El fitxer %1 no "
 "s'ha pogut obrir a causa del següent error: %2"
 
-#: AnnotationDialog/Dialog.cpp:845
+#: AnnotationDialog/Dialog.cpp:917
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
@@ -232,7 +259,7 @@ msgstr ""
 "<p>No s'ha pogut guardar la disposició de la finestra.</p>El fitxer %1 no "
 "s'ha pogut escriure a causa del següent error: %2"
 
-#: AnnotationDialog/Dialog.cpp:906
+#: AnnotationDialog/Dialog.cpp:978
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
 "recent changes for each affected file?</p>"
@@ -240,7 +267,7 @@ msgstr ""
 "<p>S'han fet alguns canvis a les anotacions. Segur que voleu cancel·lar tots "
 "els canvis recents per cada fitxer afectat?</p>"
 
-#: AnnotationDialog/Dialog.cpp:1007
+#: AnnotationDialog/Dialog.cpp:1080
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
 "it, it is suggested that you read the section in the manual on <a href="
@@ -256,7 +283,7 @@ msgstr ""
 "consells extres sobre el seu ús llegint sobre el <a href=\"help:/kphotoalbum/"
 "chp-typingIn.html\">tecleig</a>.</p>"
 
-#: AnnotationDialog/Dialog.cpp:1016
+#: AnnotationDialog/Dialog.cpp:1089
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
 "contains lots of functionality which has been optimized for fast usage.</"
@@ -268,72 +295,130 @@ msgstr ""
 "recomanable que dediqueu 5 minuts per llegir la <a href=\"help:/kphotoalbum/"
 "chp-typingIn.html\">documentació d'este diàleg</a>.</p>"
 
-#: AnnotationDialog/Dialog.cpp:1135
+#: AnnotationDialog/Dialog.cpp:1208
 msgid "Sort Most Recently Used"
 msgstr "Ordena per ús més recent"
 
-#: AnnotationDialog/Dialog.cpp:1138
+#: AnnotationDialog/Dialog.cpp:1211
 msgid "Toggle Sorting"
 msgstr "Commuta l'ordenació"
 
-#: AnnotationDialog/Dialog.cpp:1143
+#: AnnotationDialog/Dialog.cpp:1216
 msgid "Toggle Showing Selected Items Only"
 msgstr "Commuta per mostrar només els elements seleccionats"
 
-#: AnnotationDialog/Dialog.cpp:1148
+#: AnnotationDialog/Dialog.cpp:1221
 msgid "Annotate Next"
 msgstr "Anota següent"
 
-#: AnnotationDialog/Dialog.cpp:1152
+#: AnnotationDialog/Dialog.cpp:1225
 msgid "Annotate Previous"
 msgstr "Anota l'anterior"
 
-#: AnnotationDialog/Dialog.cpp:1156
+#: AnnotationDialog/Dialog.cpp:1229
 msgid "OK dialog"
 msgstr "Diàleg d'acord"
 
-#: AnnotationDialog/Dialog.cpp:1160 AnnotationDialog/ListSelect.cpp:318
-#: Settings/CategoryPage.cpp:119
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: Settings/CategoryPage.cpp:79
 msgid "Delete"
 msgstr "Elimina"
 
-#: AnnotationDialog/Dialog.cpp:1164
+#: AnnotationDialog/Dialog.cpp:1237
 msgid "Copy tags from previous image"
 msgstr "Copia les etiquetes des de la imatge anterior"
 
-#: AnnotationDialog/Dialog.cpp:1168 AnnotationDialog/ImagePreviewWidget.cpp:58
-#: MainWindow/Window.cpp:756
+#: AnnotationDialog/Dialog.cpp:1241 AnnotationDialog/ImagePreviewWidget.cpp:64
+#: MainWindow/Window.cpp:762
 msgid "Rotate counterclockwise"
 msgstr "Gira en sentit antihorari"
 
-#: AnnotationDialog/Dialog.cpp:1171 AnnotationDialog/ImagePreviewWidget.cpp:64
-#: MainWindow/Window.cpp:761
+#: AnnotationDialog/Dialog.cpp:1244 AnnotationDialog/ImagePreviewWidget.cpp:70
+#: MainWindow/Window.cpp:767
 msgid "Rotate clockwise"
 msgstr "Gira en sentit horari"
 
-#: AnnotationDialog/Dialog.cpp:1174
+#: AnnotationDialog/Dialog.cpp:1247
 msgid "Toggle fullscreen preview"
 msgstr "Commuta a vista prèvia de pantalla completa"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:44
+#: AnnotationDialog/ImagePreview.cpp:474
+#, kde-format
+msgid ""
+"<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
+"\"%2\" belongs to is not positionable.</p><p>If you want to use this tag, "
+"change this in the settings dialog. If this tag shouldn't be in the "
+"recognition database anymore, it can be deleted in the settings.</p>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreview.cpp:490
+#, kde-format
+msgid ""
+"<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
+"\"%2\" belongs to does not exist.</p><p>If you want to use this tag, add "
+"this category and mark it as positionable. If this tag shouldn't be in the "
+"recognition database anymore, it can be deleted in the settings dialog.</p>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate previous image"
 msgstr "Anota la imatge anterior"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:50
+#: AnnotationDialog/ImagePreviewWidget.cpp:56
 msgid "Annotate next image"
 msgstr "Anota la imatge següent"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:70
+#: AnnotationDialog/ImagePreviewWidget.cpp:76
 msgid "Copy tags from previously tagged image"
 msgstr "Copia les etiquetes des de la imatge etiquetada prèviament"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:76
+#: AnnotationDialog/ImagePreviewWidget.cpp:77
+msgctxt "@info:whatsthis"
+msgid ""
+"<para>Set the same tags on this image than on the previous one. The image "
+"date, label, rating, and description are left unchanged.</para>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:101
+msgid "Delete image"
+msgstr "Elimina una imatge"
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:116
+msgid "Train face recognition database automatically"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:300
+msgctxt "@info:tooltip"
 msgid "Hide or show areas on the image"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:84
-msgid "Delete image"
-msgstr "Elimina una imatge"
+#: AnnotationDialog/ImagePreviewWidget.cpp:302
+msgctxt "@info:tooltip"
+msgid "Search for faces on the current image"
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:304
+msgctxt "@info:whatsthis"
+msgid ""
+"If a tag for an area found by the face detector is set manually, the face "
+"recognition database will be trained automatically with that tag."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:311
+msgctxt "@info:tooltip"
+msgid ""
+"If you enable <emphasis>positionable tags</emphasis> for at least one "
+"category in <interface>Settings|Configure KPhotoAlbum...|Categories</"
+"interface>, you can associate specific image areas with tags."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:317
+msgctxt "@info"
+msgid ""
+"To use face detection, enable <emphasis>positionable tags</emphasis> for at "
+"least one category in <interface>Settings|Configure KPhotoAlbum...|"
+"Categories</interface>."
+msgstr ""
 
 #: AnnotationDialog/KDateEdit.cpp:88
 msgid "tomorrow"
@@ -347,60 +432,60 @@ msgstr "hui"
 msgid "yesterday"
 msgstr "ahir"
 
-#: AnnotationDialog/ListSelect.cpp:77 DB/ImageSearchInfo.cpp:247
+#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:251
 msgid "or"
 msgstr "o"
 
-#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:242
+#: AnnotationDialog/ListSelect.cpp:79 DB/ImageSearchInfo.cpp:246
 msgid "and"
 msgstr "i"
 
-#: AnnotationDialog/ListSelect.cpp:308
+#: AnnotationDialog/ListSelect.cpp:312
 msgid "No Item Selected"
 msgstr "Cap element seleccionat"
 
-#: AnnotationDialog/ListSelect.cpp:319
+#: AnnotationDialog/ListSelect.cpp:323
 msgid "Rename..."
 msgstr "Reanomena..."
 
-#: AnnotationDialog/ListSelect.cpp:321
+#: AnnotationDialog/ListSelect.cpp:325
 msgid "<b>Sub Categories</b>"
 msgstr "<b>Subcategories</b>"
 
-#: AnnotationDialog/ListSelect.cpp:329
+#: AnnotationDialog/ListSelect.cpp:333
 msgid "Super Categories"
 msgstr "Super categories"
 
-#: AnnotationDialog/ListSelect.cpp:346
+#: AnnotationDialog/ListSelect.cpp:350
 msgid "New Category..."
 msgstr "Categoria nova..."
 
-#: AnnotationDialog/ListSelect.cpp:349
+#: AnnotationDialog/ListSelect.cpp:353
 msgid "Create Subcategory..."
 msgstr "Crea subcategoria..."
 
-#: AnnotationDialog/ListSelect.cpp:355
+#: AnnotationDialog/ListSelect.cpp:359
 #, kde-format
 msgid "Take item out of category %1"
 msgstr "Trau l'element de la categoria %1"
 
-#: AnnotationDialog/ListSelect.cpp:358
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "<b>Sorting</b>"
 msgstr "<b>S'està ordenant</b>"
 
-#: AnnotationDialog/ListSelect.cpp:364
+#: AnnotationDialog/ListSelect.cpp:368
 msgid "Usage"
 msgstr "Ús"
 
-#: AnnotationDialog/ListSelect.cpp:365
+#: AnnotationDialog/ListSelect.cpp:369
 msgid "Alphabetical (Flat)"
 msgstr "Alfabètic (pla)"
 
-#: AnnotationDialog/ListSelect.cpp:366
+#: AnnotationDialog/ListSelect.cpp:370
 msgid "Alphabetical (Tree)"
 msgstr "Alfabètic (arbre)"
 
-#: AnnotationDialog/ListSelect.cpp:386
+#: AnnotationDialog/ListSelect.cpp:390
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -409,24 +494,25 @@ msgstr ""
 "<p>De debò voleu eliminar «%1»?<br/>Suprimint este element s'eliminarà "
 "qualsevol informació referent a ell de qualsevol imatge que el continga.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:394
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "De debò elimino %1?"
 
-#: AnnotationDialog/ListSelect.cpp:391 Settings/SubCategoriesPage.cpp:191
+#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:781
 msgid "&Delete"
 msgstr "E&limina"
 
-#: AnnotationDialog/ListSelect.cpp:405
+#: AnnotationDialog/ListSelect.cpp:417
 msgid "Rename Item"
 msgstr "Reanomena l'element"
 
-#: AnnotationDialog/ListSelect.cpp:405
+#: AnnotationDialog/ListSelect.cpp:417
 msgid "Enter new name:"
 msgstr "Introduïu el nom nou:"
 
-#: AnnotationDialog/ListSelect.cpp:409
+#: AnnotationDialog/ListSelect.cpp:421
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -435,53 +521,79 @@ msgstr ""
 "<p>De debò voleu reanomenar «%1» per «%2»?<br/>Fer-ho reanomenarà «%3» a "
 "qualsevol imatge que el continga.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:413
+#: AnnotationDialog/ListSelect.cpp:425
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "De debò voleu reanomenar %1?"
 
-#: AnnotationDialog/ListSelect.cpp:444
+#: AnnotationDialog/ListSelect.cpp:461
 msgid "New Super Category"
 msgstr "Super categoria nova"
 
-#: AnnotationDialog/ListSelect.cpp:444
+#: AnnotationDialog/ListSelect.cpp:461
 msgid "New Super Category Name:"
 msgstr "Nom de la super categoria nova:"
 
-#: AnnotationDialog/ListSelect.cpp:453
+#: AnnotationDialog/ListSelect.cpp:470
 msgid "New Sub Category"
 msgstr "Subcategoria nova"
 
-#: AnnotationDialog/ListSelect.cpp:453
+#: AnnotationDialog/ListSelect.cpp:470
 msgid "New Sub Category Name:"
 msgstr "Nom de la subcategoria nova:"
 
-#: AnnotationDialog/ResizableFrame.cpp:46
+#: AnnotationDialog/ProposedFaceDialog.cpp:58
+#, kde-format
+msgid "Is this %1 (%2)?"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:84
 #, fuzzy
 #| msgid "Remove Tokens"
 msgctxt "area of an image; rectangle that is overlayed upon the image"
 msgid "Remove area"
 msgstr "Supressió de símbols"
 
-#: AnnotationDialog/ResizableFrame.cpp:293
+#: AnnotationDialog/ResizableFrame.cpp:95
+msgid "Try to recognize this face"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:338
 #, kde-format
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:304
-#, kde-format
-msgctxt ""
-"As in: associate [this marked area of the image] with tag %1 in category %2"
-msgid "Associate with %1 (%2)"
+#: AnnotationDialog/ResizableFrame.cpp:350
+#: AnnotationDialog/ResizableFrame.cpp:370
+msgid "Associate with"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:326
+#: AnnotationDialog/ResizableFrame.cpp:379
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
 "choices/menu items"
 msgid "Associate with"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:402
+#, kde-format
+msgid "Train the recognition database with the face of %1"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:427
+#, kde-format
+msgctxt ""
+"%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the tag's "
+"category"
+msgid "%1 %2 (%3)"
+msgstr ""
+
+#: AnnotationDialog/ResizableFrame.cpp:432
+#, kde-format
+msgctxt "%1 is the tag name and %2 is the tag's category"
+msgid "%1 (%2)"
 msgstr ""
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
@@ -544,6 +656,7 @@ msgstr "Pausa"
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
+#: MainWindow/BirthDatesDialog.cpp:71
 msgid "Close"
 msgstr "Tanca"
 
@@ -602,7 +715,7 @@ msgstr[0] "1 vídeo"
 msgstr[1] "%1 vídeos"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:82
 msgid "Images"
 msgstr "Imatges"
 
@@ -814,108 +927,108 @@ msgstr "2 hores"
 msgid "10 Minutes"
 msgstr "10 minuts"
 
-#: DB/Category.cpp:139 DB/Category.cpp:147
+#: DB/Category.cpp:140
 msgid "People"
 msgstr "Gent"
 
-#: DB/Category.cpp:140 DB/Category.cpp:148
+#: DB/Category.cpp:141
 msgid "Places"
 msgstr "Llocs"
 
-#: DB/Category.cpp:141
+#: DB/Category.cpp:142
 msgid "Events"
 msgstr "Esdeveniments"
 
-#: DB/Category.cpp:142
+#: DB/Category.cpp:143 Settings/CategoryPage.cpp:220
 msgid "Folder"
 msgstr "Carpeta"
 
-#: DB/Category.cpp:143
+#: DB/Category.cpp:144 Settings/CategoryPage.cpp:221
 msgid "Tokens"
 msgstr "Senyals"
 
-#: DB/Category.cpp:144
+#: DB/Category.cpp:145 Settings/CategoryPage.cpp:222
 msgid "Media Type"
 msgstr "Tipus de suport"
 
-#: DB/Category.cpp:149
+#: DB/Category.cpp:147 Settings/CategoryPage.cpp:223
 msgid "Keywords"
 msgstr "Paraules clau"
 
-#: DB/Category.cpp:198
+#: DB/Category.cpp:228
 #, kde-format
 msgid "Unable to create directory '%1'."
 msgstr "No s'ha pogut crear el directori «%1»."
 
-#: DB/Category.cpp:198
+#: DB/Category.cpp:228
 msgid "Unable to Create Directory"
 msgstr "No ha estat possible crear el directori"
 
-#: DB/Category.cpp:205
+#: DB/Category.cpp:235
 #, kde-format
 msgid "Error when saving image '%1'."
 msgstr "Error mentre es desava la imatge «%1»."
 
-#: DB/Category.cpp:205
+#: DB/Category.cpp:235
 msgid "Error Saving Image"
 msgstr "Error en guardar la imatge"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:348
 msgctxt "Abbreviated month name"
 msgid "jan"
 msgstr "gen"
 
-#: DB/ImageDate.cpp:343
+#: DB/ImageDate.cpp:348
 msgctxt "Abbreviated month name"
 msgid "feb"
 msgstr "feb"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:349
 msgctxt "Abbreviated month name"
 msgid "mar"
 msgstr "mar"
 
-#: DB/ImageDate.cpp:344
+#: DB/ImageDate.cpp:349
 msgctxt "Abbreviated month name"
 msgid "apr"
 msgstr "abr"
 
-#: DB/ImageDate.cpp:345
+#: DB/ImageDate.cpp:350
 msgctxt "Abbreviated month name"
 msgid "may"
 msgstr "mai"
 
-#: DB/ImageDate.cpp:345
+#: DB/ImageDate.cpp:350
 msgctxt "Abbreviated month name"
 msgid "jun"
 msgstr "jun"
 
-#: DB/ImageDate.cpp:346
+#: DB/ImageDate.cpp:351
 msgctxt "Abbreviated month name"
 msgid "jul"
 msgstr "jul"
 
-#: DB/ImageDate.cpp:346
+#: DB/ImageDate.cpp:351
 msgctxt "Abbreviated month name"
 msgid "aug"
 msgstr "ago"
 
-#: DB/ImageDate.cpp:347
+#: DB/ImageDate.cpp:352
 msgctxt "Abbreviated month name"
 msgid "sep"
 msgstr "set"
 
-#: DB/ImageDate.cpp:347
+#: DB/ImageDate.cpp:352
 msgctxt "Abbreviated month name"
 msgid "oct"
 msgstr "oct"
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:353
 msgctxt "Abbreviated month name"
 msgid "nov"
 msgstr "nov"
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:353
 msgctxt "Abbreviated month name"
 msgid "dec"
 msgstr "des"
@@ -924,11 +1037,7 @@ msgstr "des"
 msgid "Loading information from images"
 msgstr "S'està carregant la informació des de les imatges"
 
-#: DB/ImageDB.cpp:147
-msgid "Cancel"
-msgstr "Cancel·la"
-
-#: DB/ImageSearchInfo.cpp:239
+#: DB/ImageSearchInfo.cpp:243
 #, kde-format
 msgctxt ""
 "As in No persons, no locations etc. I do realize that translators may have "
@@ -937,11 +1046,11 @@ msgctxt ""
 msgid "No %1"
 msgstr "Cap %1"
 
-#: DB/ImageSearchInfo.cpp:248
+#: DB/ImageSearchInfo.cpp:252
 msgid "not"
 msgstr "no"
 
-#: DB/ImageSearchInfo.cpp:252
+#: DB/ImageSearchInfo.cpp:256
 #, kde-format
 msgctxt ""
 "As in no other persons, or no other locations. I do realize that translators "
@@ -951,7 +1060,7 @@ msgctxt ""
 msgid "No other %1"
 msgstr "Cap altre %1"
 
-#: DB/NewImageFinder.cpp:129
+#: DB/NewImageFinder.cpp:142
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
 "of images, this may take some time.<br/>However, there is only a delay when "
@@ -961,7 +1070,7 @@ msgstr ""
 "del nombre d'imatges, això pot trigar un temps.<br/>Malgrat tot, només hi "
 "haurà un retard quan es troben noves imatges.</p>"
 
-#: DB/NewImageFinder.cpp:314
+#: DB/NewImageFinder.cpp:327
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -969,7 +1078,7 @@ msgstr[0] "<p><b>S'està calculant la suma de verificació del fitxer %1</b></p>
 msgstr[1] ""
 "<p><b>S'estan calculant les sumes de verificació dels fitxers %1</b></p>"
 
-#: DB/NewImageFinder.cpp:315
+#: DB/NewImageFinder.cpp:328
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -977,11 +1086,11 @@ msgstr ""
 "<p>En emmagatzemar la suma de verificació per cada imatge, el KPhotoAlbum és "
 "capaç de trobar les imatges, encara que les moveu pel disc.</p>"
 
-#: DB/NewImageFinder.cpp:358
+#: DB/NewImageFinder.cpp:371
 msgid "Following files could not be read:"
 msgstr "No s'han pogut llegir els següents fitxers:"
 
-#: Exif/Database.cpp:77
+#: Exif/Database.cpp:96
 #, kde-format
 msgid ""
 "<p>There was an error while executing the SQL backend command. The error is "
@@ -996,11 +1105,11 @@ msgstr ""
 "EXIF.</p><hr/><p>Per a depuració: l'orde que s'intenta executar és:<br/>%1</"
 "p><p>El missatge d'error que s'ha obtingut és:<br/>%2</p>"
 
-#: Exif/Database.cpp:85
+#: Exif/Database.cpp:104
 msgid "Error Executing Exif Command"
 msgstr "Error en executar l'orde EXIF"
 
-#: Exif/Database.cpp:308
+#: Exif/Database.cpp:404
 msgid "Rereading EXIF information from all images"
 msgstr "S'està tornant a llegir la informació EXIF des de totes les imatges"
 
@@ -1057,7 +1166,7 @@ msgstr ""
 msgid "Override image dates"
 msgstr "Sobreescriure les dates de la imatge"
 
-#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:93
+#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:107
 msgid "Settings"
 msgstr "Arranjament"
 
@@ -1350,22 +1459,22 @@ msgstr ""
 msgid "Directory Exists"
 msgstr "El directori existeix"
 
-#: HTMLGenerator/HTMLDialog.cpp:491 MainWindow/SplashScreen.cpp:66
+#: HTMLGenerator/HTMLDialog.cpp:493 MainWindow/SplashScreen.cpp:66
 #, kde-format
 msgid "%1"
 msgstr "%1"
 
-#: HTMLGenerator/HTMLDialog.cpp:502
+#: HTMLGenerator/HTMLDialog.cpp:504
 msgid "Could not find any themes - this is very likely an installation error"
 msgstr ""
 "No s'ha pogut trobar cap tema - segurament hi ha un error d'instal·lació"
 
-#: HTMLGenerator/HTMLDialog.cpp:509
+#: HTMLGenerator/HTMLDialog.cpp:511
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
 msgstr "S'ha definit per defecte més d'un tema. S'està utilitzant el tema %1"
 
-#: HTMLGenerator/HTMLDialog.cpp:516
+#: HTMLGenerator/HTMLDialog.cpp:518
 msgctxt ""
 "This is to show the author of the theme. E.g. copyright character (&#169;) "
 "by itself will work fine on this context if no proper word is available in "
@@ -1373,7 +1482,7 @@ msgctxt ""
 msgid "by "
 msgstr "per "
 
-#: HTMLGenerator/HTMLDialog.cpp:518
+#: HTMLGenerator/HTMLDialog.cpp:520
 msgid ""
 "\n"
 " "
@@ -1381,36 +1490,36 @@ msgstr ""
 "\n"
 " "
 
-#: ImageManager/ExtractOneVideoFrame.cpp:86
+#: ImageManager/ExtractOneVideoFrame.cpp:85
 msgid "Failed to start"
 msgstr "Ha fallat en iniciar"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:87
+#: ImageManager/ExtractOneVideoFrame.cpp:86
 msgid "Crashed"
 msgstr "Ha fallat"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:88
+#: ImageManager/ExtractOneVideoFrame.cpp:87
 msgid "Timedout"
 msgstr "Ha expirat el temps"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:89
+#: ImageManager/ExtractOneVideoFrame.cpp:88
 msgid "Read error"
 msgstr "Error de lectura"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:90
+#: ImageManager/ExtractOneVideoFrame.cpp:89
 msgid "Write error"
 msgstr "Error d'escriptura"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:91
+#: ImageManager/ExtractOneVideoFrame.cpp:90
 msgid "Unknown error"
 msgstr "Error desconegut"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:95
+#: ImageManager/ExtractOneVideoFrame.cpp:94
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr "<p>Error en extraure les miniatures de vídeo.<br/>L'error és: %1</p>"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:134
+#: ImageManager/ExtractOneVideoFrame.cpp:133
 #, kde-format
 msgid ""
 "Unable to extract video thumbnails from some files. Either the file is "
@@ -1658,42 +1767,46 @@ msgstr "Destinació de les imatges"
 msgid "The directory must be a subdirectory of %1"
 msgstr "El directori hauria de ser un subdirectori de %1"
 
-#: ImportExport/ImportDialog.cpp:267
+#: ImportExport/ImportDialog.cpp:230
+msgid "This directory is reserved for category images."
+msgstr ""
+
+#: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
 msgstr "Aparellament de categories"
 
-#: ImportExport/ImportDialog.cpp:299
+#: ImportExport/ImportDialog.cpp:303
 #, kde-format
 msgid "Directory %1 does not exist. Should it be created?"
 msgstr "El directori %1 no existeix. S'hauria de crear?"
 
-#: ImportExport/ImportDialog.cpp:303
+#: ImportExport/ImportDialog.cpp:307
 #, kde-format
 msgid "Error creating directory %1"
 msgstr "Error en crear el directori %1"
 
-#: ImportExport/ImportDialog.cpp:389
+#: ImportExport/ImportDialog.cpp:393
 msgid "How to resolve clashes"
 msgstr "Com resoldre col·lisions"
 
-#: ImportExport/ImportHandler.cpp:86 ImportExport/ImportHandler.cpp:139
+#: ImportExport/ImportHandler.cpp:95 ImportExport/ImportHandler.cpp:148
 msgid "Copying Images"
 msgstr "Copiant les imatges"
 
-#: ImportExport/ImportHandler.cpp:154
+#: ImportExport/ImportHandler.cpp:163
 #, kde-format
 msgid "Error when writing image %1"
 msgstr "Error en escriure la imatge %1"
 
-#: ImportExport/ImportHandler.cpp:173
+#: ImportExport/ImportHandler.cpp:182
 msgid "Updating Database"
 msgstr "S'està actualitzant la base de dades"
 
-#: ImportExport/ImportHandler.cpp:202
+#: ImportExport/ImportHandler.cpp:228
 msgid "Cannot copy from any of the following locations:"
 msgstr "No es pot copiar des de cap de les ubicacions següents:"
 
-#: ImportExport/ImportHandler.cpp:203
+#: ImportExport/ImportHandler.cpp:229
 msgid "Continue without Asking"
 msgstr "Continua sense preguntar"
 
@@ -1820,32 +1933,32 @@ msgid "&Maintenance"
 msgstr "&Manteniment"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:72
+#: kphotoalbumui.rc:72 Settings/SettingsDialog.cpp:83
 msgid "Plugins"
 msgstr "Connectors"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:73
+#: kphotoalbumui.rc:74
 msgid "Export"
 msgstr "Exporta"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:77
+#: kphotoalbumui.rc:78
 msgid "Import"
 msgstr "Importa"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:85
+#: kphotoalbumui.rc:86
 msgid "Batch Plugins"
 msgstr "Connectors per lots"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:89
+#: kphotoalbumui.rc:90
 msgid "Tools"
 msgstr "Eines"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:106
+#: kphotoalbumui.rc:107
 msgid "Main Toolbar"
 msgstr "Barra d'eines principal"
 
@@ -2080,6 +2193,32 @@ msgstr ""
 msgid "Skip images that are already in a stack"
 msgstr "Omet les imatges que ja estan en una pila"
 
+#: MainWindow/BirthDatesDialog.cpp:38
+#, fuzzy
+#| msgid "Configure Current View"
+msgid "Configure Birth Dates"
+msgstr "Configura la vista actual"
+
+#: MainWindow/BirthDatesDialog.cpp:41
+msgid ""
+"Set the date of birth for items (say people) here,\n"
+"and then see their age when viewing the images."
+msgstr ""
+
+#: MainWindow/BirthDatesDialog.cpp:53
+#, fuzzy
+#| msgid "Current Item"
+msgid "Current Category"
+msgstr "Element actual"
+
+#: MainWindow/BirthDatesDialog.cpp:57
+msgid "Filter (Alt+f)"
+msgstr ""
+
+#: MainWindow/CalendarPopup.cpp:37
+msgid "unset"
+msgstr ""
+
 #: MainWindow/CategoryImagePopup.cpp:61
 msgid "Show Category Editor"
 msgstr "Mostra l'editor de categories"
@@ -2087,6 +2226,43 @@ msgstr "Mostra l'editor de categories"
 #: MainWindow/CategoryImagePopup.cpp:83
 msgid "Make Category Image"
 msgstr "Crea una categoria d'imatges"
+
+#: MainWindow/CopyPopup.cpp:31
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy image(s) to..."
+msgstr "Exporta/copia imatges..."
+
+#: MainWindow/CopyPopup.cpp:38
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy currently selected image to..."
+msgstr "Exporta/copia imatges..."
+
+#: MainWindow/CopyPopup.cpp:41
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgid "Copy all selected images to..."
+msgstr "Exporta/copia imatges..."
+
+#: MainWindow/CopyPopup.cpp:69 Viewer/ViewerWidget.cpp:1547
+msgctxt "@action:button"
+msgid "Copy"
+msgstr ""
+
+#: MainWindow/CopyPopup.cpp:72 Viewer/ViewerWidget.cpp:1546
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgctxt "@title:window"
+msgid "Copy image to..."
+msgstr "Exporta/copia imatges..."
+
+#: MainWindow/CopyPopup.cpp:76
+#, fuzzy
+#| msgid "Export/Copy Images..."
+msgctxt "@title:window"
+msgid "Copy images to..."
+msgstr "Exporta/copia imatges..."
 
 #: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
@@ -2219,11 +2395,11 @@ msgstr "Línia d'ordes"
 msgid "Invoke External Program"
 msgstr "Invoca un programa extern"
 
-#: MainWindow/FeatureDialog.cpp:38
+#: MainWindow/FeatureDialog.cpp:40
 msgid "Feature Status"
 msgstr "Estat de les funcionalitats"
 
-#: MainWindow/FeatureDialog.cpp:43
+#: MainWindow/FeatureDialog.cpp:45
 #, kde-format
 msgid ""
 "<h1>Overview</h1><p>Below you may see the list of compile- and runtime "
@@ -2232,7 +2408,23 @@ msgstr ""
 "<h1>Vista general</h1><p>A sota podeu veure una llista de les funcionalitats "
 "(compilades i en execució) que té el KPhotoAlbum, i el seu estat:</p>%1"
 
-#: MainWindow/FeatureDialog.cpp:46
+#: MainWindow/FeatureDialog.cpp:48
+#, fuzzy
+#| msgid ""
+#| "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
+#| "yourself, then please review the sections below to learn what to install "
+#| "to get the feature in question. If on the other hand you installed "
+#| "KPhotoAlbum from a binary package, please tell whoever made the package "
+#| "about this defect, eventually including the information from the section "
+#| "below.</p><p>In case you are missing a feature and you did not compile "
+#| "KPhotoAlbum yourself, please do consider doing so. It really is not that "
+#| "hard. If you need help compiling KPhotoAlbum, feel free to ask on the <a "
+#| "href=\"http://mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum "
+#| "mailing list</a></p><p>The steps to compile KPhotoAlbum can be seen on <a "
+#| "href=\"http://www.kphotoalbum.org/index.php?page=compile\">the "
+#| "KPhotoAlbum home page</a>. If you have never compiled a KDE application, "
+#| "then please ensure that you have the developer packages installed, in "
+#| "most distributions they go under names like kdelibs<i>-devel</i></p>"
 msgid ""
 "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
 "yourself, then please review the sections below to learn what to install to "
@@ -2242,7 +2434,7 @@ msgid ""
 "p><p>In case you are missing a feature and you did not compile KPhotoAlbum "
 "yourself, please do consider doing so. It really is not that hard. If you "
 "need help compiling KPhotoAlbum, feel free to ask on the <a href=\"http://"
-"mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
+"mail.kdab.com/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></"
 "p><p>The steps to compile KPhotoAlbum can be seen on <a href=\"http://www."
 "kphotoalbum.org/index.php?page=compile\">the KPhotoAlbum home page</a>. If "
 "you have never compiled a KDE application, then please ensure that you have "
@@ -2265,7 +2457,7 @@ msgstr ""
 "paquets de desenvolupament, que en la majoria de les distribucions "
 "s'anomenen kdelibs<i>-devel</i></p>"
 
-#: MainWindow/FeatureDialog.cpp:62
+#: MainWindow/FeatureDialog.cpp:64
 msgid ""
 "<h1><a name=\"kipi\">Plug-ins support</a></h1><p>KPhotoAlbum has a plug-in "
 "system with lots of extensions. You may among other things find plug-ins for:"
@@ -2284,13 +2476,20 @@ msgstr ""
 "de connectors s'anomena KIPI, i es pot descarregar des del <a href=\"http://"
 "userbase.kde.org/KIPI\">wiki KDE Userbase</a>.</p>"
 
-#: MainWindow/FeatureDialog.cpp:75
+#: MainWindow/FeatureDialog.cpp:77
+#, fuzzy
+#| msgid ""
+#| "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information "
+#| "like the date the image was shot, the shooting angle, focal length, and "
+#| "shutter-speed in what is known as EXIF information.</p><p>KPhotoAlbum "
+#| "uses the <a href=\"http://freshmeat.net/projects/exiv2/\">EXIV2 library</"
+#| "a> to read EXIF information from images</p>"
 msgid ""
 "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information like "
 "the date the image was shot, the shooting angle, focal length, and shutter-"
 "speed in what is known as EXIF information.</p><p>KPhotoAlbum uses the <a "
-"href=\"http://freshmeat.net/projects/exiv2/\">EXIV2 library</a> to read EXIF "
-"information from images</p>"
+"href=\"http://www.exiv2.org/\">EXIV2 library</a> to read EXIF information "
+"from images</p>"
 msgstr ""
 "<h1><a name=\"exiv2\">Funcionament de l'EXIF</a></h1><p>Les imatges "
 "emmagatzemen informació com la data en què es va prendre la imatge, l'angle "
@@ -2299,19 +2498,39 @@ msgstr ""
 "freshmeat.net/projects/exiv2/\">biblioteca EXIV2</a> per llegir la "
 "informació EXIF de les imatges.</p>"
 
-#: MainWindow/FeatureDialog.cpp:83
+#: MainWindow/FeatureDialog.cpp:85
+#, fuzzy
+#| msgid ""
+#| "<h1><a name=\"database\">SQL database support</a></h1><p>KPhotoAlbum "
+#| "allows you to search using a certain number of EXIF tags. For this "
+#| "KPhotoAlbum needs an Sqlite database. In addition the qt package for "
+#| "sqlite (e.g.qt-sql-sqlite) must be installed.</p>"
 msgid ""
-"<h1><a name=\"database\">SQL database support</a></h1><p>KPhotoAlbum allows "
-"you to search using a certain number of EXIF tags. For this KPhotoAlbum "
-"needs an Sqlite database. In addition the qt package for sqlite (e.g.qt-sql-"
-"sqlite) must be installed.</p>"
+"<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
+"allows you to search using a certain number of EXIF tags. For this "
+"KPhotoAlbum needs an Sqlite database. In addition the qt package for sqlite "
+"(e.g.qt-sql-sqlite) must be installed.</p>"
 msgstr ""
 "<h1><a name=\"database\">Funcionament de la base de dades SQL</a></h1><p>El "
 "KPhotoAlbum vos permet fer cerques usant alguna de les etiquetes EXIF. Per "
 "això, el KPhotoAlbum necessita la base de dades Sqlite. Addicionalment, cal "
 "instal·lar el paquet qt per a sqlite (p.ex. qt-sql-sqlite).</p>"
 
-#: MainWindow/FeatureDialog.cpp:88
+#: MainWindow/FeatureDialog.cpp:90
+msgid ""
+"<h1><a name=\"kface\">Face detection and recognition support</a></h1><p>If "
+"KPhotoAlbum has been built with support for libkface, face detection and "
+"recognition features are enabled in the annotation dialog.</p>"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:95
+msgid ""
+"<h1><a name=\"geomap\">Map view for geotagged images</a></h1><p>If "
+"KPhotoAlbum has been built with support for libkgeomap, KPhotoAlbum can show "
+"images with GPS information on a map.</p>"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:100
 msgid ""
 "<h1><a name=\"video\">Video support</a></h1><p>KPhotoAlbum relies on Qt's "
 "Phonon architecture for displaying videos; this in turn relies on GStreamer. "
@@ -2326,7 +2545,7 @@ msgstr ""
 "KPhotoAlbum#Video_Support\">article del wiki del KPhotoAlbum sobre el "
 "funcionament del vídeo</a>.</p>"
 
-#: MainWindow/FeatureDialog.cpp:96
+#: MainWindow/FeatureDialog.cpp:108
 msgid ""
 "<p>No video mime types found, which indicates that either Qt was compiled "
 "without phonon support, or there were missing codecs</p>"
@@ -2334,7 +2553,7 @@ msgstr ""
 "<p>No s'ha trobat cap tipus MIME de vídeo, una indicació que les Qt s'han "
 "compilat sense implementar el phonon, o hi ha còdecs perduts</p>"
 
-#: MainWindow/FeatureDialog.cpp:98
+#: MainWindow/FeatureDialog.cpp:110
 #, kde-format
 msgid ""
 "<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></"
@@ -2343,7 +2562,7 @@ msgstr ""
 "<p>El Phonon pot reproduir pel·lícules dels següents tipus MIME:<ul><li>%1</"
 "li></ul></p>"
 
-#: MainWindow/FeatureDialog.cpp:100
+#: MainWindow/FeatureDialog.cpp:112
 msgid ""
 "<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
 "uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails "
@@ -2363,41 +2582,45 @@ msgstr ""
 "problemes freqüents en extraure la durada dels vídeos i també falla a "
 "vegades en extraure les miniatures usades en vídeos cíclics.</p>"
 
-#: MainWindow/FeatureDialog.cpp:205
+#: MainWindow/FeatureDialog.cpp:225
 msgid "Plug-ins available"
 msgstr "Connectors disponibles"
 
-#: MainWindow/FeatureDialog.cpp:206
+#: MainWindow/FeatureDialog.cpp:226
 msgid "EXIF info supported"
 msgstr "Accepta la informació EXIF"
 
-#: MainWindow/FeatureDialog.cpp:207
-msgid "SQL database support"
-msgstr "Accepta la base de dades SQL"
-
-#: MainWindow/FeatureDialog.cpp:208
+#: MainWindow/FeatureDialog.cpp:227
 msgid "Sqlite database support (used for EXIF searches)"
 msgstr "Accepta la base de dades Sqlite (per a les cerques EXIF)"
 
-#: MainWindow/FeatureDialog.cpp:210
+#: MainWindow/FeatureDialog.cpp:228
+msgid "Face detection and recognition support"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:229
+msgid "Map view for geotagged images."
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:230
 msgid "Video support"
 msgstr "Accepta el vídeo"
 
-#: MainWindow/FeatureDialog.cpp:214
+#: MainWindow/FeatureDialog.cpp:234
 msgctxt "Feature available"
 msgid "Yes"
 msgstr "Sí"
 
-#: MainWindow/FeatureDialog.cpp:215
+#: MainWindow/FeatureDialog.cpp:235
 msgctxt "Feature not available"
 msgid "No"
 msgstr "No"
 
-#: MainWindow/FeatureDialog.cpp:222
+#: MainWindow/FeatureDialog.cpp:242
 msgid "Only with MPlayer1"
 msgstr "Només amb MPlayer1"
 
-#: MainWindow/FeatureDialog.cpp:223
+#: MainWindow/FeatureDialog.cpp:243
 msgid "Video thumbnail support"
 msgstr "Accepta les miniatures de vídeo"
 
@@ -2568,8 +2791,7 @@ msgstr ""
 "Si useu una etiqueta específica per a indicar que una imatge s'ha etiquetat, "
 "indiqueu-la ací."
 
-#: MainWindow/StatisticsDialog.cpp:116 Settings/SubCategoriesPage.cpp:40
-#: Settings/UntaggedGroupBox.cpp:36
+#: MainWindow/StatisticsDialog.cpp:116 Settings/UntaggedGroupBox.cpp:36
 msgid "Category:"
 msgstr "Categoria:"
 
@@ -2591,7 +2813,19 @@ msgstr "Tot"
 msgid "Total"
 msgstr "Total"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:730
+#: MainWindow/StatusBar.cpp:107
+#, fuzzy
+#| msgid "Thumbnail image size:"
+msgid "Decrease thumbnail storage size"
+msgstr "Mida de la miniatura de la imatge:"
+
+#: MainWindow/StatusBar.cpp:114
+#, fuzzy
+#| msgid "Thumbnail image size:"
+msgid "Increase thumbnail storage size"
+msgstr "Mida de la miniatura de la imatge:"
+
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:736
 msgid "Remove Tokens"
 msgstr "Supressió de símbols"
 
@@ -2698,23 +2932,23 @@ msgstr "Comprovar funcionalitats"
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Felicitats: s'han habilitat totes les funcionalitats dinàmiques."
 
-#: MainWindow/Window.cpp:137
+#: MainWindow/Window.cpp:139
 msgid "Loading Database"
 msgstr "S'està carregant la base de dades"
 
-#: MainWindow/Window.cpp:143
+#: MainWindow/Window.cpp:145
 msgid "Loading Main Window"
 msgstr "S'està carregant la finestra principal"
 
-#: MainWindow/Window.cpp:233
+#: MainWindow/Window.cpp:236
 msgid "Searching for New Files"
 msgstr "S'estan cercant fitxers nous"
 
-#: MainWindow/Window.cpp:239
+#: MainWindow/Window.cpp:242
 msgid "Loading Plug-ins"
 msgstr "S'estan carregant els connectors"
 
-#: MainWindow/Window.cpp:260
+#: MainWindow/Window.cpp:263
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
@@ -2722,7 +2956,7 @@ msgstr ""
 "No s'ha pogut obrir la base de dades EXIF. Comproveu que el directori arrel "
 "de les imatges es pot escriure."
 
-#: MainWindow/Window.cpp:274
+#: MainWindow/Window.cpp:277
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -2737,19 +2971,19 @@ msgstr ""
 "i provar la demostració una altre cop, hauríeu de guardar-la amb els canvis "
 "que heu fet en esta sessió.</p>"
 
-#: MainWindow/Window.cpp:279
+#: MainWindow/Window.cpp:282
 msgid "Delete Demo Database"
 msgstr "Elimina la base de dades de demostració"
 
-#: MainWindow/Window.cpp:294
+#: MainWindow/Window.cpp:297
 msgid "Do you want to save the changes?"
 msgstr "Voleu guardar els canvis?"
 
-#: MainWindow/Window.cpp:295
+#: MainWindow/Window.cpp:298
 msgid "Save Changes?"
 msgstr "Deso els canvis?"
 
-#: MainWindow/Window.cpp:334
+#: MainWindow/Window.cpp:336
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
@@ -2757,264 +2991,268 @@ msgstr ""
 "Alguna de les imatges seleccionades ja pertanyen a una pila. Voleu eliminar-"
 "les de la seua pila i crear-ne una completament nova?"
 
-#: MainWindow/Window.cpp:336 MainWindow/Window.cpp:341
+#: MainWindow/Window.cpp:338 MainWindow/Window.cpp:343
 msgid "Stacking Error"
 msgstr "Error en apilar"
 
-#: MainWindow/Window.cpp:340
+#: MainWindow/Window.cpp:342
 msgid "Unknown error, stack creation failed."
 msgstr "Error desconegut, ha fallat la creació de la pila."
 
-#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
-#: MainWindow/Window.cpp:1280
+#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:1307
 msgid "No item is selected."
 msgstr "No hi ha cap element seleccionat."
 
-#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
-#: MainWindow/Window.cpp:1281
+#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:1308
 msgid "No Selection"
 msgstr "Cap selecció"
 
-#: MainWindow/Window.cpp:466
+#: MainWindow/Window.cpp:468
 msgid "Saving..."
 msgstr "Desant..."
 
-#: MainWindow/Window.cpp:470
+#: MainWindow/Window.cpp:472
 msgid "Saving... Done"
 msgstr "Desant... fet"
 
-#: MainWindow/Window.cpp:616
+#: MainWindow/Window.cpp:622
 msgid "There are no images to be shown."
 msgstr "No hi ha imatges a mostrar."
 
-#: MainWindow/Window.cpp:691
+#: MainWindow/Window.cpp:697
 msgid "Generate HTML..."
 msgstr "Genera HTML..."
 
-#: MainWindow/Window.cpp:695
+#: MainWindow/Window.cpp:701
 msgid "Import..."
 msgstr "Importa..."
 
-#: MainWindow/Window.cpp:698
+#: MainWindow/Window.cpp:704
 msgid "Export/Copy Images..."
 msgstr "Exporta/copia imatges..."
 
-#: MainWindow/Window.cpp:724
+#: MainWindow/Window.cpp:730
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "Elimina la selecció"
 
-#: MainWindow/Window.cpp:733
+#: MainWindow/Window.cpp:739
 msgid "Open List of Files..."
 msgstr "Obri la llista de fitxers..."
 
-#: MainWindow/Window.cpp:737
+#: MainWindow/Window.cpp:743
 msgid "Annotate Individual Items"
 msgstr "Anota elements individuals"
 
-#: MainWindow/Window.cpp:741
+#: MainWindow/Window.cpp:747
 msgid "Annotate Multiple Items at a Time"
 msgstr "Anota múltiples elements a la vegada"
 
-#: MainWindow/Window.cpp:745
+#: MainWindow/Window.cpp:751
 msgid "Merge Images into a Stack"
 msgstr "Fusiona les imatges en una pila"
 
-#: MainWindow/Window.cpp:749
+#: MainWindow/Window.cpp:755
 msgid "Remove Images from Stack"
 msgstr "Elimina les imatges d'una pila"
 
-#: MainWindow/Window.cpp:752
+#: MainWindow/Window.cpp:758
 msgid "Set as First Image in Stack"
 msgstr "Defineix com a primera imatge en una pila"
 
-#: MainWindow/Window.cpp:767
+#: MainWindow/Window.cpp:773
 msgid "View"
 msgstr "Visualitza"
 
-#: MainWindow/Window.cpp:771
+#: MainWindow/Window.cpp:777
 msgid "View (In New Window)"
 msgstr "Visualitza (en una nova finestra)"
 
-#: MainWindow/Window.cpp:774
+#: MainWindow/Window.cpp:780
 msgid "Run Slide Show"
 msgstr "Executa el passe de diapositives"
 
-#: MainWindow/Window.cpp:779
+#: MainWindow/Window.cpp:785
 msgid "Run Randomized Slide Show"
 msgstr "Executa el passe aleatori de diapositives"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:791
 msgid "Collapse all stacks"
 msgstr "Redueix totes les piles"
 
-#: MainWindow/Window.cpp:791
+#: MainWindow/Window.cpp:797
 msgid "Expand all stacks"
 msgstr "Expandeix totes les piles"
 
-#: MainWindow/Window.cpp:796
+#: MainWindow/Window.cpp:802
 msgid "Show &Oldest First"
 msgstr "Mostra primer la més &antiga"
 
-#: MainWindow/Window.cpp:801
+#: MainWindow/Window.cpp:807
 msgid "Show &Newest First"
 msgstr "Mostra primer la més &nova"
 
-#: MainWindow/Window.cpp:806
+#: MainWindow/Window.cpp:812
 msgid "Sort Selected by Date && Time"
 msgstr "Ordena les seleccionades per data i hora"
 
-#: MainWindow/Window.cpp:809
+#: MainWindow/Window.cpp:815
 msgid "Limit View to Selection"
 msgstr "Limita la vista a la selecció"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:818
 msgid "Jump to Context"
 msgstr "Vés al context"
 
-#: MainWindow/Window.cpp:817
+#: MainWindow/Window.cpp:823
 msgid "Lock Images"
 msgstr "Bloqueja les imatges"
 
-#: MainWindow/Window.cpp:820
+#: MainWindow/Window.cpp:826
 msgid "Unlock"
 msgstr "Desbloqueja"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:829
 msgid "Change Password..."
 msgstr "Canvia la contrasenya..."
 
-#: MainWindow/Window.cpp:827
+#: MainWindow/Window.cpp:833
 msgid "Lock Away All Other Items"
 msgstr "Bloqueja tots els altres elements"
 
-#: MainWindow/Window.cpp:830
+#: MainWindow/Window.cpp:836
 msgid "Lock Away Current Set of Items"
 msgstr "Bloqueja el conjunt actual d'elements"
 
-#: MainWindow/Window.cpp:834
+#: MainWindow/Window.cpp:840
 msgid "Display Images and Videos Not on Disk"
 msgstr "Mostra imatges i vídeos de fora del disc"
 
-#: MainWindow/Window.cpp:837
+#: MainWindow/Window.cpp:843
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Mostra imatges i vídeos amb dates incompletes..."
 
-#: MainWindow/Window.cpp:841
+#: MainWindow/Window.cpp:847
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Mostra imatges i vídeos amb la suma MD5 canviada"
 
-#: MainWindow/Window.cpp:845
+#: MainWindow/Window.cpp:851
 msgid "Merge duplicates"
 msgstr "Combina els duplicats"
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:853
 msgid "Recalculate Checksum"
 msgstr "Torna a calcular la suma de verificació"
 
-#: MainWindow/Window.cpp:850
+#: MainWindow/Window.cpp:856
 msgid "Rescan for Images and Videos"
 msgstr "Torna a explorar les imatges i vídeos"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:859
 msgid "Recreate Exif Search Database"
 msgstr "Torna a crear la base de dades de cerca EXIF"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:862
 msgid "Read EXIF Info From Files..."
 msgstr "Llig la informació EXIF des dels fitxers..."
 
-#: MainWindow/Window.cpp:858
+#: MainWindow/Window.cpp:864
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Torna a crear la base de dades de cerca EXIF (cal compilar el KPhotoAlbum "
 "amb implementació per EXIF)"
 
-#: MainWindow/Window.cpp:859
+#: MainWindow/Window.cpp:865
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Llig la informació EXIF dels fitxers... (cal compilar el KPhotoAlbum amb "
 "implementació per EXIF)"
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:871
 msgid "Sort All by Date && Time"
 msgstr "Ordena-ho tot per data i hora"
 
-#: MainWindow/Window.cpp:869
+#: MainWindow/Window.cpp:875
 msgid "Automatically Stack Selected Images..."
 msgstr "Apila automàticament les imatges seleccionades..."
 
-#: MainWindow/Window.cpp:872
+#: MainWindow/Window.cpp:878
+msgid "Edit Birth Dates..."
+msgstr ""
+
+#: MainWindow/Window.cpp:881
 msgid "Build Thumbnails"
 msgstr "Construeix les miniatures"
 
-#: MainWindow/Window.cpp:875
+#: MainWindow/Window.cpp:884
 msgid "Statistics"
 msgstr "Estadístiques"
 
-#: MainWindow/Window.cpp:884
+#: MainWindow/Window.cpp:893
 msgid "Enable All Messages"
 msgstr "Habilita tots els missatges"
 
-#: MainWindow/Window.cpp:887
+#: MainWindow/Window.cpp:896
 msgid "Configure Current View"
 msgstr "Configura la vista actual"
 
-#: MainWindow/Window.cpp:896
+#: MainWindow/Window.cpp:905
 msgid "Tree"
 msgstr "Arbre"
 
-#: MainWindow/Window.cpp:901
+#: MainWindow/Window.cpp:910
 msgid "Tree with User Icons"
 msgstr "Arbre amb icones d'usuari"
 
-#: MainWindow/Window.cpp:907 MainWindow/Window.cpp:913
+#: MainWindow/Window.cpp:915
 msgid "Icons"
 msgstr "Icones"
 
-#: MainWindow/Window.cpp:925
+#: MainWindow/Window.cpp:927
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Mostra informació emergent a la finestra de miniatures"
 
-#: MainWindow/Window.cpp:931
+#: MainWindow/Window.cpp:933
 msgid "Run KPhotoAlbum Demo"
 msgstr "Executa la demostració del KPhotoAlbum"
 
-#: MainWindow/Window.cpp:934
+#: MainWindow/Window.cpp:936
 msgid "KPhotoAlbum Feature Status"
 msgstr "Estat de les funcionalitats del KPhotoAlbum"
 
-#: MainWindow/Window.cpp:937
+#: MainWindow/Window.cpp:939
 msgid "Show Demo Videos"
 msgstr "Mostra demostracions dels vídeos"
 
-#: MainWindow/Window.cpp:942
+#: MainWindow/Window.cpp:944
 msgid "Show Exif Info"
 msgstr "Mostra la informació EXIF"
 
-#: MainWindow/Window.cpp:945
+#: MainWindow/Window.cpp:947
 msgid "Recreate Selected Thumbnails"
 msgstr "Torna a crear les miniatures seleccionades"
 
-#: MainWindow/Window.cpp:948
+#: MainWindow/Window.cpp:950
 msgid "Use next video thumbnail"
 msgstr "Usa la miniatura de vídeo següent"
 
-#: MainWindow/Window.cpp:952
+#: MainWindow/Window.cpp:954
 msgid "Use previous video thumbnail"
 msgstr "Usa la miniatura de vídeo anterior"
 
-#: MainWindow/Window.cpp:978
+#: MainWindow/Window.cpp:980
 msgid "Auto saving...."
 msgstr "S'està guardant automàticament..."
 
-#: MainWindow/Window.cpp:980
+#: MainWindow/Window.cpp:982
 msgid "Auto saving.... Done"
 msgstr "Desant automàticament... fet"
 
-#: MainWindow/Window.cpp:1072
+#: MainWindow/Window.cpp:1076
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -3023,7 +3261,7 @@ msgstr ""
 "<p>No s'ha pogut obrir l'index.xml indicat doncs el directori no existeix."
 "<br />%1</p>"
 
-#: MainWindow/Window.cpp:1080
+#: MainWindow/Window.cpp:1084
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -3032,7 +3270,15 @@ msgstr ""
 "<p>Atès que l'índex de fitxer no existeix, el voleu crear tot seguit?<br />"
 "%1/index.xml</p>"
 
-#: MainWindow/Window.cpp:1150
+#: MainWindow/Window.cpp:1100
+msgid ""
+"<p>You have configured a tag for untagged images, but either the tag itself "
+"or its category does not exist in the database.</p><p>Please review your "
+"untagged tag setting under <interface>Settings|Configure KPhotoAlbum...|"
+"Categories</interface></p>"
+msgstr ""
+
+#: MainWindow/Window.cpp:1177
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
@@ -3045,39 +3291,39 @@ msgstr ""
 "accés al fitxer index.xml pot saltar-se esta contrasenya amb facilitat.</b></"
 "p>"
 
-#: MainWindow/Window.cpp:1155
+#: MainWindow/Window.cpp:1182
 msgid "Password Protection"
 msgstr "Protecció per contrasenya"
 
-#: MainWindow/Window.cpp:1169
+#: MainWindow/Window.cpp:1196
 msgid "Type in Password to Unlock"
 msgstr "Introduïu la contrasenya per desbloquejar"
 
-#: MainWindow/Window.cpp:1178 MainWindow/Window.cpp:1212
+#: MainWindow/Window.cpp:1205 MainWindow/Window.cpp:1239
 msgid "Invalid password."
 msgstr "Contrasenya no vàlida."
 
-#: MainWindow/Window.cpp:1203
+#: MainWindow/Window.cpp:1230
 msgid "Type in Old Password"
 msgstr "Introduïu la contrasenya antiga"
 
-#: MainWindow/Window.cpp:1215
+#: MainWindow/Window.cpp:1242
 msgid "Type in New Password"
 msgstr "Introduïu la contrasenya nova"
 
-#: MainWindow/Window.cpp:1226 Settings/SettingsDialog.cpp:65
+#: MainWindow/Window.cpp:1253 Settings/SettingsDialog.cpp:76
 msgid "General"
 msgstr "General"
 
-#: MainWindow/Window.cpp:1227 Settings/SettingsDialog.cpp:70
+#: MainWindow/Window.cpp:1254 Settings/SettingsDialog.cpp:81
 msgid "Viewer"
 msgstr "Visor"
 
-#: MainWindow/Window.cpp:1240
+#: MainWindow/Window.cpp:1267
 msgid "Annotation Dialog"
 msgstr "Diàleg d'anotacions"
 
-#: MainWindow/Window.cpp:1398
+#: MainWindow/Window.cpp:1421
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
@@ -3085,7 +3331,7 @@ msgstr ""
 "<p>De debò habilito tots els quadres de missatge encara que abans heu marcat "
 "la casella de selecció de no mostrar-les una altra vegada?</p>"
 
-#: MainWindow/Window.cpp:1409
+#: MainWindow/Window.cpp:1432
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -3101,15 +3347,15 @@ msgstr ""
 "continuarà executant-se, però probablement fallarà més avant, degut a que "
 "manca el «make install».</p>"
 
-#: MainWindow/Window.cpp:1409
+#: MainWindow/Window.cpp:1432
 msgid "Internal Error"
 msgstr "Error intern"
 
-#: MainWindow/Window.cpp:1594
+#: MainWindow/Window.cpp:1617
 msgid "Open List of Files"
 msgstr "Obri la llista de fitxers"
 
-#: MainWindow/Window.cpp:1594
+#: MainWindow/Window.cpp:1617
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3117,15 +3363,22 @@ msgstr ""
 "Podeu obrir un conjunt de fitxers des de l'arrel d'imatges de KPhotoAlbum "
 "amb els fitxers ací llistats."
 
-#: MainWindow/Window.cpp:1610
+#: MainWindow/Window.cpp:1633
 msgid "No images matching your input were found."
 msgstr "No s'ha trobat cap imatge que coincidisca amb la vostra entrada."
 
-#: MainWindow/Window.cpp:1610
+#: MainWindow/Window.cpp:1633
 msgid "No Matches"
 msgstr "Sense coincidències"
 
-#: MainWindow/Window.cpp:1787
+#: MainWindow/Window.cpp:1794
+#, fuzzy, no-c-format, kde-format
+#| msgid "Thumbnail image size:"
+msgctxt "@info:status"
+msgid "Thumbnail width: %1px (storage size: %2px)"
+msgstr "Mida de la miniatura de la imatge:"
+
+#: MainWindow/Window.cpp:1833
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3135,11 +3388,11 @@ msgstr ""
 "KPhotoAlbum no podrà mostrar miniatures de vídeos ni la durada de vídeos. Si "
 "vos plau, instal·leu el paquet de l'MPlayer2</p>"
 
-#: MainWindow/Window.cpp:1790
+#: MainWindow/Window.cpp:1836
 msgid "Video thumbnails are not available"
 msgstr "Les miniatures pel vídeo no estan disponibles"
 
-#: MainWindow/Window.cpp:1796
+#: MainWindow/Window.cpp:1842
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3151,11 +3404,11 @@ msgstr ""
 "vos plau, instal·leu-lo si és possible, ja que esta versió funciona molt "
 "millor per extraure les miniatures dels vídeos.</p>"
 
-#: MainWindow/Window.cpp:1799
+#: MainWindow/Window.cpp:1845
 msgid "MPlayer is too old"
 msgstr "L'MPlayer és massa antic."
 
-#: MainWindow/Window.cpp:1821
+#: MainWindow/Window.cpp:1867
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3164,27 +3417,64 @@ msgid ""
 "id=org.kde.kphotoalbum\">install from google play</a></p>"
 msgstr ""
 
-#: Plugins/CategoryImageCollection.cpp:34 Plugins/ImageCollection.cpp:57
+#: Map/MapView.cpp:62
+msgid "Save the current map settings"
+msgstr ""
+
+#: Map/MapView.cpp:68
+msgid "Go to last map position"
+msgstr ""
+
+#: Map/MapView.cpp:137
+#, fuzzy
+#| msgid "Settings"
+msgid "Settings saved"
+msgstr "Arranjament"
+
+#: Map/MapView.cpp:137
+msgid "Map view"
+msgstr ""
+
+#: Map/MapView.cpp:148
+#, fuzzy
+#| msgid "Loading information from images"
+msgid "<i>Loading coordinates from the images ...</i>"
+msgstr "S'està carregant la informació des de les imatges"
+
+#: Map/MapView.cpp:157
+msgid "<i>This image does not contain geographic coordinates.</i>"
+msgstr ""
+
+#: Map/MapView.cpp:162
+msgid ""
+"<i>Some of the selected images do not contain geographic coordinates.</i>"
+msgstr ""
+
+#: Map/MapView.cpp:168
+msgid "<i>None of the selected images contain geographic coordinates.</i>"
+msgstr ""
+
+#: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:55
 msgctxt "The 'name' of an unnamed image collection."
 msgid "None"
 msgstr "Cap"
 
-#: Plugins/ImageCollection.cpp:44
+#: Plugins/ImageCollection.cpp:42
 msgctxt "As in 'an unknown set of images, created from the selection'."
 msgid "Unknown (Selection)"
 msgstr "Desconegut (selecció)"
 
-#: Plugins/ImageCollection.cpp:47
+#: Plugins/ImageCollection.cpp:45
 msgctxt "As in 'A selection of [a generated context description]'"
 msgid " (Selection)"
 msgstr " (Selecció)"
 
-#: Plugins/ImageCollection.cpp:52
+#: Plugins/ImageCollection.cpp:50
 msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Desconegut"
 
-#: Plugins/Interface.cpp:144
+#: Plugins/Interface.cpp:155
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3232,7 +3522,7 @@ msgid ""
 "Remote Control protocol version: %2"
 msgstr ""
 
-#: Settings/CategoryItem.cpp:130
+#: Settings/CategoryItem.cpp:160
 msgid ""
 "<p>Due to a shortcoming in KPhotoAlbum, you need to save your database after "
 "renaming categories; otherwise all the filenames of the category thumbnails "
@@ -3246,61 +3536,153 @@ msgstr ""
 "perdran.</p><p>Així que premeu ara Cancel·la (i no es reanomenaran), o "
 "premeu Continua, i el proper pas serà guardar la base de dades.</p>"
 
-#: Settings/CategoryPage.cpp:55
-msgid "Label:"
-msgstr "Etiqueta:"
-
-#: Settings/CategoryPage.cpp:68
-msgid "Positionable tags:"
-msgstr ""
-
-#: Settings/CategoryPage.cpp:71
-msgid "Coordinates can be added to tags in this category"
-msgstr ""
-
-#: Settings/CategoryPage.cpp:79
-msgid "Icon:"
-msgstr "Icona:"
-
-#: Settings/CategoryPage.cpp:91
-msgid "Thumbnail Size: "
-msgstr "Mida de la miniatura: "
-
-#: Settings/CategoryPage.cpp:103
-msgid "Preferred view:"
-msgstr "Vista preferida:"
-
-#: Settings/CategoryPage.cpp:109
-msgid "List View"
-msgstr "Vista de llista"
-
-#: Settings/CategoryPage.cpp:109
-msgid "List View with Custom Thumbnails"
-msgstr "Vista de llista amb miniatures personalitzades"
-
-#: Settings/CategoryPage.cpp:109
-msgid "Icon View"
-msgstr "Vista d'icones"
-
-#: Settings/CategoryPage.cpp:109
-msgid "Icon View with Custom Thumbnails"
-msgstr "Vista d'icones amb miniatures personalitzades"
-
-#: Settings/CategoryPage.cpp:116
+#: Settings/CategoryPage.cpp:75
 msgid "New"
 msgstr "Nova"
 
-#: Settings/CategoryPage.cpp:164
-#, kde-format
-msgid ""
-"<p>Do you really want to make '%1' non-positionable?</p><p>All areas linked "
-"against this category will be deleted!</p>"
+#: Settings/CategoryPage.cpp:83
+#, fuzzy
+#| msgid "Rename..."
+msgid "Rename"
+msgstr "Reanomena..."
+
+#: Settings/CategoryPage.cpp:115
+msgid "Positionable tags:"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:211
+#: Settings/CategoryPage.cpp:117
+msgid "Tags in this category can be associated with an area of the image"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:123
+msgid "Icon:"
+msgstr "Icona:"
+
+#: Settings/CategoryPage.cpp:133
+#, fuzzy
+#| msgid "Thumbnail Size: "
+msgid "Thumbnail Size:"
+msgstr "Mida de la miniatura: "
+
+#: Settings/CategoryPage.cpp:144
+msgid "Preferred view:"
+msgstr "Vista preferida:"
+
+#: Settings/CategoryPage.cpp:149
+msgid "List View"
+msgstr "Vista de llista"
+
+#: Settings/CategoryPage.cpp:150
+msgid "List View with Custom Thumbnails"
+msgstr "Vista de llista amb miniatures personalitzades"
+
+#: Settings/CategoryPage.cpp:151
+msgid "Icon View"
+msgstr "Vista d'icones"
+
+#: Settings/CategoryPage.cpp:152
+msgid "Icon View with Custom Thumbnails"
+msgstr "Vista d'icones amb miniatures personalitzades"
+
+#: Settings/CategoryPage.cpp:173
+msgid "<i>Choose a category to edit it</i>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:187
+#, fuzzy
+#| msgctxt "Basically 'enter a category name'"
+#| msgid "<b>Setting Category: </b>"
+msgid "Settings for category"
+msgstr "<b>Definició de categoria:</b>"
+
+#: Settings/CategoryPage.cpp:190
 #, kde-format
-msgid "<p>Really delete category '%1'?</p>"
+msgid "<i>Pending change: rename to \"%1\"</i>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:227
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"special category name which is reserved and can't be used for a normal "
+"category.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:231 Settings/CategoryPage.cpp:242
+#: Settings/CategoryPage.cpp:256 Settings/CategoryPage.cpp:273
+#, fuzzy
+#| msgid "Invalid password."
+msgid "Invalid category name"
+msgstr "Contrasenya no vàlida."
+
+#: Settings/CategoryPage.cpp:239
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
+"this name already exists.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:251
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"standard category which comes with a localized name. The localized name for "
+"\"%2\" is \"%1\", so this category already has this name.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:268
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
+"standard category which comes with a localized name. The localized name for "
+"\"%2\" is \"%3\" and this category already exists.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:281
+#, kde-format
+msgid ""
+"<p>\"%1\" is a standard category which comes with a localized name. The "
+"localized name for \"%1\" is \"%2\", this name will be used instead.</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:285
+msgid "Localized category name entered"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:302
+#, kde-format
+msgid ""
+"<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
+"pending rename action on the category \"%2\". Please save this change first."
+"</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:306
+msgid "Unsaved pending renaming action"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:335
+#, kde-format
+msgid ""
+"<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
+"linked against this category will be deleted!</p>"
+msgstr ""
+
+#: Settings/CategoryPage.cpp:384
+#, fuzzy
+#| msgid "New Category..."
+msgid "New category"
+msgstr "Categoria nova..."
+
+#: Settings/CategoryPage.cpp:416
+#, fuzzy, kde-format
+#| msgid "<p>Really delete category '%1'?</p>"
+msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>De debò elimino la categoria «%1»?</p>"
+
+#: Settings/CategoryPage.cpp:429
+msgid "<i>choose a category to edit it</i>"
+msgstr ""
 
 #: Settings/DatabaseBackendPage.cpp:36
 msgid "Choose speed over readability for index.xml file"
@@ -3370,6 +3752,81 @@ msgstr "Informació EXIF/IPTC a mostrar en el diàleg EXIF"
 #: Settings/ExifPage.cpp:48
 msgid "Character set for image metadata:"
 msgstr "Joc de caràcters per les metadades d'imatges:"
+
+#: Settings/FaceManagementPage.cpp:49
+#, fuzzy
+#| msgid "No Selection"
+msgid "Face detection"
+msgstr "Cap selecció"
+
+#: Settings/FaceManagementPage.cpp:57
+msgid "Accuracy"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:61
+msgid "fast"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:71
+msgid "accurate"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:76
+msgid "Sensitivity"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:80
+msgid "more false positives"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:90
+msgid "more missed faces"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:102
+msgid "Face recognition"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:111
+#, fuzzy
+#| msgid "Database backend"
+msgid "Database entry"
+msgstr "Dorsal de base de dades"
+
+#: Settings/FaceManagementPage.cpp:126
+#, fuzzy
+#| msgctxt "Delete selected images"
+#| msgid "Delete Selected"
+msgid "Delete selected"
+msgstr "Elimina la selecció"
+
+#: Settings/FaceManagementPage.cpp:132
+#, fuzzy
+#| msgid ""
+#| "Use data from\n"
+#| "Database"
+msgid "Erase database"
+msgstr ""
+"Usa les dades de\n"
+"la base de dades"
+
+#: Settings/FaceManagementPage.cpp:137
+msgid ""
+"<b>Caution:</b> Changes to category names or category deletions are not "
+"adopted by the recognition database until the changes are saved!"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:207
+#, fuzzy
+#| msgid "Do you want to save the changes?"
+msgid "Do you really want to delete the selected tags?"
+msgstr "Voleu guardar els canvis?"
+
+#: Settings/FaceManagementPage.cpp:232
+#, fuzzy
+#| msgid "Do you want to save the changes?"
+msgid "Do you really want to erase the database?"
+msgstr "Voleu guardar els canvis?"
 
 #: Settings/FileVersionDetectionPage.cpp:38
 msgid "New File Searches"
@@ -3779,149 +4236,280 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Confiar en les marques de temps?"
 
-#: Settings/SettingsDialog.cpp:66
+#: Settings/SettingsDialog.cpp:77
 msgid "File Searching & Versions"
 msgstr "Cerca i versions de fitxer"
 
-#: Settings/SettingsDialog.cpp:67
+#: Settings/SettingsDialog.cpp:78
 msgid "Thumbnail View"
 msgstr "Vista de miniatures"
 
-#: Settings/SettingsDialog.cpp:68
+#: Settings/SettingsDialog.cpp:79
 msgid "Categories"
 msgstr "Categories"
 
-#: Settings/SettingsDialog.cpp:69
-msgid "Subcategories"
-msgstr "Subcategories"
+#: Settings/SettingsDialog.cpp:80
+#, fuzzy
+#| msgid "New Group"
+msgid "Tag Groups"
+msgstr "Grup nou"
 
-#: Settings/SettingsDialog.cpp:76
+#: Settings/SettingsDialog.cpp:87
 msgid "EXIF/IPTC Information"
 msgstr "Informació EXIF/IPTC"
 
-#: Settings/SettingsDialog.cpp:78
+#: Settings/SettingsDialog.cpp:89
 msgid "Database backend"
 msgstr "Dorsal de base de dades"
 
-#: Settings/SubCategoriesPage.cpp:53
-msgid "Super Categories:"
-msgstr "Super categories:"
-
-#: Settings/SubCategoriesPage.cpp:62
-msgid "Items of Category:"
-msgstr "Elements de categoria:"
-
-#: Settings/SubCategoriesPage.cpp:72
-msgid "Add Super Category..."
-msgstr "Afig super categoria..."
-
-#: Settings/SubCategoriesPage.cpp:74
-msgid "Rename Super Category..."
-msgstr "Reanomena super categoria..."
-
-#: Settings/SubCategoriesPage.cpp:76
-msgid "Delete Super Category"
-msgstr "Elimina super categoria"
-
-#: Settings/SubCategoriesPage.cpp:80
-msgid ""
-"<b>Notice:</b> It is also possible to set up subcategories in the annotation "
-"dialog, simply by dragging items."
+#: Settings/SettingsDialog.cpp:91
+msgid "Face management"
 msgstr ""
-"<b>Nota:</b> també es possible establir subcategories al diàleg "
-"d'anotacions, senzillament arrossegant elements."
 
-#: Settings/SubCategoriesPage.cpp:159 Settings/SubCategoriesPage.cpp:176
+#: Settings/TagGroupsPage.cpp:49
+#, fuzzy
+#| msgid "Categories"
+msgctxt "@label"
+msgid "Categories and groups:"
+msgstr "Categories"
+
+#: Settings/TagGroupsPage.cpp:60
+msgctxt "@label/rich"
+msgid "<emphasis>Select a group on the left side to add tags to it</emphasis>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:73
+msgctxt "@label/rich"
+msgid ""
+"<emphasis>There are pending changes of category names.<nl> Please save the "
+"changes before working on tag groups.</emphasis>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:81
+msgctxt "@action:inmenu"
+msgid "Add group ..."
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:260
+#, fuzzy, kde-format
+#| msgid "Really delete group %1?"
+msgctxt "@action:inmenu"
+msgid "Rename group \"%1\""
+msgstr "De debò elimino el grup %1?"
+
+#: Settings/TagGroupsPage.cpp:262
+#, fuzzy, kde-format
+#| msgid "Delete Group"
+msgctxt "@action:inmenu"
+msgid "Delete group \"%1\""
+msgstr "Elimina un grup"
+
+#: Settings/TagGroupsPage.cpp:330
+#, fuzzy, kde-format
+#| msgid "Take item out of category %1"
+msgctxt "@label"
+msgid "Tags in group \"%1\" of category \"%2\""
+msgstr "Trau l'element de la categoria %1"
+
+#: Settings/TagGroupsPage.cpp:349
+#, fuzzy
+#| msgid "New Group"
+msgctxt "@title:window"
 msgid "New Group"
 msgstr "Grup nou"
 
-#: Settings/SubCategoriesPage.cpp:159 Settings/SubCategoriesPage.cpp:176
+#: Settings/TagGroupsPage.cpp:350
+#, fuzzy
+#| msgid "Group name:"
+msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Nom de grup:"
 
-#: Settings/SubCategoriesPage.cpp:191
+#: Settings/TagGroupsPage.cpp:367
 #, kde-format
-msgid "Really delete group %1?"
-msgstr "De debò elimino el grup %1?"
+msgctxt "@info"
+msgid "<p>The group \"%1\" already exists.</p>"
+msgstr ""
 
-#: Settings/SubCategoriesPage.cpp:191
+#: Settings/TagGroupsPage.cpp:368
+msgctxt "@title:window"
+msgid "Cannot add group"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:446 Settings/TagGroupsPage.cpp:469
+#, fuzzy
+#| msgid "Delete Group"
+msgctxt "@title:window"
+msgid "Rename Group"
+msgstr "Elimina un grup"
+
+#: Settings/TagGroupsPage.cpp:447
+#, fuzzy
+#| msgid "Group name:"
+msgctxt "@label:textbox"
+msgid "New group name:"
+msgstr "Nom de grup:"
+
+#: Settings/TagGroupsPage.cpp:464
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>Cannot rename group \"%1\" to \"%2\": \"%2\" already exists in "
+"category \"%3\"</para>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:526
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>Really delete group \"%1\"?</para><para>Sub-categories of this group "
+"will be moved to the super category of \"%1\" (\"%2\").<nl/> All other "
+"memberships of the sub-categories will stay intact.</para>"
+msgstr ""
+
+#: Settings/TagGroupsPage.cpp:532
+#, fuzzy, kde-format
+#| msgid "<p>Really delete category '%1'?</p>"
+msgctxt "@info"
+msgid "<para>Really delete group \"%1\"?</para>"
+msgstr "<p>De debò elimino la categoria «%1»?</p>"
+
+#: Settings/TagGroupsPage.cpp:537
+#, fuzzy
+#| msgid "Delete Group"
+msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Elimina un grup"
 
-#: Settings/ThumbnailsPage.cpp:36
+#: Settings/TagGroupsPage.cpp:715
+#, fuzzy, kde-format
+#| msgid "Rename..."
+msgctxt "@action:inmenu"
+msgid "Rename \"%1\""
+msgstr "Reanomena..."
+
+#: Settings/TagGroupsPage.cpp:717
+#, fuzzy, kde-format
+#| msgid "Delete"
+msgctxt "@action:inmenu"
+msgid "Delete \"%1\""
+msgstr "Elimina"
+
+#: Settings/TagGroupsPage.cpp:727
+#, fuzzy
+#| msgid "New Sub Category Name:"
+msgctxt "@title:window"
+msgid "New Tag Name"
+msgstr "Nom de la subcategoria nova:"
+
+#: Settings/TagGroupsPage.cpp:728
+#, fuzzy
+#| msgid "Group name:"
+msgctxt "@label:textbox"
+msgid "Tag name:"
+msgstr "Nom de grup:"
+
+#: Settings/TagGroupsPage.cpp:776
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
+#| "any information about it from any image containing the item.</p>"
+msgctxt "@info"
+msgid ""
+"<para>Do you really want to delete \"%1\"?</para><para>Deleting the item "
+"will remove any information about it from any image containing the item.</"
+"para>"
+msgstr ""
+"<p>De debò voleu eliminar «%1»?<br/>Suprimint este element s'eliminarà "
+"qualsevol informació referent a ell de qualsevol imatge que el continga.</p>"
+
+#: Settings/TagGroupsPage.cpp:780
+#, fuzzy, kde-format
+#| msgid "Really Delete %1?"
+msgctxt "@title:window"
+msgid "Really delete %1?"
+msgstr "De debò elimino %1?"
+
+#: Settings/ThumbnailsPage.cpp:37
 msgid "Tooltip preview image size:"
 msgstr "Rètol indicatiu de mida de la imatge:"
 
-#: Settings/ThumbnailsPage.cpp:40
+#: Settings/ThumbnailsPage.cpp:41
 msgid "No Image Preview"
 msgstr "Sense vista prèvia de la Imatge"
 
-#: Settings/ThumbnailsPage.cpp:46
+#: Settings/ThumbnailsPage.cpp:47
 msgid "Thumbnail image size:"
 msgstr "Mida de la miniatura de la imatge:"
 
-#: Settings/ThumbnailsPage.cpp:55
+#: Settings/ThumbnailsPage.cpp:56
+#, fuzzy
+#| msgid "Build Thumbnails"
+msgid "Build thumbnails on demand"
+msgstr "Construeix les miniatures"
+
+#: Settings/ThumbnailsPage.cpp:61
 msgid "Thumbnail table cells aspect ratio"
 msgstr "Relació d'aspecte de les cel·les de la taula de miniatures"
 
-#: Settings/ThumbnailsPage.cpp:57
+#: Settings/ThumbnailsPage.cpp:63
 msgid "1:1"
 msgstr "1:1"
 
-#: Settings/ThumbnailsPage.cpp:57
+#: Settings/ThumbnailsPage.cpp:63
 msgid "4:3"
 msgstr "4:3"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "3:2"
 msgstr "3:2"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "16:9"
 msgstr "16:9"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "3:4"
 msgstr "3:4"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "2:3"
 msgstr "2:3"
 
-#: Settings/ThumbnailsPage.cpp:58
+#: Settings/ThumbnailsPage.cpp:64
 msgid "9:16"
 msgstr "9:16"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:70
 msgid "Space around cells"
 msgstr "Espai al voltant de les cel·les"
 
-#: Settings/ThumbnailsPage.cpp:72
+#: Settings/ThumbnailsPage.cpp:78
 msgid "Background Color"
 msgstr "Color de fons"
 
-#: Settings/ThumbnailsPage.cpp:79
+#: Settings/ThumbnailsPage.cpp:85
 msgid "Display grid around thumbnails"
 msgstr "Mostra la graella al voltant de les miniatures"
 
-#: Settings/ThumbnailsPage.cpp:84
+#: Settings/ThumbnailsPage.cpp:90
 msgid "Display labels in thumbnail view"
 msgstr "Mostra les etiquetes a la vista de miniatures"
 
-#: Settings/ThumbnailsPage.cpp:89
+#: Settings/ThumbnailsPage.cpp:95
 msgid "Display categories in thumbnail view"
 msgstr "Mostra les categories a la vista de miniatures"
 
-#: Settings/ThumbnailsPage.cpp:94
+#: Settings/ThumbnailsPage.cpp:100
 msgid "Threshold for automatic thumbnail view: "
 msgstr "Llindar de la vista automàtica de miniatures: "
 
-#: Settings/ThumbnailsPage.cpp:98
+#: Settings/ThumbnailsPage.cpp:104
 msgctxt "Describing: 'ThumbnailView will not be automatically shown'"
 msgid "Disabled"
 msgstr "Desactivat"
 
-#: Settings/ThumbnailsPage.cpp:109
+#: Settings/ThumbnailsPage.cpp:115
 msgid ""
 "<p>If you select <b>Settings -&gt; Show Tooltips</b> in the thumbnail view, "
 "then you will see a small tool tip window displaying information about the "
@@ -3933,30 +4521,40 @@ msgstr ""
 "informació sobre les miniatures. Esta finestra inclou una petita vista "
 "prèvia de la imatge. Esta opció configura la mida de la imatge.</p>"
 
-#: Settings/ThumbnailsPage.cpp:116
+#: Settings/ThumbnailsPage.cpp:122
 msgid ""
-"<p>Thumbnail image size. You may also set the size simply by dragging the "
-"thumbnail view using the middle mouse button.</p>"
+"<p>Thumbnail image size. Changing the thumbnail size here triggers a rebuild "
+"of the thumbnail database.</p>"
 msgstr ""
-"<p>Mida de la imatge de les miniatures. També podeu establir la mida "
-"arrossegant la vista de la miniatura usant el botó del mig del ratolí.</p>"
 
-#: Settings/ThumbnailsPage.cpp:120
+#: Settings/ThumbnailsPage.cpp:126
+msgid ""
+"<p>If this is set, thumbnails are built on demand. As you browse your image "
+"database, only those thumbnails that are needed are actually built. This "
+"means that when you change the thumbnail size, KPhotoAlbum will remain "
+"responsive even if you have lots of images.</p><p>If this is not set, "
+"KPhotoAlbum will always build the thumbnails for all images as soon as "
+"possible. This means that when new images are found, KPhotoAlbum will "
+"immediately build thumbnails for them and you won't have a delay later while "
+"browsing.</p>"
+msgstr ""
+
+#: Settings/ThumbnailsPage.cpp:135
 msgid ""
 "<p>Choose what aspect ratio the cells holding thumbnails should have.</p>"
 msgstr ""
 "<p>Trieu la relació d'aspecte que haurien de tindre les cel·les a on estan "
 "les miniatures.</p>"
 
-#: Settings/ThumbnailsPage.cpp:123
+#: Settings/ThumbnailsPage.cpp:138
 msgid "<p>How thick the cell padding should be.</p>"
 msgstr "<p>Quina mida hauria de tindre el farciment de les cel·les.</p>"
 
-#: Settings/ThumbnailsPage.cpp:126
+#: Settings/ThumbnailsPage.cpp:141
 msgid "<p>Background color to use in the thumbnail viewer</p>"
 msgstr "<p>Color de fons a utilitzar en el visor de miniatures</p>"
 
-#: Settings/ThumbnailsPage.cpp:130
+#: Settings/ThumbnailsPage.cpp:145
 msgid ""
 "<p>If you want to see grid around your thumbnail images, select this option."
 "</p>"
@@ -3964,7 +4562,7 @@ msgstr ""
 "<p>Seleccioneu esta opció si voleu veure una graella al voltant de les "
 "miniatures de les imatges.</p>"
 
-#: Settings/ThumbnailsPage.cpp:134
+#: Settings/ThumbnailsPage.cpp:149
 msgid ""
 "<p>Checking this option will show the base name for the file under "
 "thumbnails in the thumbnail view.</p>"
@@ -3972,7 +4570,7 @@ msgstr ""
 "<p>Al marcar esta opció es mostrarà el nom base del fitxer sota les "
 "miniatures a la vista de miniatures.</p>"
 
-#: Settings/ThumbnailsPage.cpp:138
+#: Settings/ThumbnailsPage.cpp:153
 msgid ""
 "<p>Checking this option will show the Categories for the file under "
 "thumbnails in the thumbnail view</p>"
@@ -3980,7 +4578,7 @@ msgstr ""
 "<p>Marcant este opció es mostrarà les categories del fitxer sota les "
 "miniatures a la vista de miniatures</p>"
 
-#: Settings/ThumbnailsPage.cpp:142
+#: Settings/ThumbnailsPage.cpp:157
 msgid ""
 "<p>When you are browsing, and the count gets below the value specified here, "
 "the thumbnails will be shown automatically. The alternative is to continue "
@@ -4089,14 +4687,21 @@ msgctxt ""
 msgid "video"
 msgstr "vídeo"
 
-#: ThumbnailView/GridResizeInteraction.cpp:78
-msgid "Really resize grid, it will result in all thumbnails being regenerated?"
+#: ThumbnailView/GridResizeSlider.cpp:150
+#, fuzzy
+#| msgid ""
+#| "Really resize grid, it will result in all thumbnails being regenerated?"
+msgid ""
+"Really resize the stored thumbnail size? It will result in all thumbnails "
+"being regenerated!"
 msgstr ""
 "De debò redimensiono la graella? Es tornaran a generar totes les miniatures."
 
-#: ThumbnailView/GridResizeInteraction.cpp:79
-msgid "Really resize grid?"
-msgstr "De debò redimensiono la graella?"
+#: ThumbnailView/GridResizeSlider.cpp:152
+#, fuzzy
+#| msgid "Required size for the thumbnail:"
+msgid "Really resize the thumbnails?"
+msgstr "Mida requerida per les miniatures:"
 
 #: ThumbnailView/ThumbnailDND.cpp:93
 msgid ""
@@ -4147,13 +4752,22 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:15
+#, fuzzy
+#| msgid ""
+#| "<p>It is possible to create new categories - that are alternatives\n"
+#| "to <b>People</b>, <b>Places</b>, and <b>Events</b> - in the annotation\n"
+#| "dialog. \n"
+#| "To add new categories or remove existing ones, go to the <b>Settings-&gt;"
+#| "Configure KPhotoAlbum</b> dialog, and choose\n"
+#| "<b>Categories</b> in the side bar.</p>\n"
 msgid ""
 "<p>It is possible to create new categories - that are alternatives\n"
-"to <b>People</b>, <b>Places</b>, and <b>Events</b> - in the annotation\n"
-"dialog. \n"
-"To add new categories or remove existing ones, go to the <b>Settings-&gt;"
-"Configure KPhotoAlbum</b> dialog, and choose\n"
-"<b>Categories</b> in the side bar.</p>\n"
+"to <resource>People</resource>, <resource>Places</resource>, and "
+"<resource>Events</resource> - in the annotation\n"
+"dialog.\n"
+"To add new categories or remove existing ones, go to the <interface>Settings|"
+"Configure KPhotoAlbum...</interface> dialog, and choose\n"
+"<interface>Categories</interface> in the side bar.</p>\n"
 msgstr ""
 "<p>És possible crear noves categories - que siguen alternatives\n"
 "a <b>Persona</b>, <b>Lloc</b>, i <b>Esdeveniments</b> - en el diàleg\n"
@@ -4164,8 +4778,13 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:25
+#, fuzzy
+#| msgid ""
+#| "<p>You may rename or delete a person, location, keyword or similar by\n"
+#| "right-clicking on the item in the image property dialog.</p>\n"
 msgid ""
-"<p>You may rename or delete a person, location, keyword or similar by\n"
+"<p>You may rename or delete a tag (i.e. a person, location, keyword or "
+"similar) by\n"
 "right-clicking on the item in the image property dialog.</p>\n"
 msgstr ""
 "<p>Podeu reanomenar o eliminar una persona, lloc o paraula clau o similar\n"
@@ -4200,15 +4819,30 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:47
+#, fuzzy
+#| msgid ""
+#| "<p>New images are automatically marked as <tt>Untagged</tt>. You can "
+#| "easily\n"
+#| "search for these images from main window by clicking the appropriate "
+#| "icon. Once\n"
+#| "you are done tagging an image just click <tt>Done</tt> and the Untagged "
+#| "flag is\n"
+#| "automatically removed. On the other hand, the <tt>Continue Later</tt> "
+#| "button\n"
+#| "finishes the tagging but leaves the Untagged flag intact.</p>\n"
 msgid ""
-"<p>New images are automatically marked as <tt>Untagged</tt>. You can easily\n"
-"search for these images from main window by clicking the appropriate icon. "
-"Once\n"
-"you are done tagging an image just click <tt>Done</tt> and the Untagged flag "
-"is\n"
-"automatically removed. On the other hand, the <tt>Continue Later</tt> "
-"button\n"
-"finishes the tagging but leaves the Untagged flag intact.</p>\n"
+"<p>New images are automatically marked as <emphasis>untagged</emphasis>.</"
+"br>\n"
+"You can easily search for these images from main window by clicking the "
+"appropriate icon.</p>\n"
+"<p>\n"
+"Once you are done tagging an image just click <interface>Done</interface> "
+"and the\n"
+"<emphasis>untagged</emphasis> flag is automatically removed. On the other "
+"hand, the\n"
+"<interface>Continue Later</interface> button finishes the tagging but leaves "
+"the\n"
+"<emphasis>untagged</emphasis> flag intact.</p>\n"
 msgstr ""
 "<p>Les noves imatges seran marcades automàticament com\n"
 "<tt>Sense etiquetar</tt>. Podeu cercar estes imatges\n"
@@ -4219,10 +4853,17 @@ msgstr ""
 "inicial intacta.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:57
+#: tips:59
+#, fuzzy
+#| msgid ""
+#| "<p>You can reorder images on your hard disk after having loaded them "
+#| "into\n"
+#| "KPhotoAlbum - KPhotoAlbum will still remember them, as it calculates "
+#| "checksums for\n"
+#| "the images.</p>\n"
 msgid ""
 "<p>You can reorder images on your hard disk after having loaded them into\n"
-"KPhotoAlbum - KPhotoAlbum will still remember them, as it calculates "
+"KPhotoAlbum. KPhotoAlbum will still remember them, as it calculates "
 "checksums for\n"
 "the images.</p>\n"
 msgstr ""
@@ -4231,14 +4872,27 @@ msgstr ""
 "una suma de verificació de les imatges.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:65
+#: tips:67
+#, fuzzy
+#| msgid ""
+#| "<p>It is possible to associate images with categories. That way when "
+#| "browsing, say people, you\n"
+#| "may get a small icon for each person with e.g. the person's face.</p>\n"
+#| "<p>To specify an icon for a person, load the person in the viewer, zoom "
+#| "to\n"
+#| "the part which you want to make into an icon, and choose\n"
+#| "<b>Show Category Editor</b>. This will bring up a dialog where you can\n"
+#| "find the person, and set the image.\n"
+#| "</p>\n"
 msgid ""
-"<p>It is possible to associate images with categories. That way when "
-"browsing, say people, you\n"
-"may get a small icon for each person with e.g. the person's face.</p>\n"
+"<p>It is possible to associate images with categories.</p>\n"
+"<p>That way when browsing, say people, you may get a small icon for each "
+"person with\n"
+"e.g. the person's face.</p>\n"
 "<p>To specify an icon for a person, load the person in the viewer, zoom to\n"
 "the part which you want to make into an icon, and choose\n"
-"<b>Show Category Editor</b>. This will bring up a dialog where you can\n"
+"<interface>Show Category Editor</interface>. This will bring up a dialog "
+"where you can\n"
 "find the person, and set the image.\n"
 "</p>\n"
 msgstr ""
@@ -4252,7 +4906,7 @@ msgstr ""
 "</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:77
+#: tips:80
 msgid ""
 "<p>You may close the image annotation dialog (the one where you specify\n"
 "people, places, etc. for the images) by pressing Ctrl+Enter.\n"
@@ -4263,7 +4917,7 @@ msgstr ""
 "</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:85
+#: tips:88
 msgid ""
 "<p>To hear more about latest changes in KPhotoAlbum and to get help in using "
 "and developing KPhotoAlbum, you are welcome to join the KPhotoAlbum mailing "
@@ -4276,7 +4930,7 @@ msgstr ""
 "\">KPhotoAlbum</a>.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:91
+#: tips:94
 msgid ""
 "<p>To discuss KPhotoAlbum with other users and developers and ask any "
 "questions that come into your mind, feel free to join our IRC channel "
@@ -4291,10 +4945,18 @@ msgstr ""
 "channels=kphotoalbum</a>.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:97
+#: tips:100
+#, fuzzy
+#| msgid ""
+#| "<p>You may reorder images by dragging and dropping one image onto\n"
+#| "another. If you drop it on the left edge, it will end up in front of\n"
+#| "the other, if you drop it on the right edge it will be inserted behind.</"
+#| "p>\n"
+#| "<p align=\"right\">-- Tip contributed by Eivind Kjorstad</p>\n"
 msgid ""
 "<p>You may reorder images by dragging and dropping one image onto\n"
-"another. If you drop it on the left edge, it will end up in front of\n"
+"another.</p>\n"
+"<p>If you drop it on the left edge, it will end up in front of\n"
 "the other, if you drop it on the right edge it will be inserted behind.</p>\n"
 "<p align=\"right\">-- Tip contributed by Eivind Kjorstad</p>\n"
 msgstr ""
@@ -4304,14 +4966,24 @@ msgstr ""
 "<p align=\"right\">-- Consell proporcionat per Eivind Kjorstad</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:106
+#: tips:110
+#, fuzzy
+#| msgid ""
+#| "<p>\n"
+#| "On the thumbnail view, you can resize the grid to your needs just by "
+#| "clicking \n"
+#| "the middle mouse button and dragging around. On most systems you can "
+#| "emulate \n"
+#| "the middle mouse button by left and right clicking at the same time. \n"
+#| "</p>\n"
+#| "<p align=\"right\">-- Tip contributed by Rafael Beccar</p>\n"
 msgid ""
 "<p>\n"
 "On the thumbnail view, you can resize the grid to your needs just by "
-"clicking \n"
+"clicking\n"
 "the middle mouse button and dragging around. On most systems you can "
-"emulate \n"
-"the middle mouse button by left and right clicking at the same time. \n"
+"emulate\n"
+"the middle mouse button by left and right clicking at the same time.\n"
 "</p>\n"
 "<p align=\"right\">-- Tip contributed by Rafael Beccar</p>\n"
 msgstr ""
@@ -4326,7 +4998,7 @@ msgstr ""
 "<p align=\"right\">-- Consell proporcionat per Rafael Beccar</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:117
+#: tips:121
 msgid ""
 "<p>You can rate images using the numbers from 0 to 5 on the keyboard whilst "
 "in\n"
@@ -4340,14 +5012,24 @@ msgstr ""
 "puntuar les imatges seleccionant l'estrella de puntuació apropiada.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:126
+#: tips:130
+#, fuzzy
+#| msgid ""
+#| "<p>Sometimes it is useful to group several related images into an image "
+#| "stack.\n"
+#| "You can merge several images into a stack by first selecting them on "
+#| "Thumbnail\n"
+#| "View and then pressing <tt>Ctrl+3</tt> or selecting <tt>Merge Images into "
+#| "a\n"
+#| "Stack</tt> from menu.</p>\n"
 msgid ""
 "<p>Sometimes it is useful to group several related images into an image "
 "stack.\n"
 "You can merge several images into a stack by first selecting them on "
 "Thumbnail\n"
-"View and then pressing <tt>Ctrl+3</tt> or selecting <tt>Merge Images into a\n"
-"Stack</tt> from menu.</p>\n"
+"View and then pressing <shortcut>Ctrl+3</shortcut> or selecting "
+"<interface>Merge Images into a\n"
+"Stack</interface> from menu.</p>\n"
 msgstr ""
 "<p>De vegades és útil per agrupar diverses imatges relacionades\n"
 "dins d'una pila d'imatges. Podeu fusionar diverses imatges dins d'una pila,\n"
@@ -4356,22 +5038,42 @@ msgstr ""
 "des del menú.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:135
+#: tips:139
+#, fuzzy
+#| msgid ""
+#| "<p>When searching for new images, KPhotoAlbum can automatically put new "
+#| "versions\n"
+#| "of images into stacks by looking at their filenames. To configure this "
+#| "feature,\n"
+#| "choose \"Configure KPhotoalbum...\" from the Settings menu and set "
+#| "appropriate\n"
+#| "values in the \"File Searching & Versions\" tab.</p>\n"
+#| "<p>\n"
+#| "<ul>\n"
+#| "<li>Enable the checkbox \"Try to detect multiple versions of files\"</"
+#| "li>\n"
+#| "<li>Enter a regular expression for your modified files:<br/><tt>^(.*)-"
+#| "adjusted\\.(.*)</tt></li>\n"
+#| "<li>Enter a regular expression for your original file:<br/><tt>\\1.\\2</"
+#| "tt></li>\n"
+#| "</ul>\n"
+#| "</p>\n"
 msgid ""
 "<p>When searching for new images, KPhotoAlbum can automatically put new "
 "versions\n"
 "of images into stacks by looking at their filenames. To configure this "
 "feature,\n"
-"choose \"Configure KPhotoalbum...\" from the Settings menu and set "
+"choose <interface>Settings|Configure KPhotoalbum...</interface> and set "
 "appropriate\n"
-"values in the \"File Searching & Versions\" tab.</p>\n"
+"values in the <interface>File Searching &amp; Versions</interface> tab.</p>\n"
 "<p>\n"
 "<ul>\n"
-"<li>Enable the checkbox \"Try to detect multiple versions of files\"</li>\n"
-"<li>Enter a regular expression for your modified files:<br/><tt>^(.*)-"
-"adjusted\\.(.*)</tt></li>\n"
-"<li>Enter a regular expression for your original file:<br/><tt>\\1.\\2</tt></"
-"li>\n"
+"<li>Enable the checkbox <interface>Try to detect multiple versions of files</"
+"interface></li>\n"
+"<li>Enter a regular expression for your modified files:<br/><bcode>^(.*)-"
+"adjusted\\.(.*)</bcode></li>\n"
+"<li>Enter a regular expression for your original file:<br/><bcode>\\1.\\2</"
+"bcode></li>\n"
 "</ul>\n"
 "</p>\n"
 msgstr ""
@@ -4392,7 +5094,56 @@ msgstr ""
 "</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
-#: tips:152
+#: tips:155
+msgid ""
+"<p>KPhotoAlbum can display the age of people on an image.</p>\n"
+"<p>\n"
+"To enable this, enter the birthdate of a person under <interface>Maintenance|"
+"Edit Birth Dates</interface>.\n"
+"The age of the person will then be shown in the info box of the viewer "
+"window.\n"
+"</p>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:165
+msgid ""
+"<p>KPhotoAlbum can detect and recognize faces on images.</p>\n"
+"<p>\n"
+"To use this functionality, use the <interface>Search for faces on the "
+"current image</interface>\n"
+"button below the image preview in the annotation dialog.\n"
+"</p>\n"
+"<note>To see if face recognition support is enabled, open the feature "
+"dialog\n"
+"(<interface>Help|KPhotoAlbum feature status</interface>), and check the "
+"item\n"
+"<resource>Face detection and recognition support</resource>.\n"
+"</note>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:179
+msgid ""
+"<p>You can associate tags to an area of an image (e.g. to connect a name to "
+"a face).</p>\n"
+"<p>\n"
+"To do so, make sure that the checkbox <interface>Positionable Tags</"
+"interface> under\n"
+"<interface>Settings|Configure KPhotoAlbum...|Categories</interface> is "
+"enabled for the\n"
+"given category.\n"
+"</p>\n"
+"<p>\n"
+"When this is done, you can drag the mouse on the image preview of the "
+"annotation dialog to\n"
+"mark an area. Open the context menu (right mouse button) on the area to "
+"associate it with a tag.\n"
+"</p>\n"
+msgstr ""
+
+#. i18n: ectx: @info:tipoftheday
+#: tips:194
 msgid ""
 "<p>This is the last tip. If you know any additional tips or tricks, then "
 "please\n"
@@ -4431,15 +5182,37 @@ msgstr " (%1MP)"
 msgid "<b>Image Size: </b> "
 msgstr "<b>Mida de la imatge: </b> "
 
-#: Utilities/Util.cpp:163
+#: Utilities/Util.cpp:164
 msgid "<b>Label: </b> "
 msgstr "<b>Etiqueta: </b> "
 
-#: Utilities/Util.cpp:167
+#: Utilities/Util.cpp:168
 msgid "<b>Description: </b> "
 msgstr "<b>Descripció: </b> "
 
-#: Utilities/Util.cpp:225
+#: Utilities/Util.cpp:247
+#, kde-format
+msgid "1 day"
+msgid_plural "%1 days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Utilities/Util.cpp:249
+#, fuzzy, kde-format
+#| msgid "1 Month"
+msgid "1 month"
+msgid_plural "%1 month"
+msgstr[0] "1 mes"
+msgstr[1] "1 mes"
+
+#: Utilities/Util.cpp:251
+#, kde-format
+msgid "1 year"
+msgid_plural "%1 years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Utilities/Util.cpp:311
 #, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
@@ -4448,11 +5221,11 @@ msgstr ""
 "El fitxer «%1» de guardat automàtic ja existeix (mida %3 KB) i és més nou "
 "que «%2». S'ha d'utilitzar el fitxer de guardat automàtic?"
 
-#: Utilities/Util.cpp:227
+#: Utilities/Util.cpp:313
 msgid "Found Autosave File"
 msgstr "Fitxer de guardat automàtic"
 
-#: Utilities/Util.cpp:229
+#: Utilities/Util.cpp:315
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -4464,11 +5237,11 @@ msgstr ""
 "KB) en lloc d'eixir?</p><p><small>(El verificar i copiar manualment el "
 "fitxer pot ser una bona idea).</small></p>"
 
-#: Utilities/Util.cpp:232
+#: Utilities/Util.cpp:318
 msgid "Recover from Autosave?"
 msgstr "Restaurar des del guardat automàtic?"
 
-#: Utilities/Util.cpp:234
+#: Utilities/Util.cpp:320
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
@@ -4478,28 +5251,28 @@ msgstr ""
 "manualment si hi ha còpies de seguretat numerades i es poden utilitzar per "
 "restaurar index.xml.</p>"
 
-#: Utilities/Util.cpp:266
+#: Utilities/Util.cpp:352
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "No s'ha pogut copiar de «%1» a «%2»."
 
-#: Utilities/Util.cpp:266 Utilities/Util.cpp:280 Utilities/Util.cpp:298
-#: Utilities/Util.cpp:315 XMLDB/FileReader.cpp:393
+#: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:472
 msgid "Error Running Demo"
 msgstr "Error executant la demostració"
 
-#: Utilities/Util.cpp:280 Utilities/Util.cpp:315
+#: Utilities/Util.cpp:366 Utilities/Util.cpp:401
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr ""
 "No ha estat possible crear el directori «%1» necessari per la demostració."
 
-#: Utilities/Util.cpp:298
+#: Utilities/Util.cpp:384
 #, kde-format
 msgid "Unable to open '%1' for writing."
 msgstr "No es pot obrir «%1» per a escriptura."
 
-#: Utilities/Util.cpp:367
+#: Utilities/Util.cpp:453
 #, kde-format
 msgid "<p>Unable to find file %1</p>"
 msgstr "<p>No s'ha pogut trobar el fitxer %1</p>"
@@ -4543,6 +5316,10 @@ msgstr "La profunditat de color és insuficient per este filtre"
 #, kde-format
 msgid "[ zoom x%1 ]"
 msgstr "[ zoom x%1 ]"
+
+#: Viewer/InfoBox.cpp:85
+msgid "Show the geographic position of this image on a map"
+msgstr ""
 
 #: Viewer/SpeedDisplay.cpp:44
 #, kde-format
@@ -4902,18 +5679,6 @@ msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr "Aplica el filtre monocrom"
 
-#: Viewer/ViewerWidget.cpp:1546
-#, fuzzy
-#| msgid "Export/Copy Images..."
-msgctxt "@title:window"
-msgid "Copy image to..."
-msgstr "Exporta/copia imatges..."
-
-#: Viewer/ViewerWidget.cpp:1547
-msgctxt "@action:button"
-msgid "Copy"
-msgstr ""
-
 #: Viewer/VisibleOptionsMenu.cpp:33
 msgid "Show..."
 msgstr "Mostra..."
@@ -4958,44 +5723,52 @@ msgstr "Mostra la mida de la imatge"
 msgid "Show Rating"
 msgstr "Mostra la valoració"
 
-#: XMLDB/FileReader.cpp:56
-#, kde-format
+#: XMLDB/FileReader.cpp:58
 msgid ""
-"<p>The database file indicates a file format version of %1. This version of "
-"KPhotoAlbum uses the database file format version %2.</p><p>It is possible "
-"that some information will be lost during import, or that the database can "
-"not be read at all.</p>"
+"<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
+"p><p>Chances are you will be able to read this file, but when writing it "
+"back, information saved in the newer version will be lost</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:61 XMLDB/FileReader.cpp:71
+#: XMLDB/FileReader.cpp:61
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:66
-#, kde-format
-msgid ""
-"<p>The database file indicates a file format version of %1. This version of "
-"KPhotoAlbum uses the database file format version %2.</p><p>If you save the "
-"database using this version of KPhotoAlbum, you won't be able to open it "
-"with older versions of KPhotoAlbum.</p>"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:106
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "Error en el fitxer %1: element inesperat: «%2»"
 
-#: XMLDB/FileReader.cpp:119
+#: XMLDB/FileReader.cpp:112
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "No s'ha trobat l'etiqueta «Options» en el fitxer de configuració %1."
 
-#: XMLDB/FileReader.cpp:121
+#: XMLDB/FileReader.cpp:114
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "No s'ha trobat l'etiqueta «Images» en el fitxer de configuració %1."
 
-#: XMLDB/FileReader.cpp:312
+#: XMLDB/FileReader.cpp:212
+msgid ""
+"<p>This version of KPhotoAlbum will fix some issues with old category names "
+"by renaming them. As a consequence, existing tag and category thumbnails "
+"have to be moved accordingly.</p><p>If you select \"Yes\", please be sure to "
+"save the database as your next step. If you select \"No\", you won't see the "
+"thumbnails for the respective categories now. If you do so, please don't "
+"save the database. Otherwise, the thumbnails will be lost!</p><p>Should the "
+"existing category and tag thumbnails be updated now?</p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:220 XMLDB/FileReader.cpp:277
+msgid "index.xml Update"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:278
+msgid "Don't forget to save your database now!"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:391
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5018,7 +5791,7 @@ msgstr ""
 "la seua data informada, podeu executar <b>Imatges->Ordena-ho tot per data i "
 "hora</b> per ordenar-les a la base de dades.</p>"
 
-#: XMLDB/FileReader.cpp:322
+#: XMLDB/FileReader.cpp:401
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5035,11 +5808,11 @@ msgstr ""
 "ho hàgeu fet, se vos demanarà el què fer per corregir la informació perduda."
 "</p>"
 
-#: XMLDB/FileReader.cpp:329
+#: XMLDB/FileReader.cpp:408
 msgid "Images/Videos Are Not Sorted"
 msgstr "Les imatges/vídeos no estan ordenats"
 
-#: XMLDB/FileReader.cpp:344
+#: XMLDB/FileReader.cpp:423
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5056,11 +5829,11 @@ msgstr ""
 "voltant de les imatges en la vista de miniatures -només això-, per tant, no "
 "és urgent fer-ho.</p>"
 
-#: XMLDB/FileReader.cpp:349
+#: XMLDB/FileReader.cpp:428
 msgid "Not All Images Have Size Information"
 msgstr "No totes les imatges tenen informació de la mida"
 
-#: XMLDB/FileReader.cpp:372
+#: XMLDB/FileReader.cpp:451
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5083,38 +5856,38 @@ msgstr ""
 "cas de tindre KDEDIRS ja inicialitzat, senzillament afegiu la cadena com si "
 "estigueu configurant la variable <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:379
+#: XMLDB/FileReader.cpp:458
 msgid "No default setup file found"
 msgstr "No s'ha trobat cap fitxer de configuració per defecte"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:472
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "No ha estat possible obrir «%1» per lectura"
 
-#: XMLDB/FileReader.cpp:406
+#: XMLDB/FileReader.cpp:485
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "línia %1 columna %2 en el fitxer %3: %4"
 
-#: XMLDB/FileReader.cpp:408
+#: XMLDB/FileReader.cpp:487
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Ha fallat en recuperar la còpia de seguretat: %1"
 
-#: XMLDB/FileReader.cpp:419
+#: XMLDB/FileReader.cpp:498
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Error en el fitxer %1: no s'ha trobat cap element"
 
-#: XMLDB/FileReader.cpp:425
+#: XMLDB/FileReader.cpp:504
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
 "Error en el fitxer %1: s'esperava «KPhotoAlbum» com a element superior però "
 "s'ha trobat «%2»"
 
-#: XMLDB/FileWriter.cpp:47
+#: XMLDB/FileWriter.cpp:66
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
@@ -5123,7 +5896,7 @@ msgstr ""
 "<p>No s'ha pogut guardar la base de dades d'imatges a XML.</p>El fitxer %1 "
 "no s'ha pogut obrir a causa del següent error: %2"
 
-#: XMLDB/FileWriter.cpp:85
+#: XMLDB/FileWriter.cpp:94
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
@@ -5133,7 +5906,7 @@ msgstr ""
 "p><p>Torneu-ho a intentar de nou o substituïu el fitxer %1 amb el fitxer %2 "
 "manualment!</p>"
 
-#: XMLDB/FileWriter.cpp:95
+#: XMLDB/FileWriter.cpp:104
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
@@ -5153,35 +5926,46 @@ msgstr "Error en crear el fitxer zip %1"
 msgid "Error writing file %1 to zip file %2"
 msgstr "Error en escriure el fitxer %1 al fitxer zip %2"
 
-#: XMLDB/XmlReader.cpp:46
+#: XMLDB/XmlReader.cpp:47
 msgid "Error reading next element"
 msgstr "Error en llegir l'element següent"
 
-#: XMLDB/XmlReader.cpp:49
+#: XMLDB/XmlReader.cpp:50
 #, kde-format
 msgid "Expected to read a start or stop element, but read %1"
 msgstr "S'esperava llegir un element d'inici o parada, però s'ha llegit %1"
 
-#: XMLDB/XmlReader.cpp:54
+#: XMLDB/XmlReader.cpp:55
 #, kde-format
 msgid "Expected to read %1, but read %2"
 msgstr "S'esperava llegir %1, però s'ha llegit %2"
 
-#: XMLDB/XmlReader.cpp:65
+#: XMLDB/XmlReader.cpp:66
 #, kde-format
 msgid "Expected to read an end element but read %1"
 msgstr "S'esperava llegir un element de final però s'ha llegit %1"
 
-#: XMLDB/XmlReader.cpp:83
+#: XMLDB/XmlReader.cpp:84
 #, kde-format
 msgid "Expected to read start element '%1'"
 msgstr "S'esperava llegir un element d'inici «%1»"
 
-#: XMLDB/XmlReader.cpp:88
+#: XMLDB/XmlReader.cpp:90
 #, kde-format
 msgid ""
-"On line %1, column %2:\n"
-"%3"
+"<p>An error was encountered on line %1, column %2:<nl/><message>%3</"
+"message></p>"
 msgstr ""
-"En la línia %1, columna %2:\n"
-"%3"
+
+#: XMLDB/XmlReader.cpp:93
+#, kde-format
+msgid "<p>Additional error information:<nl/><message>%1</message></p>"
+msgstr ""
+
+#: XMLDB/XmlReader.cpp:95
+#, fuzzy
+#| msgid "Loading Database"
+msgid "Error while reading database file"
+msgstr "S'està carregant la base de dades"
+
+#, fuzzy

@@ -29,6 +29,7 @@
 #include <QPixmap>
 #include <KIcon>
 #include <Utilities/Util.h>
+#include <QDebug>
 
 using Utilities::StringSet;
 
@@ -92,7 +93,7 @@ DB::CategoryItem* createItem( const QString& categoryName, const QString& itemNa
                 child = createItem( categoryName, *memberIt, handledItems, categoryItems, potentialToplevelItems );
 
             potentialToplevelItems.remove( *memberIt );
-            result->_subcategories.append( child );
+            result->mp_subcategories.append( child );
         }
     }
 
@@ -119,14 +120,14 @@ DB::CategoryItemPtr DB::Category::itemsCategories() const
 
     CategoryItem* result = new CategoryItem( QString::fromLatin1("top"), true );
     for( QMap<QString,DB::CategoryItem*>::ConstIterator toplevelIt = potentialToplevelItems.constBegin(); toplevelIt != potentialToplevelItems.constEnd(); ++toplevelIt ) {
-        result->_subcategories.append( *toplevelIt );
+        result->mp_subcategories.append( *toplevelIt );
     }
 
     // Add items not found yet.
     QStringList elms = items();
     for( QStringList::ConstIterator elmIt = elms.constBegin(); elmIt != elms.constEnd(); ++elmIt ) {
         if ( !categoryItems.contains( *elmIt ) )
-            result->_subcategories.append( new DB::CategoryItem( *elmIt ) );
+            result->mp_subcategories.append( new DB::CategoryItem( *elmIt ) );
     }
 
     return CategoryItemPtr( result );
@@ -142,13 +143,42 @@ QMap<QString,QString> DB::Category::standardCategories()
         map.insert( QString::fromLatin1( "Folder" ),  i18n("Folder") );
         map.insert( QString::fromLatin1( "Tokens" ),  i18n("Tokens") );
         map.insert( QString::fromLatin1( "Media Type" ),  i18n("Media Type") );
-
-        // Needed for compatibility with index.xml files from older versions of KPA.
-        map.insert( QString::fromLatin1( "Persons" ), i18n("People") );
-        map.insert( QString::fromLatin1( "Locations" ), i18n("Places") );
+        // superseded by "Events", but not quite the same concept:
         map.insert( QString::fromLatin1( "Keywords" ),  i18n("Keywords") );
     }
     return map;
+}
+
+QMap<QString,QString> DB::Category::localizedCategoriesToC()
+{
+    static QMap<QString,QString> localeToC;
+    if (localeToC.isEmpty()) {
+        QMap<QString,QString> cToLocale = standardCategories();
+        QMap<QString, QString>::iterator i;
+        for (i = cToLocale.begin(); i != cToLocale.end(); ++i) {
+            localeToC[i.value()] = i.key();
+        }
+    }
+
+    return localeToC;
+}
+
+QString DB::Category::localizedCategoryName(QString category)
+{
+    if (standardCategories().contains(category)) {
+        return standardCategories()[category];
+    } else {
+        return category;
+    }
+}
+
+QString DB::Category::unLocalizedCategoryName(QString category)
+{
+    if (localizedCategoriesToC().contains(category)) {
+        return localizedCategoriesToC()[category];
+    } else {
+        return category;
+    }
 }
 
 QString DB::Category::defaultIconName() const

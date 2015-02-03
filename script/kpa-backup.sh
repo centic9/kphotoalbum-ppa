@@ -1,13 +1,18 @@
 #!/bin/bash
 # Author: Johannes Zarl <isilmendil@gmx.at>
+KDE_LOCALPREFIX="${KDE_LOCALPREFIX:-`kde4-config --localprefix`}"
 # default locations:
-KPARC=$HOME/.kde/share/config/kphotoalbumrc
-KPAUIRC=$HOME/.kde/share/apps/kphotoalbum/kphotoalbumui.rc
+KPARC="${KPARC:-$KDE_LOCALPREFIX/share/config/kphotoalbumrc}"
+KPAUIRC="${KPAUIRC:-$KDE_LOCALPREFIX/share/apps/kphotoalbum/kphotoalbumui.rc}"
 BACKUP_LOCATION=~/kpa-backup
+BACKUP_ID=latest
 ACTION=
-ADD_FILES_RELATIVE="exif-info.db layout.dat"
+ADD_FILES_RELATIVE="exif-info.db layout.dat recognition.db"
 KEEP_NUM=5
+TERSE=
 NO_ACT=
+
+SQLITE=sqlite3
 
 ###
 # Helper functions:
@@ -18,23 +23,187 @@ get_config_value()
 	sed -n 's/#.*// ; s/'$1'=\(.*\)/\1/p' "$KPARC"
 }
 
+resolve_link()
+# Use readlink to resolve the given filename.
+# If the file is no symlink, just return the filename.
+{
+	if [ -L "$1" ]
+	then
+		readlink "$1"
+	else
+		echo "$1"
+	fi
+}
+
 print_help()
 {
-	echo "Usage: $0 -b|--backup [-d|--directory BACKUP_LOCATION]" >&2
-	echo "       $0 -r|--restore [-d|--directory BACKUP_LOCATION]" >&2
-	echo "       $0 -l|--list [-d|--directory BACKUP_LOCATION]" >&2
-	echo "       $0 -i|--info [-d|--directory BACKUP_LOCATION]" >&2
-	echo "       $0 -p|--purge [--keep NUM]" >&2
+	echo "Usage: $0 -b|--backup OPTIONS..." >&2
+	echo "       $0 -r|--restore OPTIONS..." >&2
+	echo "       $0 -l|--list [--terse] OPTIONS..." >&2
+	echo "       $0 -i|--info OPTIONS..." >&2
+	echo "       $0 -p|--purge [--keep NUM] OPTIONS..." >&2
 	echo "" >&2
-	echo "Create or restore a backup of your essential KPhotoalbum files." >&2
+	echo "Create or restore a backup of your essential KPhotoAlbum files." >&2
 	echo "Note: your actual image-files are not backed up!" >&2
 	echo "" >&2
+	echo "Options:" >&2
 	echo "-d|--directory BACKUP_LOCATION   Use the specified path as backup location" >&2
 	echo "                                 [default: $BACKUP_LOCATION]" >&2
-	echo "--keep NUM                       Keep the latest NUM backups" >&2
-	echo "                                 [default: $KEEP_NUM]" >&2
+	echo "--id BACKUP_ID                   Use given backup instead of latest.">&2
 	echo "-n|--no-act                      Do not take any action." >&2
 	echo "" >&2
+	echo "List options:" >&2
+	echo "--terse                          Only show backup ids, no change information." >&2
+	echo "" >&2
+	echo "Purge options:" >&2
+	echo "--keep NUM                       Keep the latest NUM backups." >&2
+	echo "                                 [default: $KEEP_NUM]" >&2
+	echo "" >&2
+	echo "Actions:" >&2
+	echo "-b|--backup" >&2
+	echo "                                 Create a new backup." >&2
+	echo "-r|--restore" >&2
+	echo "                                 Restore the latest backup (or the one given by --id)." >&2
+	echo "-l|--list" >&2
+	echo "                                 List all backups, in the same format as --info." >&2
+	echo "                                 If --terse is given: show a list of all backup ids." >&2
+	echo "-i|--info" >&2
+	echo "                                 Show which files in the latest backup (or the one specified by --id)" >&2
+	echo "                                 have changed compared to the current state." >&2
+	echo "-p|--purge" >&2
+	echo "                                 Delete all but the latest $KEEP_NUM backups." >&2
+	echo "" >&2
+}
+
+sqlite_diff()
+# sqlite_diff SRC DST QUERYTEXT
+# visual comparison for exif-info.db
+# Either SRC or DST may be "-" to denote input from stdin.
+# QUERYTEXT should be a descriptive query for the db, but even it does
+# not have to include every aspect of the data.
+# After the data-diff on the query, a diff on the whole file will determine
+# the status of sqlite_diff.
+{
+	local src="$1"
+	local dst="$2"
+	local query="$3"
+	# catch "exif_diff - -":
+	if [ "$src" = "$dst" ]
+	then
+		echo "Identical files!" >&2
+		return 0
+	fi
+
+	if ! "$SQLITE" -version >/dev/null
+	then
+		echo "Warning: sqlite not found." >&2
+		diff -q -s "$1" "$2"
+	else
+		local tmp=`mktemp`
+		local srctmp=`mktemp`
+		local dsttmp=`mktemp`
+		if [ "$src" = "-" ]
+		then
+			src="$tmp"
+			cat > "$tmp"
+		fi
+		if [ "$dst" = "-" ]
+		then
+			dst="$tmp"
+			cat > "$tmp"
+		fi
+
+		"$SQLITE" "$src" "$query" > "$srctmp"
+		"$SQLITE" "$dst" "$query" > "$dsttmp"
+
+		# display unified diff of query result:
+		diff -u --label "$1" --label "$2" "$srctmp" "$dsttmp"
+		# diff the actual file:
+		diff -q --label "$1" --label "$2" "$src" "$dst"
+		local retval=$?
+
+		# cleanup
+		rm "$tmp" "$srctmp" "$dsttmp"
+		return $retval
+	fi
+}
+
+exif_diff()
+# exif_diff SRC DST
+{
+	sqlite_diff "$1" "$2" "select * from exif"
+}
+
+kface_diff()
+# kface_diff SRC DST
+{
+	sqlite_diff "$1" "$2" 'select * from IdentityAttributes'
+}
+
+visual_diff()
+# visual_diff [-q] SRC DST
+# Do a diff of two files (or STDIN and a file).
+# An appropriate diff format is used, based on the given file.
+# If -q is given, no output is given.
+# The exit value is just like from GNU diff.
+{
+	local quiet
+	local src
+	local dst
+	local filename
+	for param
+	do
+		case "$param" in
+			-q) #quiet,question
+				quiet=1
+				;;
+			*)
+				if [ -z "$src" ]
+				then
+					src="$param"
+				else if [ -z "$dst" ]
+					then
+						dst="$param"
+					else
+						echo "visual_diff: incorrect number of parameters!" >&2
+						exit 1
+					fi
+				fi
+				# we need a valid filename to determine which specialized diff we should use
+				# usually, one parameter is "-", so we take the param that's a real filename
+				[ -f "$param" ] && filename="$param"
+				;;
+		esac
+	done
+
+	if [ -n "$quiet" ]
+	then
+		# just do the quickest thing:
+		diff -q "$src" "$dst" >/dev/null
+	else
+		filename=`basename "$filename"`
+		case "$filename" in
+			exif-info.db)
+				exif_diff "$src" "$dst"
+				;;
+			index.xml)
+				diff -u -F '^    <.*' "$src" "$dst"
+				;;
+			kphotoalbumui.rc)
+				diff -u --ignore-space-change -F '^\ *<\(Menu\|ToolBar\).*' "$src" "$dst"
+				;;
+			kphotoalbumrc)
+				diff -u -F '^\[.*\]' "$src" "$dst"
+				;;
+			recognition.db)
+				kface_diff "$src" "$dst"
+				;;
+			*)
+				# data; nothing to see:
+				diff -q "$src" "$dst" >/dev/null
+				;;
+		esac
+	fi
 }
 
 untar_if_changed()
@@ -43,7 +212,7 @@ untar_if_changed()
 {
 	local printonly=false
 	[ -n "$NO_ACT" ] && printonly=true
-	local diffredir="/dev/stdout"
+	local quiet
 	local tarfile
 	for param
 	do
@@ -51,8 +220,8 @@ untar_if_changed()
 			-p)
 				printonly=true
 				;;
-			-s) #silent
-				diffredir="/dev/null"
+			-q) #quiet
+				quiet=-q
 				;;
 			*)
 				tarfile="$param"
@@ -61,7 +230,7 @@ untar_if_changed()
 	done
 	[ -f "$tarfile" ] || return 1
 	local dstfile=`tar -Ptz -f "$tarfile"`
-	if tar -PxzO -f "$tarfile" | diff -u - "$dstfile" >$diffredir
+	if tar -PxzO -f "$tarfile" | visual_diff $quiet - "$dstfile"
 	then
 		echo "unchanged: $dstfile"
 	else
@@ -76,7 +245,6 @@ untar_if_changed()
 
 do_backup()
 {
-	local BACKEND=
 	local INDEXFILE=
 	local KPA_FOLDER=
 	###
@@ -90,29 +258,22 @@ do_backup()
 	fi
 	# KPA gets the image directory from the configfile entry
 	INDEXFILE=`get_config_value configfile`
+	if [ -z "$INDEXFILE" ]
+	then
+		echo "The RC-file ($KPARC) does not define an entry for index.xml!" >&2
+		exit 1
+	fi
+	if [ ! -f "$INDEXFILE" ]
+	then
+		echo "KPhotoAlbum index file does not exist!" >&2
+		exit 1
+	fi
 	KPA_FOLDER=`dirname "$INDEXFILE"`
 	if [ ! -d "$KPA_FOLDER" ]
 	then
-		echo "Kphotoalbum image directory ($KPA_FOLDER) does not exist!" >&2
+		echo "KPhotoAlbum image directory ($KPA_FOLDER) does not exist!" >&2
 		exit 1
 	fi
-
-	BACKEND=`get_config_value backend`
-	case "$BACKEND" in
-		xml)
-			echo "KPhotoalbum uses XML backend..."
-			if [ ! -r "$INDEXFILE" ]
-			then
-				echo "Kphotoalbum XML database file ($INDEXFILE) not readable!" >&2
-				exit 1
-			fi
-			;;
-		*)
-			echo "KPhotoalbum uses backend \`$BACKEND'..." >&2
-			echo "This backend is not currently supported!" >&2
-			exit 1
-			;;
-	esac
 
 	if [ ! -d "$BACKUP_LOCATION" ]
 	then
@@ -150,7 +311,7 @@ do_backup()
 do_restore()
 {
 	echo "Restoring essential files..."
-	for f in "$BACKUP_LOCATION/latest"/*.tgz
+	for f in "$BACKUP_LOCATION/$BACKUP_ID"/*.tgz
 	do
 		# untar_if_changed honors NO_ACT:
 		untar_if_changed "$f"
@@ -174,15 +335,17 @@ show_info()
 	for f in "$backup_dir"/*.tgz
 	do
 		echo -n "  |-"
-		untar_if_changed -p -s "$f"
+		untar_if_changed -p -q "$f"
 	done
 	echo
 }
 
 do_list()
 {
-	local LATEST=`readlink "$BACKUP_LOCATION/latest"`
+	local LATEST=`resolve_link "$BACKUP_LOCATION/latest"`
 	LATEST=`basename "$LATEST"`
+	local action=show_info
+	[ -n "$TERSE" ] && action=basename
 	echo "$BACKUP_LOCATION:"
 	for d in "$BACKUP_LOCATION"/*
 	do
@@ -191,9 +354,9 @@ do_list()
 			[ -L "$d" ] && continue
 			if [ "`basename "$d"`" = "$LATEST" ]
 			then
-				show_info "$d" "(*latest*)"
+				$action "$d" "(*latest*)"
 			else
-				show_info "$d"
+				$action "$d"
 			fi
 		fi
 	done
@@ -201,7 +364,7 @@ do_list()
 
 do_info()
 {
-	local LATEST=`readlink "$BACKUP_LOCATION/latest"`
+	local LATEST=`resolve_link "$BACKUP_LOCATION/$BACKUP_ID"`
 	echo "$BACKUP_LOCATION:"
 	show_info "$LATEST"
 }
@@ -232,7 +395,7 @@ do_purge()
 # Parse commandline:
 ###
 
-TEMP=`getopt -o hbrlipnd: --long help,backup,restore,list,info,purge,no-act,directory:,keep: \
+TEMP=`getopt -o hbrlipnd: --long help,backup,restore,list,info,purge,no-act,directory:,keep:,id:,terse \
      -n 'kpa-backup' -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
@@ -251,6 +414,8 @@ while true ; do
 		-n|--no-act) NO_ACT=1 ; shift ;;
 		-d|--directory) BACKUP_LOCATION="$2" ; shift 2 ;;
 		--keep) KEEP_NUM="$2" ; shift 2 ;;
+		--id) BACKUP_ID="$2" ; shift 2 ;;
+		--terse) TERSE=1 ; shift ;;
 		--) shift ; break ;;
 		*) echo "Internal error!" ; exit 1 ;;
 	esac

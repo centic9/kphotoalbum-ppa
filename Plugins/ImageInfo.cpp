@@ -16,9 +16,7 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-kpa-kipi.h>
-#ifdef HASKIPI
-#include "Plugins/ImageInfo.h"
+#include "ImageInfo.h"
 #include "DB/ImageDB.h"
 #include "DB/ImageInfo.h"
 #include "DB/Category.h"
@@ -90,42 +88,41 @@ static int kexivOrientation2deg( int orient)
 Plugins::ImageInfo::ImageInfo( KIPI::Interface* interface, const KUrl& url )
     : KIPI::ImageInfoShared( interface, url )
 {
-    _info = DB::ImageDB::instance()->info( DB::FileName::fromAbsolutePath(_url.path()));
+    m_info = DB::ImageDB::instance()->info( DB::FileName::fromAbsolutePath(_url.path()));
 }
 
 QMap<QString,QVariant> Plugins::ImageInfo::attributes()
 {
-    Q_ASSERT( _info );
+    Q_ASSERT( m_info );
     QMap<QString,QVariant> res;
 
-    res.insert(QString::fromLatin1("name"), QFileInfo(_info->fileName().absolute()).baseName());
-    res.insert(QString::fromLatin1("comment"), _info->description());
+    res.insert(QString::fromLatin1("name"), QFileInfo(m_info->fileName().absolute()).baseName());
+    res.insert(QString::fromLatin1("comment"), m_info->description());
 
-    res.insert(QLatin1String("date"), _info->date().start());
-    res.insert(QLatin1String("dateto"), _info->date().end());
-    res.insert(QLatin1String("isexactdate"), _info->date().start() == _info->date().end());
+    res.insert(QLatin1String("date"), m_info->date().start());
+    res.insert(QLatin1String("dateto"), m_info->date().end());
+    res.insert(QLatin1String("isexactdate"), m_info->date().start() == m_info->date().end());
 
-    res.insert(QString::fromLatin1("orientation"), deg2KexivOrientation(_info->angle()) );
-    res.insert(QString::fromLatin1("angle"), deg2KexivOrientation(_info->angle()) ); // for compatibility with older versions. Now called orientation.
+    res.insert(QString::fromLatin1("orientation"), deg2KexivOrientation(m_info->angle()) );
+    res.insert(QString::fromLatin1("angle"), deg2KexivOrientation(m_info->angle()) ); // for compatibility with older versions. Now called orientation.
 
-    res.insert(QString::fromLatin1("title"), _info->label());
+    res.insert(QString::fromLatin1("title"), m_info->label());
 
-    res.insert(QString::fromLatin1("rating"), _info->rating());
+    res.insert(QString::fromLatin1("rating"), m_info->rating());
 
     // not supported:
     //res.insert(QString::fromLatin1("colorlabel"), xxx );
     //res.insert(QString::fromLatin1("picklabel"), xxx );
 
-    DB::GpsCoordinates position = _info->geoPosition();
-    if (!position.isNull()) {
-        res.insert(QString::fromLatin1("longitude"), QVariant(position.longitude()));
-        res.insert(QString::fromLatin1("latitude"), QVariant(position.latitude()));
-        res.insert(QString::fromLatin1("altitude"), QVariant(position.altitude()));
-        if (position.precision() != DB::GpsCoordinates::NoPrecisionData) {
-            // XXX: attribute not mentioned in libkipi/imageinfo.h -> is this supported?
-            res.insert(QString::fromLatin1("positionPrecision"), QVariant(position.precision()));
-        }
+#if HAVE_KGEOMAP
+    KGeoMap::GeoCoordinates position = m_info->coordinates();
+    if (position.hasCoordinates()) {
+        res.insert(QString::fromLatin1("longitude"), QVariant(position.lon()));
+        res.insert(QString::fromLatin1("latitude"), QVariant(position.lat()));
+        if (position.hasAltitude())
+           res.insert(QString::fromLatin1("altitude"), QVariant(position.alt()));
     }
+#endif
 
     // Flickr plug-in expects the item tags, so we better give them.
     QString text;
@@ -139,7 +136,7 @@ QMap<QString,QVariant> Plugins::ImageInfo::attributes()
             continue;
         // I don't know why any categories except the above should be excluded
         //if ( (*categoryIt)->doShow() ) {
-            Utilities::StringSet items = _info->itemsOfCategory( categoryName );
+            Utilities::StringSet items = m_info->itemsOfCategory( categoryName );
             for( Utilities::StringSet::Iterator it = items.begin(); it != items.end(); ++it ) {
                 tags.append( *it );
                 // digikam compatible tag path:
@@ -167,7 +164,7 @@ QMap<QString,QVariant> Plugins::ImageInfo::attributes()
 
 void Plugins::ImageInfo::clearAttributes()
 {
-    if( _info ) {
+    if( m_info ) {
         // official behaviour is to delete all officially supported attributes:
         QStringList attr;
         attr.append( QString::fromLatin1("comment") );
@@ -186,7 +183,7 @@ void Plugins::ImageInfo::clearAttributes()
 
 void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
 {
-    if ( _info && ! amap.empty() ) {
+    if ( m_info && ! amap.empty() ) {
         QMap<QString,QVariant> map = amap;
         if ( map.contains(QLatin1String("name")) )
         {
@@ -199,69 +196,42 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
         {
             // is it save to do that? digikam seems to allow multiple comments on a single image
             // if a plugin assumes that it is adding a comment, not setting it, things might go badly...
-            _info->setDescription( map[QLatin1String("comment")].toString() );
+            m_info->setDescription( map[QLatin1String("comment")].toString() );
             map.remove(QLatin1String("comment"));
         }
         // note: this probably won't work as expected because according to the spec,
         // "isexactdate" is supposed to be readonly and therefore never set here:
         if (map.contains(QLatin1String("isexactdate")) && map.contains(QLatin1String("date"))) {
-            _info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime()));
+            m_info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime()));
             map.remove(QLatin1String("date"));
         } else if (map.contains(QLatin1String("date")) && map.contains(QLatin1String("dateto"))) {
-            _info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime(), map[QLatin1String("dateto")].toDateTime()));
+            m_info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime(), map[QLatin1String("dateto")].toDateTime()));
             map.remove(QLatin1String("date"));
             map.remove(QLatin1String("dateto"));
         } else if (map.contains(QLatin1String("date"))) {
-            _info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime()));
+            m_info->setDate(DB::ImageDate(map[QLatin1String("date")].toDateTime()));
             map.remove(QLatin1String("date"));
         }
         if ( map.contains(QLatin1String("angle")) )
         {
             qWarning("Kipi-plugin uses deprecated attribute \"angle\".");
-            _info->setAngle( kexivOrientation2deg( map[QLatin1String("angle")].toInt() ) );
+            m_info->setAngle( kexivOrientation2deg( map[QLatin1String("angle")].toInt() ) );
             map.remove(QLatin1String("angle"));
         }
         if ( map.contains(QLatin1String("orientation")) )
         {
-            _info->setAngle( kexivOrientation2deg( map[QLatin1String("orientation")].toInt() ) );
+            m_info->setAngle( kexivOrientation2deg( map[QLatin1String("orientation")].toInt() ) );
             map.remove(QLatin1String("orientation"));
         }
         if ( map.contains(QLatin1String("title")) )
         {
-            _info->setLabel( map[QLatin1String("title")].toString() );
+            m_info->setLabel( map[QLatin1String("title")].toString() );
             map.remove(QLatin1String("title"));
         }
         if ( map.contains(QLatin1String("rating")) )
         {
-            _info->setRating( map[QLatin1String("rating")].toInt() );
+            m_info->setRating( map[QLatin1String("rating")].toInt() );
             map.remove(QLatin1String("rating"));
-        }
-        // I don't know whether we should loosen the warning on this one:
-        // after all, a Plugin might update one component of the gps data only...
-        if (map.contains(QLatin1String("longitude")) ||
-                map.contains(QLatin1String("latitude")) ||
-                map.contains(QLatin1String("altitude")) ||
-                map.contains(QLatin1String("positionPrecision"))) {
-            if (map.contains(QLatin1String("longitude")) && map.contains(QLatin1String("latitude"))) {
-                double altitude = 0;
-                QVariant var = map[QLatin1String("altitude")];
-                if (!var.isNull()) {
-                    altitude = var.toDouble();
-                }
-                int precision = DB::GpsCoordinates::NoPrecisionData;
-                var = map[QLatin1String("positionPrecision")];
-                if (!var.isNull()) {
-                    precision = var.toInt();
-                }
-                DB::GpsCoordinates coord(map[QLatin1String("longitude")].toDouble(), map[QLatin1String("latitude")].toDouble(), altitude, precision);
-                _info->setGeoPosition(coord);
-            } else {
-                qWarning("Geo coordinates incomplete. Need at least 'longitude' and 'latitude', optionally 'altitude' and 'positionPrecision'");
-            }
-            map.remove(QLatin1String("longitude"));
-            map.remove(QLatin1String("latitude"));
-            map.remove(QLatin1String("altitude"));
-            map.remove(QLatin1String("positionPrecision"));
         }
         if ( map.contains(QLatin1String("tagspath")) )
         {
@@ -315,9 +285,9 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                         previousTag = currentTag;
                     }
                     Debug() << "Adding tag " << previousTag << " in category " << categoryName
-                        << " to image " << _info->label();
+                        << " to image " << m_info->label();
                     // previousTag must be a valid category (see addItem() above...)
-                    _info->addCategoryInfo( categoryName, previousTag );
+                    m_info->addCategoryInfo( categoryName, previousTag );
                 } else {
                     qWarning() << "Unknown category: " << categoryName;
                 }
@@ -330,6 +300,9 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
         map.remove(QLatin1String("isexactdate"));
         map.remove(QLatin1String("keywords"));
         map.remove(QLatin1String("tags"));
+        map.remove(QLatin1String("altitude"));
+        map.remove(QLatin1String("longitude"));
+        map.remove(QLatin1String("latitude"));
 
         // colorlabel
         // picklabel
@@ -348,43 +321,42 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
 
 void Plugins::ImageInfo::delAttributes( const QStringList& attrs)
 {
-    if ( _info && ! attrs.empty() ) {
+    if ( m_info && ! attrs.empty() ) {
         QStringList delAttrs = attrs;
         if ( delAttrs.contains(QLatin1String("comment")))
         {
-            _info->setDescription( QString() );
+            m_info->setDescription( QString() );
             delAttrs.removeAll(QLatin1String("comment"));
         }
         // not supported: date
         if ( delAttrs.contains(QLatin1String("orientation")) ||
                 delAttrs.contains(QLatin1String("angle")) )
         {
-            _info->setAngle( 0 );
+            m_info->setAngle( 0 );
             delAttrs.removeAll(QLatin1String("orientation"));
             delAttrs.removeAll(QLatin1String("angle"));
         }
+        if ( delAttrs.contains(QLatin1String("rating")))
+        {
+            m_info->setRating( -1 );
+            delAttrs.removeAll(QLatin1String("rating"));
+        }
         if ( delAttrs.contains(QLatin1String("title")))
         {
-            _info->setLabel( QString() );
+            m_info->setLabel( QString() );
             delAttrs.removeAll(QLatin1String("title"));
         }
         // TODO:
-        // rating
         // (colorlabel)
         // (picklabel)
         // copyrights
+        // not supported: gpslocation
         if ( delAttrs.contains(QLatin1String("tags")) ||
                 delAttrs.contains(QLatin1String("tagspath")))
         {
-            _info->clearAllCategoryInfo();
+            m_info->clearAllCategoryInfo();
             delAttrs.removeAll(QLatin1String("tags"));
             delAttrs.removeAll(QLatin1String("tagspath"));
-        }
-        if ( delAttrs.contains(QLatin1String("gpslocation")) )
-        {
-            //clear position:
-            _info->setGeoPosition(DB::GpsCoordinates());
-            delAttrs.removeAll(QLatin1String("gpslocation"));
         }
         MainWindow::DirtyIndicator::markDirty();
         if ( ! delAttrs.isEmpty() )
@@ -402,9 +374,9 @@ void Plugins::ImageInfo::delAttributes( const QStringList& attrs)
 void Plugins::ImageInfo::cloneData( ImageInfoShared* KIPI_IMAGEINFO_CONST_MODIFIER other )
 {
     ImageInfoShared::cloneData( other );
-    if ( _info ) {
+    if ( m_info ) {
         Plugins::ImageInfo* inf = static_cast<Plugins::ImageInfo*>( other );
-        _info->setDate( inf->_info->date() );
+        m_info->setDate( inf->m_info->date() );
         MainWindow::DirtyIndicator::markDirty();
     }
 }
@@ -421,16 +393,16 @@ void Plugins::ImageInfo::cloneData( ImageInfoShared* KIPI_IMAGEINFO_CONST_MODIFI
 #endif
 QString Plugins::ImageInfo::KIPI_IMAGEINFO_FILINAMEFUN_GETTER_NAME()
 {
-    if ( _info )
-        return _info->label();
+    if ( m_info )
+        return m_info->label();
     else
         return QString();
 }
 
 void Plugins::ImageInfo::KIPI_IMAGEINFO_FILINAMEFUN_SETTER_NAME( const QString& name )
 {
-    if ( _info ) {
-        _info->setLabel( name );
+    if ( m_info ) {
+        m_info->setLabel( name );
         MainWindow::DirtyIndicator::markDirty();
     }
 }
@@ -439,44 +411,44 @@ void Plugins::ImageInfo::KIPI_IMAGEINFO_FILINAMEFUN_SETTER_NAME( const QString& 
 
 QString Plugins::ImageInfo::description()
 {
-    if ( _info )
-        return _info->description();
+    if ( m_info )
+        return m_info->description();
     else
         return QString();
 }
 
 void Plugins::ImageInfo::setDescription( const QString& description )
 {
-    if ( _info ) {
-        _info->setDescription( description );
+    if ( m_info ) {
+        m_info->setDescription( description );
         MainWindow::DirtyIndicator::markDirty();
     }
 }
 
 int Plugins::ImageInfo::angle()
 {
-    if ( _info )
-        return _info->angle();
+    if ( m_info )
+        return m_info->angle();
     else
         return 0;
 }
 
 void Plugins::ImageInfo::setAngle( int angle )
 {
-    if ( _info ) {
-        _info->setAngle( angle );
+    if ( m_info ) {
+        m_info->setAngle( angle );
         MainWindow::DirtyIndicator::markDirty();
     }
 }
 
 QDateTime Plugins::ImageInfo::time( KIPI::TimeSpec what )
 {
-    if ( _info ) {
+    if ( m_info ) {
         if ( what == KIPI::FromInfo ) {
-            return _info->date().start() ;
+            return m_info->date().start() ;
         }
         else
-            return _info->date().end();
+            return m_info->date().end();
     }
     else
         return KIPI::ImageInfoShared::time( what );
@@ -484,22 +456,22 @@ QDateTime Plugins::ImageInfo::time( KIPI::TimeSpec what )
 
 bool Plugins::ImageInfo::isTimeExact()
 {
-    if ( !_info )
+    if ( !m_info )
         return true;
-    return _info->date().hasValidTime();
+    return m_info->date().hasValidTime();
 }
 
 void Plugins::ImageInfo::setTime( const QDateTime& time, KIPI::TimeSpec spec )
 {
-    if ( !_info )
+    if ( !m_info )
         return;
     if ( spec == KIPI::FromInfo ) {
-        _info->setDate( DB::ImageDate( time, time ) );
+        m_info->setDate( DB::ImageDate( time, time ) );
         MainWindow::DirtyIndicator::markDirty();
     }
     else {
-        DB::ImageDate date = _info->date();
-        _info->setDate( DB::ImageDate( date.start(), time ) );
+        DB::ImageDate date = m_info->date();
+        m_info->setDate( DB::ImageDate( date.start(), time ) );
         MainWindow::DirtyIndicator::markDirty();
     }
 }
@@ -515,5 +487,4 @@ bool Plugins::ImageInfo::isCategoryAttribute(const QString &key)
     return (key != QString::fromLatin1("tags") && !isPositionAttribute(key));
 }
 
-#endif // KIPI
 // vi:expandtab:tabstop=4 shiftwidth=4:

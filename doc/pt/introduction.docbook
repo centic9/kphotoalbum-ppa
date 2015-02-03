@@ -41,7 +41,7 @@
 >Neste manual, o autor irá conduzi-lo pelos passos de (1) anotar as suas imagens, (2) navegar e ver as imagens e (3) os tópicos avançados e a personalização.</para>
 
 <para
->KPhotoAlbum started out as an application for managing your images, but since then it has been extended, so it today also takes care of your videos. In many places in this manual I will talk about images, but just as often the discussion does include videos.</para>
+>O &kphotoalbum; começou como uma aplicação para gerir as suas imagens, mas desde então tem evoluído; como tal, hoje em dia já toma conta também dos seus vídeos. Em vários pontos deste manual falar-se-á de imagens, mas nessa discussão também estão incluídos os vídeos.</para>
   
 
   </sect1>
@@ -52,22 +52,24 @@
     <title
 >Organização das imagens e dos ficheiros do &kphotoalbum;</title>
     <para
->&kphotoalbum; uses all the images of a directory and all subdirectories below it, first time you start &kphotoalbum;, you will be ask for the location of this directory. &kphotoalbum; will not modify any images, so you do not have to be afraid of &kphotoalbum; altering your images <footnote
+>O &kphotoalbum; usa todas as imagens de uma pasta e de todas as subpastas por baixo dela; da primeira vez que iniciar o &kphotoalbum;, ser-lhe-á pedida a localização desta pasta. O &kphotoalbum; não irá modificar nenhumas imagens, por isso você não terá de ter medo que o &kphotoalbum; altere as suas imagens <footnote
 ><para
->The two exceptions to this rule is (1) if you ask &kphotoalbum; to delete individual images, from <menuchoice
+>As duas excepções a esta regra são (1) remover imagens individuais, se o pedir explicitamente em <menuchoice
 ><guimenu
->Edit</guimenu
+>Editar</guimenu
 ><guimenuitem
->Delete Selected</guimenuitem
+>Remover os Seleccionados</guimenuitem
 ></menuchoice
->, and (2) plug-in operations.</para
+> e (2) operações com 'plugins'</para
 ></footnote
->, actually if you do not trust &kphotoalbum;, feel free to make all your images write protected.</para>
+>. De qualquer forma, se não confiar no &kphotoalbum;, sinta-se à vontade em tornar todas as suas imagens protegidas contra escrita.</para>
     
     <para
->&kphotoalbum; will save all its information in the file <filename
+>O &kphotoalbum; irá guardar toda a sua informação no ficheiro <filename
 >index.xml</filename
-> in your topmost image directory. This file is a simple XML file, so you can easily back it up using whatever tools you prefer, including normal backup utilities, copying the file to a floppy disk, or keeping revisions using CVS.</para>
+> da sua pasta de topo das imagens. Este é um ficheiro XML simples, para que o possa salvaguardar com as ferramentas que preferir, incluindo os utilitários de salvaguarda normais, a cópia para disquetes ou a manutenção num sistema de controlo de versões com o CVS. Existe também um programa de salvaguarda (<emphasis
+>kpa-backup.sh</emphasis
+> que vem no código do &kphotoalbum; e que faz uma cópia do 'index.xml', bem como dos ficheiros de configuração na pasta pessoal do utilizador.</para>
     
     <para
 >O &kphotoalbum; irá recordar o local que você lhe indicou onde se localizam as suas imagens e utilizá-lo-á de novo nas sessões futuras do &kphotoalbum;. Se alguma vez precisar de carregar outra base de dados no &kphotoalbum; (i.e. outra pasta com imagens), então poderá iniciá-lo com a opção <option

@@ -22,7 +22,6 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qmap.h>
-#include "GpsCoordinates.h"
 #include "ImageDate.h"
 #include "Utilities/Set.h"
 #include "MD5.h"
@@ -31,6 +30,11 @@
 #include <QSize>
 #include <QRect>
 #include "FileName.h"
+
+#include "config-kpa-kgeomap.h"
+#ifdef HAVE_KGEOMAP
+#include <libkgeomap/geocoordinates.h>
+#endif
 
 namespace Plugins
 {
@@ -74,11 +78,8 @@ public:
                MediaType type,
                short rating = -1,
                StackID stackId = 0,
-               unsigned int stackOrder = 0,
-               const GpsCoordinates& geoPosition=GpsCoordinates() );
+               unsigned int stackOrder = 0 );
     virtual ~ImageInfo() { saveChanges(); }
-
-    // TODO: this should have a method to access the ID.
 
     FileName fileName() const;
     void setFileName( const DB::FileName& relativeFileName );
@@ -101,14 +102,11 @@ public:
     short rating() const;
     void setRating( short rating );
 
-    bool isStacked() const { return _stackId != 0; }
+    bool isStacked() const { return m_stackId != 0; }
     StackID stackId() const;
 
     unsigned int stackOrder() const;
     void setStackOrder( const unsigned int stackOrder );
-
-    const GpsCoordinates& geoPosition() const;
-    void setGeoPosition(const GpsCoordinates& geoPosition);
 
     void setVideoLength(int seconds);
     int videoLength() const;
@@ -150,18 +148,18 @@ public:
 
     static bool imageOnDisk( const DB::FileName& fileName );
 
-    const MD5& MD5Sum() const { return _md5sum; }
-    void setMD5Sum( const MD5& sum ) { if (sum != _md5sum) _dirty = true; _md5sum = sum; saveChangesIfNotDelayed(); }
+    const MD5& MD5Sum() const { return m_md5sum; }
+    void setMD5Sum( const MD5& sum );
 
     void setLocked( bool );
     bool isLocked() const;
 
-    bool isNull() const { return _null; }
+    bool isNull() const { return m_null; }
     QSize size() const;
     void setSize( const QSize& size );
 
     MediaType mediaType() const;
-    void setMediaType( MediaType type ) { if (type != _type) _dirty = true; _type = type; saveChangesIfNotDelayed(); }
+    void setMediaType( MediaType type ) { if (type != m_type) m_dirty = true; m_type = type; saveChangesIfNotDelayed(); }
     bool isVideo() const;
 
     void createFolderCategoryItem( DB::CategoryPtr, DB::MemberMap& memberMap );
@@ -184,6 +182,10 @@ public:
      * @return the associated area, or <code>QRect()</code> if no association exists.
      */
     QRect areaForTag(QString category, QString tag) const;
+#ifdef HAVE_KGEOMAP
+    KGeoMap::GeoCoordinates coordinates() const;
+#endif
+
 protected:
     /** Save changes to database.
      *
@@ -192,42 +194,41 @@ protected:
      */
     virtual void saveChanges() {}
 
-    void saveChangesIfNotDelayed() { if (!_delaySaving) saveChanges(); }
+    void saveChangesIfNotDelayed() { if (!m_delaySaving) saveChanges(); }
 
-    void setIsNull(bool b) { _null = b; }
-    bool isDirty() const { return _dirty; }
-    void setIsDirty(bool b)  { _dirty = b; }
+    void setIsNull(bool b) { m_null = b; }
+    bool isDirty() const { return m_dirty; }
+    void setIsDirty(bool b)  { m_dirty = b; }
     bool updateDateInformation( int mode ) const;
 
     void setStackId( const StackID stackId );
     friend class XMLDB::Database;
 private:
-    DB::FileName _fileName;
-    QString _label;
-    QString _description;
-    ImageDate _date;
-    QMap<QString, StringSet> _categoryInfomation;
-    QMap<QString, QMap<QString, QRect>> _taggedAreas;
-    int _angle;
+    DB::FileName m_fileName;
+    QString m_label;
+    QString m_description;
+    ImageDate m_date;
+    QMap<QString, StringSet> m_categoryInfomation;
+    QMap<QString, QMap<QString, QRect>> m_taggedAreas;
+    int m_angle;
     enum OnDisk { YesOnDisk, NoNotOnDisk, Unchecked };
-    mutable OnDisk _imageOnDisk;
-    MD5 _md5sum;
-    bool _null;
-    QSize _size;
-    MediaType _type;
-    short _rating;
-    StackID _stackId;
-    unsigned int _stackOrder;
-    GpsCoordinates _geoPosition;
-    int _videoLength;
+    mutable OnDisk m_imageOnDisk;
+    MD5 m_md5sum;
+    bool m_null;
+    QSize m_size;
+    MediaType m_type;
+    short m_rating;
+    StackID m_stackId;
+    unsigned int m_stackOrder;
+    int m_videoLength;
 
     // Cache information
-    bool _locked;
+    bool m_locked;
 
     // Will be set to true after every change
-    bool _dirty;
+    bool m_dirty;
 
-    bool _delaySaving;
+    bool m_delaySaving;
 };
 
 }

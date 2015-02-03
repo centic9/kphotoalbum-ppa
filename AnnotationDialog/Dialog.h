@@ -30,6 +30,7 @@
 #include "ImagePreviewWidget.h"
 #include <QCheckBox>
 #include <kdialog.h>
+#include "config-kpa-kgeomap.h"
 
 class QStackedWidget;
 class KActionCollection;
@@ -46,8 +47,12 @@ class QSplitter;
 class KPushButton;
 class KLineEdit;
 class KPushButton;
-
+class QProgressBar;
 class KRatingWidget;
+
+#ifdef HAVE_KGEOMAP
+class QPushButton;
+#endif
 
 namespace Viewer
 {
@@ -59,6 +64,10 @@ namespace DB
     class ImageInfo;
 }
 
+namespace Map
+{
+    class MapView;
+}
 
 namespace AnnotationDialog
 {
@@ -79,7 +88,8 @@ public:
     QList<QPair<QString, QString>> positionableTagCandidates() const;
     void addTagToCandidateList(QString category, QString tag);
     void removeTagFromCandidateList(QString category, QString tag);
-    QString localizedCategory(QString category) const;
+    void checkProposedTagData(QPair<QString, QString> tagData, ResizableFrame *areaToExclude) const;
+    void areaChanged();
 
 protected slots:
     void slotRevert();
@@ -106,6 +116,11 @@ protected slots:
     void positionableTagSelected(QString category, QString tag);
     void positionableTagDeselected(QString category, QString tag);
     void positionableTagRenamed(QString category, QString oldTag, QString newTag);
+#ifdef HAVE_KGEOMAP
+    void setCancelMapLoading();
+    void annotationMapVisibilityChanged(bool visible);
+    void populateMap();
+#endif
 
 signals:
     void imageRotated(const DB::FileName& id);
@@ -138,60 +153,70 @@ protected:
     void ShowHideSearch( bool show );
 
 private:
-    QStackedWidget* _stack;
-    Viewer::ViewerWidget* _fullScreenPreview;
-    DB::ImageInfoList _origList;
-    QList<DB::ImageInfo> _editList;
-    int _current;
-    UsageMode _setup;
-    QList< ListSelect* > _optionList;
-    DB::ImageSearchInfo _oldSearch;
-    QSplitter* _splitter;
-    int _accept;
-    QList<QDockWidget*> _dockWidgets;
+    QStackedWidget* m_stack;
+    Viewer::ViewerWidget* m_fullScreenPreview;
+    DB::ImageInfoList m_origList;
+    QList<DB::ImageInfo> m_editList;
+    int m_current;
+    UsageMode m_setup;
+    QList< ListSelect* > m_optionList;
+    DB::ImageSearchInfo m_oldSearch;
+    int m_accept;
+    QList<QDockWidget*> m_dockWidgets;
 
     // Widgets
-    QMainWindow* _dockWindow;
-    KLineEdit* _imageLabel;
-    KDateEdit* _startDate;
-    KDateEdit* _endDate;
-    QLabel* _endDateLabel;
-    QLabel* _imageFilePatternLabel;
-    KLineEdit* _imageFilePattern;
+    QMainWindow* m_dockWindow;
+    KLineEdit* m_imageLabel;
+    KDateEdit* m_startDate;
+    KDateEdit* m_endDate;
+    QLabel* m_endDateLabel;
+    QLabel* m_imageFilePatternLabel;
+    KLineEdit* m_imageFilePattern;
 
-    ImagePreviewWidget* _preview;
-    KPushButton* _revertBut;
-    KPushButton* _clearBut;
-    KPushButton* _okBut;
-    KPushButton* _continueLaterBut;
-    KTextEdit* _description;
-    QTimeEdit* _time;
-    QLabel* _timeLabel;
-    QCheckBox* _isFuzzyDate;
-    KRatingWidget* _rating;
-    KComboBox* _ratingSearchMode;
-    QLabel* _ratingSearchLabel;
-    bool _ratingChanged;
-    QSpinBox* _megapixel;
-    QLabel* _megapixelLabel;
-    QCheckBox* _searchRAW;
-    QString conflictText;
-    QString _firstDescription;
+    ImagePreviewWidget* m_preview;
+    KPushButton* m_revertBut;
+    KPushButton* m_clearBut;
+    KPushButton* m_okBut;
+    KPushButton* m_continueLaterBut;
+    KTextEdit* m_description;
+    QTimeEdit* m_time;
+    QLabel* m_timeLabel;
+    QCheckBox* m_isFuzzyDate;
+    KRatingWidget* m_rating;
+    KComboBox* m_ratingSearchMode;
+    QLabel* m_ratingSearchLabel;
+    bool m_ratingChanged;
+    QSpinBox* m_megapixel;
+    QLabel* m_megapixelLabel;
+    QCheckBox* m_searchRAW;
+    QString m_conflictText;
+    QString m_firstDescription;
 
-    KActionCollection* _actions;
+    KActionCollection* m_actions;
 
     /** Clean state of the dock window.
      *
      * Used in slotResetLayout().
      */
-    QByteArray _dockWindowCleanState;
+    QByteArray m_dockWindowCleanState;
     void tidyAreas();
-    QPair<QString, QString> _lastSelectedPositionableTag;
-    QList<QPair<QString, QString>> _positionableTagCandidates;
-    QMap<QString, ListSelect*> _listSelectList;
-    QMap<QString, QString> _categoryL10n;
+    QPair<QString, QString> m_lastSelectedPositionableTag;
+    QList<QPair<QString, QString>> m_positionableTagCandidates;
+    QMap<QString, ListSelect*> m_listSelectList;
 
-    bool _positionableCategories;
+    bool m_positionableCategories;
+    bool m_areasChanged;
+
+#ifdef HAVE_KGEOMAP
+    QWidget *m_annotationMapContainer;
+    Map::MapView *m_annotationMap;
+    void updateMapForCurrentImage();
+    QProgressBar *m_mapLoadingProgress;
+    QPushButton *m_cancelMapLoadingButton;
+    void mapLoadingFinished(bool mapHasImages, bool allImagesHaveCoordinates);
+    bool m_cancelMapLoading;
+    bool m_mapIsPopulated;
+#endif
 };
 
 }

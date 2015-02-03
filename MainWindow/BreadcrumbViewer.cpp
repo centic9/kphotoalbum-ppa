@@ -18,18 +18,18 @@
 #include "BreadcrumbViewer.h"
 #include <QTextDocument>
 
-void BreadcrumbViewer::setBreadcrumbs( const Browser::BreadcrumbList& list )
+void MainWindow::BreadcrumbViewer::setBreadcrumbs( const Browser::BreadcrumbList& list )
 {
-    _activeCrumbs = list.latest();
+    m_activeCrumbs = list.latest();
     updateText();
 }
 
-void BreadcrumbViewer::linkClicked( const QString& link )
+void MainWindow::BreadcrumbViewer::linkClicked( const QString& link )
 {
-    emit widenToBreadcrumb( _activeCrumbs[ link.toInt() ] );
+    emit widenToBreadcrumb( m_activeCrumbs[ link.toInt() ] );
 }
 
-BreadcrumbViewer::BreadcrumbViewer()
+MainWindow::BreadcrumbViewer::BreadcrumbViewer()
 {
     connect( this, SIGNAL(linkActivated(QString)), this, SLOT(linkClicked(QString)) );
 }
@@ -39,14 +39,14 @@ BreadcrumbViewer::BreadcrumbViewer()
  * The by far best solution would be to compress at a letter level, but this code is really only used in the rare
  * situation where the user chooses a very long path, as his window usually is somewhat wide.
  */
-void BreadcrumbViewer::updateText()
+void MainWindow::BreadcrumbViewer::updateText()
 {
     QStringList htmlList;
 
-    for ( int i = 0; i < _activeCrumbs.count()-1; ++i )
-        htmlList.append( QString::fromLatin1("<a href=\"%1\">%2</a>").arg(i).arg(_activeCrumbs[i].text()) );
-    if ( !_activeCrumbs[_activeCrumbs.count()-1].isView() )
-        htmlList.append(_activeCrumbs[_activeCrumbs.count()-1].text());
+    for ( int i = 0; i < m_activeCrumbs.count()-1; ++i )
+        htmlList.append( QString::fromLatin1("<a href=\"%1\">%2</a>").arg(i).arg(m_activeCrumbs[i].text()) );
+    if ( !m_activeCrumbs[m_activeCrumbs.count()-1].isView() )
+        htmlList.append(m_activeCrumbs[m_activeCrumbs.count()-1].text());
 
     QTextDocument doc;
     doc.setDefaultFont( font() );
@@ -78,13 +78,13 @@ void BreadcrumbViewer::updateText()
 
 }
 
-void BreadcrumbViewer::resizeEvent( QResizeEvent* event )
+void MainWindow::BreadcrumbViewer::resizeEvent( QResizeEvent* event )
 {
     QLabel::resizeEvent( event );
     updateText();
 }
 
-QSize BreadcrumbViewer::minimumSizeHint() const
+QSize MainWindow::BreadcrumbViewer::minimumSizeHint() const
 {
     return QSize( 100, QLabel::minimumSizeHint().height() );
 }

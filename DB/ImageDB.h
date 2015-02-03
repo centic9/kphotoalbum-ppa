@@ -34,8 +34,6 @@ class Category;
 class MD5Map;
 class MemberMap;
 class ImageDateCollection;
-class IdList;
-class Id;
 class ImageSearchInfo;
 class FileName;
 
@@ -58,13 +56,13 @@ public slots:
     virtual void slotReread( const DB::FileNameList& list, DB::ExifMode mode);
 
 protected:
-    ImageDate _selectionRange;
-    bool _includeFuzzyCounts;
-    ImageInfoList _clipboard;
+    ImageDate m_selectionRange;
+    bool m_includeFuzzyCounts;
+    ImageInfoList m_clipboard;
 
 private:
     static void connectSlots();
-    static ImageDB* _instance;
+    static ImageDB* s_instance;
 
 protected:
     ImageDB();
