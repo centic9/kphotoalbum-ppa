@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-01-19 01:47+0000\n"
+"POT-Creation-Date: 2015-03-18 01:48+0000\n"
 "PO-Revision-Date: 2013-05-03 11:55+0200\n"
 "Last-Translator: Stelios <sstavra@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -331,12 +331,12 @@ msgid "Copy tags from previous image"
 msgstr "Αντιγραφή ετικετών από την προηγούμενη εικόνα"
 
 #: AnnotationDialog/Dialog.cpp:1241 AnnotationDialog/ImagePreviewWidget.cpp:64
-#: MainWindow/Window.cpp:762
+#: MainWindow/Window.cpp:785
 msgid "Rotate counterclockwise"
 msgstr "Περιστροφή προς τα αριστερά"
 
 #: AnnotationDialog/Dialog.cpp:1244 AnnotationDialog/ImagePreviewWidget.cpp:70
-#: MainWindow/Window.cpp:767
+#: MainWindow/Window.cpp:790
 msgid "Rotate clockwise"
 msgstr "Περιστροφή προς τα δεξιά"
 
@@ -361,6 +361,21 @@ msgid ""
 "this category and mark it as positionable. If this tag shouldn't be in the "
 "recognition database anymore, it can be deleted in the settings dialog.</p>"
 msgstr ""
+
+#: AnnotationDialog/ImagePreview.cpp:598
+msgid ""
+"<p>Face recognition is in a quite early development state. There are still "
+"many tweaks to do.</p><p>Sometimes, libkface needs quite a long time to "
+"train the database (even some minutes). KPhotoAlbum will be unresponsive in "
+"the meantime, but it won't crash; please be a bit patient if this happens.</"
+"p><p>However, normally, the training will happen in a few seconds.</p>"
+msgstr ""
+
+#: AnnotationDialog/ImagePreview.cpp:604
+#, fuzzy
+#| msgid "XML Database Setting"
+msgid "Face database training"
+msgstr "Ρυθμίσεις βάσης δεδομένων XML"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate previous image"
@@ -406,7 +421,7 @@ msgid ""
 "recognition database will be trained automatically with that tag."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:311
+#: AnnotationDialog/ImagePreviewWidget.cpp:312
 msgctxt "@info:tooltip"
 msgid ""
 "If you enable <emphasis>positionable tags</emphasis> for at least one "
@@ -414,12 +429,22 @@ msgid ""
 "interface>, you can associate specific image areas with tags."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:317
+#: AnnotationDialog/ImagePreviewWidget.cpp:318
+msgctxt "@info:tooltip"
+msgid "Areas on an image can only be shown in single-image annotation mode."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:325
 msgctxt "@info"
 msgid ""
 "To use face detection, enable <emphasis>positionable tags</emphasis> for at "
 "least one category in <interface>Settings|Configure KPhotoAlbum...|"
 "Categories</interface>."
+msgstr ""
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:331
+msgctxt "@info"
+msgid "Face detection is only available in single-image annotation mode."
 msgstr ""
 
 #: AnnotationDialog/KDateEdit.cpp:88
@@ -451,25 +476,30 @@ msgid "Rename..."
 msgstr "Μετονομασία..."
 
 #: AnnotationDialog/ListSelect.cpp:325
-msgid "<b>Sub Categories</b>"
-msgstr "<b>Υποκατηγορίες</b>"
+#, fuzzy
+#| msgid "New Group"
+msgid "<b>Tag Groups</b>"
+msgstr "Νέα ομάδα"
 
 #: AnnotationDialog/ListSelect.cpp:333
-msgid "Super Categories"
-msgstr "Υπερκατηγορίες"
+#, fuzzy
+#| msgid "New Group"
+msgid "Tag groups"
+msgstr "Νέα ομάδα"
 
 #: AnnotationDialog/ListSelect.cpp:350
-msgid "New Category..."
-msgstr "Νέα κατηγορία..."
+msgid "Add this tag to a new tag group..."
+msgstr ""
 
 #: AnnotationDialog/ListSelect.cpp:353
-msgid "Create Subcategory..."
-msgstr "Δημιουργία υποκατηγορίας..."
+msgid "Make this tag a tag group and add a tag..."
+msgstr ""
 
 #: AnnotationDialog/ListSelect.cpp:359
-#, kde-format
-msgid "Take item out of category %1"
-msgstr "Αφαίρεση του αντικειμένου από την κατηγορία %1"
+#, fuzzy, kde-format
+#| msgid "Really delete group %1?"
+msgid "Remove from tag group %1"
+msgstr "Θέλετε πραγματικά τη διαγραφή της ομάδας %1;"
 
 #: AnnotationDialog/ListSelect.cpp:362
 msgid "<b>Sorting</b>"
@@ -529,21 +559,23 @@ msgstr ""
 msgid "Really Rename %1?"
 msgstr "Πραγματικά μετονομασία του %1;"
 
-#: AnnotationDialog/ListSelect.cpp:461
-msgid "New Super Category"
-msgstr "Νέα υπερκατηγορία"
+#: AnnotationDialog/ListSelect.cpp:462
+#, fuzzy
+#| msgid "New Group"
+msgid "New tag group"
+msgstr "Νέα ομάδα"
 
-#: AnnotationDialog/ListSelect.cpp:461
-msgid "New Super Category Name:"
-msgstr "Όνομα νέας υπερκατηγορίας:"
+#: AnnotationDialog/ListSelect.cpp:463
+msgid "Name for the new tag group the tag will be added to:"
+msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:470
-msgid "New Sub Category"
-msgstr "Νέα υποκατηγορία"
+#: AnnotationDialog/ListSelect.cpp:474
+msgid "Add a tag"
+msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:470
-msgid "New Sub Category Name:"
-msgstr "Όνομα νέας υποκατηγορίας:"
+#: AnnotationDialog/ListSelect.cpp:475
+msgid "Name for the tag to be added to this tag group:"
+msgstr ""
 
 #: AnnotationDialog/ProposedFaceDialog.cpp:58
 #, kde-format
@@ -660,7 +692,6 @@ msgstr "Παύση"
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
-#: MainWindow/BirthDatesDialog.cpp:71
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -720,7 +751,7 @@ msgstr[0] "1 βίντεο"
 msgstr[1] "%1 βίντεο"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:82
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
 msgid "Images"
 msgstr "Εικόνες"
 
@@ -742,7 +773,7 @@ msgctxt "@action Search button in the browser view."
 msgid "Search"
 msgstr "Αναζήτηση"
 
-#: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:29
+#: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:30
 msgid "Untagged Images"
 msgstr "Αταξινόμητες εικόνες"
 
@@ -786,7 +817,7 @@ msgstr ""
 msgid "Feature has not been configured"
 msgstr "Το χαρακτηριστικό δεν έχει διαμορφωθεί"
 
-#: CategoryListView/CheckDropItem.cpp:110
+#: CategoryListView/CheckDropItem.cpp:111
 #, kde-format
 msgid ""
 "<p>You have just dragged an item onto another: this will make the dragged "
@@ -824,7 +855,7 @@ msgstr[1] ""
 "p><p>Είχατε πράγματι την πρόθεση να δημιουργήσετε υποκατηγορίες \"%2\" του "
 "\"%3\";</p>"
 
-#: CategoryListView/CheckDropItem.cpp:122
+#: CategoryListView/CheckDropItem.cpp:123
 msgid "Move Items"
 msgstr "Μετακίνηση αντικειμένων"
 
@@ -1079,14 +1110,14 @@ msgstr ""
 "εικόνων, αυτό μπορεί να διαρκέσει αρκετά.<br/>Ωστόσο, υπάρχει καθυστέρηση "
 "μόνο όταν βρεθούν νέες εικόνες.</p>"
 
-#: DB/NewImageFinder.cpp:327
+#: DB/NewImageFinder.cpp:332
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] "<p><b>Υπολογισμός αθροίσματος ελέγχου για %1 αρχείο</b></p>"
 msgstr[1] "<p><b>Υπολογισμός αθροισμάτων ελέγχου για %1 αρχεία</b></p>"
 
-#: DB/NewImageFinder.cpp:328
+#: DB/NewImageFinder.cpp:333
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -1094,7 +1125,7 @@ msgstr ""
 "<p>Αποθηκεύοντας ένα άθροισμα ελέγχου για κάθε εικόνα το KPhotoAlbum είναι "
 "ικανό να βρει εικόνες ακόμη και αν τις έχετε μετακινήσει στο δίσκο.</p>"
 
-#: DB/NewImageFinder.cpp:371
+#: DB/NewImageFinder.cpp:376
 msgid "Following files could not be read:"
 msgstr "Τα παρακάτω αρχεία δεν μπορούν να αναγνωστούν:"
 
@@ -1175,7 +1206,7 @@ msgstr ""
 msgid "Override image dates"
 msgstr "Αντικατάσταση ημερομηνιών εικόνων"
 
-#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:107
+#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:112
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
@@ -1948,32 +1979,32 @@ msgid "&Maintenance"
 msgstr "&Συντήρηση"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:72 Settings/SettingsDialog.cpp:83
+#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:88
 msgid "Plugins"
 msgstr "Πρόσθετα"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:74
+#: kphotoalbumui.rc:73
 msgid "Export"
 msgstr "Εξαγωγή"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:78
+#: kphotoalbumui.rc:77
 msgid "Import"
 msgstr "Εισαγωγή"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:86
+#: kphotoalbumui.rc:85
 msgid "Batch Plugins"
 msgstr "Πρόσθετα σε δέσμη"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:90
+#: kphotoalbumui.rc:89
 msgid "Tools"
 msgstr "Εργαλεία"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:107
+#: kphotoalbumui.rc:106
 msgid "Main Toolbar"
 msgstr "Κύρια γραμμή εργαλείων"
 
@@ -2205,32 +2236,6 @@ msgstr ""
 #: MainWindow/AutoStackImages.cpp:103
 msgid "Skip images that are already in a stack"
 msgstr "Παράλειψη εικόνων που βρίσκονται ήδη σε στοίβα"
-
-#: MainWindow/BirthDatesDialog.cpp:38
-#, fuzzy
-#| msgid "Configure Current View"
-msgid "Configure Birth Dates"
-msgstr "Διαμόρφωση τρέχουσας προβολής"
-
-#: MainWindow/BirthDatesDialog.cpp:41
-msgid ""
-"Set the date of birth for items (say people) here,\n"
-"and then see their age when viewing the images."
-msgstr ""
-
-#: MainWindow/BirthDatesDialog.cpp:53
-#, fuzzy
-#| msgid "Current Item"
-msgid "Current Category"
-msgstr "Τρέχον αντικείμενο"
-
-#: MainWindow/BirthDatesDialog.cpp:57
-msgid "Filter (Alt+f)"
-msgstr ""
-
-#: MainWindow/CalendarPopup.cpp:37
-msgid "unset"
-msgstr ""
 
 #: MainWindow/CategoryImagePopup.cpp:61
 msgid "Show Category Editor"
@@ -2820,11 +2825,12 @@ msgstr ""
 "Αν χρησιμοποιείτε κάποια συγκεκριμένη ετικέτα για να δηλώσετε ότι η εικόνα "
 "έχει σημειωθεί, τότε καθορίστε την εδώ."
 
-#: MainWindow/StatisticsDialog.cpp:116 Settings/UntaggedGroupBox.cpp:36
+#: MainWindow/StatisticsDialog.cpp:116 Settings/BirthdayPage.cpp:58
+#: Settings/UntaggedGroupBox.cpp:40
 msgid "Category:"
 msgstr "Κατηγορία:"
 
-#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:43
+#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:47
 msgid "Tag:"
 msgstr "Ετικέτα:"
 
@@ -2854,7 +2860,7 @@ msgstr "Μέγεθος εικόνας επισκόπησης:"
 msgid "Increase thumbnail storage size"
 msgstr "Μέγεθος εικόνας επισκόπησης:"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:736
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:759
 msgid "Remove Tokens"
 msgstr "Αφαίρεση αναγνωριστικών"
 
@@ -2965,23 +2971,23 @@ msgstr "Έλεγχος χαρακτηριστικών"
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Συγχαρητήρια: όλα τα δυναμικά χαρακτηριστικά ενεργοποιήθηκαν."
 
-#: MainWindow/Window.cpp:139
+#: MainWindow/Window.cpp:138
 msgid "Loading Database"
 msgstr "Φόρτωση βάσης δεδομένων"
 
-#: MainWindow/Window.cpp:145
+#: MainWindow/Window.cpp:144
 msgid "Loading Main Window"
 msgstr "Φόρτωση κύριου παράθυρου"
 
-#: MainWindow/Window.cpp:236
+#: MainWindow/Window.cpp:239
 msgid "Searching for New Files"
 msgstr "Αναζήτηση για νέα αρχεία"
 
-#: MainWindow/Window.cpp:242
+#: MainWindow/Window.cpp:245
 msgid "Loading Plug-ins"
 msgstr "Φόρτωση προσθέτων"
 
-#: MainWindow/Window.cpp:263
+#: MainWindow/Window.cpp:266
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
@@ -2989,7 +2995,7 @@ msgstr ""
 "Η βάση δεδομένων EXIF δεν μπορεί να ανοιχτεί. Ελέγξτε αν ο κατάλογος-ρίζα "
 "των εικόνων είναι εγγράψιμος."
 
-#: MainWindow/Window.cpp:277
+#: MainWindow/Window.cpp:280
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -3004,19 +3010,19 @@ msgstr ""
 "επίδειξη, ίσως επιθυμείτε να διατηρήσετε τις αλλαγές που κάνατε σε αυτήν τη "
 "συνεδρία.</p>"
 
-#: MainWindow/Window.cpp:282
+#: MainWindow/Window.cpp:285
 msgid "Delete Demo Database"
 msgstr "Διαγραφή βάσης δεδομένων επίδειξης"
 
-#: MainWindow/Window.cpp:297
+#: MainWindow/Window.cpp:300
 msgid "Do you want to save the changes?"
 msgstr "Επιθυμείτε την αποθήκευση των τροποποιήσεων;"
 
-#: MainWindow/Window.cpp:298
+#: MainWindow/Window.cpp:301
 msgid "Save Changes?"
 msgstr "Αποθήκευση αλλαγών;"
 
-#: MainWindow/Window.cpp:336
+#: MainWindow/Window.cpp:339
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
@@ -3024,270 +3030,286 @@ msgstr ""
 "Κάποιες από τις επιλεγμένες εικόνες ανήκουν ήδη σε μια στοίβα. Επιθυμείτε "
 "την αφαίρεσή τους και τη δημιουργία μιας νέας στοίβας με αυτές;"
 
-#: MainWindow/Window.cpp:338 MainWindow/Window.cpp:343
+#: MainWindow/Window.cpp:341 MainWindow/Window.cpp:346
 msgid "Stacking Error"
 msgstr "Σφάλμα τοποθέτησης σε στοίβα"
 
-#: MainWindow/Window.cpp:342
+#: MainWindow/Window.cpp:345
 msgid "Unknown error, stack creation failed."
 msgstr "Άγνωστο σφάλμα, αποτυχία δημιουργίας στοίβας."
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
-#: MainWindow/Window.cpp:1307
+#: MainWindow/Window.cpp:423 MainWindow/Window.cpp:577
+#: MainWindow/Window.cpp:1332
 msgid "No item is selected."
 msgstr "Χωρίς επιλεγμένο αντικείμενο."
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
-#: MainWindow/Window.cpp:1308
+#: MainWindow/Window.cpp:423 MainWindow/Window.cpp:577
+#: MainWindow/Window.cpp:1333
 msgid "No Selection"
 msgstr "Καμία επιλογή"
 
-#: MainWindow/Window.cpp:468
+#: MainWindow/Window.cpp:473
+msgid ""
+"<p><b>You skipped the database update!</b></p><p>If you save your database "
+"now, the file moves and configuration updates can't be done automatically "
+"anymore and <b>you will lose the concerned category and tag thumbnails, and "
+"probably your \"untagged images\" tags permanently. Also, face recognition "
+"will probably be broken.</b> (unless you do the necessary updates by hand).</"
+"p><p>Do you really want to save your database?</p>"
+msgstr ""
+
+#: MainWindow/Window.cpp:480
+#, fuzzy
+#| msgid "Database backend"
+msgid "Database Update skipped"
+msgstr "Σύστημα υποστήριξης βάσης δεδομένων"
+
+#: MainWindow/Window.cpp:491
 msgid "Saving..."
 msgstr "Αποθήκευση..."
 
-#: MainWindow/Window.cpp:472
+#: MainWindow/Window.cpp:495
 msgid "Saving... Done"
 msgstr "Αποθήκευση ... Έγινε"
 
-#: MainWindow/Window.cpp:622
+#: MainWindow/Window.cpp:645
 msgid "There are no images to be shown."
 msgstr "Δεν υπάρχουν εικόνες προς εμφάνιση."
 
-#: MainWindow/Window.cpp:697
+#: MainWindow/Window.cpp:720
 msgid "Generate HTML..."
 msgstr "Δημιουργία HTML..."
 
-#: MainWindow/Window.cpp:701
+#: MainWindow/Window.cpp:724
 msgid "Import..."
 msgstr "Εισαγωγή..."
 
-#: MainWindow/Window.cpp:704
+#: MainWindow/Window.cpp:727
 msgid "Export/Copy Images..."
 msgstr "Εξαγωγή/αντιγραφή εικόνων..."
 
-#: MainWindow/Window.cpp:730
+#: MainWindow/Window.cpp:753
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "Διαγραφή επιλεγμένων"
 
-#: MainWindow/Window.cpp:739
+#: MainWindow/Window.cpp:762
 msgid "Open List of Files..."
 msgstr "Άνοιγμα λίστας αρχείων..."
 
-#: MainWindow/Window.cpp:743
+#: MainWindow/Window.cpp:766
 msgid "Annotate Individual Items"
 msgstr "Σημείωση μεμονωμένων αντικειμένων"
 
-#: MainWindow/Window.cpp:747
+#: MainWindow/Window.cpp:770
 msgid "Annotate Multiple Items at a Time"
 msgstr "Σημείωση πολλαπλών αντικειμένων με τη μία"
 
-#: MainWindow/Window.cpp:751
+#: MainWindow/Window.cpp:774
 msgid "Merge Images into a Stack"
 msgstr "Συγχώνευση εικόνων στη στοίβα"
 
-#: MainWindow/Window.cpp:755
+#: MainWindow/Window.cpp:778
 msgid "Remove Images from Stack"
 msgstr "Αφαίρεση εικόνων από τη στοίβα"
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:781
 msgid "Set as First Image in Stack"
 msgstr "Ορισμός ως πρώτη εικόνα στη στοίβα"
 
-#: MainWindow/Window.cpp:773
+#: MainWindow/Window.cpp:796
 msgid "View"
 msgstr "Προβολή"
 
-#: MainWindow/Window.cpp:777
+#: MainWindow/Window.cpp:800
 msgid "View (In New Window)"
 msgstr "Προβολή (σε νέο παράθυρο)"
 
-#: MainWindow/Window.cpp:780
+#: MainWindow/Window.cpp:803
 msgid "Run Slide Show"
 msgstr "Εκτέλεση παρουσίασης διαφανειών"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:808
 msgid "Run Randomized Slide Show"
 msgstr "Εκτέλεση παρουσίασης διαφανειών σε τυχαία σειρά"
 
-#: MainWindow/Window.cpp:791
+#: MainWindow/Window.cpp:814
 msgid "Collapse all stacks"
 msgstr "Σύμπτυξη όλων των στοιβών"
 
-#: MainWindow/Window.cpp:797
+#: MainWindow/Window.cpp:820
 msgid "Expand all stacks"
 msgstr "Ανάπτυξη όλων των στοιβών"
 
-#: MainWindow/Window.cpp:802
+#: MainWindow/Window.cpp:825
 msgid "Show &Oldest First"
 msgstr "Εμφάνιση πρώτα της &παλαιότερης"
 
-#: MainWindow/Window.cpp:807
+#: MainWindow/Window.cpp:830
 msgid "Show &Newest First"
 msgstr "Εμφάνιση πρώτα της &νεότερης"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:835
 msgid "Sort Selected by Date && Time"
 msgstr "Ταξινόμηση επιλεγμένων ανά ημερομηνία && ώρα"
 
-#: MainWindow/Window.cpp:815
+#: MainWindow/Window.cpp:838
 msgid "Limit View to Selection"
 msgstr "Περιορισμός προβολής στην επιλογή"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:841
 msgid "Jump to Context"
 msgstr "Άλμα στο πλαίσιο"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:846
 msgid "Lock Images"
 msgstr "Κλείδωμα εικόνων"
 
-#: MainWindow/Window.cpp:826
+#: MainWindow/Window.cpp:849
 msgid "Unlock"
 msgstr "Ξεκλείδωμα"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:852
 msgid "Change Password..."
 msgstr "Αλλαγή κωδικού πρόσβασης..."
 
-#: MainWindow/Window.cpp:833
+#: MainWindow/Window.cpp:856
 msgid "Lock Away All Other Items"
 msgstr "Κλείδωμα όλων των άλλων αντικειμένων"
 
-#: MainWindow/Window.cpp:836
+#: MainWindow/Window.cpp:859
 msgid "Lock Away Current Set of Items"
 msgstr "Κλείδωμα του τρέχοντος συνόλου των αντικειμένων"
 
-#: MainWindow/Window.cpp:840
+#: MainWindow/Window.cpp:863
 msgid "Display Images and Videos Not on Disk"
 msgstr "Εμφάνιση εικόνων και βίντεο που δεν είναι στο δίσκο"
 
-#: MainWindow/Window.cpp:843
+#: MainWindow/Window.cpp:866
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Εμφάνιση εικόνων και βίντεο με ατελείς ημερομηνίες..."
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:870
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Εμφάνιση εικόνων και βίντεο με αλλαγμένο άθροισμα MD5"
 
-#: MainWindow/Window.cpp:851
+#: MainWindow/Window.cpp:874
 msgid "Merge duplicates"
 msgstr "Συγχώνευση αντιγράφων"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:876
 msgid "Recalculate Checksum"
 msgstr "Επανυπολογισμός αθροίσματος ελέγχου"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:879
 msgid "Rescan for Images and Videos"
 msgstr "Επανασάρωση για εικόνες και βίντεο"
 
-#: MainWindow/Window.cpp:859
+#: MainWindow/Window.cpp:882
 msgid "Recreate Exif Search Database"
 msgstr "Επανακατασκευή βάσης δεδομένων αναζήτησης Exif"
 
-#: MainWindow/Window.cpp:862
+#: MainWindow/Window.cpp:885
 msgid "Read EXIF Info From Files..."
 msgstr "Ανάγνωση πληροφοριών EXIF από τα αρχεία..."
 
-#: MainWindow/Window.cpp:864
+#: MainWindow/Window.cpp:887
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Αναδημιουργία βάσης δεδομένων αναζήτησης Exif (απαιτείται η μεταγλώττιση του "
 "KPhotoAlbum με υποστήριξη Exif)"
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:888
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "Ανάγνωση πληροφοριών Exif από αρχεία... (απαιτείται η μεταγλώττιση του "
 "KPhotoAlbum με υποστήριξη Exif)"
 
-#: MainWindow/Window.cpp:871
+#: MainWindow/Window.cpp:894
 #, fuzzy
 #| msgid "Sort Selected by Date && Time"
 msgid "Sort All by Date && Time"
 msgstr "Ταξινόμηση επιλεγμένων ανά ημερομηνία && ώρα"
 
-#: MainWindow/Window.cpp:875
+#: MainWindow/Window.cpp:898
 msgid "Automatically Stack Selected Images..."
 msgstr "Αυτόματη τοποθέτηση σε στοίβα επιλεγμένων εικόνων..."
 
-#: MainWindow/Window.cpp:878
-msgid "Edit Birth Dates..."
-msgstr ""
-
-#: MainWindow/Window.cpp:881
+#: MainWindow/Window.cpp:901
 msgid "Build Thumbnails"
 msgstr "Κατασκευή εικόνων επισκόπησης"
 
-#: MainWindow/Window.cpp:884
+#: MainWindow/Window.cpp:904
 msgid "Statistics"
 msgstr "Στατιστικά"
 
-#: MainWindow/Window.cpp:893
+#: MainWindow/Window.cpp:913
 msgid "Enable All Messages"
 msgstr "Ενεργοποίηση όλων των μηνυμάτων"
 
-#: MainWindow/Window.cpp:896
+#: MainWindow/Window.cpp:916
 msgid "Configure Current View"
 msgstr "Διαμόρφωση τρέχουσας προβολής"
 
-#: MainWindow/Window.cpp:905
+#: MainWindow/Window.cpp:925
 msgid "Tree"
 msgstr "Δενδρική δομή:"
 
-#: MainWindow/Window.cpp:910
+#: MainWindow/Window.cpp:930
 msgid "Tree with User Icons"
 msgstr "Δενδρική δομή με εικονίδια του χρήστη"
 
-#: MainWindow/Window.cpp:915
+#: MainWindow/Window.cpp:935
 msgid "Icons"
 msgstr "Εικονίδια"
 
-#: MainWindow/Window.cpp:927
+#: MainWindow/Window.cpp:947
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Εμφάνιση υποδείξεων στο παράθυρο εικόνων επισκόπησης"
 
-#: MainWindow/Window.cpp:933
+#: MainWindow/Window.cpp:953
 msgid "Run KPhotoAlbum Demo"
 msgstr "Εκτέλεση της επίδειξης του KPhotoAlbum"
 
-#: MainWindow/Window.cpp:936
+#: MainWindow/Window.cpp:956
 msgid "KPhotoAlbum Feature Status"
 msgstr "Κατάσταση χαρακτηριστικών του KPhotoAlbum"
 
-#: MainWindow/Window.cpp:939
+#: MainWindow/Window.cpp:959
 msgid "Show Demo Videos"
 msgstr "Εμφάνιση βίντεο επίδειξης"
 
-#: MainWindow/Window.cpp:944
+#: MainWindow/Window.cpp:964
 msgid "Show Exif Info"
 msgstr "Εμφάνιση πληροφοριών Exif"
 
-#: MainWindow/Window.cpp:947
+#: MainWindow/Window.cpp:967
 msgid "Recreate Selected Thumbnails"
 msgstr "Επανακατασκευή επιλεγμένων εικόνων επισκόπησης"
 
-#: MainWindow/Window.cpp:950
+#: MainWindow/Window.cpp:970
 msgid "Use next video thumbnail"
 msgstr "Χρήση επόμενης εικόνας επισκόπησης βίντεο"
 
-#: MainWindow/Window.cpp:954
+#: MainWindow/Window.cpp:974
 msgid "Use previous video thumbnail"
 msgstr "Χρήση προηγούμενης εικόνας επισκόπησης βίντεο"
 
-#: MainWindow/Window.cpp:980
+#: MainWindow/Window.cpp:1000
+msgid "Won't save the database automatically, as you skipped the update."
+msgstr ""
+
+#: MainWindow/Window.cpp:1005
 msgid "Auto saving...."
 msgstr "Αυτόματη αποθήκευση...."
 
-#: MainWindow/Window.cpp:982
+#: MainWindow/Window.cpp:1007
 msgid "Auto saving.... Done"
 msgstr "Αυτόματο αποθήκευση.... Έγινε"
 
-#: MainWindow/Window.cpp:1076
+#: MainWindow/Window.cpp:1101
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -3296,7 +3318,7 @@ msgstr ""
 "<p>Αδυναμία ανοίγματος του δοσμένου index.xml καθώς ο παρεχόμενος κατάλογος "
 "δεν υπάρχει.<br />%1</p>"
 
-#: MainWindow/Window.cpp:1084
+#: MainWindow/Window.cpp:1109
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -3305,7 +3327,7 @@ msgstr ""
 "<p>Το δοσμένο αρχείο ευρετηρίου δεν υπάρχει, θέλετε να δημιουργήσετε το "
 "ακόλουθο;<br />%1/index.xml</p>"
 
-#: MainWindow/Window.cpp:1100
+#: MainWindow/Window.cpp:1125
 msgid ""
 "<p>You have configured a tag for untagged images, but either the tag itself "
 "or its category does not exist in the database.</p><p>Please review your "
@@ -3313,7 +3335,7 @@ msgid ""
 "Categories</interface></p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1177
+#: MainWindow/Window.cpp:1202
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
@@ -3325,39 +3347,39 @@ msgstr ""
 "από το τελευταίο σας πάρτι.</p><p><b>Με άλλα λόγια, οποιοσδήποτε με πρόσβαση "
 "στο αρχείο index.xml μπορεί άνετα να παρακάμψει τον κωδικό.</b></p>"
 
-#: MainWindow/Window.cpp:1182
+#: MainWindow/Window.cpp:1207
 msgid "Password Protection"
 msgstr "Προστασία κωδικού πρόσβασης"
 
-#: MainWindow/Window.cpp:1196
+#: MainWindow/Window.cpp:1221
 msgid "Type in Password to Unlock"
 msgstr "Πληκτρολογήστε τον κωδικό πρόσβασης για ξεκλείδωμα"
 
-#: MainWindow/Window.cpp:1205 MainWindow/Window.cpp:1239
+#: MainWindow/Window.cpp:1230 MainWindow/Window.cpp:1264
 msgid "Invalid password."
 msgstr "Μη έγκυρος κωδικός πρόσβασης."
 
-#: MainWindow/Window.cpp:1230
+#: MainWindow/Window.cpp:1255
 msgid "Type in Old Password"
 msgstr "Πληκτρολογήστε τον παλιό κωδικό πρόσβασης"
 
-#: MainWindow/Window.cpp:1242
+#: MainWindow/Window.cpp:1267
 msgid "Type in New Password"
 msgstr "Πληκτρολογήστε το νέο κωδικό πρόσβασης"
 
-#: MainWindow/Window.cpp:1253 Settings/SettingsDialog.cpp:76
+#: MainWindow/Window.cpp:1278 Settings/SettingsDialog.cpp:80
 msgid "General"
 msgstr "Γενικά"
 
-#: MainWindow/Window.cpp:1254 Settings/SettingsDialog.cpp:81
+#: MainWindow/Window.cpp:1279 Settings/SettingsDialog.cpp:86
 msgid "Viewer"
 msgstr "Προβολέας"
 
-#: MainWindow/Window.cpp:1267
+#: MainWindow/Window.cpp:1292
 msgid "Annotation Dialog"
 msgstr "Διάλογος σημειώσεων"
 
-#: MainWindow/Window.cpp:1421
+#: MainWindow/Window.cpp:1446
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
@@ -3365,7 +3387,7 @@ msgstr ""
 "<p>Θέλετε πραγματικά να γίνει ενεργοποίηση όλων των μηνυμάτων που επιλέξατε "
 "προηγουμένως να μην εμφανιστούν ξανά;</p>"
 
-#: MainWindow/Window.cpp:1432
+#: MainWindow/Window.cpp:1457
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -3381,15 +3403,15 @@ msgstr ""
 "KPhotoAlbum θα συνεχίσει να εκτελείται, αλλά δεν είναι εντελώς απίθανο να "
 "καταρρεύσει αργότερα εξαιτίας της παράλειψης του make install.</p>"
 
-#: MainWindow/Window.cpp:1432
+#: MainWindow/Window.cpp:1457
 msgid "Internal Error"
 msgstr "Εσωτερικό σφάλμα"
 
-#: MainWindow/Window.cpp:1617
+#: MainWindow/Window.cpp:1642
 msgid "Open List of Files"
 msgstr "Άνοιγμα λίστας των αρχείων"
 
-#: MainWindow/Window.cpp:1617
+#: MainWindow/Window.cpp:1642
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3397,22 +3419,22 @@ msgstr ""
 "Μπορείτε να ανοίξετε ένα σύνολο αρχείων από τη θέση του αρχικού (root) "
 "καταλόγου εικόνων του KPhotoAlbum καταγράφοντας τα αρχεία εδώ."
 
-#: MainWindow/Window.cpp:1633
+#: MainWindow/Window.cpp:1658
 msgid "No images matching your input were found."
 msgstr "Δεν βρέθηκαν εικόνες που να ταιριάζουν στα δεδομένα που δώσατε."
 
-#: MainWindow/Window.cpp:1633
+#: MainWindow/Window.cpp:1658
 msgid "No Matches"
 msgstr "Κανένα ταίριασμα"
 
-#: MainWindow/Window.cpp:1794
+#: MainWindow/Window.cpp:1814
 #, fuzzy, no-c-format, kde-format
 #| msgid "Thumbnail image size:"
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "Μέγεθος εικόνας επισκόπησης:"
 
-#: MainWindow/Window.cpp:1833
+#: MainWindow/Window.cpp:1853
 #, fuzzy
 #| msgid ""
 #| "<p>Unable to find MPlayer on the system</p><p>KPhotoAlbum needs MPlayer "
@@ -3427,13 +3449,13 @@ msgstr ""
 "το Mplayer για την εξαγωγή εικόνων επισκόπησης βίντεο εκτός των άλλων. "
 "Εγκαταστήστε το πακέτο Mplayer2</p>"
 
-#: MainWindow/Window.cpp:1836
+#: MainWindow/Window.cpp:1856
 #, fuzzy
 #| msgid "File not available"
 msgid "Video thumbnails are not available"
 msgstr "Το αρχείο δεν είναι διαθέσιμο"
 
-#: MainWindow/Window.cpp:1842
+#: MainWindow/Window.cpp:1862
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3445,11 +3467,11 @@ msgstr ""
 "παρακαλώ εγκαταστήστε το αν γίνεται, καθώς η έκδοση αυτή έχει πολύ καλύτερη "
 "υποστήριξη για εξαγωγή εικόνων επισκόπησης από βίντεο.</p>"
 
-#: MainWindow/Window.cpp:1845
+#: MainWindow/Window.cpp:1865
 msgid "MPlayer is too old"
 msgstr "Το Mplayer είναι πολύ παλαιό"
 
-#: MainWindow/Window.cpp:1867
+#: MainWindow/Window.cpp:1887
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3563,6 +3585,44 @@ msgid ""
 "Version mismatch between Remote Client and KPhotoAlbum on the desktop.\n"
 "Desktop protocol version: %1\n"
 "Remote Control protocol version: %2"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:66
+msgid "Filter (Alt+f)"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:105
+msgid "unset"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:111
+msgid ""
+"Set the date of birth for items (say people) here, and then see their age "
+"when viewing the images."
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:169
+msgid "Name"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:169
+msgid "Birthday"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:236
+#, kde-format
+msgid "Birthday of %1:"
+msgstr ""
+
+#: Settings/BirthdayPage.cpp:244
+#, fuzzy
+#| msgctxt "@action:inmenu"
+#| msgid "Annotate..."
+msgid "Enter a date..."
+msgstr "Σχολιασμός..."
+
+#: Settings/BirthdayPage.cpp:291
+msgid "<i>Select an item on the left to edit the birthday</i>"
 msgstr ""
 
 #: Settings/CategoryItem.cpp:160
@@ -3859,13 +3919,13 @@ msgid ""
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:207
+#: Settings/FaceManagementPage.cpp:210
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
 msgstr "Επιθυμείτε την αποθήκευση των τροποποιήσεων;"
 
-#: Settings/FaceManagementPage.cpp:232
+#: Settings/FaceManagementPage.cpp:235
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
@@ -4301,33 +4361,37 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Εμπιστοσύνη στις χρονικές σφραγίδες;"
 
-#: Settings/SettingsDialog.cpp:77
+#: Settings/SettingsDialog.cpp:81
 msgid "File Searching & Versions"
 msgstr "Αναζήτηση και εκδόσεις αρχείου"
 
-#: Settings/SettingsDialog.cpp:78
+#: Settings/SettingsDialog.cpp:82
 msgid "Thumbnail View"
 msgstr "Προβολή εικόνων επισκόπησης"
 
-#: Settings/SettingsDialog.cpp:79
+#: Settings/SettingsDialog.cpp:83
 msgid "Categories"
 msgstr "Κατηγορίες"
 
-#: Settings/SettingsDialog.cpp:80
+#: Settings/SettingsDialog.cpp:84
+msgid "Birthdays"
+msgstr ""
+
+#: Settings/SettingsDialog.cpp:85
 #, fuzzy
 #| msgid "New Group"
 msgid "Tag Groups"
 msgstr "Νέα ομάδα"
 
-#: Settings/SettingsDialog.cpp:87
+#: Settings/SettingsDialog.cpp:92
 msgid "EXIF/IPTC Information"
 msgstr "Πληροφορίες EXIF/IPTC"
 
-#: Settings/SettingsDialog.cpp:89
+#: Settings/SettingsDialog.cpp:94
 msgid "Database backend"
 msgstr "Σύστημα υποστήριξης βάσης δεδομένων"
 
-#: Settings/SettingsDialog.cpp:91
+#: Settings/SettingsDialog.cpp:96
 msgid "Face management"
 msgstr ""
 
@@ -4657,9 +4721,32 @@ msgstr ""
 "μπορείτε να συνεχίσετε την περιήγηση μέχρι να πατήσετε <i>Εμφάνιση εικόνων</"
 "i></p>"
 
-#: Settings/UntaggedGroupBox.cpp:56
+#: Settings/UntaggedGroupBox.cpp:32
+msgid ""
+"If a tag is selected here, it will be added to new (untagged) images "
+"automatically, so that they can be easily found. It will be removed as soon "
+"as the image is annotated. This tag won't show up in the annotation dialog "
+"and can't be used for \"normal\" tagging."
+msgstr ""
+
+#: Settings/UntaggedGroupBox.cpp:60
 msgid "None Selected"
 msgstr "Κανένα επιλεγμένο"
+
+#: Settings/UntaggedGroupBox.cpp:118
+#, fuzzy
+#| msgid "New Sub Category Name:"
+msgid "New tag added"
+msgstr "Όνομα νέας υποκατηγορίας:"
+
+#: Settings/UntaggedGroupBox.cpp:119
+#, kde-format
+msgid ""
+"<p>The new tag \"%1\" has been added to the category \"%2\" and will be used "
+"for untagged images now.</p><p>Please save now, so that this tag will be "
+"stored in the database. Otherwise, it will be lost, and you will get an "
+"error about this tag being not present on the next start.</p>"
+msgstr ""
 
 #: Settings/ViewerPage.cpp:33
 msgid "Running Slide Show From Thumbnail View"
@@ -5342,7 +5429,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Αδυναμία αντιγραφής του '%1' στο '%2'."
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:472
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
 msgid "Error Running Demo"
 msgstr "Σφάλμα εκτέλεσης της επίδειξης"
 
@@ -5806,52 +5893,63 @@ msgstr "Εμφάνιση μεγέθους εικόνας"
 msgid "Show Rating"
 msgstr "Εμφάνιση βαθμολογίας"
 
-#: XMLDB/FileReader.cpp:58
+#: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
 "p><p>Chances are you will be able to read this file, but when writing it "
 "back, information saved in the newer version will be lost</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:61
+#: XMLDB/FileReader.cpp:65
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:106
+#: XMLDB/FileReader.cpp:110
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "Σφάλμα στο αρχείο %1: μη αναμενόμενο στοιχείο: '%2'"
 
-#: XMLDB/FileReader.cpp:112
+#: XMLDB/FileReader.cpp:116
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "Αδυναμία εύρεσης της ετικέτας 'Options' στο αρχείο διαμόρφωσης %1."
 
-#: XMLDB/FileReader.cpp:114
+#: XMLDB/FileReader.cpp:118
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "Αδυναμία εύρεσης της ετικέτας 'Images' στο αρχείο διαμόρφωσης %1."
 
-#: XMLDB/FileReader.cpp:212
+#: XMLDB/FileReader.cpp:219
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with old category names "
-"by renaming them. As a consequence, existing tag and category thumbnails "
-"have to be moved accordingly.</p><p>If you select \"Yes\", please be sure to "
-"save the database as your next step. If you select \"No\", you won't see the "
-"thumbnails for the respective categories now. If you do so, please don't "
-"save the database. Otherwise, the thumbnails will be lost!</p><p>Should the "
-"existing category and tag thumbnails be updated now?</p>"
+"<p>This version of KPhotoAlbum will fix some issues with category names. "
+"This is a database internal update which won't affect the displayed category "
+"names or any tag data. Anyway, some files (category and tag thumbnails) have "
+"to be moved and the configuration file has to be fixed. If you want to know "
+"what exactly happens, read \"Differences to version 5\" in "
+"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
+"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
+"\" will skip the update. Only choose this if you don't want to or can't "
+"change any data now. You will be asked for the update on the next start "
+"again.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:220 XMLDB/FileReader.cpp:277
-msgid "index.xml Update"
+#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
+#, fuzzy
+#| msgid "Database backend"
+msgid "Database Update"
+msgstr "Σύστημα υποστήριξης βάσης δεδομένων"
+
+#: XMLDB/FileReader.cpp:235
+msgid ""
+"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
+"some features in the running session (missing category and tag thumbnails, "
+"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
+"your database or this will become permanent!</b></p><p>To run the update "
+"later, close KPhotoAlbum without saving the database and don't use face "
+"recognition. You will be asked again for the update on the next start.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:278
-msgid "Don't forget to save your database now!"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:391
+#: XMLDB/FileReader.cpp:412
 #, fuzzy
 #| msgid ""
 #| "<p>Your images/videos are not sorted, which means that navigating using "
@@ -5889,7 +5987,7 @@ msgstr ""
 "δεδομένων. Σημειώστε ότι πρέπει να επεκτείνετε όλες τις στοίβες για να γίνει "
 "η ταξινόμηση.</p>"
 
-#: XMLDB/FileReader.cpp:401
+#: XMLDB/FileReader.cpp:422
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5906,11 +6004,11 @@ msgstr ""
 "κάνετε αυτό, θα ερωτηθείτε για τον τρόπο διόρθωσης των πληροφοριών που "
 "λείπουν.</p>"
 
-#: XMLDB/FileReader.cpp:408
+#: XMLDB/FileReader.cpp:429
 msgid "Images/Videos Are Not Sorted"
 msgstr "Αταξινόμητες εικόνες/βίντεο"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:444
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5928,11 +6026,11 @@ msgstr ""
 "από τις εικόνες στην προβολή εικόνων επισκόπησης - αυτό είναι όλο - οπότε "
 "δεν είναι επείγον να το κάνετε.</p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:449
 msgid "Not All Images Have Size Information"
 msgstr "Πληροφορίες μεγέθους όχι για όλες τις εικόνες"
 
-#: XMLDB/FileReader.cpp:451
+#: XMLDB/FileReader.cpp:472
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5956,31 +6054,31 @@ msgstr ""
 "προσθέστε στο τέλος τη συμβολοσειρά όπως ακριβώς ορίζεται και η μεταβλητή "
 "περιβάλλοντος <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:458
+#: XMLDB/FileReader.cpp:479
 msgid "No default setup file found"
 msgstr "Δεν βρέθηκε προκαθορισμένο αρχείο ρυθμίσεων"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:493
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Αδυναμία ανοίγματος του '%1' για ανάγνωση"
 
-#: XMLDB/FileReader.cpp:485
+#: XMLDB/FileReader.cpp:506
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "Γραμμή %1 στήλη %2 στο αρχείο %3: %4"
 
-#: XMLDB/FileReader.cpp:487
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Αποτυχία επαναφοράς από εφεδρικό αντίγραφο: %1"
 
-#: XMLDB/FileReader.cpp:498
+#: XMLDB/FileReader.cpp:519
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Σφάλμα στο αρχείο %1: Δε βρέθηκαν στοιχεία"
 
-#: XMLDB/FileReader.cpp:504
+#: XMLDB/FileReader.cpp:525
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -6071,6 +6169,40 @@ msgstr "Μετατροπή βάσης δεδομένων"
 
 
 
+
+#, fuzzy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#, fuzzy
 
 
 

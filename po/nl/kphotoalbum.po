@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-01-19 01:47+0000\n"
-"PO-Revision-Date: 2015-01-19 10:36+0100\n"
-"Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
+"POT-Creation-Date: 2015-03-18 01:48+0000\n"
+"PO-Revision-Date: 2015-03-17 12:07+0100\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -340,12 +340,12 @@ msgid "Copy tags from previous image"
 msgstr "Tags vanuit vorige afbeelding kopiëren"
 
 #: AnnotationDialog/Dialog.cpp:1241 AnnotationDialog/ImagePreviewWidget.cpp:64
-#: MainWindow/Window.cpp:762
+#: MainWindow/Window.cpp:785
 msgid "Rotate counterclockwise"
 msgstr "Linksom draaien"
 
 #: AnnotationDialog/Dialog.cpp:1244 AnnotationDialog/ImagePreviewWidget.cpp:70
-#: MainWindow/Window.cpp:767
+#: MainWindow/Window.cpp:790
 msgid "Rotate clockwise"
 msgstr "Rechtsom draaien"
 
@@ -380,6 +380,24 @@ msgstr ""
 "voeg deze categorie toe en markeer deze als te positioneren. Als deze tag "
 "niet meer in de database voor herkenning aanwezig moet zijn, dan kan deze in "
 "de dialoog voor instellingen worden verwijderd.</p>"
+
+#: AnnotationDialog/ImagePreview.cpp:598
+msgid ""
+"<p>Face recognition is in a quite early development state. There are still "
+"many tweaks to do.</p><p>Sometimes, libkface needs quite a long time to "
+"train the database (even some minutes). KPhotoAlbum will be unresponsive in "
+"the meantime, but it won't crash; please be a bit patient if this happens.</"
+"p><p>However, normally, the training will happen in a few seconds.</p>"
+msgstr ""
+"<p>Gezichtsherkenning is in een tamelijk vroege staat van ontwikkeling. Er "
+"zijn nog zaken te doen.</p><p>Soms heeft libkface een lange tijd om de "
+"database te trainen (zelfs enige minuten). KPhotoAlbum zal dan niet "
+"reageren, maar het zal niet crashen; wees een beetje geduldig als dat "
+"gebeurd.</p><p>Normaal zal het trainen in een paar seconden gebeuren.</p>"
+
+#: AnnotationDialog/ImagePreview.cpp:604
+msgid "Face database training"
+msgstr "Trainen van database met gezichten"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate previous image"
@@ -431,7 +449,7 @@ msgstr ""
 "ingesteld, dan zal de database voor gezichtsherkenning automatisch met die "
 "tag worden getraind."
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:311
+#: AnnotationDialog/ImagePreviewWidget.cpp:312
 msgctxt "@info:tooltip"
 msgid ""
 "If you enable <emphasis>positionable tags</emphasis> for at least one "
@@ -443,7 +461,14 @@ msgstr ""
 "Categorieën</interface>, dan kunt u specifieke gebieden in afbeeldingen met "
 "tags associëren."
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:317
+#: AnnotationDialog/ImagePreviewWidget.cpp:318
+msgctxt "@info:tooltip"
+msgid "Areas on an image can only be shown in single-image annotation mode."
+msgstr ""
+"Gebieden op een afbeelding kunnen alleen getoond worden in annotatie-modus "
+"van een enkele afbeelding."
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:325
 msgctxt "@info"
 msgid ""
 "To use face detection, enable <emphasis>positionable tags</emphasis> for at "
@@ -453,6 +478,13 @@ msgstr ""
 "Om gezichtsherkenning te gebruiken schakelt u <emphasis>te positioneren "
 "tags</emphasis> in voor minstens een categorie in in <interface>Instellingen|"
 "KPhotoAlbum instellen...|Categorieën</interface>."
+
+#: AnnotationDialog/ImagePreviewWidget.cpp:331
+msgctxt "@info"
+msgid "Face detection is only available in single-image annotation mode."
+msgstr ""
+"Gezichtsherkenning is alleen beschikbaar in annotatie-modus van een enkele "
+"afbeelding."
 
 #: AnnotationDialog/KDateEdit.cpp:88
 msgid "tomorrow"
@@ -483,25 +515,25 @@ msgid "Rename..."
 msgstr "Hernoemen..."
 
 #: AnnotationDialog/ListSelect.cpp:325
-msgid "<b>Sub Categories</b>"
-msgstr "<b>Subcategorieën</b>"
+msgid "<b>Tag Groups</b>"
+msgstr "<b>Groepen van tags voorzien</b>"
 
 #: AnnotationDialog/ListSelect.cpp:333
-msgid "Super Categories"
-msgstr "Supercategorieën"
+msgid "Tag groups"
+msgstr "Groepen van tags voorzien"
 
 #: AnnotationDialog/ListSelect.cpp:350
-msgid "New Category..."
-msgstr "Nieuwe categorie..."
+msgid "Add this tag to a new tag group..."
+msgstr "Deze tag aan een nieuwe taggroep toevoegen..."
 
 #: AnnotationDialog/ListSelect.cpp:353
-msgid "Create Subcategory..."
-msgstr "Subcategorie aanmaken..."
+msgid "Make this tag a tag group and add a tag..."
+msgstr "Van deze tag een taggroep maken en een tag toevoegen..."
 
 #: AnnotationDialog/ListSelect.cpp:359
 #, kde-format
-msgid "Take item out of category %1"
-msgstr "Item uit categorie %1 halen"
+msgid "Remove from tag group %1"
+msgstr "Uit taggroep %1 verwijderen"
 
 #: AnnotationDialog/ListSelect.cpp:362
 msgid "<b>Sorting</b>"
@@ -561,21 +593,21 @@ msgstr ""
 msgid "Really Rename %1?"
 msgstr "\"%1\" hernoemen?"
 
-#: AnnotationDialog/ListSelect.cpp:461
-msgid "New Super Category"
-msgstr "Nieuwe supercategorie"
+#: AnnotationDialog/ListSelect.cpp:462
+msgid "New tag group"
+msgstr "Nieuwe taggroep"
 
-#: AnnotationDialog/ListSelect.cpp:461
-msgid "New Super Category Name:"
-msgstr "Naam nieuwe supercategorie:"
+#: AnnotationDialog/ListSelect.cpp:463
+msgid "Name for the new tag group the tag will be added to:"
+msgstr "Naam voor de nieuwe taggroep waaraan de tag zal worden toegevoegd:"
 
-#: AnnotationDialog/ListSelect.cpp:470
-msgid "New Sub Category"
-msgstr "Nieuwe subcategorie"
+#: AnnotationDialog/ListSelect.cpp:474
+msgid "Add a tag"
+msgstr "Een tag toevoegen"
 
-#: AnnotationDialog/ListSelect.cpp:470
-msgid "New Sub Category Name:"
-msgstr "Naam nieuwe subcategorie:"
+#: AnnotationDialog/ListSelect.cpp:475
+msgid "Name for the tag to be added to this tag group:"
+msgstr "Naam voor de tag die aan deze taggroep wordt toegevoegd:"
 
 #: AnnotationDialog/ProposedFaceDialog.cpp:58
 #, kde-format
@@ -689,7 +721,6 @@ msgstr "Pauzeren"
 
 #. i18n: ectx: property (text), widget (QPushButton, pushButton)
 #: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
-#: MainWindow/BirthDatesDialog.cpp:71
 msgid "Close"
 msgstr "Sluiten"
 
@@ -748,7 +779,7 @@ msgstr[0] "Video"
 msgstr[1] "%1 video's"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:82
+#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:81
 msgid "Images"
 msgstr "Afbeeldingen"
 
@@ -770,7 +801,7 @@ msgctxt "@action Search button in the browser view."
 msgid "Search"
 msgstr "Zoeken"
 
-#: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:29
+#: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:30
 msgid "Untagged Images"
 msgstr "Afbeeldingen zonder tags"
 
@@ -814,7 +845,7 @@ msgstr ""
 msgid "Feature has not been configured"
 msgstr "Mogelijkheid is niet ingesteld"
 
-#: CategoryListView/CheckDropItem.cpp:110
+#: CategoryListView/CheckDropItem.cpp:111
 #, kde-format
 msgid ""
 "<p>You have just dragged an item onto another: this will make the dragged "
@@ -849,7 +880,7 @@ msgstr[1] ""
 "selecteren.</p><p>Was het de bedoeling om van \"%2\" subcategorieën van "
 "\"%3\" te maken?</p>"
 
-#: CategoryListView/CheckDropItem.cpp:122
+#: CategoryListView/CheckDropItem.cpp:123
 msgid "Move Items"
 msgstr "Items verplaatsen"
 
@@ -1104,14 +1135,14 @@ msgstr ""
 "aantal afbeeldingen kan dit enige tijd in beslag nemen.<br/>Dit geldt echter "
 "alleen als er nieuwe afbeeldingen zijn gevonden.</p>"
 
-#: DB/NewImageFinder.cpp:327
+#: DB/NewImageFinder.cpp:332
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] "<p><b>Bezig de controlesom te bereken voor %1 bestand</b></p>"
 msgstr[1] "<p><b>Bezig de controlesom te bereken voor %1 bestanden</b></p>"
 
-#: DB/NewImageFinder.cpp:328
+#: DB/NewImageFinder.cpp:333
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -1119,7 +1150,7 @@ msgstr ""
 "<p>Door een controlesom op te slaan voor elke afbeelding kan KPhotoAlbum "
 "afbeeldingen terugvinden als ze op de schijf zijn verplaatst.</p>"
 
-#: DB/NewImageFinder.cpp:371
+#: DB/NewImageFinder.cpp:376
 msgid "Following files could not be read:"
 msgstr "De volgende bestanden konden niet worden gelezen:"
 
@@ -1199,7 +1230,7 @@ msgstr ""
 msgid "Override image dates"
 msgstr "Afbeeldingsdatums overschrijven"
 
-#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:107
+#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:112
 msgid "Settings"
 msgstr "Instellingen"
 
@@ -1974,32 +2005,32 @@ msgid "&Maintenance"
 msgstr "&Onderhoud"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:72 Settings/SettingsDialog.cpp:83
+#: kphotoalbumui.rc:71 Settings/SettingsDialog.cpp:88
 msgid "Plugins"
 msgstr "Plug-ins"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:74
+#: kphotoalbumui.rc:73
 msgid "Export"
 msgstr "Exporteren"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:78
+#: kphotoalbumui.rc:77
 msgid "Import"
 msgstr "Importeren"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:86
+#: kphotoalbumui.rc:85
 msgid "Batch Plugins"
 msgstr "Batch-plugins"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:90
+#: kphotoalbumui.rc:89
 msgid "Tools"
 msgstr "Hulpmiddelen"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:107
+#: kphotoalbumui.rc:106
 msgid "Main Toolbar"
 msgstr "Hoofdwerkbalk"
 
@@ -2231,30 +2262,6 @@ msgstr ""
 #: MainWindow/AutoStackImages.cpp:103
 msgid "Skip images that are already in a stack"
 msgstr "Sla afbeeldingen over die zich al op de stapel bevinden"
-
-#: MainWindow/BirthDatesDialog.cpp:38
-msgid "Configure Birth Dates"
-msgstr "Geboortedata instellen"
-
-#: MainWindow/BirthDatesDialog.cpp:41
-msgid ""
-"Set the date of birth for items (say people) here,\n"
-"and then see their age when viewing the images."
-msgstr ""
-"Stel de geboortedata voor items (zeg mensen) hier in,\n"
-"en zie dan hun leeftijd bij bekijken van de afbeeldingen."
-
-#: MainWindow/BirthDatesDialog.cpp:53
-msgid "Current Category"
-msgstr "Huidige categorie"
-
-#: MainWindow/BirthDatesDialog.cpp:57
-msgid "Filter (Alt+f)"
-msgstr "Filter (Alt+f)"
-
-#: MainWindow/CalendarPopup.cpp:37
-msgid "unset"
-msgstr "niet ingesteld"
 
 #: MainWindow/CategoryImagePopup.cpp:61
 msgid "Show Category Editor"
@@ -2802,11 +2809,12 @@ msgstr ""
 "Als u een specifieke tag gebruikt om aan te geven dat een afbeelding van "
 "tags is voorzien dan kunt u die hier specificeren."
 
-#: MainWindow/StatisticsDialog.cpp:116 Settings/UntaggedGroupBox.cpp:36
+#: MainWindow/StatisticsDialog.cpp:116 Settings/BirthdayPage.cpp:58
+#: Settings/UntaggedGroupBox.cpp:40
 msgid "Category:"
 msgstr "Categorie:"
 
-#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:43
+#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:47
 msgid "Tag:"
 msgstr "Tag:"
 
@@ -2832,7 +2840,7 @@ msgstr "Grootte opslag van miniatuurafbeelding verminderen"
 msgid "Increase thumbnail storage size"
 msgstr "Grootte opslag van miniatuurafbeelding verhogen"
 
-#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:736
+#: MainWindow/TokenEditor.cpp:38 MainWindow/Window.cpp:759
 msgid "Remove Tokens"
 msgstr "Tokens verwijderen"
 
@@ -2939,23 +2947,23 @@ msgstr "Functionaliteitscontrole"
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Gefeliciteerd: alle dynamische mogelijkheden zijn geactiveerd."
 
-#: MainWindow/Window.cpp:139
+#: MainWindow/Window.cpp:138
 msgid "Loading Database"
 msgstr "Database wordt geladen"
 
-#: MainWindow/Window.cpp:145
+#: MainWindow/Window.cpp:144
 msgid "Loading Main Window"
 msgstr "Hoofdvenster wordt geladen"
 
-#: MainWindow/Window.cpp:236
+#: MainWindow/Window.cpp:239
 msgid "Searching for New Files"
 msgstr "Naar nieuwe bestanden zoeken"
 
-#: MainWindow/Window.cpp:242
+#: MainWindow/Window.cpp:245
 msgid "Loading Plug-ins"
 msgstr "Plugins laden"
 
-#: MainWindow/Window.cpp:263
+#: MainWindow/Window.cpp:266
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
@@ -2963,7 +2971,7 @@ msgstr ""
 "De EXIF-database kon niet worden geopend. Controleer of de hoofdmap van de "
 "afbeeldingen schrijfbaar is."
 
-#: MainWindow/Window.cpp:277
+#: MainWindow/Window.cpp:280
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
 "KPhotoAlbum demo. The demo database was copied to /tmp, should it be deleted "
@@ -2977,19 +2985,19 @@ msgstr ""
 "daar blijven staan en enige schijfruimte in beslag nemen. Echter, als u de "
 "database laat staan kunt u hem altijd in een later stadium weer openen.</p>"
 
-#: MainWindow/Window.cpp:282
+#: MainWindow/Window.cpp:285
 msgid "Delete Demo Database"
 msgstr "Demo-database verwijderen"
 
-#: MainWindow/Window.cpp:297
+#: MainWindow/Window.cpp:300
 msgid "Do you want to save the changes?"
 msgstr "Wilt u de wijzigingen opslaan?"
 
-#: MainWindow/Window.cpp:298
+#: MainWindow/Window.cpp:301
 msgid "Save Changes?"
 msgstr "Wijzigingen opslaan?"
 
-#: MainWindow/Window.cpp:336
+#: MainWindow/Window.cpp:339
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
@@ -2997,268 +3005,291 @@ msgstr ""
 "Sommige van de geselecteerde afbeeldingen behoren bij een stapel. Wilt u "
 "deze daaruit verwijderen en een compleet nieuwe aanmaken?"
 
-#: MainWindow/Window.cpp:338 MainWindow/Window.cpp:343
+#: MainWindow/Window.cpp:341 MainWindow/Window.cpp:346
 msgid "Stacking Error"
 msgstr "Stacking-fout"
 
-#: MainWindow/Window.cpp:342
+#: MainWindow/Window.cpp:345
 msgid "Unknown error, stack creation failed."
 msgstr "Onbekende fout, stack aanmaken is mislukt."
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
-#: MainWindow/Window.cpp:1307
+#: MainWindow/Window.cpp:423 MainWindow/Window.cpp:577
+#: MainWindow/Window.cpp:1332
 msgid "No item is selected."
 msgstr "Er is geen item geselecteerd."
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
-#: MainWindow/Window.cpp:1308
+#: MainWindow/Window.cpp:423 MainWindow/Window.cpp:577
+#: MainWindow/Window.cpp:1333
 msgid "No Selection"
 msgstr "Geen selectie"
 
-#: MainWindow/Window.cpp:468
+#: MainWindow/Window.cpp:473
+msgid ""
+"<p><b>You skipped the database update!</b></p><p>If you save your database "
+"now, the file moves and configuration updates can't be done automatically "
+"anymore and <b>you will lose the concerned category and tag thumbnails, and "
+"probably your \"untagged images\" tags permanently. Also, face recognition "
+"will probably be broken.</b> (unless you do the necessary updates by hand).</"
+"p><p>Do you really want to save your database?</p>"
+msgstr ""
+"<p><b>U hebt het bijwerken van de database overgeslagen!</b></p><p>Als u uw "
+"database nu opslaat, kunnen de verplaatsingen van bestanden en bijgewerkte "
+"instellingen niet meer automatisch worden gedaan en <b>zult u de betrokken "
+"categorie en miniaturentags verliezen en zeer waarschijnlijk ook permanent "
+"uw tags van \"afbeeldingen zonder tags\". Ook zal gezichtsherkenning zeer "
+"waarschijnlijk niet werken.</b> (tenzij u het noodzakelijke bijwerken "
+"handmatig doet).</p><p>Wilt u uw database opslaan?</p>"
+
+#: MainWindow/Window.cpp:480
+msgid "Database Update skipped"
+msgstr "Bijwerken van database overgeslagen"
+
+#: MainWindow/Window.cpp:491
 msgid "Saving..."
 msgstr "Bezig met opslaan..."
 
-#: MainWindow/Window.cpp:472
+#: MainWindow/Window.cpp:495
 msgid "Saving... Done"
 msgstr "Opslaan... gereed"
 
-#: MainWindow/Window.cpp:622
+#: MainWindow/Window.cpp:645
 msgid "There are no images to be shown."
 msgstr "Er zijn geen afbeeldingen om weer te geven."
 
-#: MainWindow/Window.cpp:697
+#: MainWindow/Window.cpp:720
 msgid "Generate HTML..."
 msgstr "HTML aanmaken..."
 
-#: MainWindow/Window.cpp:701
+#: MainWindow/Window.cpp:724
 msgid "Import..."
 msgstr "Importeren..."
 
-#: MainWindow/Window.cpp:704
+#: MainWindow/Window.cpp:727
 msgid "Export/Copy Images..."
 msgstr "Afbeeldingen exporteren/kopiëren..."
 
-#: MainWindow/Window.cpp:730
+#: MainWindow/Window.cpp:753
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "Selectie verwijderen"
 
-#: MainWindow/Window.cpp:739
+#: MainWindow/Window.cpp:762
 msgid "Open List of Files..."
 msgstr "Lijst met bestanden openen..."
 
-#: MainWindow/Window.cpp:743
+#: MainWindow/Window.cpp:766
 msgid "Annotate Individual Items"
 msgstr "Individuele items annoteren"
 
-#: MainWindow/Window.cpp:747
+#: MainWindow/Window.cpp:770
 msgid "Annotate Multiple Items at a Time"
 msgstr "Meerdere items tegelijk annoteren"
 
-#: MainWindow/Window.cpp:751
+#: MainWindow/Window.cpp:774
 msgid "Merge Images into a Stack"
 msgstr "Afbeeldingen in een stack zetten"
 
-#: MainWindow/Window.cpp:755
+#: MainWindow/Window.cpp:778
 msgid "Remove Images from Stack"
 msgstr "Afbeeldingen uit stack verwijderen"
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:781
 msgid "Set as First Image in Stack"
 msgstr "Als eerste afbeelding in een stapel zetten"
 
-#: MainWindow/Window.cpp:773
+#: MainWindow/Window.cpp:796
 msgid "View"
 msgstr "Tonen"
 
-#: MainWindow/Window.cpp:777
+#: MainWindow/Window.cpp:800
 msgid "View (In New Window)"
 msgstr "Tonen (in nieuw venster)"
 
-#: MainWindow/Window.cpp:780
+#: MainWindow/Window.cpp:803
 msgid "Run Slide Show"
 msgstr "Diavoorstelling tonen"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:808
 msgid "Run Randomized Slide Show"
 msgstr "Dia's in willekeurige volgorde"
 
-#: MainWindow/Window.cpp:791
+#: MainWindow/Window.cpp:814
 msgid "Collapse all stacks"
 msgstr "Alle stapels invouwen"
 
-#: MainWindow/Window.cpp:797
+#: MainWindow/Window.cpp:820
 msgid "Expand all stacks"
 msgstr "Alle stapels uitbreiden"
 
-#: MainWindow/Window.cpp:802
+#: MainWindow/Window.cpp:825
 msgid "Show &Oldest First"
 msgstr "&Oudste als eerste tonen"
 
-#: MainWindow/Window.cpp:807
+#: MainWindow/Window.cpp:830
 msgid "Show &Newest First"
 msgstr "&Nieuwste als eerste tonen"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:835
 msgid "Sort Selected by Date && Time"
 msgstr "Selectie sorteren op datum en tijd"
 
-#: MainWindow/Window.cpp:815
+#: MainWindow/Window.cpp:838
 msgid "Limit View to Selection"
 msgstr "Weergave beperken tot selectie"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:841
 msgid "Jump to Context"
 msgstr "Naar context gaan"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:846
 msgid "Lock Images"
 msgstr "Afbeeldingen vergrendelen"
 
-#: MainWindow/Window.cpp:826
+#: MainWindow/Window.cpp:849
 msgid "Unlock"
 msgstr "Ontgrendelen"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:852
 msgid "Change Password..."
 msgstr "Wachtwoord wijzigen..."
 
-#: MainWindow/Window.cpp:833
+#: MainWindow/Window.cpp:856
 msgid "Lock Away All Other Items"
 msgstr "Alle andere items wegzetten"
 
-#: MainWindow/Window.cpp:836
+#: MainWindow/Window.cpp:859
 msgid "Lock Away Current Set of Items"
 msgstr "Huidige set items wegzetten"
 
-#: MainWindow/Window.cpp:840
+#: MainWindow/Window.cpp:863
 msgid "Display Images and Videos Not on Disk"
 msgstr "Afbeeldingen en video's die niet op schijf staan weergeven"
 
-#: MainWindow/Window.cpp:843
+#: MainWindow/Window.cpp:866
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Afbeeldingen en video's met onvolledige datums weergeven..."
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:870
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Afbeeldingen en video's met gewijzigde MD5-controlesommen weergeven"
 
-#: MainWindow/Window.cpp:851
+#: MainWindow/Window.cpp:874
 msgid "Merge duplicates"
 msgstr "Duplicaten samenvoegen"
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:876
 msgid "Recalculate Checksum"
 msgstr "Controlesom herberekenen"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:879
 msgid "Rescan for Images and Videos"
 msgstr "Opnieuw naar afbeeldingen en video's zoeken"
 
-#: MainWindow/Window.cpp:859
+#: MainWindow/Window.cpp:882
 msgid "Recreate Exif Search Database"
 msgstr "EXIF-database opnieuw aanmaken"
 
-#: MainWindow/Window.cpp:862
+#: MainWindow/Window.cpp:885
 msgid "Read EXIF Info From Files..."
 msgstr "EXIF-informatie van bestanden lezen..."
 
-#: MainWindow/Window.cpp:864
+#: MainWindow/Window.cpp:887
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "EXIF-zoekdatabase opnieuw aanmaken (het is nodig om KPhotoAlbum met Exif-"
 "ondersteuning te compileren)"
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:888
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 "EXIF-informatie uit bestanden lezen... (het is nodig om KPhotoAlbum met Exif-"
 "ondersteuning te compileren)"
 
-#: MainWindow/Window.cpp:871
+#: MainWindow/Window.cpp:894
 msgid "Sort All by Date && Time"
 msgstr "Alles sorteren op datum && tijd"
 
-#: MainWindow/Window.cpp:875
+#: MainWindow/Window.cpp:898
 msgid "Automatically Stack Selected Images..."
 msgstr "Geselecteerde afbeeldingen automatisch stapelen..."
 
-#: MainWindow/Window.cpp:878
-msgid "Edit Birth Dates..."
-msgstr "Geboortedata bewerken..."
-
-#: MainWindow/Window.cpp:881
+#: MainWindow/Window.cpp:901
 msgid "Build Thumbnails"
 msgstr "Miniaturen aanmaken"
 
-#: MainWindow/Window.cpp:884
+#: MainWindow/Window.cpp:904
 msgid "Statistics"
 msgstr "Statistieken"
 
-#: MainWindow/Window.cpp:893
+#: MainWindow/Window.cpp:913
 msgid "Enable All Messages"
 msgstr "Alle berichten activeren"
 
-#: MainWindow/Window.cpp:896
+#: MainWindow/Window.cpp:916
 msgid "Configure Current View"
 msgstr "Huidige weergave instellen"
 
-#: MainWindow/Window.cpp:905
+#: MainWindow/Window.cpp:925
 msgid "Tree"
 msgstr "Boomstructuur"
 
-#: MainWindow/Window.cpp:910
+#: MainWindow/Window.cpp:930
 msgid "Tree with User Icons"
 msgstr "Boomstructuur met gebruikerpictogrammen"
 
-#: MainWindow/Window.cpp:915
+#: MainWindow/Window.cpp:935
 msgid "Icons"
 msgstr "Pictogrammen"
 
-#: MainWindow/Window.cpp:927
+#: MainWindow/Window.cpp:947
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Tekstballonnen in miniaturenvenster tonen"
 
-#: MainWindow/Window.cpp:933
+#: MainWindow/Window.cpp:953
 msgid "Run KPhotoAlbum Demo"
 msgstr "KPhotoAlbum-demo starten"
 
-#: MainWindow/Window.cpp:936
+#: MainWindow/Window.cpp:956
 msgid "KPhotoAlbum Feature Status"
 msgstr "Status van KPhotoAlbum-functies"
 
-#: MainWindow/Window.cpp:939
+#: MainWindow/Window.cpp:959
 msgid "Show Demo Videos"
 msgstr "Demovideo's tonen"
 
-#: MainWindow/Window.cpp:944
+#: MainWindow/Window.cpp:964
 msgid "Show Exif Info"
 msgstr "EXIF-informatie tonen"
 
-#: MainWindow/Window.cpp:947
+#: MainWindow/Window.cpp:967
 msgid "Recreate Selected Thumbnails"
 msgstr "Geselecteerde miniaturen opnieuw aanmaken"
 
-#: MainWindow/Window.cpp:950
+#: MainWindow/Window.cpp:970
 msgid "Use next video thumbnail"
 msgstr "Volgende videominiatuur gebruiken"
 
-#: MainWindow/Window.cpp:954
+#: MainWindow/Window.cpp:974
 msgid "Use previous video thumbnail"
 msgstr "Vorige videominiatuur gebruiken"
 
-#: MainWindow/Window.cpp:980
+#: MainWindow/Window.cpp:1000
+msgid "Won't save the database automatically, as you skipped the update."
+msgstr ""
+"De database zal niet automatisch worden opgeslagen als u het bijwerken "
+"overslaat."
+
+#: MainWindow/Window.cpp:1005
 msgid "Auto saving...."
 msgstr "Autom. opslaan...."
 
-#: MainWindow/Window.cpp:982
+#: MainWindow/Window.cpp:1007
 msgid "Auto saving.... Done"
 msgstr "Autom. opslaan... gereed"
 
-#: MainWindow/Window.cpp:1076
+#: MainWindow/Window.cpp:1101
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -3267,7 +3298,7 @@ msgstr ""
 "<p>Kon de gegeven index.xml niet openen omdat de gegeven map niet bestaat."
 "<br />%1</p>"
 
-#: MainWindow/Window.cpp:1084
+#: MainWindow/Window.cpp:1109
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -3276,7 +3307,7 @@ msgstr ""
 "<p>Het gegeven index-bestand bestaat niet, wilt u het volgende aanmaken?<br /"
 ">%1/index.xml</p>"
 
-#: MainWindow/Window.cpp:1100
+#: MainWindow/Window.cpp:1125
 msgid ""
 "<p>You have configured a tag for untagged images, but either the tag itself "
 "or its category does not exist in the database.</p><p>Please review your "
@@ -3288,7 +3319,7 @@ msgstr ""
 "tag-instelling zonder tags onder <interface>Instellingen|KPhotoAlbum "
 "instellen...|Categorieën</interface></p>"
 
-#: MainWindow/Window.cpp:1177
+#: MainWindow/Window.cpp:1202
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
 "look in your images, without getting to those embarrassing images from your "
@@ -3301,39 +3332,39 @@ msgstr ""
 "toegang heeft tot het bestand index.html kan dit wachtwoord op eenvoudige "
 "wijze omzeilen.</b></p>"
 
-#: MainWindow/Window.cpp:1182
+#: MainWindow/Window.cpp:1207
 msgid "Password Protection"
 msgstr "Wachtwoordbescherming"
 
-#: MainWindow/Window.cpp:1196
+#: MainWindow/Window.cpp:1221
 msgid "Type in Password to Unlock"
 msgstr "Voer het wachtwoord in om de vergrendeling op te heffen"
 
-#: MainWindow/Window.cpp:1205 MainWindow/Window.cpp:1239
+#: MainWindow/Window.cpp:1230 MainWindow/Window.cpp:1264
 msgid "Invalid password."
 msgstr "Onjuist wachtwoord."
 
-#: MainWindow/Window.cpp:1230
+#: MainWindow/Window.cpp:1255
 msgid "Type in Old Password"
 msgstr "Oud wachtwoord invoeren"
 
-#: MainWindow/Window.cpp:1242
+#: MainWindow/Window.cpp:1267
 msgid "Type in New Password"
 msgstr "Nieuw wachtwoord invoeren"
 
-#: MainWindow/Window.cpp:1253 Settings/SettingsDialog.cpp:76
+#: MainWindow/Window.cpp:1278 Settings/SettingsDialog.cpp:80
 msgid "General"
 msgstr "Algemeen"
 
-#: MainWindow/Window.cpp:1254 Settings/SettingsDialog.cpp:81
+#: MainWindow/Window.cpp:1279 Settings/SettingsDialog.cpp:86
 msgid "Viewer"
 msgstr "Weergave"
 
-#: MainWindow/Window.cpp:1267
+#: MainWindow/Window.cpp:1292
 msgid "Annotation Dialog"
 msgstr "Annotatiedialoog"
 
-#: MainWindow/Window.cpp:1421
+#: MainWindow/Window.cpp:1446
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
@@ -3341,7 +3372,7 @@ msgstr ""
 "<p>Wilt u alle berichten activeren waar u eerder het keuzevakje 'Niet "
 "opnieuw tonen' hebt geselecteerd?</p>"
 
-#: MainWindow/Window.cpp:1432
+#: MainWindow/Window.cpp:1457
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
 "Window::setupPluginMenu). This indicate that you forgot to do a make "
@@ -3357,15 +3388,15 @@ msgstr ""
 "p><p>KPhotoAlbum zal doorgaan, maar het is niet geheel onmogelijk dat het "
 "later zal crashen vanwege de ontbrekende 'make install'.</p>"
 
-#: MainWindow/Window.cpp:1432
+#: MainWindow/Window.cpp:1457
 msgid "Internal Error"
 msgstr "Interne fout"
 
-#: MainWindow/Window.cpp:1617
+#: MainWindow/Window.cpp:1642
 msgid "Open List of Files"
 msgstr "Lijst met bestanden openen"
 
-#: MainWindow/Window.cpp:1617
+#: MainWindow/Window.cpp:1642
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3373,21 +3404,21 @@ msgstr ""
 "U kunt een set bestanden uit de basismap van KPhotoAlbum door hier een lijst "
 "te maken."
 
-#: MainWindow/Window.cpp:1633
+#: MainWindow/Window.cpp:1658
 msgid "No images matching your input were found."
 msgstr "Er kwamen geen afbeeldingen overeen met uw invoer."
 
-#: MainWindow/Window.cpp:1633
+#: MainWindow/Window.cpp:1658
 msgid "No Matches"
 msgstr "Geen overeenkomsten"
 
-#: MainWindow/Window.cpp:1794
+#: MainWindow/Window.cpp:1814
 #, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "Breedte miniatuur: %1px (opslaggrootte: %2px)"
 
-#: MainWindow/Window.cpp:1833
+#: MainWindow/Window.cpp:1853
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3397,11 +3428,11 @@ msgstr ""
 "andere MPlayer nodig om videominiaturen lengtes van video's te tonen. "
 "Installeer het pakket MPlayer2</p>"
 
-#: MainWindow/Window.cpp:1836
+#: MainWindow/Window.cpp:1856
 msgid "Video thumbnails are not available"
 msgstr "Videominiaturen zijn niet beschikbaar"
 
-#: MainWindow/Window.cpp:1842
+#: MainWindow/Window.cpp:1862
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3413,11 +3444,11 @@ msgstr ""
 "indien mogelijk, omdat die versie veel beter ondersteuning biedt voor het "
 "extraheren van miniaturen uit video's.</p>"
 
-#: MainWindow/Window.cpp:1845
+#: MainWindow/Window.cpp:1865
 msgid "MPlayer is too old"
 msgstr "MPlayer is te oud"
 
-#: MainWindow/Window.cpp:1867
+#: MainWindow/Window.cpp:1887
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3548,6 +3579,46 @@ msgstr ""
 "bureaublad.\n"
 "Protocolversie op het bureaublad: %1\n"
 "Protocolversie van client op afstand: %2"
+
+#: Settings/BirthdayPage.cpp:66
+msgid "Filter (Alt+f)"
+msgstr "Filter (Alt+f)"
+
+#: Settings/BirthdayPage.cpp:105
+msgid "unset"
+msgstr "niet ingesteld"
+
+#: Settings/BirthdayPage.cpp:111
+msgid ""
+"Set the date of birth for items (say people) here, and then see their age "
+"when viewing the images."
+msgstr ""
+"Stel de geboortedata voor items (zeg mensen) hier in en zie dan hun leeftijd "
+"bij het bekijken van de afbeeldingen."
+
+#: Settings/BirthdayPage.cpp:169
+msgid "Name"
+msgstr "Naam"
+
+#: Settings/BirthdayPage.cpp:169
+msgid "Birthday"
+msgstr "Verjaardag"
+
+#: Settings/BirthdayPage.cpp:236
+#, kde-format
+msgid "Birthday of %1:"
+msgstr "Geboortedatum van %1:"
+
+#: Settings/BirthdayPage.cpp:244
+#, fuzzy
+#| msgctxt "@action:inmenu"
+#| msgid "Annotate..."
+msgid "Enter a date..."
+msgstr "Annoteren..."
+
+#: Settings/BirthdayPage.cpp:291
+msgid "<i>Select an item on the left to edit the birthday</i>"
+msgstr "<i>Een item links selecteren om de geboortedatum te bewerken</i>"
 
 #: Settings/CategoryItem.cpp:160
 msgid ""
@@ -3841,11 +3912,11 @@ msgstr ""
 "categorieën worden niet opgepakt door de herkenningsdatabase totdat de "
 "wijzigingen zijn opgeslagen."
 
-#: Settings/FaceManagementPage.cpp:207
+#: Settings/FaceManagementPage.cpp:210
 msgid "Do you really want to delete the selected tags?"
 msgstr "Wilt u de geselecteerde tags opslaan?"
 
-#: Settings/FaceManagementPage.cpp:232
+#: Settings/FaceManagementPage.cpp:235
 msgid "Do you really want to erase the database?"
 msgstr "Wilt u de database wissen?"
 
@@ -4270,31 +4341,35 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Tijdaanduidingen overnemen?"
 
-#: Settings/SettingsDialog.cpp:77
+#: Settings/SettingsDialog.cpp:81
 msgid "File Searching & Versions"
 msgstr "Zoeken naar bestanden en hun versies"
 
-#: Settings/SettingsDialog.cpp:78
+#: Settings/SettingsDialog.cpp:82
 msgid "Thumbnail View"
 msgstr "Miniaturenweergave"
 
-#: Settings/SettingsDialog.cpp:79
+#: Settings/SettingsDialog.cpp:83
 msgid "Categories"
 msgstr "Categorieën"
 
-#: Settings/SettingsDialog.cpp:80
+#: Settings/SettingsDialog.cpp:84
+msgid "Birthdays"
+msgstr "Verjaardagen"
+
+#: Settings/SettingsDialog.cpp:85
 msgid "Tag Groups"
 msgstr "Groepen tags"
 
-#: Settings/SettingsDialog.cpp:87
+#: Settings/SettingsDialog.cpp:92
 msgid "EXIF/IPTC Information"
 msgstr "EXIF/IPTC-informatie"
 
-#: Settings/SettingsDialog.cpp:89
+#: Settings/SettingsDialog.cpp:94
 msgid "Database backend"
 msgstr "Databasebackend"
 
-#: Settings/SettingsDialog.cpp:91
+#: Settings/SettingsDialog.cpp:96
 msgid "Face management"
 msgstr "Beheer van gezichten"
 
@@ -4615,9 +4690,40 @@ msgstr ""
 "weergeven van de browser totdat u op de knop <i>Afbeeldingen tonen</i> klikt."
 "</p>"
 
-#: Settings/UntaggedGroupBox.cpp:56
+#: Settings/UntaggedGroupBox.cpp:32
+msgid ""
+"If a tag is selected here, it will be added to new (untagged) images "
+"automatically, so that they can be easily found. It will be removed as soon "
+"as the image is annotated. This tag won't show up in the annotation dialog "
+"and can't be used for \"normal\" tagging."
+msgstr ""
+"Als hier een tag is geselecteerd, zal het automatisch toegevoegd worden aan "
+"nieuwe afbeeldingen (zonder tag), zodat ze gemakkelijk gevonden kunnen "
+"worden. Deze zal verwijderd worden zodra de afbeelding een annotatie heeft "
+"gekregen. Deze tag zal niet in de annotatiedialoog verschijnen en kan niet "
+"gebruikt worden voor \"normaal\" van een tag toekennen."
+
+#: Settings/UntaggedGroupBox.cpp:60
 msgid "None Selected"
 msgstr "Geen geselecteerd"
+
+#: Settings/UntaggedGroupBox.cpp:118
+msgid "New tag added"
+msgstr "Nieuwe tag toegevoegd"
+
+#: Settings/UntaggedGroupBox.cpp:119
+#, kde-format
+msgid ""
+"<p>The new tag \"%1\" has been added to the category \"%2\" and will be used "
+"for untagged images now.</p><p>Please save now, so that this tag will be "
+"stored in the database. Otherwise, it will be lost, and you will get an "
+"error about this tag being not present on the next start.</p>"
+msgstr ""
+"<p>De nieuwe tag \"%1\" toegevoegd aan de categorie \"%2\" en zal nu "
+"gebruikt worden voor afbeeldingen zonder tags.</p><p>Nu opslaan, zodat deze "
+"tag zal worden opgeslagen in de database. Anders gaat deze verloren en "
+"krijgt u een andere fout over deze tag die niet aanwezig is bij de volgende "
+"keer starten.</p>"
 
 #: Settings/ViewerPage.cpp:33
 msgid "Running Slide Show From Thumbnail View"
@@ -5243,7 +5349,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "'%1' kan niet worden gekopieerd naar '%2'."
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:472
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
 msgid "Error Running Demo"
 msgstr "Fout bij het uitvoeren van de demo"
 
@@ -5706,7 +5812,7 @@ msgstr "Afbeeldingsgrootte tonen"
 msgid "Show Rating"
 msgstr "Waardering tonen"
 
-#: XMLDB/FileReader.cpp:58
+#: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
 "p><p>Chances are you will be able to read this file, but when writing it "
@@ -5717,53 +5823,73 @@ msgstr ""
 "terugschrijven kan opgeslagen informatie in de nieuwere versie verloren "
 "gaan</p>"
 
-#: XMLDB/FileReader.cpp:61
+#: XMLDB/FileReader.cpp:65
 msgid "index.xml version mismatch"
 msgstr "De versie van index.xml komt niet overeen"
 
-#: XMLDB/FileReader.cpp:106
+#: XMLDB/FileReader.cpp:110
 #, kde-format
 msgid "Error in file %1: unexpected element: '%2'"
 msgstr "Fout in bestand %1: onverwacht element '%2'"
 
-#: XMLDB/FileReader.cpp:112
+#: XMLDB/FileReader.cpp:116
 #, kde-format
 msgid "Unable to find 'Options' tag in configuration file %1."
 msgstr "Tag 'Options' is niet gevonden in configuratiebestand %1."
 
-#: XMLDB/FileReader.cpp:114
+#: XMLDB/FileReader.cpp:118
 #, kde-format
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "Tag 'Images' is niet gevonden in configuratiebestand %1."
 
-#: XMLDB/FileReader.cpp:212
+#: XMLDB/FileReader.cpp:219
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with old category names "
-"by renaming them. As a consequence, existing tag and category thumbnails "
-"have to be moved accordingly.</p><p>If you select \"Yes\", please be sure to "
-"save the database as your next step. If you select \"No\", you won't see the "
-"thumbnails for the respective categories now. If you do so, please don't "
-"save the database. Otherwise, the thumbnails will be lost!</p><p>Should the "
-"existing category and tag thumbnails be updated now?</p>"
+"<p>This version of KPhotoAlbum will fix some issues with category names. "
+"This is a database internal update which won't affect the displayed category "
+"names or any tag data. Anyway, some files (category and tag thumbnails) have "
+"to be moved and the configuration file has to be fixed. If you want to know "
+"what exactly happens, read \"Differences to version 5\" in "
+"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
+"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
+"\" will skip the update. Only choose this if you don't want to or can't "
+"change any data now. You will be asked for the update on the next start "
+"again.</p>"
 msgstr ""
-"<p>Deze versie van KPhotoAlbum repareert enige problemen met oud namen van "
-"categorieën door ze te hernoemen. Als gevolg hiervan moeten bestaande tags "
-"en miniaturen van categorieën ook verplaats worden.</p><p>Als u \"Ja\" "
-"kiest, denk er dan aan om de database als uw volgende stap op te slaan. Als "
-"u \"Nee\" kiest dan zult u de miniaturen voor de respectievelijke "
-"categorieën nu niet zien. Als u dat doet, sla de database dan niet op. "
-"Anders zullen de miniaturen verloren gaan!</p><p>Moeten de bestaande "
-"miniaturen voor categorie and tag nu bijgewerkt worden?</p>"
+"<p>Deze versie van KPhotoAlbum zal enige problemen met namen van categorieën "
+"repareren. Dit is een intern bijwerken van de database die geen effect heeft "
+"op de getoonde namen van categorieën of taggegevens. In elk geval moeten "
+"sommige bestanden (categorie- en tagminiaturen) verplaatst worden en het "
+"instellingenbestand moet gerepareerd worden. Als u wilt weten wat er exact "
+"zal gebeuren, lees dan \"Verschillen met versie 5\" in <kbd>documentation/"
+"database-layout.md</kbd>.</p><p><b>Druk op \"Doorgaan\" om het bijwerken uit "
+"te voeren. Dit is wat u nu normaal zou doen.</b></p><p>\"Annuleren\" zal het "
+"bijwerken overslaan. Kies dit alleen als u het niet wilt of nu geen gegevens "
+"wilt wijzigen. U zult bij de volgende keer opstarten weer gevraagd worden om "
+"het bijwerken uit te voeren.</p>"
 
-#: XMLDB/FileReader.cpp:220 XMLDB/FileReader.cpp:277
-msgid "index.xml Update"
-msgstr "Bijwerken van index.xml"
+#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
+msgid "Database Update"
+msgstr "Bijwerken van database"
 
-#: XMLDB/FileReader.cpp:278
-msgid "Don't forget to save your database now!"
-msgstr "Vergeet niet om uw database nu op te slaan!"
+#: XMLDB/FileReader.cpp:235
+msgid ""
+"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
+"some features in the running session (missing category and tag thumbnails, "
+"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
+"your database or this will become permanent!</b></p><p>To run the update "
+"later, close KPhotoAlbum without saving the database and don't use face "
+"recognition. You will be asked again for the update on the next start.</p>"
+msgstr ""
+"<p><b>U hebt het bijwerken van de database overgeslagen!</b></p><p>U zult "
+"waarschijnlijk enige functies missen in de gaande sessie (ontbrekende "
+"miniaturen voor categorieën en tags, gebroken functie voor \"afbeeldingen "
+"zonder tags\" en gebroken gezichtsherkenning). <b>Sla uw database niet op of "
+"dit zal permanent worden!</b></p><p>Om het bijwerken later uit te voeren, "
+"sluit KPhotoAlbum zonder de database op te slaan en gebruik geen "
+"gezichtsherkenning. U zult weer gevraagd worden om bij te werken bij de "
+"volgende keer opstarten.</p>"
 
-#: XMLDB/FileReader.cpp:391
+#: XMLDB/FileReader.cpp:412
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5786,7 +5912,7 @@ msgstr ""
 "item <b>Onderhoud->Alles sorteren op datum & tijd</b> selecteren om ze in de "
 "database te sorteren.</p>"
 
-#: XMLDB/FileReader.cpp:401
+#: XMLDB/FileReader.cpp:422
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5803,11 +5929,11 @@ msgstr ""
 "Nadat u dit gedaan hebt zult u worden gevraagd hoe u de ontbrekende "
 "informatie wilt corrigeren.</p>"
 
-#: XMLDB/FileReader.cpp:408
+#: XMLDB/FileReader.cpp:429
 msgid "Images/Videos Are Not Sorted"
 msgstr "Afbeeldingen/video's zijn niet gesorteerd"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:444
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5824,11 +5950,11 @@ msgstr ""
 "afbeeldingen ontstaan in de miniaturenweergave. Dat is alles, dus het "
 "oplossen van dit probleem is niet urgent.</p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:449
 msgid "Not All Images Have Size Information"
 msgstr "Niet alle afbeeldingen bevatten informatie over hun afmetingen"
 
-#: XMLDB/FileReader.cpp:451
+#: XMLDB/FileReader.cpp:472
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5850,31 +5976,31 @@ msgstr ""
 "ingesteld, voeg dan de installatiemap toe zoals u gewend bent bij het "
 "instellen van de omgevingsvariabele <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:458
+#: XMLDB/FileReader.cpp:479
 msgid "No default setup file found"
 msgstr "Geen standaard configuratiebestand gevonden"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:493
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "'%1' kon niet worden geopend"
 
-#: XMLDB/FileReader.cpp:485
+#: XMLDB/FileReader.cpp:506
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "regel %1 kolom %2 in bestand %3: %4"
 
-#: XMLDB/FileReader.cpp:487
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "De backup herstellen is mislukt: %1"
 
-#: XMLDB/FileReader.cpp:498
+#: XMLDB/FileReader.cpp:519
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Fout in bestand %1: geen elementen gevonden"
 
-#: XMLDB/FileReader.cpp:504
+#: XMLDB/FileReader.cpp:525
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -5961,6 +6087,65 @@ msgstr "<p>Aanvullende informatie over de fout:<nl/><message>%1</message></p>"
 #: XMLDB/XmlReader.cpp:95
 msgid "Error while reading database file"
 msgstr "Fout bij lezen van het databasebestand"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

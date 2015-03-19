@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2015 Tobias Leupold <tobias.leupold@web.de>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,11 +16,26 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPA_VERSION_H
-#define KPA_VERSION_H
+// Qt includes
+#include <QDate>
 
-#define KPA_VERSION "4.6.1"
+// Local includes
+#include "DateTableWidgetItem.h"
 
-#endif /* KPA_VERSION_H */
+Settings::DateTableWidgetItem::DateTableWidgetItem(const QString& text)
+{
+    setText(text);
+}
 
-// vi:expandtab:tabstop=4 shiftwidth=4:
+bool Settings::DateTableWidgetItem::operator < (const QTableWidgetItem& other) const
+{
+    if (data(Qt::UserRole).toDate() == QDate()
+        && other.data(Qt::UserRole).toDate() != QDate()) {
+        return false;
+    } else if (data(Qt::UserRole).toDate() != QDate()
+                && other.data(Qt::UserRole).toDate() == QDate()) {
+        return true;
+    } else {
+        return data(Qt::UserRole).toDate() < other.data(Qt::UserRole).toDate();
+    }
+}
