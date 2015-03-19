@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2015 Tobias Leupold <tobias.leupold@web.de>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,32 +15,27 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef SETTINGS_CALENDARPOPUP_H
-#define SETTINGS_CALENDARPOPUP_H
 
-#include <QWidget>
+// Qt includes
 #include <QDate>
 
-class QCalendarWidget;
+// Local includes
+#include "DateTableWidgetItem.h"
 
-namespace MainWindow {
-
-class CalendarPopup : public QWidget
+Settings::DateTableWidgetItem::DateTableWidgetItem(const QString& text)
 {
-    Q_OBJECT
-public:
-    explicit CalendarPopup(QWidget *parent = 0);
-    void setSelectedDate(const QDate&);
+    setText(text);
+}
 
-signals:
-    void dateSelected(const QDate& date = QDate());
-
-private:
-    void resetDate();
-
-    QCalendarWidget* m_calendar;
-};
-
-} // namespace Settings
-
-#endif // SETTINGS_CALENDARPOPUP_H
+bool Settings::DateTableWidgetItem::operator < (const QTableWidgetItem& other) const
+{
+    if (data(Qt::UserRole).toDate() == QDate()
+        && other.data(Qt::UserRole).toDate() != QDate()) {
+        return false;
+    } else if (data(Qt::UserRole).toDate() != QDate()
+                && other.data(Qt::UserRole).toDate() == QDate()) {
+        return true;
+    } else {
+        return data(Qt::UserRole).toDate() < other.data(Qt::UserRole).toDate();
+    }
+}

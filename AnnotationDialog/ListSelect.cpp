@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -147,7 +147,7 @@ void AnnotationDialog::ListSelect::slotReturn()
         m_category->addItem( txt);
         rePopulate();
 
-        QList<QTreeWidgetItem*> items = m_treeWidget->findItems( txt, Qt::MatchContains, 0 );
+        QList<QTreeWidgetItem*> items = m_treeWidget->findItems(txt, Qt::MatchExactly, 0);
 
         if (!items.isEmpty()) {
             items.at(0)->setCheckState(0, Qt::Checked);
@@ -322,7 +322,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     QAction* deleteAction = menu->addAction( SmallIcon(QString::fromLatin1("edit-delete")), i18n("Delete") );
     QAction* renameAction = menu->addAction( i18n("Rename...") );
 
-    QLabel* categoryTitle = new QLabel( i18n("<b>Sub Categories</b>"), menu );
+    QLabel* categoryTitle = new QLabel( i18n("<b>Tag Groups</b>"), menu );
     categoryTitle->setAlignment( Qt::AlignCenter );
     action = new QWidgetAction( menu );
     action->setDefaultWidget( categoryTitle );
@@ -330,7 +330,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
 
     // -------------------------------------------------- Add/Remove member group
     DB::MemberMap& memberMap = DB::ImageDB::instance()->memberMap();
-    QMenu* members = new QMenu( i18n( "Super Categories" ) );
+    QMenu* members = new QMenu( i18n( "Tag groups" ) );
     menu->addMenu( members );
     QAction* newCategoryAction = nullptr;
     if ( item ) {
@@ -347,16 +347,16 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
 
         if ( !grps.isEmpty() )
             members->addSeparator();
-        newCategoryAction = members->addAction( i18n("New Category..." ) );
+        newCategoryAction = members->addAction( i18n("Add this tag to a new tag group..." ) );
     }
 
-    QAction* newSubcategoryAction = menu->addAction( i18n( "Create Subcategory..." ) );
+    QAction* newSubcategoryAction = menu->addAction( i18n( "Make this tag a tag group and add a tag..." ) );
 
     // -------------------------------------------------- Take item out of category
     QTreeWidgetItem* parent = item ? item->parent() : nullptr;
     QAction* takeAction = nullptr;
     if ( parent )
-        takeAction = menu->addAction( i18n( "Take item out of category %1", parent->text(0) ) );
+        takeAction = menu->addAction( i18n( "Remove from tag group %1", parent->text(0) ) );
 
     // -------------------------------------------------- sort
     QLabel* sortTitle = new QLabel( i18n("<b>Sorting</b>") );
@@ -458,7 +458,10 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
         Settings::SettingsData::instance()->setViewSortType( Settings::SortAlphaFlat );
     }
     else if ( which == newCategoryAction ) {
-        QString superCategory = KInputDialog::getText( i18n("New Super Category"), i18n("New Super Category Name:") );
+        QString superCategory = KInputDialog::getText(
+            i18n("New tag group"),
+            i18n("Name for the new tag group the tag will be added to:")
+        );
         if ( superCategory.isEmpty() )
             return;
         memberMap.addGroup( m_category->name(), superCategory );
@@ -467,7 +470,10 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
         rePopulate();
     }
     else if ( which == newSubcategoryAction ) {
-        QString subCategory = KInputDialog::getText( i18n("New Sub Category"), i18n("New Sub Category Name:") );
+        QString subCategory = KInputDialog::getText(
+            i18n("Add a tag"),
+            i18n("Name for the tag to be added to this tag group:")
+        );
         if ( subCategory.isEmpty() )
             return;
 
@@ -526,6 +532,31 @@ void AnnotationDialog::ListSelect::populate()
         populateAlphaFlat();
     else
         populateMRU();
+
+    hideUntaggedImagesTag();
+}
+
+void AnnotationDialog::ListSelect::hideUntaggedImagesTag()
+{
+    if (! Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()) {
+        return;
+    }
+
+    if (Settings::SettingsData::instance()->untaggedCategory() != category()) {
+        return;
+    }
+
+    QList<QTreeWidgetItem*> matchingTags = m_treeWidget->findItems(
+        Settings::SettingsData::instance()->untaggedTag(),
+        Qt::MatchExactly | Qt::MatchRecursive, 0
+    );
+
+    // Be sure not to crash here in case the config points to a non-existant tag
+    if (matchingTags.at(0) == nullptr) {
+        return;
+    }
+
+    matchingTags.at(0)->setHidden(true);
 }
 
 void AnnotationDialog::ListSelect::slotSortDate()
@@ -629,6 +660,7 @@ void AnnotationDialog::ListSelect::showAllChildren()
 {
     m_showSelectedOnly->setChecked( false );
     showOnlyItemsMatching( QString() );
+    hideUntaggedImagesTag();
 }
 
 void AnnotationDialog::ListSelect::updateSelectionCount()
@@ -744,7 +776,7 @@ bool AnnotationDialog::ListSelect::positionable() const
 
 bool AnnotationDialog::ListSelect::tagIsChecked(QString tag) const
 {
-    QList<QTreeWidgetItem *> matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly, 0);
+    QList<QTreeWidgetItem *> matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly | Qt::MatchRecursive, 0);
 
     if(matchingTags.isEmpty()) {
         return false;
@@ -761,7 +793,7 @@ void AnnotationDialog::ListSelect::ensureTagIsSelected(QString category, QString
     }
 
     // Be sure that tag is actually checked
-    QList<QTreeWidgetItem *> matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly, 0);
+    QList<QTreeWidgetItem *> matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly | Qt::MatchRecursive, 0);
 
     // If we have the requested category, but not this tag, add it.
     // This should only happen if the recognition database is copied from another database
@@ -771,7 +803,7 @@ void AnnotationDialog::ListSelect::ensureTagIsSelected(QString category, QString
         m_category->addItem(tag);
         rePopulate();
         // Now, we find it
-        matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly, 0);
+        matchingTags = m_treeWidget->findItems(tag, Qt::MatchExactly | Qt::MatchRecursive, 0);
     }
 
     matchingTags.first()->setCheckState(0, Qt::Checked);

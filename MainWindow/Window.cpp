@@ -101,7 +101,6 @@
 #  include "Exif/Database.h"
 #endif
 
-#include "BirthDatesDialog.h"
 #include "FeatureDialog.h"
 
 #include <krun.h>
@@ -216,6 +215,10 @@ MainWindow::Window::Window( QWidget* parent )
     setAutoSaveSettings();
 
     executeStartupActions();
+
+    if (m_v6UpdateDone) {
+        slotSave();
+    }
 }
 
 MainWindow::Window::~Window()
@@ -464,6 +467,26 @@ void MainWindow::Window::createAnnotationDialog()
 
 void MainWindow::Window::slotSave()
 {
+    if (m_v6UpdateSkipped) {
+        int ret = KMessageBox::warningYesNo(
+            this,
+            i18n("<p><b>You skipped the database update!</b></p>"
+                 "<p>If you save your database now, the file moves and configuration updates can't "
+                 "be done automatically anymore and <b>you will lose the concerned category and "
+                 "tag thumbnails, and probably your \"untagged images\" tags permanently. Also, "
+                 "face recognition will probably be broken.</b> (unless you do the necessary "
+                 "updates by hand).</p>"
+                 "<p>Do you really want to save your database?</p>"),
+            i18n("Database Update skipped")
+        );
+
+        if (ret == KStandardGuiItem::No) {
+            return;
+        } else {
+            m_v6UpdateSkipped = false; // Don't ask again
+        }
+    }
+
     Utilities::ShowBusyCursor dummy;
     m_statusBar->showMessage(i18n("Saving..."), 5000 );
     DB::ImageDB::instance()->save( Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("index.xml"), false );
@@ -874,9 +897,6 @@ void MainWindow::Window::setupMenuBar()
     m_AutoStackImages = actionCollection()->addAction( QString::fromLatin1( "autoStack" ), this, SLOT (slotAutoStackImages()) );
     m_AutoStackImages->setText( i18n("Automatically Stack Selected Images...") );
 
-    KAction* editBirthDates = actionCollection()->addAction( QString::fromUtf8("editBirthDates"), this, SLOT(editBirthDates()));
-    editBirthDates->setText(i18n("Edit Birth Dates..."));
-
     a = actionCollection()->addAction( QString::fromLatin1("buildThumbs"), this, SLOT(slotBuildThumbnails()) );
     a->setText( i18n("Build Thumbnails") );
 
@@ -976,6 +996,11 @@ void MainWindow::Window::startAutoSaveTimer()
 void MainWindow::Window::slotAutoSave()
 {
     if ( m_statusBar->mp_dirtyIndicator->isAutoSaveDirty() ) {
+        if (m_v6UpdateSkipped) {
+            m_statusBar->showMessage(i18n("Won't save the database automatically, as you skipped the update."), 5000);
+            return;
+        }
+
         Utilities::ShowBusyCursor dummy;
         m_statusBar->showMessage(i18n("Auto saving...."));
         DB::ImageDB::instance()->save( Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1(".#index.xml"), true );
@@ -1782,11 +1807,6 @@ void MainWindow::Window::mergeDuplicates()
     merger->show();
 }
 
-void MainWindow::Window::editBirthDates()
-{
-    MainWindow::BirthDatesDialog dialog;
-    dialog.exec();
-}
 void MainWindow::Window::slotThumbnailSizeChanged()
 {
     QString thumbnailSizeMsg = i18nc( "@info:status",
@@ -1890,6 +1910,16 @@ void MainWindow::Window::slotImageRotated(const DB::FileName& fileName)
     // An image has been rotated by the annotation dialog or the viewer.
     // We have to reload the respective thumbnail to get it in the right angle
     ImageManager::ThumbnailCache::instance()->removeThumbnail(fileName);
+}
+
+void MainWindow::Window::v6UpdateDone()
+{
+    m_v6UpdateDone = true;
+}
+
+void MainWindow::Window::v6UpdateSkipped()
+{
+    m_v6UpdateSkipped = true;
 }
 
 #include "Window.moc"

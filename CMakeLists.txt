@@ -134,6 +134,8 @@ set(libSettings_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/DatabaseBackendPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/UntaggedGroupBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoriesGroupsWidget.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/BirthdayPage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/DateTableWidgetItem.cpp
 )
 
 set(libxmldb_SRCS
@@ -246,8 +248,6 @@ set(libMainWindow_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMatch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/MergeToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CopyPopup.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/BirthDatesDialog.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CalendarPopup.cpp
 )
 
 set(libImageManager_SRCS
