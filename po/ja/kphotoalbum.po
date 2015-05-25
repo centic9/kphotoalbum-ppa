@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-03-18 01:48+0000\n"
+"POT-Creation-Date: 2015-05-03 01:57+0000\n"
 "PO-Revision-Date: 2008-09-24 00:02+0900\n"
 "Last-Translator: Yukiko Bando <ybando@k6.dion.ne.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -323,7 +323,7 @@ msgstr "前のアイテムに注釈を付ける"
 msgid "OK dialog"
 msgstr "OK ダイアログ"
 
-#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:334
 #: Settings/CategoryPage.cpp:79
 msgid "Delete"
 msgstr "削除"
@@ -475,61 +475,69 @@ msgstr "または"
 msgid "and"
 msgstr "かつ"
 
-#: AnnotationDialog/ListSelect.cpp:312
+#: AnnotationDialog/ListSelect.cpp:152
+msgid ""
+"The tag you entered is the tag that is set automatically for newly found, "
+"untagged images (cf. <interface>Settings|Configure KPhotoAlbum...|Categories|"
+"Untagged Images</interface>). It will not show up here as long as it is "
+"selected for this purpose."
+msgstr ""
+
+#: AnnotationDialog/ListSelect.cpp:324
 msgid "No Item Selected"
 msgstr "アイテムが選択されていません"
 
-#: AnnotationDialog/ListSelect.cpp:323
+#: AnnotationDialog/ListSelect.cpp:335
 msgid "Rename..."
 msgstr "名前変更..."
 
-#: AnnotationDialog/ListSelect.cpp:325
+#: AnnotationDialog/ListSelect.cpp:337
 #, fuzzy
 #| msgid "New Group"
 msgid "<b>Tag Groups</b>"
 msgstr "新しいグループ"
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:345
 #, fuzzy
 #| msgid "New Group"
 msgid "Tag groups"
 msgstr "新しいグループ"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "Add this tag to a new tag group..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:353
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Make this tag a tag group and add a tag..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:359
+#: AnnotationDialog/ListSelect.cpp:371
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgid "Remove from tag group %1"
 msgstr "本当にグループ <resource>%1</resource> を削除しますか？"
 
-#: AnnotationDialog/ListSelect.cpp:362
+#: AnnotationDialog/ListSelect.cpp:374
 msgid "<b>Sorting</b>"
 msgstr "<b>ソート</b>"
 
-#: AnnotationDialog/ListSelect.cpp:368
+#: AnnotationDialog/ListSelect.cpp:380
 msgid "Usage"
 msgstr "使用順"
 
-#: AnnotationDialog/ListSelect.cpp:369
+#: AnnotationDialog/ListSelect.cpp:381
 #, fuzzy
 #| msgid "Alphabetical"
 msgid "Alphabetical (Flat)"
 msgstr "アルファベット順"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:382
 #, fuzzy
 #| msgid "Alphabetical"
 msgid "Alphabetical (Tree)"
 msgstr "アルファベット順"
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:402
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>Do you really want to delete \"%1\"?<br>Deleting the item will remove "
@@ -541,25 +549,25 @@ msgstr ""
 "<p>本当に \"%1\" を削除しますか？<br/>このアイテムを削除すると、それを含むす"
 "べての画像からそれに関する情報が削除されます。</p>"
 
-#: AnnotationDialog/ListSelect.cpp:394
+#: AnnotationDialog/ListSelect.cpp:406
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "本当に %1 を削除しますか？"
 
-#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:538
 #: Settings/TagGroupsPage.cpp:781
 msgid "&Delete"
 msgstr "削除(&D)"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Rename Item"
 msgstr "アイテムの名前変更"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Enter new name:"
 msgstr "新しい名前:"
 
-#: AnnotationDialog/ListSelect.cpp:421
+#: AnnotationDialog/ListSelect.cpp:433
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>Do you really want to rename \"%1\" to \"%2\"?<br>Doing so will rename "
@@ -571,26 +579,26 @@ msgstr ""
 "<p>本当に \"%1\" の名前を \"%2\" に変更しますか？<br/>実行すると、それを含む"
 "すべての画像で \"%3\" の名前が変わります。</p>"
 
-#: AnnotationDialog/ListSelect.cpp:425
+#: AnnotationDialog/ListSelect.cpp:437
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "本当に %1 の名前を変更しますか？"
 
-#: AnnotationDialog/ListSelect.cpp:462
+#: AnnotationDialog/ListSelect.cpp:474
 #, fuzzy
 #| msgid "New Group"
 msgid "New tag group"
 msgstr "新しいグループ"
 
-#: AnnotationDialog/ListSelect.cpp:463
+#: AnnotationDialog/ListSelect.cpp:475
 msgid "Name for the new tag group the tag will be added to:"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:474
+#: AnnotationDialog/ListSelect.cpp:486
 msgid "Add a tag"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:475
+#: AnnotationDialog/ListSelect.cpp:487
 msgid "Name for the tag to be added to this tag group:"
 msgstr ""
 
@@ -3925,13 +3933,17 @@ msgstr ""
 msgid "Database entry"
 msgstr "データベースのバックエンド"
 
-#: Settings/FaceManagementPage.cpp:126
+#: Settings/FaceManagementPage.cpp:112
+msgid "Trained faces"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:127
 #, fuzzy
 #| msgid "Delete Selected"
 msgid "Delete selected"
 msgstr "選択したものを削除"
 
-#: Settings/FaceManagementPage.cpp:132
+#: Settings/FaceManagementPage.cpp:133
 #, fuzzy
 #| msgid ""
 #| "Use data from\n"
@@ -3941,19 +3953,19 @@ msgstr ""
 "データベースの\n"
 "のデータを使う"
 
-#: Settings/FaceManagementPage.cpp:137
+#: Settings/FaceManagementPage.cpp:138
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:210
+#: Settings/FaceManagementPage.cpp:213
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
 msgstr "変更を保存しますか？"
 
-#: Settings/FaceManagementPage.cpp:235
+#: Settings/FaceManagementPage.cpp:238
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
@@ -4834,13 +4846,13 @@ msgctxt ""
 msgid "video"
 msgstr "1 動画"
 
-#: ThumbnailView/GridResizeSlider.cpp:150
+#: ThumbnailView/GridResizeSlider.cpp:155
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
 msgstr ""
 
-#: ThumbnailView/GridResizeSlider.cpp:152
+#: ThumbnailView/GridResizeSlider.cpp:157
 #, fuzzy
 #| msgid "Reorder Thumbnails"
 msgid "Really resize the thumbnails?"
@@ -5278,7 +5290,7 @@ msgstr[1] ""
 #, fuzzy, kde-format
 #| msgid "1 Month"
 msgid "1 month"
-msgid_plural "%1 month"
+msgid_plural "%1 months"
 msgstr[0] "1 カ月"
 msgstr[1] "1 カ月"
 
@@ -5333,7 +5345,7 @@ msgstr ""
 "<filename>%1</filename> を <filename>%2</filename> にコピーできません。"
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:539
 msgid "Error Running Demo"
 msgstr "デモの実行でエラー"
 
@@ -5956,37 +5968,33 @@ msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr ""
 "設定ファイル <filename>%1</filename> に 'Images' タグが見つかりません。"
 
-#: XMLDB/FileReader.cpp:219
+#: XMLDB/FileReader.cpp:225
+#, kde-format
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with category names. "
-"This is a database internal update which won't affect the displayed category "
+"<p>This version of KPhotoAlbum would normally fix some issues with category "
+"names. Some changes inside the database (<kbd>index.xml</kbd> file) and the "
+"configuration are necessary to do this. Additionally, some (internal) files "
+"inside your collection directory have to be moved.</p><p>You don't have "
+"write access to your collection (<kbd>%1</kbd>), so this update can't be "
+"done now. Please check your permissions and re-run KPhotoAlbum.</"
+"p><p><b>Probably, some features may be missing or broken until the update "
+"can be done!</b></p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:339
+#, kde-format
+msgid ""
+"<p>This version of KPhotoAlbum fixes some issues with category names. This "
+"is a database internal update which won't affect the displayed category "
 "names or any tag data. Anyway, some files (category and tag thumbnails) have "
-"to be moved and the configuration file has to be fixed. If you want to know "
-"what exactly happens, read \"Differences to version 5\" in "
-"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
-"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
-"\" will skip the update. Only choose this if you don't want to or can't "
-"change any data now. You will be asked for the update on the next start "
-"again.</p>"
+"been moved and the configuration file and the database (<kbd>index.xml</"
+"kbd>) has been fixed. If you want to know what exactly happened, read "
+"\"Differences to version 5\" in <kbd>documentation/database-layout.md</kbd>."
+"</p><p>A backup of all (probably) changed files has been created in <kbd>%1</"
+"kbd>.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
-#, fuzzy
-#| msgid "Database backend"
-msgid "Database Update"
-msgstr "データベースのバックエンド"
-
-#: XMLDB/FileReader.cpp:235
-msgid ""
-"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
-"some features in the running session (missing category and tag thumbnails, "
-"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
-"your database or this will become permanent!</b></p><p>To run the update "
-"later, close KPhotoAlbum without saving the database and don't use face "
-"recognition. You will be asked again for the update on the next start.</p>"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:412
+#: XMLDB/FileReader.cpp:458
 #, fuzzy
 #| msgid ""
 #| "<p>Your images/videos are not sorted, which means that navigating using "
@@ -6018,7 +6026,7 @@ msgstr ""
 "像に日付を設定した後に、それらをデータベースでソートするために<interface>画"
 "像|選択した画像を日付と時刻でソート</interface>を実行してください。</p>"
 
-#: XMLDB/FileReader.cpp:422
+#: XMLDB/FileReader.cpp:468
 #, fuzzy
 #| msgid ""
 #| "<p>Your images/videos are not sorted, which means that navigating using "
@@ -6041,11 +6049,11 @@ msgstr ""
 "ブラリ付きで KPhotoAlbum をコンパイルし直すことを強くお勧めします。再コンパイ"
 "ル後に欠けているすべての情報を修正することができます。</p>"
 
-#: XMLDB/FileReader.cpp:429
+#: XMLDB/FileReader.cpp:475
 msgid "Images/Videos Are Not Sorted"
 msgstr "画像/動画がソートされていません"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:490
 #, fuzzy
 #| msgid ""
 #| "<p>Not all the images in the database have information about image sizes; "
@@ -6069,11 +6077,11 @@ msgstr ""
 "す。</p><p>これを実行しないとサムネイルビューで画像の周囲に余計なスペースが生"
 "じます。問題はそれだけなので、急いで実行する必要はありません。</p>"
 
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:495
 msgid "Not All Images Have Size Information"
 msgstr "サイズ情報のない画像があります"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:518
 #, fuzzy
 #| msgid ""
 #| "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -6106,32 +6114,32 @@ msgstr ""
 "いる場合は、<envar>PATH</envar> 環境変数を設定するのと同じように単純にそれを"
 "追加してください。</p>"
 
-#: XMLDB/FileReader.cpp:479
+#: XMLDB/FileReader.cpp:525
 msgid "No default setup file found"
 msgstr "標準の設定ファイルが見つかりません"
 
-#: XMLDB/FileReader.cpp:493
+#: XMLDB/FileReader.cpp:539
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "<filename>%1</filename> を読み取りのために開けません"
 
-#: XMLDB/FileReader.cpp:506
+#: XMLDB/FileReader.cpp:552
 #, fuzzy, kde-format
 #| msgid "Error on line %1 column %2 in file %3: %4"
 msgid "line %1 column %2 in file %3: %4"
 msgstr "ファイル <filename>%3</filename> の行 %1 列 %2 にエラー: %4"
 
-#: XMLDB/FileReader.cpp:508
+#: XMLDB/FileReader.cpp:554
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:519
+#: XMLDB/FileReader.cpp:565
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "ファイル <filename>%1</filename> にエラー: 要素が見つかりません"
 
-#: XMLDB/FileReader.cpp:525
+#: XMLDB/FileReader.cpp:571
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -6213,10 +6221,3 @@ msgstr ""
 #| msgid "Loading Database"
 msgid "Error while reading database file"
 msgstr "データベースを読み込み"
-
-#, fuzzy
-
-
-
-
-#, fuzzy

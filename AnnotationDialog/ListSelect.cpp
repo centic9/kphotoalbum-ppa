@@ -139,24 +139,36 @@ AnnotationDialog::ListSelect::ListSelect( const DB::CategoryPtr& category, QWidg
 
 void AnnotationDialog::ListSelect::slotReturn()
 {
-    if ( isInputMode() )  {
-        QString txt = m_lineEdit->text().trimmed();
-        if ( txt.isEmpty() )
+    if (isInputMode()) {
+        QString enteredText = m_lineEdit->text().trimmed();
+        if (enteredText.isEmpty()) {
             return;
+        }
 
-        m_category->addItem( txt);
+        if (searchForUntaggedImagesTagNeeded()) {
+            if (enteredText == Settings::SettingsData::instance()->untaggedTag()) {
+                KMessageBox::information(
+                    this,
+                    i18n("The tag you entered is the tag that is set automatically for newly "
+                         "found, untagged images (cf. <interface>Settings|Configure KPhotoAlbum..."
+                         "|Categories|Untagged Images</interface>). It will not show up here as "
+                         "long as it is selected for this purpose.")
+                );
+                m_lineEdit->setText(QString());
+                return;
+            }
+        }
+
+        m_category->addItem(enteredText);
         rePopulate();
 
-        QList<QTreeWidgetItem*> items = m_treeWidget->findItems(txt, Qt::MatchExactly, 0);
-
-        if (!items.isEmpty()) {
+        QList<QTreeWidgetItem*> items = m_treeWidget->findItems(enteredText, Qt::MatchExactly, 0);
+        if (! items.isEmpty()) {
             items.at(0)->setCheckState(0, Qt::Checked);
-
             if (m_positionable) {
                 emit positionableTagSelected(m_category->name(), items.at(0)->text(0));
             }
-        }
-        else {
+        } else {
             Q_ASSERT(false);
         }
 
@@ -536,13 +548,22 @@ void AnnotationDialog::ListSelect::populate()
     hideUntaggedImagesTag();
 }
 
-void AnnotationDialog::ListSelect::hideUntaggedImagesTag()
+bool AnnotationDialog::ListSelect::searchForUntaggedImagesTagNeeded()
 {
     if (! Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()) {
-        return;
+        return false;
     }
 
     if (Settings::SettingsData::instance()->untaggedCategory() != category()) {
+        return false;
+    }
+
+    return true;
+}
+
+void AnnotationDialog::ListSelect::hideUntaggedImagesTag()
+{
+    if (! searchForUntaggedImagesTagNeeded()) {
         return;
     }
 
@@ -551,7 +572,7 @@ void AnnotationDialog::ListSelect::hideUntaggedImagesTag()
         Qt::MatchExactly | Qt::MatchRecursive, 0
     );
 
-    // Be sure not to crash here in case the config points to a non-existant tag
+    // Be sure not to crash here in case the config points to a non-existent tag
     if (matchingTags.at(0) == nullptr) {
         return;
     }

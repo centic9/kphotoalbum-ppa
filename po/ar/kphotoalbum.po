@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-03-18 01:48+0000\n"
+"POT-Creation-Date: 2015-05-03 01:57+0000\n"
 "PO-Revision-Date: 2013-07-03 11:26+0300\n"
 "Last-Translator: Safa Alfulaij <safaalfulaij@hotmail.con>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
@@ -312,7 +312,7 @@ msgstr "إضافة التعليقات على السابق"
 msgid "OK dialog"
 msgstr "حوار الموافقة"
 
-#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:334
 #: Settings/CategoryPage.cpp:79
 #, fuzzy
 msgid "Delete"
@@ -466,59 +466,67 @@ msgstr "أو"
 msgid "and"
 msgstr "و"
 
-#: AnnotationDialog/ListSelect.cpp:312
+#: AnnotationDialog/ListSelect.cpp:152
+msgid ""
+"The tag you entered is the tag that is set automatically for newly found, "
+"untagged images (cf. <interface>Settings|Configure KPhotoAlbum...|Categories|"
+"Untagged Images</interface>). It will not show up here as long as it is "
+"selected for this purpose."
+msgstr ""
+
+#: AnnotationDialog/ListSelect.cpp:324
 msgid "No Item Selected"
 msgstr "لم يتم إختيار عنصر"
 
-#: AnnotationDialog/ListSelect.cpp:323
+#: AnnotationDialog/ListSelect.cpp:335
 msgid "Rename..."
 msgstr "إعادة التسمية..."
 
-#: AnnotationDialog/ListSelect.cpp:325
+#: AnnotationDialog/ListSelect.cpp:337
 #, fuzzy
 #| msgid "New Group"
 msgid "<b>Tag Groups</b>"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:345
 #, fuzzy
 #| msgid "New Group"
 msgid "Tag groups"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "Add this tag to a new tag group..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:353
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Make this tag a tag group and add a tag..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:359
+#: AnnotationDialog/ListSelect.cpp:371
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgid "Remove from tag group %1"
 msgstr "محو المجموعة %1 فعلاً ؟"
 
-#: AnnotationDialog/ListSelect.cpp:362
+#: AnnotationDialog/ListSelect.cpp:374
 msgid "<b>Sorting</b>"
 msgstr "<b>الفرز</b>"
 
-#: AnnotationDialog/ListSelect.cpp:368
+#: AnnotationDialog/ListSelect.cpp:380
 msgid "Usage"
 msgstr "الإستعمالية"
 
-#: AnnotationDialog/ListSelect.cpp:369
+#: AnnotationDialog/ListSelect.cpp:381
 #, fuzzy
 msgid "Alphabetical (Flat)"
 msgstr "أبجدي"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:382
 #, fuzzy
 msgid "Alphabetical (Tree)"
 msgstr "أبجدي"
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:402
 #, fuzzy, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -527,26 +535,26 @@ msgstr ""
 "<p>هل تريد فعلاً محو \"%1\"?<br>إنّ محو العنصر سوف يحذف أي معلومات عنه من أيّ "
 "صورة تحتوي على العنصر.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:394
+#: AnnotationDialog/ListSelect.cpp:406
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "محو %1 حقاً ؟"
 
-#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:538
 #: Settings/TagGroupsPage.cpp:781
 #, fuzzy
 msgid "&Delete"
 msgstr "ا&حذف"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Rename Item"
 msgstr "إعادة تسمية العنصر"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Enter new name:"
 msgstr "أدخل الاسم الجديد:"
 
-#: AnnotationDialog/ListSelect.cpp:421
+#: AnnotationDialog/ListSelect.cpp:433
 #, fuzzy, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -555,26 +563,26 @@ msgstr ""
 "<p>هل تريد حقاً إعادة تسمية \"%1\" إلى \"%2\" ؟<br> عند تطبيق ذلك ستعاد تسمية "
 "\"%3\" على اسم أي صورة تحتويه.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:425
+#: AnnotationDialog/ListSelect.cpp:437
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "هل حقاً تريد إعادة تسمية %1 ؟"
 
-#: AnnotationDialog/ListSelect.cpp:462
+#: AnnotationDialog/ListSelect.cpp:474
 #, fuzzy
 #| msgid "New Group"
 msgid "New tag group"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:463
+#: AnnotationDialog/ListSelect.cpp:475
 msgid "Name for the new tag group the tag will be added to:"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:474
+#: AnnotationDialog/ListSelect.cpp:486
 msgid "Add a tag"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:475
+#: AnnotationDialog/ListSelect.cpp:487
 msgid "Name for the tag to be added to this tag group:"
 msgstr ""
 
@@ -3800,29 +3808,33 @@ msgstr ""
 msgid "Database entry"
 msgstr "قاعدة بيانات منتهى خلفي"
 
-#: Settings/FaceManagementPage.cpp:126
+#: Settings/FaceManagementPage.cpp:112
+msgid "Trained faces"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:127
 #, fuzzy
 msgid "Delete selected"
 msgstr "أمحي المحدد"
 
-#: Settings/FaceManagementPage.cpp:132
+#: Settings/FaceManagementPage.cpp:133
 #, fuzzy
 msgid "Erase database"
 msgstr "التحديث قاعدة بيانات"
 
-#: Settings/FaceManagementPage.cpp:137
+#: Settings/FaceManagementPage.cpp:138
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:210
+#: Settings/FaceManagementPage.cpp:213
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
 msgstr "هل تريد حفظ التغييرات ؟"
 
-#: Settings/FaceManagementPage.cpp:235
+#: Settings/FaceManagementPage.cpp:238
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
@@ -4661,13 +4673,13 @@ msgctxt ""
 msgid "video"
 msgstr "فيديو"
 
-#: ThumbnailView/GridResizeSlider.cpp:150
+#: ThumbnailView/GridResizeSlider.cpp:155
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
 msgstr ""
 
-#: ThumbnailView/GridResizeSlider.cpp:152
+#: ThumbnailView/GridResizeSlider.cpp:157
 #, fuzzy
 msgid "Really resize the thumbnails?"
 msgstr "إعادة ترتيب الأظافر"
@@ -5029,7 +5041,7 @@ msgstr[5] ""
 #, fuzzy, kde-format
 #| msgid "1 Month"
 msgid "1 month"
-msgid_plural "%1 month"
+msgid_plural "%1 months"
 msgstr[0] "شهر واحِد"
 msgstr[1] "شهر واحِد"
 msgstr[2] "شهر واحِد"
@@ -5087,7 +5099,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "غير قادر على نسخ '%1' إلى '%2'."
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:539
 msgid "Error Running Demo"
 msgstr "خطأ تنفيذ العرض التوضيحي"
 
@@ -5640,36 +5652,33 @@ msgstr "لم يتمكن إيجاد علامة الخيارات في ملف ال�
 msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr "لم يتمكن إيجاد علامة الصور في ملف التشكيل %1."
 
-#: XMLDB/FileReader.cpp:219
+#: XMLDB/FileReader.cpp:225
+#, kde-format
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with category names. "
-"This is a database internal update which won't affect the displayed category "
+"<p>This version of KPhotoAlbum would normally fix some issues with category "
+"names. Some changes inside the database (<kbd>index.xml</kbd> file) and the "
+"configuration are necessary to do this. Additionally, some (internal) files "
+"inside your collection directory have to be moved.</p><p>You don't have "
+"write access to your collection (<kbd>%1</kbd>), so this update can't be "
+"done now. Please check your permissions and re-run KPhotoAlbum.</"
+"p><p><b>Probably, some features may be missing or broken until the update "
+"can be done!</b></p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:339
+#, kde-format
+msgid ""
+"<p>This version of KPhotoAlbum fixes some issues with category names. This "
+"is a database internal update which won't affect the displayed category "
 "names or any tag data. Anyway, some files (category and tag thumbnails) have "
-"to be moved and the configuration file has to be fixed. If you want to know "
-"what exactly happens, read \"Differences to version 5\" in "
-"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
-"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
-"\" will skip the update. Only choose this if you don't want to or can't "
-"change any data now. You will be asked for the update on the next start "
-"again.</p>"
+"been moved and the configuration file and the database (<kbd>index.xml</"
+"kbd>) has been fixed. If you want to know what exactly happened, read "
+"\"Differences to version 5\" in <kbd>documentation/database-layout.md</kbd>."
+"</p><p>A backup of all (probably) changed files has been created in <kbd>%1</"
+"kbd>.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
-#, fuzzy
-msgid "Database Update"
-msgstr "قاعدة بيانات منتهى خلفي"
-
-#: XMLDB/FileReader.cpp:235
-msgid ""
-"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
-"some features in the running session (missing category and tag thumbnails, "
-"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
-"your database or this will become permanent!</b></p><p>To run the update "
-"later, close KPhotoAlbum without saving the database and don't use face "
-"recognition. You will be asked again for the update on the next start.</p>"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:412
+#: XMLDB/FileReader.cpp:458
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5688,7 +5697,7 @@ msgstr ""
 "الصيانة اقرأ EXIF معلومات</b> إلى معلومات</p><p> أخيرا الكل set نفِّذ<b> صور "
 "رتّب مختار أداء التاريخ الوقت</b> إلى رتّب بوصة قاعدة بيانات</p>"
 
-#: XMLDB/FileReader.cpp:422
+#: XMLDB/FileReader.cpp:468
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5702,11 +5711,11 @@ msgstr ""
 "قراءة صورة من JPEG بيانات أعلى itإيطالياهو s مفضّل إلى مع<code></code> مكتبة "
 "بعد done إلى إلى صح الكل مفقود معلومات</p>"
 
-#: XMLDB/FileReader.cpp:429
+#: XMLDB/FileReader.cpp:475
 msgid "Images/Videos Are Not Sorted"
 msgstr "الصور/المرئيات هي غير مفرزة"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:490
 #, fuzzy
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
@@ -5721,11 +5730,11 @@ msgstr ""
 "مُسْتعْرضة</b> و بعد اختيار<tt> ابني مُسْتعْرضة</tt></p><p> لا نتيجو بوصة إضافي "
 "فراغ بوصة صورة مصغّرة اعرض هو الكل هو لا بوصة الإيطالية</p>"
 
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:495
 msgid "Not All Images Have Size Information"
 msgstr "ليست كلّ الصور تحتوي على معلومات عن القياس"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:518
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -5744,31 +5753,31 @@ msgstr ""
 "KDEDIRS محليّ</b></p><p> داخل حالة KDEDIRS set تذييل سلسلة نص IF<b> المسار</"
 "b> بيئة متغير</p>"
 
-#: XMLDB/FileReader.cpp:479
+#: XMLDB/FileReader.cpp:525
 msgid "No default setup file found"
 msgstr "لم أعثر على ملف تعيينات إفتراضي"
 
-#: XMLDB/FileReader.cpp:493
+#: XMLDB/FileReader.cpp:539
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "غير قادر على فتح '%1' للقراءة"
 
-#: XMLDB/FileReader.cpp:506
+#: XMLDB/FileReader.cpp:552
 #, fuzzy, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "يوجد خطأ على السطر %1 العمود %2 في الملف %3: %4"
 
-#: XMLDB/FileReader.cpp:508
+#: XMLDB/FileReader.cpp:554
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:519
+#: XMLDB/FileReader.cpp:565
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "خطأ في الملف %1: لم أجد إي عنصر"
 
-#: XMLDB/FileReader.cpp:525
+#: XMLDB/FileReader.cpp:571
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -5847,6 +5856,10 @@ msgstr ""
 #| msgid "Converting database"
 msgid "Error while reading database file"
 msgstr "جاري تحويل قاعدة البيانات"
+
+#, fuzzy
+
+
 
 #, fuzzy
 
