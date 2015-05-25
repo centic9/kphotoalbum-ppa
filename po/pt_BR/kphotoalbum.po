@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-03-18 01:48+0000\n"
-"PO-Revision-Date: 2015-03-17 08:09-0300\n"
+"POT-Creation-Date: 2015-05-03 01:57+0000\n"
+"PO-Revision-Date: 2015-05-03 11:22-0300\n"
 "Last-Translator: André Marcelo Alvarenga <alvarenga@kde.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_br@kde.org>\n"
 "Language: pt_BR\n"
@@ -328,7 +328,7 @@ msgstr "Anotar anterior"
 msgid "OK dialog"
 msgstr "Diálogo de confirmação"
 
-#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:334
 #: Settings/CategoryPage.cpp:79
 msgid "Delete"
 msgstr "Excluir"
@@ -504,52 +504,64 @@ msgstr "ou"
 msgid "and"
 msgstr "e"
 
-#: AnnotationDialog/ListSelect.cpp:312
+#: AnnotationDialog/ListSelect.cpp:152
+msgid ""
+"The tag you entered is the tag that is set automatically for newly found, "
+"untagged images (cf. <interface>Settings|Configure KPhotoAlbum...|Categories|"
+"Untagged Images</interface>). It will not show up here as long as it is "
+"selected for this purpose."
+msgstr ""
+"A etiqueta que você inseriu é automaticamente definida para imagens recentes "
+"encontradas e sem etiquetas (ver em <interface>Configurações|Configurar o "
+"KPhotoAlbum...|Categorias|Imagens sem etiquetas</interface>). Não será "
+"mostrada aqui enquanto for selecionada para esse fim."
+
+#: AnnotationDialog/ListSelect.cpp:324
 msgid "No Item Selected"
 msgstr "Nenhum item selecionado"
 
-#: AnnotationDialog/ListSelect.cpp:323
+#: AnnotationDialog/ListSelect.cpp:335
 msgid "Rename..."
 msgstr "Renomear..."
 
-#: AnnotationDialog/ListSelect.cpp:325
+#: AnnotationDialog/ListSelect.cpp:337
 msgid "<b>Tag Groups</b>"
 msgstr "<b>Grupos de etiquetas</b>"
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:345
 msgid "Tag groups"
 msgstr "Grupos de etiquetas"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "Add this tag to a new tag group..."
 msgstr "Adicionar esta etiqueta para um novo grupo de etiquetas..."
 
-#: AnnotationDialog/ListSelect.cpp:353
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Make this tag a tag group and add a tag..."
 msgstr "Tornar esta etiqueta um grupo de etiquetas e adicionar uma etiqueta..."
 
-#: AnnotationDialog/ListSelect.cpp:359
+#: AnnotationDialog/ListSelect.cpp:371
 #, kde-format
 msgid "Remove from tag group %1"
 msgstr "Renomear do grupo de etiquetas %1"
 
-#: AnnotationDialog/ListSelect.cpp:362
+#: AnnotationDialog/ListSelect.cpp:374
 msgid "<b>Sorting</b>"
 msgstr "<b>Ordenando</b>"
 
-#: AnnotationDialog/ListSelect.cpp:368
+#: AnnotationDialog/ListSelect.cpp:380
 msgid "Usage"
 msgstr "Uso"
 
-#: AnnotationDialog/ListSelect.cpp:369
+#: AnnotationDialog/ListSelect.cpp:381
 msgid "Alphabetical (Flat)"
 msgstr "Alfabética (Plano)"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:382
 msgid "Alphabetical (Tree)"
 msgstr "Alfabética (Árvore)"
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:402
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -559,25 +571,25 @@ msgstr ""
 "quaisquer informações sobre ele, de qualquer imagem que possa conter o item."
 "</p>"
 
-#: AnnotationDialog/ListSelect.cpp:394
+#: AnnotationDialog/ListSelect.cpp:406
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "Deseja realmente excluir %1?"
 
-#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:538
 #: Settings/TagGroupsPage.cpp:781
 msgid "&Delete"
 msgstr "E&xcluir"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Rename Item"
 msgstr "Renomear item"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Enter new name:"
 msgstr "Digite o novo nome:"
 
-#: AnnotationDialog/ListSelect.cpp:421
+#: AnnotationDialog/ListSelect.cpp:433
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -586,24 +598,24 @@ msgstr ""
 "<p>Deseja realmente renomear \"%1\" para \"%2\"?<br/>Ao fazer isto será "
 "renomeado \"%3\" em qualquer imagem contendo-o.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:425
+#: AnnotationDialog/ListSelect.cpp:437
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "Deseja realmente renomear %1?"
 
-#: AnnotationDialog/ListSelect.cpp:462
+#: AnnotationDialog/ListSelect.cpp:474
 msgid "New tag group"
 msgstr "Novo grupo de etiquetas"
 
-#: AnnotationDialog/ListSelect.cpp:463
+#: AnnotationDialog/ListSelect.cpp:475
 msgid "Name for the new tag group the tag will be added to:"
 msgstr "Nome do novo grupo de etiquetas em que a etiqueta será adicionada:"
 
-#: AnnotationDialog/ListSelect.cpp:474
+#: AnnotationDialog/ListSelect.cpp:486
 msgid "Add a tag"
 msgstr "Adicionar uma etiqueta"
 
-#: AnnotationDialog/ListSelect.cpp:475
+#: AnnotationDialog/ListSelect.cpp:487
 msgid "Name for the tag to be added to this tag group:"
 msgstr "Nome da etiqueta a ser adicionado a este grupo de etiquetas:"
 
@@ -3601,11 +3613,8 @@ msgid "Birthday of %1:"
 msgstr "Aniversário de %1:"
 
 #: Settings/BirthdayPage.cpp:244
-#, fuzzy
-#| msgctxt "@action:inmenu"
-#| msgid "Annotate..."
 msgid "Enter a date..."
-msgstr "Anotar..."
+msgstr "Insira uma data..."
 
 #: Settings/BirthdayPage.cpp:291
 msgid "<i>Select an item on the left to edit the birthday</i>"
@@ -3885,15 +3894,19 @@ msgstr "Reconhecimento de rostos"
 msgid "Database entry"
 msgstr "Item do banco de dados"
 
-#: Settings/FaceManagementPage.cpp:126
+#: Settings/FaceManagementPage.cpp:112
+msgid "Trained faces"
+msgstr "Rostos treinados"
+
+#: Settings/FaceManagementPage.cpp:127
 msgid "Delete selected"
 msgstr "Excluir selecionado"
 
-#: Settings/FaceManagementPage.cpp:132
+#: Settings/FaceManagementPage.cpp:133
 msgid "Erase database"
 msgstr "Apagar o banco de dados"
 
-#: Settings/FaceManagementPage.cpp:137
+#: Settings/FaceManagementPage.cpp:138
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
@@ -3902,11 +3915,11 @@ msgstr ""
 "categorias não são adotadas pelo banco de dados de reconhecimento até que as "
 "alterações sejam salvas!"
 
-#: Settings/FaceManagementPage.cpp:210
+#: Settings/FaceManagementPage.cpp:213
 msgid "Do you really want to delete the selected tags?"
 msgstr "Deseja realmente excluir as etiquetas selecionadas?"
 
-#: Settings/FaceManagementPage.cpp:235
+#: Settings/FaceManagementPage.cpp:238
 msgid "Do you really want to erase the database?"
 msgstr "Deseja realmente apagar o banco de dados?"
 
@@ -4293,7 +4306,7 @@ msgid ""
 "want to ignore in the input field, one per line. Be sure to add the exact "
 "comment, including all whitespace.</p>"
 msgstr ""
-"<p>Algumas câmaras armazenam automaticamente comentários genéricos em cada "
+"<p>Algumas câmeras armazenam automaticamente comentários genéricos em cada "
 "imagem. Esses comentários podem ser ignorados automaticamente.</p><p>Indique "
 "os comentários que deseja ignorar no campo de entrada, um por linha. "
 "Certifique-se de adicionar o comentário exato, incluindo todos os espaços em "
@@ -4805,7 +4818,7 @@ msgctxt ""
 msgid "video"
 msgstr "vídeo"
 
-#: ThumbnailView/GridResizeSlider.cpp:150
+#: ThumbnailView/GridResizeSlider.cpp:155
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
@@ -4813,7 +4826,7 @@ msgstr ""
 "Deseja realmente redimensionar as miniaturas armazenadas? Será necessário "
 "gerar todas as miniaturas novamente!"
 
-#: ThumbnailView/GridResizeSlider.cpp:152
+#: ThumbnailView/GridResizeSlider.cpp:157
 msgid "Really resize the thumbnails?"
 msgstr "Deseja realmente redimensionar as miniaturas?"
 
@@ -5280,7 +5293,7 @@ msgstr[1] "%1 dias"
 #: Utilities/Util.cpp:249
 #, kde-format
 msgid "1 month"
-msgid_plural "%1 month"
+msgid_plural "%1 months"
 msgstr[0] "1 mês"
 msgstr[1] "%1 meses"
 
@@ -5336,7 +5349,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Não foi possível copiar de '%1' para '%2'."
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:539
 msgid "Error Running Demo"
 msgstr "Erro ao executar a demonstração"
 
@@ -5831,55 +5844,52 @@ msgid "Unable to find 'Images' tag in configuration file %1."
 msgstr ""
 "Não foi possível encontrar a etiqueta 'Images' no arquivo de configuração %1."
 
-#: XMLDB/FileReader.cpp:219
+#: XMLDB/FileReader.cpp:225
+#, kde-format
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with category names. "
-"This is a database internal update which won't affect the displayed category "
+"<p>This version of KPhotoAlbum would normally fix some issues with category "
+"names. Some changes inside the database (<kbd>index.xml</kbd> file) and the "
+"configuration are necessary to do this. Additionally, some (internal) files "
+"inside your collection directory have to be moved.</p><p>You don't have "
+"write access to your collection (<kbd>%1</kbd>), so this update can't be "
+"done now. Please check your permissions and re-run KPhotoAlbum.</"
+"p><p><b>Probably, some features may be missing or broken until the update "
+"can be done!</b></p>"
+msgstr ""
+"<p>Esta versão do KPhotoAlbum corrige alguns problemas relacionados aos "
+"nomes das categorias. Para isso, será necessário efetuar algumas alterações "
+"no banco de dados (arquivo <kbd>index.xml</kbd>) e na configuração. Além "
+"disso, alguns arquivos (internos) dentro da sua coleção precisam ser movidos "
+"para outro local.</p><p>Como você não tem acesso a sua coleção (<kbd>%1</"
+"kbd>), a atualização não poderá ser feita agora. Verifique suas permissões e "
+"execute o KPhotoAlbum novamente.</p><p><b>É provável que algumas "
+"funcionalidades estejam ausentes ou apresentem problemas até que a "
+"atualização seja feita!</b></p>"
+
+#: XMLDB/FileReader.cpp:339
+#, kde-format
+msgid ""
+"<p>This version of KPhotoAlbum fixes some issues with category names. This "
+"is a database internal update which won't affect the displayed category "
 "names or any tag data. Anyway, some files (category and tag thumbnails) have "
-"to be moved and the configuration file has to be fixed. If you want to know "
-"what exactly happens, read \"Differences to version 5\" in "
-"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
-"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
-"\" will skip the update. Only choose this if you don't want to or can't "
-"change any data now. You will be asked for the update on the next start "
-"again.</p>"
+"been moved and the configuration file and the database (<kbd>index.xml</"
+"kbd>) has been fixed. If you want to know what exactly happened, read "
+"\"Differences to version 5\" in <kbd>documentation/database-layout.md</kbd>."
+"</p><p>A backup of all (probably) changed files has been created in <kbd>%1</"
+"kbd>.</p>"
 msgstr ""
-"<p>Esta versão do KPhotoAlbum irá corrige alguns problemas com os nomes das "
-"categorias. Esta é uma atualização interna do banco de dados que não afetará "
-"os nomes apresentados das categorias ou de qualquer informação das "
-"etiquetas. Da mesma forma, alguns arquivos (miniaturas de etiquetas e "
-"categorias) deverão ser movidos e o arquivo de configuração precisa ser "
-"corrigido. Se quiser saber exatamente o que vai acontecer, leia as "
-"\"Diferenças para a versão 5\" do <kbd>documentation/database-layout.md</"
-"kbd>.</p><p><b>Clique em \"Continuar\" para executar a atualização. Isto "
-"normalmente será o que deseja fazer agora.</b></p><p>Se clicar em \"Cancelar"
-"\" irá ignorar a atualização. Escolha isto apenas se não quiser ou não puder "
-"alterar nenhum dado agora. Você será novamente questionado se quer efetuar a "
-"atualização na próxima vez que iniciar o programa.</p>"
+"<p>Esta versão do KPhotoAlbum corrige alguns problemas relacionados aos "
+"nomes das categorias. Esta é uma atualização interna do banco de dados que "
+"não afetará os nomes apresentados das categorias ou de qualquer informação "
+"das etiquetas. Da mesma forma, alguns arquivos (miniaturas de etiquetas e "
+"categorias) deverão ser movidos para outro local e o arquivo de configuração "
+"e o banco de dados (<kbd>index.xml</kbd>) precisam ser corrigidos. Se quiser "
+"saber exatamente o que vai acontecer, leia as \"Diferenças para a versão 5\" "
+"do <kbd>documentation/database-layout.md</kbd>.</p><p>Será criada uma cópia "
+"de segurança de todos (provavelmente) os arquivos alterados em <kbd>%1</kbd>."
+"</p>"
 
-#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
-msgid "Database Update"
-msgstr "Atualização do banco de dados"
-
-#: XMLDB/FileReader.cpp:235
-msgid ""
-"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
-"some features in the running session (missing category and tag thumbnails, "
-"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
-"your database or this will become permanent!</b></p><p>To run the update "
-"later, close KPhotoAlbum without saving the database and don't use face "
-"recognition. You will be asked again for the update on the next start.</p>"
-msgstr ""
-"<p><b>Você ignorou a atualização do banco de dados!</b></p><p>Provavelmente, "
-"você perderá algumas funcionalidades na sessão em andamento (falta das "
-"miniaturas das etiquetas e categorias, problemas na funcionalidade das "
-"\"imagens sem etiqueta\").<b>Não salve seu banco de dados ou isso pode se "
-"tornar permanente!</b></p><p>Para executar a atualização mais tarde, feche o "
-"KPhotoAlbum sem salvar o banco de dados e não use o reconhecimento de "
-"rostos. Você será novamente questionado se quer efetuar a atualização na "
-"próxima vez que iniciar o programa.</p>"
-
-#: XMLDB/FileReader.cpp:412
+#: XMLDB/FileReader.cpp:458
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5902,7 +5912,7 @@ msgstr ""
 "configuradas, você pode executar <b>Manutenção->Organizar tudo por data e "
 "hora</b> para organizá-las no banco de dados. </p>"
 
-#: XMLDB/FileReader.cpp:422
+#: XMLDB/FileReader.cpp:468
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5919,11 +5929,11 @@ msgstr ""
 "Após ter feito isso, você será perguntado o que fazer para corrigir todas as "
 "informações faltando.</p>"
 
-#: XMLDB/FileReader.cpp:429
+#: XMLDB/FileReader.cpp:475
 msgid "Images/Videos Are Not Sorted"
 msgstr "As imagens/vídeos não estão organizados"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:490
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5940,11 +5950,11 @@ msgstr ""
 "resultará em espaço extra ao redor das imagens na visualização de miniatura "
 "- apenas isto - então não há urgência em fazê-lo.</p>"
 
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:495
 msgid "Not All Images Have Size Information"
 msgstr "Nem todas as imagens possuem informações sobre o tamanho"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:518
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5966,31 +5976,31 @@ msgstr ""
 "local/kde</b></p><p>No caso de você já ter ajustado a variável KDEDIRS, "
 "simplesmente adicione a string, na variável de ambiente <b>PATH</b>.</p>"
 
-#: XMLDB/FileReader.cpp:479
+#: XMLDB/FileReader.cpp:525
 msgid "No default setup file found"
 msgstr "Nenhum arquivo de configuração padrão encontrado"
 
-#: XMLDB/FileReader.cpp:493
+#: XMLDB/FileReader.cpp:539
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Não foi possível abrir '%1' para leitura"
 
-#: XMLDB/FileReader.cpp:506
+#: XMLDB/FileReader.cpp:552
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "linha %1 coluna %2 no arquivo %3: %4"
 
-#: XMLDB/FileReader.cpp:508
+#: XMLDB/FileReader.cpp:554
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Ocorreu uma falha ao recuperar a cópia de segurança: %1"
 
-#: XMLDB/FileReader.cpp:519
+#: XMLDB/FileReader.cpp:565
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Erro no arquivo %1: nenhum elemento encontrado"
 
-#: XMLDB/FileReader.cpp:525
+#: XMLDB/FileReader.cpp:571
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""

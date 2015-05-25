@@ -2,7 +2,7 @@
 # Copyright (C) 2009 This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2014.
+# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2014, 2015.
 # Cristina Yenyxe Gonzalez Garcia <the.blue.valkyrie@gmail.com>, 2009.
 # Adrián Martínez <sfxgt3@gmail.com>, 2009.
 # Pablo Pita Leira <pablo.pita@gmail.com>, 2010, 2011.
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-03-18 01:48+0000\n"
-"PO-Revision-Date: 2014-11-27 21:33+0100\n"
+"POT-Creation-Date: 2015-05-03 01:57+0000\n"
+"PO-Revision-Date: 2015-04-24 15:06+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -63,11 +63,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: AnnotationDialog/Dialog.cpp:152 AnnotationDialog/Dialog.cpp:154
-#, fuzzy
-#| msgctxt "Abbreviated month name"
-#| msgid "apr"
 msgid "Map"
-msgstr "abr"
+msgstr "Mapa"
 
 #: AnnotationDialog/Dialog.cpp:161
 msgctxt "@info:whatsthis"
@@ -119,7 +116,7 @@ msgstr "Hora: "
 
 #: AnnotationDialog/Dialog.cpp:327
 msgid "Use Fuzzy Date"
-msgstr ""
+msgstr "Usar fecha imprecisa"
 
 #: AnnotationDialog/Dialog.cpp:329
 msgctxt "@info"
@@ -131,10 +128,17 @@ msgid ""
 "the photo comes from an analog camera), then you should set <interface>Use "
 "Fuzzy Date</interface>.</para>"
 msgstr ""
+"<para>In KPhotoAlbum, las imágenes pueden tener una fecha y hora exactas o "
+"una fecha <emphasis>imprecisa</emphasis>, que se refiere a cualquier momento "
+"de un intervalo de tiempo. Las imágenes obtenidas con una cámara digital "
+"suelen tener una fecha exacta.</para><para>Si desconoce cuándo se obtuvo una "
+"foto con exactitud (por ejemplo, si la foto se hizo con una cámara "
+"analógica), debería marcar <interface>Usar fecha imprecisa</interface>.</"
+"para>"
 
 #: AnnotationDialog/Dialog.cpp:344
 msgid "Minimum megapixels:"
-msgstr ""
+msgstr "Mínimo de megapíxeles:"
 
 #: AnnotationDialog/Dialog.cpp:357
 msgid "Rating:"
@@ -142,7 +146,7 @@ msgstr "Puntuación:"
 
 #: AnnotationDialog/Dialog.cpp:364
 msgid "Rating search mode:"
-msgstr ""
+msgstr "Modo de búsqueda por puntuación:"
 
 #: AnnotationDialog/Dialog.cpp:368
 msgid "=="
@@ -162,11 +166,11 @@ msgstr "!="
 
 #: AnnotationDialog/Dialog.cpp:376
 msgid "File Name Pattern: "
-msgstr ""
+msgstr "Patrón de nombre de archivo: "
 
 #: AnnotationDialog/Dialog.cpp:379
 msgid "File Name Pattern"
-msgstr ""
+msgstr "Patrón de nombre de archivo"
 
 #: AnnotationDialog/Dialog.cpp:384
 msgid "Search only for RAW files"
@@ -192,7 +196,7 @@ msgstr "Anotaciones"
 
 #: AnnotationDialog/Dialog.cpp:814
 msgid "Configure window layout..."
-msgstr ""
+msgstr "Configurar la distribución de la ventana..."
 
 #: AnnotationDialog/Dialog.cpp:815
 msgid "Save Current Window Setup"
@@ -218,15 +222,15 @@ msgstr "Ordenar por fecha"
 
 #: AnnotationDialog/Dialog.cpp:847
 msgid "Match tags from the first character."
-msgstr ""
+msgstr "Coincidir etiquetas desde el primer carácter."
 
 #: AnnotationDialog/Dialog.cpp:848
 msgid "Match tags from word boundaries."
-msgstr ""
+msgstr "Coincidir etiquetas desde los límites de palabras."
 
 #: AnnotationDialog/Dialog.cpp:849
 msgid "Match tags anywhere."
-msgstr ""
+msgstr "Coincidir etiquetas en cualquier lugar."
 
 #: AnnotationDialog/Dialog.cpp:867 AnnotationDialog/ListSelect.cpp:109
 msgid "Show only selected Ctrl+S"
@@ -307,7 +311,7 @@ msgstr "Anotar anterior"
 msgid "OK dialog"
 msgstr "Diálogo OK"
 
-#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:322
+#: AnnotationDialog/Dialog.cpp:1233 AnnotationDialog/ListSelect.cpp:334
 #: Settings/CategoryPage.cpp:79
 msgid "Delete"
 msgstr "Eliminar"
@@ -457,58 +461,66 @@ msgstr "o"
 msgid "and"
 msgstr "y"
 
-#: AnnotationDialog/ListSelect.cpp:312
+#: AnnotationDialog/ListSelect.cpp:152
+msgid ""
+"The tag you entered is the tag that is set automatically for newly found, "
+"untagged images (cf. <interface>Settings|Configure KPhotoAlbum...|Categories|"
+"Untagged Images</interface>). It will not show up here as long as it is "
+"selected for this purpose."
+msgstr ""
+
+#: AnnotationDialog/ListSelect.cpp:324
 msgid "No Item Selected"
 msgstr "Ningún elemento seleccionado"
 
-#: AnnotationDialog/ListSelect.cpp:323
+#: AnnotationDialog/ListSelect.cpp:335
 msgid "Rename..."
 msgstr "Cambiar nombre..."
 
-#: AnnotationDialog/ListSelect.cpp:325
+#: AnnotationDialog/ListSelect.cpp:337
 #, fuzzy
 #| msgid "New Group"
 msgid "<b>Tag Groups</b>"
 msgstr "Nuevo grupo"
 
-#: AnnotationDialog/ListSelect.cpp:333
+#: AnnotationDialog/ListSelect.cpp:345
 #, fuzzy
 #| msgid "New Group"
 msgid "Tag groups"
 msgstr "Nuevo grupo"
 
-#: AnnotationDialog/ListSelect.cpp:350
+#: AnnotationDialog/ListSelect.cpp:362
 msgid "Add this tag to a new tag group..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:353
+#: AnnotationDialog/ListSelect.cpp:365
 msgid "Make this tag a tag group and add a tag..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:359
+#: AnnotationDialog/ListSelect.cpp:371
 #, fuzzy, kde-format
 #| msgctxt "@action:inmenu"
 #| msgid "Rename group \"%1\""
 msgid "Remove from tag group %1"
 msgstr "Cambiar el nombre del grupo «%1»"
 
-#: AnnotationDialog/ListSelect.cpp:362
+#: AnnotationDialog/ListSelect.cpp:374
 msgid "<b>Sorting</b>"
 msgstr "<b>Orden</b>"
 
-#: AnnotationDialog/ListSelect.cpp:368
+#: AnnotationDialog/ListSelect.cpp:380
 msgid "Usage"
 msgstr "Uso"
 
-#: AnnotationDialog/ListSelect.cpp:369
+#: AnnotationDialog/ListSelect.cpp:381
 msgid "Alphabetical (Flat)"
 msgstr "Alfabético (plano)"
 
-#: AnnotationDialog/ListSelect.cpp:370
+#: AnnotationDialog/ListSelect.cpp:382
 msgid "Alphabetical (Tree)"
 msgstr "Alfabético (árbol)"
 
-#: AnnotationDialog/ListSelect.cpp:390
+#: AnnotationDialog/ListSelect.cpp:402
 #, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -517,25 +529,25 @@ msgstr ""
 "<p>¿Seguro que desea eliminar «%1»?<br/>Al eliminar un elemento también se "
 "eliminará su información de cualquier imagen que lo contuviese.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:394
+#: AnnotationDialog/ListSelect.cpp:406
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "¿Seguro que desea eliminar %1?"
 
-#: AnnotationDialog/ListSelect.cpp:395 Settings/TagGroupsPage.cpp:538
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:538
 #: Settings/TagGroupsPage.cpp:781
 msgid "&Delete"
 msgstr "&Eliminar"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Rename Item"
 msgstr "Cambiar nombre del elemento"
 
-#: AnnotationDialog/ListSelect.cpp:417
+#: AnnotationDialog/ListSelect.cpp:429
 msgid "Enter new name:"
 msgstr "Introduzca el nuevo nombre:"
 
-#: AnnotationDialog/ListSelect.cpp:421
+#: AnnotationDialog/ListSelect.cpp:433
 #, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -544,26 +556,26 @@ msgstr ""
 "<p>¿Seguro que desea cambiar el nombre de «%1» a «%2»?<br/>Al hacerlo "
 "cambiará el nombre de «%3» en cualquier imagen que lo contenga.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:425
+#: AnnotationDialog/ListSelect.cpp:437
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "¿Seguro que desea cambiar el nombre de %1?"
 
-#: AnnotationDialog/ListSelect.cpp:462
+#: AnnotationDialog/ListSelect.cpp:474
 #, fuzzy
 #| msgid "New Group"
 msgid "New tag group"
 msgstr "Nuevo grupo"
 
-#: AnnotationDialog/ListSelect.cpp:463
+#: AnnotationDialog/ListSelect.cpp:475
 msgid "Name for the new tag group the tag will be added to:"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:474
+#: AnnotationDialog/ListSelect.cpp:486
 msgid "Add a tag"
-msgstr ""
+msgstr "Añadir una etiqueta"
 
-#: AnnotationDialog/ListSelect.cpp:475
+#: AnnotationDialog/ListSelect.cpp:487
 msgid "Name for the tag to be added to this tag group:"
 msgstr ""
 
@@ -573,11 +585,9 @@ msgid "Is this %1 (%2)?"
 msgstr ""
 
 #: AnnotationDialog/ResizableFrame.cpp:84
-#, fuzzy
-#| msgid "Remove Tokens"
 msgctxt "area of an image; rectangle that is overlayed upon the image"
 msgid "Remove area"
-msgstr "Eliminar señales"
+msgstr "Eliminar área"
 
 #: AnnotationDialog/ResizableFrame.cpp:95
 msgid "Try to recognize this face"
@@ -588,19 +598,19 @@ msgstr ""
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
-msgstr ""
+msgstr "Eliminar la etiqueta %1 (%2)"
 
 #: AnnotationDialog/ResizableFrame.cpp:350
 #: AnnotationDialog/ResizableFrame.cpp:370
 msgid "Associate with"
-msgstr ""
+msgstr "Asociar con"
 
 #: AnnotationDialog/ResizableFrame.cpp:379
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
 "choices/menu items"
 msgid "Associate with"
-msgstr ""
+msgstr "Asociar con"
 
 #: AnnotationDialog/ResizableFrame.cpp:402
 #, kde-format
@@ -613,13 +623,13 @@ msgctxt ""
 "%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the tag's "
 "category"
 msgid "%1 %2 (%3)"
-msgstr ""
+msgstr "%1 %2 (%3)"
 
 #: AnnotationDialog/ResizableFrame.cpp:432
 #, kde-format
 msgctxt "%1 is the tag name and %2 is the tag's category"
 msgid "%1 (%2)"
-msgstr ""
+msgstr "%1 (%2)"
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
 msgid "Extracting Thumbnail"
@@ -631,15 +641,15 @@ msgstr "Extraer miniatura de vídeo"
 
 #: BackgroundJobs/ReadVideoLengthJob.cpp:41
 msgid "Read Video Length"
-msgstr ""
+msgstr "Leer longitud del vídeo"
 
 #: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:58
 msgid "Search for videos without length information"
-msgstr ""
+msgstr "Buscar vídeos sin información de longitud"
 
 #: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:63
 msgid "Searching for videos without video thumbnails"
-msgstr ""
+msgstr "Buscando vídeos sin miniaturas de vídeo"
 
 #: BackgroundTaskManager/JobInfo.cpp:64
 msgid "Not Started"
@@ -663,7 +673,7 @@ msgstr "Detalles"
 #: BackgroundTaskManager/JobModel.cpp:100
 msgctxt "@title:column Elapsed time"
 msgid "Elapsed"
-msgstr ""
+msgstr "Transcurrido"
 
 #: BackgroundTaskManager/JobViewer.cpp:33
 msgid "Background Job Viewer"
@@ -868,8 +878,8 @@ msgstr "Mostrar indicador de resolución"
 msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
 msgid_plural "%1 exact"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "1 exacta"
+msgstr[1] "%1 exactas"
 
 #: DateBar/DateBarWidget.cpp:684
 #, kde-format
@@ -886,8 +896,8 @@ msgstr[1] " + %1 intervalos"
 msgctxt "@info:status total image count"
 msgid " = 1 total"
 msgid_plural " = %1 total"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " = 1 en total"
+msgstr[1] " = %1 en total"
 
 #: DateBar/DateBarWidget.cpp:687
 #, kde-format
@@ -1075,8 +1085,8 @@ msgstr ""
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<p><b>Calculando suma de verificación para %1 archivo</b></p>"
+msgstr[1] "<p><b>Calculando suma de verificación para %1 archivos</b></p>"
 
 #: DB/NewImageFinder.cpp:333
 msgid ""
@@ -1329,9 +1339,8 @@ msgid "Inline Movies in pages"
 msgstr "Películas en línea en páginas"
 
 #: HTMLGenerator/HTMLDialog.cpp:105
-#, fuzzy
 msgid "Use HTML5 video tag"
-msgstr "Generar miniaturas"
+msgstr "Usar la etiqueta de vídeo de HTML5"
 
 #: HTMLGenerator/HTMLDialog.cpp:116
 msgid ""
@@ -1341,7 +1350,7 @@ msgstr ""
 
 #: HTMLGenerator/HTMLDialog.cpp:118
 msgid "Generate HTML5 video files (mp4 and ogg)"
-msgstr ""
+msgstr "Generar archivos de vídeo para HTML5 (mp4 y ogg)"
 
 #: HTMLGenerator/HTMLDialog.cpp:126
 msgid "What to Include"
@@ -1493,12 +1502,11 @@ msgstr ""
 
 #: ImageManager/ExtractOneVideoFrame.cpp:85
 msgid "Failed to start"
-msgstr ""
+msgstr "El inicio ha fallado"
 
 #: ImageManager/ExtractOneVideoFrame.cpp:86
-#, fuzzy
 msgid "Crashed"
-msgstr "se ha detenido"
+msgstr "Se ha detenido"
 
 #: ImageManager/ExtractOneVideoFrame.cpp:87
 msgid "Timedout"
@@ -1550,7 +1558,7 @@ msgstr "Incluir en el archivo .kim"
 
 #: ImportExport/Export.cpp:84
 msgid "Do not copy files, only generate .kim file"
-msgstr ""
+msgstr "No copiar archivos, generar solo el archivo .kim"
 
 #: ImportExport/Export.cpp:85
 msgid "Automatically copy next to .kim file"
@@ -2008,7 +2016,7 @@ msgstr "Johannes Zarl"
 
 #: main.cpp:48
 msgid "Tobias Leupold"
-msgstr ""
+msgstr "Tobias Leupold"
 
 #: main.cpp:51
 msgid "Will Stephenson"
@@ -2195,22 +2203,16 @@ msgid "Make Category Image"
 msgstr "Crear imagen de categoría"
 
 #: MainWindow/CopyPopup.cpp:31
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy image(s) to..."
-msgstr "Exportar/copiar imágenes..."
+msgstr "Copiar imágenes en..."
 
 #: MainWindow/CopyPopup.cpp:38
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy currently selected image to..."
-msgstr "Exportar/copiar imágenes..."
+msgstr "Copar las imágenes seleccionadas en..."
 
 #: MainWindow/CopyPopup.cpp:41
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy all selected images to..."
-msgstr "Exportar/copiar imágenes..."
+msgstr "Copiar todas las imágenes seleccionadas en..."
 
 #: MainWindow/CopyPopup.cpp:69 Viewer/ViewerWidget.cpp:1547
 msgctxt "@action:button"
@@ -2218,18 +2220,14 @@ msgid "Copy"
 msgstr "Copiar"
 
 #: MainWindow/CopyPopup.cpp:72 Viewer/ViewerWidget.cpp:1546
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Copy image to..."
-msgstr "Exportar/copiar imágenes..."
+msgstr "Copiar imagen en..."
 
 #: MainWindow/CopyPopup.cpp:76
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Copy images to..."
-msgstr "Exportar/copiar imágenes..."
+msgstr "Copiar imágenes en..."
 
 #: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
@@ -2570,7 +2568,7 @@ msgstr "No"
 
 #: MainWindow/FeatureDialog.cpp:242
 msgid "Only with MPlayer1"
-msgstr ""
+msgstr "Solo con MPlayer1"
 
 #: MainWindow/FeatureDialog.cpp:243
 msgid "Video thumbnail support"
@@ -3365,40 +3363,40 @@ msgstr ""
 
 #: Map/MapView.cpp:62
 msgid "Save the current map settings"
-msgstr ""
+msgstr "Guardar las preferencias de mapas actuales"
 
 #: Map/MapView.cpp:68
 msgid "Go to last map position"
-msgstr ""
+msgstr "Ir a la última posición del mapa"
 
 #: Map/MapView.cpp:137
-#, fuzzy
-#| msgid "Settings"
 msgid "Settings saved"
-msgstr "Preferencias"
+msgstr "Preferencias guardadas"
 
 #: Map/MapView.cpp:137
 msgid "Map view"
-msgstr ""
+msgstr "Vista de mapa"
 
 #: Map/MapView.cpp:148
-#, fuzzy
-#| msgid "Loading information from images"
 msgid "<i>Loading coordinates from the images ...</i>"
-msgstr "Cargando información de las imágenes"
+msgstr "<i>Cargando coordenadas de las imágenes...</i>"
 
 #: Map/MapView.cpp:157
 msgid "<i>This image does not contain geographic coordinates.</i>"
-msgstr ""
+msgstr "<i>Esta imagen no contiene coordenadas geográficas.</i>"
 
 #: Map/MapView.cpp:162
 msgid ""
 "<i>Some of the selected images do not contain geographic coordinates.</i>"
 msgstr ""
+"<i>Algunas de las imágenes seleccionadas no contienen coordenadas "
+"geográficas.</i>"
 
 #: Map/MapView.cpp:168
 msgid "<i>None of the selected images contain geographic coordinates.</i>"
 msgstr ""
+"<i>Ninguna de las imágenes seleccionadas contiene coordenadas geográficas.</"
+"i>"
 
 #: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:55
 msgctxt "The 'name' of an unnamed image collection."
@@ -3773,11 +3771,15 @@ msgstr "Reconocimiento facial"
 msgid "Database entry"
 msgstr "Motor de base de datos"
 
-#: Settings/FaceManagementPage.cpp:126
+#: Settings/FaceManagementPage.cpp:112
+msgid "Trained faces"
+msgstr ""
+
+#: Settings/FaceManagementPage.cpp:127
 msgid "Delete selected"
 msgstr "Borrar la selección"
 
-#: Settings/FaceManagementPage.cpp:132
+#: Settings/FaceManagementPage.cpp:133
 #, fuzzy
 #| msgid ""
 #| "Use data from\n"
@@ -3787,19 +3789,19 @@ msgstr ""
 "Usar datos de\n"
 "base de datos"
 
-#: Settings/FaceManagementPage.cpp:137
+#: Settings/FaceManagementPage.cpp:138
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:210
+#: Settings/FaceManagementPage.cpp:213
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
 msgstr "¿Desea guardar los cambios?"
 
-#: Settings/FaceManagementPage.cpp:235
+#: Settings/FaceManagementPage.cpp:238
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
@@ -4654,13 +4656,13 @@ msgctxt ""
 msgid "video"
 msgstr "vídeo"
 
-#: ThumbnailView/GridResizeSlider.cpp:150
+#: ThumbnailView/GridResizeSlider.cpp:155
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
 msgstr ""
 
-#: ThumbnailView/GridResizeSlider.cpp:152
+#: ThumbnailView/GridResizeSlider.cpp:157
 #, fuzzy
 #| msgid "Required size for the thumbnail:"
 msgid "Really resize the thumbnails?"
@@ -5082,9 +5084,11 @@ msgstr[0] "1 día"
 msgstr[1] "%1 días"
 
 #: Utilities/Util.cpp:249
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "1 month"
+#| msgid_plural "%1 month"
 msgid "1 month"
-msgid_plural "%1 month"
+msgid_plural "%1 months"
 msgstr[0] "1 mes"
 msgstr[1] "%1 meses"
 
@@ -5135,7 +5139,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "No se pudo copiar «%1» a «%2»."
 
 #: Utilities/Util.cpp:352 Utilities/Util.cpp:366 Utilities/Util.cpp:384
-#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:493
+#: Utilities/Util.cpp:401 XMLDB/FileReader.cpp:539
 msgid "Error Running Demo"
 msgstr "Error al ejecutar demo"
 
@@ -5643,37 +5647,33 @@ msgstr ""
 "No se pudo encontrar la etiqueta «Imágenes» en el archivo de configuración "
 "%1."
 
-#: XMLDB/FileReader.cpp:219
+#: XMLDB/FileReader.cpp:225
+#, kde-format
 msgid ""
-"<p>This version of KPhotoAlbum will fix some issues with category names. "
-"This is a database internal update which won't affect the displayed category "
+"<p>This version of KPhotoAlbum would normally fix some issues with category "
+"names. Some changes inside the database (<kbd>index.xml</kbd> file) and the "
+"configuration are necessary to do this. Additionally, some (internal) files "
+"inside your collection directory have to be moved.</p><p>You don't have "
+"write access to your collection (<kbd>%1</kbd>), so this update can't be "
+"done now. Please check your permissions and re-run KPhotoAlbum.</"
+"p><p><b>Probably, some features may be missing or broken until the update "
+"can be done!</b></p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:339
+#, kde-format
+msgid ""
+"<p>This version of KPhotoAlbum fixes some issues with category names. This "
+"is a database internal update which won't affect the displayed category "
 "names or any tag data. Anyway, some files (category and tag thumbnails) have "
-"to be moved and the configuration file has to be fixed. If you want to know "
-"what exactly happens, read \"Differences to version 5\" in "
-"<kbd>documentation/database-layout.md</kbd>.</p><p><b>Press \"Continue\" to "
-"run the update. This is what you normally want to do now.</b></p><p>\"Cancel"
-"\" will skip the update. Only choose this if you don't want to or can't "
-"change any data now. You will be asked for the update on the next start "
-"again.</p>"
+"been moved and the configuration file and the database (<kbd>index.xml</"
+"kbd>) has been fixed. If you want to know what exactly happened, read "
+"\"Differences to version 5\" in <kbd>documentation/database-layout.md</kbd>."
+"</p><p>A backup of all (probably) changed files has been created in <kbd>%1</"
+"kbd>.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:228 XMLDB/FileReader.cpp:234
-#, fuzzy
-#| msgid "Database backend"
-msgid "Database Update"
-msgstr "Motor de base de datos"
-
-#: XMLDB/FileReader.cpp:235
-msgid ""
-"<p><b>You skipped the database update!</b></p><p>Probably, you will miss "
-"some features in the running session (missing category and tag thumbnails, "
-"broken \"untagged images\" feature, broken face recognition). <b>Don't save "
-"your database or this will become permanent!</b></p><p>To run the update "
-"later, close KPhotoAlbum without saving the database and don't use face "
-"recognition. You will be asked again for the update on the next start.</p>"
-msgstr ""
-
-#: XMLDB/FileReader.cpp:412
+#: XMLDB/FileReader.cpp:458
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5696,7 +5696,7 @@ msgstr ""
 "todas las imágenes, puede ejecutar <b>Imágenes->Ordenar selección por fecha "
 "y hora</b> para ordenarlas en la base de datos.</p>"
 
-#: XMLDB/FileReader.cpp:422
+#: XMLDB/FileReader.cpp:468
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5712,11 +5712,11 @@ msgstr ""
 "con la biblioteca <code>exiv2</code>. Tras hacerlo se le preguntará cómo "
 "completar la información perdida.</p>"
 
-#: XMLDB/FileReader.cpp:429
+#: XMLDB/FileReader.cpp:475
 msgid "Images/Videos Are Not Sorted"
 msgstr "Las imágenes/vídeos no están ordenados"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:490
 #, fuzzy
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
@@ -5734,11 +5734,11 @@ msgstr ""
 "simplemente se mostrará un espacio extra a su alrededor, por lo que tampoco "
 "es una tarea urgente.</p>"
 
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:495
 msgid "Not All Images Have Size Information"
 msgstr "Algunas imágenes no tienen información de tamaño"
 
-#: XMLDB/FileReader.cpp:472
+#: XMLDB/FileReader.cpp:518
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -5761,31 +5761,31 @@ msgstr ""
 "KDEDIRS, simplemente añada la cadena como si estuviese fijando el de la "
 "variable de entorno <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:479
+#: XMLDB/FileReader.cpp:525
 msgid "No default setup file found"
 msgstr "No se encuentra un archivo de configuración por defecto"
 
-#: XMLDB/FileReader.cpp:493
+#: XMLDB/FileReader.cpp:539
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "No se pudo abrir el archivo «%1» para lectura"
 
-#: XMLDB/FileReader.cpp:506
+#: XMLDB/FileReader.cpp:552
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "línea %1, columna %2 del archivo %3: %4"
 
-#: XMLDB/FileReader.cpp:508
+#: XMLDB/FileReader.cpp:554
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:519
+#: XMLDB/FileReader.cpp:565
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Error en el archivo %1: No se encontró ningún elemento"
 
-#: XMLDB/FileReader.cpp:525
+#: XMLDB/FileReader.cpp:571
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -5868,6 +5868,11 @@ msgstr ""
 #| msgid "Loading Database"
 msgid "Error while reading database file"
 msgstr "Cargando base de datos"
+
+#, fuzzy
+
+
+
 
 #, fuzzy
 
