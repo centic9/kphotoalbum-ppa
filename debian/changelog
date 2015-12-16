@@ -1,3 +1,45 @@
+kphotoalbum (4.6.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Backport part of upstream commit d83730a934437f18e0406bddb244a7a9c497565c,
+    and upstream commit 8dafd2c36ae8ed71577e4ff3c7c7ade18f670e37, to add a
+    missing forward declaration and missing includes, fixing build; patches
+    upstream_Fix-compilation-for-Ubuntu-15.04.patch and
+    upstream_Add-missing-QMap-and-QDate-includes.patch.
+
+ -- Pino Toscano <pino@debian.org>  Wed, 16 Dec 2015 08:29:28 +0100
+
+kphotoalbum (4.6.2-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Acknowledge NMUs, thanks Matthias Klose and Sebastian Ramacher.
+  * Update watch file.
+  * Drop patch gcc5.diff, fixed upstream.
+  * Bump Standards-Version to 3.9.6, no changes required.
+  * Remove unused build dependencies: libmarble-dev, shared-desktop-ontologies.
+  * Drop menu file, as kphotoalbum already provides a .desktop file.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 15 Dec 2015 23:19:43 +0100
+
+kphotoalbum (4.5-1.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+
+  [ Andreas Cadhalpun ]
+  * debian/control:
+    - Change Depends on mplayer2 to mplayer. (Closes: #795419)
+    - Change Recommends on libav-tools to ffmpeg.
+
+ -- Sebastian Ramacher <sramacher@debian.org>  Mon, 12 Oct 2015 18:38:47 +0200
+
+kphotoalbum (4.5-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix build with GCC 5 (Betty Dall). Closes: #777929.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 14 Jul 2015 18:28:03 +0200
+
 kphotoalbum (4.5-1) unstable; urgency=low
 
   * Team upload.
