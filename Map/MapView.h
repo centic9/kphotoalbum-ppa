@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2015 Tobias Leupold <tobias.leupold@web.de>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -65,7 +65,8 @@ public:
         ImageHasCoordinates,
         ImageHasNoCoordinates,
         NoImagesHaveNoCoordinates,
-        SomeImagesHaveNoCoordinates
+        SomeImagesHaveNoCoordinates,
+        SearchCoordinates
     };
 
     explicit MapView( QWidget* parent = 0, UsageType type = InlineMapView);
@@ -97,6 +98,9 @@ public:
      * itself to the state indicated by the given MapStatus.
      */
     void displayStatus(MapStatus status);
+
+    KGeoMap::GeoCoordinates::Pair getRegionSelection() const;
+    bool regionSelected() const;
 
 public slots:
     /**

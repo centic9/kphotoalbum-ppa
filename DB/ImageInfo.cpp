@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -464,6 +464,10 @@ void ImageInfo::readExif(const DB::FileName& fullPath, DB::ExifMode mode)
         Exif::Database::instance()->remove( fullPath );
         Exif::Database::instance()->add( fullPath );
 #endif
+#ifdef HAVE_KGEOMAP
+        // GPS coords might have changed...
+        m_coordsIsSet = false;
+#endif
     }
 }
 
@@ -737,6 +741,10 @@ QRect DB::ImageInfo::areaForTag(QString category, QString tag) const
 #ifdef HAVE_KGEOMAP
 KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
 {
+    if (m_coordsIsSet) {
+        return m_coordinates;
+    }
+
     static const int EXIF_GPS_VERSIONID = 0;
     static const int EXIF_GPS_LATREF    = 1;
     static const int EXIF_GPS_LAT       = 2;
@@ -762,12 +770,12 @@ KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
     }
 
     // read field values from database:
-    Exif::Database::instance()->readFields( m_fileName, fields );
+    bool foundIt = Exif::Database::instance()->readFields( m_fileName, fields );
 
     // if the Database query result doesn't contain exif GPS info (-> upgraded exifdb from DBVersion < 2), it is null
     // if the result is int 0, then there's no exif gps information in the image
     // otherwise we can proceed to parse the information
-    if ( fields[EXIF_GPS_VERSIONID]->value().isNull() )
+    if ( foundIt && fields[EXIF_GPS_VERSIONID]->value().isNull() )
     {
         // update exif DB and repeat the search:
         Exif::Database::instance()->remove( fileName() );
@@ -781,7 +789,7 @@ KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
 
     // gps info set?
     // don't use the versionid field here, because some cameras use 0 as its value
-    if ( fields[EXIF_GPS_LAT]->value().toInt() != -1.0
+    if ( foundIt && fields[EXIF_GPS_LAT]->value().toInt() != -1.0
          && fields[EXIF_GPS_LON]->value().toInt() != -1.0 )
     {
         // lat/lon/alt reference determines sign of float:
@@ -799,7 +807,10 @@ KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
             }
         }
     }
-    return coords;
+
+    m_coordinates = coords;
+    m_coordsIsSet = true;
+    return m_coordinates;
 }
 
 #endif

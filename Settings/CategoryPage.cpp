@@ -27,6 +27,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDebug>
+#include <QGroupBox>
 
 // KDE includes
 #include <KMessageBox>
@@ -37,6 +38,9 @@
 // Local includes
 #include "DB/ImageDB.h"
 #include "DB/CategoryCollection.h"
+#include "DB/MemberMap.h"
+#include "MainWindow/Window.h"
+#include "MainWindow/DirtyIndicator.h"
 #include "UntaggedGroupBox.h"
 #include "SettingsDialog.h"
 #include "CategoryItem.h"
@@ -44,8 +48,13 @@
 Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
 {
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    QHBoxLayout* categoryLayout = new QHBoxLayout;
-    mainLayout->addLayout(categoryLayout);
+
+    // The category settings
+
+    QGroupBox* categoryGroupBox = new QGroupBox;
+    mainLayout->addWidget(categoryGroupBox);
+    categoryGroupBox->setTitle(i18n("Category Settings"));
+    QHBoxLayout* categoryLayout = new QHBoxLayout(categoryGroupBox);
 
     // Category list
 
@@ -56,6 +65,8 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
 
     connect(m_categoriesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(editCategory(QListWidgetItem*)));
+    connect(m_categoriesListWidget, SIGNAL(itemSelectionChanged()),
+            this, SLOT(editSelectedCategory()));
     connect(m_categoriesListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
             this, SLOT(categoryNameChanged(QListWidgetItem*)));
 
@@ -154,6 +165,21 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
 
     rightSideLayout->addStretch();
 
+    // Info about the database not being saved
+
+    QHBoxLayout* dbNotSavedLayout = new QHBoxLayout;
+    mainLayout->addLayout(dbNotSavedLayout);
+
+    m_dbNotSavedLabel = new QLabel( i18n("<font color='red'>"
+                                         "The database has unsaved changes. As long as those are "
+                                         "not saved, the names of categories can't be changed."
+                                         "</font>"));
+    dbNotSavedLayout->addWidget(m_dbNotSavedLabel);
+
+    m_saveDbNowButton = new QPushButton(i18n("Save the DB now"));
+    connect(m_saveDbNowButton, SIGNAL(clicked()), this, SLOT(saveDbNow()));
+    dbNotSavedLayout->addWidget(m_saveDbNowButton);
+
     resetInterface();
 
     // Untagged images
@@ -164,14 +190,20 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
 
     // This is needed to fix some odd behavior if the "New" button is double clicked
     m_editorOpen = false;
+
+    m_categoryNamesChanged = false;
 }
 
 void Settings::CategoryPage::resetInterface()
 {
     enableDisable(false);
     m_categoriesListWidget->setItemSelected(m_categoriesListWidget->currentItem(), false);
-    m_categoryLabel->setText(i18n("<i>Choose a category to edit it</i>"));
+    resetCategoryLabel();
     m_renameLabel->hide();
+}
+
+void Settings::CategoryPage::editSelectedCategory() {
+    editCategory(m_categoriesListWidget->currentItem());
 }
 
 void Settings::CategoryPage::editCategory(QListWidgetItem* i)
@@ -184,10 +216,12 @@ void Settings::CategoryPage::editCategory(QListWidgetItem* i)
 
     Settings::CategoryItem* item = static_cast<Settings::CategoryItem*>(i);
     m_currentCategory = item;
-    m_categoryLabel->setText(QString::fromUtf8("%1 <b>%2</b>").arg(i18n("Settings for category")).arg(m_currentCategory->text()));
+    m_categoryLabel->setText(QString::fromUtf8("%1 <b>%2</b>")
+                                 .arg(i18n("Settings for category"), item->originalName()));
 
-    if (m_currentCategory->text() != m_categoryNameBeforeEdit) {
-        m_renameLabel->setText(i18n("<i>Pending change: rename to \"%1\"</i>").arg(m_categoryNameBeforeEdit));
+    if (m_currentCategory->originalName() != m_categoryNameBeforeEdit) {
+        m_renameLabel->setText(i18n("<i>Pending change: rename to \"%1\"</i>")
+            .arg(m_categoryNameBeforeEdit));
         m_renameLabel->show();
     } else {
         m_renameLabel->clear();
@@ -198,7 +232,21 @@ void Settings::CategoryPage::editCategory(QListWidgetItem* i)
     m_icon->setIcon(item->icon());
     m_thumbnailSizeInCategory->setValue(item->thumbnailSize());
     m_preferredView->setCurrentIndex(static_cast<int>(item->viewType()));
+
     enableDisable(true);
+
+    if (item->originalName()
+        == DB::ImageDB::instance()->categoryCollection()
+                                  ->categoryForSpecial(DB::Category::TokensCategory)->name()) {
+
+        m_delItem->setEnabled(false);
+        m_positionableLabel->setEnabled(false);
+        m_positionable->setEnabled(false);
+        m_thumbnailSizeInCategoryLabel->setEnabled(false);
+        m_thumbnailSizeInCategory->setEnabled(false);
+        m_preferredViewLabel->setEnabled(false);
+        m_preferredView->setEnabled(false);
+    }
 }
 
 void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
@@ -217,10 +265,10 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
     }
 
     // We don't want to have special category names.
-    if (newCategoryName == QString::fromUtf8("Folder") || newCategoryName == i18n("Folder")
-        || newCategoryName == QString::fromUtf8("Tokens") || newCategoryName == i18n("Tokens")
-        || newCategoryName == QString::fromUtf8("Media Type") || newCategoryName == i18n("Media Type")
-        || newCategoryName == QString::fromUtf8("Keywords") || newCategoryName == i18n("Keywords")) {
+    if (newCategoryName == QString::fromUtf8("Folder")
+        || newCategoryName == i18n("Folder")
+        || newCategoryName == QString::fromUtf8("Media Type")
+        || newCategoryName == i18n("Media Type")) {
 
         resetCategory(item);
         KMessageBox::sorry(this,
@@ -243,60 +291,14 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
         return;
     }
 
-    // Let's see if we are about to rename a localized category to it's C locale version
-    if (DB::Category::localizedCategoriesToC().contains(m_currentCategory->text())) {
-        if (newCategoryName == DB::Category::localizedCategoriesToC()[m_currentCategory->text()]) {
-            resetCategory(item);
-            KMessageBox::sorry(this,
-                               i18n("<p>Can't change the name of category \"%1\" to \"%2\":</p>"
-                                    "<p>\"%2\" is a standard category which comes with a localized "
-                                    "name. The localized name for \"%2\" is \"%1\", so this "
-                                    "category already has this name.</p>",
-                                    m_currentCategory->text(), newCategoryName),
-                               i18n("Invalid category name"));
-            return;
-        }
-    }
-
-    // Check if the entered name has a C locale version
-    if (DB::Category::standardCategories().contains(newCategoryName)) {
-
-        // Let's see if we rename the category to the C locale version of another existing one
-        if (m_categoriesListWidget->findItems(DB::Category::standardCategories()[newCategoryName], Qt::MatchExactly).size() > 0) {
-            resetCategory(item);
-            KMessageBox::sorry(this,
-                               i18n("<p>Can't change the name of category \"%1\" to \"%2\":</p>"
-                                    "<p>\"%2\" is a standard category which comes with a localized "
-                                    "name. The localized name for \"%2\" is \"%3\" and this "
-                                    "category already exists.</p>",
-                                    m_currentCategory->text(), newCategoryName, DB::Category::standardCategories()[newCategoryName]),
-                               i18n("Invalid category name"));
-            return;
-        }
-
-        if (newCategoryName != DB::Category::standardCategories()[newCategoryName])
-        {
-            // The C locale name can be used, but we set the localized version.
-            KMessageBox::information(this,
-                    i18n("<p>\"%1\" is a standard category which comes with a "
-                        "localized name. The localized name for \"%1\" is \"%2\", "
-                        "this name will be used instead.</p>",
-                        newCategoryName, DB::Category::standardCategories()[newCategoryName]),
-                    i18n("Localized category name entered"));
-            newCategoryName = DB::Category::standardCategories()[newCategoryName];
-        }
-    }
-
     // Let's see if we have any pending name changes that would cause collisions.
     for (int i = 0; i < m_categoriesListWidget->count(); i++) {
-        Settings::CategoryItem* cat = static_cast<Settings::CategoryItem*>(m_categoriesListWidget->item(i));
+       Settings::CategoryItem* cat = static_cast<Settings::CategoryItem*>(m_categoriesListWidget->item(i));
         if (cat == m_currentCategory) {
             continue;
         }
 
-        if (newCategoryName == cat->text()
-            || DB::Category::unLocalizedCategoryName(newCategoryName) == cat->text()) {
-
+        if (newCategoryName == cat->originalName()) {
             resetCategory(item);
             KMessageBox::sorry(this,
                                i18n("<p>Can't change the name of category \"%1\" to \"%2\":</p>"
@@ -312,9 +314,12 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
     item->setText(newCategoryName);
     m_categoriesListWidget->blockSignals(false);
 
-    emit currentCategoryNameChanged(m_currentCategory->text(), newCategoryName);
+    emit currentCategoryNameChanged();
+    m_untaggedBox->categoryRenamed(m_categoryNameBeforeEdit, newCategoryName);
     m_currentCategory->setLabel(newCategoryName);
     editCategory(m_currentCategory);
+
+    m_categoryNamesChanged = true;
 }
 
 void Settings::CategoryPage::resetCategory(QListWidgetItem* item)
@@ -390,13 +395,12 @@ void Settings::CategoryPage::newCategory()
     }
 
     m_categoriesListWidget->blockSignals(true);
-    m_currentCategory = new Settings::CategoryItem(QString(),
-                                                   checkedCategory,
+    m_currentCategory = new Settings::CategoryItem(checkedCategory,
                                                    QString(),
                                                    DB::Category::TreeView,
                                                    64,
                                                    m_categoriesListWidget);
-    emit currentCategoryNameChanged(QString(), checkedCategory);
+    emit currentCategoryNameChanged();
     m_currentCategory->setLabel(checkedCategory);
     m_categoriesListWidget->blockSignals(false);
 
@@ -408,6 +412,8 @@ void Settings::CategoryPage::newCategory()
     m_currentCategory->setSelected(true);
     editCategory(m_currentCategory);
     m_categoriesListWidget->editItem(m_currentCategory);
+
+    MainWindow::DirtyIndicator::markDirty();
 }
 
 void Settings::CategoryPage::deleteCurrentCategory()
@@ -419,6 +425,7 @@ void Settings::CategoryPage::deleteCurrentCategory()
         return;
     }
 
+    m_untaggedBox->categoryDeleted(m_currentCategory->text());
     m_deletedCategories.append(m_currentCategory);
     m_categoriesListWidget->takeItem(m_categoriesListWidget->row(m_currentCategory));
     m_currentCategory = 0;
@@ -426,7 +433,7 @@ void Settings::CategoryPage::deleteCurrentCategory()
     m_icon->setIcon(QIcon());
     m_thumbnailSizeInCategory->setValue(64);
     enableDisable(false);
-    m_categoryLabel->setText(i18n("<i>choose a category to edit it</i>"));
+    resetCategoryLabel();
 }
 
 void Settings::CategoryPage::renameCurrentCategory()
@@ -440,7 +447,6 @@ void Settings::CategoryPage::renameCurrentCategory()
 void Settings::CategoryPage::enableDisable(bool b)
 {
     m_delItem->setEnabled(b);
-    m_renameItem->setEnabled(b);
     m_positionableLabel->setEnabled(b);
     m_positionable->setEnabled(b);
     m_icon->setEnabled(b);
@@ -449,6 +455,30 @@ void Settings::CategoryPage::enableDisable(bool b)
     m_thumbnailSizeInCategory->setEnabled(b);
     m_preferredViewLabel->setEnabled(b);
     m_preferredView->setEnabled(b);
+
+    m_categoriesListWidget->blockSignals(true);
+
+    if (MainWindow::Window::theMainWindow()->dbIsDirty()) {
+        m_dbNotSavedLabel->show();
+        m_saveDbNowButton->show();
+        m_renameItem->setEnabled(false);
+
+        for (int i = 0; i < m_categoriesListWidget->count(); i++) {
+            QListWidgetItem* currentItem = m_categoriesListWidget->item(i);
+            currentItem->setFlags(currentItem->flags() & ~Qt::ItemIsEditable);
+        }
+    } else {
+        m_dbNotSavedLabel->hide();
+        m_saveDbNowButton->hide();
+        m_renameItem->setEnabled(b);
+
+        for (int i = 0; i < m_categoriesListWidget->count(); i++) {
+            QListWidgetItem* currentItem = m_categoriesListWidget->item(i);
+            currentItem->setFlags(currentItem->flags() | Qt::ItemIsEditable);
+        }
+    }
+
+    m_categoriesListWidget->blockSignals(false);
 }
 
 void Settings::CategoryPage::saveSettings(Settings::SettingsData* opt, DB::MemberMap* memberMap)
@@ -458,21 +488,20 @@ void Settings::CategoryPage::saveSettings(Settings::SettingsData* opt, DB::Membe
 #endif
 
     // Delete items
-    for (QList<CategoryItem*>::Iterator it = m_deletedCategories.begin(); it != m_deletedCategories.end(); ++it) {
+    Q_FOREACH( CategoryItem *item, m_deletedCategories ) {
 #ifdef HAVE_KFACE
-        m_recognizer->deleteCategory(nonLocalizedCategoryName((*it)->text()));
+        m_recognizer->deleteCategory(item->text());
 #endif
-        (*it)->removeFromDatabase();
+        item->removeFromDatabase();
     }
 
 #ifdef HAVE_KFACE
     m_deletedCategories = QList<CategoryItem*>();
 
     // Categories un-marked as positionable
-    for (QList<CategoryItem*>::Iterator it = m_unMarkedAsPositionable.begin();
-         it != m_unMarkedAsPositionable.end(); ++it) {
+    Q_FOREACH( const CategoryItem *item, m_unMarkedAsPositionable ) {
         // For the recognition database, this is the same as if the category had been deleted
-        m_recognizer->deleteCategory(nonLocalizedCategoryName((*it)->text()));
+        m_recognizer->deleteCategory(item->text());
     }
     m_unMarkedAsPositionable = QList<CategoryItem*>();
 #endif
@@ -483,7 +512,15 @@ void Settings::CategoryPage::saveSettings(Settings::SettingsData* opt, DB::Membe
         item->submit(memberMap);
     }
 
+    DB::ImageDB::instance()->memberMap() = *memberMap;
     m_untaggedBox->saveSettings(opt);
+
+    if (m_categoryNamesChanged) {
+        // Probably, one or more category names have been edited. Save the database so that
+        // all thumbnails are referenced with the correct name.
+        MainWindow::Window::theMainWindow()->slotSave();
+        m_categoryNamesChanged = false;
+    }
 }
 
 void Settings::CategoryPage::loadSettings(Settings::SettingsData* opt)
@@ -492,28 +529,20 @@ void Settings::CategoryPage::loadSettings(Settings::SettingsData* opt)
     m_categoriesListWidget->clear();
 
     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    for (QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it) {
-        if (! (*it)->isSpecialCategory()) {
-#ifdef HAVE_KFACE
-            Settings::CategoryItem *item = new CategoryItem((*it)->name(),
-                                                            (*it)->text(),
-                                                            (*it)->iconName(),
-                                                            (*it)->viewType(),
-                                                            (*it)->thumbnailSize(),
+    Q_FOREACH( const DB::CategoryPtr category, categories ) {
+        if (category->type() == DB::Category::PlainCategory
+            || category->type() == DB::Category::TokensCategory) {
+            Settings::CategoryItem *item = new CategoryItem(category->name(),
+                                                            category->iconName(),
+                                                            category->viewType(),
+                                                            category->thumbnailSize(),
                                                             m_categoriesListWidget,
-                                                            (*it)->positionable());
-            if ((*it)->positionable()) {
+                                                            category->positionable());
+#ifdef HAVE_KFACE
+            if (category->positionable()) {
                 connect(item, SIGNAL(newCategoryNameSaved(QString,QString)),
                         this, SLOT(renameRecognitionCategory(QString,QString)));
             }
-#else
-            new CategoryItem((*it)->name(),
-                             (*it)->text(),
-                             (*it)->iconName(),
-                             (*it)->viewType(),
-                             (*it)->thumbnailSize(),
-                             m_categoriesListWidget,
-                             (*it)->positionable());
 #endif
         }
     }
@@ -526,22 +555,9 @@ void Settings::CategoryPage::loadSettings(Settings::SettingsData* opt)
 #ifdef HAVE_KFACE
 void Settings::CategoryPage::renameRecognitionCategory(QString oldName, QString newName)
 {
-    m_recognizer->updateCategoryName(oldName, nonLocalizedCategoryName(newName));
+    m_recognizer->updateCategoryName(oldName, newName);
 }
 #endif
-
-QString Settings::CategoryPage::nonLocalizedCategoryName(QString category)
-{
-    QString nonLocalizedCategoryName = category;
-    QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    for (QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it) {
-        if (nonLocalizedCategoryName == (*it)->text()) {
-            nonLocalizedCategoryName = (*it)->name();
-            break;
-        }
-    }
-    return nonLocalizedCategoryName;
-}
 
 void Settings::CategoryPage::categoryDoubleClicked(QListWidgetItem*)
 {
@@ -553,6 +569,23 @@ void Settings::CategoryPage::listWidgetEditEnd(QWidget*, QAbstractItemDelegate::
 {
     // This is needed to fix some odd behavior if the "New" button is double clicked
     m_editorOpen = false;
+}
+
+void Settings::CategoryPage::resetCategoryLabel()
+{
+    m_categoryLabel->setText(i18n("<i>choose a category to edit it</i>"));
+}
+
+void Settings::CategoryPage::saveDbNow()
+{
+    MainWindow::Window::theMainWindow()->slotSave();
+    resetInterface();
+    enableDisable(false);
+}
+
+void Settings::CategoryPage::resetCategoryNamesChanged()
+{
+    m_categoryNamesChanged = false;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

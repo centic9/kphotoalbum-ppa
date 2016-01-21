@@ -45,27 +45,52 @@ public:
     typedef QList<DatabaseElement*> ElementList;
     typedef QPair<QString, QString> Camera;
     typedef QList<Camera> CameraList;
+    typedef QString Lens;
+    typedef QList<Lens> LensList;
 
     static Database* instance();
     static void deleteInstance();
     static bool isAvailable();
-    static int DBVersion();
+    /**
+     * @brief DBVersion is the exif search database schema version currently supported by KPhotoAlbum.
+     * @return the Exif Database version
+     */
+    static constexpr int DBVersion();
 
     bool isOpen() const;
     bool isUsable() const;
+    /**
+     * @brief DBFileVersion is the database schema version used in the exif-info.db file.
+     * @return the database schema version used by the database file, or 0 on error.
+     */
+    int DBFileVersion() const;
+    /**
+     * @brief DBFileVersionGuaranteed reflects DBVersion of the last time the exif db has been built.
+     * It is just like the DBFileVersion() but concerning the data.
+     * The schema version is automatically updated to a newer schema, but normally the
+     * data in the exif database is not.
+     * In this situation, only newly added pictures are populated with the new fields, whereas
+     * existing pictures have empty values.
+     * However, once the user rebuilds the exif database, we can guarantee all entries in the
+     * database to conform to the new schema, and DBFileVersionGuaranteed() will be updated to the new value.
+     * @return 0 <= DBFileVersionGuaranteed() <= DBFileVersion()
+     */
+    int DBFileVersionGuaranteed() const;
     bool add( const DB::FileName& fileName );
     void remove( const DB::FileName& fileName );
-    void readFields( const DB::FileName& fileName, ElementList &fields) const;
+    bool readFields( const DB::FileName& fileName, ElementList &fields) const;
     DB::FileNameSet filesMatchingQuery( const QString& query ) const;
     CameraList cameras() const;
+    LensList lenses() const;
     void recreate();
 
 protected:
+    enum DBSchemaChangeType { SchemaChanged, SchemaAndDataChanged };
     static QString exifDBFile();
     void openDatabase();
     void populateDatabase();
     void updateDatabase();
-    void createMetadataTable();
+    void createMetadataTable(DBSchemaChangeType change);
     static QString connectionName();
     void insert( const DB::FileName& filename, Exiv2::ExifData );
 

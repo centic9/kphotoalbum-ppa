@@ -82,6 +82,7 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
         saveImages( writer );
         saveBlockList( writer );
         saveMemberGroups( writer );
+        //saveSettings(writer);
     }
     writer.writeEndDocument();
 
@@ -114,44 +115,46 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
 void XMLDB::FileWriter::saveCategories( QXmlStreamWriter& writer )
 {
     QStringList categories = DB::ImageDB::instance()->categoryCollection()->categoryNames();
-    {
-        ElementWriter dummy(writer, QString::fromLatin1("Categories") );
+    ElementWriter dummy(writer, QString::fromLatin1("Categories") );
 
+    DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial( DB::Category::TokensCategory );
+    for (QString name : categories) {
+        DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName(name);
 
-        Q_FOREACH(const QString &name, categories) {
-            DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName( name );
-            ElementWriter dummy(writer, QString::fromLatin1("Category") );
-            writer.writeAttribute( QString::fromLatin1("name"),  name );
-            writer.writeAttribute( QString::fromLatin1( "icon" ), category->iconName() );
-            writer.writeAttribute( QString::fromLatin1( "show" ), QString::number(category->doShow()) );
-            writer.writeAttribute( QString::fromLatin1( "viewtype" ), QString::number(category->viewType()));
-            writer.writeAttribute( QString::fromLatin1( "thumbnailsize" ), QString::number(category->thumbnailSize()));
-            writer.writeAttribute( QString::fromLatin1( "positionable" ), QString::number(category->positionable()) );
+        if (! shouldSaveCategory(name)) {
+            continue;
+        }
 
-            if ( shouldSaveCategory( name ) ) {
-                /*
-                FIXME (l3u):
-                Correct me if I'm wrong, but we don't need this, as the tags used as groups are
-                added to the respective category anyway when they're created, so there's no need to
-                re-add them here. Apart from this, adding an empty group (one without members) does
-                add an empty tag ("") doing so.
-                */
-                /*
-                QStringList list =
-                        Utilities::mergeListsUniqly(category->items(),
-                                                    m_db->_members.groups(name));
-                */
+        ElementWriter dummy(writer, QString::fromUtf8("Category"));
+        writer.writeAttribute(QString::fromUtf8("name"),  name);
+        writer.writeAttribute(QString::fromUtf8("icon"), category->iconName());
+        writer.writeAttribute(QString::fromUtf8("show"), QString::number(category->doShow()));
+        writer.writeAttribute(QString::fromUtf8("viewtype"), QString::number(category->viewType()));
+        writer.writeAttribute(QString::fromUtf8("thumbnailsize"), QString::number(category->thumbnailSize()));
+        writer.writeAttribute(QString::fromUtf8("positionable"), QString::number(category->positionable()));
+        if (category == tokensCategory) {
+            writer.writeAttribute(QString::fromUtf8("meta"),QString::fromUtf8("tokens"));
+        }
 
-                Q_FOREACH(const QString &tagName, category->items()) {
-                    ElementWriter dummy( writer, QString::fromLatin1("value") );
-                    writer.writeAttribute( QString::fromLatin1("value"), tagName );
-                    writer.writeAttribute( QString::fromLatin1( "id" ),
-                                           QString::number(static_cast<XMLCategory*>( category.data() )->idForName( tagName ) ));
-                    QDate birthDate = category->birthDate(tagName);
-                    if (!birthDate.isNull())
-                        writer.writeAttribute( QString::fromUtf8("birthDate"), birthDate.toString(Qt::ISODate) );
-                }
-            }
+        // FIXME (l3u):
+        // Correct me if I'm wrong, but we don't need this, as the tags used as groups are
+        // added to the respective category anyway when they're created, so there's no need to
+        // re-add them here. Apart from this, adding an empty group (one without members) does
+        // add an empty tag ("") doing so.
+        /*
+        QStringList list =
+                Utilities::mergeListsUniqly(category->items(),
+                                            m_db->_members.groups(name));
+        */
+
+        Q_FOREACH(const QString &tagName, category->items()) {
+            ElementWriter dummy( writer, QString::fromLatin1("value") );
+            writer.writeAttribute( QString::fromLatin1("value"), tagName );
+            writer.writeAttribute( QString::fromLatin1( "id" ),
+                                    QString::number(static_cast<XMLCategory*>( category.data() )->idForName( tagName ) ));
+            QDate birthDate = category->birthDate(tagName);
+            if (!birthDate.isNull())
+                writer.writeAttribute( QString::fromUtf8("birthDate"), birthDate.toString(Qt::ISODate) );
         }
     }
 }
@@ -245,21 +248,33 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
     }
 }
 
-// This function will save an empty config element and a valid configWindowSetup element in the XML file.
-// In versions of KPhotoAlbum newer than 2.1, this information is stored
-// using KConfig, rather than in the database, so I need to add them like
-// this to make the file readable by KPhotoAlbum 2.1.
-void XMLDB::FileWriter::add21CompatXML( QDomElement& top )
+/*
+Perhaps, we may need this later ;-)
+
+void XMLDB::FileWriter::saveSettings(QXmlStreamWriter& writer)
 {
-    QDomDocument doc = top.ownerDocument();
-    top.appendChild( doc.createElement( QString::fromLatin1( "config" ) ) );
+    static QString settingsString = QString::fromUtf8("settings");
+    static QString settingString = QString::fromUtf8("setting");
+    static QString keyString = QString::fromUtf8("key");
+    static QString valueString = QString::fromUtf8("value");
 
-    QByteArray conf = "<configWindowSetup>  <dock>   <name>Label and Dates</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>Places</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <dock>   <name>People</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </dock>  <splitGroup>   <firstName>Label and Dates</firstName>   <secondName>Description</secondName>   <orientation>0</orientation>   <separatorPos>31</separatorPos>   <name>Label and Dates,Description</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description</firstName>   <secondName>Image Preview</secondName>   <orientation>1</orientation>   <separatorPos>70</separatorPos>   <name>Label and Dates,Description,Image Preview</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Places</firstName>   <secondName>Events</secondName>   <orientation>1</orientation>   <separatorPos>50</separatorPos>   <name>Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>People</firstName>   <secondName>Places,Events</secondName>   <orientation>1</orientation>   <separatorPos>34</separatorPos>   <name>People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <splitGroup>   <firstName>Label and Dates,Description,Image Preview</firstName>   <secondName>People,Places,Events</secondName>   <orientation>0</orientation>   <separatorPos>0</separatorPos>   <name>Label and Dates,Description,Image Preview,People,Places,Events</name>   <hasParent>true</hasParent>   <dragEnabled>true</dragEnabled>  </splitGroup>  <centralWidget>Label and Dates,Description,Image Preview,People,Places,Events</centralWidget>  <mainDockWidget>Label and Dates</mainDockWidget>  <geometry>   <x>6</x>   <y>6</y>   <width>930</width>   <height>492</height>  </geometry> </configWindowSetup>";
+    ElementWriter dummy(writer, settingsString);
 
-    QDomDocument tmpDoc;
-    tmpDoc.setContent( conf );
-    top.appendChild( tmpDoc.documentElement() );
+    QMap<QString, QString> settings;
+    // For testing
+    settings.insert(QString::fromUtf8("tokensCategory"), QString::fromUtf8("Tokens"));
+    settings.insert(QString::fromUtf8("untaggedCategory"), QString::fromUtf8("Events"));
+    settings.insert(QString::fromUtf8("untaggedTag"), QString::fromUtf8("untagged"));
+
+    QMapIterator<QString, QString> settingsIterator(settings);
+    while (settingsIterator.hasNext()) {
+        ElementWriter dummy(writer, settingString);
+        settingsIterator.next();
+        writer.writeAttribute(keyString, escape(settingsIterator.key()));
+        writer.writeAttribute(valueString, escape(settingsIterator.value()));
+    }
 }
+*/
 
 void XMLDB::FileWriter::save( QXmlStreamWriter& writer, const DB::ImageInfoPtr& info )
 {

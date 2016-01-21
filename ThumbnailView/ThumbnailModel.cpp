@@ -174,13 +174,22 @@ void ThumbnailView::ThumbnailModel::imagesDeletedFromDB( const DB::FileNameList&
 }
 
 
+int ThumbnailView::ThumbnailModel::indexOf(const DB::FileName& fileName)
+{
+    Q_ASSERT( !fileName.isNull() );
+    if ( !m_fileNameToIndex.contains(fileName) )
+        m_fileNameToIndex.insert(fileName, m_displayList.indexOf(fileName));
+    
+    return m_fileNameToIndex[fileName];
+}
+
 int ThumbnailView::ThumbnailModel::indexOf(const DB::FileName& fileName) const
 {
     Q_ASSERT( !fileName.isNull() );
-    if ( !m_fileNameToIndex.contains(fileName))
+    if ( !m_fileNameToIndex.contains(fileName) )
         return -1;
-    else
-        return m_fileNameToIndex[fileName];
+    
+    return m_fileNameToIndex[fileName];
 }
 
 void ThumbnailView::ThumbnailModel::updateIndexCache()
@@ -282,8 +291,9 @@ void ThumbnailView::ThumbnailModel::requestThumbnail( const DB::FileName& fileNa
     // request the thumbnail in the size that is set in the settings, not in the current grid size:
     const QSize cellSize = cellGeometryInfo()->baseIconSize();
     const int angle = imageInfo->angle();
+    const int row = indexOf(fileName);
     ThumbnailRequest* request
-        = new ThumbnailRequest( m_displayList.indexOf(fileName), fileName, cellSize, angle, this );
+        = new ThumbnailRequest( row, fileName, cellSize, angle, this );
     request->setPriority( priority );
     ImageManager::AsyncLoader::instance()->load( request );
 }
@@ -311,12 +321,6 @@ void ThumbnailView::ThumbnailModel::reset()
     QAbstractItemModel::reset();
 }
 
-int ThumbnailView::ThumbnailModel::indexOf(const DB::FileName& fileName)
-{
-    return m_displayList.indexOf(fileName);
-}
-
-
 QString ThumbnailView::ThumbnailModel::thumbnailText( const QModelIndex& index ) const
 {
     const DB::FileName fileName = imageAt( index.row() );
@@ -343,6 +347,17 @@ QString ThumbnailView::ThumbnailModel::thumbnailText( const QModelIndex& index )
             QString category = *it;
             if ( category != QString::fromLatin1( "Folder" ) && category != QString::fromLatin1( "Media Type" ) ) {
                 Utilities::StringSet items = fileName.info()->itemsOfCategory( category );
+
+                if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+                    && ! Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
+
+                    if (category == Settings::SettingsData::instance()->untaggedCategory()) {
+                        if (items.contains(Settings::SettingsData::instance()->untaggedTag())) {
+                            items.remove(Settings::SettingsData::instance()->untaggedTag());
+                        }
+                    }
+                }
+
                 if (!items.empty()) {
                     QString line;
                     bool first = true;

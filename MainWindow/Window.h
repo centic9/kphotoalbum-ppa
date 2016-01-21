@@ -75,14 +75,14 @@ public:
     QString currentBrowseCategory() const;
     void setStackHead( const DB::FileName& image );
     void setHistogramVisibilty( bool visible ) const;
-    void v6UpdateDone();
-    void v6UpdateSkipped();
+    bool dbIsDirty() const;
 
 public slots:
     void showThumbNails(const DB::FileNameList& items);
     void loadPlugins();
     void reloadThumbnails( ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection );
     void slotImageRotated(const DB::FileName& fileName);
+    void slotSave();
 
 protected slots:
     void showThumbNails();
@@ -93,7 +93,6 @@ protected slots:
     void slotCreateImageStack();
     void slotUnStackImages();
     void slotSetStackHead();
-    void slotSave();
     void slotCopySelectedURLs();
     void slotPasteInformation();
     void slotDeleteSelected();
@@ -161,6 +160,7 @@ protected slots:
     void usePreviousVideoThumbnail();
     void mergeDuplicates();
     void slotThumbnailSizeChanged();
+    void slotMarkUntagged();
 
 protected:
     void configureImages( bool oneAtATime );
@@ -234,15 +234,13 @@ private:
     KAction* m_recreateThumbnails;
     KAction* m_useNextVideoThumbnail;
     KAction* m_usePreviousVideoThumbnail;
+    KAction* m_markUntagged;
     TokenEditor* m_tokenEditor;
     DateBar::DateBarWidget* m_dateBar;
     QFrame* m_dateBarLine;
     bool m_hasLoadedPlugins;
     QMap<Qt::Key, QPair<QString,QString> > m_viewerInputMacros;
     MainWindow::StatusBar* m_statusBar;
-
-    bool m_v6UpdateDone = false;
-    bool m_v6UpdateSkipped = false;
 };
 
 }

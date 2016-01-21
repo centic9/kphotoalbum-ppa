@@ -21,6 +21,12 @@
 #include <QVariant>
 #include <QDebug>
 
+#ifdef DEBUG_EXIF
+#define Debug qDebug
+#else
+#define Debug if(0) qDebug
+#endif
+
 static QString replaceDotWithUnderscore( const char* cstr )
 {
     QString str( QString::fromLatin1( cstr ) );
@@ -173,6 +179,100 @@ void Exif::RationalExifElement::bindValues( QSqlQuery* query, int& counter, Exiv
 void Exif::RationalExifElement::bindValues(QSqlQuery* query , int& counter)
 {
     query->bindValue( counter++, 0, QSql::Out );
+}
+
+Exif::LensExifElement::LensExifElement()
+    : m_tag("Exif.Photo.LensModel")
+{
+}
+
+QString Exif::LensExifElement::columnName() const
+{
+    return replaceDotWithUnderscore( m_tag );
+}
+
+QString Exif::LensExifElement::createString() const
+{
+    return QString::fromLatin1( "%1 string" ).arg( replaceDotWithUnderscore( m_tag ) );
+}
+
+
+QString Exif::LensExifElement::queryString() const
+{
+    return QString::fromLatin1( "?" );
+}
+
+
+void Exif::LensExifElement::bindValues(QSqlQuery* query , int& counter)
+{
+    query->bindValue( counter++, 0, QSql::Out );
+}
+
+void Exif::LensExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data ) const
+{
+    QString value;
+    bool canonHack = false;
+    for (Exiv2::ExifData::const_iterator it = data.begin(); it != data.end(); ++it)
+    {
+        const QString datum = QString::fromLatin1(it->key().c_str());
+
+        // Exif.Photo.LensModel [Ascii]
+        // Exif.Canon.LensModel [Ascii]
+        // Exif.OlympusEq.LensModel [Ascii]
+        if (datum.endsWith(QString::fromLatin1(".LensModel")))
+        {
+            Debug() << datum << ": " << it->toString().c_str();
+            canonHack = false;
+            value = QString::fromUtf8(it->toString().c_str());
+            // we can break here since Exif.Photo.LensModel should be bound first
+            break;
+        }
+
+        // Exif.NikonLd3.LensIDNumber [Byte]
+        // on Nikon cameras, this seems to provide better results than .Lens and .LensType
+        // (i.e. it includes the lens manufacturer).
+        if (datum.endsWith(QString::fromLatin1(".LensIDNumber")))
+        {
+            // ExifDatum::print() returns the interpreted value
+            Debug() << datum << ": " << it->print(&data).c_str();
+            canonHack = false;
+            value = QString::fromUtf8(it->print(&data).c_str());
+            continue;
+        }
+
+        // Exif.Nikon3.LensType [Byte]
+        // Exif.OlympusEq.LensType [Byte]
+        // Exif.Panasonic.LensType [Ascii]
+        // Exif.Pentax.LensType [Byte]
+        // Exif.Samsung2.LensType [Short]
+        if (datum.endsWith(QString::fromLatin1(".LensType")))
+        {
+            // ExifDatum::print() returns the interpreted value
+            Debug() << datum << ": " << it->print(&data).c_str();
+            // make sure this cannot overwrite LensIDNumber
+            if (value.isEmpty())
+            {
+                canonHack = (datum == QString::fromLatin1("Exif.CanonCs.LensType"));
+                value = QString::fromUtf8(it->print(&data).c_str());
+            }
+        }
+    }
+
+    // some canon lenses have a dummy value as LensType:
+    if (canonHack && value == QString::fromLatin1("(65535)"))
+    {
+        value = QString::fromLatin1("Canon generic");
+        const auto datum = data.findKey(Exiv2::ExifKey("Exif.CanonCs.Lens"));
+        if (datum != data.end())
+        {
+            value += QString::fromLatin1(" ");
+            value += QString::fromUtf8(datum->print(&data).c_str());
+        }
+
+    }
+
+    Debug() << "bind value " << value;
+    query->bindValue( counter++, value );
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

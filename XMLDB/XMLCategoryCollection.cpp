@@ -24,7 +24,7 @@
 DB::CategoryPtr XMLDB::XMLCategoryCollection::categoryForName( const QString& name ) const
 {
     for( QList<DB::CategoryPtr>::ConstIterator it = m_categories.begin(); it != m_categories.end(); ++it ) {
-        if ( (*it)->name() == name || (*it)->text() == name )
+        if ((*it)->name() == name)
             return *it;
     }
     return DB::CategoryPtr();
@@ -33,6 +33,10 @@ DB::CategoryPtr XMLDB::XMLCategoryCollection::categoryForName( const QString& na
 void XMLDB::XMLCategoryCollection::addCategory( DB::CategoryPtr category )
 {
     m_categories.append( category );
+    if (category->isSpecialCategory())
+    {
+        m_specialCategories[category->type()] = category;
+    }
     connect( category.data(), SIGNAL(changed()), this, SIGNAL(categoryCollectionChanged()) );
     connect( category.data(), SIGNAL(itemRemoved(QString)), this, SLOT(itemRemoved(QString)) );
     connect( category.data(), SIGNAL(itemRenamed(QString,QString)), this, SLOT(itemRenamed(QString,QString)) );
@@ -52,14 +56,14 @@ QStringList XMLDB::XMLCategoryCollection::categoryTexts() const
 {
     QStringList res;
     for( QList<DB::CategoryPtr>::ConstIterator it = m_categories.begin(); it != m_categories.end(); ++it ) {
-        res.append( (*it)->text() );
+        res.append((*it)->name());
     }
     return res;
 }
 
 void XMLDB::XMLCategoryCollection::removeCategory( const QString& name )
 {
-    for( QList<DB::CategoryPtr>::Iterator it = m_categories.begin(); it != m_categories.end(); ++it ) {
+    for( QList<DB::CategoryPtr>::iterator it = m_categories.begin(); it != m_categories.end(); ++it ) {
         if ( (*it)->name() == name ) {
             m_categories.erase(it);
             emit categoryCollectionChanged();
@@ -88,10 +92,16 @@ void XMLDB::XMLCategoryCollection::addCategory( const QString& text, const QStri
     addCategory( DB::CategoryPtr( new XMLCategory( text, icon, type, thumbnailSize, show, positionable ) ) );
 }
 
+DB::CategoryPtr XMLDB::XMLCategoryCollection::categoryForSpecial(const DB::Category::CategoryType type) const
+{
+    return m_specialCategories[type];
+}
+
 void XMLDB::XMLCategoryCollection::initIdMap()
 {
-    for( QList<DB::CategoryPtr>::Iterator it = m_categories.begin(); it != m_categories.end(); ++it )
-        static_cast<XMLCategory*>((*it).data())->initIdMap();
+    Q_FOREACH( DB::CategoryPtr categoryPtr, m_categories ) {
+        static_cast<XMLCategory*>(categoryPtr.data())->initIdMap();
+    }
 }
 
 #include "XMLCategoryCollection.moc"

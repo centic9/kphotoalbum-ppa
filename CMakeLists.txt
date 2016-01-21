@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.9)
 project(kphotoalbum)
 
 if(POLICY CMP0017)
@@ -401,6 +401,7 @@ if(KGEOMAP_FOUND)
     set(libMap_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapView.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapMarkerModelHelper.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Map/SearchMarkerTiler.cpp
     )
 endif(KGEOMAP_FOUND)
 
@@ -455,7 +456,7 @@ kde4_add_library(Utilities STATIC ${libUtilities_SRCS})
 target_link_libraries(kphotoalbum Utilities)
 
 # External components
-target_link_libraries(kphotoalbum ${KDE4_KIO_LIBS} ${JPEG_LIBRARY} kmediaplayer ${KDE4_PHONON_LIBS})
+target_link_libraries(kphotoalbum ${KDE4_KIO_LIBS} ${JPEG_LIBRARY} ${KDE4_TARGET_PREFIX}kmediaplayer ${KDE4_PHONON_LIBS})
 
 if(KIPI_FOUND)
     target_link_libraries(kphotoalbum ${KIPI_LIBRARIES})

@@ -97,7 +97,7 @@ KPhotoAlbum
 | (version=4,compressed=1)
 |
 +-Categories
-| +-Category (name,icon,show,viewtype,thumbnailsize)
+| +-Category (name,icon,show,viewtype,thumbnailsize,positionable)
 |   +-value (value, id)
 |
 +-images
@@ -121,7 +121,7 @@ KPhotoAlbum
 | (version=4,compressed=0)
 |
 +-Categories
-| +-Category (name,icon,show,viewtype,thumbnailsize)
+| +-Category (name,icon,show,viewtype,thumbnailsize,positionable)
 |   +-value (value, id)
 |
 +-images
@@ -154,7 +154,7 @@ KPhotoAlbum
 | (version=5,compressed=1)
 |
 +-Categories
-| +-Category (name,icon,show,viewtype,thumbnailsize)
+| +-Category (name,icon,show,viewtype,thumbnailsize,positionable)
 |   +-value
 |     (value, id)
 |     (birthDate) [optional]
@@ -180,7 +180,7 @@ KPhotoAlbum
 | (version=5,compressed=0)
 |
 +-Categories
-| +-Category (name,icon,show,viewtype,thumbnailsize)
+| +-Category (name,icon,show,viewtype,thumbnailsize,positionable)
 |   +-value
 |     (value, id)
 |     (birthDate) [optional]
@@ -221,6 +221,73 @@ Same structure as version 5.
    superseded by storing GPS data in the EXIF database.
 
 
+### Version 7 ###
+
+```
+KPhotoAlbum
+| (version=7, compressed=1)
+|
++-Categories
+| +-Category
+|   (name, icon, show, viewtype, thumbnailsize, positionable)
+|   (meta) [optional]
+|   +-value
+|     (value, id)
+|     (birthDate) [optional]
+|
++-images
+| +-image
+|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
+|   (stackId, stackOrder, rating) [optional]
+|   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
+|   +-options
+|     +-option(name=#Categories.Category.name#)
+|       +-value(value=#Categories.Category.value.value#, area="x y w h")
+|
++-blocklist
+| +-block (file)
+|
++-member-groups
+  +-member (category,group-name,members)
+```
+
+```
+KPhotoAlbum
+| (version=7, compressed=0)
+|
++-Categories
+| +-Category
+|   (name, icon, show, viewtype, thumbnailsize, positionable)
+|   (meta) [optional]
+|   +-value
+|     (value, id)
+|     (birthDate) [optional]
+|
++-images
+| +-image
+|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
+|   (stackId, stackOrder, rating) [optional]
+|   +-options
+|     +-option(name=#Categories.Category.name#)
+|       +-value(value=#Categories.Category.value.value#, area="x y w h")
+|
++-blocklist
+| +-block (file)
+|
++-member-groups
+  +-member (category,group-name,member)
+```
+
+#### Differences to version 6 ####
+The concept of translatable "standard" categories led to a lot of problems when users started KPA
+with different locales. Some of them simply can't be solved, so we decided to remove translatable
+category names. Now, each category is stored with it's literal name.
+Added an additional optional "meta" attribute to the Category-tag, so that the "Tokens" category (a
+"special" category like "Folder", but stored in the database and thus causing the same translation
+problems like the old "standard" categories) can be marked as such and does not need to have a fixed
+name anymore.
+
+
 ### Attribute values explained ###
 
 
@@ -241,6 +308,10 @@ Same structure as version 5.
        + ```viewtype```
          Appearance of list views in the browser.
          ```TreeView=0, ThumbedTreeView=1, IconView=2, ThumbedIconView=3```
+       + ```positionable```
+         ```0|1``` - indicates whether this category can contain areas (positionned tags) or not.
+       + ```meta```
+         Meta information that holds an unique id for special categories (so that they can be tracked when they are renamed for localization).
        + value
           * ```id```
             Numerical tag id, unique within each Category.

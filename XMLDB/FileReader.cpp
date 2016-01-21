@@ -72,85 +72,79 @@ void XMLDB::FileReader::read( const QString& configFile )
     setUseCompressedFileFormat( reader->attribute(compressedString).toInt() );
 
     m_db->m_members.setLoading( true );
-    loadCategories( reader );
 
+    loadCategories( reader );
     loadImages( reader );
     loadBlockList( reader );
     loadMemberGroups( reader );
+    //loadSettings(reader);
+
     m_db->m_members.setLoading( false );
 
     checkIfImagesAreSorted();
-    checkIfAllImagesHasSizeAttributes();
-}
-
-
-void XMLDB::FileReader::readTopNodeInConfigDocument( const QString& configFile, QDomElement top, QDomElement* options, QDomElement* images,
-                                                     QDomElement* blockList, QDomElement* memberGroups )
-{
-    for ( QDomNode node = top.firstChild(); !node.isNull(); node = node.nextSibling() ) {
-        if ( node.isElement() ) {
-            QDomElement elm = node.toElement();
-            QString tag = elm.tagName().toLower();
-            if ( tag == QString::fromLatin1( "config" ) )
-                ; // Skip for compatibility with 2.1 and older
-            else if ( tag == QString::fromLatin1( "categories" ) || tag == QString::fromLatin1( "options" ) ) {
-                // options is for KimDaBa 2.1 compatibility
-                *options = elm;
-            }
-            else if ( tag == QString::fromLatin1( "configwindowsetup" ) )
-                ; // Skip for compatibility with 2.1 and older
-            else if ( tag == QString::fromLatin1("images") )
-                *images = elm;
-            else if ( tag == QString::fromLatin1( "blocklist" ) )
-                *blockList = elm;
-            else if ( tag == QString::fromLatin1( "member-groups" ) )
-                *memberGroups = elm;
-            else {
-                KMessageBox::error( messageParent(),
-                                    i18n("Error in file %1: unexpected element: '%2'", configFile , tag ) );
-            }
-        }
-    }
-
-    if ( options->isNull() )
-        KMessageBox::sorry( messageParent(), i18n("Unable to find 'Options' tag in configuration file %1.", configFile ) );
-    if ( images->isNull() )
-        KMessageBox::sorry( messageParent(), i18n("Unable to find 'Images' tag in configuration file %1.", configFile ) );
+    checkIfAllImagesHaveSizeAttributes();
 }
 
 void XMLDB::FileReader::createSpecialCategories()
 {
-    m_folderCategory = m_db->m_categoryCollection.categoryForName( QString::fromLatin1( "Folder" ) );
+    // Setup the "Folder" category
+
+    m_folderCategory = m_db->m_categoryCollection.categoryForName(i18n("Folder"));
     if( m_folderCategory.isNull() ) {
-        m_folderCategory = new XMLCategory( QString::fromLatin1("Folder"), QString::fromLatin1("folder"),
+        m_folderCategory = new XMLCategory(i18n("Folder"), QString::fromLatin1("folder"),
                                            DB::Category::TreeView, 32, false );
         m_db->m_categoryCollection.addCategory( m_folderCategory );
     }
-    m_folderCategory->setSpecialCategory( true );
+    m_folderCategory->setType( DB::Category::FolderCategory );
     dynamic_cast<XMLCategory*>( m_folderCategory.data() )->setShouldSave( false );
 
-    DB::CategoryPtr tokenCat = m_db->m_categoryCollection.categoryForName( QString::fromLatin1( "Tokens" ) );
-    if ( !tokenCat ) {
-        tokenCat = new XMLCategory( QString::fromLatin1("Tokens"), QString::fromLatin1("flag-blue"),
-                                    DB::Category::TreeView, 32, true );
-        m_db->m_categoryCollection.addCategory( tokenCat );
+    // Setup the "Tokens" category
+
+    DB::CategoryPtr tokenCat;
+
+    if (m_fileVersion >= 7) {
+        tokenCat = m_db->m_categoryCollection.categoryForSpecial( DB::Category::TokensCategory );
+    } else {
+        // Before version 7, the "Tokens" category name wasn't stored to the settings. So ...
+        // look for a literal "Tokens" category ...
+        tokenCat = m_db->m_categoryCollection.categoryForName(QString::fromUtf8("Tokens"));
+        if (!tokenCat) {
+            // ... and a translated "Tokens" category if we don't have the literal one.
+            tokenCat = m_db->m_categoryCollection.categoryForName(i18n("Tokens"));
+        }
+        if (tokenCat) {
+            // in this case we need to give the tokens category its special meaning:
+            m_db->m_categoryCollection.removeCategory(tokenCat->name());
+            tokenCat->setType(DB::Category::TokensCategory);
+            m_db->m_categoryCollection.addCategory(tokenCat);
+        }
     }
-    tokenCat->setSpecialCategory( true );
 
-    // KPhotoAlbum 2.2 did not write the tokens to the category section, so unless we do this small trick they
-    // will not show up when importing.
-    for ( char ch = 'A'; ch < 'Z'; ++ch )
-        tokenCat->addItem( QString::fromLatin1("%1").arg( QChar::fromLatin1( ch) ) );
+    if (! tokenCat) {
+        // Create a new "Tokens" category
+        tokenCat = new XMLCategory(i18n("Tokens"), QString::fromUtf8("flag-blue"),
+                                   DB::Category::TreeView, 32, true);
+        tokenCat->setType(DB::Category::TokensCategory);
+        m_db->m_categoryCollection.addCategory(tokenCat);
+    }
 
-    DB::CategoryPtr mediaCat = m_db->m_categoryCollection.categoryForName( QString::fromLatin1( "Media Type" ) );
+    // KPhotoAlbum 2.2 did not write the tokens to the category section,
+    // so unless we do this small trick they will not show up when importing.
+    for (char ch = 'A'; ch < 'Z'; ++ch) {
+        tokenCat->addItem(QString::fromUtf8("%1").arg(QChar::fromLatin1(ch)));
+    }
+
+    // Setup the "Media Type" category
+
+    DB::CategoryPtr mediaCat = m_db->m_categoryCollection.categoryForName(i18n("Media Type"));
     if ( !mediaCat ) {
-        mediaCat = new XMLCategory( QString::fromLatin1("Media Type"), QString::fromLatin1("video"),
-                                    DB::Category::TreeView, 32, false );
+        mediaCat = new XMLCategory(i18n("Media Type"), QString::fromLatin1("video"),
+                                   DB::Category::TreeView, 32, false);
         m_db->m_categoryCollection.addCategory( mediaCat );
     }
     mediaCat->addItem( QString::fromLatin1( "Image" ) );
     mediaCat->addItem( QString::fromLatin1( "Video" ) );
-    mediaCat->setSpecialCategory( true );
+    mediaCat->setType( DB::Category::MediaTypeCategory );
     dynamic_cast<XMLCategory*>( mediaCat.data() )->setShouldSave( false );
 }
 
@@ -162,6 +156,8 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
     static QString showString = QString::fromUtf8("show");
     static QString thumbnailSizeString = QString::fromUtf8("thumbnailsize");
     static QString positionableString = QString::fromUtf8("positionable");
+    static QString metaString = QString::fromUtf8("meta");
+    static QString tokensString = QString::fromUtf8("tokens");
     static QString valueString = QString::fromUtf8("value");
     static QString idString = QString::fromUtf8("id");
     static QString birthDateString = QString::fromUtf8("birthDate");
@@ -174,7 +170,7 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
         reader->complainStartElementExpected(categoriesString);
 
     while ( reader->readNextStartOrStopElement(categoryString).isStartToken) {
-        const QString categoryName = sanitizedCategoryName(unescape( reader->attribute(nameString) ));
+        const QString categoryName = unescape(reader->attribute(nameString));
         if ( !categoryName.isNull() )  {
             // Read Category info
             QString icon = reader->attribute(iconString);
@@ -183,10 +179,13 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
             int thumbnailSize = reader->attribute( thumbnailSizeString, QString::fromLatin1( "32" ) ).toInt();
             bool show = (bool) reader->attribute( showString, QString::fromLatin1( "1" ) ).toInt();
             bool positionable = (bool) reader->attribute( positionableString, QString::fromLatin1( "0" ) ).toInt();
+            bool tokensCat = reader->attribute(metaString) == tokensString;
 
             DB::CategoryPtr cat = m_db->m_categoryCollection.categoryForName( categoryName );
             Q_ASSERT ( !cat );
             cat = new XMLCategory( categoryName, icon, type, thumbnailSize, show, positionable );
+            if (tokensCat)
+                cat->setType(DB::Category::TokensCategory);
             m_db->m_categoryCollection.addCategory( cat );
 
             // Read values
@@ -208,143 +207,22 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
 
     createSpecialCategories();
 
-    if (m_newToOldName.count() == 0) {
-        // Normally, we end here. The rest only happens once, when the transition from dbv5 to
-        // dbv6 is performed.
-        return;
-    }
-
-    Settings::SettingsData* settings = Settings::SettingsData::instance();
-
-    // Just in case the collection is not writable. Although I don't think this actually happens
-    // "in the wild" ;-)
-    QFileInfo imageDirectoryInfo(settings->imageDirectory());
-    if (! imageDirectoryInfo.isWritable()) {
-        KMessageBox::sorry(
+    if (m_fileVersion < 7) {
+        KMessageBox::information(
             messageParent(),
-            i18n("<p>This version of KPhotoAlbum would normally fix some issues with category "
-                 "names. Some changes inside the database (<kbd>index.xml</kbd> file) and the "
-                 "configuration are necessary to do this. Additionally, some (internal) files "
-                 "inside your collection directory have to be moved.</p>"
-                 "<p>You don't have write access to your collection (<kbd>%1</kbd>), so this "
-                 "update can't be done now. Please check your permissions and re-run "
-                 "KPhotoAlbum.</p>"
-                 "<p><b>Probably, some features may be missing or broken until the update can be "
-                 "done!</b></p>",
-                 settings->imageDirectory())
+            i18n("<p><b>"
+                 "This version of KPhotoAlbum does not translate \"standard\" categories any more."
+                 "</b></p>"
+                 "<p>"
+                 "This may mean that – if you use a locale other than English – some of your "
+                 "categories are now displayed in English. "
+                 "<p>"
+                 "</p>"
+                 "You can manually rename your categories any time and then save your database."
+                 "</p>"),
+            i18n("Changed standard category names")
         );
-        MainWindow::Window::theMainWindow()->v6UpdateSkipped();
-        return;
     }
-
-    // Create a backup of the original index.xml, the CategoryImages directory, and the original
-    // settings.
-
-    // Find a save directory name for our backup
-    QString backupDir = settings->imageDirectory() + QString::fromUtf8("v6updateBackup");
-    if (QDir(backupDir).exists()) {
-        QString newBackupDir = backupDir + QString::fromUtf8(".");
-        int backupDirAppendix = 0;
-        while (QDir(backupDir + QString::number(backupDirAppendix)).exists()) {
-            backupDirAppendix++;
-        }
-        backupDir = backupDir + QString::fromUtf8(".") + QString::number(backupDirAppendix);
-    }
-
-    QDir().mkdir(backupDir);
-
-    // Create a backup of index.xml
-    QFile::copy(settings->imageDirectory() + QString::fromUtf8("index.xml"),
-                backupDir + QString::fromUtf8("/index.xml"));
-
-    // Create a backup of kphotoalbumrc
-    QFile::copy(KStandardDirs::locateLocal("config", KGlobal::config()->name()),
-                backupDir + QString::fromUtf8("/") + KGlobal::config()->name());
-
-    // Create a backup of CategoryImages
-    QDir().mkdir(backupDir + QString::fromUtf8("/CategoryImages"));
-    QString categoryImagesPath = settings->imageDirectory() + QString::fromUtf8("/CategoryImages");
-    QString categoryImagesBackupPath = backupDir + QString::fromUtf8("/CategoryImages/");
-    QDir categoryImagesDirectory(categoryImagesPath);
-    QStringList files = categoryImagesDirectory.entryList(QDir::Files | QDir::NoDotAndDotDot);
-    for (QString fileName : files) {
-        QFile::copy(categoryImagesPath + QString::fromUtf8("/") + fileName,
-                    categoryImagesBackupPath + fileName);
-    }
-
-    // Here we have a backup of everything we will change.
-
-    // Update the CategoryImages directory
-    QMapIterator<QString, QString> oldToNew(m_newToOldName);
-    while (oldToNew.hasNext()) {
-        oldToNew.next();
-        const QString& oldName = oldToNew.key();
-        const QString& newName = oldToNew.value();
-
-        if (oldName == newName) {
-            continue;
-        }
-
-        // Rename CategoryImages
-        QStringList matchingFiles = categoryImagesDirectory.entryList(QStringList()
-                                    << QString::fromUtf8("%1*").arg(newName));
-        for (const QString& oldFileName : matchingFiles) {
-            categoryImagesDirectory.rename(oldFileName,
-                                           oldName + oldFileName.mid(newName.length()));
-        }
-    }
-
-    // Update category names for the Categories config
-
-    KConfigGroup generalConfig = KGlobal::config()->group( QString::fromLatin1("General") );
-
-    // Categories.untaggedCategory
-    const QString untaggedCategory = QString::fromUtf8("untaggedCategory");
-    QString untaggedCategoryValue = generalConfig.readEntry<QString>(untaggedCategory, QString());
-    if (! untaggedCategoryValue.isEmpty()) {
-        generalConfig.writeEntry<QString>(untaggedCategory,
-                                          sanitizedCategoryName(untaggedCategoryValue));
-    }
-
-    // Categories.albumCategory
-    const QString albumCategory = QString::fromUtf8("albumCategory");
-    QString albumCategoryValue = generalConfig.readEntry<QString>(albumCategory, QString());
-    if (! albumCategoryValue.isEmpty()) {
-        generalConfig.writeEntry<QString>(albumCategory,
-                                          sanitizedCategoryName(albumCategoryValue));
-    }
-
-    // Update category names for privacy-lock settings
-    KConfigGroup privacyConfig = KGlobal::config()->group(settings->groupForDatabase("Privacy Settings"));
-    QStringList oldCategories = privacyConfig.readEntry<QStringList>(QString::fromUtf8("categories"),
-                                                                     QStringList());
-    QStringList categories;
-    for (QString& category : oldCategories) {
-        QString oldName = category;
-        category = sanitizedCategoryName(oldName);
-        categories << category;
-        QString lockEntry = privacyConfig.readEntry<QString>(oldName, QString());
-        if (! lockEntry.isEmpty()) {
-            privacyConfig.writeEntry<QString>(category, lockEntry);
-            privacyConfig.deleteEntry(oldName);
-        }
-    }
-    privacyConfig.writeEntry<QStringList>(QString::fromUtf8("categories"), categories);
-
-    // We're done with the update, so save the database to make it permanent
-    MainWindow::Window::theMainWindow()->v6UpdateDone();
-
-    KMessageBox::information(
-        messageParent(),
-        i18n("<p>This version of KPhotoAlbum fixes some issues with category names. This is a "
-             "database internal update which won't affect the displayed category names or any tag "
-             "data. Anyway, some files (category and tag thumbnails) have been moved and the "
-             "configuration file and the database (<kbd>index.xml</kbd>) has been fixed. If you "
-             "want to know what exactly happened, read \"Differences to version 5\" in "
-             "<kbd>documentation/database-layout.md</kbd>.</p>"
-             "<p>A backup of all (probably) changed files has been created in <kbd>%1</kbd>.</p>",
-             backupDir)
-    );
 }
 
 void XMLDB::FileReader::loadImages( ReaderPtr reader )
@@ -385,7 +263,7 @@ void XMLDB::FileReader::loadBlockList( ReaderPtr reader )
         while (reader->readNextStartOrStopElement(blockString).isStartToken) {
             QString fileName = reader->attribute(fileString);
             if ( !fileName.isEmpty() )
-                m_db->m_blockList << DB::FileName::fromRelativePath(fileName);
+                m_db->m_blockList.insert(DB::FileName::fromRelativePath(fileName));
             reader->readEndElement();
         }
     }
@@ -403,7 +281,7 @@ void XMLDB::FileReader::loadMemberGroups( ReaderPtr reader )
     if ( info.isStartToken && info.tokenName == memberGroupsString) {
         reader->readNextStartOrStopElement(memberGroupsString);
         while(reader->readNextStartOrStopElement(memberString).isStartToken) {
-            QString category = sanitizedCategoryName(reader->attribute(categoryString));
+            QString category = reader->attribute(categoryString);
 
             QString group = reader->attribute(groupNameString);
             if ( reader->hasAttribute(memberString) ) {
@@ -412,7 +290,7 @@ void XMLDB::FileReader::loadMemberGroups( ReaderPtr reader )
             }
             else {
                 QStringList members = reader->attribute(membersString).split( QString::fromLatin1( "," ), QString::SkipEmptyParts );
-                for( QStringList::Iterator membersIt = members.begin(); membersIt != members.end(); ++membersIt ) {
+                Q_FOREACH( const QString &memberItem, members ) {
                     DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName( category );
                     if (catPtr.isNull())
                     { // category was not declared in "Categories"
@@ -421,7 +299,7 @@ void XMLDB::FileReader::loadMemberGroups( ReaderPtr reader )
                         m_db->m_categoryCollection.addCategory( catPtr );
                     }
                     XMLCategory* cat = static_cast<XMLCategory*>( catPtr.data() );
-                    QString member = cat->nameForId( (*membersIt).toInt() );
+                    QString member = cat->nameForId( memberItem.toInt() );
                     if (member.isNull())
                         continue;
                     m_db->m_members.addMemberToGroup( category, group, member );
@@ -438,6 +316,31 @@ void XMLDB::FileReader::loadMemberGroups( ReaderPtr reader )
         }
     }
 }
+
+/*
+void XMLDB::FileReader::loadSettings(ReaderPtr reader)
+{
+    static QString settingsString = QString::fromUtf8("settings");
+    static QString settingString = QString::fromUtf8("setting");
+    static QString keyString = QString::fromUtf8("key");
+    static QString valueString = QString::fromUtf8("value");
+
+    ElementInfo info = reader->peekNext();
+    if (info.isStartToken && info.tokenName == settingsString) {
+        reader->readNextStartOrStopElement(settingString);
+        while(reader->readNextStartOrStopElement(settingString).isStartToken) {
+            if (reader->hasAttribute(keyString) && reader->hasAttribute(valueString)) {
+                m_db->m_settings.insert(unescape(reader->attribute(keyString)),
+                                        unescape(reader->attribute(valueString)));
+            } else {
+                qWarning() << "File corruption in index.xml. Setting either lacking a key or a "
+                           << "value attribute. Ignoring this entry.";
+            }
+            reader->readEndElement();
+        }
+    }
+}
+*/
 
 void XMLDB::FileReader::checkIfImagesAreSorted()
 {
@@ -478,7 +381,7 @@ void XMLDB::FileReader::checkIfImagesAreSorted()
 
 }
 
-void XMLDB::FileReader::checkIfAllImagesHasSizeAttributes()
+void XMLDB::FileReader::checkIfAllImagesHaveSizeAttributes()
 {
     QTime time;
     time.start();
@@ -500,7 +403,7 @@ void XMLDB::FileReader::checkIfAllImagesHasSizeAttributes()
 
 DB::ImageInfoPtr XMLDB::FileReader::load( const DB::FileName& fileName, ReaderPtr reader )
 {
-    DB::ImageInfoPtr info = XMLDB::Database::createImageInfo( fileName, reader, m_db, &m_newToOldName );
+    DB::ImageInfoPtr info = XMLDB::Database::createImageInfo(fileName, reader, m_db);
     m_nextStackId = qMax( m_nextStackId, info->stackId() + 1 );
     info->createFolderCategoryItem( m_folderCategory, m_db->m_members );
     return info;
@@ -528,6 +431,13 @@ XMLDB::ReaderPtr XMLDB::FileReader::readConfigFile( const QString& configFile )
             QTextStream stream( &file );
             stream.setCodec( QTextCodec::codecForName("UTF-8") );
             QString str = stream.readAll();
+
+            // Replace the default setup's category and tag names with localized ones
+            str = str.replace(QString::fromUtf8("People"), i18n("People"));
+            str = str.replace(QString::fromUtf8("Places"), i18n("Places"));
+            str = str.replace(QString::fromUtf8("Events"), i18n("Events"));
+            str = str.replace(QString::fromUtf8("untagged"), i18n("untagged"));
+
             str = str.replace( QRegExp( QString::fromLatin1("imageDirectory=\"[^\"]*\"")), QString::fromLatin1("") );
             str = str.replace( QRegExp( QString::fromLatin1("htmlBaseDir=\"[^\"]*\"")), QString::fromLatin1("") );
             str = str.replace( QRegExp( QString::fromLatin1("htmlBaseURL=\"[^\"]*\"")), QString::fromLatin1("") );
@@ -601,33 +511,6 @@ QString XMLDB::FileReader::unescape( const QString& str )
 
     cache.insert(str,tmp);
     return tmp;
-}
-
-QString XMLDB::FileReader::sanitizedCategoryName(const QString& category)
-{
-    // this fix only applies to older databases (<= version 5);
-    // newer databases allow these categories, but without the "special meaning":
-    if (m_fileVersion > 5) {
-        return category;
-    }
-
-    QString mapped;
-    // Silently correct some changes/bugs regarding category names
-    // for a list of currently used category names, cf. DB::Category::standardCategories()
-    if (category == QString::fromUtf8("Persons")) {
-        // "Persons" is now "People"
-        mapped = QString::fromUtf8("People");
-    } else if (category == QString::fromUtf8("Locations")) {
-        // "Locations" is now "Places"
-        mapped = QString::fromUtf8("Places");
-    } else {
-        // Be sure to use the C locale category name for standard categories.
-        // Older versions of KPA did store the localized category names.
-        mapped = DB::Category::unLocalizedCategoryName(category);
-    }
-
-    m_newToOldName[mapped] = category;
-    return mapped;
 }
 
 // TODO(hzeller): DEPENDENCY This pulls in the whole MainWindow dependency into the database backend.

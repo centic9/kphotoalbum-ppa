@@ -29,6 +29,7 @@
 #include "DB/CategoryCollection.h"
 #include "DB/Category.h"
 #include "DB/ImageSearchInfo.h"
+#include "Settings/SettingsData.h"
 
 using namespace MainWindow;
 
@@ -73,25 +74,25 @@ void TokenEditor::show()
 {
     QStringList tokens = tokensInUse();
 
-     for( QList<QCheckBox*>::Iterator it = m_checkBoxes.begin(); it != m_checkBoxes.end(); ++it ) {
-        (*it)->setChecked( false );
-        QString txt = (*it)->text().remove( QString::fromLatin1("&") );
-        (*it)->setEnabled( tokens.contains( txt ) );
+    Q_FOREACH( QCheckBox *box, m_checkBoxes ) {
+        box->setChecked( false );
+        QString txt = box->text().remove( QString::fromLatin1("&") );
+        box->setEnabled( tokens.contains( txt ) );
     }
     KDialog::show();
 }
 
 void TokenEditor::selectAll()
 {
-     for( QList<QCheckBox*>::Iterator it = m_checkBoxes.begin(); it != m_checkBoxes.end(); ++it ) {
-        (*it)->setChecked( true );
+    Q_FOREACH( QCheckBox *box, m_checkBoxes ) {
+        box->setChecked( true );
     }
 }
 
 void TokenEditor::selectNone()
 {
-     for( QList<QCheckBox*>::Iterator it = m_checkBoxes.begin(); it != m_checkBoxes.end(); ++it ) {
-        (*it)->setChecked( false );
+    Q_FOREACH( QCheckBox *box, m_checkBoxes ) {
+        box->setChecked( false );
     }
 }
 
@@ -104,8 +105,9 @@ void TokenEditor::selectNone()
 QStringList TokenEditor::tokensInUse()
 {
     QStringList res;
+    DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
     QMap<QString,uint> map =
-        DB::ImageDB::instance()->classify( DB::ImageSearchInfo(), QString::fromLatin1( "Tokens" ), DB::anyMediaType );
+        DB::ImageDB::instance()->classify( DB::ImageSearchInfo(), tokensCategory->name(), DB::anyMediaType );
     for( QMap<QString,uint>::Iterator it = map.begin(); it != map.end(); ++it ) {
         if ( it.value() > 0 )
             res.append( it.key() );
@@ -115,10 +117,11 @@ QStringList TokenEditor::tokensInUse()
 
 void TokenEditor::accept()
 {
-     for( QList<QCheckBox*>::Iterator it = m_checkBoxes.begin(); it != m_checkBoxes.end(); ++it ) {
-        if ( (*it)->isChecked() && (*it)->isEnabled() ) {
-            QString txt = (*it)->text().remove( QString::fromLatin1("&") );
-            DB::ImageDB::instance()->categoryCollection()->categoryForName( QString::fromLatin1( "Tokens" ) )->removeItem( txt );
+    DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
+    Q_FOREACH( const QCheckBox *box, m_checkBoxes ) {
+        if ( box->isChecked() && box->isEnabled() ) {
+            QString txt = box->text().remove( QString::fromLatin1("&") );
+            tokensCategory->removeItem( txt );
         }
     }
     KDialog::accept();

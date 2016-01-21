@@ -39,6 +39,8 @@
 #include <QStackedWidget>
 #include "DB/CategoryCollection.h"
 
+#include "TreeCategoryModel.h"
+
 Browser::BrowserWidget* Browser::BrowserWidget::s_instance = nullptr;
 bool Browser::BrowserWidget::s_isResizing = false;
 
@@ -58,6 +60,7 @@ Browser::BrowserWidget::BrowserWidget( QWidget* parent )
     m_filterProxy->setFilterKeyColumn(0);
     m_filterProxy->setFilterCaseSensitivity( Qt::CaseInsensitive );
     m_filterProxy->setSortRole( ValueRole );
+    m_filterProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
 
     addAction( new OverviewPage( Breadcrumb::home(), DB::ImageSearchInfo(), this ) );
     QTimer::singleShot( 0, this, SLOT(emitSignals()) );
@@ -276,6 +279,10 @@ Browser::BrowserPage* Browser::BrowserWidget::currentAction() const
 void Browser::BrowserWidget::setModel( QAbstractItemModel* model)
 {
     m_filterProxy->setSourceModel( model );
+
+    if (qobject_cast<TreeCategoryModel*>(model)) {
+        connect(model, SIGNAL(dataChanged()), this, SLOT(reload()));
+    }
 }
 
 void Browser::BrowserWidget::switchToViewType( DB::Category::ViewType type )
@@ -368,6 +375,11 @@ void Browser::BrowserWidget::createWidgets()
 
 
     m_treeView = new QTreeView( m_stack );
+
+    m_treeView->setDragEnabled(true);
+    m_treeView->setAcceptDrops(true);
+    m_treeView->setDropIndicatorShown(true);
+    m_treeView->setDefaultDropAction( Qt::MoveAction );
 
     QPalette pal = m_treeView->palette();
     pal.setBrush( QPalette::Base, QApplication::palette().color( QPalette::Background ) );

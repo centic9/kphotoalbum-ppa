@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -160,14 +160,31 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     QString txt = info->description();
     if ( !m_description.isEmpty() ) {
         QStringList list = m_description.split(QChar::fromLatin1(' '), QString::SkipEmptyParts);
-        for( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
-            ok = ok && ( txt.indexOf( *it, 0, Qt::CaseInsensitive ) != -1 );
+        Q_FOREACH( const QString &word, list ) {
+            ok = ok && ( txt.indexOf( word, 0, Qt::CaseInsensitive ) != -1 );
         }
     }
 
     // -------------------------------------------------- File name pattern
     ok = ok && ( m_fnPattern.isEmpty() ||
         m_fnPattern.indexIn( info->fileName().relative() ) != -1 );
+
+
+#ifdef HAVE_KGEOMAP
+    // Search for GPS Position
+    if (ok && m_usingRegionSelection) {
+        ok = ok && info->coordinates().hasCoordinates();
+        if (ok) {
+            float infoLat = info->coordinates().lat();
+            float infoLon = info->coordinates().lon();
+            ok = ok
+                 && m_regionSelectionMinLat <= infoLat
+                 && infoLat                 <= m_regionSelectionMaxLat
+                 && m_regionSelectionMinLon <= infoLon
+                 && infoLon                 <= m_regionSelectionMaxLon;
+        }
+    }
+#endif
 
     return ok;
 }
@@ -310,6 +327,10 @@ ImageSearchInfo::ImageSearchInfo( const ImageSearchInfo& other )
 #ifdef HAVE_EXIV2
     m_exifSearchInfo = other.m_exifSearchInfo;
 #endif
+#ifdef HAVE_KGEOMAP
+    m_regionSelection = other.m_regionSelection;
+#endif
+
 }
 
 void ImageSearchInfo::compile() const
@@ -317,6 +338,19 @@ void ImageSearchInfo::compile() const
 #ifdef HAVE_EXIV2
     m_exifSearchInfo.search();
 #endif
+#ifdef HAVE_KGEOMAP
+    // Prepare Search for GPS Position
+    m_usingRegionSelection = m_regionSelection.first.hasCoordinates() && m_regionSelection.second.hasCoordinates();
+    if (m_usingRegionSelection) {
+        using std::min;
+        using std::max;
+        m_regionSelectionMinLat = min(m_regionSelection.first.lat(), m_regionSelection.second.lat());
+        m_regionSelectionMaxLat = max(m_regionSelection.first.lat(), m_regionSelection.second.lat());
+        m_regionSelectionMinLon = min(m_regionSelection.first.lon(), m_regionSelection.second.lon());
+        m_regionSelectionMaxLon = max(m_regionSelection.first.lon(), m_regionSelection.second.lon());
+    }
+#endif
+
     deleteMatchers();
 
     for( QMap<QString,QString>::ConstIterator it = m_categoryMatchText.begin(); it != m_categoryMatchText.end(); ++it ) {
@@ -326,17 +360,16 @@ void ImageSearchInfo::compile() const
         QStringList orParts = matchText.split(QString::fromLatin1("|"), QString::SkipEmptyParts);
         DB::ContainerCategoryMatcher* orMatcher = new DB::OrCategoryMatcher;
 
-        for( QStringList::Iterator itOr = orParts.begin(); itOr != orParts.end(); ++itOr ) {
+        Q_FOREACH( QString orPart, orParts ) {
             // Split by " & ", not only by "&", so that the doubled "&"s won't be used as a split point
-            QStringList andParts = (*itOr).split(QString::fromLatin1(" & "), QString::SkipEmptyParts);
+            QStringList andParts = orPart.split(QString::fromLatin1(" & "), QString::SkipEmptyParts);
 
             DB::ContainerCategoryMatcher* andMatcher;
             bool exactMatch=false;
             bool negate = false;
             andMatcher = new DB::AndCategoryMatcher;
 
-            for( QStringList::Iterator itAnd = andParts.begin(); itAnd != andParts.end(); ++itAnd ) {
-                QString str = *itAnd;
+            Q_FOREACH( QString str, andParts ) {
                 static QRegExp regexp( QString::fromLatin1("^\\s*!\\s*(.*)$") );
                 if ( regexp.exactMatch( str ) )
                 { // str is preceded with NOT
@@ -465,8 +498,8 @@ Utilities::StringSet ImageSearchInfo::findAlreadyMatched( const QString &group )
     }
 
     QStringList list = str.split(QString::fromLatin1( "&" ), QString::SkipEmptyParts);
-    for( QStringList::Iterator it = list.begin(); it != list.end(); ++it ) {
-        QString nm = (*it).trimmed();
+    Q_FOREACH( QString part, list ) {
+        QString nm = part.trimmed();
         if (! nm.contains( QString::fromLatin1( "!" ) ) )
             result.insert(nm);
     }
@@ -539,4 +572,18 @@ void DB::ImageSearchInfo::renameCategory( const QString& oldName, const QString&
     m_categoryMatchText.remove( oldName );
     m_compiled = false;
 }
+
+#ifdef HAVE_KGEOMAP
+KGeoMap::GeoCoordinates::Pair ImageSearchInfo::regionSelection() const
+{
+    return m_regionSelection;
+}
+
+void ImageSearchInfo::setRegionSelection(const KGeoMap::GeoCoordinates::Pair& actRegionSelection)
+{
+    m_regionSelection = actRegionSelection;
+    m_compiled = false;
+}
+#endif
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

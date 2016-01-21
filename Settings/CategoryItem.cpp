@@ -33,18 +33,16 @@
 #include "MainWindow/Window.h"
 
 Settings::CategoryItem::CategoryItem(const QString &category,
-                                     const QString &text,
                                      const QString &icon,
                                      DB::Category::ViewType type,
                                      int thumbnailSize,
                                      QListWidget *parent,
-                                     bool positionable) : QListWidgetItem(text, parent),
+                                     bool positionable) : QListWidgetItem(category, parent),
     m_categoryOrig(category),
     m_iconOrig(icon),
     m_positionable(positionable),
     m_positionableOrig(positionable),
     m_category(category),
-    m_text(text),
     m_icon(icon),
     m_type(type),
     m_typeOrig(type),
@@ -72,7 +70,7 @@ void Settings::CategoryItem::submit(DB::MemberMap* memberMap)
     } else {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName(m_categoryOrig);
 
-        if (DB::Category::unLocalizedCategoryName(m_category) != m_categoryOrig) {
+        if (m_category != m_categoryOrig) {
             renameCategory(memberMap);
         }
 
@@ -106,11 +104,6 @@ void Settings::CategoryItem::removeFromDatabase()
         // The database knows about the item.
         DB::ImageDB::instance()->categoryCollection()->removeCategory(m_categoryOrig);
     }
-}
-
-QString Settings::CategoryItem::text() const
-{
-    return m_text;
 }
 
 bool Settings::CategoryItem::positionable() const
@@ -155,20 +148,6 @@ void Settings::CategoryItem::setViewType(DB::Category::ViewType type)
 
 void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
 {
-    if (KMessageBox::warningContinueCancel(
-        ::MainWindow::Window::theMainWindow(),
-        i18n("<p>Due to a shortcoming in KPhotoAlbum, you need to save your database after "
-             "renaming categories; otherwise all the filenames of the category thumbnails will be "
-             "wrong, and thus lost.</p>"
-             "<p>So either press Cancel now (and it will not be renamed), or press Continue, and "
-             "as your next step save the database.</p>")
-        ) == KMessageBox::Cancel) {
-
-        return;
-    }
-
-    QString categoryName = DB::Category::unLocalizedCategoryName(m_category);
-
     QDir dir(QString::fromLatin1("%1/CategoryImages").arg(
             Settings::SettingsData::instance()->imageDirectory()));
 
@@ -179,7 +158,7 @@ void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
          fileNameIt != files.end();
          ++fileNameIt) {
 
-        QString newName = categoryName + (*fileNameIt).mid(m_categoryOrig.length());
+        QString newName = m_category + (*fileNameIt).mid(m_categoryOrig.length());
         dir.rename(*fileNameIt, newName);
     }
 
@@ -188,18 +167,23 @@ void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
     DB::ImageSearchInfo info = settings->currentLock();
     const bool exclude = settings->lockExcludes();
 
-    info.renameCategory(m_categoryOrig, categoryName);
+    info.renameCategory(m_categoryOrig, m_category);
     settings->setCurrentLock(info, exclude);
 
-    DB::ImageDB::instance()->categoryCollection()->rename(m_categoryOrig, categoryName);
-    memberMap->renameCategory(m_categoryOrig, categoryName);
+    DB::ImageDB::instance()->categoryCollection()->rename(m_categoryOrig, m_category);
+    memberMap->renameCategory(m_categoryOrig, m_category);
 
 #ifdef HAVE_KFACE
     // Also tell the face management page to update the recognition database
     emit newCategoryNameSaved(m_categoryOrig, m_category);
 #endif
 
-    m_categoryOrig = categoryName;
+    m_categoryOrig = m_category;
+}
+
+QString Settings::CategoryItem::originalName() const
+{
+    return m_categoryOrig;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -24,6 +24,7 @@
 #include "DB/ImageDB.h"
 #include "ThumbnailModel.h"
 #include "VideoThumbnailCycler.h"
+#include "Settings/SettingsData.h"
 
 ThumbnailView::KeyboardEventHandler::KeyboardEventHandler( ThumbnailFactory* factory )
     : ThumbnailComponent( factory )
@@ -39,22 +40,23 @@ bool ThumbnailView::KeyboardEventHandler::keyPressEvent( QKeyEvent* event )
         bool hadHit          = false;
 
         const DB::FileNameList selection = widget()->selection(NoExpandCollapsedStacks);
+        DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
         Q_FOREACH( const DB::FileName& fileName, selection ) {
             DB::ImageInfoPtr info = fileName.info();
             if ( ! hadHit ) {
-                mustRemoveToken = info->hasCategoryInfo( QString::fromLatin1("Tokens"), token );
+                mustRemoveToken = info->hasCategoryInfo(tokensCategory->name(), token );
                 hadHit = true;
             }
 
             if ( mustRemoveToken )
-                info->removeCategoryInfo( QString::fromLatin1("Tokens"), token );
+                info->removeCategoryInfo(tokensCategory->name(), token );
             else
-                info->addCategoryInfo( QString::fromLatin1("Tokens"), token );
+                info->addCategoryInfo(tokensCategory->name(), token );
 
             model()->updateCell(fileName);
         }
 
-        DB::ImageDB::instance()->categoryCollection()->categoryForName( QString::fromLatin1("Tokens") )->addItem( token );
+        tokensCategory->addItem(token);
         MainWindow::DirtyIndicator::markDirty();
         return true;
     }

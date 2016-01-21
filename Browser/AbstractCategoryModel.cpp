@@ -53,7 +53,7 @@ QString Browser::AbstractCategoryModel::text( const QString& name ) const
         return i18nc("Denotes the media type (video,image)","Image");
 
     else {
-        if ( m_category->name() == QString::fromLatin1( "Folder" ) ) {
+        if (m_category->name() == i18n("Folder")) {
             QRegExp rx( QString::fromLatin1( "(.*/)(.*)$") );
             QString value = name;
             value.replace( rx, QString::fromLatin1("\\2") );
@@ -134,7 +134,7 @@ QVariant Browser::AbstractCategoryModel::headerData( int section, Qt::Orientatio
         return QVariant();
 
     switch ( section ) {
-    case 0: return m_category->text();
+    case 0: return m_category->name();
     case 1: return i18n("Images");
     case 2: return i18n("Videos");
     }

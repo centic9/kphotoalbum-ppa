@@ -111,8 +111,8 @@ Settings::SettingsDialog::SettingsDialog( QWidget* parent)
     setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
     setCaption( i18n( "Settings" ) );
 
-    connect(m_categoryPage, SIGNAL(currentCategoryNameChanged(QString,QString)),
-            m_tagGroupsPage, SLOT(categoryRenamed(QString,QString)));
+    connect(m_categoryPage, SIGNAL(currentCategoryNameChanged()),
+            m_tagGroupsPage, SLOT(categoryRenamed()));
     connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
             m_tagGroupsPage, SLOT(slotPageChange()));
 #ifdef HAVE_KFACE
@@ -122,6 +122,7 @@ Settings::SettingsDialog::SettingsDialog( QWidget* parent)
     connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
             m_birthdayPage, SLOT(pageChange(KPageWidgetItem*)));
     connect(this, SIGNAL(cancelClicked()), m_birthdayPage, SLOT(discardChanges()));
+    connect(this, SIGNAL(cancelClicked()), m_categoryPage, SLOT(resetCategoryLabel()));
 
     connect( this, SIGNAL(applyClicked()), this, SLOT(slotMyOK()) );
     connect( this, SIGNAL(okClicked()), this, SLOT(slotMyOK()) );
@@ -155,6 +156,7 @@ void Settings::SettingsDialog::show()
     m_categoryPage->enableDisable( false );
 
     m_birthdayPage->reload();
+    m_categoryPage->resetCategoryNamesChanged();
 
     KDialog::show();
 }

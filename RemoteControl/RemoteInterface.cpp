@@ -29,6 +29,7 @@
 #include <QTcpSocket>
 
 #include <kiconloader.h>
+#include <KLocale>
 
 #include "Browser/FlatCategoryModel.h"
 #include "DB/Category.h"
@@ -133,7 +134,7 @@ void RemoteInterface::sendCategoryNames(const SearchRequest& search)
 
     CategoryListResult command;
     for (const DB::CategoryPtr& category : DB::ImageDB::instance()->categoryCollection()->categories()) {
-        if (category->name() == QString::fromLatin1("Media Type"))
+        if (category->name() == i18n("Media Type"))
             continue;
         QMap<QString, uint> images = DB::ImageDB::instance()->classify( dbSearchInfo, category->name(), DB::Image );
 
@@ -144,7 +145,7 @@ void RemoteInterface::sendCategoryNames(const SearchRequest& search)
                 ? Types::CategoryIconView : Types::CategoryListView;
 
         const QImage icon = category->icon(search.size, enabled ? KIconLoader::DefaultState : KIconLoader::DisabledState).toImage();
-        command.categories.append({category->name(), category->text(), icon, enabled, type});
+        command.categories.append({category->name(), icon, enabled, type});
     }
     m_connection->sendCommand(command);
 }
@@ -265,9 +266,10 @@ void RemoteInterface::setToken(const ToggleTokenRequest& command)
 {
     const DB::FileName fileName = m_imageNameStore[command.imageId];
     DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
+    DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
     if (command.state == ToggleTokenRequest::On)
-        info->addCategoryInfo(QString::fromUtf8("Tokens"), command.token);
+        info->addCategoryInfo(tokensCategory->name(), command.token);
     else
-        info->removeCategoryInfo(QString::fromUtf8("Tokens"), command.token);
+        info->removeCategoryInfo(tokensCategory->name(), command.token);
     MainWindow::DirtyIndicator::markDirty();
 }

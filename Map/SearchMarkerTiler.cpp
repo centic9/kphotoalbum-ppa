@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2015 Johannes Zarl-Zierl <johannes@zarl.at>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,11 +16,31 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPA_VERSION_H
-#define KPA_VERSION_H
+// libkgeomap includes
+#include <libkgeomap/modelhelper.h>
+#include <libkgeomap/kgeomap_primitives.h>
 
-#define KPA_VERSION "4.7"
+// Local includes
+#include "Map/MapView.h"
+#include "SearchMarkerTiler.h"
 
-#endif /* KPA_VERSION_H */
+Map::SearchMarkerTiler::SearchMarkerTiler(KGeoMap::ModelHelper *const modelHelper, QObject *const parent)
+    : ItemMarkerTiler(modelHelper,parent)
+{
+    m_mapView = dynamic_cast<MapView*>(parent);
+}
+
+Map::SearchMarkerTiler::~SearchMarkerTiler()
+{
+}
+
+KGeoMap::KGeoMapGroupState Map::SearchMarkerTiler::getGlobalGroupState()
+{
+    if (m_mapView->regionSelected()) {
+        return KGeoMap::ItemMarkerTiler::getGlobalGroupState() | KGeoMap::KGeoMapRegionSelectedAll;
+    } else {
+        return KGeoMap::ItemMarkerTiler::getGlobalGroupState();
+    }
+}
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2015 Tobias Leupold <tobias.leupold@web.de>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -33,6 +33,7 @@
 
 // Local includes
 #include "MapMarkerModelHelper.h"
+#include "SearchMarkerTiler.h"
 
 Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
 {
@@ -85,7 +86,7 @@ Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
 
     // Add the item model for the coordinates display
     m_modelHelper = new MapMarkerModelHelper();
-    m_itemMarkerTiler = new KGeoMap::ItemMarkerTiler(m_modelHelper, this);
+    m_itemMarkerTiler = new SearchMarkerTiler(m_modelHelper, this);
     m_mapWidget->setGroupedModel(m_itemMarkerTiler);
 }
 
@@ -144,38 +145,81 @@ void Map::MapView::setShowThumbnails(bool state)
 
 void Map::MapView::displayStatus(MapStatus status)
 {
-    if (status == MapStatus::Loading) {
+    switch (status)
+    {
+    case MapStatus::Loading:
         m_statusLabel->setText(i18n("<i>Loading coordinates from the images ...</i>"));
         m_statusLabel->show();
         m_mapWidget->hide();
+        m_mapWidget->clearRegionSelection();
         m_setLastCenterButton->setEnabled(false);
-    } else if (status == MapStatus::ImageHasCoordinates) {
+        break;
+    case MapStatus::ImageHasCoordinates:
         m_statusLabel->hide();
+        m_mapWidget->setAvailableMouseModes(KGeoMap::MouseModePan);
+        m_mapWidget->setVisibleMouseModes(0);
+        m_mapWidget->setMouseMode(KGeoMap::MouseModePan);
+        m_mapWidget->clearRegionSelection();
         m_mapWidget->show();
+        m_setLastCenterButton->show();
         m_setLastCenterButton->setEnabled(true);
-    } else if (status == MapStatus::ImageHasNoCoordinates) {
+        break;
+    case MapStatus::ImageHasNoCoordinates:
         m_statusLabel->setText(i18n("<i>This image does not contain geographic coordinates.</i>"));
         m_statusLabel->show();
         m_mapWidget->hide();
+        m_setLastCenterButton->show();
         m_setLastCenterButton->setEnabled(false);
-    } else if (status == MapStatus::SomeImagesHaveNoCoordinates) {
+        break;
+    case MapStatus::SomeImagesHaveNoCoordinates:
         m_statusLabel->setText(i18n("<i>Some of the selected images do not contain geographic "
                                     "coordinates.</i>"));
         m_statusLabel->show();
+        m_mapWidget->setAvailableMouseModes(KGeoMap::MouseModePan);
+        m_mapWidget->setVisibleMouseModes(0);
+        m_mapWidget->setMouseMode(KGeoMap::MouseModePan);
+        m_mapWidget->clearRegionSelection();
         m_mapWidget->show();
+        m_setLastCenterButton->show();
         m_setLastCenterButton->setEnabled(true);
-    } else if (status == MapStatus::NoImagesHaveNoCoordinates) {
+        break;
+    case MapStatus::SearchCoordinates:
+        m_statusLabel->setText(i18n("<i>Search for geographic coordinates.</i>"));
+        m_statusLabel->show();
+        m_mapWidget->setAvailableMouseModes(KGeoMap::MouseModePan
+                                            | KGeoMap::MouseModeRegionSelection);
+        m_mapWidget->setVisibleMouseModes(KGeoMap::MouseModePan
+                                          | KGeoMap::MouseModeRegionSelection);
+        m_mapWidget->setMouseMode(KGeoMap::MouseModePan);
+        m_mapWidget->show();
+        m_mapWidget->setCenter(KGeoMap::GeoCoordinates());
+        m_setLastCenterButton->hide();
+        break;
+    case MapStatus::NoImagesHaveNoCoordinates:
         m_statusLabel->setText(i18n("<i>None of the selected images contain geographic "
                                     "coordinates.</i>"));
         m_statusLabel->show();
         m_mapWidget->hide();
+        m_setLastCenterButton->show();
         m_setLastCenterButton->setEnabled(false);
+        break;
     }
 }
 
 void Map::MapView::setLastCenter()
 {
     m_mapWidget->setCenter(m_lastCenter);
+}
+
+KGeoMap::GeoCoordinates::Pair Map::MapView::getRegionSelection() const
+{
+    return m_mapWidget->getRegionSelection();
+}
+
+bool Map::MapView::regionSelected() const
+{
+    return m_mapWidget->getRegionSelection().first.hasCoordinates()
+           && m_mapWidget->getRegionSelection().second.hasCoordinates();
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
