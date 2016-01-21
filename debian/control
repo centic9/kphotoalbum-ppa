@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 9), cmake (>= 2.8.3), pkg-kde-tools (>= 0.6.4),
  docbook-to-man,
  libexiv2-dev (>= 0.19), libjpeg-dev, libkdcraw-dev, libkipi-dev,
  x11proto-core-dev,
- pkg-config,
+ pkg-config, libkgeomap-dev, libkface-dev
 Standards-Version: 3.9.6
 Homepage: http://kphotoalbum.org
 Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-kde/kde-extras/kphotoalbum/trunk
@@ -16,8 +16,8 @@ Vcs-Svn: svn://anonscm.debian.org/pkg-kde/kde-extras/kphotoalbum/trunk/
 Package: kphotoalbum
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends},
- libqt4-sql-sqlite, mplayer
-Recommends: kipi-plugins, khelpcenter4, ffmpeg
+ libqt4-sql-sqlite, mplayer2
+Recommends: kipi-plugins (>= 4:4.7.0), khelpcenter4, libav-tools
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of
