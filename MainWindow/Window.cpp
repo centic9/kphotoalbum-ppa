@@ -215,10 +215,6 @@ MainWindow::Window::Window( QWidget* parent )
     setAutoSaveSettings();
 
     executeStartupActions();
-
-    if (m_v6UpdateDone) {
-        slotSave();
-    }
 }
 
 MainWindow::Window::~Window()
@@ -321,6 +317,7 @@ void MainWindow::Window::slotOptions()
         m_settingsDialog = new Settings::SettingsDialog( this );
         connect( m_settingsDialog, SIGNAL(changed()), this, SLOT(reloadThumbnails()) );
         connect( m_settingsDialog, SIGNAL(changed()), this, SLOT(startAutoSaveTimer()) );
+        connect(m_settingsDialog, SIGNAL(changed()), m_browser, SLOT(reload()));
     }
     m_settingsDialog->show();
 }
@@ -467,26 +464,6 @@ void MainWindow::Window::createAnnotationDialog()
 
 void MainWindow::Window::slotSave()
 {
-    if (m_v6UpdateSkipped) {
-        int ret = KMessageBox::warningYesNo(
-            this,
-            i18n("<p><b>You skipped the database update!</b></p>"
-                 "<p>If you save your database now, the file moves and configuration updates can't "
-                 "be done automatically anymore and <b>you will lose the concerned category and "
-                 "tag thumbnails, and probably your \"untagged images\" tags permanently. Also, "
-                 "face recognition will probably be broken.</b> (unless you do the necessary "
-                 "updates by hand).</p>"
-                 "<p>Do you really want to save your database?</p>"),
-            i18n("Database Update skipped")
-        );
-
-        if (ret == KStandardGuiItem::No) {
-            return;
-        } else {
-            m_v6UpdateSkipped = false; // Don't ask again
-        }
-    }
-
     Utilities::ShowBusyCursor dummy;
     m_statusBar->showMessage(i18n("Saving..."), 5000 );
     DB::ImageDB::instance()->save( Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("index.xml"), false );
@@ -903,6 +880,10 @@ void MainWindow::Window::setupMenuBar()
     a = actionCollection()->addAction( QString::fromLatin1("statistics"), this, SLOT(slotStatistics()) );
     a->setText( i18n("Statistics") );
 
+    m_markUntagged = actionCollection()->addAction(QString::fromUtf8("markUntagged"),
+                                                   this, SLOT(slotMarkUntagged()));
+    m_markUntagged->setText(i18n("Mark As Untagged"));
+
 
     // Settings
     KStandardAction::preferences( this, SLOT(slotOptions()), actionCollection() );
@@ -996,11 +977,6 @@ void MainWindow::Window::startAutoSaveTimer()
 void MainWindow::Window::slotAutoSave()
 {
     if ( m_statusBar->mp_dirtyIndicator->isAutoSaveDirty() ) {
-        if (m_v6UpdateSkipped) {
-            m_statusBar->showMessage(i18n("Won't save the database automatically, as you skipped the update."), 5000);
-            return;
-        }
-
         Utilities::ShowBusyCursor dummy;
         m_statusBar->showMessage(i18n("Auto saving...."));
         DB::ImageDB::instance()->save( Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1(".#index.xml"), true );
@@ -1172,15 +1148,23 @@ void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
             action->setEnabled( false );
 
         // "Copy image(s) to ..."
-        CopyPopup *copyMenu = new CopyPopup(&menu, info, selected());
+        CopyPopup *copyMenu = new CopyPopup(&menu, info, selected(), CopyPopup::Copy);
         QAction *copyAction = menu.addMenu(copyMenu);
         if (info.isNull() and selected().isEmpty()) {
             copyAction->setEnabled(false);
         }
 
+        // "Link image(s) to ..."
+        CopyPopup *linkMenu = new CopyPopup(&menu, info, selected(), CopyPopup::Link);
+        QAction *linkAction = menu.addMenu(linkMenu);
+        if (info.isNull() and selected().isEmpty()) {
+            linkAction->setEnabled(false);
+        }
+
         menu.exec( QCursor::pos() );
 
         delete externalCommands;
+        delete linkMenu;
         delete copyMenu;
     }
     e->setAccepted(true);
@@ -1280,11 +1264,10 @@ void MainWindow::Window::slotConfigureKeyBindings()
 
 #ifdef HASKIPI
     loadPlugins();
-    KIPI::PluginLoader::PluginList list = m_pluginLoader->pluginList();
-    for( KIPI::PluginLoader::PluginList::Iterator it = list.begin(); it != list.end(); ++it ) {
-        KIPI::Plugin* plugin = (*it)->plugin();
+    Q_FOREACH( const KIPI::PluginLoader::Info *pluginInfo, m_pluginLoader->pluginList() ) {
+        KIPI::Plugin* plugin = pluginInfo->plugin();
         if ( plugin )
-            dialog->addCollection( plugin->actionCollection(), (*it)->comment() );
+            dialog->addCollection( plugin->actionCollection(), pluginInfo->comment() );
     }
 #endif
 
@@ -1322,6 +1305,7 @@ void MainWindow::Window::updateContextMenuFromSelectionSize(int selectionSize)
     m_rotLeft->setEnabled(selectionSize >= 1);
     m_rotRight->setEnabled(selectionSize >= 1);
     m_AutoStackImages->setEnabled(selectionSize > 1);
+    m_markUntagged->setEnabled(selectionSize >= 1);
     m_statusBar->mp_selected->setSelectionCount( selectionSize );
 }
 
@@ -1522,33 +1506,33 @@ void MainWindow::Window::plug()
     QList<QAction*> batchActions;
 
     KIPI::PluginLoader::PluginList list = m_pluginLoader->pluginList();
-    for( KIPI::PluginLoader::PluginList::Iterator it = list.begin(); it != list.end(); ++it ) {
-        KIPI::Plugin* plugin = (*it)->plugin();
-        if ( !plugin || !(*it)->shouldLoad() )
+    Q_FOREACH( const KIPI::PluginLoader::Info *pluginInfo, list ) {
+        KIPI::Plugin* plugin = pluginInfo->plugin();
+        if ( !plugin || !pluginInfo->shouldLoad() )
             continue;
 
         plugin->setup( this );
 
         QList<KAction*> actions = plugin->actions();
-        for( QList<KAction*>::Iterator it = actions.begin(); it != actions.end(); ++it ) {
-            KIPI::Category category = plugin->category( *it );
+        Q_FOREACH( KAction *action, actions ) {
+            KIPI::Category category = plugin->category( action );
             if (  category == KIPI::ImagesPlugin ||  category == KIPI::CollectionsPlugin )
-                imageActions.append( *it );
+                imageActions.append( action );
 
             else if ( category == KIPI::ImportPlugin )
-                importActions.append( *it );
+                importActions.append( action );
 
             else if ( category == KIPI::ExportPlugin )
-                exportActions.append( *it );
+                exportActions.append( action );
 
             else if ( category == KIPI::ToolsPlugin )
-                toolsActions.append( *it );
+                toolsActions.append( action );
 
             else if ( category == KIPI::BatchPlugin )
-                batchActions.append( *it );
+                batchActions.append( action );
 
             else {
-                kDebug() << "Unknow category\n";
+                kDebug() << "Unknown category\n";
             }
         }
         KConfigGroup group = KGlobal::config()->group( QString::fromLatin1("Shortcuts") );
@@ -1777,6 +1761,32 @@ void MainWindow::Window::slotStatistics()
     dialog->show();
 }
 
+void MainWindow::Window::slotMarkUntagged()
+{
+    if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()) {
+        for (const DB::FileName& newFile : selected()) {
+            newFile.info()->addCategoryInfo(Settings::SettingsData::instance()->untaggedCategory(),
+                                            Settings::SettingsData::instance()->untaggedTag());
+        }
+
+        DirtyIndicator::markDirty();
+    } else {
+        // Note: the same dialog text is used in
+        // Browser::OverviewPage::activateUntaggedImagesAction(),
+        // so if it is changed, be sure to also change it there!
+        KMessageBox::information(this,
+            i18n("<p>You have not yet configured which tag to use for indicating untagged images."
+                 "</p>"
+                 "<p>Please follow these steps to do so:"
+                 "<ul><li>In the menu bar choose <b>Settings</b></li>"
+                 "<li>From there choose <b>Configure KPhotoAlbum</b></li>"
+                 "<li>Now choose the <b>Categories</b> icon</li>"
+                 "<li>Now configure section <b>Untagged Images</b></li></ul></p>"),
+            i18n("Feature has not been configured")
+        );
+    }
+}
+
 void MainWindow::Window::setupStatusBar()
 {
     m_statusBar = new MainWindow::StatusBar;
@@ -1912,14 +1922,9 @@ void MainWindow::Window::slotImageRotated(const DB::FileName& fileName)
     ImageManager::ThumbnailCache::instance()->removeThumbnail(fileName);
 }
 
-void MainWindow::Window::v6UpdateDone()
+bool MainWindow::Window::dbIsDirty() const
 {
-    m_v6UpdateDone = true;
-}
-
-void MainWindow::Window::v6UpdateSkipped()
-{
-    m_v6UpdateSkipped = true;
+    return m_statusBar->mp_dirtyIndicator->isSaveDirty();
 }
 
 #include "Window.moc"

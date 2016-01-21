@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -174,7 +174,10 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
         // check if a specific (positioned) tag is (still) selected later
         m_listSelectList[(*categoryIt)->name()] = sel;
 
-        QDockWidget* dock = createDock( (*categoryIt)->text(), (*categoryIt)->name(), Qt::BottomDockWidgetArea, sel );
+        QDockWidget* dock = createDock((*categoryIt)->name(),
+                                       (*categoryIt)->name(),
+                                       Qt::BottomDockWidgetArea,
+                                       sel);
         shortCutManager.addDock( dock, sel->lineEdit() );
 
         if ( (*categoryIt)->isSpecialCategory() )
@@ -444,19 +447,27 @@ void AnnotationDialog::Dialog::slotCopyPrevious()
     m_lastSelectedPositionableTag.second = QString();
     QList<ResizableFrame *> allAreas = m_preview->preview()->findChildren<ResizableFrame *>();
 
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-        (*it)->setSelection( old_info.itemsOfCategory( (*it)->category() ) );
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->setSelection( old_info.itemsOfCategory( ls->category() ) );
 
         // Also set all positionable tag candidates
 
-        if ( (*it)->positionable() ) {
-            QString category = (*it)->category();
+        if ( ls->positionable() ) {
+            QString category = ls->category();
             QSet<QString> selectedTags = old_info.itemsOfCategory( category );
 
-            for ( const auto tag : selectedTags ) {
-                QRect area = m_editList[m_current].areaForTag(category, tag);
-                if (area.isNull()) {
-                    // no associated area yet
+            // Add the tag to the positionable candiate list, if no area is already associated with it
+            for (const auto tag : selectedTags) {
+                bool alreadyAssociated = false;
+
+                for (ResizableFrame* area : allAreas) {
+                    if (area->tagData().first == category && area->tagData().second == tag) {
+                        alreadyAssociated = true;
+                        break;
+                    }
+                }
+
+                if (! alreadyAssociated) {
                     addTagToCandidateList(category, tag);
                 }
             }
@@ -518,22 +529,21 @@ void AnnotationDialog::Dialog::load()
     // or un-marked as positionable in the meantime, so ...
     QMap<QString, bool> categoryIsPositionable;
 
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-        (*it)->setSelection( info.itemsOfCategory( (*it)->category() ) );
-        (*it)->rePopulate();
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->setSelection( info.itemsOfCategory( ls->category() ) );
+        ls->rePopulate();
 
         // Get all selected positionable tags and add them to the candidate list
-        if ((*it)->positionable()) {
-            QSet<QString> selectedTags = (*it)->itemsOn();
-            QSet<QString>::iterator tagName;
+        if (ls->positionable()) {
+            QSet<QString> selectedTags = ls->itemsOn();
 
-            for (tagName = selectedTags.begin(); tagName != selectedTags.end(); ++tagName) {
-                addTagToCandidateList( (*it)->category(), *tagName );
+            Q_FOREACH( const QString &tagName, selectedTags ) {
+                addTagToCandidateList( ls->category(), tagName );
             }
         }
 
         // ... create a list of all categories and their positionability ...
-        categoryIsPositionable[(*it)->category()] = (*it)->positionable();
+        categoryIsPositionable[ls->category()] = ls->positionable();
     }
 
     // Create all tagged areas
@@ -579,8 +589,8 @@ void AnnotationDialog::Dialog::load()
 
 void AnnotationDialog::Dialog::writeToInfo()
 {
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-        (*it)->slotReturn();
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->slotReturn();
     }
 
     DB::ImageInfo& info = m_editList[ m_current ];
@@ -618,10 +628,10 @@ void AnnotationDialog::Dialog::writeToInfo()
     info.setLabel( m_imageLabel->text() );
     info.setDescription( m_description->toPlainText() );
 
-    for (QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it) {
-        info.setCategoryInfo( (*it)->category(), (*it)->itemsOn() );
-        if ((*it)->positionable()) {
-            info.setPositionedTags((*it)->category(), taggedAreas[(*it)->category()]);
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        info.setCategoryInfo( ls->category(), ls->itemsOn() );
+        if (ls->positionable()) {
+            info.setPositionedTags(ls->category(), taggedAreas[ls->category()]);
         }
     }
 
@@ -688,8 +698,9 @@ int AnnotationDialog::Dialog::configure( DB::ImageInfoList list, bool oneAtATime
         m_ratingChanged = false;
         m_areasChanged = false;
 
-        for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it )
-            setUpCategoryListBoxForMultiImageSelection( *it, list );
+        Q_FOREACH( ListSelect *ls, m_optionList ) {
+            setUpCategoryListBoxForMultiImageSelection( ls, list );
+        }
 
         m_imageLabel->setText(QString());
         m_imageFilePattern->setText(QString());
@@ -737,8 +748,8 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
                       m_imageLabel->text(), m_description->toPlainText(),
                       m_imageFilePattern->text());
 
-        for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-            m_oldSearch.setCategoryMatchText( (*it)->category(), (*it)->text() );
+        Q_FOREACH( const ListSelect *ls, m_optionList ) {
+            m_oldSearch.setCategoryMatchText( ls->category(), ls->text() );
         }
         //FIXME: for the user to search for 0-rated images, he must first change the rating to anything > 0
         //then change back to 0 .
@@ -749,6 +760,10 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         m_oldSearch.setSearchMode( m_ratingSearchMode->currentIndex() );
         m_oldSearch.setMegaPixel( m_megapixel->value() );
         m_oldSearch.setSearchRAW( m_searchRAW->isChecked() );
+#ifdef HAVE_KGEOMAP
+        const KGeoMap::GeoCoordinates::Pair regionSelection = m_annotationMap->getRegionSelection();
+        m_oldSearch.setRegionSelection(regionSelection);
+#endif
         return m_oldSearch;
     }
     else
@@ -759,8 +774,8 @@ void AnnotationDialog::Dialog::setup()
 {
 // Repopulate the listboxes in case data has changed
     // An group might for example have been renamed.
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-        (*it)->populate();
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->populate();
     }
 
     if ( m_setup == SearchMode )  {
@@ -782,8 +797,9 @@ void AnnotationDialog::Dialog::setup()
         setWindowTitle( i18n("Annotations") );
     }
 
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it )
-        (*it)->setMode( m_setup );
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->setMode( m_setup );
+    }
 }
 
 
@@ -797,8 +813,8 @@ void AnnotationDialog::Dialog::loadInfo( const DB::ImageSearchInfo& info )
     m_startDate->setDate( info.date().start().date() );
     m_endDate->setDate( info.date().end().date() );
 
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-        (*it)->setText( info.categoryMatchText( (*it)->category() ) );
+    Q_FOREACH( ListSelect *ls, m_optionList ) {
+        ls->setText( info.categoryMatchText( ls->category() ) );
     }
 
     m_imageLabel->setText( info.label() );
@@ -1004,11 +1020,11 @@ bool AnnotationDialog::Dialog::hasChanges()
         changed |= ( !m_startDate->date().isNull() );
         changed |= ( !m_endDate->date().isNull() );
 
-        for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
+        Q_FOREACH( ListSelect *ls, m_optionList ) {
             StringSet on, partialOn;
-            std::tie(on, partialOn) = selectionForMultiSelect( *it, m_origList );
-            changed |= (on != (*it)->itemsOn());
-            changed |= (partialOn != (*it)->itemsUnchanged());
+            std::tie(on, partialOn) = selectionForMultiSelect( ls, m_origList );
+            changed |= (on != ls->itemsOn());
+            changed |= (partialOn != ls->itemsUnchanged());
         }
 
         changed |= ( !m_imageLabel->text().isEmpty() );
@@ -1125,7 +1141,7 @@ void AnnotationDialog::Dialog::setupFocus()
 
         bool inserted = false;
         // Iterate through the ordered list of widgets, and insert the current one, so it is in the right position in the tab chain.
-        for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
+        for( QList<QWidget*>::iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
             const QWidget* w = *orderedIt;
             int wx = w->mapToGlobal( QPoint(0,0) ).x();
             int wy = w->mapToGlobal( QPoint(0,0) ).y();
@@ -1144,13 +1160,13 @@ void AnnotationDialog::Dialog::setupFocus()
     // now setup tab order.
     QWidget* prev = nullptr;
     QWidget* first = nullptr;
-    for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
+    Q_FOREACH( QWidget *widget, orderedList ) {
         if ( prev ) {
-            setTabOrder( prev, *orderedIt );
+            setTabOrder( prev, widget );
         } else {
-            first = *orderedIt;
+            first = widget;
         }
-        prev = *orderedIt;
+        prev = widget;
     }
 
     if ( first ) {
@@ -1159,9 +1175,9 @@ void AnnotationDialog::Dialog::setupFocus()
 
 
     // Finally set focus on the first list select
-    for( QList<QWidget*>::Iterator orderedIt = orderedList.begin(); orderedIt != orderedList.end(); ++orderedIt ) {
-        if ( (*orderedIt)->property("FocusCandidate").isValid() && (*orderedIt)->isVisible() ) {
-            (*orderedIt)->setFocus();
+    Q_FOREACH( QWidget *widget, orderedList ) {
+        if ( widget->property("FocusCandidate").isValid() && widget->isVisible() ) {
+            widget->setFocus();
             break;
         }
     }
@@ -1317,8 +1333,8 @@ void AnnotationDialog::Dialog::saveAndClose()
         }
     }
     else if ( m_setup == InputMultiImageConfigMode ) {
-    for( QList<ListSelect*>::Iterator it = m_optionList.begin(); it != m_optionList.end(); ++it ) {
-            (*it)->slotReturn();
+        Q_FOREACH( ListSelect *ls, m_optionList ) {
+            ls->slotReturn();
         }
 
         for( DB::ImageInfoListConstIterator it = m_origList.constBegin(); it != m_origList.constEnd(); ++it ) {
@@ -1327,9 +1343,9 @@ void AnnotationDialog::Dialog::saveAndClose()
             if ( !m_startDate->date().isNull() )
                 info->setDate( DB::ImageDate( m_startDate->date(), m_endDate->date(), m_time->time() ) );
 
-            for( QList<ListSelect*>::Iterator listSelectIt = m_optionList.begin(); listSelectIt != m_optionList.end(); ++listSelectIt ) {
-                info->addCategoryInfo( (*listSelectIt)->category(), (*listSelectIt)->itemsOn() );
-                info->removeCategoryInfo( (*listSelectIt)->category(), (*listSelectIt)->itemsOff() );
+            Q_FOREACH( ListSelect *ls, m_optionList ) {
+                info->addCategoryInfo( ls->category(), ls->itemsOn() );
+                info->removeCategoryInfo( ls->category(), ls->itemsOff() );
             }
 
             if ( !m_imageLabel->text().isEmpty() ) {
@@ -1367,13 +1383,15 @@ AnnotationDialog::Dialog::~Dialog()
 
 void AnnotationDialog::Dialog::togglePreview()
 {
-    if ( m_stack->currentWidget() == m_fullScreenPreview ) {
-        m_stack->setCurrentWidget( m_dockWindow );
-        m_fullScreenPreview->stopPlayback();
-    }
-    else {
-        m_stack->setCurrentWidget( m_fullScreenPreview );
-        m_fullScreenPreview->load( DB::FileNameList() << m_editList[ m_current].fileName() );
+    if (m_setup == InputSingleImageConfigMode) {
+        if ( m_stack->currentWidget() == m_fullScreenPreview ) {
+            m_stack->setCurrentWidget( m_dockWindow );
+            m_fullScreenPreview->stopPlayback();
+        }
+        else {
+            m_stack->setCurrentWidget( m_fullScreenPreview );
+            m_fullScreenPreview->load( DB::FileNameList() << m_editList[ m_current].fileName() );
+        }
     }
 }
 
@@ -1596,19 +1614,25 @@ void AnnotationDialog::Dialog::mapLoadingFinished(bool mapHasImages, bool allIma
     if (m_setup == InputSingleImageConfigMode) {
         m_annotationMap->displayStatus(Map::MapView::MapStatus::ImageHasNoCoordinates);
     } else {
-        if (mapHasImages) {
-            if (! allImagesHaveCoordinates) {
-                m_annotationMap->displayStatus(Map::MapView::MapStatus::SomeImagesHaveNoCoordinates);
-            } else {
-                m_annotationMap->displayStatus(Map::MapView::MapStatus::ImageHasCoordinates);
-            }
+        if (m_setup == SearchMode) {
+            m_annotationMap->displayStatus(Map::MapView::MapStatus::SearchCoordinates);
         } else {
-            m_annotationMap->displayStatus(Map::MapView::MapStatus::NoImagesHaveNoCoordinates);
+            if (mapHasImages) {
+                if (! allImagesHaveCoordinates) {
+                    m_annotationMap->displayStatus(Map::MapView::MapStatus::SomeImagesHaveNoCoordinates);
+                } else {
+                    m_annotationMap->displayStatus(Map::MapView::MapStatus::ImageHasCoordinates);
+                }
+            } else {
+                m_annotationMap->displayStatus(Map::MapView::MapStatus::NoImagesHaveNoCoordinates);
+            }
         }
     }
 
-    m_annotationMap->zoomToMarkers();
-    updateMapForCurrentImage();
+    if (m_setup != SearchMode) {
+        m_annotationMap->zoomToMarkers();
+        updateMapForCurrentImage();
+    }
 }
 #endif
 

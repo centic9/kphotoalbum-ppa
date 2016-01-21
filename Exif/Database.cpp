@@ -39,29 +39,13 @@
 
 using namespace Exif;
 
-static const Database::ElementList GpsElements()
+namespace {
+// schema version; bump it up whenever the database schema changes
+constexpr int DB_VERSION = 3;
+const Database::ElementList elements(int since=0)
 {
     static Database::ElementList elms;
-
-    if ( elms.count() == 0 ) {
-        elms.append( new IntExifElement( "Exif.GPSInfo.GPSVersionID" ) ); // actually a byte value
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSAltitude" ) );
-        elms.append( new IntExifElement( "Exif.GPSInfo.GPSAltitudeRef" ) ); // actually a byte value
-        elms.append( new StringExifElement( "Exif.GPSInfo.GPSMeasureMode" ) );
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSDOP" ) );
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSImgDirection" ) );
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSLatitude" ) );
-        elms.append( new StringExifElement( "Exif.GPSInfo.GPSLatitudeRef" ) );
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSLongitude" ) );
-        elms.append( new StringExifElement( "Exif.GPSInfo.GPSLongitudeRef" ) );
-        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSTimeStamp" ) );
-    }
-
-    return elms;
-}
-static const Database::ElementList elements()
-{
-    static Database::ElementList elms;
+    static int sinceDBVersion[DB_VERSION]{};
 
     if ( elms.count() == 0 ) {
         elms.append( new RationalExifElement( "Exif.Photo.FocalLength" ) );
@@ -82,10 +66,30 @@ static const Database::ElementList elements()
 
         elms.append( new StringExifElement( "Exif.Image.Make" ) );
         elms.append( new StringExifElement( "Exif.Image.Model" ) );
-        elms.append( GpsElements() );
+        // gps info has been added in database schema version 2:
+        sinceDBVersion[1] = elms.size();
+        elms.append( new IntExifElement( "Exif.GPSInfo.GPSVersionID" ) ); // actually a byte value
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSAltitude" ) );
+        elms.append( new IntExifElement( "Exif.GPSInfo.GPSAltitudeRef" ) ); // actually a byte value
+        elms.append( new StringExifElement( "Exif.GPSInfo.GPSMeasureMode" ) );
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSDOP" ) );
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSImgDirection" ) );
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSLatitude" ) );
+        elms.append( new StringExifElement( "Exif.GPSInfo.GPSLatitudeRef" ) );
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSLongitude" ) );
+        elms.append( new StringExifElement( "Exif.GPSInfo.GPSLongitudeRef" ) );
+        elms.append( new RationalExifElement( "Exif.GPSInfo.GPSTimeStamp" ) );
+        // lens info has been added in database schema version 3:
+        sinceDBVersion[2] = elms.size();
+        elms.append( new LensExifElement(  ) );
     }
 
+    // query only for the newly added stuff:
+    if (since > 0)
+        return elms.mid(sinceDBVersion[since]);
+
     return elms;
+}
 }
 
 Exif::Database* Exif::Database::s_instance = nullptr;
@@ -145,11 +149,10 @@ bool Exif::Database::isOpen() const
 
 void Exif::Database::populateDatabase()
 {
-    createMetadataTable();
+    createMetadataTable(SchemaAndDataChanged);
     QStringList attributes;
-    Database::ElementList elms = elements();
-    for( Database::ElementList::Iterator tagIt = elms.begin(); tagIt != elms.end(); ++tagIt ) {
-        attributes.append( (*tagIt)->createString() );
+    Q_FOREACH( DatabaseElement *element, elements() ) {
+        attributes.append( element->createString() );
     }
 
     QSqlQuery query( QString::fromLatin1( "create table if not exists exif (filename string PRIMARY KEY, %1 )")
@@ -160,15 +163,17 @@ void Exif::Database::populateDatabase()
 
 void Exif::Database::updateDatabase()
 {
-    // previous to KPA 4.6, there was no metadata table:
-    if ( !m_db.tables().contains( QString::fromLatin1("settings")) )
+    const int version = DBFileVersion();
+    if (version < DBVersion())
     {
         // on the next update, we can just query the DB Version
-        createMetadataTable();
-
-        // add GPS data
+        createMetadataTable(SchemaChanged);
+    }
+    // update schema
+    if ( version < DBVersion() )
+    {
         QSqlQuery query( m_db );
-        for( const DatabaseElement *e : GpsElements())
+        for( const DatabaseElement *e : elements(version))
         {
             query.prepare( QString::fromLatin1( "alter table exif add column %1")
                            .arg( e->createString()) );
@@ -178,16 +183,23 @@ void Exif::Database::updateDatabase()
     }
 }
 
-void Exif::Database::createMetadataTable()
+void Exif::Database::createMetadataTable(DBSchemaChangeType change)
 {
     QSqlQuery query(m_db);
     query.prepare( QString::fromLatin1( "create table if not exists settings (keyword TEXT PRIMARY KEY, value TEXT) without rowid") );
     if ( !query.exec())
         showError( query );
 
-    query.prepare( QString::fromLatin1( "insert into settings (keyword, value) values('DBVersion','%1')").arg( Database::DBVersion()));
+    query.prepare( QString::fromLatin1( "insert or replace into settings (keyword, value) values('DBVersion','%1')").arg( Database::DBVersion()));
     if ( !query.exec())
         showError( query );
+
+    if (change == SchemaAndDataChanged)
+    {
+        query.prepare( QString::fromLatin1( "insert or replace into settings (keyword, value) values('GuaranteedDataVersion','%1')").arg( Database::DBVersion()));
+        if ( !query.exec())
+            showError( query );
+    }
 }
 
 bool Exif::Database::add( const DB::FileName& fileName )
@@ -271,10 +283,43 @@ bool Exif::Database::isAvailable()
 #endif
 }
 
-int Exif::Database::DBVersion()
+int Exif::Database::DBFileVersion() const
 {
-    // schema version; bump it up whenever the database schema changes
-    return 2;
+    // previous to KPA 4.6, there was no metadata table:
+    if ( !m_db.tables().contains( QString::fromLatin1("settings")) )
+        return 1;
+
+    QSqlQuery query( QString::fromLatin1("SELECT value FROM settings WHERE keyword = 'DBVersion'"), m_db );
+    if ( !query.exec() )
+        showError( query );
+
+    if (query.first())
+    {
+        return query.value(0).toInt();
+    }
+    return 0;
+}
+
+int Exif::Database::DBFileVersionGuaranteed() const
+{
+    // previous to KPA 4.6, there was no metadata table:
+    if ( !m_db.tables().contains( QString::fromLatin1("settings")) )
+        return 0;
+
+    QSqlQuery query( QString::fromLatin1("SELECT value FROM settings WHERE keyword = 'GuaranteedDataVersion'"), m_db );
+    if ( !query.exec() )
+        showError( query );
+
+    if (query.first())
+    {
+        return query.value(0).toInt();
+    }
+    return 0;
+}
+
+constexpr int Exif::Database::DBVersion()
+{
+    return DB_VERSION;
 }
 
 bool Exif::Database::isUsable() const
@@ -287,10 +332,11 @@ QString Exif::Database::exifDBFile()
     return ::Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("/exif-info.db");
 }
 
-void Exif::Database::readFields( const DB::FileName& fileName, ElementList &fields) const
+bool Exif::Database::readFields( const DB::FileName& fileName, ElementList &fields) const
 {
+    bool foundIt = false;
     if ( !isUsable() )
-        return;
+        return foundIt;
 
     QStringList fieldList;
     for( const DatabaseElement *e : fields )
@@ -317,8 +363,18 @@ void Exif::Database::readFields( const DB::FileName& fileName, ElementList &fiel
             {
                 e->setValue( query.value(i++) );
             }
-        }
+            foundIt = true;
+        } else {
+	    // no infos -> write back empty results
+            int i=0;
+	    for( DatabaseElement *e : fields )
+            {
+                e->setValue( QVariant() );
+		i++;
+            }
+	}
     }
+    return foundIt;
 }
 
 DB::FileNameSet Exif::Database::filesMatchingQuery( const QString& queryStr ) const
@@ -353,14 +409,36 @@ QList< QPair<QString,QString> > Exif::Database::cameras() const
 
     QSqlQuery query( QString::fromLatin1("SELECT DISTINCT Exif_Image_Make, Exif_Image_Model FROM exif"), m_db );
     if ( !query.exec() )
+    {
         showError( query );
-
-    else {
+    } else {
         while ( query.next() ) {
             QString make = query.value(0).toString();
             QString model = query.value(1).toString();
             if ( !make.isEmpty() && !model.isEmpty() )
                 result.append( qMakePair( make, model ) );
+        }
+    }
+
+    return result;
+}
+
+QList< QString > Exif::Database::lenses() const
+{
+    QList< QString > result;
+
+    if ( !isUsable() )
+        return result;
+
+    QSqlQuery query( QString::fromLatin1("SELECT DISTINCT Exif_Photo_LensModel FROM exif"), m_db );
+    if ( !query.exec() )
+    {
+        showError( query );
+    } else {
+        while ( query.next() ) {
+            QString lens = query.value(0).toString();
+            if ( !lens.isEmpty() )
+                result.append( lens );
         }
     }
 

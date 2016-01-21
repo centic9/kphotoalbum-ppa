@@ -140,8 +140,8 @@ Settings::GeneralPage::GeneralPage( QWidget* parent )
     lay->addWidget( m_albumCategory, row, 1 );
 
     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    for( QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it ) {
-       m_albumCategory->addItem( (*it)->text() );
+    Q_FOREACH( const DB::CategoryPtr category, categories ) {
+       m_albumCategory->addItem( category->name() );
     }
 
     m_listenForAndroidDevicesOnStartup = new QCheckBox(i18n("Listen for Android devices on startup"));
@@ -238,7 +238,7 @@ void Settings::GeneralPage::loadSettings( Settings::SettingsData* opt )
     if ( !cat )
         cat = DB::ImageDB::instance()->categoryCollection()->categories()[0];
 
-    m_albumCategory->setEditText( cat->text() );
+    m_albumCategory->setEditText(cat->name());
 }
 
 void Settings::GeneralPage::saveSettings( Settings::SettingsData* opt )
@@ -268,12 +268,14 @@ void Settings::GeneralPage::saveSettings( Settings::SettingsData* opt )
     opt->setShowHistogram( m_showHistogram->isChecked() );
     opt->setShowSplashScreen( m_showSplashScreen->isChecked() );
     opt->setListenForAndroidDevicesOnStartup(m_listenForAndroidDevicesOnStartup->isChecked());
-    QString name = DB::ImageDB::instance()->categoryCollection()->nameForText( m_albumCategory->currentText() );
-    if ( name.isNull() )
-        name = DB::ImageDB::instance()->categoryCollection()->categoryNames()[0];
-    opt->setHistogramSize( QSize( m_barWidth->value(), m_barHeight->value() ) );
 
-    opt->setAlbumCategory( name );
+    QString name = m_albumCategory->currentText();
+    if (name.isNull()) {
+        name = DB::ImageDB::instance()->categoryCollection()->categoryNames()[0];
+    }
+    opt->setAlbumCategory(name);
+
+    opt->setHistogramSize(QSize(m_barWidth->value(), m_barHeight->value()));
 }
 
 void Settings::GeneralPage::setUseRawThumbnailSize( const QSize& size  )

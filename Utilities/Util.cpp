@@ -85,7 +85,7 @@ static void AddNonEmptyInfo(const QString &label, const QString &info,
  * thumbnail view.
  *
  * As the HTML text is created, the parameter linkMap is filled with
- * information about hyberlinks. The map maps from an index to a pair of
+ * information about hyperlinks. The map maps from an index to a pair of
  * (categoryName, categoryItem). This linkMap is used when the user selects
  * one of the hyberlinks.
  */
@@ -116,6 +116,15 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
                 info += i18nc("short for: x megapixels"," (%1MP)"
                     ,QString::number(megapix, 'f', 1));
             }
+            const double aspect = (double) imageSize.width() / (double) imageSize.height();
+            if (aspect > 1)
+                info += i18nc("aspect ratio"," (%1:1)"
+                              ,QLocale::system().toString(aspect, 'f', 2));
+            else if (aspect >= 0.995 && aspect < 1.005)
+                info += i18nc("aspect ratio"," (1:1)");
+            else
+                info += i18nc("aspect ratio"," (1:%1)"
+                              ,QLocale::system().toString(1.0d/aspect, 'f', 2));
             AddNonEmptyInfo(i18n("<b>Image Size: </b> "), info, &result);
         }
     }
@@ -131,16 +140,26 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
 
     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
     int link = 0;
-     for( QList<DB::CategoryPtr>::Iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
-        const QString categoryName = (*categoryIt)->name();
-        if ( (*categoryIt)->doShow() ) {
-            const StringSet items = info->itemsOfCategory( categoryName );
+    Q_FOREACH( const DB::CategoryPtr category, categories ) {
+        const QString categoryName = category->name();
+        if ( category->doShow() ) {
+            StringSet items = info->itemsOfCategory( categoryName );
+
+            if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+                    && ! Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
+
+                if (categoryName == Settings::SettingsData::instance()->untaggedCategory()) {
+                    if (items.contains(Settings::SettingsData::instance()->untaggedTag())) {
+                        items.remove(Settings::SettingsData::instance()->untaggedTag());
+                    }
+                }
+            }
+
             if (!items.empty()) {
-                QString title = QString::fromLatin1( "<b>%1: </b> " ).arg( (*categoryIt)->text() );
+                QString title = QString::fromUtf8("<b>%1: </b> ").arg(category->name());
                 QString infoText;
                 bool first = true;
-                for( StringSet::const_iterator it2 = items.constBegin(); it2 != items.constEnd(); ++it2 ) {
-                    QString item = *it2;
+                Q_FOREACH( const QString &item, items) {
                     if ( first )
                         first = false;
                     else
@@ -150,7 +169,7 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
                         ++link;
                         (*linkMap)[link] = QPair<QString,QString>( categoryName, item );
                         infoText += QString::fromLatin1( "<a href=\"%1\">%2</a>").arg( link ).arg( item );
-                        infoText += formatAge(*categoryIt, item, info);
+                        infoText += formatAge(category, item, info);
                     }
                     else
                         infoText += item;

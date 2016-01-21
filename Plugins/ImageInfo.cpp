@@ -93,6 +93,12 @@ Plugins::ImageInfo::ImageInfo( KIPI::Interface* interface, const KUrl& url )
 
 QMap<QString,QVariant> Plugins::ImageInfo::attributes()
 {
+    if (m_info == nullptr) {
+        // This can happen if we're trying to access an image that
+        // has been deleted on-disc, but not yet the database
+        return QMap<QString,QVariant>();
+    }
+
     Q_ASSERT( m_info );
     QMap<QString,QVariant> res;
 
@@ -114,7 +120,7 @@ QMap<QString,QVariant> Plugins::ImageInfo::attributes()
     //res.insert(QString::fromLatin1("colorlabel"), xxx );
     //res.insert(QString::fromLatin1("picklabel"), xxx );
 
-#if HAVE_KGEOMAP
+#ifdef HAVE_KGEOMAP
     KGeoMap::GeoCoordinates position = m_info->coordinates();
     if (position.hasCoordinates()) {
         res.insert(QString::fromLatin1("longitude"), QVariant(position.lon()));
@@ -130,19 +136,19 @@ QMap<QString,QVariant> Plugins::ImageInfo::attributes()
     QStringList tags;
     QStringList tagspath;
     const QLatin1String sep ("/");
-    for( QList<DB::CategoryPtr>::Iterator categoryIt = categories.begin(); categoryIt != categories.end(); ++categoryIt ) {
-        QString categoryName = (*categoryIt)->name();
-        if ( (*categoryIt)->isSpecialCategory() )
+    Q_FOREACH( const DB::CategoryPtr category, categories ) {
+        QString categoryName = category->name();
+        if ( category->isSpecialCategory() )
             continue;
         // I don't know why any categories except the above should be excluded
-        //if ( (*categoryIt)->doShow() ) {
+        //if ( category->doShow() ) {
             Utilities::StringSet items = m_info->itemsOfCategory( categoryName );
-            for( Utilities::StringSet::Iterator it = items.begin(); it != items.end(); ++it ) {
-                tags.append( *it );
+            Q_FOREACH( const QString &tag, items ) {
+                tags.append( tag );
                 // digikam compatible tag path:
                 // note: this produces a semi-flattened hierarchy.
                 // instead of "Places/France/Paris" this will yield "Places/Paris"
-                tagspath.append( categoryName + sep + (*it) );
+                tagspath.append( categoryName + sep + tag );
             }
         //}
     }

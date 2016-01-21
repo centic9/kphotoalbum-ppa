@@ -11,11 +11,11 @@ my @params;
 # Using same file format list as KPhotoAlbum from
 # http://www.cybercom.net/~dcoffin/dcraw/rawphoto.c
 my @rawExt = (
-	"3fr","arw","bay","bmq","cine","cr2","crw","cs1","dc2","dcr","dng","erf","fff","hdr","ia","jpg","k25","kc2","kdc","mdc","mef","mos","mrw","nef","nrw","orf","pef","pxn","qtk","raf","raw","rdc","rw2","sr2","srf","sti","tif","x3f"
+	"3fr","arw","bay","bmq","cine","cr2","crw","cs1","dc2","dcr","dng","erf","fff","hdr","ia","k25","kc2","kdc","mdc","mef","mos","mrw","nef","nrw","orf","pef","pxn","qtk","raf","raw","rdc","rw2","sr2","srf","sti","tif","x3f","jpg"
 );
 
 # The application you use to develop the RAW files
-my @raw_converters = ( "/usr/bin/AfterShot2",
+my @raw_converters = ( "/usr/bin/AfterShot2X64", "/usr/bin/AfterShot2",
 	"/usr/bin/AfterShotPro", "/usr/bin/bibble5",
 	"/usr/bin/ufraw", "/usr/bin/rt", "/usr/bin/darktable" );
 my $extApp = "";

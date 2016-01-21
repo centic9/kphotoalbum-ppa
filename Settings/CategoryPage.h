@@ -38,6 +38,7 @@ class QComboBox;
 class QSpinBox;
 class QCheckBox;
 class QPushButton;
+class QGroupBox;
 
 // KDE classes
 class KIconButton;
@@ -68,11 +69,16 @@ public:
     void saveSettings(Settings::SettingsData* opt, DB::MemberMap* memberMap);
     void loadSettings(Settings::SettingsData* opt);
     void resetInterface();
+    void resetCategoryNamesChanged();
 
 signals:
-    void currentCategoryNameChanged(const QString& oldName, const QString& newName);
+    void currentCategoryNameChanged();
+
+protected slots:
+    void resetCategoryLabel();
 
 private slots:
+    void editSelectedCategory();
     void editCategory(QListWidgetItem*);
     void positionableChanged(bool);
     void iconChanged(const QString& icon);
@@ -87,6 +93,10 @@ private slots:
 #ifdef HAVE_KFACE
     void renameRecognitionCategory(QString oldName, QString newName);
 #endif
+    void saveDbNow();
+
+private: // Functions
+    void resetCategory(QListWidgetItem* item);
 
 private: // Variables
     QListWidget* m_categoriesListWidget;
@@ -111,14 +121,13 @@ private: // Variables
     FaceManagement::Recognizer* m_recognizer;
     QList<CategoryItem*> m_unMarkedAsPositionable;
 #endif
-
-private: // Functions
-    void resetCategory(QListWidgetItem* item);
-    QString nonLocalizedCategoryName(QString category);
+    QLabel* m_dbNotSavedLabel;
+    QPushButton* m_saveDbNowButton;
+    bool m_categoryNamesChanged;
 };
 
 }
 
-#endif /* CATEGORYPAGE_H */
+#endif // CATEGORYPAGE_H
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

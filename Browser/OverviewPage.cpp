@@ -119,7 +119,7 @@ QList<DB::CategoryPtr> Browser::OverviewPage::categories() const
 QVariant Browser::OverviewPage::categoryInfo( int row, int role ) const
 {
     if ( role == Qt::DisplayRole )
-        return categories()[row]->text();
+        return categories()[row]->name();
     else if ( role == Qt::DecorationRole )
         return categories()[row]->icon(THUMBNAILSIZE);
 
@@ -279,6 +279,8 @@ Browser::BrowserPage* Browser::OverviewPage::activateUntaggedImagesAction()
         return new ImageViewPage( info, browser()  );
     }
     else {
+        // Note: the same dialog text is used in MainWindow::Window::slotMarkUntagged(),
+        // so if it is changed, be sure to also change it there!
         KMessageBox::information( browser(),
                                   i18n("<p>You have not yet configured which tag to use for indicating untagged images.</p>"
                                        "<p>Please follow these steps to do so:"

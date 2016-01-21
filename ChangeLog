@@ -1,3 +1,56 @@
+====================== KPhotoalbum 4.7 released  (19.01.2016) ======================
+
+* Bugfix: Various fixes of compilation failures on different distributions/gcc versions, as well as
+  various fixes of crashes caused by regressions.
+
+* Enhancement/UI: The category settings dialog doesn't tell the user anymore that he must save the
+  database now after renaming categories. Instead, the saving is done automatically now, and
+  category name changes can only be done on a "clean" (saved) database, so that no unwanted changes
+  will be auto-saved.
+
+* Enhancement: Better performance for single- and dual-core processors when creating thumbnails.
+
+* Enhancement: Various enhancements for tne RAW support.
+
+* Change: The "standard categories" are not translated anymore, due to a lot of problems with this
+  approach. Each category's name is now stored as-is in the database. The "Tokens" category's name
+  and icon can also be changed now.
+
+* Bugfix (#348096): Fix crash when accessing an image via KIPI plugins which has been deleted from
+  the disc, but not yet from the collection.
+
+* Bugfix: Don't crash if a category is renamed or deleted which holds the currently selected
+  "untagged images" tag.
+
+* Bugfix: If a category holding tag groups was renamed, the tag groups were lost.
+
+* Enhancement: Added a "mark as untagged" action, as proposed by the patch of Reimar Imhof.
+
+* Bugfix: Several fixes about the "untagged image" tag (counting, visibility etc.)
+
+* Enhancement: Added category drag and drop support for the browser's category page.
+
+* Enhancement: Added GPS coordinate search functionality for the search dialog as proposed by
+  Reimar Imhof.
+
+* Bugfix: Fix crash: Decrease the rowCount of the items list when an item is skipped due to a
+  filter input so that KPA won't crash when an empty row is clicked (and the row count actually
+  matches the number of displayed items).
+
+* Enhancement: Add python script to show birthday info. Also Bugfixes.
+
+* Enhancement: Enable exif search for lens data. Also various enhancements in the general handling
+  of EXIF lens data (esp. better lens info for generic canon lenses).
+
+* Enhancement: Display the image's aspect ratio in the ctrl-i image overlay.
+
+* Bugfix: Ignore empty input while quick-tagging.
+
+* Enhancement: Add "link images" to context menu.
+
+* Bugfix: Fixed copy tags from last image (tags already associated with an area were added to the
+  candidate list when they shouldn't be).
+
 ====================== KPhotoalbum 4.6.2 released  ======================
 
 * Bugfix: Fixed several compilation issues for various distributions and/or gcc versions.

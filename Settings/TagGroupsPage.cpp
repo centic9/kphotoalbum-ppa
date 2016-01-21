@@ -40,6 +40,7 @@
 #include "MainWindow/DirtyIndicator.h"
 #include "DB/CategoryCollection.h"
 #include "CategoriesGroupsWidget.h"
+#include "Settings/SettingsData.h"
 
 Settings::TagGroupsPage::TagGroupsPage(QWidget* parent) : QWidget(parent)
 {
@@ -125,14 +126,14 @@ void Settings::TagGroupsPage::updateCategoryTree()
     // Create a tree view of all groups and their sub-groups
 
     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    for(QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it) {
-        if ((*it)->isSpecialCategory()) {
+    Q_FOREACH(const DB::CategoryPtr category, categories ) {
+        if (category->isSpecialCategory()) {
             continue;
         }
 
         // Add the real categories as top-level items
         QTreeWidgetItem* topLevelItem = new QTreeWidgetItem;
-        topLevelItem->setText(0, (*it)->text());
+        topLevelItem->setText(0, category->name());
         topLevelItem->setFlags(topLevelItem->flags() & Qt::ItemIsEnabled);
         QFont font = topLevelItem->font(0);
         font.setWeight(QFont::Bold);
@@ -141,14 +142,14 @@ void Settings::TagGroupsPage::updateCategoryTree()
 
         // Build a map with all members for each group
         QMap<QString, QStringList> membersForGroup;
-        QStringList allGroups = m_memberMap.groups((*it)->name());
+        QStringList allGroups = m_memberMap.groups(category->name());
         foreach (const QString &group, allGroups) {
             // FIXME: Why does the member map return an empty category?!
             if (group.isEmpty()) {
                 continue;
             }
 
-            QStringList allMembers = m_memberMap.members((*it)->name(), group, false);
+            QStringList allMembers = m_memberMap.members(category->name(), group, false);
             foreach (const QString &member, allMembers) {
                 membersForGroup[group] << member;
             }
@@ -229,7 +230,7 @@ QString Settings::TagGroupsPage::getCategory(QTreeWidgetItem* currentItem)
         currentItem = currentItem->parent();
     }
 
-    return DB::Category::unLocalizedCategoryName(currentItem->text(0));
+    return currentItem->text(0);
 }
 
 void Settings::TagGroupsPage::showTreeContextMenu(QPoint point)
@@ -279,15 +280,27 @@ void Settings::TagGroupsPage::categoryChanged(const QString& name)
     QStringList list = getCategoryObject(name)->items();
     list += m_memberMap.groups(name);
     QStringList alreadyAdded;
-    for (QStringList::Iterator it = list.begin(); it != list.end(); ++it) {
-        if ((*it).isEmpty()) {
+
+    Q_FOREACH( const QString &member, list ) {
+        if (member.isEmpty()) {
             // This can happen if we add group that currently has no members.
             continue;
         }
 
-        if (! alreadyAdded.contains(*it)) {
-            alreadyAdded << (*it);
-            QListWidgetItem *newItem = new QListWidgetItem((*it), m_membersListWidget);
+        if (! alreadyAdded.contains(member)) {
+            alreadyAdded << member;
+
+            if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+                && ! Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
+
+                if (name == Settings::SettingsData::instance()->untaggedCategory()) {
+                    if (member == Settings::SettingsData::instance()->untaggedTag()) {
+                        continue;
+                    }
+                }
+            }
+
+            QListWidgetItem* newItem = new QListWidgetItem(member, m_membersListWidget);
             newItem->setFlags(newItem->flags() | Qt::ItemIsUserCheckable);
             newItem->setCheckState(Qt::Unchecked);
         }
@@ -328,8 +341,7 @@ void Settings::TagGroupsPage::slotGroupSelected(QTreeWidgetItem* item)
     m_currentGroup = item->text(0);
     selectMembers(m_currentGroup);
     m_tagsInGroupLabel->setText(i18nc("@label","Tags in group \"%1\" of category \"%2\"",
-                                     m_currentGroup,
-                                     DB::Category::localizedCategoryName(m_currentCategory)));
+                                     m_currentGroup, m_currentCategory));
 }
 
 void Settings::TagGroupsPage::slotAddGroup()
@@ -414,7 +426,7 @@ QTreeWidgetItem* Settings::TagGroupsPage::findCategoryItem(QString category)
     QTreeWidgetItem* categoryItem = nullptr;
     for (int i = 0; i < m_categoryTreeWidget->topLevelItemCount(); ++i) {
         categoryItem = m_categoryTreeWidget->topLevelItem(i);
-        if (DB::Category::unLocalizedCategoryName(categoryItem->text(0)) == category) {
+        if (categoryItem->text(0) == category) {
             break;
         }
     }
@@ -662,7 +674,7 @@ void Settings::TagGroupsPage::loadSettings()
     updateCategoryTree();
 }
 
-void Settings::TagGroupsPage::categoryRenamed(const QString&, const QString&)
+void Settings::TagGroupsPage::categoryRenamed()
 {
     m_categoryTreeWidget->setEnabled(false);
     m_membersListWidget->setEnabled(false);

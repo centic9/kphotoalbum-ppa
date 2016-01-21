@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 XMLDB::XMLCategory::XMLCategory( const QString& name, const QString& icon, ViewType type, int thumbnailSize, bool show, bool positionable )
-    : m_name( name ), m_icon( icon ), m_show( show ), m_type( type ), m_thumbnailSize( thumbnailSize ), m_positionable ( positionable ), m_isSpecial(false), m_shouldSave( true )
+    : m_name( name ), m_icon( icon ), m_show( show ), m_type( type ), m_thumbnailSize( thumbnailSize ), m_positionable ( positionable ), m_categoryType(DB::Category::PlainCategory), m_shouldSave( true )
 {
 }
 
@@ -83,14 +83,19 @@ bool XMLDB::XMLCategory::doShow() const
     return m_show;
 }
 
-void XMLDB::XMLCategory::setSpecialCategory( bool b )
+void XMLDB::XMLCategory::setType(DB::Category::CategoryType t)
 {
-    m_isSpecial = b;
+    m_categoryType = t;
+}
+
+DB::Category::CategoryType XMLDB::XMLCategory::type() const
+{
+    return m_categoryType;
 }
 
 bool XMLDB::XMLCategory::isSpecialCategory() const
 {
-    return m_isSpecial;
+    return m_categoryType != DB::Category::PlainCategory;
 }
 
 void XMLDB::XMLCategory::addOrReorderItems( const QStringList& items )
@@ -137,14 +142,14 @@ void XMLDB::XMLCategory::initIdMap()
 {
     int i = 0;
     m_idMap.clear();
-    for( QStringList::Iterator it = m_items.begin(); it != m_items.end(); ++it ) {
-        m_idMap.insert( *it, ++i );
+    Q_FOREACH( const QString &tag, m_items ) {
+        m_idMap.insert( tag, ++i );
     }
 
     QStringList groups = DB::ImageDB::instance()->memberMap().groups(m_name);
-    for( QStringList::ConstIterator groupIt = groups.constBegin(); groupIt != groups.constEnd(); ++groupIt ) {
-        if ( !m_idMap.contains( *groupIt ) )
-            m_idMap.insert( *groupIt, ++i );
+    Q_FOREACH( const QString &group, groups ) {
+        if ( !m_idMap.contains( group ) )
+            m_idMap.insert( group, ++i );
     }
 }
 

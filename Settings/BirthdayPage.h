@@ -21,6 +21,8 @@
 
 // Qt includes
 #include <QWidget>
+#include <QMap>
+#include <QDate>
 
 // Qt classes
 class QLineEdit;
@@ -30,6 +32,7 @@ class QFont;
 class QCalendarWidget;
 class QPushButton;
 class QTableWidgetItem;
+class QLabel;
 
 // KDE classes
 class KPageWidgetItem;

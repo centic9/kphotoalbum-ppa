@@ -47,7 +47,7 @@ protected:
     void makeExposureTime( QGridLayout* layout );
     RangeWidget* makeApertureOrFNumber( const QString& text, const QString& key, QGridLayout* layout, int row );
     QWidget* makeCamera();
-    QStringList availableCameras();
+    QWidget* makeLens();
 
 protected slots:
     void fromFocalLengthChanged( int );
@@ -65,6 +65,7 @@ private:
     Settings<int> m_sharpness;
     Settings<int> m_saturation;
     Settings<Database::Camera> m_cameras;
+    Settings<Database::Lens> m_lenses;
     QSpinBox* m_fromFocalLength;
     QSpinBox* m_toFocalLength;
 };

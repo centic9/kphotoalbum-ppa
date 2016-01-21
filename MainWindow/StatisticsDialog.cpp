@@ -130,9 +130,12 @@ QGroupBox* MainWindow::StatisticsDialog::createAnnotatedGroupBox()
 
     QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
     Q_FOREACH( const DB::CategoryPtr& category, categories ) {
-        if ( category->name() == QString::fromLatin1("Media Type") || category->name() == QString::fromLatin1("Folder"))
+        if (category->name() == i18n("Media Type")
+            || category->name() == i18n("Folder")) {
+
             continue;
-        m_category->addItem( category->text(), category->name() );
+        }
+        m_category->addItem(category->name(), category->name());
     }
 
     connect( m_category, SIGNAL(activated(int)), this, SLOT(categoryChanged(int)) );
@@ -192,8 +195,11 @@ void MainWindow::StatisticsDialog::populateSubTree( const DB::ImageSearchInfo& i
     int tagsTotal = 0;
     int grantTotal = 0;
     Q_FOREACH( const DB::CategoryPtr& category, categories ) {
-        if ( category->name() == QString::fromLatin1("Media Type") || category->name() == QString::fromLatin1("Folder"))
+        if (category->name() == i18n("Media Type")
+            || category->name() == i18n("Folder")) {
+
             continue;
+        }
 
         const QMap<QString,uint> tags = DB::ImageDB::instance()->classify( info, category->name(), DB::anyMediaType );
         int total = 0;
@@ -204,7 +210,7 @@ void MainWindow::StatisticsDialog::populateSubTree( const DB::ImageSearchInfo& i
         }
 
 
-        addRow( category->text(), tags.count()-1, total, imageCount, top );
+        addRow(category->name(), tags.count()-1, total, imageCount, top);
         tagsTotal += tags.count() -1;
         grantTotal += total;
     }

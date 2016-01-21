@@ -43,7 +43,6 @@ class CategoryItem : public QObject, public QListWidgetItem
 public:
     CategoryItem(
         const QString& category,
-        const QString& text,
         const QString& icon,
         DB::Category::ViewType type,
         int thumbnailSize,
@@ -59,9 +58,9 @@ public:
     DB::Category::ViewType viewType() const;
     void setThumbnailSize(int size);
     void setViewType(DB::Category::ViewType type);
-    QString text() const;
     QString icon() const;
     void setIcon(const QString& icon);
+    QString originalName() const;
 
 #ifdef HAVE_KFACE
 signals:

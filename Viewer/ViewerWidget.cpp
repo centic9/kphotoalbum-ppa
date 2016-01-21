@@ -84,7 +84,11 @@ Viewer::ViewerWidget* Viewer::ViewerWidget::latest()
 
 // Notice the parent is zero to allow other windows to come on top of it.
 Viewer::ViewerWidget::ViewerWidget( UsageType type, QMap<Qt::Key, QPair<QString,QString> > *macroStore )
-    :QStackedWidget( nullptr ), m_current(0), m_popup(nullptr), m_showingFullScreen( false ), m_forward( true ), m_isRunningSlideShow( false ), m_videoPlayerStoppedManually(false), m_type(type), m_currentCategory(QString::fromLatin1("Tokens")), m_inputMacros(macroStore),  m_myInputMacros(nullptr)
+    :QStackedWidget( nullptr )
+    , m_current(0), m_popup(nullptr), m_showingFullScreen( false ), m_forward( true )
+    , m_isRunningSlideShow( false ), m_videoPlayerStoppedManually(false), m_type(type)
+    , m_currentCategory(DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory)->name())
+    , m_inputMacros(macroStore),  m_myInputMacros(nullptr)
 {
     if ( type == ViewerWindow ) {
         setWindowFlags( Qt::Window );
@@ -130,8 +134,6 @@ Viewer::ViewerWidget::ViewerWidget( UsageType type, QMap<Qt::Key, QPair<QString,
     setFocusPolicy( Qt::StrongFocus );
 
     QTimer::singleShot( 2000, this, SLOT(test()) );
-
-    m_categoryL10n = DB::Category::standardCategories();
 }
 
 void Viewer::ViewerWidget::setupContextMenu()
@@ -807,32 +809,31 @@ void Viewer::ViewerWidget::resizeEvent( QResizeEvent* e )
 
 void Viewer::ViewerWidget::updateInfoBox()
 {
-    if ( currentInfo() || m_currentInput != QString::fromLatin1("") ||
-         (m_currentCategory != QString::fromLatin1("") &&
-          m_currentCategory != QString::fromLatin1("Tokens"))) {
+    QString tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory)->name();
+    if ( currentInfo() || !m_currentInput.isEmpty() ||
+         (!m_currentCategory.isEmpty() && m_currentCategory != tokensCategory)) {
         QMap<int, QPair<QString,QString> > map;
         QString text = Utilities::createInfoText( currentInfo(), &map );
         QString selecttext = QString::fromLatin1("");
-        if (m_currentCategory == QString::fromLatin1("")) {
+        if (m_currentCategory.isEmpty()) {
             selecttext = i18nc("Basically 'enter a category name'","<b>Setting Category: </b>") + m_currentInput;
             if (m_currentInputList.length() > 0) {
                 selecttext += QString::fromLatin1("{") + m_currentInputList +
                     QString::fromLatin1("}");
             }
-        } else if ( ( m_currentInput != QString::fromLatin1("") &&
-                   m_currentCategory != QString::fromLatin1("Tokens") ) ||
-                   m_currentCategory != QString::fromLatin1("Tokens")) {
+        } else if ( ( !m_currentInput.isEmpty() &&
+                   m_currentCategory != tokensCategory)) {
             selecttext = i18nc("Basically 'enter a tag name'","<b>Assigning: </b>") + m_currentCategory +
                 QString::fromLatin1("/")  + m_currentInput;
             if (m_currentInputList.length() > 0) {
                 selecttext += QString::fromLatin1("{") + m_currentInputList +
                     QString::fromLatin1("}");
             }
-        } else if ( m_currentInput != QString::fromLatin1("") &&
-                   m_currentCategory == QString::fromLatin1("Tokens") ) {
+        } else if ( !m_currentInput.isEmpty() &&
+                   m_currentCategory == tokensCategory) {
             m_currentInput = QString::fromLatin1("");
         }
-        if (selecttext != QString::fromLatin1(""))
+        if (!selecttext.isEmpty())
             text = selecttext + QString::fromLatin1("<br />") + text;
         if ( Settings::SettingsData::instance()->showInfoBox() && !text.isNull() && ( m_type != InlineViewer ) ) {
             m_infoBox->setInfo( text, map );
@@ -1129,14 +1130,16 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
         return; // we've handled it
     } else if (event->key() == Qt::Key_Comma) {
         // force set the "new" token
-        if (m_currentCategory != QString::fromLatin1("")) {
+        if (!m_currentCategory.isEmpty()) {
             if (m_currentInput.left(1) == QString::fromLatin1("\"") ||
                 // allow a starting ' or " to signal a brand new category
                 // this bypasses the auto-selection of matching characters
                 m_currentInput.left(1) == QString::fromLatin1("\'")) {
                 m_currentInput = m_currentInput.right(m_currentInput.length()-1);
             }
-            currentInfo()->addCategoryInfo( DB::ImageDB::instance()->categoryCollection()->nameForText( m_currentCategory ), m_currentInput );
+            if (m_currentInput.isEmpty())
+                return;
+            currentInfo()->addCategoryInfo(m_currentCategory, m_currentInput);
             DB::CategoryPtr category =
                 DB::ImageDB::instance()->categoryCollection()->categoryForName(m_currentCategory);
             category->addItem(m_currentInput);
@@ -1161,8 +1164,8 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
 
         // start searching for a new category name
         if (incomingKey == QString::fromLatin1("/")) {
-            if (m_currentInput == QString::fromLatin1("") &&
-                m_currentCategory == QString::fromLatin1("")) {
+            if (m_currentInput.isEmpty() &&
+                m_currentCategory.isEmpty()) {
                 if (m_currentInputMode == InACategory) {
                     m_currentInputMode = AlwaysStartWithCategory;
                 } else {
@@ -1175,7 +1178,7 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
             }
 
         // use an assigned key or map to a given key for future reference
-        } else if (m_currentInput == QString::fromLatin1("") &&
+        } else if (m_currentInput.isEmpty() &&
                    // can map to function keys
                    event->key() >= Qt::Key_F1 &&
                    event->key() <= Qt::Key_F35) {
@@ -1198,7 +1201,7 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
             MainWindow::DirtyIndicator::markDirty();
             // handled it
             return;
-        } else if (m_currentCategory == QString::fromLatin1("")) {
+        } else if (m_currentCategory.isEmpty()) {
             // still searching for a category to lock to
             m_currentInput += incomingKey;
             QStringList categorynames = DB::ImageDB::instance()->categoryCollection()->categoryTexts();
@@ -1211,8 +1214,8 @@ void Viewer::ViewerWidget::keyPressEvent( QKeyEvent* event )
         } else {
             m_currentInput += incomingKey;
 
-            DB::CategoryPtr category =
-                DB::ImageDB::instance()->categoryCollection()->categoryForName( DB::ImageDB::instance()->categoryCollection()->nameForText( m_currentCategory ) );
+            DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()
+                                                              ->categoryForName(m_currentCategory);
             QStringList items = category->items();
             if (find_tag_in_list(items, namefound) == 1) {
                 // yay, we have exactly one!
@@ -1445,18 +1448,11 @@ void Viewer::ViewerWidget::addTaggedAreas()
     QMap<QString, QMap<QString, QRect>> taggedAreas = currentInfo()->taggedAreas();
     QMapIterator<QString, QMap<QString, QRect>> areasInCategory(taggedAreas);
     QString category;
-    QString localizedCategory;
     QString tag;
 
     while (areasInCategory.hasNext()) {
         areasInCategory.next();
         category = areasInCategory.key();
-
-        if (m_categoryL10n.contains(category)) {
-            localizedCategory = m_categoryL10n[category];
-        } else {
-            localizedCategory = category;
-        }
 
         QMapIterator<QString, QRect> areaData(areasInCategory.value());
         while (areaData.hasNext()) {
@@ -1465,7 +1461,7 @@ void Viewer::ViewerWidget::addTaggedAreas()
 
             // Add a new frame for the area
             TaggedArea *newArea = new TaggedArea(this);
-            newArea->setTagInfo(category, localizedCategory, tag);
+            newArea->setTagInfo(category, category, tag);
             newArea->setActualGeometry(areaData.value());
             newArea->show();
 
