@@ -72,7 +72,7 @@ public:
     void resetCategoryNamesChanged();
 
 signals:
-    void currentCategoryNameChanged();
+    void categoryChangesPending();
 
 protected slots:
     void resetCategoryLabel();
@@ -124,6 +124,7 @@ private: // Variables
     QLabel* m_dbNotSavedLabel;
     QPushButton* m_saveDbNowButton;
     bool m_categoryNamesChanged;
+    QPushButton* m_newCategoryButton;
 };
 
 }

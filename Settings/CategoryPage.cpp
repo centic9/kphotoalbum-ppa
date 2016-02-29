@@ -83,9 +83,9 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
     QHBoxLayout* newDeleteRenameLayout = new QHBoxLayout;
     categorySideLayout->addLayout(newDeleteRenameLayout);
 
-    QPushButton* newCategoryButton = new QPushButton(i18n("New"));
-    connect(newCategoryButton, SIGNAL(clicked()), this, SLOT(newCategory()));
-    newDeleteRenameLayout->addWidget(newCategoryButton);
+    m_newCategoryButton = new QPushButton(i18n("New"));
+    connect(m_newCategoryButton, SIGNAL(clicked()), this, SLOT(newCategory()));
+    newDeleteRenameLayout->addWidget(m_newCategoryButton);
 
     m_delItem = new QPushButton(i18n("Delete"));
     connect(m_delItem, SIGNAL(clicked()), this, SLOT(deleteCurrentCategory()));
@@ -172,11 +172,14 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
 
     m_dbNotSavedLabel = new QLabel( i18n("<font color='red'>"
                                          "The database has unsaved changes. As long as those are "
-                                         "not saved, the names of categories can't be changed."
+                                         "not saved, the names of categories can't be changed and "
+                                         "new ones can't be added."
                                          "</font>"));
+    m_dbNotSavedLabel->setWordWrap(true);
     dbNotSavedLayout->addWidget(m_dbNotSavedLabel);
 
     m_saveDbNowButton = new QPushButton(i18n("Save the DB now"));
+    m_saveDbNowButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Minimum);
     connect(m_saveDbNowButton, SIGNAL(clicked()), this, SLOT(saveDbNow()));
     dbNotSavedLayout->addWidget(m_saveDbNowButton);
 
@@ -265,10 +268,14 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
     }
 
     // We don't want to have special category names.
-    if (newCategoryName == QString::fromUtf8("Folder")
-        || newCategoryName == i18n("Folder")
-        || newCategoryName == QString::fromUtf8("Media Type")
-        || newCategoryName == i18n("Media Type")) {
+    // We do have to search both for the localized version and the C locale version, because a user
+    // could start KPA e. g. with a German locale and create a "Folder" category (which would not
+    // be catched by i18n("Folder")), and then start KPA with the C locale, which would produce a
+    // doubled "Folder" category.
+    if (newCategoryName == i18n("Folder")
+        || newCategoryName == QString::fromUtf8("Folder")
+        || newCategoryName == i18n("Media Type")
+        || newCategoryName == QString::fromUtf8("Media Type")) {
 
         resetCategory(item);
         KMessageBox::sorry(this,
@@ -314,7 +321,7 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
     item->setText(newCategoryName);
     m_categoriesListWidget->blockSignals(false);
 
-    emit currentCategoryNameChanged();
+    emit categoryChangesPending();
     m_untaggedBox->categoryRenamed(m_categoryNameBeforeEdit, newCategoryName);
     m_currentCategory->setLabel(newCategoryName);
     editCategory(m_currentCategory);
@@ -400,8 +407,10 @@ void Settings::CategoryPage::newCategory()
                                                    DB::Category::TreeView,
                                                    64,
                                                    m_categoriesListWidget);
-    emit currentCategoryNameChanged();
+    m_currentCategory->markAsNewCategory();
+    emit categoryChangesPending();
     m_currentCategory->setLabel(checkedCategory);
+    m_currentCategory->setSelected(true);
     m_categoriesListWidget->blockSignals(false);
 
     m_positionable->setChecked(false);
@@ -409,11 +418,8 @@ void Settings::CategoryPage::newCategory()
     m_thumbnailSizeInCategory->setValue(64);
     enableDisable(true);
 
-    m_currentCategory->setSelected(true);
     editCategory(m_currentCategory);
     m_categoriesListWidget->editItem(m_currentCategory);
-
-    MainWindow::DirtyIndicator::markDirty();
 }
 
 void Settings::CategoryPage::deleteCurrentCategory()
@@ -434,6 +440,9 @@ void Settings::CategoryPage::deleteCurrentCategory()
     m_thumbnailSizeInCategory->setValue(64);
     enableDisable(false);
     resetCategoryLabel();
+
+    editCategory(m_categoriesListWidget->currentItem());
+    emit categoryChangesPending();
 }
 
 void Settings::CategoryPage::renameCurrentCategory()
@@ -462,6 +471,7 @@ void Settings::CategoryPage::enableDisable(bool b)
         m_dbNotSavedLabel->show();
         m_saveDbNowButton->show();
         m_renameItem->setEnabled(false);
+        m_newCategoryButton->setEnabled(false);
 
         for (int i = 0; i < m_categoriesListWidget->count(); i++) {
             QListWidgetItem* currentItem = m_categoriesListWidget->item(i);
@@ -471,6 +481,7 @@ void Settings::CategoryPage::enableDisable(bool b)
         m_dbNotSavedLabel->hide();
         m_saveDbNowButton->hide();
         m_renameItem->setEnabled(b);
+        m_newCategoryButton->setEnabled(true);
 
         for (int i = 0; i < m_categoriesListWidget->count(); i++) {
             QListWidgetItem* currentItem = m_categoriesListWidget->item(i);

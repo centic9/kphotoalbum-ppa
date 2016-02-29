@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-01-18 01:47+0000\n"
+"POT-Creation-Date: 2016-02-21 01:57+0000\n"
 "PO-Revision-Date: 2015-02-26 23:46+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -527,8 +527,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "Stvarno izbrisati %1?"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:550
-#: Settings/TagGroupsPage.cpp:793
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
+#: Settings/TagGroupsPage.cpp:797
 msgid "&Delete"
 msgstr "&Obriši"
 
@@ -713,23 +713,7 @@ msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Nijedan drugi"
 
-#: Browser/AbstractCategoryModel.cpp:51
-msgctxt "Denotes the media type (video,image)"
-msgid "Video"
-msgstr "Video"
-
-#: Browser/AbstractCategoryModel.cpp:53
-msgctxt "Denotes the media type (video,image)"
-msgid "Image"
-msgstr "Slika"
-
-#: Browser/AbstractCategoryModel.cpp:56 MainWindow/StatisticsDialog.cpp:134
-#: MainWindow/StatisticsDialog.cpp:199 Settings/CategoryPage.cpp:269
-#: XMLDB/FileReader.cpp:92 XMLDB/FileReader.cpp:94
-msgid "Folder"
-msgstr "Direktorij"
-
-#: Browser/AbstractCategoryModel.cpp:100
+#: Browser/AbstractCategoryModel.cpp:96
 #, kde-format
 msgctxt "@item:intable number of images with a specific tag."
 msgid "1 image"
@@ -738,7 +722,7 @@ msgstr[0] "%1 slika"
 msgstr[1] "%1 slike"
 msgstr[2] "%1 slika"
 
-#: Browser/AbstractCategoryModel.cpp:101
+#: Browser/AbstractCategoryModel.cpp:97
 #, kde-format
 msgctxt "@item:intable number of videos with a specific tag."
 msgid "1 video"
@@ -748,11 +732,11 @@ msgstr[1] "%1 videa"
 msgstr[2] "%1 videa"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
 msgid "Images"
 msgstr "Slike"
 
-#: Browser/AbstractCategoryModel.cpp:139
+#: Browser/AbstractCategoryModel.cpp:135
 msgid "Videos"
 msgstr "Snimci"
 
@@ -1123,7 +1107,7 @@ msgstr ""
 "broja slika, moglo bi potrajati.<br/>Međutim, tu je odgađanje samo kada je "
 "nova slika pronađena.</p>"
 
-#: DB/NewImageFinder.cpp:332
+#: DB/NewImageFinder.cpp:334
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -1131,7 +1115,7 @@ msgstr[0] "<p><b>Proračunavanje checksum za %1 datoteku</b></p>"
 msgstr[1] "<p><b>Proračunavanje checksum za %1 datoteke</b></p>"
 msgstr[2] "<p><b>Proračunavanje checksum za %1 datoteka</b></p>"
 
-#: DB/NewImageFinder.cpp:333
+#: DB/NewImageFinder.cpp:335
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -1139,7 +1123,7 @@ msgstr ""
 "<p>Stavljanjem kontrolne sume KPhotoAlbum može tražiti slike i kada ste ih "
 "uklonili s diska.</p>"
 
-#: DB/NewImageFinder.cpp:376
+#: DB/NewImageFinder.cpp:378
 msgid "Following files could not be read:"
 msgstr "Sljedeći fajlovi nisu mogli biti pročitani:"
 
@@ -1610,6 +1594,13 @@ msgstr ""
 msgid "Building thumbnails"
 msgstr "Pravljenje thumbnailsa"
 
+#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+#, fuzzy
+#| msgid "KPhotoAlbum"
+msgctxt ".kim files"
+msgid "KPhotoAlbum Export Files"
+msgstr "KPhotoAlbum"
+
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
 msgstr "Konfiguracija izvoza / Kopiraj slike"
@@ -1843,6 +1834,23 @@ msgstr "Direktorij mora biti subdirektorij od %1"
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
 msgstr ""
+
+#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/FileReader.cpp:92
+msgid "Folder"
+msgstr "Direktorij"
+
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
+#: XMLDB/FileReader.cpp:122
+msgid "Tokens"
+msgstr "Žeton"
+
+#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+msgid "Media Type"
+msgstr "Tip medija"
 
 #: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
@@ -2850,12 +2858,6 @@ msgctxt "@item:inlistbox meaning 'no category'"
 msgid "None"
 msgstr "Nijedan"
 
-#: MainWindow/StatisticsDialog.cpp:133 MainWindow/StatisticsDialog.cpp:198
-#: RemoteControl/RemoteInterface.cpp:137 Settings/CategoryPage.cpp:271
-#: XMLDB/FileReader.cpp:139 XMLDB/FileReader.cpp:141
-msgid "Media Type"
-msgstr "Tip medija"
-
 #: MainWindow/StatisticsDialog.cpp:170
 msgctxt "As in 'all images'"
 msgid "All"
@@ -3522,7 +3524,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Nepoznata"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+msgid "Places"
+msgstr "Mjesta"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3602,7 +3608,7 @@ msgstr ""
 "Postavite datum rođenja za ove stvari (kažu ljudi) ovdje,\n"
 "i onda pogledajte njihovu dob pri gledanju slike."
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:436
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
 msgid "People"
 msgstr "Ljudi"
 
@@ -3684,23 +3690,24 @@ msgstr "Pogled na ikonu sa podešenim sličicama"
 #: Settings/CategoryPage.cpp:173
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed.</font>"
+"saved, the names of categories can't be changed and new ones can't be added."
+"</font>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:179
+#: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:220
+#: Settings/CategoryPage.cpp:223
 msgid "Settings for category"
 msgstr "Postavke za kategoriju"
 
-#: Settings/CategoryPage.cpp:223
+#: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr "<i>Najavljujem promjenu: preimenuj u \"%1\"</i>"
 
-#: Settings/CategoryPage.cpp:275
+#: Settings/CategoryPage.cpp:282
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3711,11 +3718,11 @@ msgstr ""
 "specijalno ime kategorije koje je rezervisano i ne može se koristiti kao "
 "normalna kategorija.</p>"
 
-#: Settings/CategoryPage.cpp:279 Settings/CategoryPage.cpp:290
+#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
 msgid "Invalid category name"
 msgstr "Neispravno ime kategorije"
 
-#: Settings/CategoryPage.cpp:287
+#: Settings/CategoryPage.cpp:294
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
@@ -3724,7 +3731,7 @@ msgstr ""
 "<p>Ne mogu promijeniti ime kategorije \"%1\" u \"%2\"::</p><p>Kategorija s "
 "ovim imenom već postoji.</p>"
 
-#: Settings/CategoryPage.cpp:304
+#: Settings/CategoryPage.cpp:311
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3735,11 +3742,11 @@ msgstr ""
 "akcija preimenovanja na kategoriji \"%2\". Molim prvo snimite ovu promjenu.</"
 "p>"
 
-#: Settings/CategoryPage.cpp:308
+#: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:340
+#: Settings/CategoryPage.cpp:347
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
@@ -3748,16 +3755,16 @@ msgstr ""
 "<p>Da li stvarno želite da napravite '%1' ne pozicionabilnim?</p><p>Sva "
 "područja povezana sa ovom kategorijom će biti izbrisana</p>"
 
-#: Settings/CategoryPage.cpp:389
+#: Settings/CategoryPage.cpp:396
 msgid "New category"
 msgstr "Nova kategorija"
 
-#: Settings/CategoryPage.cpp:422
+#: Settings/CategoryPage.cpp:428
 #, kde-format
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>Zaista želite obrisati kategoriju \"%1\"?</p>"
 
-#: Settings/CategoryPage.cpp:576
+#: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
 msgstr ""
 
@@ -4300,11 +4307,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Vjeruj vremenskim markicama?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:438
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
 msgid "Events"
 msgstr "Događaji"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:439
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
 #, fuzzy
 #| msgid "Untagged Images"
 msgid "untagged"
@@ -4357,8 +4364,8 @@ msgstr ""
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes of category names.<nl> Please save the "
-"changes before working on tag groups.</emphasis>"
+"<emphasis>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</emphasis>"
 msgstr ""
 
 #: Settings/TagGroupsPage.cpp:82
@@ -4366,56 +4373,56 @@ msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr "Dodaj grupu..."
 
-#: Settings/TagGroupsPage.cpp:261
+#: Settings/TagGroupsPage.cpp:265
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "Preimenuj grupu  \"%1\""
 
-#: Settings/TagGroupsPage.cpp:263
+#: Settings/TagGroupsPage.cpp:267
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "Obriši grupu  \"%1\""
 
-#: Settings/TagGroupsPage.cpp:343
+#: Settings/TagGroupsPage.cpp:347
 #, kde-format
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "Oznake u grupi \"%1\" kategorije \"%2\""
 
-#: Settings/TagGroupsPage.cpp:361
+#: Settings/TagGroupsPage.cpp:365
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Nova grupa"
 
-#: Settings/TagGroupsPage.cpp:362
+#: Settings/TagGroupsPage.cpp:366
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Naziv grupe:"
 
-#: Settings/TagGroupsPage.cpp:379
+#: Settings/TagGroupsPage.cpp:383
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr "<p>Grupa %1 već postoji.</p>"
 
-#: Settings/TagGroupsPage.cpp:380
+#: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr "Ne mogu dodati grupu"
 
-#: Settings/TagGroupsPage.cpp:458 Settings/TagGroupsPage.cpp:481
+#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Preimenuj grupu"
 
-#: Settings/TagGroupsPage.cpp:459
+#: Settings/TagGroupsPage.cpp:463
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Ime nove grupe"
 
-#: Settings/TagGroupsPage.cpp:476
+#: Settings/TagGroupsPage.cpp:480
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4423,7 +4430,7 @@ msgid ""
 "category \"%3\"</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:542
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4432,40 +4439,40 @@ msgid ""
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:544
+#: Settings/TagGroupsPage.cpp:548
 #, kde-format
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<para>Zaista izbrisati grupu %1?</para>"
 
-#: Settings/TagGroupsPage.cpp:549
+#: Settings/TagGroupsPage.cpp:553
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Obriši  grupu"
 
-#: Settings/TagGroupsPage.cpp:727
+#: Settings/TagGroupsPage.cpp:731
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Preimenuj \"%1\""
 
-#: Settings/TagGroupsPage.cpp:729
+#: Settings/TagGroupsPage.cpp:733
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Obrisi \"%1\""
 
-#: Settings/TagGroupsPage.cpp:739
+#: Settings/TagGroupsPage.cpp:743
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Novo ime oznake"
 
-#: Settings/TagGroupsPage.cpp:740
+#: Settings/TagGroupsPage.cpp:744
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Ime oznake:"
 
-#: Settings/TagGroupsPage.cpp:788
+#: Settings/TagGroupsPage.cpp:792
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4476,7 +4483,7 @@ msgstr ""
 "<para>Da li stvarno želite izbrisati \"%1\"?</para><para>Brisanjem stavke "
 "ćete ukloniti sve informacije o njoj sa svake slike koja je sadrži.</para>"
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:796
 #, kde-format
 msgctxt "@title:window"
 msgid "Really delete %1?"
@@ -5280,7 +5287,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Nemoguće kopirati '%1' u '%2'."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:449
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
 msgid "Error Running Demo"
 msgstr "Pogreška prilikom pokretanja Demo"
 
@@ -5742,6 +5749,20 @@ msgstr "Prikaži veličinu slike"
 msgid "Show Rating"
 msgstr "Pokazati rejting"
 
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#, fuzzy
+#| msgctxt "Denotes the media type (video,image)"
+#| msgid "Image"
+msgid "Image"
+msgstr "Slika"
+
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#, fuzzy
+#| msgctxt "Denotes the media type (video,image)"
+#| msgid "Video"
+msgid "Video"
+msgstr "Video"
+
 #: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
@@ -5753,11 +5774,7 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr "index.xml nepodudaranje verzije"
 
-#: XMLDB/FileReader.cpp:113 XMLDB/FileReader.cpp:125
-msgid "Tokens"
-msgstr "Žeton"
-
-#: XMLDB/FileReader.cpp:213
+#: XMLDB/FileReader.cpp:208
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
@@ -5765,13 +5782,13 @@ msgid ""
 "can manually rename your categories any time and then save your database.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:223
+#: XMLDB/FileReader.cpp:218
 #, fuzzy
 #| msgid "Invalid category name"
 msgid "Changed standard category names"
 msgstr "Neispravno ime kategorije"
 
-#: XMLDB/FileReader.cpp:361
+#: XMLDB/FileReader.cpp:356
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5794,7 +5811,7 @@ msgstr ""
 "<b> zahtijeva održavanje > Sortiraj Sve po Datum i vrijeme </b> da ih "
 "razvrstati u bazi podataka. </p>"
 
-#: XMLDB/FileReader.cpp:371
+#: XMLDB/FileReader.cpp:366
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5810,11 +5827,11 @@ msgstr ""
 "knjižnice. Nakon što ste to učinili, vi ćete se pitao što učiniti da ispravi "
 "sve podatke koji nedostaju. </p>"
 
-#: XMLDB/FileReader.cpp:378
+#: XMLDB/FileReader.cpp:373
 msgid "Images/Videos Are Not Sorted"
 msgstr "Slike/videi nisu sortirani"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5830,11 +5847,11 @@ msgstr ""
 "tt>. </p><p> u protivnom će rezultirati dodatni prostor oko slike u prikazu "
 "sličica - to je sve. - tako da nema hitnost u to radiš </p>"
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 msgid "Not All Images Have Size Information"
 msgstr "Nemaju sve slike informaciju o veličini"
 
-#: XMLDB/FileReader.cpp:421
+#: XMLDB/FileReader.cpp:416
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5856,35 +5873,31 @@ msgstr ""
 "već KDEDIRS postavili, jednostavno dodajte string kao da ste u kojima "
 "postavka  <b>PATH</b>  varijabla okruženja </p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:423
 msgid "No default setup file found"
 msgstr "Nema zadane  datoteke podešavanja"
 
-#: XMLDB/FileReader.cpp:437
-msgid "Places"
-msgstr "Mjesta"
-
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:444
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Nemoguće otvoriti '%1' za čitanje"
 
-#: XMLDB/FileReader.cpp:462
+#: XMLDB/FileReader.cpp:457
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "linija %1 kolona %2 u datoteci %3: %4"
 
-#: XMLDB/FileReader.cpp:464
+#: XMLDB/FileReader.cpp:459
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Neuspjelo vraćanje rezerve: %1"
 
-#: XMLDB/FileReader.cpp:475
+#: XMLDB/FileReader.cpp:470
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Greška u datoteci %1: Elementi nisu pronađeni"
 
-#: XMLDB/FileReader.cpp:481
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""

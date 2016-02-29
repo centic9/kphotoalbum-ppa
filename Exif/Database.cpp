@@ -212,8 +212,7 @@ bool Exif::Database::add( const DB::FileName& fileName )
         Q_ASSERT(image.get() != nullptr);
         image->readMetadata();
         Exiv2::ExifData &exifData = image->exifData();
-        insert( fileName, exifData );
-        return true;
+        return insert( fileName, exifData );
     }
     catch (...)
     {
@@ -233,28 +232,38 @@ void Exif::Database::remove( const DB::FileName& fileName )
         showError( query );
 }
 
-void Exif::Database::insert( const DB::FileName& filename, Exiv2::ExifData data )
+bool Exif::Database::insert(const DB::FileName& filename, Exiv2::ExifData data )
 {
+    static QString _queryString;
     if ( !isUsable() )
-        return;
+        return false;
 
-    QStringList formalList;
-    Database::ElementList elms = elements();
-    for( const DatabaseElement *e : elms )
+    if (_queryString.isEmpty())
     {
-        formalList.append( e->queryString() );
+        QStringList formalList;
+        Database::ElementList elms = elements();
+        for( const DatabaseElement *e : elms )
+        {
+            formalList.append( e->queryString() );
+        }
+        _queryString = QString::fromLatin1( "INSERT OR REPLACE into exif values (?, %1) " ).arg( formalList.join( QString::fromLatin1( ", " ) ) );
     }
 
-    QSqlQuery query( QString::fromLatin1( "INSERT into exif values (?, %1) " ).arg( formalList.join( QString::fromLatin1( ", " ) ) ), m_db );
+    QSqlQuery query( _queryString, m_db );
     query.bindValue(  0, filename.absolute() );
     int i = 1;
-    for( const DatabaseElement *e : elms )
+    for( const DatabaseElement *e : elements() )
     {
-        e->bindValues( &query, i, data );
+        query.bindValue( i++, e->valueFromExif(data));
     }
 
     if ( !query.exec() )
+    {
         showError( query );
+        return false;
+    } else {
+        return true;
+    }
 
 }
 
@@ -334,10 +343,10 @@ QString Exif::Database::exifDBFile()
 
 bool Exif::Database::readFields( const DB::FileName& fileName, ElementList &fields) const
 {
-    bool foundIt = false;
     if ( !isUsable() )
-        return foundIt;
+        return false;
 
+    bool foundIt = false;
     QStringList fieldList;
     for( const DatabaseElement *e : fields )
     {
@@ -354,25 +363,16 @@ bool Exif::Database::readFields( const DB::FileName& fileName, ElementList &fiel
 
     if ( !query.exec() ) {
         showError( query );
-    } else {
-        if ( query.next() )
+    }
+    if ( query.next() )
+    {
+        // file in exif db -> write back results
+        int i=0;
+        for( DatabaseElement *e : fields )
         {
-            // file in exif db -> write back results
-            int i=0;
-            for( DatabaseElement *e : fields )
-            {
-                e->setValue( query.value(i++) );
-            }
-            foundIt = true;
-        } else {
-	    // no infos -> write back empty results
-            int i=0;
-	    for( DatabaseElement *e : fields )
-            {
-                e->setValue( QVariant() );
-		i++;
-            }
-	}
+            e->setValue( query.value(i++) );
+        }
+        foundIt = true;
     }
     return foundIt;
 }
@@ -481,13 +481,14 @@ void Exif::Database::recreate()
     dialog.setModal(true);
     dialog.setLabelText(i18n("Rereading EXIF information from all images"));
     dialog.setMaximum(allImages.size());
+    // using a transaction here removes a *huge* overhead on the insert statements
+    m_db.transaction();
     int i = 0;
-    bool success = true;
     for (const DB::FileName& fileName : allImages) {
         const DB::ImageInfoPtr info = fileName.info();
         dialog.setValue(i++);
         if (info->mediaType() == DB::Image) {
-            success &= add(fileName);
+            add(fileName);
         }
         if ( i % 10 )
             qApp->processEvents();
@@ -497,12 +498,14 @@ void Exif::Database::recreate()
 
     // PENDING(blackie) We should count the amount of files that did not succeeded and warn the user.
     if (dialog.wasCanceled()) {
+        m_db.rollback();
         m_db.close();
         QDir().remove(exifDBFile());
         QDir().rename(origBackup, exifDBFile());
         init();
     }
     else {
+        m_db.commit();
         QDir().remove(origBackup);
     }
 }

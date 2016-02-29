@@ -76,8 +76,21 @@ public:
      * @return 0 <= DBFileVersionGuaranteed() <= DBFileVersion()
      */
     int DBFileVersionGuaranteed() const;
+    /**
+     * @brief add a file and its exif data to the database.
+     * If the file already exists in the database, the new data replaces the existing data.
+     * @param fileName the file
+     * @return
+     */
     bool add( const DB::FileName& fileName );
     void remove( const DB::FileName& fileName );
+    /**
+     * @brief readFields searches the exif database for a given file and fills the element list with values.
+     * If the query fails or has no result, the ElementList is not changed.
+     * @param fileName
+     * @param fields a list of the DatabaseElements that you want to read.
+     * @return true, if the fileName is found in the database, false otherwise.
+     */
     bool readFields( const DB::FileName& fileName, ElementList &fields) const;
     DB::FileNameSet filesMatchingQuery( const QString& query ) const;
     CameraList cameras() const;
@@ -92,7 +105,7 @@ protected:
     void updateDatabase();
     void createMetadataTable(DBSchemaChangeType change);
     static QString connectionName();
-    void insert( const DB::FileName& filename, Exiv2::ExifData );
+    bool insert( const DB::FileName& filename, Exiv2::ExifData );
 
 private:
     bool m_isOpen;

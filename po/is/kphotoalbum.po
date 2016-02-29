@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-01-18 01:47+0000\n"
+"POT-Creation-Date: 2016-02-21 01:57+0000\n"
 "PO-Revision-Date: 2016-01-05 16:41+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
@@ -494,8 +494,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "Viltu í alvörunni eyða %1?"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:550
-#: Settings/TagGroupsPage.cpp:793
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
+#: Settings/TagGroupsPage.cpp:797
 msgid "&Delete"
 msgstr "&Eyða"
 
@@ -689,27 +689,7 @@ msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Ekkert annað"
 
-#: Browser/AbstractCategoryModel.cpp:51
-#, fuzzy
-#| msgid "Video"
-msgctxt "Denotes the media type (video,image)"
-msgid "Video"
-msgstr "Vídeó"
-
-#: Browser/AbstractCategoryModel.cpp:53
-#, fuzzy
-#| msgid "Image"
-msgctxt "Denotes the media type (video,image)"
-msgid "Image"
-msgstr "Mynd"
-
-#: Browser/AbstractCategoryModel.cpp:56 MainWindow/StatisticsDialog.cpp:134
-#: MainWindow/StatisticsDialog.cpp:199 Settings/CategoryPage.cpp:269
-#: XMLDB/FileReader.cpp:92 XMLDB/FileReader.cpp:94
-msgid "Folder"
-msgstr "Mappa"
-
-#: Browser/AbstractCategoryModel.cpp:100
+#: Browser/AbstractCategoryModel.cpp:96
 #, fuzzy, kde-format
 #| msgid "1 image"
 #| msgid_plural "%1 images"
@@ -719,7 +699,7 @@ msgid_plural "%1 images"
 msgstr[0] "1 mynd"
 msgstr[1] "%1 myndir"
 
-#: Browser/AbstractCategoryModel.cpp:101
+#: Browser/AbstractCategoryModel.cpp:97
 #, fuzzy, kde-format
 #| msgid "1 video"
 #| msgid_plural "%1 videos"
@@ -730,11 +710,11 @@ msgstr[0] "1 videó"
 msgstr[1] "%1 videó"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
 msgid "Images"
 msgstr "Myndir"
 
-#: Browser/AbstractCategoryModel.cpp:139
+#: Browser/AbstractCategoryModel.cpp:135
 msgid "Videos"
 msgstr "Vídeó"
 
@@ -1079,14 +1059,14 @@ msgstr ""
 "myndanna hvað það tekur langan tíma.<br/>Hinsvegar er eingöngu töf við "
 "yfirferðina þegar nýjar myndir finnast.</p>"
 
-#: DB/NewImageFinder.cpp:332
+#: DB/NewImageFinder.cpp:334
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: DB/NewImageFinder.cpp:333
+#: DB/NewImageFinder.cpp:335
 #, fuzzy
 #| msgid ""
 #| "<p><b>Calculating checksum for %1 files<b></p><p>By storing a checksum "
@@ -1100,7 +1080,7 @@ msgstr ""
 "fyrir hverja mynd þá getur KMyndaAlbúm fundið aftur myndir jafnvel þegar þú "
 "hefur flutt þær til á diskinum.</p>"
 
-#: DB/NewImageFinder.cpp:376
+#: DB/NewImageFinder.cpp:378
 msgid "Following files could not be read:"
 msgstr "Eftirfarandi skrár tókst ekki að lesa:"
 
@@ -1566,6 +1546,13 @@ msgstr ""
 msgid "Building thumbnails"
 msgstr "Byggi upp smámyndir"
 
+#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+#, fuzzy
+#| msgid "KPhotoAlbum database files (*.db)"
+msgctxt ".kim files"
+msgid "KPhotoAlbum Export Files"
+msgstr "KMyndaAlbúm gagnagrunnsskrár (*.db)"
+
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
 msgstr ""
@@ -1752,6 +1739,23 @@ msgstr ""
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
 msgstr ""
+
+#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/FileReader.cpp:92
+msgid "Folder"
+msgstr "Mappa"
+
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
+#: XMLDB/FileReader.cpp:122
+msgid "Tokens"
+msgstr "Tákn"
+
+#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+msgid "Media Type"
+msgstr "Tegund miðils"
 
 #: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
@@ -2687,12 +2691,6 @@ msgctxt "@item:inlistbox meaning 'no category'"
 msgid "None"
 msgstr "Ekkert"
 
-#: MainWindow/StatisticsDialog.cpp:133 MainWindow/StatisticsDialog.cpp:198
-#: RemoteControl/RemoteInterface.cpp:137 Settings/CategoryPage.cpp:271
-#: XMLDB/FileReader.cpp:139 XMLDB/FileReader.cpp:141
-msgid "Media Type"
-msgstr "Tegund miðils"
-
 #: MainWindow/StatisticsDialog.cpp:170
 #, fuzzy
 #| msgid "All"
@@ -3330,7 +3328,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Óþekkt"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+msgid "Places"
+msgstr "Staðir"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3394,7 +3396,7 @@ msgid ""
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:436
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
 msgid "People"
 msgstr "Fólk"
 
@@ -3478,25 +3480,26 @@ msgstr "Táknmyndasýn með sérsniðnum smámyndum"
 #: Settings/CategoryPage.cpp:173
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed.</font>"
+"saved, the names of categories can't be changed and new ones can't be added."
+"</font>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:179
+#: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:220
+#: Settings/CategoryPage.cpp:223
 #, fuzzy
 #| msgid "<b>Sub Categories</b>"
 msgid "Settings for category"
 msgstr "<b>Undirflokkar</b>"
 
-#: Settings/CategoryPage.cpp:223
+#: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:275
+#: Settings/CategoryPage.cpp:282
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3504,20 +3507,20 @@ msgid ""
 "category.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:279 Settings/CategoryPage.cpp:290
+#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Invalid category name"
 msgstr "Ógildur rekill."
 
-#: Settings/CategoryPage.cpp:287
+#: Settings/CategoryPage.cpp:294
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:304
+#: Settings/CategoryPage.cpp:311
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3525,30 +3528,30 @@ msgid ""
 "</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:308
+#: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:340
+#: Settings/CategoryPage.cpp:347
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
 "linked against this category will be deleted!</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:389
+#: Settings/CategoryPage.cpp:396
 #, fuzzy
 #| msgid "New Category..."
 msgid "New category"
 msgstr "Nýr flokkur..."
 
-#: Settings/CategoryPage.cpp:422
+#: Settings/CategoryPage.cpp:428
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>Virkilega eyða flokknum '%1'?</p>"
 
-#: Settings/CategoryPage.cpp:576
+#: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
 msgstr ""
 
@@ -4002,11 +4005,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Treysta tímamerkjum?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:438
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
 msgid "Events"
 msgstr "Atburðir"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:439
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
 #, fuzzy
 #| msgid "Untagged Images"
 msgid "untagged"
@@ -4063,8 +4066,8 @@ msgstr ""
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes of category names.<nl> Please save the "
-"changes before working on tag groups.</emphasis>"
+"<emphasis>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</emphasis>"
 msgstr ""
 
 #: Settings/TagGroupsPage.cpp:82
@@ -4072,67 +4075,67 @@ msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:261
+#: Settings/TagGroupsPage.cpp:265
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "Virkilega eyða hópnum %1?"
 
-#: Settings/TagGroupsPage.cpp:263
+#: Settings/TagGroupsPage.cpp:267
 #, fuzzy, kde-format
 #| msgid "Delete Group"
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "Eyða hóp"
 
-#: Settings/TagGroupsPage.cpp:343
+#: Settings/TagGroupsPage.cpp:347
 #, fuzzy, kde-format
 #| msgid "Take item out of category %1"
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "Taka hlut úr flokknum %1"
 
-#: Settings/TagGroupsPage.cpp:361
+#: Settings/TagGroupsPage.cpp:365
 #, fuzzy
 #| msgid "New Group"
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Nýr hópur"
 
-#: Settings/TagGroupsPage.cpp:362
+#: Settings/TagGroupsPage.cpp:366
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Nafn hóps:"
 
-#: Settings/TagGroupsPage.cpp:379
+#: Settings/TagGroupsPage.cpp:383
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:380
+#: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:458 Settings/TagGroupsPage.cpp:481
+#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Eyða hóp"
 
-#: Settings/TagGroupsPage.cpp:459
+#: Settings/TagGroupsPage.cpp:463
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Nafn hóps:"
 
-#: Settings/TagGroupsPage.cpp:476
+#: Settings/TagGroupsPage.cpp:480
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4140,7 +4143,7 @@ msgid ""
 "category \"%3\"</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:542
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4149,49 +4152,49 @@ msgid ""
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:544
+#: Settings/TagGroupsPage.cpp:548
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<p>Virkilega eyða flokknum '%1'?</p>"
 
-#: Settings/TagGroupsPage.cpp:549
+#: Settings/TagGroupsPage.cpp:553
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Eyða hóp"
 
-#: Settings/TagGroupsPage.cpp:727
+#: Settings/TagGroupsPage.cpp:731
 #, fuzzy, kde-format
 #| msgid "Rename..."
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Endurnefna..."
 
-#: Settings/TagGroupsPage.cpp:729
+#: Settings/TagGroupsPage.cpp:733
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Eyða"
 
-#: Settings/TagGroupsPage.cpp:739
+#: Settings/TagGroupsPage.cpp:743
 #, fuzzy
 #| msgid "New image:"
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Ný mynd:"
 
-#: Settings/TagGroupsPage.cpp:740
+#: Settings/TagGroupsPage.cpp:744
 #, fuzzy
 #| msgid "Database name:"
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Nafn á gagnagrunni:"
 
-#: Settings/TagGroupsPage.cpp:788
+#: Settings/TagGroupsPage.cpp:792
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4200,7 +4203,7 @@ msgid ""
 "para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:796
 #, fuzzy, kde-format
 #| msgid "Really Delete %1?"
 msgctxt "@title:window"
@@ -4879,7 +4882,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Gat ekki afritað '%1' í '%2'."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:449
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
 msgid "Error Running Demo"
 msgstr "Villa við að keyra sýnidæmið"
 
@@ -5481,6 +5484,18 @@ msgstr "Sýna stærð myndar"
 msgid "Show Rating"
 msgstr "Sýna svið"
 
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#, fuzzy
+#| msgid "Image"
+msgid "Image"
+msgstr "Mynd"
+
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#, fuzzy
+#| msgid "Video"
+msgid "Video"
+msgstr "Vídeó"
+
 #: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
@@ -5492,11 +5507,7 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:113 XMLDB/FileReader.cpp:125
-msgid "Tokens"
-msgstr "Tákn"
-
-#: XMLDB/FileReader.cpp:213
+#: XMLDB/FileReader.cpp:208
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
@@ -5504,13 +5515,13 @@ msgid ""
 "can manually rename your categories any time and then save your database.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:223
+#: XMLDB/FileReader.cpp:218
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Changed standard category names"
 msgstr "Ógildur rekill."
 
-#: XMLDB/FileReader.cpp:361
+#: XMLDB/FileReader.cpp:356
 #, fuzzy
 #| msgid ""
 #| "<p>Your images/videos are not sorted, which means that navigating using "
@@ -5545,7 +5556,7 @@ msgstr ""
 ">Raða völdu eftir dags- og tímasetningu</b> til að raða þeim í "
 "gagnagrunninum.</p>"
 
-#: XMLDB/FileReader.cpp:371
+#: XMLDB/FileReader.cpp:366
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5562,11 +5573,11 @@ msgstr ""
 "Þegar það hefur verið gert, mun verða spurt hvort og hvernig leiðrétta eigi "
 "þær upplýsingar sem vantar.</p>"
 
-#: XMLDB/FileReader.cpp:378
+#: XMLDB/FileReader.cpp:373
 msgid "Images/Videos Are Not Sorted"
 msgstr "Myndir/vídeó er ekki rétt uppraðað"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5576,11 +5587,11 @@ msgid ""
 "that is all - so there is no urgency in doing it.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 msgid "Not All Images Have Size Information"
 msgstr "Ekki hafa allar myndir stærðarupplýsingar"
 
-#: XMLDB/FileReader.cpp:421
+#: XMLDB/FileReader.cpp:416
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5593,36 +5604,32 @@ msgid ""
 "setting the <b>PATH</b> environment variable</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:423
 msgid "No default setup file found"
 msgstr "Engin sjálfgefin uppsetningaskrá fannst"
 
-#: XMLDB/FileReader.cpp:437
-msgid "Places"
-msgstr "Staðir"
-
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:444
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Tókst ekki opna '%1' til lestrar"
 
-#: XMLDB/FileReader.cpp:462
+#: XMLDB/FileReader.cpp:457
 #, fuzzy, kde-format
 #| msgid "Error on line %1 column %2 in file %3: %4"
 msgid "line %1 column %2 in file %3: %4"
 msgstr "Villa á línu %1 dálki %2 í skrá %3: %4"
 
-#: XMLDB/FileReader.cpp:464
+#: XMLDB/FileReader.cpp:459
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:475
+#: XMLDB/FileReader.cpp:470
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Villa í skránni %1: Engin stök fundust"
 
-#: XMLDB/FileReader.cpp:481
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
