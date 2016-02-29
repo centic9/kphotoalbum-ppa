@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-01-18 01:47+0000\n"
+"POT-Creation-Date: 2016-02-21 01:57+0000\n"
 "PO-Revision-Date: 2012-01-16 16:58+0700\n"
 "Last-Translator: Lê Hoàng Phương <herophuong93@gmail.com>\n"
 "Language-Team: Vietnamese <kde-i18n-vi@kde.org>\n"
@@ -541,8 +541,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "Thực sự xoá %1 không?"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:550
-#: Settings/TagGroupsPage.cpp:793
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
+#: Settings/TagGroupsPage.cpp:797
 msgid "&Delete"
 msgstr "&Xoá"
 
@@ -742,27 +742,7 @@ msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Không có gì khác"
 
-#: Browser/AbstractCategoryModel.cpp:51
-#, fuzzy
-#| msgid "Video"
-msgctxt "Denotes the media type (video,image)"
-msgid "Video"
-msgstr "Ảnh động"
-
-#: Browser/AbstractCategoryModel.cpp:53
-#, fuzzy
-#| msgid "Image"
-msgctxt "Denotes the media type (video,image)"
-msgid "Image"
-msgstr "Ảnh"
-
-#: Browser/AbstractCategoryModel.cpp:56 MainWindow/StatisticsDialog.cpp:134
-#: MainWindow/StatisticsDialog.cpp:199 Settings/CategoryPage.cpp:269
-#: XMLDB/FileReader.cpp:92 XMLDB/FileReader.cpp:94
-msgid "Folder"
-msgstr "Thư mục"
-
-#: Browser/AbstractCategoryModel.cpp:100
+#: Browser/AbstractCategoryModel.cpp:96
 #, fuzzy, kde-format
 #| msgid "1 image"
 #| msgid_plural "%1 images"
@@ -771,7 +751,7 @@ msgid "1 image"
 msgid_plural "%1 images"
 msgstr[0] "%1 ảnh"
 
-#: Browser/AbstractCategoryModel.cpp:101
+#: Browser/AbstractCategoryModel.cpp:97
 #, fuzzy, kde-format
 #| msgid "1 video"
 #| msgid_plural "%1 videos"
@@ -781,11 +761,11 @@ msgid_plural "%1 videos"
 msgstr[0] "%1 ảnh động"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
 msgid "Images"
 msgstr "Ảnh"
 
-#: Browser/AbstractCategoryModel.cpp:139
+#: Browser/AbstractCategoryModel.cpp:135
 msgid "Videos"
 msgstr "Ảnh động"
 
@@ -1139,13 +1119,13 @@ msgstr ""
 "số ảnh, việc này có thể kéo dài một lát.<br/>Tuy nhiên, chỉ chạy trễ khi tìm "
 "ảnh mới.</p></p>"
 
-#: DB/NewImageFinder.cpp:332
+#: DB/NewImageFinder.cpp:334
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] ""
 
-#: DB/NewImageFinder.cpp:333
+#: DB/NewImageFinder.cpp:335
 #, fuzzy
 #| msgid ""
 #| "<p><b>Calculating checksum for %1 files<b></p><p>By storing a checksum "
@@ -1159,7 +1139,7 @@ msgstr ""
 "một tổng kiểm tra (checksum) riêng cho mỗi ảnh, KPhotoAlbum có khả năng tìm "
 "ảnh ngay cả khi bạn đã di chuyển nó vào vị trí khác trên đĩa.</p></p>"
 
-#: DB/NewImageFinder.cpp:376
+#: DB/NewImageFinder.cpp:378
 msgid "Following files could not be read:"
 msgstr ""
 
@@ -1633,6 +1613,13 @@ msgstr ""
 msgid "Building thumbnails"
 msgstr "Xây dựng mẫu ảnh"
 
+#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+#, fuzzy
+#| msgid "KPhotoAlbum database files (*.db)"
+msgctxt ".kim files"
+msgid "KPhotoAlbum Export Files"
+msgstr "Các tập tin co sở dữ liệu KPhotoAlbum (*.db)"
+
 #: ImportExport/Export.cpp:71
 #, fuzzy
 #| msgid "Export Configuration"
@@ -1884,6 +1871,23 @@ msgstr "Thư mục phải là thư mục con của %1"
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
 msgstr ""
+
+#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/FileReader.cpp:92
+msgid "Folder"
+msgstr "Thư mục"
+
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
+#: XMLDB/FileReader.cpp:122
+msgid "Tokens"
+msgstr "Hiệu bài"
+
+#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+msgid "Media Type"
+msgstr "Kiểu vật chứa"
 
 #: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
@@ -2935,12 +2939,6 @@ msgctxt "@item:inlistbox meaning 'no category'"
 msgid "None"
 msgstr "Không có"
 
-#: MainWindow/StatisticsDialog.cpp:133 MainWindow/StatisticsDialog.cpp:198
-#: RemoteControl/RemoteInterface.cpp:137 Settings/CategoryPage.cpp:271
-#: XMLDB/FileReader.cpp:139 XMLDB/FileReader.cpp:141
-msgid "Media Type"
-msgstr "Kiểu vật chứa"
-
 #: MainWindow/StatisticsDialog.cpp:170
 msgctxt "As in 'all images'"
 msgid "All"
@@ -3619,7 +3617,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Không rõ"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+msgid "Places"
+msgstr "Nơi"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3685,7 +3687,7 @@ msgid ""
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:436
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
 msgid "People"
 msgstr "Người"
 
@@ -3769,25 +3771,26 @@ msgstr "Xem biểu tượng có mẫu ảnh riêng"
 #: Settings/CategoryPage.cpp:173
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed.</font>"
+"saved, the names of categories can't be changed and new ones can't be added."
+"</font>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:179
+#: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:220
+#: Settings/CategoryPage.cpp:223
 #, fuzzy
 #| msgid "<b>Sub Categories</b>"
 msgid "Settings for category"
 msgstr "<b>Phân loại con</b>"
 
-#: Settings/CategoryPage.cpp:223
+#: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:275
+#: Settings/CategoryPage.cpp:282
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3795,20 +3798,20 @@ msgid ""
 "category.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:279 Settings/CategoryPage.cpp:290
+#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Invalid category name"
 msgstr "Trình điều khiển không hợp lệ."
 
-#: Settings/CategoryPage.cpp:287
+#: Settings/CategoryPage.cpp:294
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:304
+#: Settings/CategoryPage.cpp:311
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3816,30 +3819,30 @@ msgid ""
 "</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:308
+#: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:340
+#: Settings/CategoryPage.cpp:347
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
 "linked against this category will be deleted!</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:389
+#: Settings/CategoryPage.cpp:396
 #, fuzzy
 #| msgid "New Category..."
 msgid "New category"
 msgstr "Phân loại mới..."
 
-#: Settings/CategoryPage.cpp:422
+#: Settings/CategoryPage.cpp:428
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>Thực sự muốn xoá phân loại « %1 » không?</p>"
 
-#: Settings/CategoryPage.cpp:576
+#: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
 msgstr ""
 
@@ -4380,11 +4383,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Theo nhãn thời gian ?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:438
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
 msgid "Events"
 msgstr ""
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:439
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
 #, fuzzy
 #| msgid "New Images"
 msgid "untagged"
@@ -4443,8 +4446,8 @@ msgstr ""
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes of category names.<nl> Please save the "
-"changes before working on tag groups.</emphasis>"
+"<emphasis>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</emphasis>"
 msgstr ""
 
 #: Settings/TagGroupsPage.cpp:82
@@ -4452,67 +4455,67 @@ msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:261
+#: Settings/TagGroupsPage.cpp:265
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "Thực sự xoá nhóm %1 không?"
 
-#: Settings/TagGroupsPage.cpp:263
+#: Settings/TagGroupsPage.cpp:267
 #, fuzzy, kde-format
 #| msgid "Delete Group"
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "Xoá nhóm"
 
-#: Settings/TagGroupsPage.cpp:343
+#: Settings/TagGroupsPage.cpp:347
 #, fuzzy, kde-format
 #| msgid "Take item out of category %1"
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "Lấy mục ra phân loại %1"
 
-#: Settings/TagGroupsPage.cpp:361
+#: Settings/TagGroupsPage.cpp:365
 #, fuzzy
 #| msgid "New Group"
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Nhóm mới"
 
-#: Settings/TagGroupsPage.cpp:362
+#: Settings/TagGroupsPage.cpp:366
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Tên nhóm:"
 
-#: Settings/TagGroupsPage.cpp:379
+#: Settings/TagGroupsPage.cpp:383
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:380
+#: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:458 Settings/TagGroupsPage.cpp:481
+#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Xoá nhóm"
 
-#: Settings/TagGroupsPage.cpp:459
+#: Settings/TagGroupsPage.cpp:463
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Tên nhóm:"
 
-#: Settings/TagGroupsPage.cpp:476
+#: Settings/TagGroupsPage.cpp:480
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4520,7 +4523,7 @@ msgid ""
 "category \"%3\"</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:542
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4529,49 +4532,49 @@ msgid ""
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:544
+#: Settings/TagGroupsPage.cpp:548
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<p>Thực sự muốn xoá phân loại « %1 » không?</p>"
 
-#: Settings/TagGroupsPage.cpp:549
+#: Settings/TagGroupsPage.cpp:553
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Xoá nhóm"
 
-#: Settings/TagGroupsPage.cpp:727
+#: Settings/TagGroupsPage.cpp:731
 #, fuzzy, kde-format
 #| msgid "Rename..."
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Thay tên..."
 
-#: Settings/TagGroupsPage.cpp:729
+#: Settings/TagGroupsPage.cpp:733
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Xoá"
 
-#: Settings/TagGroupsPage.cpp:739
+#: Settings/TagGroupsPage.cpp:743
 #, fuzzy
 #| msgid "New Sub Category Name:"
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Tên phân loại con mới:"
 
-#: Settings/TagGroupsPage.cpp:740
+#: Settings/TagGroupsPage.cpp:744
 #, fuzzy
 #| msgid "Database name:"
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Tên co sở dữ liệu :"
 
-#: Settings/TagGroupsPage.cpp:788
+#: Settings/TagGroupsPage.cpp:792
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>Do you really want to delete \"%1\"?<br>Deleting the item will remove "
@@ -4585,7 +4588,7 @@ msgstr ""
 "<p>Bạn thực sự muốn xoá « %1 » không?<br>Việc xoá mục này sẽ gỡ bỏ thông tin "
 "nào về nó ra ảnh nào chứa mục đó.</p>"
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:796
 #, fuzzy, kde-format
 #| msgid "Really Delete %1?"
 msgctxt "@title:window"
@@ -5408,7 +5411,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Không thể sao chép « %1 » vào « %2 »."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:449
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
 msgid "Error Running Demo"
 msgstr "Gặp lỗi khi chạy chứng minh"
 
@@ -6005,6 +6008,18 @@ msgstr "Hiện cỡ ảnh"
 msgid "Show Rating"
 msgstr "Hiện phạm vị"
 
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#, fuzzy
+#| msgid "Image"
+msgid "Image"
+msgstr "Ảnh"
+
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#, fuzzy
+#| msgid "Video"
+msgid "Video"
+msgstr "Ảnh động"
+
 #: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
@@ -6016,11 +6031,7 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:113 XMLDB/FileReader.cpp:125
-msgid "Tokens"
-msgstr "Hiệu bài"
-
-#: XMLDB/FileReader.cpp:213
+#: XMLDB/FileReader.cpp:208
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
@@ -6028,13 +6039,13 @@ msgid ""
 "can manually rename your categories any time and then save your database.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:223
+#: XMLDB/FileReader.cpp:218
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Changed standard category names"
 msgstr "Trình điều khiển không hợp lệ."
 
-#: XMLDB/FileReader.cpp:361
+#: XMLDB/FileReader.cpp:356
 #, fuzzy
 #| msgid ""
 #| "<p>Your images/videos are not sorted, which means that navigating using "
@@ -6067,7 +6078,7 @@ msgstr ""
 "có ngày tháng được đặt, bạn có thể thực hiện <b>Ảnh > Sắp điều đã chọn theo "
 "Ngày và Giờ</b> để sắp xếp chúng trong co sở dữ liệu.</p>"
 
-#: XMLDB/FileReader.cpp:371
+#: XMLDB/FileReader.cpp:366
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -6077,11 +6088,11 @@ msgid ""
 "to do to correct all the missing information.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:378
+#: XMLDB/FileReader.cpp:373
 msgid "Images/Videos Are Not Sorted"
 msgstr "Chưa sắp xếp các Ảnh (động)"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:388
 #, fuzzy
 #| msgid ""
 #| "<p>Not all the images in the database have information about image sizes; "
@@ -6105,11 +6116,11 @@ msgstr ""
 "ảnh</b>.</p><p>Không thì các ảnh trong ô xem mẫu ảnh sẽ chỉ có độ đệm thêm "
 "chung quanh. Không phải là vấn đề nghiêm trọng.</p>"
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 msgid "Not All Images Have Size Information"
 msgstr "Không phải tất cả các ảnh có thông tin kích cỡ"
 
-#: XMLDB/FileReader.cpp:421
+#: XMLDB/FileReader.cpp:416
 #, fuzzy
 #| msgid ""
 #| "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -6142,36 +6153,32 @@ msgstr ""
 "phụ thêm chuỗi như khi đặt biến môi trường đường dẫn mặc định <b>PATH</b>.</"
 "p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:423
 msgid "No default setup file found"
 msgstr "Không tìm thấy tập tin thiết lập mặc định nào"
 
-#: XMLDB/FileReader.cpp:437
-msgid "Places"
-msgstr "Nơi"
-
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:444
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Không thể mở « %1 » để đọc"
 
-#: XMLDB/FileReader.cpp:462
+#: XMLDB/FileReader.cpp:457
 #, fuzzy, kde-format
 #| msgid "Error on line %1 column %2 in file %3: %4"
 msgid "line %1 column %2 in file %3: %4"
 msgstr "Gặp lỗi trên dòng %1, cột %2, trong tập tin %3: %4"
 
-#: XMLDB/FileReader.cpp:464
+#: XMLDB/FileReader.cpp:459
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:475
+#: XMLDB/FileReader.cpp:470
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Gặp lỗi trong tập tin %1: không tìm thấy yếu tố nào"
 
-#: XMLDB/FileReader.cpp:481
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -6632,9 +6639,6 @@ msgstr "Đang chuyển đổi co sở dữ liệu"
 
 
 #, fuzzy
-
-
-
 
 
 

@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 #include "DatabaseElement.h"
-#include <qsqlquery.h>
 #include <exiv2/exif.hpp>
 #include <QVariant>
 #include <QDebug>
@@ -69,14 +68,9 @@ QString Exif::StringExifElement::queryString() const
 }
 
 
-void Exif::StringExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data ) const
+QVariant Exif::StringExifElement::valueFromExif(Exiv2::ExifData &data) const
 {
-    query->bindValue( counter++, QLatin1String(data[m_tag].toString().c_str() ) );
-}
-
-void Exif::StringExifElement::bindValues(QSqlQuery* query , int& counter)
-{
-    query->bindValue( counter++, 0, QSql::Out );
+    return QVariant{ QLatin1String(data[m_tag].toString().c_str() ) };
 }
 
 
@@ -102,17 +96,12 @@ QString Exif::IntExifElement::queryString() const
 }
 
 
-void Exif::IntExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data ) const
+QVariant Exif::IntExifElement::valueFromExif(Exiv2::ExifData &data) const
 {
     if (data[m_tag].count() > 0)
-        query->bindValue( counter++, (int) data[m_tag].toLong() );
+        return QVariant{ (int) data[m_tag].toLong() };
     else
-        query->bindValue( counter++, (int) 0 );
-}
-
-void Exif::IntExifElement::bindValues(QSqlQuery* query , int& counter)
-{
-    query->bindValue( counter++, 0, QSql::Out );
+        return QVariant{ (int) 0 };
 }
 
 
@@ -137,7 +126,7 @@ QString Exif::RationalExifElement::queryString() const
 }
 
 
-void Exif::RationalExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data ) const
+QVariant Exif::RationalExifElement::valueFromExif(Exiv2::ExifData &data) const
 {
     double value;
     Exiv2::Exifdatum &tagDatum = data[m_tag];
@@ -171,14 +160,9 @@ void Exif::RationalExifElement::bindValues( QSqlQuery* query, int& counter, Exiv
         // YCbCrCoefficients -> 3 components (Coefficients for transformation from RGB to YCbCr image data. )
         // chromaticities -> 6 components
         qWarning() << "Exif rational data with " << tagDatum.count() << " components is not handled, yet!";
-        value = -1.0;
+        return QVariant{};
     }
-    query->bindValue( counter++, value);
-}
-
-void Exif::RationalExifElement::bindValues(QSqlQuery* query , int& counter)
-{
-    query->bindValue( counter++, 0, QSql::Out );
+    return QVariant{value};
 }
 
 Exif::LensExifElement::LensExifElement()
@@ -203,12 +187,7 @@ QString Exif::LensExifElement::queryString() const
 }
 
 
-void Exif::LensExifElement::bindValues(QSqlQuery* query , int& counter)
-{
-    query->bindValue( counter++, 0, QSql::Out );
-}
-
-void Exif::LensExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::ExifData& data ) const
+QVariant Exif::LensExifElement::valueFromExif(Exiv2::ExifData &data) const
 {
     QString value;
     bool canonHack = false;
@@ -270,9 +249,8 @@ void Exif::LensExifElement::bindValues( QSqlQuery* query, int& counter, Exiv2::E
         }
 
     }
-
-    Debug() << "bind value " << value;
-    query->bindValue( counter++, value );
+    Debug() << "final lens value " << value;
+    return QVariant{ value };
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

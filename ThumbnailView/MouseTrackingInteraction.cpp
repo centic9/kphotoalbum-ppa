@@ -55,13 +55,18 @@ void ThumbnailView::MouseTrackingInteraction::updateStackingIndication( QMouseEv
 
 void ThumbnailView::MouseTrackingInteraction::handleCursorOverNewIcon()
 {
-    static DB::FileName lastFileNameUderCursor;
+    static DB::FileName lastFileNameUnderCursor;
     const DB::FileName fileName = widget()->mediaIdUnderCursor();
-    if ( fileName != lastFileNameUderCursor ) {
-        emit fileIdUnderCursorChanged(fileName);
-        model()->updateCell(lastFileNameUderCursor);
-        model()->updateCell(fileName);
-        lastFileNameUderCursor = fileName;
+    Q_ASSERT( !fileName.isNull());
+
+    if ( fileName != lastFileNameUnderCursor ) {
+        if ( !lastFileNameUnderCursor.isNull() )
+        {
+            emit fileIdUnderCursorChanged(fileName);
+            model()->updateCell(lastFileNameUnderCursor);
+            model()->updateCell(fileName);
+        }
+        lastFileNameUnderCursor = fileName;
     }
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

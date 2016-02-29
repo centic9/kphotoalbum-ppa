@@ -2,7 +2,7 @@
 # Copyright (C) 2009 This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2014, 2015.
+# Eloy Cuadra <ecuadra@eloihr.net>, 2009, 2014, 2015, 2016.
 # Cristina Yenyxe Gonzalez Garcia <the.blue.valkyrie@gmail.com>, 2009.
 # Adrián Martínez <sfxgt3@gmail.com>, 2009.
 # Pablo Pita Leira <pablo.pita@gmail.com>, 2010, 2011.
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-01-18 01:47+0000\n"
-"PO-Revision-Date: 2015-12-09 10:11+0100\n"
+"POT-Creation-Date: 2016-02-21 01:57+0000\n"
+"PO-Revision-Date: 2016-01-30 19:15+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -554,8 +554,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "¿Seguro que desea eliminar %1?"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:550
-#: Settings/TagGroupsPage.cpp:793
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
+#: Settings/TagGroupsPage.cpp:797
 msgid "&Delete"
 msgstr "&Eliminar"
 
@@ -741,23 +741,7 @@ msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Ningún otro"
 
-#: Browser/AbstractCategoryModel.cpp:51
-msgctxt "Denotes the media type (video,image)"
-msgid "Video"
-msgstr "Vídeo"
-
-#: Browser/AbstractCategoryModel.cpp:53
-msgctxt "Denotes the media type (video,image)"
-msgid "Image"
-msgstr "Imagen"
-
-#: Browser/AbstractCategoryModel.cpp:56 MainWindow/StatisticsDialog.cpp:134
-#: MainWindow/StatisticsDialog.cpp:199 Settings/CategoryPage.cpp:269
-#: XMLDB/FileReader.cpp:92 XMLDB/FileReader.cpp:94
-msgid "Folder"
-msgstr "Carpeta"
-
-#: Browser/AbstractCategoryModel.cpp:100
+#: Browser/AbstractCategoryModel.cpp:96
 #, kde-format
 msgctxt "@item:intable number of images with a specific tag."
 msgid "1 image"
@@ -765,7 +749,7 @@ msgid_plural "%1 images"
 msgstr[0] "1 imagen"
 msgstr[1] "%1 imágenes"
 
-#: Browser/AbstractCategoryModel.cpp:101
+#: Browser/AbstractCategoryModel.cpp:97
 #, kde-format
 msgctxt "@item:intable number of videos with a specific tag."
 msgid "1 video"
@@ -774,11 +758,11 @@ msgstr[0] "1 vídeo"
 msgstr[1] "%1 vídeos"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
 msgid "Images"
 msgstr "Imágenes"
 
-#: Browser/AbstractCategoryModel.cpp:139
+#: Browser/AbstractCategoryModel.cpp:135
 msgid "Videos"
 msgstr "Vídeo"
 
@@ -1123,14 +1107,14 @@ msgstr ""
 "imágenes puede llevar bastante tiempo,<br/>aunque solo se producirá un "
 "retraso si se encuentran imágenes nuevas.</p>"
 
-#: DB/NewImageFinder.cpp:332
+#: DB/NewImageFinder.cpp:334
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
 msgstr[0] "<p><b>Calculando suma de verificación para %1 archivo</b></p>"
 msgstr[1] "<p><b>Calculando suma de verificación para %1 archivos</b></p>"
 
-#: DB/NewImageFinder.cpp:333
+#: DB/NewImageFinder.cpp:335
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -1138,7 +1122,7 @@ msgstr ""
 "<p>Al almacenar una suma para cada imagen, KPhotoAlbum puede buscarlas "
 "aunque las haya movido por el disco.</p>"
 
-#: DB/NewImageFinder.cpp:376
+#: DB/NewImageFinder.cpp:378
 msgid "Following files could not be read:"
 msgstr "No se pudieron leer los siguientes archivos:"
 
@@ -1587,6 +1571,8 @@ msgstr "Error desconocido"
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr ""
+"<p>Ha ocurrido un error al extraer miniaturas de vídeo.<br/>El error ha "
+"sido: %1</p>"
 
 #: ImageManager/ExtractOneVideoFrame.cpp:134
 #, kde-format
@@ -1598,10 +1584,24 @@ msgid ""
 "(You might need to wait till the video extraction led in your status bar has "
 "stopped blinking, to see all affected videos.)"
 msgstr ""
+"La extracción de miniaturas de algunos archivos de vídeo no ha resultado "
+"posible. Es posible que los archivos estén dañados de alguna forma, o que "
+"los vídeos sean extremadamente cortos. Para su conveniencia, se han marcado "
+"estos vídeos con la etiqueta «%1».\n"
+"\n"
+"(Es posible que tenga que esperar hasta que el led de extracción de vídeo "
+"deje de parpadear en la barra de estado para ver los archivos afectados.)"
 
 #: ImageManager/ThumbnailBuilder.cpp:120
 msgid "Building thumbnails"
 msgstr "Generando miniaturas"
+
+#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+#, fuzzy
+#| msgid "KPhotoAlbum"
+msgctxt ".kim files"
+msgid "KPhotoAlbum Export Files"
+msgstr "KPhotoAlbum"
 
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
@@ -1834,6 +1834,23 @@ msgstr "La carpeta debe ser una subcarpeta de %1"
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
 msgstr "Este directorio está reservado para imágenes de categorías."
+
+#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/FileReader.cpp:92
+msgid "Folder"
+msgstr "Carpeta"
+
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
+#: XMLDB/FileReader.cpp:122
+msgid "Tokens"
+msgstr "Señales"
+
+#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+msgid "Media Type"
+msgstr "Tipo de medio"
 
 #: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
@@ -2182,7 +2199,7 @@ msgstr "Wes Hardaker"
 
 #: main.cpp:63
 msgid "Some very useful features to improve workflow"
-msgstr ""
+msgstr "Algunas funciones útiles para mejorar el flujo de trabajo"
 
 #: main.cpp:68
 msgid "Config file"
@@ -2198,10 +2215,8 @@ msgid "Import file"
 msgstr "Importar archivo"
 
 #: main.cpp:71
-#, fuzzy
-#| msgid "Search for new images and videos on startup"
 msgid "Don't start listening for android devices on startup."
-msgstr "Buscar nuevas imágenes y vídeos durante el inicio"
+msgstr "No prestar atención a dispositivos Android durante el inicio."
 
 #: MainWindow/AutoStackImages.cpp:43
 msgid "Automatically Stack Images"
@@ -2845,12 +2860,6 @@ msgctxt "@item:inlistbox meaning 'no category'"
 msgid "None"
 msgstr "Nada"
 
-#: MainWindow/StatisticsDialog.cpp:133 MainWindow/StatisticsDialog.cpp:198
-#: RemoteControl/RemoteInterface.cpp:137 Settings/CategoryPage.cpp:271
-#: XMLDB/FileReader.cpp:139 XMLDB/FileReader.cpp:141
-msgid "Media Type"
-msgstr "Tipo de medio"
-
 #: MainWindow/StatisticsDialog.cpp:170
 msgctxt "As in 'all images'"
 msgid "All"
@@ -3490,7 +3499,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Desconocidas"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+msgid "Places"
+msgstr "Lugares"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3550,7 +3563,7 @@ msgid ""
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:436
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
 msgid "People"
 msgstr "Personas"
 
@@ -3630,24 +3643,25 @@ msgstr "Vista de iconos con miniaturas personalizadas"
 #: Settings/CategoryPage.cpp:173
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed.</font>"
+"saved, the names of categories can't be changed and new ones can't be added."
+"</font>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:179
+#: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:220
+#: Settings/CategoryPage.cpp:223
 #, fuzzy
 msgid "Settings for category"
 msgstr "<b>Definir categoría: </b>"
 
-#: Settings/CategoryPage.cpp:223
+#: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr "<i>Cambio pendiente: cambiar el nombre a «%1»</i>"
 
-#: Settings/CategoryPage.cpp:275
+#: Settings/CategoryPage.cpp:282
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3655,20 +3669,20 @@ msgid ""
 "category.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:279 Settings/CategoryPage.cpp:290
+#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
 #, fuzzy
 #| msgid "Invalid password."
 msgid "Invalid category name"
 msgstr "Contraseña no válida."
 
-#: Settings/CategoryPage.cpp:287
+#: Settings/CategoryPage.cpp:294
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:304
+#: Settings/CategoryPage.cpp:311
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3679,11 +3693,11 @@ msgstr ""
 "una acción pendiente de cambio de nombre de la categoría «%2». Por favor, "
 "guarde primero este cambio.</p>"
 
-#: Settings/CategoryPage.cpp:308
+#: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:340
+#: Settings/CategoryPage.cpp:347
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
@@ -3692,19 +3706,19 @@ msgstr ""
 "<p>¿Realmente desea hacer que «%1» no se pueda posicionar?</p><p>Se borrarán "
 "todas las áreas enlazadas con esta categoría.</p>"
 
-#: Settings/CategoryPage.cpp:389
+#: Settings/CategoryPage.cpp:396
 #, fuzzy
 #| msgid "New Category..."
 msgid "New category"
 msgstr "Nueva categoría..."
 
-#: Settings/CategoryPage.cpp:422
+#: Settings/CategoryPage.cpp:428
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>¿Seguro que desea eliminar la categoría «%1»?</p>"
 
-#: Settings/CategoryPage.cpp:576
+#: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
 msgstr ""
 
@@ -4222,11 +4236,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "¿Confiar en las marcas de tiempo?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:438
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
 msgid "Events"
 msgstr "Eventos"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:439
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
 #, fuzzy
 #| msgid "Untagged Images"
 msgid "untagged"
@@ -4282,8 +4296,8 @@ msgstr ""
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes of category names.<nl> Please save the "
-"changes before working on tag groups.</emphasis>"
+"<emphasis>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</emphasis>"
 msgstr ""
 
 #: Settings/TagGroupsPage.cpp:82
@@ -4291,64 +4305,64 @@ msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:261
+#: Settings/TagGroupsPage.cpp:265
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "Cambiar el nombre del grupo «%1»"
 
-#: Settings/TagGroupsPage.cpp:263
+#: Settings/TagGroupsPage.cpp:267
 #, fuzzy, kde-format
 #| msgid "Delete Group"
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "Eliminar grupo"
 
-#: Settings/TagGroupsPage.cpp:343
+#: Settings/TagGroupsPage.cpp:347
 #, fuzzy, kde-format
 #| msgid "Take item out of category %1"
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "Quitar elemento de la categoría %1"
 
-#: Settings/TagGroupsPage.cpp:361
+#: Settings/TagGroupsPage.cpp:365
 #, fuzzy
 #| msgid "New Group"
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Nuevo grupo"
 
-#: Settings/TagGroupsPage.cpp:362
+#: Settings/TagGroupsPage.cpp:366
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Nombre del grupo:"
 
-#: Settings/TagGroupsPage.cpp:379
+#: Settings/TagGroupsPage.cpp:383
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:380
+#: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:458 Settings/TagGroupsPage.cpp:481
+#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Cambiar el nombre del grupo"
 
-#: Settings/TagGroupsPage.cpp:459
+#: Settings/TagGroupsPage.cpp:463
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Nombre del grupo:"
 
-#: Settings/TagGroupsPage.cpp:476
+#: Settings/TagGroupsPage.cpp:480
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4358,7 +4372,7 @@ msgstr ""
 "<para>No se puede cambiar el nombre del grupo «%1» a «%2»: «%2» ya existe en "
 "la categoría «%3»</para>"
 
-#: Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:542
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4367,48 +4381,48 @@ msgid ""
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:544
+#: Settings/TagGroupsPage.cpp:548
 #, fuzzy, kde-format
 #| msgid "<p>Really delete category '%1'?</p>"
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<p>¿Seguro que desea eliminar la categoría «%1»?</p>"
 
-#: Settings/TagGroupsPage.cpp:549
+#: Settings/TagGroupsPage.cpp:553
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Eliminar grupo"
 
-#: Settings/TagGroupsPage.cpp:727
+#: Settings/TagGroupsPage.cpp:731
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Cambiar nombre de «%1»"
 
-#: Settings/TagGroupsPage.cpp:729
+#: Settings/TagGroupsPage.cpp:733
 #, fuzzy, kde-format
 #| msgid "Delete"
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Eliminar"
 
-#: Settings/TagGroupsPage.cpp:739
+#: Settings/TagGroupsPage.cpp:743
 #, fuzzy
 #| msgid "New Sub Category Name:"
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Nombre de la nueva subcategoría:"
 
-#: Settings/TagGroupsPage.cpp:740
+#: Settings/TagGroupsPage.cpp:744
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Nombre del grupo:"
 
-#: Settings/TagGroupsPage.cpp:788
+#: Settings/TagGroupsPage.cpp:792
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -4422,7 +4436,7 @@ msgstr ""
 "<p>¿Seguro que desea eliminar «%1»?<br/>Al eliminar un elemento también se "
 "eliminará su información de cualquier imagen que lo contuviese.</p>"
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:796
 #, fuzzy, kde-format
 #| msgid "Really Delete %1?"
 msgctxt "@title:window"
@@ -5244,7 +5258,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "No se pudo copiar «%1» a «%2»."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:449
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
 msgid "Error Running Demo"
 msgstr "Error al ejecutar demo"
 
@@ -5718,6 +5732,20 @@ msgstr "Mostrar tamaño de imagen"
 msgid "Show Rating"
 msgstr "Mostrar puntuación"
 
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#, fuzzy
+#| msgctxt "Denotes the media type (video,image)"
+#| msgid "Image"
+msgid "Image"
+msgstr "Imagen"
+
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#, fuzzy
+#| msgctxt "Denotes the media type (video,image)"
+#| msgid "Video"
+msgid "Video"
+msgstr "Vídeo"
+
 #: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
@@ -5729,11 +5757,7 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:113 XMLDB/FileReader.cpp:125
-msgid "Tokens"
-msgstr "Señales"
-
-#: XMLDB/FileReader.cpp:213
+#: XMLDB/FileReader.cpp:208
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
@@ -5741,13 +5765,13 @@ msgid ""
 "can manually rename your categories any time and then save your database.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:223
+#: XMLDB/FileReader.cpp:218
 #, fuzzy
 #| msgid "Invalid password."
 msgid "Changed standard category names"
 msgstr "Contraseña no válida."
 
-#: XMLDB/FileReader.cpp:361
+#: XMLDB/FileReader.cpp:356
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5770,7 +5794,7 @@ msgstr ""
 "todas las imágenes, puede ejecutar <b>Imágenes->Ordenar selección por fecha "
 "y hora</b> para ordenarlas en la base de datos.</p>"
 
-#: XMLDB/FileReader.cpp:371
+#: XMLDB/FileReader.cpp:366
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5786,11 +5810,11 @@ msgstr ""
 "con la biblioteca <code>exiv2</code>. Tras hacerlo se le preguntará cómo "
 "completar la información perdida.</p>"
 
-#: XMLDB/FileReader.cpp:378
+#: XMLDB/FileReader.cpp:373
 msgid "Images/Videos Are Not Sorted"
 msgstr "Las imágenes/vídeos no están ordenados"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:388
 #, fuzzy
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
@@ -5808,11 +5832,11 @@ msgstr ""
 "simplemente se mostrará un espacio extra a su alrededor, por lo que tampoco "
 "es una tarea urgente.</p>"
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 msgid "Not All Images Have Size Information"
 msgstr "Algunas imágenes no tienen información de tamaño"
 
-#: XMLDB/FileReader.cpp:421
+#: XMLDB/FileReader.cpp:416
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -5835,35 +5859,31 @@ msgstr ""
 "KDEDIRS, simplemente añada la cadena como si estuviese fijando el de la "
 "variable de entorno <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:423
 msgid "No default setup file found"
 msgstr "No se encuentra un archivo de configuración por defecto"
 
-#: XMLDB/FileReader.cpp:437
-msgid "Places"
-msgstr "Lugares"
-
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:444
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "No se pudo abrir el archivo «%1» para lectura"
 
-#: XMLDB/FileReader.cpp:462
+#: XMLDB/FileReader.cpp:457
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "línea %1, columna %2 del archivo %3: %4"
 
-#: XMLDB/FileReader.cpp:464
+#: XMLDB/FileReader.cpp:459
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Ha fallado la recuperación de la copia de respaldo: %1"
 
-#: XMLDB/FileReader.cpp:475
+#: XMLDB/FileReader.cpp:470
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Error en el archivo %1: No se encontró ningún elemento"
 
-#: XMLDB/FileReader.cpp:481
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""

@@ -71,10 +71,10 @@ Settings::TagGroupsPage::TagGroupsPage(QWidget* parent) : QWidget(parent)
             this, SLOT(showMembersContextMenu(QPoint)));
 
     // The "pending rename actions" label
-    m_pendingRenameLabel = new QLabel(i18nc("@label/rich","<emphasis>There are pending changes of category names.<nl> "
+    m_pendingChangesLabel = new QLabel(i18nc("@label/rich","<emphasis>There are pending changes on the categories page.<nl> "
                 "Please save the changes before working on tag groups.</emphasis>"));
-    m_pendingRenameLabel->hide();
-    layout->addWidget(m_pendingRenameLabel, 2, 0, 1, 2);
+    m_pendingChangesLabel->hide();
+    layout->addWidget(m_pendingChangesLabel, 2, 0, 1, 2);
 
     connect( parent, SIGNAL(cancelClicked()), this, SLOT(discardChanges()));
 
@@ -99,6 +99,10 @@ Settings::TagGroupsPage::TagGroupsPage(QWidget* parent) : QWidget(parent)
     connect(DB::ImageDB::instance()->categoryCollection(),
             SIGNAL(itemRenamed(DB::Category*,QString,QString)),
             &m_memberMap, SLOT(renameItem(DB::Category*,QString,QString)));
+
+    connect(DB::ImageDB::instance()->categoryCollection(),
+            SIGNAL(categoryRemoved(QString)),
+            &m_memberMap, SLOT(deleteCategory(QString)));
 
     m_dataChanged = false;
 }
@@ -633,7 +637,7 @@ void Settings::TagGroupsPage::saveSettings()
 
     m_categoryTreeWidget->setEnabled(true);
     m_membersListWidget->setEnabled(true);
-    m_pendingRenameLabel->hide();
+    m_pendingChangesLabel->hide();
 }
 
 void Settings::TagGroupsPage::discardChanges()
@@ -665,7 +669,7 @@ void Settings::TagGroupsPage::discardChanges()
 
     m_categoryTreeWidget->setEnabled(true);
     m_membersListWidget->setEnabled(true);
-    m_pendingRenameLabel->hide();
+    m_pendingChangesLabel->hide();
 }
 
 void Settings::TagGroupsPage::loadSettings()
@@ -674,11 +678,11 @@ void Settings::TagGroupsPage::loadSettings()
     updateCategoryTree();
 }
 
-void Settings::TagGroupsPage::categoryRenamed()
+void Settings::TagGroupsPage::categoryChangesPending()
 {
     m_categoryTreeWidget->setEnabled(false);
     m_membersListWidget->setEnabled(false);
-    m_pendingRenameLabel->show();
+    m_pendingChangesLabel->show();
 }
 
 DB::MemberMap* Settings::TagGroupsPage::memberMap()

@@ -31,6 +31,7 @@
 #include "DB/ImageDB.h"
 #include "DB/MemberMap.h"
 #include "MainWindow/Window.h"
+#include "MainWindow/DirtyIndicator.h"
 
 Settings::CategoryItem::CategoryItem(const QString &category,
                                      const QString &icon,
@@ -67,6 +68,7 @@ void Settings::CategoryItem::submit(DB::MemberMap* memberMap)
                                                                    m_type,
                                                                    m_thumbnailSize,
                                                                    true);
+        MainWindow::DirtyIndicator::markDirty();
     } else {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName(m_categoryOrig);
 
@@ -184,6 +186,11 @@ void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
 QString Settings::CategoryItem::originalName() const
 {
     return m_categoryOrig;
+}
+
+void Settings::CategoryItem::markAsNewCategory()
+{
+    m_categoryOrig = QString();
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

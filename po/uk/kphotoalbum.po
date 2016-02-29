@@ -1,5 +1,5 @@
 # Translation of kphotoalbum.po to Ukrainian
-# Copyright (C) 2007-2015 This_file_is_part_of_KDE
+# Copyright (C) 2007-2016 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-01-18 01:47+0000\n"
-"PO-Revision-Date: 2016-01-18 10:10+0200\n"
+"POT-Creation-Date: 2016-02-21 01:57+0000\n"
+"PO-Revision-Date: 2016-02-08 09:09+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -553,8 +553,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "Ви справді бажаєте вилучити %1?"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:550
-#: Settings/TagGroupsPage.cpp:793
+#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
+#: Settings/TagGroupsPage.cpp:797
 msgid "&Delete"
 msgstr "&Вилучити"
 
@@ -741,23 +741,7 @@ msgctxt "As in no other persons, or no other locations. "
 msgid "No other"
 msgstr "Нічого крім"
 
-#: Browser/AbstractCategoryModel.cpp:51
-msgctxt "Denotes the media type (video,image)"
-msgid "Video"
-msgstr "Відео"
-
-#: Browser/AbstractCategoryModel.cpp:53
-msgctxt "Denotes the media type (video,image)"
-msgid "Image"
-msgstr "Зображення"
-
-#: Browser/AbstractCategoryModel.cpp:56 MainWindow/StatisticsDialog.cpp:134
-#: MainWindow/StatisticsDialog.cpp:199 Settings/CategoryPage.cpp:269
-#: XMLDB/FileReader.cpp:92 XMLDB/FileReader.cpp:94
-msgid "Folder"
-msgstr "Тека"
-
-#: Browser/AbstractCategoryModel.cpp:100
+#: Browser/AbstractCategoryModel.cpp:96
 #, kde-format
 msgctxt "@item:intable number of images with a specific tag."
 msgid "1 image"
@@ -767,7 +751,7 @@ msgstr[1] "%1 зображення"
 msgstr[2] "%1 зображень"
 msgstr[3] "%1 зображення"
 
-#: Browser/AbstractCategoryModel.cpp:101
+#: Browser/AbstractCategoryModel.cpp:97
 #, kde-format
 msgctxt "@item:intable number of videos with a specific tag."
 msgid "1 video"
@@ -778,11 +762,11 @@ msgstr[2] "%1 відеофайлів"
 msgstr[3] "%1 відеофайл"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:138 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
 msgid "Images"
 msgstr "Зображення"
 
-#: Browser/AbstractCategoryModel.cpp:139
+#: Browser/AbstractCategoryModel.cpp:135
 msgid "Videos"
 msgstr "Відео"
 
@@ -1156,7 +1140,7 @@ msgstr ""
 "зображень воно може тривати деякий час.<br/>Але ця затримка виникатиме, лише "
 "якщо знайдено нові зображення.</p>"
 
-#: DB/NewImageFinder.cpp:332
+#: DB/NewImageFinder.cpp:334
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -1165,7 +1149,7 @@ msgstr[1] "<p><b>Обчислення контрольної суми для %1 
 msgstr[2] "<p><b>Обчислення контрольної суми для %1 файлів</b></p>"
 msgstr[3] "<p><b>Обчислення контрольної суми для %1 файлів</b></p>"
 
-#: DB/NewImageFinder.cpp:333
+#: DB/NewImageFinder.cpp:335
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
@@ -1173,7 +1157,7 @@ msgstr ""
 "<p>Збереження контрольної суми для кожного зображення дозволяє KPhotoAlbum "
 "знаходити зображення, навіть якщо ви пересунули їх на диску.</p>"
 
-#: DB/NewImageFinder.cpp:376
+#: DB/NewImageFinder.cpp:378
 msgid "Following files could not be read:"
 msgstr "Список файлів, які неможливо прочитати:"
 
@@ -1644,6 +1628,11 @@ msgstr ""
 msgid "Building thumbnails"
 msgstr "Створення мініатюр"
 
+#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+msgctxt ".kim files"
+msgid "KPhotoAlbum Export Files"
+msgstr "експортовані файли KPhotoAlbum"
+
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
 msgstr "Налаштування експорту / Копіювання зображень"
@@ -1883,6 +1872,23 @@ msgstr "Каталог має бути підкаталогом %1"
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
 msgstr "Цей каталог зарезервовано для зображень категорій."
+
+#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/FileReader.cpp:92
+msgid "Folder"
+msgstr "Тека"
+
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
+#: XMLDB/FileReader.cpp:122
+msgid "Tokens"
+msgstr "Позначки"
+
+#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+msgid "Media Type"
+msgstr "Тип носія"
 
 #: ImportExport/ImportDialog.cpp:271
 msgid "Match Categories"
@@ -2902,12 +2908,6 @@ msgctxt "@item:inlistbox meaning 'no category'"
 msgid "None"
 msgstr "Немає"
 
-#: MainWindow/StatisticsDialog.cpp:133 MainWindow/StatisticsDialog.cpp:198
-#: RemoteControl/RemoteInterface.cpp:137 Settings/CategoryPage.cpp:271
-#: XMLDB/FileReader.cpp:139 XMLDB/FileReader.cpp:141
-msgid "Media Type"
-msgstr "Тип носія"
-
 #: MainWindow/StatisticsDialog.cpp:170
 msgctxt "As in 'all images'"
 msgid "All"
@@ -3588,7 +3588,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "невідомо"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+msgid "Places"
+msgstr "Місця"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3664,7 +3668,7 @@ msgstr ""
 "Тут можна встановити дату народження для записів (зокрема людей), а потім "
 "бачити вік під час перегляду зображень."
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:436
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
 msgid "People"
 msgstr "Люди"
 
@@ -3741,25 +3745,26 @@ msgstr "Перегляд з піктограмами з нетиповими м�
 #: Settings/CategoryPage.cpp:173
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed.</font>"
+"saved, the names of categories can't be changed and new ones can't be added."
+"</font>"
 msgstr ""
 "<font color='red'>Деякі зміни у базі даних не збережено. Доки ці зміни не "
-"буде збережено, зміна назв категорій неможлива.</font>"
+"буде збережено, зміна назв категорій і створення категорій неможливе.</font>"
 
-#: Settings/CategoryPage.cpp:179
+#: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
 msgstr "Зберегти базу даних зараз"
 
-#: Settings/CategoryPage.cpp:220
+#: Settings/CategoryPage.cpp:223
 msgid "Settings for category"
 msgstr "Параметри категорії"
 
-#: Settings/CategoryPage.cpp:223
+#: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr "<i>Зміна у черзі: перейменування на «%1»</i>"
 
-#: Settings/CategoryPage.cpp:275
+#: Settings/CategoryPage.cpp:282
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3770,11 +3775,11 @@ msgstr ""
 "назвою категорії, яку зарезервовано. Цю назву не можна використовувати для "
 "звичайної категорії.</p>"
 
-#: Settings/CategoryPage.cpp:279 Settings/CategoryPage.cpp:290
+#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
 msgid "Invalid category name"
 msgstr "Некоректна назва категорії"
 
-#: Settings/CategoryPage.cpp:287
+#: Settings/CategoryPage.cpp:294
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
@@ -3783,7 +3788,7 @@ msgstr ""
 "<p>Не вдалося змінити назву категорії «%1» на «%2»:</p><p>Категорія із такою "
 "назвою вже існує.</p>"
 
-#: Settings/CategoryPage.cpp:304
+#: Settings/CategoryPage.cpp:311
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3794,11 +3799,11 @@ msgstr ""
 "з перейменування на категорію «%2». Будь ласка, збережіть спочатку наслідки "
 "виконання попередньої дії.</p>"
 
-#: Settings/CategoryPage.cpp:308
+#: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
 msgstr "Незбережена дія з перейменування у черзі"
 
-#: Settings/CategoryPage.cpp:340
+#: Settings/CategoryPage.cpp:347
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
@@ -3807,16 +3812,16 @@ msgstr ""
 "<p>Ви справді хочете зробити «%1» позбавленим позиції?</p><p>Усі записи "
 "областей, пов’язані із цією категорією буде вилучено!</p>"
 
-#: Settings/CategoryPage.cpp:389
+#: Settings/CategoryPage.cpp:396
 msgid "New category"
 msgstr "Нова категорія"
 
-#: Settings/CategoryPage.cpp:422
+#: Settings/CategoryPage.cpp:428
 #, kde-format
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>Ви справді бажаєте вилучити категорію «%1»?</p>"
 
-#: Settings/CategoryPage.cpp:576
+#: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
 msgstr "<i>Виберіть категорію для редагування</i>"
 
@@ -4371,11 +4376,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Довіряти часовим штампам?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:438
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
 msgid "Events"
 msgstr "Події"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:439
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
 msgid "untagged"
 msgstr "без міток"
 
@@ -4426,10 +4431,10 @@ msgstr ""
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes of category names.<nl> Please save the "
-"changes before working on tag groups.</emphasis>"
+"<emphasis>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</emphasis>"
 msgstr ""
-"<emphasis>У черзі обробки вже є записи щодо дій зі зміни назв категорій."
+"<emphasis>У черзі обробки вже є записи щодо дій зі зміни сторінки категорій."
 "<nl>Будь ласка, збережіть зміни, перш ніж працювати з групами міток.</"
 "emphasis>"
 
@@ -4438,56 +4443,56 @@ msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr "Додати групу…"
 
-#: Settings/TagGroupsPage.cpp:261
+#: Settings/TagGroupsPage.cpp:265
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "Перейменувати групу «%1»"
 
-#: Settings/TagGroupsPage.cpp:263
+#: Settings/TagGroupsPage.cpp:267
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "Вилучити групу «%1»"
 
-#: Settings/TagGroupsPage.cpp:343
+#: Settings/TagGroupsPage.cpp:347
 #, kde-format
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "Мітки у групі «%1» категорії «%2»"
 
-#: Settings/TagGroupsPage.cpp:361
+#: Settings/TagGroupsPage.cpp:365
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Нова група"
 
-#: Settings/TagGroupsPage.cpp:362
+#: Settings/TagGroupsPage.cpp:366
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Назва групи:"
 
-#: Settings/TagGroupsPage.cpp:379
+#: Settings/TagGroupsPage.cpp:383
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr "<p>Група з назвою «%1» вже існує.</p>"
 
-#: Settings/TagGroupsPage.cpp:380
+#: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr "Не вдалося додати групу"
 
-#: Settings/TagGroupsPage.cpp:458 Settings/TagGroupsPage.cpp:481
+#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Перейменування групи"
 
-#: Settings/TagGroupsPage.cpp:459
+#: Settings/TagGroupsPage.cpp:463
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Нова назва групи:"
 
-#: Settings/TagGroupsPage.cpp:476
+#: Settings/TagGroupsPage.cpp:480
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4497,7 +4502,7 @@ msgstr ""
 "<para>Не вдалося перейменувати групу «%1» на «%2»: у категорії «%3» вже є "
 "група з назвою «%2».</para>"
 
-#: Settings/TagGroupsPage.cpp:538
+#: Settings/TagGroupsPage.cpp:542
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4509,40 +4514,40 @@ msgstr ""
 "групи буде пересунуто до надкатегорії «%1» («%2»).<nl/>Записи, включені до "
 "підкатегорій, залишаться незмінними.</para>"
 
-#: Settings/TagGroupsPage.cpp:544
+#: Settings/TagGroupsPage.cpp:548
 #, kde-format
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<para>Ви справді бажаєте вилучити групу «%1»?</para>"
 
-#: Settings/TagGroupsPage.cpp:549
+#: Settings/TagGroupsPage.cpp:553
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Вилучення групи"
 
-#: Settings/TagGroupsPage.cpp:727
+#: Settings/TagGroupsPage.cpp:731
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Перейменувати «%1»"
 
-#: Settings/TagGroupsPage.cpp:729
+#: Settings/TagGroupsPage.cpp:733
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Вилучити «%1»"
 
-#: Settings/TagGroupsPage.cpp:739
+#: Settings/TagGroupsPage.cpp:743
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Нова назва мітки"
 
-#: Settings/TagGroupsPage.cpp:740
+#: Settings/TagGroupsPage.cpp:744
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Назва мітки:"
 
-#: Settings/TagGroupsPage.cpp:788
+#: Settings/TagGroupsPage.cpp:792
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4554,7 +4559,7 @@ msgstr ""
 "призведе до вилучення будь-якої інформації про нього з зображення, що "
 "містить елемент.</para>"
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:796
 #, kde-format
 msgctxt "@title:window"
 msgid "Really delete %1?"
@@ -5433,7 +5438,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Не вдалося скопіювати «%1» у «%2»."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:449
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
 msgid "Error Running Demo"
 msgstr "Помилка під час запуску демонстрації"
 
@@ -5895,6 +5900,14 @@ msgstr "Показати розмір зображення"
 msgid "Show Rating"
 msgstr "Показати оцінку"
 
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+msgid "Image"
+msgstr "Зображення"
+
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+msgid "Video"
+msgstr "Відео"
+
 #: XMLDB/FileReader.cpp:62
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
@@ -5910,11 +5923,7 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr "Невідповідність версії index.xml"
 
-#: XMLDB/FileReader.cpp:113 XMLDB/FileReader.cpp:125
-msgid "Tokens"
-msgstr "Позначки"
-
-#: XMLDB/FileReader.cpp:213
+#: XMLDB/FileReader.cpp:208
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
@@ -5927,11 +5936,11 @@ msgstr ""
 "можете перейменувати ці категорії вручну і зберегти результати до бази даних."
 "</p>"
 
-#: XMLDB/FileReader.cpp:223
+#: XMLDB/FileReader.cpp:218
 msgid "Changed standard category names"
 msgstr "Змінено стандартні назви категорій"
 
-#: XMLDB/FileReader.cpp:361
+#: XMLDB/FileReader.cpp:356
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5956,7 +5965,7 @@ msgstr ""
 "Впорядкувати усі за датою і часом</b>, щоб впорядкувати зображення у базі "
 "даних.</p>"
 
-#: XMLDB/FileReader.cpp:371
+#: XMLDB/FileReader.cpp:366
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5973,11 +5982,11 @@ msgstr ""
 "Після того, як ви це зробите, програма надасть вам перелік можливостей "
 "заповнення відсутньої інформації.</p>"
 
-#: XMLDB/FileReader.cpp:378
+#: XMLDB/FileReader.cpp:373
 msgid "Images/Videos Are Not Sorted"
 msgstr "Зображення/Відео не впорядковано"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5994,11 +6003,11 @@ msgstr ""
 "у полі мініатюр утвориться зайвий простір навколо зображень — нічого "
 "більшого — отже виконувати цю операцію зовсім не обов’язково.</p>"
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 msgid "Not All Images Have Size Information"
 msgstr "Не всі зображення мають інформацію про розмір"
 
-#: XMLDB/FileReader.cpp:421
+#: XMLDB/FileReader.cpp:416
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -6021,35 +6030,31 @@ msgstr ""
 "KDEDIRS вже встановлено, просто додайте рядок так, неначе ви встановлювали "
 "змінну середовища <b>PATH</b>.</p>"
 
-#: XMLDB/FileReader.cpp:428
+#: XMLDB/FileReader.cpp:423
 msgid "No default setup file found"
 msgstr "Не знайдено типового файла налаштування"
 
-#: XMLDB/FileReader.cpp:437
-msgid "Places"
-msgstr "Місця"
-
-#: XMLDB/FileReader.cpp:449
+#: XMLDB/FileReader.cpp:444
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Неможливо відкрити файл «%1» для читання"
 
-#: XMLDB/FileReader.cpp:462
+#: XMLDB/FileReader.cpp:457
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "рядок %1 на позиції %2 у файлі %3: %4"
 
-#: XMLDB/FileReader.cpp:464
+#: XMLDB/FileReader.cpp:459
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Не вдалося відновити дані з резервної копії: %1"
 
-#: XMLDB/FileReader.cpp:475
+#: XMLDB/FileReader.cpp:470
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Помилка у файлі %1: Не знайдено жодного елемента"
 
-#: XMLDB/FileReader.cpp:481
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
