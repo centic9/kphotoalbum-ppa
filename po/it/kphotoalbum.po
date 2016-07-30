@@ -1,28 +1,30 @@
 # translation of kphotoalbum.po to Italian
 # Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
-#
 # Federico Zenith <federico.zenith@member.fsf.org>, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
+# Valter Mura <valtermura@gmail.com>, 2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-02-21 01:57+0000\n"
-"PO-Revision-Date: 2014-04-22 08:38+0200\n"
-"Last-Translator: Federico Zenith <federico.zenith@member.fsf.org>\n"
+"POT-Creation-Date: 2016-07-21 01:46+0000\n"
+"PO-Revision-Date: 2016-04-30 11:18+0200\n"
+"Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.5\n"
 
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Federico Zenith"
+msgstr "Valter Mura,Federico Zenith"
 
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "federico.zenith@member.fsf.org"
+msgstr "valtermura@gmail.com,"
 
 #: AnnotationDialog/Dialog.cpp:90
 msgid ""
@@ -53,17 +55,19 @@ msgid ""
 "KPhotoAlbum...|General</interface>, a description embedded in the image EXIF "
 "information is imported to this field if available.</para>"
 msgstr ""
+"<para>Testo descrittivo dell'immagine.</para><para>Se <emphasis>Usa la "
+"descrizione EXIF</emphasis> è attivato in <interface>Impostazioni|Configura "
+"KPhotoAlbum...|Generale</interface>, viene importata in questo campo una "
+"descrizione incorporata nell'informazione EXIF dell'immagine, se disponibile."
+"</para>"
 
 #: AnnotationDialog/Dialog.cpp:147 DB/ImageDB.cpp:147
 msgid "Cancel"
 msgstr "Annulla"
 
 #: AnnotationDialog/Dialog.cpp:152 AnnotationDialog/Dialog.cpp:154
-#, fuzzy
-#| msgctxt "Abbreviated month name"
-#| msgid "apr"
 msgid "Map"
-msgstr "apr"
+msgstr "Mappa"
 
 #: AnnotationDialog/Dialog.cpp:161
 msgctxt "@info:whatsthis"
@@ -71,6 +75,8 @@ msgid ""
 "The map widget allows you to view the location of images if GPS coordinates "
 "are found in the EXIF information."
 msgstr ""
+"L'oggetto mappa ti consente ti visualizzare la posizione delle immagini se "
+"vengono trovate le coordinate GPS nell'informazione EXIF."
 
 #: AnnotationDialog/Dialog.cpp:207
 msgid "Revert This Item"
@@ -312,7 +318,7 @@ msgstr "Annota precedente"
 
 #: AnnotationDialog/Dialog.cpp:1245
 msgid "OK dialog"
-msgstr "Finestra di OK"
+msgstr "Finestra di conferma"
 
 #: AnnotationDialog/Dialog.cpp:1249 AnnotationDialog/ListSelect.cpp:334
 #: Settings/CategoryPage.cpp:90
@@ -345,6 +351,11 @@ msgid ""
 "change this in the settings dialog. If this tag shouldn't be in the "
 "recognition database anymore, it can be deleted in the settings.</p>"
 msgstr ""
+"<p><b>Impossibile associare l'etichetta «%2»</b></p><p>La categoria «%1», a "
+"cui appartiene l'etichetta «%2», non è spostabile.</p><p>Se vuoi utilizzare "
+"questa etichetta, cambia l'impostazione nella finestra delle impostazioni. "
+"L'etichetta può essere eliminata nelle impostazioni, se non deve essere più "
+"utilizzata nella banca dati del riconoscimento facciale.</p>"
 
 #: AnnotationDialog/ImagePreview.cpp:490
 #, kde-format
@@ -354,6 +365,11 @@ msgid ""
 "this category and mark it as positionable. If this tag shouldn't be in the "
 "recognition database anymore, it can be deleted in the settings dialog.</p>"
 msgstr ""
+"<p><b>Impossibile associare l'etichetta «%2»</b></p><p>La categoria «%1», a "
+"cui appartiene l'etichetta «%2», non esiste.</p><p>Se vuoi utilizzare questa "
+"etichetta, aggiungi questa categoria e contrassegnala spostabile. "
+"L'etichetta può essere eliminata nella finestra delle impostazioni, se non "
+"deve essere più utilizzata nella banca dati del riconoscimento facciale.</p>"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:50
 msgid "Annotate previous image"
@@ -366,7 +382,7 @@ msgstr "Annota l'immagine successiva"
 #: AnnotationDialog/ImagePreviewWidget.cpp:76
 msgid "Copy tags from previously tagged image"
 msgstr ""
-"Copia le etichette dall'immagine a cui sono state precedentemente assegnati "
+"Copia le etichette dall'immagine a cui sono state precedentemente assegnate "
 "delle etichette"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:77
@@ -375,6 +391,9 @@ msgid ""
 "<para>Set the same tags on this image than on the previous one. The image "
 "date, label, rating, and description are left unchanged.</para>"
 msgstr ""
+"<para>Imposta le stesse etichette dell'immagine precedente su questa "
+"immagine. La data, la didascalia, la valutazione e la descrizione non "
+"verranno modificate.</para>"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:101
 msgid "Delete image"
@@ -382,17 +401,17 @@ msgstr "Elimina immagine"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:116
 msgid "Train face recognition database automatically"
-msgstr ""
+msgstr "Addestra automaticamente la banca dati del riconoscimento facciale"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:300
 msgctxt "@info:tooltip"
 msgid "Hide or show areas on the image"
-msgstr ""
+msgstr "Nascondi o mostra le aree nell'immagine"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:302
 msgctxt "@info:tooltip"
 msgid "Search for faces on the current image"
-msgstr ""
+msgstr "Cerca i volti nell'immagine attuale"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:304
 msgctxt "@info:whatsthis"
@@ -400,6 +419,9 @@ msgid ""
 "If a tag for an area found by the face detector is set manually, the face "
 "recognition database will be trained automatically with that tag."
 msgstr ""
+"Se un'etichetta per un'area trovata dal riconoscitore facciale viene "
+"impostata manualmente, la banca dati del riconoscimento facciale utilizzerà "
+"tale etichetta per l'addestramento automatico."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:312
 msgctxt "@info:tooltip"
@@ -408,11 +430,16 @@ msgid ""
 "category in <interface>Settings|Configure KPhotoAlbum...|Categories</"
 "interface>, you can associate specific image areas with tags."
 msgstr ""
+"Se abiliti le <emphasis>etichette spostabili</emphasis> per almeno una "
+"categoria in <interface>Impostazioni|Configura KPhotoAlbum...|Categorie</"
+"interface>, puoi associare aree specifiche dell'immagine a etichette."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:318
 msgctxt "@info:tooltip"
 msgid "Areas on an image can only be shown in single-image annotation mode."
 msgstr ""
+"Le aree su un'immagine possono essere mostrate solo in modalità annotazione "
+"immagine singola."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:325
 msgctxt "@info"
@@ -421,11 +448,16 @@ msgid ""
 "least one category in <interface>Settings|Configure KPhotoAlbum...|"
 "Categories</interface>."
 msgstr ""
+"Per utilizzare il riconoscimento facciale, abilita le <emphasis>etichette "
+"spostabili</emphasis> per almeno una categoria in <interface>Impostazioni|"
+"Configura KPhotoAlbum...|Categorie</interface>."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:331
 msgctxt "@info"
 msgid "Face detection is only available in single-image annotation mode."
 msgstr ""
+"Il riconoscimento facciale è disponibile solo in modalità annotazione "
+"immagine singola."
 
 #: AnnotationDialog/KDateEdit.cpp:88
 msgid "tomorrow"
@@ -454,6 +486,10 @@ msgid ""
 "Untagged Images</interface>). It will not show up here as long as it is "
 "selected for this purpose."
 msgstr ""
+"L'etichetta che hai inserito è quella impostata automaticamente per le nuove "
+"immagini trovate, non etichettate (cf. <interface>Impostazioni|Configura "
+"KPhotoAlbum...|Categorie|Immagini non etichettate</interface>). Non sarà "
+"mostrata qui fino a quando viene utilizzata per questo scopo."
 
 #: AnnotationDialog/ListSelect.cpp:324
 msgid "No Item Selected"
@@ -464,30 +500,25 @@ msgid "Rename..."
 msgstr "Rinomina..."
 
 #: AnnotationDialog/ListSelect.cpp:337
-#, fuzzy
-#| msgid "Groups:"
 msgid "<b>Tag Groups</b>"
-msgstr "Gruppi:"
+msgstr "<b>Gruppi di etichette</b>"
 
 #: AnnotationDialog/ListSelect.cpp:345
-#, fuzzy
-#| msgid "Groups:"
 msgid "Tag groups"
-msgstr "Gruppi:"
+msgstr "Gruppi di etichette"
 
 #: AnnotationDialog/ListSelect.cpp:362
 msgid "Add this tag to a new tag group..."
-msgstr ""
+msgstr "Aggiungi questa etichetta a un nuovo gruppo di etichette..."
 
 #: AnnotationDialog/ListSelect.cpp:365
 msgid "Make this tag a tag group and add a tag..."
-msgstr ""
+msgstr "Rendi questa etichetta un gruppo e aggiungi un'etichetta..."
 
 #: AnnotationDialog/ListSelect.cpp:371
-#, fuzzy, kde-format
-#| msgid "Rename %1"
+#, kde-format
 msgid "Remove from tag group %1"
-msgstr "Rinomina %1"
+msgstr "Rimuovi dal gruppo di etichette %1"
 
 #: AnnotationDialog/ListSelect.cpp:374
 msgid "<b>Sorting</b>"
@@ -547,78 +578,72 @@ msgid "Really Rename %1?"
 msgstr "Rinominare veramente %1?"
 
 #: AnnotationDialog/ListSelect.cpp:474
-#, fuzzy
-#| msgid "New Group"
 msgid "New tag group"
-msgstr "Nuovo gruppo"
+msgstr "Nuovo gruppo di etichette"
 
 #: AnnotationDialog/ListSelect.cpp:475
 msgid "Name for the new tag group the tag will be added to:"
-msgstr ""
+msgstr "Nome del nuovo gruppo cui sarà aggiunta l'etichetta:"
 
 #: AnnotationDialog/ListSelect.cpp:486
 msgid "Add a tag"
-msgstr ""
+msgstr "Aggiungi un'etichetta"
 
 #: AnnotationDialog/ListSelect.cpp:487
 msgid "Name for the tag to be added to this tag group:"
-msgstr ""
+msgstr "Nome dell'etichetta da aggiungere a questo gruppo:"
 
 #: AnnotationDialog/ProposedFaceDialog.cpp:58
 #, kde-format
 msgid "Is this %1 (%2)?"
-msgstr ""
+msgstr "È questo %1 (%2)?"
 
 #: AnnotationDialog/ResizableFrame.cpp:84
-#, fuzzy
-#| msgid "Remove Tokens"
 msgctxt "area of an image; rectangle that is overlayed upon the image"
 msgid "Remove area"
-msgstr "Rimuovi elementi"
+msgstr "Rimuovi area"
 
 #: AnnotationDialog/ResizableFrame.cpp:95
 msgid "Try to recognize this face"
-msgstr ""
+msgstr "Prova a riconoscere questo viso"
 
 #: AnnotationDialog/ResizableFrame.cpp:338
 #, kde-format
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
-msgstr ""
+msgstr "Rimuovi l'etichetta %1 (%2)"
 
 #: AnnotationDialog/ResizableFrame.cpp:350
 #: AnnotationDialog/ResizableFrame.cpp:370
 msgid "Associate with"
-msgstr ""
+msgstr "Associa a"
 
 #: AnnotationDialog/ResizableFrame.cpp:379
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
 "choices/menu items"
 msgid "Associate with"
-msgstr ""
+msgstr "Associa a"
 
 #: AnnotationDialog/ResizableFrame.cpp:402
 #, kde-format
 msgid "Train the recognition database with the face of %1"
-msgstr ""
+msgstr "Addestra la banca dati del riconoscimento col viso di %1"
 
 #: AnnotationDialog/ResizableFrame.cpp:427
-#, fuzzy, kde-format
-#| msgid "%1 to %2  %3"
+#, kde-format
 msgctxt ""
 "%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the tag's "
 "category"
 msgid "%1 %2 (%3)"
-msgstr "%1 a %2  %3"
+msgstr "%1 %2 (%3)"
 
 #: AnnotationDialog/ResizableFrame.cpp:430
-#, fuzzy, kde-format
-#| msgid "%1 (by %2)"
+#, kde-format
 msgctxt "%1 is the tag name and %2 is the tag's category"
 msgid "%1 (%2)"
-msgstr "%1 (da %2)"
+msgstr "%1 (%2)"
 
 #: BackgroundJobs/ExtractOneThumbnailJob.cpp:51
 msgid "Extracting Thumbnail"
@@ -753,7 +778,7 @@ msgstr "Cerca"
 
 #: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:31
 msgid "Untagged Images"
-msgstr "Immagini senza etichette"
+msgstr "Immagini non etichettate"
 
 #: Browser/OverviewPage.cpp:162
 msgid "Show Thumbnails"
@@ -776,7 +801,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "ricerca"
 
-#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1778
+#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1774
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
 "images.</p><p>Please follow these steps to do so:<ul><li>In the menu bar "
@@ -785,55 +810,38 @@ msgid ""
 "section <b>Untagged Images</b></li></ul></p>"
 msgstr ""
 "<p>Non hai ancora configurato quale etichetta usare per indicare le immagini "
-"senza etichette.</p><p>Esegui questi passi per farlo:<ul><li>Nella barra dei "
+"non etichettate.</p><p>Esegui questi passi per farlo:<ul><li>Nella barra dei "
 "menu seleziona <b>Impostazioni</b>;</li><li>Da lì seleziona <b>Configura "
 "KPhotoAlbum</b>;</li><li>Ora seleziona l'icona delle <b>Categorie</b>;</"
-"li><li>Infine configura la sezione <b>Immagini senza etichette</b>.</li></"
+"li><li>Infine configura la sezione <b>Immagini non etichettate</b>.</li></"
 "ul></p>"
 
-#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1785
+#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1781
 msgid "Feature has not been configured"
 msgstr "La funzionalità non è stata configurata"
 
 #: CategoryListView/CheckDropItem.cpp:114
 #, kde-format
 msgid "\"%1\" and \"%2\""
-msgstr ""
+msgstr "«%1» e «%2»"
 
 #: CategoryListView/CheckDropItem.cpp:118
 #, kde-format
 msgid "\"%1\""
-msgstr ""
+msgstr "«%1»"
 
 #: CategoryListView/CheckDropItem.cpp:120
 #, kde-format
 msgid ", \"%1\""
-msgstr ""
+msgstr ", «%1»"
 
 #: CategoryListView/CheckDropItem.cpp:123
 #, kde-format
 msgid " and \"%1\""
-msgstr ""
+msgstr " e «%1»"
 
 #: CategoryListView/CheckDropItem.cpp:127
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>You have just dragged an item onto another: this will make the dragged "
-#| "item a sub category of that onto which it was dropped. Sub categories may "
-#| "be used to denote facts such as 'Las Vegas is in the USA', in that "
-#| "example you would drag Las Vegas onto USA. When you have set up sub "
-#| "categories you can, for instance, see all images from the USA by simply "
-#| "selecting that item in the Browser.</p><p>Was it really your intention to "
-#| "make \"%2\" a sub category of \"%3\"?</p>"
-#| msgid_plural ""
-#| "<p>You have just dragged a number of items onto another: this will make "
-#| "the dragged items sub categories of that onto which they were dropped. "
-#| "Sub categories may be used to denote facts such as 'Las Vegas and New "
-#| "York are in the USA' in that example you would drag 'Las Vegas' and 'New "
-#| "York' onto USA. When you have set up sub categories you can, for "
-#| "instance, see all images from the USA by simply selecting that item in "
-#| "the Browser.</p><p>Was it really your intention to make \"%2\" sub "
-#| "categories of \"%3\"?</p>"
+#, kde-format
 msgid ""
 "<p>You have just dragged an item onto another. This will make the target "
 "item a tag group and define the dragged item as a member of this group. Tag "
@@ -852,23 +860,24 @@ msgid_plural ""
 "it really your intention to make \"%3\" a tag group and add %2 as members?</"
 "p>"
 msgstr[0] ""
-"<p>Hai appena trascinato un elemento su un altro: ciò renderà quello "
-"trascinato una sottocategoria dell'elemento su cui sono stati trascinati. Le "
-"sottocategorie possono essere usate per indicare relazioni come «Las Vegas è "
-"negli Stati Uniti»: nell'esempio, trascineresti «Las Vegas» su «Stati "
-"Uniti». Quando hai impostato le sottocategorie, puoi per esempio vedere "
-"tutte le immagini dagli Stati Uniti semplicemente selezionando "
-"quell'elemento nel browser.</p><p>Volevi veramente rendere «%2» una "
-"sottocategoria di «%3»?</p>"
+"<p>Hai appena trascinato un elemento su un altro. Ciò trasformerà l'elemento "
+"di destinazione un gruppo di etichette e definirà quello trascinato come "
+"membro del gruppo. I gruppi di etichette possono essere usati per indicare "
+"relazioni come «Las Vegas è negli Stati Uniti». Nell'esempio, trascineresti "
+"«Las Vegas» su «Stati Uniti». Quando hai impostato i gruppi di etichette "
+"puoi, per esempio, vedere tutte le immagini dagli Stati Uniti semplicemente "
+"selezionando quell'elemento nel navigatore.</p><p>Volevi veramente rendere "
+"«%3» un gruppo di etichette e aggiungere «%2» come membro?</p>"
 msgstr[1] ""
-"<p>Hai appena trascinato degli elementi su un altro: ciò renderà gli "
-"elementi trascinati sottocategorie dell'elemento su cui sono stati "
-"trascinati. Le sottocategorie possono essere usate per indicare relazioni "
-"come «Las Vegas e New York sono negli Stati Uniti»: nell'esempio, "
-"trascineresti «Las Vegas» e «New York» su «Stati Uniti». Quando hai "
-"impostato le sottocategorie, puoi per esempio vedere tutte le immagini dagli "
-"Stati Uniti semplicemente selezionando quell'elemento nel browser.</"
-"p><p>Volevi veramente rendere «%2» una sottocategoria di «%3»?</p>"
+"<p>Hai appena trascinato alcuni elementi su un altro. Ciò trasformerà "
+"l'elemento di destinazione un gruppo di etichette e definirà quelli "
+"trascinati come membri del gruppo. I gruppi di etichette possono essere "
+"usati per indicare relazioni come «Las Vegas e New York sono negli Stati "
+"Uniti». Nell'esempio, trascineresti «Las Vegas e New York» su «Stati Uniti». "
+"Quando hai impostato i gruppi di etichette puoi, per esempio, vedere tutte "
+"le immagini dagli Stati Uniti semplicemente selezionando quell'elemento nel "
+"navigatore.</p><p>Volevi veramente rendere «%3» un gruppo di etichette e "
+"aggiungere «%2» come membri?</p>"
 
 #: CategoryListView/CheckDropItem.cpp:154
 msgid "Move Items"
@@ -1225,7 +1234,7 @@ msgstr "Macchina fotografica"
 
 #: Exif/SearchDialog.cpp:110
 msgid "Lens"
-msgstr ""
+msgstr "Obiettivo"
 
 #: Exif/SearchDialog.cpp:115 Settings/GeneralPage.cpp:124
 msgid "Miscellaneous"
@@ -1277,16 +1286,17 @@ msgid "No cameras found in the database"
 msgstr "Nessuna macchina fotografica trovata nella banca dati"
 
 #: Exif/SearchDialog.cpp:393
-#, fuzzy
-#| msgid "No cameras found in the database"
 msgid "No lenses found in the database"
-msgstr "Nessuna macchina fotografica trovata nella banca dati"
+msgstr "Nessun obiettivo trovato nella banca dati"
 
 #: Exif/SearchDialog.cpp:409
 msgid ""
 "Not all images in the database have lens information. <note>Recreate the "
 "EXIF search database to ensure lens data for all images.</note>"
 msgstr ""
+"Non tutte le immagini contenute nella banca dati possiedono informazioni "
+"sull'obiettivo. <note>Ricrea la banca dati di ricerca EXIF per garantire i "
+"dati degli obiettivi per tutte le immagini.</note>"
 
 #: HTMLGenerator/Generator.cpp:52
 msgid "Generating images for HTML page "
@@ -1576,17 +1586,22 @@ msgid ""
 "(You might need to wait till the video extraction led in your status bar has "
 "stopped blinking, to see all affected videos.)"
 msgstr ""
+"Non è stato possibile estrarre le miniature video da alcuni file. O il file "
+"è in qualche modo danneggiato, o il video è troppo corto. Per tua comodità, "
+"il segnaposto «%1» è stato impostato su questi video.\n"
+"\n"
+"(Magari vuoi aspettare fino a quando il segnalatore di estrazione video "
+"nella barra di stato ha smesso di lampeggiare, in modo da vedere tutti i "
+"video interessati)"
 
 #: ImageManager/ThumbnailBuilder.cpp:120
 msgid "Building thumbnails"
 msgstr "Costruzione delle miniature"
 
 #: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
-#, fuzzy
-#| msgid "KPhotoAlbum database files (*.db)"
 msgctxt ".kim files"
 msgid "KPhotoAlbum Export Files"
-msgstr "File di banche dati di KPhotoAlbum (*.db)"
+msgstr "File di esportazione di KPhotoAlbum"
 
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
@@ -1822,22 +1837,22 @@ msgstr "La cartella deve essere una sottocartella di %1"
 
 #: ImportExport/ImportDialog.cpp:230
 msgid "This directory is reserved for category images."
-msgstr ""
+msgstr "Questa cartella è riservata alle immagini delle categorie."
 
 #: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/FileReader.cpp:92
+#: XMLDB/FileReader.cpp:91
 msgid "Folder"
 msgstr "Cartella"
 
-#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
-#: XMLDB/FileReader.cpp:122
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:125
 msgid "Tokens"
 msgstr "Elementi"
 
 #: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:139
 msgid "Media Type"
 msgstr "Tipo di supporto"
 
@@ -2078,12 +2093,12 @@ msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
 #: main.cpp:47
-msgid "Johannes Zarl"
-msgstr "Johannes Zarl"
+msgid "Johannes Zarl-Zierl"
+msgstr "Johannes Zarl-Zierl"
 
 #: main.cpp:48
 msgid "Tobias Leupold"
-msgstr ""
+msgstr "Tobias Leupold"
 
 #: main.cpp:51
 msgid "Will Stephenson"
@@ -2210,10 +2225,8 @@ msgid "Import file"
 msgstr "Importa file"
 
 #: main.cpp:71
-#, fuzzy
-#| msgid "Search for new images and videos on startup"
 msgid "Don't start listening for android devices on startup."
-msgstr "Cerca nuove immagini e filmati all'avvio"
+msgstr "Non restare in ascolto dei dispositivi Android all'avvio."
 
 #: MainWindow/AutoStackImages.cpp:43
 msgid "Automatically Stack Images"
@@ -2275,73 +2288,53 @@ msgid "Make Category Image"
 msgstr "Crea immagine di categoria"
 
 #: MainWindow/CopyPopup.cpp:39
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy image(s) to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia immagine/i in..."
 
 #: MainWindow/CopyPopup.cpp:40
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy currently selected image to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia l'immagine attualmente selezionata in..."
 
 #: MainWindow/CopyPopup.cpp:43
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Copy all selected images to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia tutte le immagini selezionate in..."
 
 #: MainWindow/CopyPopup.cpp:49
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Link image(s) to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Collega immagine/i a..."
 
 #: MainWindow/CopyPopup.cpp:50
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Link currently selected image to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Collega l'immagine attualmente selezionata a..."
 
 #: MainWindow/CopyPopup.cpp:53
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgid "Link all selected images to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Collega tutte le immagini selezionate a..."
 
 #: MainWindow/CopyPopup.cpp:82 Viewer/ViewerWidget.cpp:1543
 msgctxt "@action:button"
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #: MainWindow/CopyPopup.cpp:86 Viewer/ViewerWidget.cpp:1542
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Copy image to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia immagine in..."
 
 #: MainWindow/CopyPopup.cpp:88
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Link image to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Collega immagine a..."
 
 #: MainWindow/CopyPopup.cpp:93
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Copy images to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia immagini in..."
 
 #: MainWindow/CopyPopup.cpp:95
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@title:window"
 msgid "Link images to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Collega immagini a..."
 
 #: MainWindow/DeleteDialog.cpp:34
 msgid "Removing items"
@@ -2487,22 +2480,6 @@ msgstr ""
 "compilazione ed esecuzione di KPhotoAlbum, e il loro stato:</p>%1"
 
 #: MainWindow/FeatureDialog.cpp:48
-#, fuzzy
-#| msgid ""
-#| "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
-#| "yourself, then please review the sections below to learn what to install "
-#| "to get the feature in question. If on the other hand you installed "
-#| "KPhotoAlbum from a binary package, please tell whoever made the package "
-#| "about this defect, eventually including the information from the section "
-#| "below.</p><p>In case you are missing a feature and you did not compile "
-#| "KPhotoAlbum yourself, please do consider doing so. It really is not that "
-#| "hard. If you need help compiling KPhotoAlbum, feel free to ask on the <a "
-#| "href=\"http://mail.kdab.net/mailman/listinfo/kphotoalbum\">KPhotoAlbum "
-#| "mailing list</a></p><p>The steps to compile KPhotoAlbum can be seen on <a "
-#| "href=\"http://www.kphotoalbum.org/index.php?page=compile\">the "
-#| "KPhotoAlbum home page</a>. If you have never compiled a KDE application, "
-#| "then please ensure that you have the developer packages installed, in "
-#| "most distributions they go under names like kdelibs<i>-devel</i></p>"
 msgid ""
 "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
 "yourself, then please review the sections below to learn what to install to "
@@ -2527,7 +2504,7 @@ msgstr ""
 "che ti manchi una funzionalità e tu non abbia compilato da te KPhotoAlbum, "
 "considera la possibilità di farlo. Non è difficile. Se hai bisogno di aiuto "
 "per compilare KPhotoAlbum, puoi sempre chiedere sulla <a href=\"http://mail."
-"kdab.net/mailman/listinfo/kphotoalbum\">mailing list di KPhotoAlbum</a></"
+"kdab.com/mailman/listinfo/kphotoalbum\">mailing list di KPhotoAlbum</a></"
 "p><p>I passi per compilare KPhotoAlbum si possono vedere sulla <a href="
 "\"http://www.kphotoalbum.org/index.php?page=compile\">pagina Web di "
 "KPhotoAlbum</a>. Se non hai mai compilato un'applicazione di KDE, assicurati "
@@ -2553,13 +2530,6 @@ msgstr ""
 "href=\"http://userbase.kde.org/KIPI\">sito wiki Userbase di KDE</a></p>."
 
 #: MainWindow/FeatureDialog.cpp:77
-#, fuzzy
-#| msgid ""
-#| "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information "
-#| "like the date the image was shot, the shooting angle, focal length, and "
-#| "shutter-speed in what is known as EXIF information.</p><p>KPhotoAlbum "
-#| "uses the <a href=\"http://freshmeat.net/projects/exiv2/\">EXIV2 library</"
-#| "a> to read EXIF information from images</p>"
 msgid ""
 "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information like "
 "the date the image was shot, the shooting angle, focal length, and shutter-"
@@ -2570,24 +2540,18 @@ msgstr ""
 "<h1><a name=\"exiv2\">Supporto EXIF</a></h1><p>Le immagini salvano "
 "informazioni come la data dello scatto, l'angolo con cui sono state "
 "scattate, la lunghezza focale, il tempo di otturazione tra quelle che sono "
-"note come informazioni EXIF.</p><p>KPhotoAlbum usa la <a href=\"http://"
-"freshmeat.net/projects/exiv2/\">libreria EXIV2</a> per leggere le "
-"informazioni EXIF dalle immagini.</p>"
+"note come informazioni EXIF.</p><p>KPhotoAlbum usa la <a href=\"http://www."
+"exiv2.org/\">libreria EXIV2</a> per leggere le informazioni EXIF dalle "
+"immagini.</p>"
 
 #: MainWindow/FeatureDialog.cpp:85
-#, fuzzy
-#| msgid ""
-#| "<h1><a name=\"database\">SQL database support</a></h1><p>KPhotoAlbum "
-#| "allows you to search using a certain number of EXIF tags. For this "
-#| "KPhotoAlbum needs an Sqlite database. In addition the qt package for "
-#| "sqlite (e.g.qt-sql-sqlite) must be installed.</p>"
 msgid ""
 "<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
 "allows you to search using a certain number of EXIF tags. For this "
 "KPhotoAlbum needs an Sqlite database. In addition the qt package for sqlite "
 "(e.g.qt-sql-sqlite) must be installed.</p>"
 msgstr ""
-"<h1><a name=\"database\">Supporto delle banche dati SQL</a></"
+"<h1><a name=\"database\">Supporto delle banche dati SQLite</a></"
 "h1><p>KPhotoAlbum ti permette di effettuare ricerche usando un certo numero "
 "di etichette EXIF. Per questo, KPhotoAlbum ha bisogno di una banca dati "
 "Sqlite. Inoltre deve essere installato il pacchetto Qt per sqlite (per "
@@ -2599,6 +2563,10 @@ msgid ""
 "KPhotoAlbum has been built with support for libkface, face detection and "
 "recognition features are enabled in the annotation dialog.</p>"
 msgstr ""
+"<h1><a name=\"kface\">Supporto per il rilevamento e il riconoscimento "
+"facciale</a></h1><p>Se KPhotoAlbum è stato compilato con il supporto per "
+"libkface, le funzionalità di rilevamento e riconoscimento facciale sono "
+"abilitate nella finestra di dialogo delle annotazioni.</p>"
 
 #: MainWindow/FeatureDialog.cpp:95
 msgid ""
@@ -2606,6 +2574,10 @@ msgid ""
 "KPhotoAlbum has been built with support for libkgeomap, KPhotoAlbum can show "
 "images with GPS information on a map.</p>"
 msgstr ""
+"<h1><a name=\"geomap\">Vista mappa per le immagini geolocalizzate</a></"
+"h1><p>Se KPhotoAlbum è stato compilato con il support per libkgeomap, "
+"KPhotoAlbum può mostrare le immagini con le informazioni GPS su una mappa.</"
+"p>"
 
 #: MainWindow/FeatureDialog.cpp:100
 msgid ""
@@ -2672,11 +2644,11 @@ msgstr "Supporto per banche dati Sqlite (usato per le ricerche EXIF)"
 
 #: MainWindow/FeatureDialog.cpp:228
 msgid "Face detection and recognition support"
-msgstr ""
+msgstr "Supporto per il rilevamento e il riconoscimento facciale"
 
 #: MainWindow/FeatureDialog.cpp:229
 msgid "Map view for geotagged images."
-msgstr ""
+msgstr "Vista mappa per le immagini geolocalizzate."
 
 #: MainWindow/FeatureDialog.cpp:230
 msgid "Video support"
@@ -2893,16 +2865,12 @@ msgid "Total"
 msgstr "Totale"
 
 #: MainWindow/StatusBar.cpp:107
-#, fuzzy
-#| msgid "Thumbnail image size:"
 msgid "Decrease thumbnail storage size"
-msgstr "Dimensione dell'immagine delle miniature:"
+msgstr "Diminuisci la dimensione di memorizzazione delle miniature"
 
 #: MainWindow/StatusBar.cpp:114
-#, fuzzy
-#| msgid "Thumbnail image size:"
 msgid "Increase thumbnail storage size"
-msgstr "Dimensione dell'immagine delle miniature:"
+msgstr "Aumenta la dimensione di memorizzazione delle miniature"
 
 #: MainWindow/TokenEditor.cpp:39 MainWindow/Window.cpp:736
 msgid "Remove Tokens"
@@ -3268,7 +3236,7 @@ msgstr "Statistiche"
 
 #: MainWindow/Window.cpp:885
 msgid "Mark As Untagged"
-msgstr ""
+msgstr "Segna come non etichettato"
 
 #: MainWindow/Window.cpp:894
 msgid "Enable All Messages"
@@ -3355,6 +3323,10 @@ msgid ""
 "untagged tag setting under <interface>Settings|Configure KPhotoAlbum...|"
 "Categories</interface></p>"
 msgstr ""
+"<p>Hai configurato un'etichetta per le immagini non etichettate, ma non "
+"esiste l'etichetta o la sua categoria nella banca dati.</p><p>Controlla le "
+"tue impostazioni per l'etichetta relativa alle immagini non etichettate in "
+"<interface>Impostazioni|Configura KPhotoAlbum...|Categorie</interface></p>"
 
 #: MainWindow/Window.cpp:1186
 msgid ""
@@ -3428,11 +3400,11 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Errore interno"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid "Open List of Files"
 msgstr "Apri elenco di file"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3440,22 +3412,21 @@ msgstr ""
 "Puoi aprire una serie di file dalla radice delle immagini di KPhotoAlbum "
 "elencandoli qui."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No images matching your input were found."
 msgstr "Non sono state trovate immagini corrispondenti a ciò che hai inserito."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No Matches"
 msgstr "Nessuna corrispondenza"
 
-#: MainWindow/Window.cpp:1824
-#, fuzzy, no-c-format, kde-format
-#| msgid "Thumbnail image size:"
+#: MainWindow/Window.cpp:1820
+#, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
-msgstr "Dimensione dell'immagine delle miniature:"
+msgstr "Larghezza miniatura: %1px (dimensione memoria: %2px)"
 
-#: MainWindow/Window.cpp:1863
+#: MainWindow/Window.cpp:1859
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3465,11 +3436,11 @@ msgstr ""
 "non può visualizzare miniature dei video e la relativa durata. Installa il "
 "pacchetto MPlayer2.</p>"
 
-#: MainWindow/Window.cpp:1866
+#: MainWindow/Window.cpp:1862
 msgid "Video thumbnails are not available"
 msgstr "Miniature dei video non disponibili"
 
-#: MainWindow/Window.cpp:1872
+#: MainWindow/Window.cpp:1868
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3481,11 +3452,11 @@ msgstr ""
 "possibile installalo, perché quella versione ha un supporto molto migliore "
 "per l'estrazione delle miniature dai video.</p>"
 
-#: MainWindow/Window.cpp:1875
+#: MainWindow/Window.cpp:1871
 msgid "MPlayer is too old"
 msgstr "MPlayer è obsoleto"
 
-#: MainWindow/Window.cpp:1897
+#: MainWindow/Window.cpp:1893
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3493,53 +3464,49 @@ msgid ""
 "youtube video</a> or <a href=\"https://play.google.com/store/apps/details?"
 "id=org.kde.kphotoalbum\">install from google play</a></p>"
 msgstr ""
+"<p>Sapevi che esiste un client Android per KPhotoAlbum?<br/>Con esso puoi "
+"visualizzare le tue immagini dal tuo desktop.</p><p><a href=\"https://www."
+"youtube.com/results?search_query=kphotoalbum+on+android\">Guarda il video su "
+"Youtube</a> o <a href=\"https://play.google.com/store/apps/details?id=org."
+"kde.kphotoalbum\">installalo da Google Play</a></p>"
 
 #: Map/MapView.cpp:63
 msgid "Save the current map settings"
-msgstr ""
+msgstr "Salva le impostazioni attuali della mappa"
 
 #: Map/MapView.cpp:69
 msgid "Go to last map position"
-msgstr ""
+msgstr "Vai all'ultima posizione della mappa"
 
 #: Map/MapView.cpp:138
-#, fuzzy
-#| msgid "Settings"
 msgid "Settings saved"
-msgstr "Impostazioni"
+msgstr "Impostazioni salvate"
 
 #: Map/MapView.cpp:138
 msgid "Map view"
-msgstr ""
+msgstr "Vista mappa"
 
 #: Map/MapView.cpp:151
-#, fuzzy
-#| msgid "Loading information from images"
 msgid "<i>Loading coordinates from the images ...</i>"
-msgstr "Caricamento delle informazioni dalle immagini"
+msgstr "<i>Caricamento delle coordinate dalle immagini...</i>"
 
 #: Map/MapView.cpp:168
 msgid "<i>This image does not contain geographic coordinates.</i>"
-msgstr ""
+msgstr "<i>Questa immagine non contiene coordinate geografiche.</i>"
 
 #: Map/MapView.cpp:175
 msgid ""
 "<i>Some of the selected images do not contain geographic coordinates.</i>"
 msgstr ""
+"<i>Alcune immagini selezionate non contengono coordinate geografiche.</i>"
 
 #: Map/MapView.cpp:187
-#, fuzzy
-#| msgid "None of the selected images or videos were available on disk."
 msgid "<i>Search for geographic coordinates.</i>"
-msgstr ""
-"Nessuna delle immagini o filmati selezionati sono disponibili sul disco."
+msgstr "<i>Cerca le coordinate geografiche.</i>"
 
 #: Map/MapView.cpp:199
-#, fuzzy
-#| msgid "None of the selected images or videos were available on disk."
 msgid "<i>None of the selected images contain geographic coordinates.</i>"
-msgstr ""
-"Nessuna delle immagini o filmati selezionati sono disponibili sul disco."
+msgstr "<i>Nessuna immagine selezionata contiene coordinate geografiche.</i>"
 
 #: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:55
 msgctxt "The 'name' of an unnamed image collection."
@@ -3561,7 +3528,7 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Sconosciuta"
 
-#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:464
 msgid "Places"
 msgstr "Luoghi"
 
@@ -3584,30 +3551,33 @@ msgid ""
 "android device's address.\n"
 "The android client can be downloaded from google play."
 msgstr ""
+"Questa icona indica se KPhotoAlbum è connesso con un dispositivo Android.\n"
+"Fai clic sull'icona per passare all'ascolto di client nella rete dell'area "
+"locale.\n"
+"Se la rete dell'area locale non consente la trasmissione dei pacchetti tra "
+"il client Android e KPhotoAlbum, allora fai clic destro sull'icona e "
+"specifica l'indirizzo del dispositivo Android.\n"
+"Il client Android può essre scaricato da Google Play."
 
 #: RemoteControl/ConnectionIndicator.cpp:93
-#, fuzzy
-#| msgid "Server address:"
 msgid "Android device address: "
-msgstr "Indirizzo del server:"
+msgstr "Indirizzo del dispositivo Android:"
 
 #: RemoteControl/Server.cpp:45
-#, fuzzy
-#| msgid "Unable to Write Image"
 msgid "Unable to bind to socket"
-msgstr "Impossibile scrivere immagine"
+msgstr "Impossibile associare al socket"
 
 #: RemoteControl/Server.cpp:46
 msgid ""
 "Unable to listen for remote Android connections. This is likely because you "
 "have another KPhotoAlbum application running."
 msgstr ""
+"Impossibile ascoltare le connessioni Android remote. Questo è probabilmente "
+"causato dal fatto che è in esecuzione un'altra istanza di KPhotoAlbum."
 
 #: RemoteControl/Server.cpp:80
-#, fuzzy
-#| msgid "Invalid Group"
 msgid "Invalid Version"
-msgstr "Gruppo non valido"
+msgstr "Versione non valida"
 
 #: RemoteControl/Server.cpp:81
 #, kde-format
@@ -3616,83 +3586,79 @@ msgid ""
 "Desktop protocol version: %1\n"
 "Remote Control protocol version: %2"
 msgstr ""
+"La versione tra il controllo remoto e KPhotoAlbum sul desktop non coincide.\n"
+"Versione protocollo del desktop: %1\n"
+"Versione protocollo del controllo remoto: %2"
 
 #: Settings/BirthdayPage.cpp:66
 msgid "Filter (Alt+f)"
-msgstr ""
+msgstr "Filtro (Alt+f)"
 
 #: Settings/BirthdayPage.cpp:105
-#, fuzzy
-#| msgid "Remove Tokens"
 msgid "Remove birthday"
-msgstr "Rimuovi elementi"
+msgstr "Rimuovi compleanno"
 
 #: Settings/BirthdayPage.cpp:111
 msgid ""
 "Set the date of birth for items (say people) here, and then see their age "
 "when viewing the images."
 msgstr ""
+"Imposta la data di nascita per gli elementi (leggi persone) qui, e "
+"visualizza la loro età quando osservi le immagini."
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:463
 msgid "People"
-msgstr "Gente"
+msgstr "Persone"
 
 #: Settings/BirthdayPage.cpp:169
-#, fuzzy
 msgid "Name"
 msgstr "Nome"
 
 #: Settings/BirthdayPage.cpp:169
 msgid "Birthday"
-msgstr ""
+msgstr "Data di nascita"
 
 #: Settings/BirthdayPage.cpp:237
 #, kde-format
 msgid "Birthday of %1:"
-msgstr ""
+msgstr "Data di nascita di %1:"
 
 #: Settings/BirthdayPage.cpp:245
-#, fuzzy
-#| msgctxt "@action:inmenu"
-#| msgid "Annotate..."
 msgid "Enter a date..."
-msgstr "Annota..."
+msgstr "Inserisci una data..."
 
 #: Settings/BirthdayPage.cpp:292
 msgid "<i>Select an item on the left to edit the birthday</i>"
 msgstr ""
+"<i>Seleziona un elemento sulla sinistra per modificare la data di nascita</i>"
 
 #: Settings/CategoryPage.cpp:56
-#, fuzzy
-#| msgid "Categories"
 msgid "Category Settings"
-msgstr "Categorie"
+msgstr "Impostazioni delle categorie"
 
 #: Settings/CategoryPage.cpp:86
 msgid "New"
-msgstr "Nuovo"
+msgstr "Nuova"
 
 #: Settings/CategoryPage.cpp:94
-#, fuzzy
-#| msgid "Rename..."
 msgid "Rename"
-msgstr "Rinomina..."
+msgstr "Rinomina"
 
 #: Settings/CategoryPage.cpp:126
 msgid "Positionable tags:"
-msgstr ""
+msgstr "Etichette spostabili:"
 
 #: Settings/CategoryPage.cpp:128
 msgid "Tags in this category can be associated with an area of the image"
 msgstr ""
+"Le etichette di questa categoria possono essere associate a un'area "
+"dell'immagine"
 
 #: Settings/CategoryPage.cpp:134
 msgid "Icon:"
 msgstr "Icona:"
 
 #: Settings/CategoryPage.cpp:144
-#, fuzzy
-#| msgid "Thumbnail Size: "
 msgid "Thumbnail Size:"
 msgstr "Dimensione delle miniature: "
 
@@ -3722,22 +3688,22 @@ msgid ""
 "saved, the names of categories can't be changed and new ones can't be added."
 "</font>"
 msgstr ""
+"<font color='red'>La banca dati contiene delle modifiche non salvate. Fino a "
+"quando esse non verranno salvate i nomi delle categorie non potranno essere "
+"modificati, né categorie nuove potranno essere aggiunte.</font>"
 
 #: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
-msgstr ""
+msgstr "Salva la banca dati ora"
 
 #: Settings/CategoryPage.cpp:223
-#, fuzzy
-#| msgctxt "Basically 'enter a category name'"
-#| msgid "<b>Setting Category: </b>"
 msgid "Settings for category"
-msgstr "<b>Impostazione della categoria: </b>"
+msgstr "Impostazioni per la categoria"
 
 #: Settings/CategoryPage.cpp:226
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
-msgstr ""
+msgstr "<i>Modifica in attesa: rinomina in «%1»</i>"
 
 #: Settings/CategoryPage.cpp:282
 #, kde-format
@@ -3746,12 +3712,13 @@ msgid ""
 "special category name which is reserved and can't be used for a normal "
 "category.</p>"
 msgstr ""
+"<p>Impossibile modificare il nome della categoria «%1» in «%2»:</p><p>«%2» è "
+"un nome di categoria speciale riservato e non può essere utilizzato da una "
+"categoria normale.</p>"
 
 #: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
-#, fuzzy
-#| msgid "Invalid integer number"
 msgid "Invalid category name"
-msgstr "Numero intero non valido"
+msgstr "Nome di categoria non valido"
 
 #: Settings/CategoryPage.cpp:294
 #, kde-format
@@ -3759,6 +3726,8 @@ msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
+"<p>Impossibile modificare il nome della categoria «%1» in «%2»:</p><p>Esiste "
+"già una categoria con questo nome.</p>"
 
 #: Settings/CategoryPage.cpp:311
 #, kde-format
@@ -3767,10 +3736,13 @@ msgid ""
 "pending rename action on the category \"%2\". Please save this change first."
 "</p>"
 msgstr ""
+"<p>Impossibile modificare il nome della categoria «%1» in «%2»:</p><p>C'è "
+"un'azione di rinomina in sospeso sulla categoria «%2». Salva prima questa "
+"modifica.</p>"
 
 #: Settings/CategoryPage.cpp:315
 msgid "Unsaved pending renaming action"
-msgstr ""
+msgstr "Azione di rinomina in sospeso non salvata"
 
 #: Settings/CategoryPage.cpp:347
 #, kde-format
@@ -3778,21 +3750,21 @@ msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
 "linked against this category will be deleted!</p>"
 msgstr ""
+"<p>Vuoi davvero rendere «%1» non spostabile?</p><p>Tutte le aree collegate a "
+"questa categoria saranno eliminate!</p>"
 
 #: Settings/CategoryPage.cpp:396
-#, fuzzy
 msgid "New category"
 msgstr "Nuova categoria"
 
 #: Settings/CategoryPage.cpp:428
-#, fuzzy, kde-format
-#| msgid "<p>Really delete category '%1'?</p>"
+#, kde-format
 msgid "<p>Really delete category \"%1\"?</p>"
-msgstr "<p>Vuoi davvero cancellare la categoria «%1»?</p>"
+msgstr "<p>Vuoi davvero eliminare la categoria «%1»?</p>"
 
 #: Settings/CategoryPage.cpp:587
 msgid "<i>choose a category to edit it</i>"
-msgstr ""
+msgstr "<i>scegli una categoria da modificare</i>"
 
 #: Settings/DatabaseBackendPage.cpp:36
 msgid "Choose speed over readability for index.xml file"
@@ -3862,85 +3834,69 @@ msgid "Character set for image metadata:"
 msgstr "Codifica per i metadati delle immagini:"
 
 #: Settings/FaceManagementPage.cpp:49
-#, fuzzy
-#| msgid "Update description"
 msgid "Face detection"
-msgstr "Aggiorna descrizione"
+msgstr "Rilevamento facciale"
 
 #: Settings/FaceManagementPage.cpp:57
 msgid "Accuracy"
-msgstr ""
+msgstr "Accuratezza"
 
 #: Settings/FaceManagementPage.cpp:61
 msgid "fast"
-msgstr ""
+msgstr "veloce"
 
 #: Settings/FaceManagementPage.cpp:71
 msgid "accurate"
-msgstr ""
+msgstr "accurato"
 
 #: Settings/FaceManagementPage.cpp:76
 msgid "Sensitivity"
-msgstr ""
+msgstr "Sensibilità"
 
 #: Settings/FaceManagementPage.cpp:80
 msgid "more false positives"
-msgstr ""
+msgstr "più falsi positivi"
 
 #: Settings/FaceManagementPage.cpp:90
 msgid "more missed faces"
-msgstr ""
+msgstr "più volti persi"
 
 #: Settings/FaceManagementPage.cpp:102
-#, fuzzy
-#| msgid "Image orientation"
 msgid "Face recognition"
-msgstr "Orientazione dell'immagine"
+msgstr "Riconoscimento facciale"
 
 #: Settings/FaceManagementPage.cpp:111
-#, fuzzy
-#| msgid "Database backend"
 msgid "Database entry"
-msgstr "Motore per banche dati"
+msgstr "Voce della banca dati"
 
 #: Settings/FaceManagementPage.cpp:112
 msgid "Trained faces"
-msgstr ""
+msgstr "Volti analizzati"
 
 #: Settings/FaceManagementPage.cpp:127
-#, fuzzy
-#| msgctxt "Delete selected images"
-#| msgid "Delete Selected"
 msgid "Delete selected"
-msgstr "Elimina selezionate"
+msgstr "Elimina selezionati"
 
 #: Settings/FaceManagementPage.cpp:133
-#, fuzzy
-#| msgid ""
-#| "Use data from\n"
-#| "Database"
 msgid "Erase database"
-msgstr ""
-"Usa i dati della\n"
-"banca dati"
+msgstr "Cancella la banca dati"
 
 #: Settings/FaceManagementPage.cpp:138
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
+"<b>Attenzione:</b> le modifiche o le cancellazioni dei nomi delle categorie "
+"saranno applicate dalla banca dati del riconoscimento facciale solo dopo il "
+"salvataggio delle modifiche!"
 
 #: Settings/FaceManagementPage.cpp:213
-#, fuzzy
-#| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
-msgstr "Vuoi salvare i cambiamenti?"
+msgstr "Vuoi davvero eliminare le etichette selezionate?"
 
 #: Settings/FaceManagementPage.cpp:238
-#, fuzzy
-#| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
-msgstr "Vuoi salvare i cambiamenti?"
+msgstr "Vuoi davvero cancellare la banca dati?"
 
 #: Settings/FileVersionDetectionPage.cpp:38
 msgid "New File Searches"
@@ -4189,7 +4145,7 @@ msgstr "Usa la descrizione EXIF"
 
 #: Settings/GeneralPage.cpp:69
 msgid "Strip out camera generated default descriptions"
-msgstr ""
+msgstr "Rimuovi le descrizioni predefinite generate dalla fotocamera"
 
 #: Settings/GeneralPage.cpp:81
 msgid "Use the embedded thumbnail in RAW file or halfsized RAW"
@@ -4220,10 +4176,8 @@ msgid "Category for virtual albums:"
 msgstr "Categoria per gli album virtuali:"
 
 #: Settings/GeneralPage.cpp:147
-#, fuzzy
-#| msgid "Search for new images and videos on startup"
 msgid "Listen for Android devices on startup"
-msgstr "Cerca nuove immagini e filmati all'avvio"
+msgstr "Resta in ascolto dei dispositivi Android all'avvio"
 
 #: Settings/GeneralPage.cpp:155
 msgid ""
@@ -4316,6 +4270,13 @@ msgid ""
 "automatically on start up. Alternatively, you can click the connection icon "
 "in the status bar to start listening."
 msgstr ""
+"<p>KPhotoAlbum è in grado di mostrare le tue immagini sui dispositivi "
+"Android. KPhotoAlbum si accoppierà automaticamente con la app da Android. "
+"Questa operazione richiede però che KPhotoAlbum resti in ascolto dei "
+"messaggi multicast sul desktop. Attivando questa opzione farai in modo che "
+"KPhotoAlbum esegua l'operazione all'avvio del sistema. In alternativa, puoi "
+"fare clic sull'icona di connessione nella barra di stato per avviare "
+"l'ascolto."
 
 #: Settings/GeneralPage.cpp:202
 msgid ""
@@ -4324,12 +4285,16 @@ msgid ""
 "want to ignore in the input field, one per line. Be sure to add the exact "
 "comment, including all whitespace.</p>"
 msgstr ""
+"<p>Alcune fotocamere memorizzano automaticamente commenti generici in ogni "
+"immagine. Questi commenti possono essere ignorati automaticamente.</"
+"p><p>Digita i commenti da ignorare nel campo di immissione, uno per riga. "
+"Assicurati di aggiungere il commento esatto, inclusi gli spazi.</p>"
 
-#: Settings/PluginsPage.cpp:39
+#: Settings/PluginsPage.cpp:37
 msgid "Choose Plugins to load:"
 msgstr "Scegli le estensioni da caricare:"
 
-#: Settings/PluginsPage.cpp:45
+#: Settings/PluginsPage.cpp:43
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr ""
 "Ritarda il caricamento delle estensioni fino all'apertura del loro menu"
@@ -4355,15 +4320,13 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Fidarsi delle date e ore?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:465
 msgid "Events"
 msgstr "Eventi"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
-#, fuzzy
-#| msgid "Untagged Images"
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:466
 msgid "untagged"
-msgstr "Immagini senza etichette"
+msgstr "non etichettata"
 
 #: Settings/SettingsDialog.cpp:81
 msgid "File Searching & Versions"
@@ -4379,13 +4342,11 @@ msgstr "Categorie"
 
 #: Settings/SettingsDialog.cpp:84
 msgid "Birthdays"
-msgstr ""
+msgstr "Date di nascita"
 
 #: Settings/SettingsDialog.cpp:85
-#, fuzzy
-#| msgid "Groups:"
 msgid "Tag Groups"
-msgstr "Gruppi:"
+msgstr "Gruppi di etichette"
 
 #: Settings/SettingsDialog.cpp:92
 msgid "EXIF/IPTC Information"
@@ -4397,19 +4358,19 @@ msgstr "Motore per banche dati"
 
 #: Settings/SettingsDialog.cpp:96
 msgid "Face management"
-msgstr ""
+msgstr "Gestione dei volti"
 
 #: Settings/TagGroupsPage.cpp:50
-#, fuzzy
-#| msgid "Categories Used"
 msgctxt "@label"
 msgid "Categories and groups:"
-msgstr "Categorie usate"
+msgstr "Categorie e gruppi:"
 
 #: Settings/TagGroupsPage.cpp:61
 msgctxt "@label/rich"
 msgid "<emphasis>Select a group on the left side to add tags to it</emphasis>"
 msgstr ""
+"<emphasis>Seleziona un gruppo sulla sinistra per aggiungervi etichette</"
+"emphasis>"
 
 #: Settings/TagGroupsPage.cpp:74
 msgctxt "@label/rich"
@@ -4417,86 +4378,72 @@ msgid ""
 "<emphasis>There are pending changes on the categories page.<nl> Please save "
 "the changes before working on tag groups.</emphasis>"
 msgstr ""
+"<emphasis>Ci sono modifiche in sospeso nella pagine delle categorie.<nl> "
+"Salva le modifiche prima di lavorare sui gruppi di etichette.</emphasis>"
 
 #: Settings/TagGroupsPage.cpp:82
-#, fuzzy
-#| msgid "Add Group..."
 msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr "Aggiungi gruppo..."
 
 #: Settings/TagGroupsPage.cpp:265
-#, fuzzy, kde-format
-#| msgid "Rename %1"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
-msgstr "Rinomina %1"
+msgstr "Rinomina il gruppo «%1»"
 
 #: Settings/TagGroupsPage.cpp:267
-#, fuzzy, kde-format
-#| msgid "Delete Group"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
-msgstr "Elimina gruppo"
+msgstr "Elimina il gruppo «%1»"
 
 #: Settings/TagGroupsPage.cpp:347
-#, fuzzy, kde-format
-#| msgid "Take item out of category %1"
+#, kde-format
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
-msgstr "Togli l'elemento dalla categoria %1"
+msgstr "Etichette nel gruppo «%1» della categoria «%2»"
 
 #: Settings/TagGroupsPage.cpp:365
-#, fuzzy
-#| msgid "New Group"
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "Nuovo gruppo"
 
 #: Settings/TagGroupsPage.cpp:366
-#, fuzzy
-#| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "Nome del gruppo:"
 
 #: Settings/TagGroupsPage.cpp:383
-#, fuzzy, kde-format
-#| msgid "Table \"%1\" already exists."
+#, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
-msgstr "La tabella \"%1\" esiste già."
+msgstr "<p>Il gruppo «%1» esiste già.</p>"
 
 #: Settings/TagGroupsPage.cpp:384
 msgctxt "@title:window"
 msgid "Cannot add group"
-msgstr ""
+msgstr "Impossibile aggiungere il gruppo"
 
 #: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
-#, fuzzy
-#| msgid "Rename Group..."
 msgctxt "@title:window"
 msgid "Rename Group"
-msgstr "Rinomina gruppo..."
+msgstr "Rinomina il gruppo"
 
 #: Settings/TagGroupsPage.cpp:463
-#, fuzzy
-#| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "New group name:"
-msgstr "Nome del gruppo:"
+msgstr "Nome del nuovo gruppo:"
 
 #: Settings/TagGroupsPage.cpp:480
-#, fuzzy, kde-format
-#| msgid ""
-#| "Could not rename table \"%1\" to \"%2\". Table \"%3\" already exists."
+#, kde-format
 msgctxt "@info"
 msgid ""
 "<para>Cannot rename group \"%1\" to \"%2\": \"%2\" already exists in "
 "category \"%3\"</para>"
 msgstr ""
-"Impossibile rinominare la tabella \"%1\" in \"%2\". La tabella \"%3\" esiste "
-"già."
+"<para>Impossibile rinominare il gruppo «%1» in «%2»: «%2» esiste già nella "
+"categoria «%3»</para>"
 
 #: Settings/TagGroupsPage.cpp:542
 #, kde-format
@@ -4506,66 +4453,56 @@ msgid ""
 "will be moved to the super category of \"%1\" (\"%2\").<nl/> All other "
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
+"<para>Vuoi davvero eliminare il gruppo «%1»?</para><para>Le sotto-categorie "
+"di questo gruppo saranno spostate nella super categoria di «%1» («%2»).<nl/> "
+"Tutte le altre appartenenze delle sotto-categorie resteranno intatte.</para>"
 
 #: Settings/TagGroupsPage.cpp:548
-#, fuzzy, kde-format
-#| msgid "<p>Really delete category '%1'?</p>"
+#, kde-format
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
-msgstr "<p>Vuoi davvero cancellare la categoria «%1»?</p>"
+msgstr "<para>Vuoi davvero eliminare il gruppo «%1»?</para>"
 
 #: Settings/TagGroupsPage.cpp:553
-#, fuzzy
-#| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Delete Group"
-msgstr "Elimina gruppo"
+msgstr "Elimina il gruppo"
 
 #: Settings/TagGroupsPage.cpp:731
-#, fuzzy, kde-format
-#| msgid "Rename %1"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
-msgstr "Rinomina %1"
+msgstr "Rinomina «%1»"
 
 #: Settings/TagGroupsPage.cpp:733
-#, fuzzy, kde-format
-#| msgid "Delete"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
-msgstr "Elimina"
+msgstr "Elimina «%1»"
 
 #: Settings/TagGroupsPage.cpp:743
-#, fuzzy
-#| msgid "New Sub Category Name:"
 msgctxt "@title:window"
 msgid "New Tag Name"
-msgstr "Nome della nuova sottocategoria:"
+msgstr "Nuovo nome di etichetta"
 
 #: Settings/TagGroupsPage.cpp:744
-#, fuzzy
-#| msgid "Database name:"
 msgctxt "@label:textbox"
 msgid "Tag name:"
-msgstr "Nome della banca dati:"
+msgstr "Nome dell'etichetta:"
 
 #: Settings/TagGroupsPage.cpp:792
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
-#| "any information about it from any image containing the item.</p>"
+#, kde-format
 msgctxt "@info"
 msgid ""
 "<para>Do you really want to delete \"%1\"?</para><para>Deleting the item "
 "will remove any information about it from any image containing the item.</"
 "para>"
 msgstr ""
-"<p>Vuoi veramente eliminare «%1»?<br/>Eliminare l'elemento ne rimuoverà ogni "
-"informazione da ogni immagine che lo contiene.</p>"
+"<para>Vuoi davvero eliminare «%1»?</para><para>Eliminare l'elemento "
+"rimuoverà ogni sua informazione da ogni immagine che lo contiene.</para>"
 
 #: Settings/TagGroupsPage.cpp:796
-#, fuzzy, kde-format
-#| msgid "Really Delete %1?"
+#, kde-format
 msgctxt "@title:window"
 msgid "Really delete %1?"
 msgstr "Eliminare veramente %1?"
@@ -4583,10 +4520,8 @@ msgid "Thumbnail image size:"
 msgstr "Dimensione dell'immagine delle miniature:"
 
 #: Settings/ThumbnailsPage.cpp:56
-#, fuzzy
-#| msgid "Build Thumbnails"
 msgid "Build thumbnails on demand"
-msgstr "Costruisci miniature"
+msgstr "Costruisci miniature su richiesta"
 
 #: Settings/ThumbnailsPage.cpp:61
 msgid "Thumbnail table cells aspect ratio"
@@ -4666,6 +4601,8 @@ msgid ""
 "<p>Thumbnail image size. Changing the thumbnail size here triggers a rebuild "
 "of the thumbnail database.</p>"
 msgstr ""
+"<p>Dimensione della miniatura. La modifica della dimensione della miniatura "
+"qui attiva la ricostruzione della banca dati delle miniature.</p>"
 
 #: Settings/ThumbnailsPage.cpp:126
 msgid ""
@@ -4678,6 +4615,15 @@ msgid ""
 "immediately build thumbnails for them and you won't have a delay later while "
 "browsing.</p>"
 msgstr ""
+"<p>Se questa opzione è impostata, le miniature sono costruite su richiesta. "
+"Durante la navigazione della banca dati delle immagini, saranno costruite "
+"realmente solo le miniature necessarie. Ciò significa che quando cambi la "
+"dimensione della miniatura, KPhotoAlbum non rallenterà anche se possiedi "
+"molte immagini.</p><p>Se l'opzione non è impostata, KPhotoAlbum costruirà "
+"sempre le miniature per tutte le immagini, appena possibile. Ciò significa "
+"che quando vengono individuate nuove immagini, KPhotoAlbum costruirà "
+"immediatamente le loro miniature e tu non dovrai in seguito subire ritardi "
+"durante la navigazione.</p>"
 
 #: Settings/ThumbnailsPage.cpp:135
 msgid ""
@@ -4734,20 +4680,22 @@ msgid ""
 "automatically, so that they can be easily found. It will be removed as soon "
 "as the image has been annotated."
 msgstr ""
+"Se viene selezionata qui un'etichetta, questa sarà aggiunta automaticamente "
+"alle nuove immagini (non etichettate), in modo da ritrovarle facilmente. "
+"L'etichetta sarà rimossa non appena l'immagine sarà annotata."
 
 #: Settings/UntaggedGroupBox.cpp:54
 msgid "Show the untagged images tag as a normal tag"
 msgstr ""
+"Mostra l'etichetta delle immagini non etichettate come un'etichetta normale"
 
 #: Settings/UntaggedGroupBox.cpp:63
 msgid "None Selected"
-msgstr "Nessuno selezionato"
+msgstr "Nessuna selezionata"
 
 #: Settings/UntaggedGroupBox.cpp:121
-#, fuzzy
-#| msgid "New Sub Category Name:"
 msgid "New tag added"
-msgstr "Nome della nuova sottocategoria:"
+msgstr "Nuova etichetta aggiunta"
 
 #: Settings/UntaggedGroupBox.cpp:122
 #, kde-format
@@ -4757,6 +4705,11 @@ msgid ""
 "stored in the database. Otherwise, it will be lost, and you will get an "
 "error about this tag being not present on the next start.</p>"
 msgstr ""
+"<p>È stata aggiunta la nuova etichetta «%1» alla categoria «%2» e sarà usata "
+"ora per le immagini non etichettate.</p><p>Salva adesso, in modo che questa "
+"etichetta venga salvata nella banca dati. In caso contrario, andrà perduta e "
+"tu riceverai un errore che essa non sarà presente al prossimo avvio del "
+"programma.</p>"
 
 #: Settings/ViewerPage.cpp:33
 msgid "Running Slide Show From Thumbnail View"
@@ -4854,21 +4807,16 @@ msgid "video"
 msgstr "video"
 
 #: ThumbnailView/GridResizeSlider.cpp:155
-#, fuzzy
-#| msgid ""
-#| "Really resize grid, it will result in all thumbnails being regenerated?"
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
 msgstr ""
-"Vuoi davvero ridimensionare la griglia? Ciò farà rigenerare tutte le "
-"miniature."
+"Vuoi davvero ridimensionare le miniature memorizzate? Ciò farà rigenerare "
+"tutte le miniature."
 
 #: ThumbnailView/GridResizeSlider.cpp:157
-#, fuzzy
-#| msgid "Required size for the thumbnail:"
 msgid "Really resize the thumbnails?"
-msgstr "Dimensioni necessarie della miniatura:"
+msgstr "Ridimensionare le miniature?"
 
 #: ThumbnailView/ThumbnailDND.cpp:93
 msgid ""
@@ -4918,14 +4866,6 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:15
-#, fuzzy
-#| msgid ""
-#| "<p>It is possible to create new categories - that are alternatives\n"
-#| "to <b>People</b>, <b>Places</b>, and <b>Events</b> - in the annotation\n"
-#| "dialog. \n"
-#| "To add new categories or remove existing ones, go to the <b>Settings-&gt;"
-#| "Configure KPhotoAlbum</b> dialog, and choose\n"
-#| "<b>Categories</b> in the side bar.</p>\n"
 msgid ""
 "<p>It is possible to create new categories - that are alternatives\n"
 "to <resource>People</resource>, <resource>Places</resource>, and "
@@ -4936,24 +4876,22 @@ msgid ""
 "<interface>Categories</interface> in the side bar.</p>\n"
 msgstr ""
 "<p>È possibile creare nuove categorie, cioè alternative\n"
-"a <b>Persone</b>, <b>Luoghi</b>, e <b>Eventi</b>, nella finestra\n"
+"a <resource>Persone</resource>, <resource>Luoghi</resource>, e "
+"<resource>Eventi</resource>, nella finestra\n"
 "delle annotazioni.\n"
 "Per aggiungere nuove categorie o rimuovere quelle esistenti, vai\n"
-"alla finestra <b>Impostazioni → ConfiguraKPhotoAlbum</b>,\n"
-"e scegli <b>Categorie</b> dalla barra laterale.</p>\n"
+"alla finestra <interface>Impostazioni → Configura KPhotoAlbum</interface>,\n"
+"e scegli <interface>Categorie</interface> dalla barra laterale.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:25
-#, fuzzy
-#| msgid ""
-#| "<p>You may rename or delete a person, location, keyword or similar by\n"
-#| "right-clicking on the item in the image property dialog.</p>\n"
 msgid ""
 "<p>You may rename or delete a tag (i.e. a person, location, keyword or "
 "similar) by\n"
 "right-clicking on the item in the image property dialog.</p>\n"
 msgstr ""
-"<p>Puoi rinominare o eliminare una persona, luogo, parola chiave o simili\n"
+"<p>Puoi rinominare o eliminare un'etichetta (ossia una persona, luogo, "
+"parola chiave o simili)\n"
 "facendo clic destro sull'elemento nella finestra di dialogo delle proprietà "
 "dell'immagine.</p>\n"
 
@@ -4985,17 +4923,6 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:47
-#, fuzzy
-#| msgid ""
-#| "<p>New images are automatically marked as <tt>Untagged</tt>. You can "
-#| "easily\n"
-#| "search for these images from main window by clicking the appropriate "
-#| "icon. Once\n"
-#| "you are done tagging an image just click <tt>Done</tt> and the Untagged "
-#| "flag is\n"
-#| "automatically removed. On the other hand, the <tt>Continue Later</tt> "
-#| "button\n"
-#| "finishes the tagging but leaves the Untagged flag intact.</p>\n"
 msgid ""
 "<p>New images are automatically marked as <emphasis>untagged</emphasis>.</"
 "br>\n"
@@ -5010,23 +4937,21 @@ msgid ""
 "the\n"
 "<emphasis>untagged</emphasis> flag intact.</p>\n"
 msgstr ""
-"<p>Le nuove immagini vengono automaticamente segnate come <tt>senza\n"
-"etichette</tt>. È facile cercare queste immagini dalla finestra principale\n"
-"facendo clic sull'icona apposita. Una volta che hai finito di etichettare\n"
-"un'immagine, basta fare clic su <tt>Fatto</tt> e l'indicazione <tt>senza\n"
-"etichette</tt> verrà automaticamente rimossa. D'altro canto, il pulsante\n"
-"<tt>Continua più tardi</tt> finisce l'etichettatura ma lascia l'indicazione\n"
-"<tt>senza etichette</tt> al suo posto.</p>\n"
+"<p>Le nuove immagini vengono automaticamente segnate come <interface>non "
+"etichettate</interface>.</br>\n"
+" È facile cercare queste immagini dalla finestra principale facendo clic "
+"sull'icona apposita.</p>\n"
+"<p>\n"
+"Una volta che hai finito di etichettare un'immagine, basta fare clic su "
+"<interface>Fatto</interface> e l'indicazione\n"
+" <emphasis>non etichettata</emphasis> verrà automaticamente rimossa. D'altro "
+"canto, il pulsante\n"
+"<interface>Continua più tardi</interface> finisce l'etichettatura ma lascia "
+"l'indicazione\n"
+"<emphasis>senza etichette</emphasis> al suo posto.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:59
-#, fuzzy
-#| msgid ""
-#| "<p>You can reorder images on your hard disk after having loaded them "
-#| "into\n"
-#| "KPhotoAlbum - KPhotoAlbum will still remember them, as it calculates "
-#| "checksums for\n"
-#| "the images.</p>\n"
 msgid ""
 "<p>You can reorder images on your hard disk after having loaded them into\n"
 "KPhotoAlbum. KPhotoAlbum will still remember them, as it calculates "
@@ -5034,22 +4959,11 @@ msgid ""
 "the images.</p>\n"
 msgstr ""
 "<p>Puoi riordinare le immagini sul tuo disco fisso dopo averle caricate in\n"
-"KPhotoAlbum - KPhotoAlbum se le ricorderà ancora, siccome calcola\n"
+"KPhotoAlbum. KPhotoAlbum se le ricorderà ancora, siccome calcola\n"
 "i codici di controllo delle immagini.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:67
-#, fuzzy
-#| msgid ""
-#| "<p>It is possible to associate images with categories. That way when "
-#| "browsing, say people, you\n"
-#| "may get a small icon for each person with e.g. the person's face.</p>\n"
-#| "<p>To specify an icon for a person, load the person in the viewer, zoom "
-#| "to\n"
-#| "the part which you want to make into an icon, and choose\n"
-#| "<b>Show Category Editor</b>. This will bring up a dialog where you can\n"
-#| "find the person, and set the image.\n"
-#| "</p>\n"
 msgid ""
 "<p>It is possible to associate images with categories.</p>\n"
 "<p>That way when browsing, say people, you may get a small icon for each "
@@ -5062,14 +4976,13 @@ msgid ""
 "find the person, and set the image.\n"
 "</p>\n"
 msgstr ""
-"<p>È possibile associare le immagini a delle categorie.\n"
-"In questo modo, quando starai navigando tra le persone,\n"
-"potrai avere una piccola icona per ogni persona, con per\n"
-"esempio la sua faccia.</p>\n"
-"<p>Per specificare un'icona per una persona, carica la\n"
-"persona nel visore,\n"
+"<p>È possibile associare le immagini a delle categorie.</p>\n"
+"<p>In questo modo, quando starai navigando tra le persone, potrai avere una "
+"piccola icona per ogni persona,\n"
+"con, per esempio, il suo viso.</p>\n"
+"<p>Per specificare un'icona per una persona, carica la persona nel visore,\n"
 "ingrandisci la parte che vuoi usare per l'icona, e scegli\n"
-"<b>Mostra l'editor delle categorie</b>, che ti porterà\n"
+"<interface>Mostra l'editor delle categorie</interface>, che ti porterà\n"
 "a una finestra di dialogo dove potrai trovare la persona,\n"
 "e impostarne l'immagine.\n"
 "</p>\n"
@@ -5116,13 +5029,6 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:100
-#, fuzzy
-#| msgid ""
-#| "<p>You may reorder images by dragging and dropping one image onto\n"
-#| "another. If you drop it on the left edge, it will end up in front of\n"
-#| "the other, if you drop it on the right edge it will be inserted behind.</"
-#| "p>\n"
-#| "<p align=\"right\">-- Tip contributed by Eivind Kjorstad</p>\n"
 msgid ""
 "<p>You may reorder images by dragging and dropping one image onto\n"
 "another.</p>\n"
@@ -5130,23 +5036,13 @@ msgid ""
 "the other, if you drop it on the right edge it will be inserted behind.</p>\n"
 "<p align=\"right\">-- Tip contributed by Eivind Kjorstad</p>\n"
 msgstr ""
-"<p>Puoi riordinare le immagini trascinando un'immagine su un'altra.\n"
-"Se la sganci sul lato sinistro, sarà posizionata davanti all'altra, se la\n"
-"sganci sul lato destro sarà inserita dopo.</p>\n"
+"<p>Puoi riordinare le immagini trascinando un'immagine su un'altra.</p>\n"
+"<p>Se la sganci sul lato sinistro, sarà posizionata davanti all'altra, se\n"
+"la sganci sul lato destro sarà inserita dopo.</p>\n"
 "<p align=\"right\">-- Suggerimento di Eivind Kjorstad</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:110
-#, fuzzy
-#| msgid ""
-#| "<p>\n"
-#| "On the thumbnail view, you can resize the grid to your needs just by "
-#| "clicking \n"
-#| "the middle mouse button and dragging around. On most systems you can "
-#| "emulate \n"
-#| "the middle mouse button by left and right clicking at the same time. \n"
-#| "</p>\n"
-#| "<p align=\"right\">-- Tip contributed by Rafael Beccar</p>\n"
 msgid ""
 "<p>\n"
 "On the thumbnail view, you can resize the grid to your needs just by "
@@ -5180,15 +5076,6 @@ msgstr ""
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:130
-#, fuzzy
-#| msgid ""
-#| "<p>Sometimes it is useful to group several related images into an image "
-#| "stack.\n"
-#| "You can merge several images into a stack by first selecting them on "
-#| "Thumbnail\n"
-#| "View and then pressing <tt>Ctrl+3</tt> or selecting <tt>Merge Images into "
-#| "a\n"
-#| "Stack</tt> from menu.</p>\n"
 msgid ""
 "<p>Sometimes it is useful to group several related images into an image "
 "stack.\n"
@@ -5200,30 +5087,12 @@ msgid ""
 msgstr ""
 "<p>A volte è utile raggruppare diverse immagini correlate in una pila di\n"
 "immagini. Puoi fondere diverse immagini in una pila selezionandole nella\n"
-"vista delle miniature e premendo <tt>Ctrl+3</tt> o selezionando <tt>Fondi\n"
-"le immagini in una pila</tt> dal menu.</p>\n"
+"vista delle miniature e premendo <shortcut>Ctrl+3</shortcut> o selezionando "
+"<interface>Fondi\n"
+"le immagini in una pila</interface> dal menu.</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:139
-#, fuzzy
-#| msgid ""
-#| "<p>When searching for new images, KPhotoAlbum can automatically put new "
-#| "versions\n"
-#| "of images into stacks by looking at their filenames. To configure this "
-#| "feature,\n"
-#| "choose \"Configure KPhotoalbum...\" from the Settings menu and set "
-#| "appropriate\n"
-#| "values in the \"File Searching & Versions\" tab.</p>\n"
-#| "<p>\n"
-#| "<ul>\n"
-#| "<li>Enable the checkbox \"Try to detect multiple versions of files\"</"
-#| "li>\n"
-#| "<li>Enter a regular expression for your modified files:<br/><tt>^(.*)-"
-#| "adjusted\\.(.*)</tt></li>\n"
-#| "<li>Enter a regular expression for your original file:<br/><tt>\\1.\\2</"
-#| "tt></li>\n"
-#| "</ul>\n"
-#| "</p>\n"
 msgid ""
 "<p>When searching for new images, KPhotoAlbum can automatically put new "
 "versions\n"
@@ -5245,16 +5114,18 @@ msgid ""
 msgstr ""
 "<p>Quando cerca nuove immagini, KPhotoAlbum può impilare automaticamente\n"
 "le loro nuove versioni guardando i nomi dei loro file. Per configurare\n"
-"questa funzionalità, scegli «Configura KPhotoAlbum» dal menu Impostazioni\n"
-"e imposta i valori appropriati nella scheda «Ricerca di file e versioni».</"
-"p>\n"
+"questa funzionalità, scegli <interface>Impostazioni|Configura KPhotoAlbum..."
+"</interface>\n"
+"e imposta i valori appropriati nella scheda <interface>Ricerca di file e "
+"versioni</interface>.</p>\n"
 "<p>\n"
 "<ul>\n"
-"<li>Abilita la casella «Cerca di rilevare diverse versioni dei file»</li>\n"
-"<li>Inserisci un'espressione regolare per i file modificati:<br/>\n"
-"<tt>^(.*)-regolato\\.(.*)</tt></li>\n"
+"<li>Abilita la casella <interface>Cerca di rilevare diverse versioni dei "
+"file</interface></li>\n"
+"<li>Inserisci un'espressione regolare per i file modificati:<br/><bcode>^(."
+"*)-regolato\\.(.*)</bcode></li>\n"
 "<li>Inserisci un'espressione regolare per i file originali:<br/>\n"
-"<tt>\\1.\\2</tt></li>\n"
+"<bcode>\\1.\\2</bcode></li>\n"
 "</ul>\n"
 "</p>\n"
 
@@ -5269,6 +5140,13 @@ msgid ""
 "window.\n"
 "</p>\n"
 msgstr ""
+"<p>KPhotoAlbum può visualizzare l'età delle persone su un'immagine.</p>\n"
+"<p>\n"
+"Per abilitare questa opzione, inserisci la data di nascita di una persona in "
+"<interface>Manutenzione|Modifica le date di nascita</interface>.\n"
+"L'età della persona sarà mostrata nel riquadro informativo della finestra "
+"del visore.\n"
+"</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:165
@@ -5286,6 +5164,19 @@ msgid ""
 "<resource>Face detection and recognition support</resource>.\n"
 "</note>\n"
 msgstr ""
+"<p>KPhotoAlbum può individuare e riconoscere i volti nelle immagini.</p>\n"
+"<p>\n"
+"Per usare questa funzionalità, usa il pulsante <interface>Cerca i volti "
+"nell'immagine attuale</interface>\n"
+"che si trova sotto l'anteprima immagine nella finestra di annotazione.\n"
+"</p>\n"
+"<note>Per verificare che il supporto al riconoscimento facciale sia "
+"abilitato, apri la finestra delle funzionalità\n"
+"(<interface>Aiuto|Stato delle delle funzionalità di KPhotoAlbum</interface>) "
+"e controlla l'elemento\n"
+"<resource>Supporto per il rilevamento e il riconoscimento facciale</"
+"resource>.\n"
+"</note>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:179
@@ -5306,6 +5197,20 @@ msgid ""
 "associate it with a tag.\n"
 "</p>\n"
 msgstr ""
+"<p>Puoi associare etichette a un'area di un'immagine (per es. per collegare "
+"un nome a un viso).</p>\n"
+"<p>\n"
+"Per farlo, assicurati che sia attivata la casella di controllo "
+"<interface>Etichette spostabili</interface> in\n"
+"<interface>Impostazioni|Configura KPhotoAlbum...|Categorie</interface> per \n"
+"la categoria scelta.\n"
+"</p>\n"
+"<p>\n"
+"Una volta fatto questo, puoi trascinare e rilasciare il mouse sull'anteprima "
+"dell'immagine della finestra delle annotazioni per\n"
+"contrassegnare un'area. Apri il menu di contesto (clic col destro) sull'area "
+"per associarla a un'etichetta.\n"
+"</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:194
@@ -5317,6 +5222,12 @@ msgid ""
 "again.\n"
 "</p>\n"
 msgstr ""
+"<p>\n"
+"Nella finestra delle annotazioni, puoi premere quando vuoi <shortcut>Ctrl"
+"+Barra spaziatrice</shortcut> per allargare l'immagine attiva.\n"
+"Premi di nuovo <shortcut>Ctrl+Barra spaziatrice</shortcut> per tornare alla "
+"visualizzazione standard.\n"
+"</p>\n"
 
 #. i18n: ectx: @info:tipoftheday
 #: tips:203
@@ -5355,23 +5266,21 @@ msgid " (%1MP)"
 msgstr " (%1MP)"
 
 #: Utilities/Util.cpp:121
-#, fuzzy, kde-format
-#| msgctxt "short for: x megapixels"
-#| msgid " (%1MP)"
+#, kde-format
 msgctxt "aspect ratio"
 msgid " (%1:1)"
-msgstr " (%1MP)"
+msgstr " (%1:1)"
 
 #: Utilities/Util.cpp:124
 msgctxt "aspect ratio"
 msgid " (1:1)"
-msgstr ""
+msgstr " (1:1)"
 
 #: Utilities/Util.cpp:126
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (1:%1)"
-msgstr ""
+msgstr " (1:%1)"
 
 #: Utilities/Util.cpp:128
 msgid "<b>Image Size: </b> "
@@ -5389,24 +5298,22 @@ msgstr "<b>Descrizione: </b> "
 #, kde-format
 msgid "1 day"
 msgid_plural "%1 days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Un giorno"
+msgstr[1] "%1 giorni"
 
 #: Utilities/Util.cpp:268
-#, fuzzy, kde-format
-#| msgid "1 Month"
+#, kde-format
 msgid "1 month"
 msgid_plural "%1 months"
-msgstr[0] "1 mese"
-msgstr[1] "1 mese"
+msgstr[0] "Un mese"
+msgstr[1] "%1 mesi"
 
 #: Utilities/Util.cpp:270
-#, fuzzy, kde-format
-#| msgid "1 year"
+#, kde-format
 msgid "1 year"
 msgid_plural "%1 years"
-msgstr[0] "1 anno"
-msgstr[1] "1 anno"
+msgstr[0] "Un anno"
+msgstr[1] "%1 anni"
 
 #: Utilities/Util.cpp:330
 #, kde-format
@@ -5453,7 +5360,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Impossibile copiare «%1» a «%2»."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:476
 msgid "Error Running Demo"
 msgstr "Errore nell'esecuzione della dimostrazione"
 
@@ -5468,9 +5375,8 @@ msgid "Unable to open '%1' for writing."
 msgstr "Impossibile aprire «%1» in scrittura."
 
 #: Utilities/Util.cpp:472
-#, kde-format
-msgid "<p>Unable to find file %1</p>"
-msgstr "<p>Impossibile trovare il file %1</p>"
+msgid "<p>No file name given!</p>"
+msgstr "<p>Nessun nome file fornito.</p>"
 
 #: Viewer/CategoryImageConfig.cpp:42
 msgctxt "@title:window"
@@ -5512,9 +5418,9 @@ msgstr "Profondità di colore insufficiente per questo filtro"
 msgid "[ zoom x%1 ]"
 msgstr "[ ingrandimento ×%1 ]"
 
-#: Viewer/InfoBox.cpp:85
+#: Viewer/InfoBox.cpp:86
 msgid "Show the geographic position of this image on a map"
-msgstr ""
+msgstr "Mostra la posizione geografica di questa immagine su una mappa"
 
 #: Viewer/SpeedDisplay.cpp:44
 #, kde-format
@@ -5556,11 +5462,9 @@ msgid "Show EXIF Viewer"
 msgstr "Mostra visore EXIF"
 
 #: Viewer/ViewerWidget.cpp:172
-#, fuzzy
-#| msgid "Export/Copy Images..."
 msgctxt "@action:inmenu"
 msgid "Copy image to..."
-msgstr "Esporta/copia immagini..."
+msgstr "Copia immagine in..."
 
 #: Viewer/ViewerWidget.cpp:178
 msgctxt "@action:inmenu"
@@ -5915,17 +5819,11 @@ msgstr "Mostra dimensioni delle immagini"
 msgid "Show Rating"
 msgstr "Mostra voto"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
-#, fuzzy
-#| msgctxt "Denotes the media type (video,image)"
-#| msgid "Image"
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:141
 msgid "Image"
 msgstr "Immagine"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
-#, fuzzy
-#| msgctxt "Denotes the media type (video,image)"
-#| msgid "Video"
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:142
 msgid "Video"
 msgstr "Filmato"
 
@@ -5935,26 +5833,55 @@ msgid ""
 "p><p>Chances are you will be able to read this file, but when writing it "
 "back, information saved in the newer version will be lost</p>"
 msgstr ""
+"<p>Il file della banca dati (index.xml) proviene da una versione più recente "
+"di KPhotoAlbum!</p><p>È possibile che tu sia in grado di leggere questo "
+"file, ma durante la riscrittura le informazioni salvate nella versione più "
+"recente andranno perse</p>"
 
 #: XMLDB/FileReader.cpp:65
 msgid "index.xml version mismatch"
-msgstr ""
+msgstr "non corrispondenza della versione index.xml"
 
-#: XMLDB/FileReader.cpp:208
+#: XMLDB/FileReader.cpp:191
+#, kde-format
+msgid ""
+"<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
+"ignore the duplicate category and try an automatic repair, or choose cancel "
+"to quit.</p>"
+msgstr ""
+"<p>Riga %1, colonna %2: categoria duplicata «%3»</p><p>Scegli di continuare "
+"a ignorare la categoria duplicata e prova la riparazione automatica, oppure "
+"scegli Annulla per uscire.</p>"
+
+#: XMLDB/FileReader.cpp:198
+msgid "Error in database file"
+msgstr "Errore nel file della banca dati"
+
+#: XMLDB/FileReader.cpp:242
+msgctxt ""
+"Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
+"with these exact names. Thanks :-)"
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
-"English – some of your categories are now displayed in English. <p></p>You "
-"can manually rename your categories any time and then save your database.</p>"
+"English – some of your categories are now displayed in English.</p><p>You "
+"can manually rename your categories any time and then save your database.</"
+"p><p>In some cases, you may get two additional empty categories, \"Folder\" "
+"and \"Media Type\". You can delete those.</p>"
 msgstr ""
+"<p><b>Questa versione di KPhotoAlbum non traduce più le categorie «standard»."
+"</b></p><p>Ciò significa che – se usi una lingua di sistema diversa "
+"dall'inglese – alcune categorie potrebbero ora essere mostrate in inglese.</"
+"p><p>Puoi rinominare manualmente le tue categorie in qualsiasi momento e poi "
+"salvare la banca dati.</p><p>In alcuni casi potresti trovare due categorie "
+"aggiuntive vuote, «Folder» e «Media Type». Puoi tranquillamente eliminarle.</"
+"p>"
 
-#: XMLDB/FileReader.cpp:218
-#, fuzzy
-#| msgid "Invalid integer number"
+#: XMLDB/FileReader.cpp:250
 msgid "Changed standard category names"
-msgstr "Numero intero non valido"
+msgstr "Nomi delle categorie standard modificati"
 
-#: XMLDB/FileReader.cpp:356
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5977,7 +5904,7 @@ msgstr ""
 "impostata, puoi eseguire <b>Manutenzione → Ordina tutto per data e ora</b> "
 "per ordinarle nella banca dati.</p>"
 
-#: XMLDB/FileReader.cpp:366
+#: XMLDB/FileReader.cpp:398
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5993,11 +5920,11 @@ msgstr ""
 "con la libreria <code>exiv2</code>. Dopo averlo fatto, ti sarà chiesto cosa "
 "fare per correggere le informazioni mancanti.</p>"
 
-#: XMLDB/FileReader.cpp:373
+#: XMLDB/FileReader.cpp:405
 msgid "Images/Videos Are Not Sorted"
 msgstr "Le immagini e i filmati non sono ordinati"
 
-#: XMLDB/FileReader.cpp:388
+#: XMLDB/FileReader.cpp:420
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -6014,11 +5941,11 @@ msgstr ""
 "farlo risulterà in spazio aggiuntivo attorno alle immagini nella vista delle "
 "miniature, non di più, quindi non c'è urgenza di farlo.</p>"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:425
 msgid "Not All Images Have Size Information"
 msgstr "Non tutte le immagini hanno informazioni sulle dimensioni"
 
-#: XMLDB/FileReader.cpp:416
+#: XMLDB/FileReader.cpp:448
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -6041,31 +5968,31 @@ msgstr ""
 "aggiungi la stringa come se stessi impostando la variabile d'ambiente "
 "<b>PATH</b>.</p>"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:455
 msgid "No default setup file found"
 msgstr "Nessun file di configurazione predefinito trovato"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Impossibile aprire «%1» in lettura"
 
-#: XMLDB/FileReader.cpp:457
+#: XMLDB/FileReader.cpp:489
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "riga %1 colonna %2 nel file %3: %4"
 
-#: XMLDB/FileReader.cpp:459
+#: XMLDB/FileReader.cpp:491
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Recupero della copia di sicurezza non riuscito: %1"
 
-#: XMLDB/FileReader.cpp:470
+#: XMLDB/FileReader.cpp:502
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Errore nel file %1: nessun elemento trovato"
 
-#: XMLDB/FileReader.cpp:476
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -6140,17 +6067,20 @@ msgid ""
 "<p>An error was encountered on line %1, column %2:<nl/><message>%3</"
 "message></p>"
 msgstr ""
+"<p>È stato riscontrato un errore alla riga %1, colonna %2:<nl/><message>%3</"
+"message></p>"
 
 #: XMLDB/XmlReader.cpp:93
 #, kde-format
 msgid "<p>Additional error information:<nl/><message>%1</message></p>"
-msgstr ""
+msgstr "<p>Informazioni aggiuntive sull'errore:<nl/><message>%1</message></p>"
 
 #: XMLDB/XmlReader.cpp:95
-#, fuzzy
-#| msgid "Error opening database cursor."
 msgid "Error while reading database file"
-msgstr "Errore nell'apertura del cursore della banca dati."
+msgstr "Errore durante la lettura del file della banca dati"
+
+
+
 
 
 

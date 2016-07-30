@@ -24,7 +24,6 @@
 
 // Local includes
 #include "ListViewItemHider.h"
-#include "Utilities/AlgorithmHelper.h"
 #include "ListSelect.h"
 
 using namespace Utilities;
@@ -86,11 +85,31 @@ bool AnnotationDialog::ListViewTextMatchHider::shouldItemBeShown(QTreeWidgetItem
     {
         case AnnotationDialog::MatchFromBeginning:
             return item->text(0).toLower().startsWith( m_text.toLower() );
-        case AnnotationDialog::MatchFromWordStart:
+        case AnnotationDialog::MatchFromWordStart: {
+            QStringList itemWords = item->text(0).toLower().split(QRegExp(QString::fromUtf8("\\W+")),
+                                                                          QString::SkipEmptyParts);
+            QStringList searchWords = m_text.toLower().split(QRegExp(QString::fromUtf8("\\W+")),
+                                                                    QString::SkipEmptyParts);
+
+            // all search words ...
+            Q_FOREACH( const auto searchWord, searchWords )
             {
-                QStringList words = item->text(0).toLower().split( QRegExp(QString::fromLatin1("\\W+") ), QString::SkipEmptyParts);
-                return any_of(words,  [this] (const QString& word) { return word.startsWith( m_text.toLower()); } );
+                bool found = false;
+                // ... must match at least one word of the item
+                Q_FOREACH( const auto itemWord, itemWords )
+                {
+                    if (itemWord.startsWith(searchWord))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    return false;
+                }
             }
+            return true;
+        }
         case AnnotationDialog::MatchAnywhere:
             return item->text(0).toLower().contains( m_text.toLower() );
     }
