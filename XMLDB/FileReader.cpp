@@ -88,10 +88,13 @@ void XMLDB::FileReader::read( const QString& configFile )
 void XMLDB::FileReader::createSpecialCategories()
 {
     // Setup the "Folder" category
-    // The folder category is not stored in the index.xml file
     m_folderCategory = new XMLCategory(i18n("Folder"), QString::fromLatin1("folder"),
                                                 DB::Category::TreeView, 32, false );
     m_folderCategory->setType( DB::Category::FolderCategory );
+    // The folder category is not stored in the index.xml file,
+    // but older versions of KPhotoAlbum stored a stub entry, which we need to remove first:
+    if ( !m_db->m_categoryCollection.categoryForName(m_folderCategory->name()).isNull() )
+        m_db->m_categoryCollection.removeCategory(m_folderCategory->name());
     m_db->m_categoryCollection.addCategory( m_folderCategory );
     dynamic_cast<XMLCategory*>( m_folderCategory.data() )->setShouldSave( false );
 
@@ -127,12 +130,11 @@ void XMLDB::FileReader::createSpecialCategories()
 
     // KPhotoAlbum 2.2 did not write the tokens to the category section,
     // so unless we do this small trick they will not show up when importing.
-    for (char ch = 'A'; ch < 'Z'; ++ch) {
+    for (char ch = 'A'; ch <= 'Z'; ++ch) {
         tokenCat->addItem(QString::fromUtf8("%1").arg(QChar::fromLatin1(ch)));
     }
 
     // Setup the "Media Type" category
-    // the media type is not stored in the media category
     DB::CategoryPtr mediaCat;
     mediaCat = new XMLCategory(i18n("Media Type"), QString::fromLatin1("video-x-generic"),
                                DB::Category::TreeView, 32, false);
@@ -140,6 +142,10 @@ void XMLDB::FileReader::createSpecialCategories()
     mediaCat->addItem( i18n( "Video" ) );
     mediaCat->setType( DB::Category::MediaTypeCategory );
     dynamic_cast<XMLCategory*>( mediaCat.data() )->setShouldSave( false );
+    // The media type is not stored in the media category,
+    // but older versions of KPhotoAlbum stored a stub entry, which we need to remove first:
+    if ( !m_db->m_categoryCollection.categoryForName(mediaCat->name()).isNull() )
+        m_db->m_categoryCollection.removeCategory( mediaCat->name() );
     m_db->m_categoryCollection.addCategory( mediaCat );
 }
 
@@ -177,11 +183,29 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
             bool tokensCat = reader->attribute(metaString) == tokensString;
 
             DB::CategoryPtr cat = m_db->m_categoryCollection.categoryForName( categoryName );
-            Q_ASSERT ( !cat );
-            cat = new XMLCategory( categoryName, icon, type, thumbnailSize, show, positionable );
-            if (tokensCat)
-                cat->setType(DB::Category::TokensCategory);
-            m_db->m_categoryCollection.addCategory( cat );
+            bool repairMode = false;
+            if (cat)
+            {
+                int choice = KMessageBox::warningContinueCancel(
+                            messageParent(),
+                            i18n( "<p>Line %1, column %2: duplicate category '%3'</p>"
+                                  "<p>Choose continue to ignore the duplicate category and try an automatic repair, "
+                                  "or choose cancel to quit.</p>",
+                                  reader->lineNumber(),
+                                  reader->columnNumber(),
+                                  categoryName
+                                  ),
+                            i18n("Error in database file"));
+                if ( choice == KMessageBox::Continue )
+                    repairMode = true;
+                else
+                    exit(-1);
+            } else {
+                cat = new XMLCategory( categoryName, icon, type, thumbnailSize, show, positionable );
+                if (tokensCat)
+                    cat->setType(DB::Category::TokensCategory);
+                m_db->m_categoryCollection.addCategory( cat );
+            }
 
             // Read values
             QStringList items;
@@ -196,6 +220,14 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
                 items.append( value );
                 reader->readEndElement();
             }
+            if ( repairMode )
+            {
+                // merge with duplicate category
+                qDebug() << "Repairing category " << categoryName << ": merging items "
+                         << cat->items() << " with " << items;
+                items.append(cat->items());
+                items.removeDuplicates();
+            }
             cat->setItems( items );
         }
     }
@@ -205,16 +237,16 @@ void XMLDB::FileReader::loadCategories( ReaderPtr reader )
     if (m_fileVersion < 7) {
         KMessageBox::information(
             messageParent(),
-            i18n("<p><b>"
-                 "This version of KPhotoAlbum does not translate \"standard\" categories any more."
-                 "</b></p>"
-                 "<p>"
-                 "This may mean that – if you use a locale other than English – some of your "
-                 "categories are now displayed in English. "
-                 "<p>"
-                 "</p>"
-                 "You can manually rename your categories any time and then save your database."
-                 "</p>"),
+            i18nc("Leave \"Folder\" and \"Media Type\" untranslated below, those will show up with "
+                  "these exact names. Thanks :-)",
+                  "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
+                  "any more.</b></p>"
+                  "<p>This may mean that – if you use a locale other than English – some of your "
+                  "categories are now displayed in English.</p>"
+                  "<p>You can manually rename your categories any time and then save your database."
+                  "</p>"
+                  "<p>In some cases, you may get two additional empty categories, \"Folder\" and "
+                  "\"Media Type\". You can delete those.</p>"),
             i18n("Changed standard category names")
         );
     }

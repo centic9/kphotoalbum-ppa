@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-02-21 01:57+0000\n"
+"POT-Creation-Date: 2016-07-21 01:46+0000\n"
 "PO-Revision-Date: 2014-04-23 14:09+0800\n"
 "Last-Translator: Franklin Weng <franklin at goodhorse dot idv dot tw>\n"
 "Language-Team: Chinese Traditional <kde-tw@googlegroups.com>\n"
@@ -758,7 +758,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "搜尋"
 
-#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1778
+#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1774
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
 "images.</p><p>Please follow these steps to do so:<ul><li>In the menu bar "
@@ -770,7 +770,7 @@ msgstr ""
 "<ul><li>點選「設定」選單</li> <li>點選「設定 KPhotoAlbum」</li> <li>點選「類"
 "別」圖示</li> <li>設定「無標籤影像」的區塊</li> </ul></p>"
 
-#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1785
+#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1781
 msgid "Feature has not been configured"
 msgstr "功能尚未設定"
 
@@ -1744,18 +1744,18 @@ msgstr ""
 
 #: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/FileReader.cpp:92
+#: XMLDB/FileReader.cpp:91
 msgid "Folder"
 msgstr "資料夾"
 
-#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
-#: XMLDB/FileReader.cpp:122
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:125
 msgid "Tokens"
 msgstr "標記"
 
 #: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:139
 msgid "Media Type"
 msgstr "媒體型態"
 
@@ -1978,7 +1978,9 @@ msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
 #: main.cpp:47
-msgid "Johannes Zarl"
+#, fuzzy
+#| msgid "Johannes Zarl"
+msgid "Johannes Zarl-Zierl"
 msgstr "Johannes Zarl"
 
 #: main.cpp:48
@@ -3245,32 +3247,32 @@ msgstr ""
 msgid "Internal Error"
 msgstr "內部錯誤"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid "Open List of Files"
 msgstr "開啟檔案清單"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
 msgstr "您可以在此列出檔案，一次從 KPhotoAlbum 的影像集中開啟許多檔案。"
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No images matching your input were found."
 msgstr "沒有符合您輸入條件的影像。"
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No Matches"
 msgstr "沒有符合的。"
 
-#: MainWindow/Window.cpp:1824
+#: MainWindow/Window.cpp:1820
 #, fuzzy, no-c-format, kde-format
 #| msgid "Thumbnail image size:"
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "縮圖影像大小："
 
-#: MainWindow/Window.cpp:1863
+#: MainWindow/Window.cpp:1859
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3279,11 +3281,11 @@ msgstr ""
 "<p>系統中找不到 MPlayer。</p> <p>KPhotoAlbum 需要 MPlayer 來展開影片的縮圖與"
 "長度。請安裝 MPlayer2 套件。</p>"
 
-#: MainWindow/Window.cpp:1866
+#: MainWindow/Window.cpp:1862
 msgid "Video thumbnails are not available"
 msgstr "無法使用影片縮圖"
 
-#: MainWindow/Window.cpp:1872
+#: MainWindow/Window.cpp:1868
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3293,11 +3295,11 @@ msgstr ""
 "<p>您的系統中安裝了 MPlayer，但不是第二版。MPlayer2 通常在系統上是另一個獨立"
 "的套件，如果可以的話請安裝 MPlayer2，因為它對展開影片的縮圖有較好的支援。</p>"
 
-#: MainWindow/Window.cpp:1875
+#: MainWindow/Window.cpp:1871
 msgid "MPlayer is too old"
 msgstr "MPlayer 版本過舊"
 
-#: MainWindow/Window.cpp:1897
+#: MainWindow/Window.cpp:1893
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3367,7 +3369,7 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "未知"
 
-#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:464
 msgid "Places"
 msgstr "地方"
 
@@ -3435,7 +3437,7 @@ msgid ""
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:463
 msgid "People"
 msgstr "人物"
 
@@ -4079,11 +4081,11 @@ msgid ""
 "comment, including all whitespace.</p>"
 msgstr ""
 
-#: Settings/PluginsPage.cpp:39
+#: Settings/PluginsPage.cpp:37
 msgid "Choose Plugins to load:"
 msgstr "選擇要載入的外掛程式："
 
-#: Settings/PluginsPage.cpp:45
+#: Settings/PluginsPage.cpp:43
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "延遲載入外掛程式的時間，直到外掛程式選單被開啟"
 
@@ -4105,11 +4107,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "信任時間戳記嗎？"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:465
 msgid "Events"
 msgstr "事件"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:466
 #, fuzzy
 #| msgid "Untagged Images"
 msgid "untagged"
@@ -5138,7 +5140,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "無法將 %1 複製到 %2。"
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:476
 msgid "Error Running Demo"
 msgstr "執行範例時發生錯誤"
 
@@ -5153,9 +5155,8 @@ msgid "Unable to open '%1' for writing."
 msgstr "無法開啟 %1 以寫入。"
 
 #: Utilities/Util.cpp:472
-#, kde-format
-msgid "<p>Unable to find file %1</p>"
-msgstr "<p>找不到檔案 %1</p>"
+msgid "<p>No file name given!</p>"
+msgstr ""
 
 #: Viewer/CategoryImageConfig.cpp:42
 msgctxt "@title:window"
@@ -5197,7 +5198,7 @@ msgstr "此過濾器的色彩空間不足"
 msgid "[ zoom x%1 ]"
 msgstr "【縮放 %1 倍】"
 
-#: Viewer/InfoBox.cpp:85
+#: Viewer/InfoBox.cpp:86
 msgid "Show the geographic position of this image on a map"
 msgstr ""
 
@@ -5600,14 +5601,14 @@ msgstr "顯示影像大小"
 msgid "Show Rating"
 msgstr "顯示評分"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:141
 #, fuzzy
 #| msgctxt "Denotes the media type (video,image)"
 #| msgid "Image"
 msgid "Image"
 msgstr "影像"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:142
 #, fuzzy
 #| msgctxt "Denotes the media type (video,image)"
 #| msgid "Video"
@@ -5625,21 +5626,40 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:208
+#: XMLDB/FileReader.cpp:191
+#, kde-format
+msgid ""
+"<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
+"ignore the duplicate category and try an automatic repair, or choose cancel "
+"to quit.</p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:198
+#, fuzzy
+#| msgid "Converting database"
+msgid "Error in database file"
+msgstr "轉換資料庫"
+
+#: XMLDB/FileReader.cpp:242
+msgctxt ""
+"Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
+"with these exact names. Thanks :-)"
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
-"English – some of your categories are now displayed in English. <p></p>You "
-"can manually rename your categories any time and then save your database.</p>"
+"English – some of your categories are now displayed in English.</p><p>You "
+"can manually rename your categories any time and then save your database.</"
+"p><p>In some cases, you may get two additional empty categories, \"Folder\" "
+"and \"Media Type\". You can delete those.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:218
+#: XMLDB/FileReader.cpp:250
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Changed standard category names"
 msgstr "不合法的驅動程式："
 
-#: XMLDB/FileReader.cpp:356
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5658,7 +5678,7 @@ msgstr ""
 "設定好日期，您就可以執行<b>「維護」─「全部依日期與時間排序」</b>來重新排序。"
 "</p>"
 
-#: XMLDB/FileReader.cpp:366
+#: XMLDB/FileReader.cpp:398
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5672,11 +5692,11 @@ msgstr ""
 "譯 KPhotoAlbum，加上 <code>exiv2</code> 函式庫支援，然後您就可以修正這些不明"
 "的資訊。</p>"
 
-#: XMLDB/FileReader.cpp:373
+#: XMLDB/FileReader.cpp:405
 msgid "Images/Videos Are Not Sorted"
 msgstr "圖片或影像未排序"
 
-#: XMLDB/FileReader.cpp:388
+#: XMLDB/FileReader.cpp:420
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5690,11 +5710,11 @@ msgstr ""
 "然後再選擇「建立縮圖」。</p> <p>不這樣做的話，縮圖周圍可能會有空白。不過其實"
 "也就這樣而已，所以不這樣做也無所謂啦。</p>"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:425
 msgid "Not All Images Have Size Information"
 msgstr "不是所有影像都有尺寸大小資訊"
 
-#: XMLDB/FileReader.cpp:416
+#: XMLDB/FileReader.cpp:448
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5713,31 +5733,31 @@ msgstr ""
 "KDEDIRS=/usr/local/kde</b></p> <p>若您已經有設定 KDEDIRS，則將路徑加到它的後"
 "面即可。</p>"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:455
 msgid "No default setup file found"
 msgstr "找不到預設的設定檔"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "無法開啟 '%1' 以讀取"
 
-#: XMLDB/FileReader.cpp:457
+#: XMLDB/FileReader.cpp:489
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "檔案 %3 的第 %1 行第 %2 欄：%4"
 
-#: XMLDB/FileReader.cpp:459
+#: XMLDB/FileReader.cpp:491
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "無法回復備份：%1"
 
-#: XMLDB/FileReader.cpp:470
+#: XMLDB/FileReader.cpp:502
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "在檔案 %1 內發生錯誤：找不到元素"
 
-#: XMLDB/FileReader.cpp:476
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr "在檔案 %1 內發生錯誤：頂端元素應為 KPhotoAlbum 但是看到的是 %2"
@@ -5819,6 +5839,9 @@ msgstr ""
 #| msgid "Converting database"
 msgid "Error while reading database file"
 msgstr "轉換資料庫"
+
+
+
 
 
 

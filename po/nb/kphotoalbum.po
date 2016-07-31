@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-02-08 02:37+0000\n"
+"POT-Creation-Date: 2016-04-18 01:59+0000\n"
 "PO-Revision-Date: 2014-04-26 20:31+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
@@ -759,7 +759,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "søk"
 
-#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1778
+#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1774
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
 "images.</p><p>Please follow these steps to do so:<ul><li>In the menu bar "
@@ -773,7 +773,7 @@ msgstr ""
 "></li> <li>Trykk så <b>Kategorier</b>-ikonet</li> <li>Sett opp avdelingen "
 "<b>Umerkede bilder</b></li> </ul> </p>"
 
-#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1785
+#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1781
 msgid "Feature has not been configured"
 msgstr "Funksjonen er ikke satt opp"
 
@@ -1753,18 +1753,18 @@ msgstr ""
 
 #: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/FileReader.cpp:92
+#: XMLDB/FileReader.cpp:91
 msgid "Folder"
 msgstr "Mappe"
 
-#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
-#: XMLDB/FileReader.cpp:122
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:125
 msgid "Tokens"
 msgstr "Symboler"
 
 #: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:139
 msgid "Media Type"
 msgstr "Mediatype"
 
@@ -2002,8 +2002,8 @@ msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
 #: main.cpp:47
-msgid "Johannes Zarl"
-msgstr "Johannes Zarl"
+msgid "Johannes Zarl-Zierl"
+msgstr ""
 
 #: main.cpp:48
 msgid "Tobias Leupold"
@@ -3258,11 +3258,11 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Intern feil"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid "Open List of Files"
 msgstr "Åpne filliste"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3270,21 +3270,21 @@ msgstr ""
 "Du kan åpne en gruppe filer fra bilderota til KPhotoAlbum ved å liste opp "
 "filene her."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No images matching your input were found."
 msgstr "Fant ingen bilder som stemte med det du oppga."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No Matches"
 msgstr "Ingen treff"
 
-#: MainWindow/Window.cpp:1824
+#: MainWindow/Window.cpp:1820
 #, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr ""
 
-#: MainWindow/Window.cpp:1863
+#: MainWindow/Window.cpp:1859
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3294,11 +3294,11 @@ msgstr ""
 "KPhotoAlbum visse video-minibilder og video-lengder. Du bør installere "
 "MPlayer2-pakka.</p>"
 
-#: MainWindow/Window.cpp:1866
+#: MainWindow/Window.cpp:1862
 msgid "Video thumbnails are not available"
 msgstr "Video-minibilder er ikke tilgjengelige"
 
-#: MainWindow/Window.cpp:1872
+#: MainWindow/Window.cpp:1868
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3310,11 +3310,11 @@ msgstr ""
 "siden den versjonen har mye bedre støtte for å trekke ut minibilder fra "
 "videoer.</p>"
 
-#: MainWindow/Window.cpp:1875
+#: MainWindow/Window.cpp:1871
 msgid "MPlayer is too old"
 msgstr "MPlayer er for gammel"
 
-#: MainWindow/Window.cpp:1897
+#: MainWindow/Window.cpp:1893
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3380,7 +3380,11 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Ukjent"
 
-#: Plugins/Interface.cpp:155
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:464
+msgid "Places"
+msgstr "Steder"
+
+#: Plugins/Interface.cpp:161
 #, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
@@ -3440,7 +3444,7 @@ msgid ""
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:463
 msgid "People"
 msgstr "Personer"
 
@@ -4077,11 +4081,11 @@ msgid ""
 "comment, including all whitespace.</p>"
 msgstr ""
 
-#: Settings/PluginsPage.cpp:39
+#: Settings/PluginsPage.cpp:37
 msgid "Choose Plugins to load:"
 msgstr "Vekg programtillegg som skal lastes inn:"
 
-#: Settings/PluginsPage.cpp:45
+#: Settings/PluginsPage.cpp:43
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "Utsett lasting av programtillegg til programtillegg-menyen er åpnet"
 
@@ -4105,11 +4109,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Stole på tidsstempler? …"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:465
 msgid "Events"
 msgstr "Hendelser"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:466
 msgid "untagged"
 msgstr ""
 
@@ -4996,7 +5000,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Klarer ikke kopiere «%1» til «%2»."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:476
 msgid "Error Running Demo"
 msgstr "Feil ved kjøring av demonstrasjonen"
 
@@ -5011,9 +5015,8 @@ msgid "Unable to open '%1' for writing."
 msgstr "Klarer ikke åpne «%1» for skriving."
 
 #: Utilities/Util.cpp:472
-#, kde-format
-msgid "<p>Unable to find file %1</p>"
-msgstr "<p>Klarer ikke finne fila %1</p>"
+msgid "<p>No file name given!</p>"
+msgstr ""
 
 #: Viewer/CategoryImageConfig.cpp:42
 msgctxt "@title:window"
@@ -5458,11 +5461,11 @@ msgstr "Vis bildestørrelse"
 msgid "Show Rating"
 msgstr "Vis karakter"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:141
 msgid "Image"
 msgstr "Bilde"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:142
 msgid "Video"
 msgstr "Video"
 
@@ -5477,19 +5480,36 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:208
+#: XMLDB/FileReader.cpp:191
+#, kde-format
+msgid ""
+"<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
+"ignore the duplicate category and try an automatic repair, or choose cancel "
+"to quit.</p>"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:198
+msgid "Error in database file"
+msgstr ""
+
+#: XMLDB/FileReader.cpp:242
+msgctxt ""
+"Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
+"with these exact names. Thanks :-)"
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
-"English – some of your categories are now displayed in English. <p></p>You "
-"can manually rename your categories any time and then save your database.</p>"
+"English – some of your categories are now displayed in English.</p><p>You "
+"can manually rename your categories any time and then save your database.</"
+"p><p>In some cases, you may get two additional empty categories, \"Folder\" "
+"and \"Media Type\". You can delete those.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:218
+#: XMLDB/FileReader.cpp:250
 msgid "Changed standard category names"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:356
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5511,7 +5531,7 @@ msgstr ""
 "<b>Vedlikehold→Sorter alle på dato og tid</b> for å sortere dem i databasen."
 "</p>"
 
-#: XMLDB/FileReader.cpp:366
+#: XMLDB/FileReader.cpp:398
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5527,11 +5547,11 @@ msgstr ""
 "biblioteket. Når dette er gjort vil du få spørsmål om hva som skal gjøres "
 "for å rette på de manglende opplysningene.</p>"
 
-#: XMLDB/FileReader.cpp:373
+#: XMLDB/FileReader.cpp:405
 msgid "Images/Videos Are Not Sorted"
 msgstr "Bilder/filmer er ikke sortert"
 
-#: XMLDB/FileReader.cpp:388
+#: XMLDB/FileReader.cpp:420
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5547,11 +5567,11 @@ msgstr ""
 "ekstra plass rundt bildene i minibildevisningen, det er alt, så det har "
 "ingen hast.</p>"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:425
 msgid "Not All Images Have Size Information"
 msgstr "Ikke alle bilder har informasjon om størrelsen"
 
-#: XMLDB/FileReader.cpp:416
+#: XMLDB/FileReader.cpp:448
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5573,35 +5593,31 @@ msgstr ""
 "verdi, så bare legg til strengen akkurat som om du satte miljøvariablen "
 "<b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:455
 msgid "No default setup file found"
 msgstr "Fant ingen standard oppsettsfil"
 
-#: XMLDB/FileReader.cpp:432
-msgid "Places"
-msgstr "Steder"
-
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Klarte ikke å åpne «%1» for lesing"
 
-#: XMLDB/FileReader.cpp:457
+#: XMLDB/FileReader.cpp:489
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr " linje %1 kolonne %2 i fil %3: %4"
 
-#: XMLDB/FileReader.cpp:459
+#: XMLDB/FileReader.cpp:491
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Klarte ikke å gjenopprette fra sikkerhetskopi: %1"
 
-#: XMLDB/FileReader.cpp:470
+#: XMLDB/FileReader.cpp:502
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Feil i fil %1: ingen elementer funnet"
 
-#: XMLDB/FileReader.cpp:476
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr "Feil i fil %1; forventet «KPhotoAlbum» som toppelement men fant «%2»"

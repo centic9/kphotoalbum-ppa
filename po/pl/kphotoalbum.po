@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-02-21 01:57+0000\n"
-"PO-Revision-Date: 2016-01-23 08:05+0100\n"
+"POT-Creation-Date: 2016-07-21 01:46+0000\n"
+"PO-Revision-Date: 2016-05-14 08:12+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -804,7 +804,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "znajdź"
 
-#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1778
+#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1774
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
 "images.</p><p>Please follow these steps to do so:<ul><li>In the menu bar "
@@ -819,7 +819,7 @@ msgstr ""
 "li><li>Następnie zmień odpowiednie ustawienia w sekcji <b>Obrazy bez "
 "znaczników</b></li></ul></p>"
 
-#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1785
+#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1781
 msgid "Feature has not been configured"
 msgstr "Funkcja nie została ustawiona"
 
@@ -1608,11 +1608,9 @@ msgid "Building thumbnails"
 msgstr "Budowanie miniatur"
 
 #: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
-#, fuzzy
-#| msgid "KPhotoAlbum database files (*.db)"
 msgctxt ".kim files"
 msgid "KPhotoAlbum Export Files"
-msgstr "Pliki baz danych KPhotoAlbum (*.db)"
+msgstr "Eksportowanie plików KPhotoAlbum"
 
 #: ImportExport/Export.cpp:71
 msgid "Export Configuration / Copy Images"
@@ -1849,18 +1847,18 @@ msgstr "Ten katalog jest zarezerwowany dla obrazów kategorii."
 
 #: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/FileReader.cpp:92
+#: XMLDB/FileReader.cpp:91
 msgid "Folder"
 msgstr "Katalog"
 
-#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:110
-#: XMLDB/FileReader.cpp:122
+#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:113
+#: XMLDB/FileReader.cpp:125
 msgid "Tokens"
 msgstr "Symbol"
 
 #: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:137
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:139
 msgid "Media Type"
 msgstr "Typ nośnika"
 
@@ -2104,8 +2102,8 @@ msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
 #: main.cpp:47
-msgid "Johannes Zarl"
-msgstr "Johannes Zarl"
+msgid "Johannes Zarl-Zierl"
+msgstr "Johannes Zarl-Zierl"
 
 #: main.cpp:48
 msgid "Tobias Leupold"
@@ -3411,11 +3409,11 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Błąd wewnętrzny"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid "Open List of Files"
 msgstr "Otwórz listę plików"
 
-#: MainWindow/Window.cpp:1626
+#: MainWindow/Window.cpp:1622
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
@@ -3423,21 +3421,21 @@ msgstr ""
 "Możesz otworzyć zestaw plików z głównego katalogu obrazów KPhotoAlbum "
 "poprzez stworzenie tutaj listy plików."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No images matching your input were found."
 msgstr "Nie znaleziono obrazów pasujących do podanych danych."
 
-#: MainWindow/Window.cpp:1642
+#: MainWindow/Window.cpp:1638
 msgid "No Matches"
 msgstr "Brak pasujących"
 
-#: MainWindow/Window.cpp:1824
+#: MainWindow/Window.cpp:1820
 #, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "Szerokość miniatury: %1px (przechowywany rozmiar: %2px)"
 
-#: MainWindow/Window.cpp:1863
+#: MainWindow/Window.cpp:1859
 msgid ""
 "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
 "will not be able to display video thumbnails and video lengths. Please "
@@ -3447,11 +3445,11 @@ msgstr ""
 "MPlayera do m.in. wydobywania miniatur i długości filmów. Proszę "
 "zainstalować pakiet MPlayer2</p>"
 
-#: MainWindow/Window.cpp:1866
+#: MainWindow/Window.cpp:1862
 msgid "Video thumbnails are not available"
 msgstr "Miniatury filmów nie są dostępne"
 
-#: MainWindow/Window.cpp:1872
+#: MainWindow/Window.cpp:1868
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3463,11 +3461,11 @@ msgstr ""
 "zainstalować, jeśli to możliwa, jako iż ta wersja ma dużo lepsze na wsparcie "
 "wydobywania miniatur z filmów.</p>"
 
-#: MainWindow/Window.cpp:1875
+#: MainWindow/Window.cpp:1871
 msgid "MPlayer is too old"
 msgstr "MPlayer jest za stary"
 
-#: MainWindow/Window.cpp:1897
+#: MainWindow/Window.cpp:1893
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3541,7 +3539,7 @@ msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "Nieznany"
 
-#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:432
+#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:464
 msgid "Places"
 msgstr "Miejsca"
 
@@ -3619,7 +3617,7 @@ msgstr ""
 "Tutaj ustaw daty urodzenia dla elementów (dajmy na to ludzi), a następnie "
 "oglądaj ich wiek przy przeglądaniu obrazów"
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:431
+#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:463
 msgid "People"
 msgstr "Ludzie"
 
@@ -3693,17 +3691,14 @@ msgid "Icon View with Custom Thumbnails"
 msgstr "Widok ikon z własnymi miniaturami"
 
 #: Settings/CategoryPage.cpp:173
-#, fuzzy
-#| msgid ""
-#| "<font color='red'>The database has unsaved changes. As long as those are "
-#| "not saved, the names of categories can't be changed.</font>"
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
 "saved, the names of categories can't be changed and new ones can't be added."
 "</font>"
 msgstr ""
 "<font color='red'>Baza danych ma niezapisane zmiany. Dopóki zmiany te nie "
-"zostaną zapisane, nie można zmienić nazw kategorii.</font>"
+"zostaną zapisane, nie można zmienić nazw kategorii, a nowe nazwy nie "
+"mogą być dodane.</font>"
 
 #: Settings/CategoryPage.cpp:181
 msgid "Save the DB now"
@@ -4290,11 +4285,11 @@ msgstr ""
 "wiersz. Upewnij się, że podano dokładny komentarz, zwracając uwagę na białe "
 "znaki.</p>"
 
-#: Settings/PluginsPage.cpp:39
+#: Settings/PluginsPage.cpp:37
 msgid "Choose Plugins to load:"
 msgstr "Wybierz wtyczki do wczytania:"
 
-#: Settings/PluginsPage.cpp:45
+#: Settings/PluginsPage.cpp:43
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "Opóźnij wczytywanie wtyczek do momentu otwarcia menu"
 
@@ -4318,11 +4313,11 @@ msgstr ""
 msgid "Trust Time Stamps?"
 msgstr "Czy znaczniki czasu są wiarygodne?"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:433
+#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:465
 msgid "Events"
 msgstr "Wydarzenia"
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:434
+#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:466
 msgid "untagged"
 msgstr "nieznaczony"
 
@@ -4371,18 +4366,13 @@ msgstr ""
 "emphasis>"
 
 #: Settings/TagGroupsPage.cpp:74
-#, fuzzy
-#| msgctxt "@label/rich"
-#| msgid ""
-#| "<emphasis>There are pending changes of category names.<nl> Please save "
-#| "the changes before working on tag groups.</emphasis>"
 msgctxt "@label/rich"
 msgid ""
 "<emphasis>There are pending changes on the categories page.<nl> Please save "
 "the changes before working on tag groups.</emphasis>"
 msgstr ""
-"<emphasis>Nie istnieją żadne oczekujące zmiany nazwy kategorii.<nl> Proszę "
-"zapisać zmiany przed pracą nad grupami znaczników.</emphasis>"
+"<emphasis>Nie istnieją żadne oczekujące zmiany na stronie kategorii.<nl> "
+"Proszę zapisać zmiany przed pracą nad grupami znaczników.</emphasis>"
 
 #: Settings/TagGroupsPage.cpp:82
 msgctxt "@action:inmenu"
@@ -5359,7 +5349,7 @@ msgid "Unable to copy '%1' to '%2'."
 msgstr "Nie można skopiować '%1' do '%2'."
 
 #: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:444
+#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:476
 msgid "Error Running Demo"
 msgstr "Błąd podczas uruchamiania demo"
 
@@ -5374,9 +5364,8 @@ msgid "Unable to open '%1' for writing."
 msgstr "Nie można otworzyć '%1' do zapisu."
 
 #: Utilities/Util.cpp:472
-#, kde-format
-msgid "<p>Unable to find file %1</p>"
-msgstr "<p>Nie można odnaleźć pliku %1</p>"
+msgid "<p>No file name given!</p>"
+msgstr "<p>Nie podano nazwy pliku!</p>"
 
 #: Viewer/CategoryImageConfig.cpp:42
 msgctxt "@title:window"
@@ -5418,7 +5407,7 @@ msgstr "Niewystarczająca głębia koloru dla tego filtra"
 msgid "[ zoom x%1 ]"
 msgstr "[ pow. x%1 ]"
 
-#: Viewer/InfoBox.cpp:85
+#: Viewer/InfoBox.cpp:86
 msgid "Show the geographic position of this image on a map"
 msgstr "Pokaż położenie geograficzne tego obrazu na mapie"
 
@@ -5819,17 +5808,11 @@ msgstr "Pokaż wymiary obrazów"
 msgid "Show Rating"
 msgstr "Pokaż ocenę"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:139
-#, fuzzy
-#| msgctxt "Denotes the media type (video,image)"
-#| msgid "Image"
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:141
 msgid "Image"
 msgstr "Obraz"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:140
-#, fuzzy
-#| msgctxt "Denotes the media type (video,image)"
-#| msgid "Video"
+#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:142
 msgid "Video"
 msgstr "Film"
 
@@ -5847,24 +5830,46 @@ msgstr ""
 msgid "index.xml version mismatch"
 msgstr "niezgodność wersji index.xml"
 
-#: XMLDB/FileReader.cpp:208
+#: XMLDB/FileReader.cpp:191
+#, kde-format
+msgid ""
+"<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
+"ignore the duplicate category and try an automatic repair, or choose cancel "
+"to quit.</p>"
+msgstr ""
+"<p>Wiersz %1, kolumna %2: powielona kategoria '%3'</p><p>Wybierz kontynuuj, "
+"aby pominąć powieloną kategorię i spróbować samoczynnego naprawiania lub "
+"wyjdź.</p>"
+
+#: XMLDB/FileReader.cpp:198
+msgid "Error in database file"
+msgstr "Błąd w pliku bazy danych"
+
+#: XMLDB/FileReader.cpp:242
+msgctxt ""
+"Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
+"with these exact names. Thanks :-)"
 msgid ""
 "<p><b>This version of KPhotoAlbum does not translate \"standard\" categories "
 "any more.</b></p><p>This may mean that – if you use a locale other than "
-"English – some of your categories are now displayed in English. <p></p>You "
-"can manually rename your categories any time and then save your database.</p>"
+"English – some of your categories are now displayed in English.</p><p>You "
+"can manually rename your categories any time and then save your database.</"
+"p><p>In some cases, you may get two additional empty categories, \"Folder\" "
+"and \"Media Type\". You can delete those.</p>"
 msgstr ""
 "<p><b>Ta wersja KPhotoAlbum już nie tłumaczy \"standardowych\" kategorii.</"
 "b></p><p>Może to oznaczać – jeśli używasz języka innego niż angielski – że "
 "niektóre z twoich kategorii są teraz wyświetlane w języku angielskim. <p></"
 "p>Możesz ręcznie zmienić nazwy swoich kategorii w każdej chwili, a następnie "
-"zapisać je w swojej bazie danych.</p>"
+"zapisać je w swojej bazie danych.</p><p>W pewnych przypadkach, możesz mieć "
+"dwie dodatkowe puste kategorie, \"Katalog\"  oraz \"Rodzaj nośnika\". Możesz "
+"je spokojnie usunąć.</p>"
 
-#: XMLDB/FileReader.cpp:218
+#: XMLDB/FileReader.cpp:250
 msgid "Changed standard category names"
 msgstr "Zmieniono nazwy standardowych kategorii"
 
-#: XMLDB/FileReader.cpp:356
+#: XMLDB/FileReader.cpp:388
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
@@ -5887,7 +5892,7 @@ msgstr ""
 "wykonać polecenie <b> Obsługa -> Uporządkuj wszystkie wg. daty i czasu</b>, "
 "żeby posortować je w bazie danych.</p>"
 
-#: XMLDB/FileReader.cpp:366
+#: XMLDB/FileReader.cpp:398
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>You also do not have EXIF "
@@ -5903,11 +5908,11 @@ msgstr ""
 "<code>exiv2</code>. Po przekompilowaniu program pomoże w skorygowaniu "
 "brakujących informacji.</p>"
 
-#: XMLDB/FileReader.cpp:373
+#: XMLDB/FileReader.cpp:405
 msgid "Images/Videos Are Not Sorted"
 msgstr "Obrazy/filmy nie są posortowane"
 
-#: XMLDB/FileReader.cpp:388
+#: XMLDB/FileReader.cpp:420
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
 "this is needed to get the best result in the thumbnail view. To fix this, "
@@ -5924,11 +5929,11 @@ msgstr ""
 "obrazów w podglądzie miniatur. Jednak jest to jedyny efekt, więc nie ma się "
 "co spieszyć z wykonywaniem tej operacji.</p>"
 
-#: XMLDB/FileReader.cpp:393
+#: XMLDB/FileReader.cpp:425
 msgid "Not All Images Have Size Information"
 msgstr "Nie wszystkie obrazy posiadają informacje o rozmiarze"
 
-#: XMLDB/FileReader.cpp:416
+#: XMLDB/FileReader.cpp:448
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
 "installation error</p><p>If you have installed KPhotoAlbum yourself, then "
@@ -5950,31 +5955,31 @@ msgstr ""
 "p><p>Jeżeli zmienna KDEDIRS już istnieje, po prostuj dodaj odpowiedni "
 "łańcuch tak, jakbyś ustawiał zmienną środowiskową <b>PATH</b></p>"
 
-#: XMLDB/FileReader.cpp:423
+#: XMLDB/FileReader.cpp:455
 msgid "No default setup file found"
 msgstr "Nie znaleziono domyślnego pliku ustawień"
 
-#: XMLDB/FileReader.cpp:444
+#: XMLDB/FileReader.cpp:476
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "Nie można otworzyć '%1' do odczytu"
 
-#: XMLDB/FileReader.cpp:457
+#: XMLDB/FileReader.cpp:489
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "wiersz %1 kolumna %2 w pliku %3: %4"
 
-#: XMLDB/FileReader.cpp:459
+#: XMLDB/FileReader.cpp:491
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "Nieudane odzyskiwanie kopii zapasowej: %1"
 
-#: XMLDB/FileReader.cpp:470
+#: XMLDB/FileReader.cpp:502
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "Błąd w pliku %1: Nie znaleziono jakichkolwiek elementów"
 
-#: XMLDB/FileReader.cpp:476
+#: XMLDB/FileReader.cpp:508
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
@@ -6060,6 +6065,9 @@ msgstr "<p>Dodatkowe szczegóły błędu:<nl/><message>%1</message></p>"
 #: XMLDB/XmlReader.cpp:95
 msgid "Error while reading database file"
 msgstr "Błąd podczas odczytu pliku bazy danych"
+
+
+
 
 
 
