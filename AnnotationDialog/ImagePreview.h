@@ -18,7 +18,6 @@
 
 #ifndef IMAGEPREVIEW_H
 #define IMAGEPREVIEW_H
-#include <QLabel>
 #include "config-kpa-kface.h"
 #include "DB/ImageInfo.h"
 #include "ImageManager/ImageClientInterface.h"
@@ -27,6 +26,9 @@
 #include "FaceManagement/Detector.h"
 #include "FaceManagement/Recognizer.h"
 #endif
+
+#include <QLabel>
+#include <QTimer>
 
 class QResizeEvent;
 class QRubberBand;
@@ -56,6 +58,7 @@ public:
     void trainRecognitionDatabase(QRect geometry, QPair<QString, QString> tagData);
     void recognizeArea(ResizableFrame *area);
 #endif
+    QPixmap grabAreaImage(QRect area);
 
 public slots:
     void setAreaCreationEnabled(bool state);
@@ -75,6 +78,7 @@ protected:
     void reload();
     void setCurrentImage(const QImage &image);
     QImage rotateAndScale( QImage, int width, int height, int angle ) const;
+    void updateScaleFactors();
 
     QRect areaActualToPreview(QRect area) const;
     void processNewArea();
@@ -110,6 +114,8 @@ protected:
     };
     PreviewLoader m_preloader;
 
+protected slots:
+    void resizeFinished();
 private:
     DB::ImageInfo m_info;
     QString m_fileName;
@@ -126,6 +132,9 @@ private:
     QRubberBand *m_selectionRect;
     double m_scaleWidth;
     double m_scaleHeight;
+    double m_aspectRatio;
+    QTimer *m_reloadTimer;
+
     void createNewArea(QRect geometry, QRect actualGeometry);
     QRect rotateArea(QRect originalAreaGeometry, int angle);
     bool m_areaCreationEnabled;

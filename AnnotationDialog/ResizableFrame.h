@@ -48,10 +48,13 @@ class ResizableFrame : public QFrame
 public:
     explicit ResizableFrame(QWidget* parent = 0);
     ~ResizableFrame();
+
     void setActualCoordinates(QRect actualCoordinates);
     QRect actualCoordinates() const;
+
     void checkGeometry();
-    void checkShowContextMenu();
+    void showContextMenu();
+
     void setDialog(Dialog* dialog);
     QPair<QString, QString> tagData() const;
     void removeTagData();
@@ -59,6 +62,13 @@ public:
     void setProposedTagData(QPair<QString, QString> tagData);
     QPair<QString, QString> proposedTagData() const;
     void removeProposedTagData();
+
+    /**
+     * @brief Add the context menu actions to a QMenu.
+     * @sa AreaTagSelectDialog
+     * @param w
+     */
+    void addTagActions(QMenu *menu);
 #ifdef HAVE_KFACE
     /**
      * If the face has been detected by the face detector, this method is called.
@@ -78,7 +88,7 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
-    void contextMenuEvent(QContextMenuEvent* event);
+    void contextMenuEvent(QContextMenuEvent *);
 #ifdef HAVE_KFACE
     void enterEvent(QEvent*);
     void leaveEvent(QEvent*);
@@ -114,10 +124,10 @@ private: // Variables
     QPair<QString, QString> m_tagData;
     QPair<QString, QString> m_proposedTagData;
     ImagePreview* m_preview;
+    ImagePreviewWidget* m_previewWidget;
 #ifdef HAVE_KFACE
     QAction* m_updateRecognitionDatabaseAct;
     QAction* m_recognizeAct;
-    ImagePreviewWidget* m_previewWidget;
     bool m_changed;
     bool m_trained;
     bool m_detectedFace;
