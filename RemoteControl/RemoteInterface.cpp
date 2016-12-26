@@ -29,7 +29,7 @@
 #include <QTcpSocket>
 
 #include <kiconloader.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "Browser/FlatCategoryModel.h"
 #include "DB/Category.h"
@@ -88,9 +88,9 @@ bool RemoteInterface::requestStillNeeded(const DB::FileName& fileName)
     return m_activeReuqest.contains(fileName);
 }
 
-void RemoteInterface::listen()
+void RemoteInterface::listen(QHostAddress address)
 {
-    m_connection->listen();
+    m_connection->listen(address);
     emit listening();
 }
 

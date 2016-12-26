@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2016 Jesper K. Pedersen <blackie@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
@@ -17,46 +17,75 @@
 */
 
 #include "HTMLDialog.h"
-#include <QComboBox>
-#include <QLabel>
 
-#include <klocale.h>
-#include <qlayout.h>
-#include <klineedit.h>
-#include <qlabel.h>
-#include <qspinbox.h>
-#include <qcheckbox.h>
-#include <kfiledialog.h>
-#include <qpushbutton.h>
-#include "Settings/SettingsData.h"
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDialogButtonBox>
+#include <QFileDialog>
 #include <QGroupBox>
-#include <kstandarddirs.h>
-#include <kmessagebox.h>
-#include <kfileitem.h>
-#include <kio/netaccess.h>
-#include "MainWindow/Window.h"
-#include "DB/CategoryCollection.h"
-#include "DB/ImageDB.h"
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QScopedPointer>
+#include <QSpinBox>
+#include <QStandardPaths>
+#include <QStringMatcher>
+#include <QVBoxLayout>
+
+#include <KConfig>
+#include <KConfigGroup>
+#include <KFileItem>
+#include <KIO/DeleteJob>
+#include <KIO/StatJob>
+#include <KJob>
+#include <KJobWidgets>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KTextEdit>
+
+#include <DB/CategoryCollection.h>
+#include <DB/ImageDB.h>
+#include <MainWindow/Window.h>
+#include <Settings/SettingsData.h>
+
 #include "Generator.h"
 #include "ImageSizeCheckBox.h"
-#include <KTextEdit>
-#include <QStringMatcher>
-#include <QHBoxLayout>
+
 using namespace HTMLGenerator;
 
+#ifdef DEBUG_HTMLGENERATOR
+#define Debug qDebug
+#else
+#define Debug if(0) qDebug
+#endif
 
 HTMLDialog::HTMLDialog( QWidget* parent )
    : KPageDialog(parent)
    , m_list()
 {
     setWindowTitle( i18n("HTML Export") );
-    setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Help );
-    enableButtonOk( false );
+    QWidget *mainWidget = new QWidget(this);
+    this->layout()->addWidget(mainWidget);
+
     createContentPage();
     createLayoutPage();
     createDestinationPage();
-    setHelp( QString::fromLatin1( "chp-generating-html" ) );
-    connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
+    // destUrl is only relevant for .kim file creation:
+    connect(m_generateKimFile,&QCheckBox::toggled,m_destURL,&QLineEdit::setEnabled);
+    // automatically fill in output directory:
+    connect(m_title,&QLineEdit::editingFinished,this,&HTMLDialog::slotSuggestOutputDir);
+
+    QDialogButtonBox *buttonBox = this->buttonBox();
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &HTMLDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &HTMLDialog::reject);
+    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
+    okButton->setDefault(true);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    okButton->setEnabled( m_themes.size()>0 );
+    connect(okButton, &QPushButton::clicked, this, &HTMLDialog::slotOk);
+    this->layout()->addWidget(buttonBox);
 }
 
 void HTMLDialog::createContentPage()
@@ -64,7 +93,7 @@ void HTMLDialog::createContentPage()
     QWidget* contentPage = new QWidget;
     KPageWidgetItem* page = new KPageWidgetItem( contentPage, i18n("Content" ) );
     page->setHeader( i18n("Content" ) );
-    page->setIcon( KIcon( QString::fromLatin1( "document-properties" ) ) );
+    page->setIcon( QIcon::fromTheme( QString::fromLatin1( "document-properties" ) ) );
     addPage( page );
 
     QVBoxLayout* lay1 = new QVBoxLayout( contentPage );
@@ -73,7 +102,7 @@ void HTMLDialog::createContentPage()
 
     QLabel* label = new QLabel( i18n("Page title:"), contentPage );
     lay2->addWidget( label, 0, 0 );
-    m_title = new KLineEdit( contentPage );
+    m_title = new QLineEdit( contentPage );
     label->setBuddy( m_title );
     lay2->addWidget( m_title, 0, 1 );
 
@@ -81,7 +110,7 @@ void HTMLDialog::createContentPage()
     label = new QLabel( i18n("Copyright:"), contentPage );
     label->setAlignment( Qt::AlignTop );
     lay2->addWidget( label, 1, 0 );
-    m_copyright = new KLineEdit( contentPage );
+    m_copyright = new QLineEdit( contentPage );
     m_copyright->setText( Settings::SettingsData::instance()->HTMLCopyright() );
     label->setBuddy( m_copyright );
     lay2->addWidget( m_copyright, 1, 1 );
@@ -98,20 +127,21 @@ void HTMLDialog::createContentPage()
     m_generateKimFile->setChecked( Settings::SettingsData::instance()->HTMLKimFile() );
     lay1->addWidget( m_generateKimFile );
 
-    m_inlineMovies = new QCheckBox( i18n( "Inline Movies in pages" ), contentPage );
+    m_inlineMovies = new QCheckBox( i18nc("Inline as a verb, i.e. 'please show movies right on the page, not as links'",
+                                          "Inline Movies in pages" ), contentPage );
     m_inlineMovies->setChecked( Settings::SettingsData::instance()->HTMLInlineMovies() );
     lay1->addWidget( m_inlineMovies );
 
-    m_html5Video = new QCheckBox( i18n( "Use HTML5 video tag" ), contentPage );
+    m_html5Video = new QCheckBox( i18nc("Tag as in HTML-tag, not as in image tag", "Use HTML5 video tag" ), contentPage );
     m_html5Video->setChecked( Settings::SettingsData::instance()->HTML5Video() );
     lay1->addWidget( m_html5Video );
 
-    QString avconv = KStandardDirs::findExe( QString::fromLatin1( "avconv" ) );
-    const QString ffmpeg2theora = KStandardDirs::findExe(QString::fromLatin1("ffmpeg2theora"));
+    QString avconv = QStandardPaths::findExecutable(QString::fromUtf8("avconv"));
+    const QString ffmpeg2theora = QStandardPaths::findExecutable(QString::fromUtf8("ffmpeg2theora"));
 
-    KStandardDirs::findExe( QString::fromLatin1( "avconv" ) );
+    QStandardPaths::findExecutable(QString::fromUtf8("avconv"));
     if ( avconv.isNull() )
-        avconv = KStandardDirs::findExe( QString::fromLatin1( "ffmpeg" ) );
+        avconv = QStandardPaths::findExecutable(QString::fromUtf8("ffmpeg"));
 
     QString txt = i18n( "<p>This selection will generate video files suitable for displaying on web. "
                         "avconv and ffmpeg2theora are required for video file generation.</p>" );
@@ -162,7 +192,7 @@ void HTMLDialog::createLayoutPage()
     QWidget* layoutPage = new QWidget;
     KPageWidgetItem* page = new KPageWidgetItem( layoutPage, i18n("Layout" ) );
     page->setHeader( i18n("Layout" ) );
-    page->setIcon( KIcon( QString::fromLatin1( "matrix" )) );
+    page->setIcon( QIcon::fromTheme( QString::fromLatin1( "configure" )) );
     addPage(page);
 
     QVBoxLayout* lay1 = new QVBoxLayout( layoutPage );
@@ -211,7 +241,7 @@ void HTMLDialog::createLayoutPage()
     m_themeInfo = new QLabel( i18n("Theme Description"), layoutPage );
     m_themeInfo->setWordWrap(true);
     lay2->addWidget( m_themeInfo, 3, 1 );
-    connect(m_themeBox, SIGNAL(currentIndexChanged(int)), this, SLOT(displayThemeDescription(int)));  // update theme description whenever ComboBox changes
+    connect(m_themeBox, static_cast<void (KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &HTMLDialog::displayThemeDescription);
     populateThemesCombo();
 
     // Image sizes
@@ -271,21 +301,21 @@ void HTMLDialog::createDestinationPage()
 
     KPageWidgetItem* page = new KPageWidgetItem( destinationPage, i18n("Destination" ) );
     page->setHeader( i18n("Destination" ) );
-    page->setIcon( KIcon( QString::fromLatin1( "drive-harddisk" ) ) );
+    page->setIcon( QIcon::fromTheme( QString::fromLatin1( "drive-harddisk" ) ) );
     addPage( page );
 
     QVBoxLayout* lay1 = new QVBoxLayout( destinationPage );
     QGridLayout* lay2 = new QGridLayout;
     lay1->addLayout( lay2 );
+    int row = -1;
 
     // Base Directory
     QLabel* label = new QLabel( i18n("Base directory:"), destinationPage );
-    lay2->addWidget( label, 0, 0 );
-
+    lay2->addWidget( label, ++row, 0 );
     QHBoxLayout* lay3 = new QHBoxLayout;
-    lay2->addLayout( lay3, 0, 1 );
+    lay2->addLayout( lay3, row, 1 );
 
-    m_baseDir = new KLineEdit( destinationPage );
+    m_baseDir = new QLineEdit( destinationPage );
     lay3->addWidget( m_baseDir );
     label->setBuddy( m_baseDir );
 
@@ -293,35 +323,48 @@ void HTMLDialog::createDestinationPage()
     lay3->addWidget( but );
     but->setFixedWidth( 25 );
 
-    connect( but, SIGNAL(clicked()), this, SLOT(selectDir()) );
+    connect(but, &QPushButton::clicked, this, &HTMLDialog::selectDir);
     m_baseDir->setText( Settings::SettingsData::instance()->HTMLBaseDir() );
 
-    // Base URL
-    label = new QLabel( i18n("Base URL:"), destinationPage );
-    lay2->addWidget( label, 1, 0 );
-
-    m_baseURL = new KLineEdit( destinationPage );
-    m_baseURL->setText( Settings::SettingsData::instance()->HTMLBaseURL() );
-    lay2->addWidget( m_baseURL, 1, 1 );
-    label->setBuddy( m_baseURL );
-
-    // Destination URL
-    label = new QLabel( i18n("URL for final destination:" ), destinationPage );
-    lay2->addWidget( label, 2, 0 );
-    m_destURL = new KLineEdit( destinationPage );
-    m_destURL->setText( Settings::SettingsData::instance()->HTMLDestURL() );
-    lay2->addWidget( m_destURL, 2, 1 );
-    label->setBuddy( m_destURL );
-
     // Output Directory
-    label = new QLabel( i18n("Output directory:"), destinationPage );
-    lay2->addWidget( label, 3, 0 );
-    m_outputDir = new KLineEdit( destinationPage );
-    lay2->addWidget( m_outputDir, 3, 1 );
+    label = new QLabel( i18n("Gallery directory:"), destinationPage );
+    lay2->addWidget( label, ++row, 0 );
+    m_outputDir = new QLineEdit( destinationPage );
+    lay2->addWidget( m_outputDir, row, 1 );
     label->setBuddy( m_outputDir );
 
-    label = new QLabel( i18n("<b>Hint: Press the help button for descriptions of the fields</b>"), destinationPage );
-    lay1->addWidget( label );
+    // fully "Assembled" output Directory
+    label = new QLabel( i18n("Output directory:"), destinationPage );
+    lay2->addWidget( label, ++row, 0 );
+    m_outputLabel = new QLabel( destinationPage );
+    lay2->addWidget( m_outputLabel, row, 1 );
+    label->setBuddy( m_outputLabel );
+    connect(m_baseDir, &QLineEdit::textChanged, this, &HTMLDialog::slotUpdateOutputLabel);
+    connect(m_outputDir, &QLineEdit::textChanged, this, &HTMLDialog::slotUpdateOutputLabel);
+    // initial text
+    slotUpdateOutputLabel();
+
+    // Destination URL
+    label = new QLabel( i18n("URL for final destination of .kim file:" ), destinationPage );
+    label->setToolTip( i18n(
+                           "<p>If you move the gallery to a remote location, set this to the destination URL.</p>"
+                           "<p>This only affects the generated <filename>.kim</filename> file.</p>"
+                           )
+                       );
+    lay2->addWidget( label, ++row, 0 );
+    m_destURL = new QLineEdit( destinationPage );
+    m_destURL->setText( Settings::SettingsData::instance()->HTMLDestURL() );
+    lay2->addWidget( m_destURL, row, 1 );
+    label->setBuddy( m_destURL );
+
+    // Base URL
+    label = new QLabel( i18n("Open gallery in browser:"), destinationPage );
+    lay2->addWidget( label, ++row, 0 );
+    m_openInBrowser = new QCheckBox(destinationPage);
+    m_openInBrowser->setChecked(true);
+    lay2->addWidget( m_openInBrowser, row, 1);
+    label->setBuddy( m_openInBrowser );
+
     lay1->addStretch( 1 );
 }
 
@@ -331,14 +374,13 @@ void HTMLDialog::slotOk()
         return;
 
     if( activeResolutions().count() < 1 ) {
-        KMessageBox::error( nullptr, i18n( "You must select at least one resolution." ) );
+        KMessageBox::sorry( nullptr, i18n( "You must select at least one resolution." ) );
         return;
     }
 
     accept();
 
     Settings::SettingsData::instance()->setHTMLBaseDir( m_baseDir->text() );
-    Settings::SettingsData::instance()->setHTMLBaseURL( m_baseURL->text() );
     Settings::SettingsData::instance()->setHTMLDestURL( m_destURL->text() );
     Settings::SettingsData::instance()->setHTMLCopyright( m_copyright->text() );
     Settings::SettingsData::instance()->setHTMLDate( m_date->isChecked() );
@@ -358,9 +400,11 @@ void HTMLDialog::slotOk()
 
 void HTMLDialog::selectDir()
 {
-    KUrl dir = KFileDialog::getExistingDirectoryUrl( m_baseDir->text(), this );
-    if ( !dir.url().isNull() )
-        m_baseDir->setText( dir.url() );
+    QString dir = QFileDialog::getExistingDirectory( this,
+                                                     i18n("Select base directory..."),
+                                                     m_baseDir->text() );
+    if ( !dir.isEmpty() )
+        m_baseDir->setText( dir );
 }
 
 bool HTMLDialog::checkVars()
@@ -389,16 +433,18 @@ bool HTMLDialog::checkVars()
     }
 
     // ensure base dir exists
-    KIO::UDSEntry result;
-    bool ok = KIO::NetAccess::stat( KUrl(baseDir), result, this );
-    if ( !ok ) {
+    QScopedPointer<KIO::StatJob> statJob( KIO::stat( QUrl::fromUserInput(baseDir), KIO::StatJob::DestinationSide, 1 /*only basic info*/));
+    KJobWidgets::setWindow( statJob.data(), MainWindow::Window::theMainWindow() );
+    if (!statJob->exec())
+    {
         KMessageBox::error( this, i18n("<p>Error while reading information about %1. "
-                                       "This is most likely because the directory does not exist.</p>",
-                                       baseDir ) );
+                                       "This is most likely because the directory does not exist.</p>"
+                                       "<p>The error message was: %2</p>",
+                                       baseDir, statJob->errorString() ) );
         return false;
     }
 
-    KFileItem fileInfo( result, KUrl(baseDir) );
+    KFileItem fileInfo( statJob->statResult(), QUrl::fromUserInput(baseDir) );
     if ( !fileInfo.isDir() ) {
         KMessageBox::error( this, i18n("<p>%1 does not exist, is not a directory or "
                                        "cannot be written to.</p>", baseDir ) );
@@ -407,8 +453,10 @@ bool HTMLDialog::checkVars()
 
 
     // test if destination directory exists.
-    bool exists = KIO::NetAccess::exists( KUrl(outputDir), KIO::NetAccess::DestinationSide, MainWindow::Window::theMainWindow() );
-    if ( exists ) {
+    QScopedPointer<KIO::StatJob> existsJob( KIO::stat( QUrl::fromUserInput(outputDir), KIO::StatJob::DestinationSide, 0 /*only minimal info*/ ));
+    KJobWidgets::setWindow( existsJob.data(), MainWindow::Window::theMainWindow() );
+    if ( existsJob->exec() )
+    {
         int answer = KMessageBox::warningYesNo( this,
                                                 i18n("<p>Output directory %1 already exists. "
                                                      "Usually, this means you should specify a new directory.</p>"
@@ -416,7 +464,9 @@ bool HTMLDialog::checkVars()
                                                 i18n("Directory Exists"), KStandardGuiItem::yes(), KStandardGuiItem::no(),
                                                 QString::fromLatin1("html_export_delete_original_directory") );
         if ( answer == KMessageBox::Yes ) {
-            KIO::NetAccess::del( KUrl(outputDir), MainWindow::Window::theMainWindow() );
+            QScopedPointer<KJob> delJob (KIO::del(QUrl::fromUserInput(outputDir)));
+            KJobWidgets::setWindow( delJob.data(), MainWindow::Window::theMainWindow() );
+            delJob->exec();
         }
         else
             return false;
@@ -468,14 +518,21 @@ QString HTMLDialog::includeSelections() const
 
 void HTMLDialog::populateThemesCombo()
 {
-    QStringList dirs = KGlobal::dirs()->findDirs( "data", QString::fromLocal8Bit("kphotoalbum/themes/") );
+    QStringList dirs = QStandardPaths::locateAll(
+                QStandardPaths::GenericDataLocation,
+                QString::fromLocal8Bit("kphotoalbum/themes/"),
+                QStandardPaths::LocateDirectory
+                );
     int i = 0;
     int theme = 0;
     int defaultthemes = 0;
+    Debug() << "Theme directories:"<<dirs;
     for(QStringList::Iterator it = dirs.begin(); it != dirs.end(); ++it) {
         QDir dir(*it);
+        Debug() << "Searching themes in:"<<dir;
         QStringList themes = dir.entryList( QDir::Dirs | QDir::Readable );
         for(QStringList::Iterator it = themes.begin(); it != themes.end(); ++it) {
+            Debug() << " *" << *it;
             if(*it == QString::fromLatin1(".") || *it == QString::fromLatin1("..")) continue;
             QString themePath = QString::fromLatin1("%1/%2/").arg(dir.path()).arg(*it);
 
@@ -488,7 +545,6 @@ void HTMLDialog::populateThemesCombo()
             QString themeDescription = config.readEntry( "Description" );
             m_themeDescriptions << themeDescription; // save description to display later
 
-            enableButtonOk( true );
             //m_themeBox->insertItem( i, i18n( "%1 (by %2)",themeName, themeAuthor ) ); // combined alternative
             m_themeBox->insertItem( i, i18n( "%1",themeName) );
             m_themes.insert( i, themePath );
@@ -524,10 +580,44 @@ void HTMLDialog::displayThemeDescription(int themenr)
     // however, storing author and descriptions separately might be cleaner.
 }
 
+void HTMLDialog::slotUpdateOutputLabel()
+{
+    QString outputDir = QDir(m_baseDir->text()).filePath(m_outputDir->text());
+    // feedback on validity:
+    if (outputDir == m_baseDir->text())
+    {
+        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : darkred; }"));
+        outputDir.append(i18n("<p>Gallery directory cannot be empty.</p>"));
+    } else if ( QDir(outputDir).exists())
+    {
+        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : darkorange; }"));
+        outputDir.append(i18n("<p>The output directory already exists.</p>"));
+    } else
+    {
+        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : black; }"));
+    }
+    m_outputLabel->setText( outputDir );
+
+}
+
+void HTMLDialog::slotSuggestOutputDir()
+{
+    if (m_outputDir->text().isEmpty())
+    {
+        // the title is often an adequate directory name:
+        m_outputDir->setText( m_title->text() );
+    }
+}
+
 int HTMLDialog::exec(const DB::FileNameList& list)
 {
+    if (list.empty())
+    {
+        qWarning() << "HTMLDialog called without images for export";
+        return false;
+    }
     m_list = list;
-    return KDialog::exec();
+    return QDialog::exec();
 }
 
 
@@ -537,7 +627,10 @@ Setup HTMLGenerator::HTMLDialog::setup() const
     Setup setup;
     setup.setTitle( m_title->text() );
     setup.setBaseDir( m_baseDir->text() );
-    setup.setBaseURL( m_baseURL->text() );
+    if (m_openInBrowser->isEnabled())
+    {
+        setup.setBaseURL( m_baseDir->text() );
+    }
     setup.setDestURL( m_destURL->text() );
     setup.setOutputDir( m_outputDir->text() );
     setup.setThumbSize( m_thumbSize->value() );

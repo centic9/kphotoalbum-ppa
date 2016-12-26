@@ -31,7 +31,7 @@
 #include <QTimer>
 
 // KDE includes
-#include <KLocale>
+#include <KLocalizedString>
 
 // Local includes
 #include "ImagePreview.h"
@@ -202,7 +202,6 @@ void AnnotationDialog::ResizableFrame::mouseMoveEvent(QMouseEvent* event)
             y = m_dragStartGeometry.top() - (m_dragStartPosition.y() - event->y());
 
             if (y >= geometry().y() + geometry().height()) {
-                h = 0;
                 y = m_dragStartGeometry.top() + m_dragStartGeometry.height();
                 moveAction ^= SCALE_BOTTOM | SCALE_TOP;
             }
@@ -245,7 +244,6 @@ void AnnotationDialog::ResizableFrame::mouseMoveEvent(QMouseEvent* event)
             x = m_dragStartGeometry.left() - (m_dragStartPosition.x() - event->x());
 
             if (x >= geometry().left() + geometry().width()) {
-                w = 0;
                 x = m_dragStartGeometry.left() + m_dragStartGeometry.width();
                 moveAction ^= SCALE_RIGHT | SCALE_LEFT;
             }
@@ -367,7 +365,9 @@ void AnnotationDialog::ResizableFrame::contextMenuEvent(QContextMenuEvent* event
                 // Add a single action
                 QAction* associateOnlyCandidateAction = createAssociateTagAction(
                     positionableTagCandidates[0],
-                    i18n("Associate with")
+                    i18nc("As in: associate [this marked area of the image] with one of the "
+                          "following choices/menu items",
+                          "Associate with")
                 );
                 connect(associateOnlyCandidateAction, SIGNAL(triggered()), this, SLOT(associateTag()));
                 menu->addAction(associateOnlyCandidateAction);
@@ -424,10 +424,12 @@ QAction* AnnotationDialog::ResizableFrame::createAssociateTagAction(
     if (! prefix.isEmpty()) {
         actionText = i18nc("%1 is a prefix like 'Associate with', "
                            "%2 is the tag name and %3 is the tag's category",
-                           "%1 %2 (%3)").arg(prefix, tag.second, tag.first);
+                           "%1 %2 (%3)",
+                           prefix, tag.second, tag.first);
     } else {
         actionText = i18nc("%1 is the tag name and %2 is the tag's category",
-                           "%1 (%2)").arg(tag.second, tag.first);
+                           "%1 (%2)",
+                           tag.second, tag.first);
     }
 
     QAction* action = new QAction(actionText, this);

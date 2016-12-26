@@ -22,7 +22,7 @@
 #include <QResizeEvent>
 #include <QMouseEvent>
 #include <KMessageBox>
-#include <klocale.h>
+#include <KLocalizedString>
 #include "Settings/SettingsData.h"
 #include "Viewer/ViewHandler.h"
 #include "ImageManager/AsyncLoader.h"
@@ -78,7 +78,7 @@ Viewer::ImageDisplay::ImageDisplay( QWidget* parent)
     setMouseTracking( true );
     m_cursorTimer = new QTimer( this );
     m_cursorTimer->setSingleShot(true);
-    connect( m_cursorTimer, SIGNAL(timeout()), this, SLOT(hideCursor()) );
+    connect(m_cursorTimer, &QTimer::timeout, this, &ImageDisplay::hideCursor);
     showCursor();
 }
 

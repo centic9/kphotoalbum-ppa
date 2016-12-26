@@ -21,7 +21,6 @@
 #include <config-kpa-kipi.h>
 #include "Plugins/ImageCollection.h"
 #include "Plugins/Interface.h"
-#include <kdemacros.h>
 
 namespace Plugins
 {
@@ -39,11 +38,11 @@ namespace Plugins
  *    useful as i.e. html export plugin uses the names of image collections as headlines and groups the images visually by
  *    image collection.
  */
-class KDE_EXPORT ImageCollectionSelector :public KIPI::ImageCollectionSelector
+class ImageCollectionSelector :public KIPI::ImageCollectionSelector
 {
 public:
     ImageCollectionSelector(QWidget *parent, Interface *interface);
-    virtual QList<KIPI::ImageCollection> selectedImageCollections() const;
+    virtual QList<KIPI::ImageCollection> selectedImageCollections() const override;
 
 protected:
     // just fake a selectionChanged event when first shown to make export plugin happy:

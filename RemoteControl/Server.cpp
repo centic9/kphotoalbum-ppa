@@ -22,7 +22,7 @@
 #include <QTcpSocket>
 #include <QMessageBox>
 #include "RemoteCommand.h"
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace RemoteControl;
 
@@ -36,11 +36,11 @@ bool Server::isConnected() const
     return m_isConnected;
 }
 
-void Server::listen()
+void Server::listen(QHostAddress address)
 {
     if (!m_socket) {
         m_socket = new QUdpSocket(this);
-        bool ok = m_socket->bind(UDPPORT);
+        bool ok = m_socket->bind(address, UDPPORT);
         if (!ok) {
             QMessageBox::critical(0, i18n("Unable to bind to socket"),
                                   i18n("Unable to listen for remote Android connections. "
@@ -72,7 +72,7 @@ void Server::readIncommingUDP()
     QHostAddress address;
     qint64 len = m_socket->readDatagram(data,1000, &address);
     QString string = QString::fromUtf8(data).left(len);
-    QStringList list = string.split(QChar::fromAscii(' '));
+    QStringList list = string.split(QChar::fromLatin1(' '));
     if (list[0] != QString::fromUtf8("KPhotoAlbum")) {
         return;
     }
@@ -80,8 +80,9 @@ void Server::readIncommingUDP()
         QMessageBox::critical(0, i18n("Invalid Version"),
                               i18n("Version mismatch between Remote Client and KPhotoAlbum on the desktop.\n"
                                    "Desktop protocol version: %1\n"
-                                   "Remote Control protocol version: %2")
-                              .arg(RemoteControl::VERSION).arg(list[1]));
+                                   "Remote Control protocol version: %2",
+											  RemoteControl::VERSION,
+											  list[1]));
         stopListening();
         return;
     }

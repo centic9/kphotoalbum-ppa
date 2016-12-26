@@ -17,22 +17,39 @@
 */
 #ifndef FEATUREDIALOG_H
 #define FEATUREDIALOG_H
-#include <KTextBrowser>
-#include <kdialog.h>
+
+#include <QDialog>
+
+#include <QTextBrowser>
 
 namespace MainWindow
 {
 
-class FeatureDialog : public KDialog {
+class FeatureDialog : public QDialog {
     Q_OBJECT
 
 public:
     explicit FeatureDialog( QWidget* parent );
+
+    QSize sizeHint() const override;
+
     static bool hasAllFeaturesAvailable();
     static QString featureString();
     static QStringList supportedVideoMimeTypes();
     static QString mplayerBinary();
     static bool isMplayer2();
+    static QString ffmpegBinary();
+    static QString ffprobeBinary();
+    /**
+     * @brief hasVideoThumbnailer
+     * @return true, if a program capable of creating video thumbnails is found, false otherwise
+     */
+    static bool hasVideoThumbnailer();
+    /**
+     * @brief hasVideoProber
+     * @return  true, if a program capable of extracting video metadata is found, false otherwise
+     */
+    static bool hasVideoProber();
 
 protected:
     static bool hasKIPISupport();
@@ -42,12 +59,6 @@ protected:
     static bool hasGeoMapSupport();
 };
 
-class HelpBrowser :public KTextBrowser
-{
-public:
-    explicit HelpBrowser( QWidget* parent, const char* name = nullptr );
-    virtual void setSource( const QUrl& name );
-};
 
 }
 

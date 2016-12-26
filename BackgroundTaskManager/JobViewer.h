@@ -1,4 +1,4 @@
-/* Copyright 2012 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright 2012-2016 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -20,15 +20,19 @@
 #ifndef BACKGROUNDTASKS_JOBVIEWER_H
 #define BACKGROUNDTASKS_JOBVIEWER_H
 
-#include <kdialog.h>
-namespace Ui { class JobViewer; }
+#include <QDialog>
+
+class QTreeView;
+class QPushButton;
 
 namespace BackgroundTaskManager {
+
 class JobModel;
 
-class JobViewer : public KDialog
+class JobViewer : public QDialog
 {
     Q_OBJECT
+
 public:
     explicit JobViewer(QWidget *parent = nullptr);
     void setVisible(bool) override;
@@ -38,12 +42,13 @@ private slots:
 
 private:
     void updatePauseButton();
-
-    Ui::JobViewer* ui;
     JobModel* m_model;
+    QTreeView* m_treeView;
+    QPushButton* m_pauseButton;
 };
 
 } // namespace BackgroundTaskManager
 
 #endif // BACKGROUNDTASKS_JOBVIEWER_H
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

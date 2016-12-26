@@ -1,5 +1,5 @@
 /* Copyright 2012 Jesper K. Pedersen <blackie@kde.org>
-  
+
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
    published by the Free Software Foundation; either version 2 of
@@ -7,30 +7,34 @@
    accepted by the membership of KDE e.V. (or its successor approved
    by the membership of KDE e.V.), which shall act as a proxy
    defined in Section 14 of version 3 of the license.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "HandleVideoThumbnailRequestJob.h"
-#include <ImageManager/ImageRequest.h>
-#include <ImageManager/ExtractOneVideoFrame.h>
-#include <MainWindow/FeatureDialog.h>
-#include <QImage>
+
+#include <QCryptographicHash>
 #include <QDir>
-#include <Settings/SettingsData.h>
-#include <ImageManager/ThumbnailCache.h>
+#include <QImage>
+#include <QIcon>
+
+#include <KCodecs>
+#include <KLocalizedString>
+
+#include <ImageManager/ExtractOneVideoFrame.h>
 #include <ImageManager/ImageClientInterface.h>
-#include <KLocale>
-#include <kcodecs.h>
-#include <Utilities/Util.h>
+#include <ImageManager/ImageRequest.h>
+#include <ImageManager/ThumbnailCache.h>
+#include <MainWindow/FeatureDialog.h>
+#include <Settings/SettingsData.h>
 #include <ThumbnailView/CellGeometry.h>
-#include <KIcon>
+#include <Utilities/Util.h>
 
 namespace BackgroundJobs {
 
@@ -74,8 +78,9 @@ void HandleVideoThumbnailRequestJob::saveFullScaleFrame(const DB::FileName& file
 
 DB::FileName HandleVideoThumbnailRequestJob::pathForRequest(const DB::FileName &fileName)
 {
-    KMD5 md5(fileName.absolute().toUtf8());
-    return DB::FileName::fromRelativePath(QString::fromLatin1(".videoThumbnails/%2").arg(QString::fromUtf8(md5.hexDigest())));
+    QCryptographicHash md5(QCryptographicHash::Md5);
+    md5.addData(fileName.absolute().toUtf8());
+    return DB::FileName::fromRelativePath(QString::fromLatin1(".videoThumbnails/%2").arg(QString::fromUtf8(md5.result().toHex())));
 }
 
 DB::FileName HandleVideoThumbnailRequestJob::frameName(const DB::FileName &videoName, int frameNumber)
@@ -101,7 +106,8 @@ void HandleVideoThumbnailRequestJob::sendResult(QImage image)
 
 QImage HandleVideoThumbnailRequestJob::brokenImage() const
 {
-    return  KIcon( QString::fromLatin1( "applications-multimedia" ) ).pixmap(ThumbnailView::CellGeometry::preferredIconSize()).toImage();
+    return QIcon::fromTheme(QString::fromUtf8("applications-multimedia")).pixmap(
+        ThumbnailView::CellGeometry::preferredIconSize()).toImage();
 }
 
 } // namespace BackgroundJobs

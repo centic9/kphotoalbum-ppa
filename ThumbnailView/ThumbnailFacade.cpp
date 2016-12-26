@@ -28,7 +28,7 @@
 
 ThumbnailView::ThumbnailFacade* ThumbnailView::ThumbnailFacade::s_instance = nullptr;
 ThumbnailView::ThumbnailFacade::ThumbnailFacade()
-    :m_cellGeometry( new CellGeometry(this) ),
+    :m_cellGeometry( nullptr ),
      m_model( nullptr ),m_widget( nullptr ), m_toolTip( nullptr )
 {
     // To avoid one of the components references one of the other before it has been initialized, we first construct them all with null.
@@ -37,20 +37,13 @@ ThumbnailView::ThumbnailFacade::ThumbnailFacade()
     m_widget = new ThumbnailWidget(this);
     m_toolTip = new ThumbnailToolTip( m_widget );
 
-    connect( m_widget, SIGNAL(showImage(DB::FileName)),
-             this, SIGNAL(showImage(DB::FileName)) );
-    connect( m_widget, SIGNAL(showSelection()),
-             this, SIGNAL(showSelection()) );
-    connect( m_widget, SIGNAL(fileIdUnderCursorChanged(DB::FileName)),
-             this, SIGNAL(fileIdUnderCursorChanged(DB::FileName)) );
-    connect( m_widget, SIGNAL(currentDateChanged(QDateTime)),
-             this, SIGNAL(currentDateChanged(QDateTime)) );
-    connect( m_widget, SIGNAL(selectionCountChanged(int)),
-             this, SIGNAL(selectionChanged(int)) );
-    connect( m_model, SIGNAL(collapseAllStacksEnabled(bool)),
-             this, SIGNAL(collapseAllStacksEnabled(bool)) );
-    connect( m_model, SIGNAL(expandAllStacksEnabled(bool)),
-             this, SIGNAL(expandAllStacksEnabled(bool)) );
+    connect(m_widget, &ThumbnailWidget::showImage, this, &ThumbnailFacade::showImage);
+    connect(m_widget, &ThumbnailWidget::showSelection, this, &ThumbnailFacade::showSelection);
+    connect(m_widget, &ThumbnailWidget::fileIdUnderCursorChanged, this, &ThumbnailFacade::fileIdUnderCursorChanged);
+    connect(m_widget, &ThumbnailWidget::currentDateChanged, this, &ThumbnailFacade::currentDateChanged);
+    connect(m_widget, &ThumbnailWidget::selectionCountChanged, this, &ThumbnailFacade::selectionChanged);
+    connect(m_model, &ThumbnailModel::collapseAllStacksEnabled, this, &ThumbnailFacade::collapseAllStacksEnabled);
+    connect(m_model, &ThumbnailModel::expandAllStacksEnabled, this, &ThumbnailFacade::expandAllStacksEnabled);
 
     s_instance = this;
 }

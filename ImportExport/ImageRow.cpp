@@ -21,8 +21,13 @@
 #include <QCheckBox>
 #include "MiniViewer.h"
 #include <QImage>
-#include <kio/netaccess.h>
+#include <KIO/StoredTransferJob>
+#include <KJobWidgets>
+#include <KJobUiDelegate>
 #include "MainWindow/Window.h"
+#include <QDebug>
+
+#include <memory>
 
 using namespace ImportExport;
 
@@ -36,21 +41,30 @@ ImageRow::ImageRow( DB::ImageInfoPtr info, ImportDialog* import, KimFileReader* 
 void ImageRow::showImage()
 {
     if ( m_import->m_externalSource ) {
-        KUrl src1 = m_import->m_kimFile;
-        KUrl src2 = m_import->m_baseUrl + QString::fromLatin1( "/" );
+        QUrl src1 = m_import->m_kimFile;
+        QUrl src2 = m_import->m_baseUrl;
         for ( int i = 0; i < 2; ++i ) {
             // First try next to the .kim file, then the external URL
-            KUrl src = src1;
+            QUrl src = src1;
             if ( i == 1 )
                 src = src2;
-            src.setFileName( m_info->fileName().relative() );
+            src = src.adjusted(QUrl::RemoveFilename);
+            src.setPath(src.path() +  m_info->fileName().relative() );
             QString tmpFile;
 
-            if( KIO::NetAccess::download( src, tmpFile, MainWindow::Window::theMainWindow() ) ) {
-                QImage img( tmpFile );
-                MiniViewer::show( img, m_info, static_cast<QWidget*>( parent() ) );
-                KIO::NetAccess::removeTempFile( tmpFile );
-                break;
+            std::unique_ptr<KIO::StoredTransferJob> downloadJob { KIO::storedGet(src) };
+            KJobWidgets::setWindow(downloadJob.get(), MainWindow::Window::theMainWindow());
+
+            if( downloadJob->exec() )
+            {
+                QImage img;
+                if (img.loadFromData(downloadJob->data()) )
+                {
+                    MiniViewer::show( img, m_info, static_cast<QWidget*>( parent() ) );
+                    break;
+                } else {
+                    qWarning() << "Could not load image data for" << src.toDisplayString();
+                }
             }
         }
     }

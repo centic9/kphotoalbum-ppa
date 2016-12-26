@@ -17,16 +17,16 @@
 */
 #include "RawImageDecoder.h"
 
+#include <QDebug>
 #include <qfile.h>
 #include <qimage.h>
 #include "Settings/SettingsData.h"
 #include <config-kpa-kdcraw.h>
 #ifdef HAVE_KDCRAW
-#  include <libkdcraw/kdcraw.h>
-#  include <libkdcraw/rawfiles.h>
-#  include <libkdcraw/version.h>
+#  include <KDCRAW/KDcraw>
+#  include <KDCRAW/RawFiles>
+#  include <libkdcraw_version.h>
 #endif
-#include <kdebug.h>
 #include <DB/FileName.h>
 
 namespace ImageManager
@@ -38,11 +38,7 @@ bool RAWImageDecoder::_decode( QImage *img, const DB::FileName& imageFile, QSize
     Q_UNUSED( dim );
 
 #ifdef HAVE_KDCRAW
-#if KDCRAW_VERSION >= 0x020200
     if ( !KDcrawIface::KDcraw::loadRawPreview( *img, imageFile.absolute() ) )
-#else
-    if ( !KDcrawIface::KDcraw::loadDcrawPreview( *img, imageFile.absolute() ) )
-#endif
         return false;
 
     // FIXME: The preview data for Canon's image is always returned in its non-rotated form by libkdcraw, ie. KPA should do the rotation.
@@ -64,7 +60,7 @@ bool RAWImageDecoder::_decode( QImage *img, const DB::FileName& imageFile, QSize
         KDcrawIface::RawDecodingSettings rawDecodingSettings;
 
         if ( rawDecodingSettings.sixteenBitsImage ) {
-            kDebug() << "16 bits per color channel is not supported yet";
+            qDebug() << "16 bits per color channel is not supported yet";
             return false;
         } else {
             QByteArray imageData; /* 3 bytes for each pixel,  */
@@ -106,10 +102,10 @@ void RAWImageDecoder::_initializeExtensionLists( QStringList& rawExtensions, QSt
     static bool extensionListsInitialized = false;
     if ( ! extensionListsInitialized ) {
 #ifdef HAVE_KDCRAW
-        _rawExtensions = QString::fromAscii( raw_file_extentions ).split( QChar::fromLatin1(' '), QString::SkipEmptyParts );
+        _rawExtensions = QString::fromLatin1( raw_file_extentions ).split( QChar::fromLatin1(' '), QString::SkipEmptyParts );
 #endif /* HAVE_KDCRAW */
         for (QStringList::iterator it = _rawExtensions.begin(); it != _rawExtensions.end(); ++it)
-            (*it).remove( QString::fromAscii("*.") );
+            (*it).remove(QString::fromUtf8("*."));
 
         _standardExtensions << QString::fromLatin1("jpg")
                             << QString::fromLatin1("JPG")

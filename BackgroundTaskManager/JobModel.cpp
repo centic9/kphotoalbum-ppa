@@ -20,7 +20,7 @@
 #include "JobModel.h"
 #include "JobManager.h"
 #include "JobInfo.h"
-#include <KLocale>
+#include <KLocalizedString>
 #include "CompletedJobInfo.h"
 #include <QPixmap>
 #include <QPainter>
@@ -32,6 +32,7 @@ namespace BackgroundTaskManager {
 
 JobModel::JobModel(QObject *parent) :
     QAbstractTableModel(parent)
+  ,blinkStateOn(true)
 {
     connect( JobManager::instance(), SIGNAL(jobStarted(JobInterface*)), this, SLOT(jobStarted(JobInterface*)));
     connect( JobManager::instance(), SIGNAL(jobEnded(JobInterface*)), this, SLOT(jobEnded(JobInterface*)));
@@ -39,7 +40,7 @@ JobModel::JobModel(QObject *parent) :
     // Make the current task blink
     QTimer* timer = new QTimer(this);
     timer->start(500);
-    connect(timer, SIGNAL(timeout()), this, SLOT(reset()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(heartbeat()));
 }
 
 JobModel::~JobModel()
@@ -104,7 +105,14 @@ QVariant JobModel::headerData(int section, Qt::Orientation orientation, int role
 
 void JobModel::reset()
 {
-    QAbstractTableModel::reset();
+    // FIXME: this is just a stand-in replacement for a call to the deprecated
+    //        QAbstractTableModel::reset();
+    // fix this by replacing the calls to reset() using:
+    //  beginInsertRows()
+    //  beginRemoveRows()
+    //  beginMoveRows()
+    beginResetModel();
+    endResetModel();
 }
 
 void JobModel::jobEnded(JobInterface *job)
@@ -117,6 +125,14 @@ void JobModel::jobStarted(JobInterface *job)
 {
     connect( job, SIGNAL(changed()), this, SLOT(reset()));
     reset();
+}
+
+void JobModel::heartbeat()
+{
+    beginResetModel();
+    blinkStateOn = !blinkStateOn;
+    // optional improvement: emit dataChanged for running jobs only
+    endResetModel();
 }
 
 JobInfo* JobModel::info(int row) const
@@ -137,7 +153,7 @@ QPixmap JobModel::statusImage(JobInfo::State state) const
 {
     QColor color;
     if ( state == JobInfo::Running )
-        color = ( QTime::currentTime().msec() < 500 ) ?  Qt::gray : Qt::green;
+        color = blinkStateOn ?  Qt::green : Qt::gray;
     else if ( state == JobInfo::Completed )
         color = Qt::red;
     else

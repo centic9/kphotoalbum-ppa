@@ -17,7 +17,7 @@
 */
 
 #include "CategoryImagePopup.h"
-#include <klocale.h>
+#include <KLocalizedString>
 #include <Utilities/Set.h>
 #include <qstringlist.h>
 #include "Window.h"
@@ -80,7 +80,7 @@ MainWindow::CategoryImagePopup::CategoryImagePopup( QWidget* parent )
     :QMenu( parent )
 {
     setTitle( i18n("Make Category Image") );
-    connect( this, SIGNAL(triggered(QAction*)), this, SLOT(slotExecuteService(QAction*)) );
+    connect(this, &CategoryImagePopup::triggered, this, &CategoryImagePopup::slotExecuteService);
 }
 
 #include "CategoryImagePopup.moc"
