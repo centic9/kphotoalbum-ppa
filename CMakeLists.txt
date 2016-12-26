@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(kphotoalbum VERSION 5.0)
+project(kphotoalbum VERSION 5.1)
 
 if(POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
@@ -18,10 +18,6 @@ include(KDECompilerSettings)
 include(KDECMakeSettings)
 include(FeatureSummary)
 
-find_package(Qt5 REQUIRED COMPONENTS Sql Xml Widgets Network)
-find_package(Phonon4Qt5 REQUIRED)
-find_package(KF5 REQUIRED COMPONENTS CoreAddons I18n KIO DocTools WidgetsAddons Config IconThemes Archive Parts JobWidgets)
-
 # enable exceptions:
 kde_enable_exceptions()
 
@@ -38,19 +34,49 @@ add_definitions(
     -DQT_NO_CAST_TO_ASCII
     -DQT_NO_URL_CAST_FROM_STRING
     -DQT_NO_CAST_FROM_BYTEARRAY
-    #-DDEBUG_JOBMANAGER
     )
 
-include(CheckCXX11Features)
 
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} ${CXX11_COMPILER_FLAGS}"
-    )
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_REQUIRED TRUE)
+
+########## general options ##############
+
+option(ENABLE_PLAYGROUND "Enable features that are not quite polished enough for general consumption" OFF)
+add_feature_info(ENABLE_PLAYGROUND "${ENABLE_PLAYGROUND}" "Enable features that are not quite polished enough for general consumption")
+
+########### Debug options ###############
+
+foreach(part in
+        AnnotationDialog
+        EXIF
+        HTMLGENERATOR
+        JOBMANAGER
+        KIM_IMPORT
+        KIPI
+        MAP
+        ResizeSlider
+        )
+    set(_opt "DEBUG_${part}")
+    option(${_opt} "Enable debug output for ${part}" OFF)
+    if (${_opt})
+        message(STATUS "Enabling debug output for ${part}")
+        add_definitions(-D${_opt})
+    endif()
+endforeach()
+
+########### dependencies  ###############
+
+find_package(Qt5 REQUIRED COMPONENTS Sql Xml Widgets Network)
+find_package(Phonon4Qt5 REQUIRED)
+find_package(KF5 REQUIRED COMPONENTS Archive Completion Config CoreAddons DocTools I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
     include_directories(${JPEG_INCLUDE_DIR})
 endif()
+
+find_package(Exiv2 REQUIRED)
 
 find_package(KF5Kipi 5.1.0)
 set_package_properties(KF5Kipi
@@ -68,34 +94,22 @@ set_package_properties(KF5KDcraw
     )
 set(HAVE_KDCRAW ${KF5KDcraw_FOUND} )
 
-find_package(KF5KExiv2)
-# FIXME: most of KPhotoAlbum uses plain libexiv:
-find_package(Exiv2)
-set_package_properties(KF5KExiv2
-    PROPERTIES
-    TYPE RECOMMENDED
-    PURPOSE "Enables image metadata (exiv) support (strongly advised!)"
-    )
-set(HAVE_EXIV2 ${KF5KExiv2_FOUND})
-
-find_package(KF5KFace 5.0.0 CONFIG)
-set_package_properties(KF5KFace
-    PROPERTIES
-    TYPE OPTIONAL
-    PURPOSE "Enables support for face detection and recognition."
-    )
-set(HAVE_KFACE ${KF5KFace_FOUND})
-
-if(KF5KExiv2_FOUND)
-    find_package(KF5KGeoMap)
-    set_package_properties(KF5KGeoMap
+if(ENABLE_PLAYGROUND)
+    find_package(KF5KFace 5.0.0 CONFIG)
+    set_package_properties(KF5KFace
         PROPERTIES
         TYPE OPTIONAL
-        PURPOSE "Enables support for geographic map location using embedded GPS information."
+        PURPOSE "Enables support for face detection and recognition."
         )
-else()
-    message(STATUS "Not searching KF5KGeoMap because of missing dependency KF5KExiv2...")
+    set(HAVE_KFACE ${KF5KFace_FOUND})
 endif()
+
+find_package(KF5KGeoMap)
+set_package_properties(KF5KGeoMap
+    PROPERTIES
+    TYPE OPTIONAL
+    PURPOSE "Enables support for geographic map location using embedded GPS information."
+    )
 set(HAVE_KGEOMAP ${KF5KGeoMap_FOUND})
 
 add_custom_target(
@@ -319,6 +333,7 @@ set(libAnnotationDialog_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/ShortCutManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/ResizableFrame.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/DescriptionEdit.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/AreaTagSelectDialog.cpp
     )
 
 set(libBrowser_SRCS
@@ -336,7 +351,7 @@ set(libBrowser_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Browser/CenteringIconView.cpp
     )
 
-set(libexif_SRCS
+set(libExif_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Database.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/InfoDialog.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/SearchDialog.cpp
@@ -347,6 +362,7 @@ set(libexif_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Grid.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp
     )
 
 set(libBackgroundTaskManager_SRCS
@@ -405,14 +421,6 @@ add_subdirectory(themes)
 add_subdirectory(script)
 add_subdirectory(doc)
 
-set(EXIV2_SRCS)
-if(KF5KExiv2_FOUND AND Qt5Sql_FOUND)
-    set(EXIV2_SRCS
-        #${CMAKE_CURRENT_SOURCE_DIR}/Browser/ExifFolder.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp
-        ${libexif_SRCS}
-        )
-endif()
 
 ########### next target ###############
 
@@ -432,7 +440,7 @@ set(kphotoalbum_SRCS
     ${libDB_SRCS}
     ${libImportExport_SRCS}
     ${libAnnotationDialog_SRCS}
-    ${EXIV2_SRCS}
+    ${libExif_SRCS}
     ${libBrowser_SRCS}
     ${libBackgroundTaskManager_SRCS}
     ${libBackgroundJobs_SRCS}
@@ -445,10 +453,26 @@ set(kphotoalbum_SRCS
 add_executable(kphotoalbum ${kphotoalbum_SRCS})
 
 # External components
-target_link_libraries(kphotoalbum ${JPEG_LIBRARY})
-target_link_libraries(kphotoalbum Qt5::Network)
-target_link_libraries(kphotoalbum KF5::KIOCore KF5::CoreAddons KF5::I18n KF5::ConfigCore KF5::ConfigGui KF5::IconThemes KF5::Archive KF5::Parts KF5::JobWidgets KF5::WidgetsAddons)
-target_link_libraries(kphotoalbum Phonon::phonon4qt5)
+target_link_libraries(kphotoalbum
+    ${JPEG_LIBRARY}
+    ${EXIV2_LIBRARIES}
+    KF5::Archive
+    KF5::Completion
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::CoreAddons
+    KF5::I18n
+    KF5::IconThemes
+    KF5::JobWidgets
+    KF5::KIOCore
+    KF5::KIOWidgets
+    KF5::TextWidgets
+    KF5::XmlGui
+    KF5::WidgetsAddons
+    Phonon::phonon4qt5
+    Qt5::Network
+    Qt5::Sql
+    )
 
 if(KF5Kipi_FOUND)
     target_link_libraries(kphotoalbum KF5::Kipi)
@@ -458,9 +482,6 @@ if(KF5KDcraw_FOUND)
     target_link_libraries(kphotoalbum KF5::KDcraw)
 endif()
 
-if(KF5KExiv2_FOUND)
-    target_link_libraries(kphotoalbum KF5::KExiv2 ${EXIV2_LIBRARIES} Qt5::Sql)
-endif()
 
 if(KF5KFace_FOUND)
     target_link_libraries(kphotoalbum KF5::KFace )
@@ -481,7 +502,6 @@ install(FILES kphotoalbumui.rc default-setup default-layout.xml DESTINATION ${KD
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 configure_file(config-kpa-kdcraw.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kdcraw.h)
-configure_file(config-kpa-exiv2.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-exiv2.h)
 configure_file(config-kpa-kipi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kipi.h)
 configure_file(config-kpa-kface.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kface.h)
 configure_file(config-kpa-kgeomap.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kgeomap.h)

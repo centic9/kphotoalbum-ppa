@@ -68,6 +68,8 @@ Item {
                         color: "white"
                         linkColor: "white"
                         onLinkActivated: { hide(); _remoteInterface.activateSearch(link) }
+                        wrapMode: Text.Wrap
+                        width: column.width
                     }
                 }
                 Text {
@@ -76,7 +78,7 @@ Item {
                 }
 
                 Text {
-                    visible: _imageDetails.description != ""
+                    visible: _imageDetails.description !== ""
                     width: Math.min(_screenInfo.viewWidth-200, implicitWidth)
                     textFormat: Text.RichText
                     text: "<b>Description</b>: " + _imageDetails.description.replace("\n","<br/>")

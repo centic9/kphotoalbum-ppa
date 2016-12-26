@@ -33,6 +33,17 @@
 #include "NumberedBackup.h"
 #include "XMLCategory.h"
 
+// I've added this to provide anyone interested
+// with a quick and easy means to benchmark performance differences
+// between old and new save behaviour.
+// Note: in Qt4, saving files was deterministic "by accident"; with Qt5, we have to work for it
+// (mostly because QSet is randomized now)
+// FIXME(ZaJ): this should be removed "soon" (at latest by KPA 5.2.0)
+#define DETERMINISTIC_DBSAVE
+
+// print saving time:
+//#define BENCHMARK_FILEWRITER
+
 //
 //
 //
@@ -72,6 +83,10 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
                             );
         return;
     }
+#ifdef BENCHMARK_FILEWRITER
+    QTime t;
+    t.start();
+#endif
     QXmlStreamWriter writer(&out);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();
@@ -88,6 +103,9 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
         //saveSettings(writer);
     }
     writer.writeEndDocument();
+#ifdef BENCHMARK_FILEWRITER
+    qDebug() << "Saving took" << t.elapsed() <<"ms";
+#endif
 
     // State: index.xml has previous DB version, index.xml.tmp has the current version.
 
@@ -183,7 +201,14 @@ void XMLDB::FileWriter::saveImages( QXmlStreamWriter& writer )
 void XMLDB::FileWriter::saveBlockList( QXmlStreamWriter& writer )
 {
     ElementWriter dummy( writer, QString::fromLatin1( "blocklist" ) );
-    Q_FOREACH(const DB::FileName &block, m_db->m_blockList) {
+#ifdef DETERMINISTIC_DBSAVE
+    QList<DB::FileName> blockList = m_db->m_blockList.toList();
+    // sort blocklist to get diffable files
+    qSort(blockList);
+#else
+    QSet<DB::FileName> blockList = m_db->m_blockList;
+#endif
+    Q_FOREACH(const DB::FileName &block, blockList) {
         ElementWriter dummy( writer,  QString::fromLatin1( "block" ) );
         writer.writeAttribute( QString::fromLatin1( "file" ), block.relative() );
     }
@@ -218,8 +243,8 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
                 continue;
             }
 
-            StringSet members = groupMapIt.value();
             if ( useCompressedFileFormat() ) {
+                StringSet members = groupMapIt.value();
                 ElementWriter dummy( writer, QString::fromLatin1( "member" ) );
                 writer.writeAttribute( QString::fromLatin1( "category" ), categoryName );
                 writer.writeAttribute( QString::fromLatin1( "group-name" ), groupMapIt.key() );
@@ -229,9 +254,18 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
                     XMLCategory* category = static_cast<XMLCategory*>( catPtr.data() );
                     idList.append( QString::number( category->idForName( member ) ) );
                 }
+#ifdef DETERMINISTIC_DBSAVE
+                qSort(idList);
+#endif
                 writer.writeAttribute( QString::fromLatin1( "members" ), idList.join( QString::fromLatin1( "," ) ) );
             }
             else {
+#ifdef DETERMINISTIC_DBSAVE
+                QStringList members = groupMapIt.value().toList();
+                qSort(members);
+#else
+                QSet<QString> members = groupMapIt.value();
+#endif
                 Q_FOREACH(const QString& member, members) {
                     ElementWriter dummy( writer,  QString::fromLatin1( "member" ) );
                     writer.writeAttribute( QString::fromLatin1( "category" ), memberMapIt.key() );
@@ -338,7 +372,12 @@ void XMLDB::FileWriter::writeCategories( QXmlStreamWriter& writer, const DB::Ima
 
         ElementWriter categoryElm(writer, QString::fromLatin1("option"), false );
 
-        StringSet items = info->itemsOfCategory(name);
+#ifdef DETERMINISTIC_DBSAVE
+        QStringList items = info->itemsOfCategory(name).toList();
+        qSort(items);
+#else
+        QSet<QString> items = info->itemsOfCategory(name);
+#endif
         if ( !items.isEmpty() ) {
             topElm.writeStartElement();
             categoryElm.writeStartElement();
@@ -388,7 +427,12 @@ void XMLDB::FileWriter::writeCategoriesCompressed( QXmlStreamWriter& writer, con
             // Possibly all ids of a category have area information, so only
             // write the category attribute if there are actually ids to write
             if ( !idList.isEmpty() )
+            {
+#ifdef DETERMINISTIC_DBSAVE
+                qSort(idList);
+#endif
                 writer.writeAttribute( escape( categoryName ), idList.join( QString::fromLatin1( "," ) ) );
+            }
         }
     }
 
@@ -406,7 +450,12 @@ void XMLDB::FileWriter::writeCategoriesCompressed( QXmlStreamWriter& writer, con
             categoryElm.writeStartElement();
             writer.writeAttribute( QString::fromLatin1("name"), categoryWithAreas.key() );
 
-            for ( const auto& positionedTag : categoryWithAreas.value() ) {
+            QList<QPair<QString, QRect>> areas = categoryWithAreas.value();
+            std::sort(areas.begin(),areas.end(),
+                      [](QPair<QString, QRect> a, QPair<QString, QRect> b) { return a.first < b.first; }
+            );
+            Q_FOREACH( const auto &positionedTag, areas)
+            {
                 ElementWriter dummy( writer, QString::fromLatin1("value") );
                 writer.writeAttribute( QString::fromLatin1("value"), positionedTag.first );
                 writer.writeAttribute( QString::fromLatin1("area"), areaToString(positionedTag.second) );

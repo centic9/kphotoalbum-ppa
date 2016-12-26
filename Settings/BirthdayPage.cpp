@@ -67,6 +67,11 @@ Settings::BirthdayPage::BirthdayPage(QWidget* parent) : QWidget(parent)
     connect(m_filter, &QLineEdit::textChanged, this, &BirthdayPage::resetCategory);
     new QShortcut(Qt::AltModifier + Qt::Key_F, m_filter, SLOT(setFocus()));
 
+    m_dateFormats << QLocale().dateFormat(QLocale::ShortFormat).replace(QString::fromUtf8("yy"),
+                                                                        QString::fromUtf8("yyyy"))
+                  << QLocale().dateFormat(QLocale::ShortFormat)
+                  << QLocale().dateFormat(QLocale::LongFormat);
+
     m_dataView = new QTableWidget;
     m_dataView->setColumnCount(2);
     m_dataView->verticalHeader()->hide();
@@ -84,7 +89,7 @@ Settings::BirthdayPage::BirthdayPage(QWidget* parent) : QWidget(parent)
 
     m_dateInput = new QLineEdit;
     calendarLayout->addWidget(m_dateInput);
-    connect(m_dateInput, &QLineEdit::textEdited, this, &BirthdayPage::parseDate);
+    connect(m_dateInput, &QLineEdit::textEdited, this, &BirthdayPage::checkDateInput);
     connect(m_dateInput, &QLineEdit::editingFinished, this, &BirthdayPage::checkDate);
 
     m_calendar = new QCalendarWidget;
@@ -205,7 +210,7 @@ QString Settings::BirthdayPage::textForDate(const QDate& date) const
     if (date.isNull()) {
         return m_noDateString;
     } else {
-        return QLocale().toString(date,QLocale::ShortFormat);
+        return QLocale().toString(date, m_dateFormats.at(0));
     }
 }
 
@@ -238,11 +243,22 @@ void Settings::BirthdayPage::editDate(int row, int)
     m_lastItem = m_dataView->item(row, 0);
 }
 
-void Settings::BirthdayPage::parseDate(QString date)
+QDate Settings::BirthdayPage::parseDate(QString date)
 {
-    QDate parsedDate = QLocale().toDate(date);
-    if (parsedDate.isValid())
-    {
+    QDate parsedDate = QDate();
+    for (const QString &format : m_dateFormats) {
+        parsedDate = QDate::fromString(date, format);
+        if (parsedDate.isValid()) {
+            return parsedDate;
+        }
+    }
+    return parsedDate;
+}
+
+void Settings::BirthdayPage::checkDateInput(QString date)
+{
+    QDate parsedDate = parseDate(date);
+    if (parsedDate.isValid()) {
         m_calendar->setSelectedDate(parsedDate);
         m_dateInput->setStyleSheet(QString());
     } else {
@@ -252,16 +268,15 @@ void Settings::BirthdayPage::parseDate(QString date)
 
 void Settings::BirthdayPage::checkDate()
 {
-    QDate parsedDate = QLocale().toDate(m_dateInput->text());
-    if (parsedDate.isValid())
-    {
+    QDate parsedDate = parseDate(m_dateInput->text());
+    if (parsedDate.isValid()) {
         setDate(parsedDate);
     }
 }
 
 void Settings::BirthdayPage::setDate(const QDate& date)
 {
-    const QString currentCategory = m_categoryBox->itemData(m_categoryBox->currentIndex()).value<QString>();
+    const QString currentCategory = m_categoryBox->currentText();
     if (! m_changedData.contains(currentCategory)) {
         m_changedData[currentCategory] = QMap<QString, QDate>();
     }

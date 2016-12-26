@@ -22,21 +22,33 @@
 
 #include "ResizableFrame.h"
 
+// Local includes
+#ifdef HAVE_KFACE
+#  include "ProposedFaceDialog.h"
+#endif
+#include "AreaTagSelectDialog.h"
+#include "CompletableLineEdit.h"
+#include "ImagePreview.h"
+#include "ImagePreviewWidget.h"
+
 // Qt includes
-#include <QMouseEvent>
-#include <QMenu>
 #include <QApplication>
-#include <QList>
 #include <QDebug>
+#include <QDockWidget>
+#include <QList>
+#include <QMenu>
+#include <QMouseEvent>
+#include <QScopedPointer>
 #include <QTimer>
 
 // KDE includes
 #include <KLocalizedString>
+#include <KMessageBox>
 
-// Local includes
-#include "ImagePreview.h"
-#ifdef HAVE_KFACE
-#  include "ProposedFaceDialog.h"
+#ifdef DEBUG_AnnotationDialog
+#define Debug qDebug
+#else
+#define Debug if(0) qDebug
 #endif
 
 static const int SCALE_TOP    = 0b00000001;
@@ -61,10 +73,9 @@ static const QString STYLE_ASSOCIATED = QString::fromUtf8(
 AnnotationDialog::ResizableFrame::ResizableFrame(QWidget* parent) : QFrame(parent)
 {
     m_preview = dynamic_cast<ImagePreview*>(parent);
-
-#ifdef HAVE_KFACE
     m_previewWidget = dynamic_cast<ImagePreviewWidget *>(m_preview->parentWidget());
 
+#ifdef HAVE_KFACE
     // The area has not been changed yet
     m_changed = false;
     // The area has not be used to train the recognition database yet
@@ -324,11 +335,200 @@ void AnnotationDialog::ResizableFrame::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
-void AnnotationDialog::ResizableFrame::contextMenuEvent(QContextMenuEvent* event)
+void AnnotationDialog::ResizableFrame::contextMenuEvent(QContextMenuEvent *)
 {
-    // Create the context menu
-    QMenu* menu = new QMenu(this);
+    showContextMenu();
+}
 
+QAction* AnnotationDialog::ResizableFrame::createAssociateTagAction(
+    const QPair<QString, QString>& tag,
+    QString prefix
+)
+{
+    QString actionText;
+    if (! prefix.isEmpty()) {
+        actionText = i18nc("%1 is a prefix like 'Associate with', "
+                           "%2 is the tag name and %3 is the tag's category",
+                           "%1 %2 (%3)",
+                           prefix, tag.second, tag.first);
+    } else {
+        actionText = i18nc("%1 is the tag name and %2 is the tag's category",
+                           "%1 (%2)",
+                           tag.second, tag.first);
+    }
+
+    QAction* action = new QAction(actionText, this);
+    QStringList data;
+    data << tag.first << tag.second;
+    action->setData(data);
+
+    return action;
+}
+
+void AnnotationDialog::ResizableFrame::associateTag()
+{
+    QAction* action = dynamic_cast<QAction*>(sender());
+    Q_ASSERT(action!=nullptr);
+    associateTag(action);
+}
+
+void AnnotationDialog::ResizableFrame::associateTag(QAction* action)
+{
+    setTagData(action->data().toStringList()[0], action->data().toStringList()[1]);
+}
+
+void AnnotationDialog::ResizableFrame::setTagData(QString category, QString tag, ChangeOrigin changeOrigin)
+{
+    QPair<QString, QString> selectedData = QPair<QString, QString>(category, tag);
+
+    // check existing areas for consistency
+    Q_FOREACH(ResizableFrame *area, m_dialog->areas())
+    {
+        if (area->tagData() == selectedData)
+        {
+            if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
+                        m_preview,
+                        i18n("<p>%1 has already been tagged in another area on this image.</p>"
+                             "<p>If you continue, the previous tag will be removed...</p>",
+                             tag),
+                        i18n("Replace existing area?")))
+            {
+                // don't execute setTagData
+                return;
+            }
+            // replace existing tag
+            area->removeTagData();
+        }
+    }
+    // Add the data to this area
+    m_tagData = selectedData;
+
+    // Update the tool tip
+    setToolTip(tag + QString::fromUtf8(" (") + category + QString::fromUtf8(")"));
+
+    // Set the color to "associated"
+    setStyleSheet(STYLE_ASSOCIATED);
+
+    // Remove the associated tag from the tag candidate list
+    m_dialog->removeTagFromCandidateList(m_tagData.first, m_tagData.second);
+
+#ifdef HAVE_KFACE
+    // Check if the selected data is the data that has been (probably) proposed by face recognition
+    if (selectedData == m_proposedTagData) {
+        // Disable to offer training with this area (it has already been recognized correctly)
+        m_trained = true;
+    }
+
+    // Check of other areas contain this tag as a proposed tag
+    m_dialog->checkProposedTagData(m_tagData, this);
+
+    // If this is a manual update, update m_changed so that
+    // we can (probably) train the recognition database
+    if (changeOrigin == ManualChange) {
+        m_changed = true;
+
+        if (m_detectedFace and ! m_trained and m_previewWidget->automatedTraining()) {
+            m_preview->trainRecognitionDatabase(m_actualCoordinates, m_tagData);
+            m_trained = true;
+        }
+    }
+#endif
+
+    if (changeOrigin != AutomatedChange) {
+        // Tell the dialog an area has been changed
+        m_dialog->areaChanged();
+    }
+}
+
+void AnnotationDialog::ResizableFrame::removeTag()
+{
+    // Deselect the tag
+    m_dialog->listSelectForCategory(m_tagData.first)->deselectTag(m_tagData.second);
+    // Delete the tag data from this area
+    removeTagData();
+}
+
+void AnnotationDialog::ResizableFrame::removeTagData()
+{
+    // Delete the data
+    m_tagData.first.clear();
+    m_tagData.second.clear();
+    setToolTip(QString());
+
+    // Set the color to "un-associated" or "proposed"
+    if (m_proposedTagData.first.isEmpty()) {
+        setStyleSheet(STYLE_UNASSOCIATED);
+    } else {
+        setStyleSheet(STYLE_PROPOSED);
+    }
+
+#ifdef HAVE_KFACE
+    // Also reset the trained and changed state
+    m_changed = false;
+    m_trained = false;
+#endif
+
+    // Tell the dialog an area has been changed
+    m_dialog->areaChanged();
+}
+
+void AnnotationDialog::ResizableFrame::remove()
+{
+    if (! m_tagData.first.isEmpty()) {
+        // Deselect the tag
+        m_dialog->listSelectForCategory(m_tagData.first)->deselectTag(m_tagData.second);
+    }
+
+    // Delete the area
+    this->deleteLater();
+}
+
+void AnnotationDialog::ResizableFrame::showContextMenu()
+{
+    // Display a dialog where a tag can be selected directly
+    QString category = m_previewWidget->defaultPositionableCategory();
+    QScopedPointer<AreaTagSelectDialog> tagMenu ( new AreaTagSelectDialog(
+                this,
+                m_dialog->listSelectForCategory(category),
+                m_preview->grabAreaImage(geometry()),
+                m_dialog
+                ));
+
+    tagMenu->show();
+    tagMenu->moveToArea(mapToGlobal(QPoint(0, 0)));
+    tagMenu->exec();
+}
+
+void AnnotationDialog::ResizableFrame::setDialog(Dialog* dialog)
+{
+    m_dialog = dialog;
+}
+
+QPair<QString, QString> AnnotationDialog::ResizableFrame::tagData() const
+{
+    return m_tagData;
+}
+
+void AnnotationDialog::ResizableFrame::setProposedTagData(QPair<QString, QString> tagData)
+{
+    m_proposedTagData = tagData;
+    setStyleSheet(STYLE_PROPOSED);
+}
+
+QPair<QString, QString> AnnotationDialog::ResizableFrame::proposedTagData() const
+{
+    return m_proposedTagData;
+}
+
+void AnnotationDialog::ResizableFrame::removeProposedTagData()
+{
+    m_proposedTagData = QPair<QString, QString>();
+    setStyleSheet(STYLE_UNASSOCIATED);
+    setToolTip(QString());
+}
+
+void AnnotationDialog::ResizableFrame::addTagActions(QMenu *menu)
+{
     // Let's see if we already have an associated tag
     if (! m_tagData.first.isEmpty()) {
         m_removeTagAct->setText(
@@ -388,7 +588,9 @@ void AnnotationDialog::ResizableFrame::contextMenuEvent(QContextMenuEvent* event
         }
     }
 
-    menu->addSeparator();
+    QAction * sep = menu->addSeparator();
+    // clicking the separator should not dismiss the menu:
+    sep->setEnabled(false);
 
 #ifdef HAVE_KFACE
     if (m_tagData.first.isEmpty() &&  m_proposedTagData.first.isEmpty()) {
@@ -407,176 +609,6 @@ void AnnotationDialog::ResizableFrame::contextMenuEvent(QContextMenuEvent* event
 
     // Append the "Remove area" action
     menu->addAction(m_removeAct);
-
-    // Show the menu
-    menu->exec(event->globalPos());
-
-    // Clean up the menu
-    delete menu;
-}
-
-QAction* AnnotationDialog::ResizableFrame::createAssociateTagAction(
-    const QPair<QString, QString>& tag,
-    QString prefix
-)
-{
-    QString actionText;
-    if (! prefix.isEmpty()) {
-        actionText = i18nc("%1 is a prefix like 'Associate with', "
-                           "%2 is the tag name and %3 is the tag's category",
-                           "%1 %2 (%3)",
-                           prefix, tag.second, tag.first);
-    } else {
-        actionText = i18nc("%1 is the tag name and %2 is the tag's category",
-                           "%1 (%2)",
-                           tag.second, tag.first);
-    }
-
-    QAction* action = new QAction(actionText, this);
-    QStringList data;
-    data << tag.first << tag.second;
-    action->setData(data);
-
-    return action;
-}
-
-void AnnotationDialog::ResizableFrame::associateTag()
-{
-    QAction* action = dynamic_cast<QAction*>(sender());
-    setTagData(action->data().toStringList()[0], action->data().toStringList()[1]);
-}
-
-void AnnotationDialog::ResizableFrame::associateTag(QAction* action)
-{
-    setTagData(action->data().toStringList()[0], action->data().toStringList()[1]);
-}
-
-void AnnotationDialog::ResizableFrame::setTagData(QString category, QString tag, ChangeOrigin changeOrigin)
-{
-    // Add the data to this area
-    QPair<QString, QString> selectedData = QPair<QString, QString>(category, tag);
-    m_tagData = selectedData;
-
-    // Update the tool tip
-    setToolTip(tag + QString::fromUtf8(" (") + category + QString::fromUtf8(")"));
-
-    // Set the color to "associated"
-    setStyleSheet(STYLE_ASSOCIATED);
-
-    // Remove the associated tag from the tag candidate list
-    m_dialog->removeTagFromCandidateList(m_tagData.first, m_tagData.second);
-
-#ifdef HAVE_KFACE
-    // Check if the selected data is the data that has been (probably) proposed by face recognition
-    if (selectedData == m_proposedTagData) {
-        // Disable to offer training with this area (it has already been recognized correctly)
-        m_trained = true;
-    }
-
-    // Check of other areas contain this tag as a proposed tag
-    m_dialog->checkProposedTagData(m_tagData, this);
-
-    // If this is a manual update, update m_changed so that
-    // we can (probably) train the recognition database
-    if (changeOrigin == ManualChange) {
-        m_changed = true;
-
-        if (m_detectedFace and ! m_trained and m_previewWidget->automatedTraining()) {
-            m_preview->trainRecognitionDatabase(m_actualCoordinates, m_tagData);
-            m_trained = true;
-        }
-    }
-#endif
-
-    if (changeOrigin != AutomatedChange) {
-        // Tell the dialog an area has been changed
-        m_dialog->areaChanged();
-    }
-}
-
-void AnnotationDialog::ResizableFrame::removeTag()
-{
-    // Add the tag to the positionable candidate list again
-    m_dialog->addTagToCandidateList(m_tagData.first, m_tagData.second);
-    // Delete the tag data from this area
-    removeTagData();
-}
-
-void AnnotationDialog::ResizableFrame::removeTagData()
-{
-    // Delete the data
-    m_tagData.first.clear();
-    m_tagData.second.clear();
-    setToolTip(QString());
-
-    // Set the color to "un-associated" or "proposed"
-    if (m_proposedTagData.first.isEmpty()) {
-        setStyleSheet(STYLE_UNASSOCIATED);
-    } else {
-        setStyleSheet(STYLE_PROPOSED);
-    }
-
-#ifdef HAVE_KFACE
-    // Also reset the trained and changed state
-    m_changed = false;
-    m_trained = false;
-#endif
-
-    // Tell the dialog an area has been changed
-    m_dialog->areaChanged();
-}
-
-void AnnotationDialog::ResizableFrame::remove()
-{
-    if (! m_tagData.first.isEmpty()) {
-        // Re-add the associated tag to the candidate list
-        removeTag();
-    }
-
-    // Delete the area
-    this->deleteLater();
-}
-
-void AnnotationDialog::ResizableFrame::checkShowContextMenu()
-{
-    // Don't show the context menu when we don't have a last selected positionable tag
-    if (m_dialog->lastSelectedPositionableTag().first.isEmpty()) {
-        return;
-    }
-
-    // Show the context menu at the lower right corner of the newly created area
-    QContextMenuEvent* event = new QContextMenuEvent(
-        QContextMenuEvent::Mouse, QPoint(0, 0), QCursor::pos(), Qt::NoModifier
-    );
-    QApplication::postEvent(this, event);
-}
-
-void AnnotationDialog::ResizableFrame::setDialog(Dialog* dialog)
-{
-    m_dialog = dialog;
-}
-
-QPair<QString, QString> AnnotationDialog::ResizableFrame::tagData() const
-{
-    return m_tagData;
-}
-
-void AnnotationDialog::ResizableFrame::setProposedTagData(QPair<QString, QString> tagData)
-{
-    m_proposedTagData = tagData;
-    setStyleSheet(STYLE_PROPOSED);
-}
-
-QPair<QString, QString> AnnotationDialog::ResizableFrame::proposedTagData() const
-{
-    return m_proposedTagData;
-}
-
-void AnnotationDialog::ResizableFrame::removeProposedTagData()
-{
-    m_proposedTagData = QPair<QString, QString>();
-    setStyleSheet(STYLE_UNASSOCIATED);
-    setToolTip(QString());
 }
 
 #ifdef HAVE_KFACE

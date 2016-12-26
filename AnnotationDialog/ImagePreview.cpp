@@ -18,16 +18,6 @@
 
 #include "ImagePreview.h"
 
-#include <math.h>
-
-#include <QDebug>
-#include <QImageReader>
-#include <QRubberBand>
-#include <QMouseEvent>
-
-#include <KLocalizedString>
-#include <KMessageBox>
-
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <ImageManager/AsyncLoader.h>
@@ -35,40 +25,65 @@
 
 #include "ResizableFrame.h"
 
+#include <QDebug>
+#include <QImageReader>
+#include <QMouseEvent>
+#include <QRubberBand>
+#include <QTimer>
+
+#include <KLocalizedString>
+#include <KMessageBox>
+
+#include <math.h>
+
+#ifdef DEBUG_AnnotationDialog
+#define Debug qDebug
+#else
+#define Debug if(0) qDebug
+#endif
+
 using namespace AnnotationDialog;
 
 ImagePreview::ImagePreview( QWidget* parent )
-    : QLabel( parent ), m_selectionRect(0), m_areaCreationEnabled( false )
+    : QLabel( parent )
+    , m_selectionRect(0)
+    , m_aspectRatio(1)
+    , m_reloadTimer( new QTimer(this) )
+    , m_areaCreationEnabled( false )
 {
     setAlignment( Qt::AlignCenter );
     setMinimumSize( 64, 64 );
     // "the widget can make use of extra space, so it should get as much space as possible"
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+    m_reloadTimer->setSingleShot(true);
+    connect(m_reloadTimer, &QTimer::timeout, this, &ImagePreview::resizeFinished);
 }
 
-void ImagePreview::resizeEvent( QResizeEvent* )
+void ImagePreview::resizeEvent( QResizeEvent* ev )
 {
-    m_preloader.cancelPreload();
-    m_lastImage.reset();
-    reload();
+    Debug() << "Resizing from" << ev->oldSize() <<"to"<<ev->size();
+    // during resizing, a scaled image will do
+    QImage scaledImage = m_currentImage.getImage().scaled(size(),Qt::KeepAspectRatio);
+    setPixmap(QPixmap::fromImage(scaledImage));
+    updateScaleFactors();
+
+    // (re)start the timer to do a full reload
+    m_reloadTimer->start(200);
+
+    QLabel::resizeEvent(ev);
 }
 
 int ImagePreview::heightForWidth(int width) const
 {
-    int height = this->height();
-    if (pixmap())
-    {
-        int pxHeight = pixmap()->height();
-        int pxWidth = pixmap()->width();
-        height = ((qreal)pxHeight*width) / pxWidth;
-        //height = qMax(height, minimumHeight());
-    }
+    int height = width * m_aspectRatio;
     return height;
 }
 
 QSize ImagePreview::sizeHint() const
 {
-    QSize hint { width(), heightForWidth(width()) };
+    QSize hint = m_info.size();
+    Debug() << "Preview size hint is" << hint;
     return hint;
 }
 
@@ -111,22 +126,33 @@ void ImagePreview::setImage( const QString& fileName )
 
 void ImagePreview::reload()
 {
+    m_aspectRatio = 1;
     if ( !m_info.isNull() ) {
         if (m_preloader.has(m_info.fileName(), m_info.angle()))
         {
+            Debug() << "reload(): set preloader image";
             setCurrentImage(m_preloader.getImage());
         } else if (m_lastImage.has(m_info.fileName(), m_info.angle())) {
+            Debug() << "reload(): set last image";
             //don't pass by reference, the additional constructor is needed here
             //see setCurrentImage for the reason (where m_lastImage is changed...)
             setCurrentImage(QImage(m_lastImage.getImage()));
         } else {
-            setPixmap(QPixmap()); //erase old image
+            if (!m_currentImage.has(m_info.fileName(), m_info.angle()))
+            {
+                // erase old image to prevent a laggy feel,
+                // but only erase old image if it is a different image
+                // (otherwise we get flicker when resizing)
+                setPixmap(QPixmap());
+            }
+            Debug() << "reload(): set another image";
             ImageManager::AsyncLoader::instance()->stop(this);
             ImageManager::ImageRequest* request = new ImageManager::ImageRequest( m_info.fileName(), size(), m_info.angle(), this );
             request->setPriority( ImageManager::Viewer );
             ImageManager::AsyncLoader::instance()->load( request );
         }
     } else {
+        Debug() << "reload(): set image from file";
         QImage img( m_fileName );
         img = rotateAndScale( img, width(), height(), m_angle );
         setPixmap( QPixmap::fromImage(img) );
@@ -144,6 +170,7 @@ QSize ImagePreview::getActualImageSize()
     if (! m_info.size().isValid()) {
         // We have to fetch the size from the image
         m_info.setSize(QImageReader(m_info.fileName().absolute()).size());
+        m_aspectRatio = m_info.size().height() / m_info.size().width();
     }
     return m_info.size();
 }
@@ -156,27 +183,10 @@ void ImagePreview::setCurrentImage(const QImage &image)
     m_currentImage.set(m_info.fileName(), image, m_info.angle());
     setPixmap(QPixmap::fromImage(image));
 
-     if (!m_anticipated.m_fileName.isNull())
-         m_preloader.preloadImage(m_anticipated.m_fileName, width(), height(), m_anticipated.m_angle);
+    if (!m_anticipated.m_fileName.isNull())
+        m_preloader.preloadImage(m_anticipated.m_fileName, width(), height(), m_anticipated.m_angle);
 
-    // Calculate a scale factor from the original image's size and it's current preview
-    QSize actualSize = getActualImageSize();
-    QSize previewSize = m_currentImage.getImage().size();
-    m_scaleWidth = double(actualSize.width()) / double(previewSize.width());
-    m_scaleHeight = double(actualSize.height()) / double(previewSize.height());
-
-    // Calculate the min and max coordinates inside the preview widget
-    int previewWidth = m_currentImage.getImage().size().width();
-    int previewHeight = m_currentImage.getImage().size().height();
-    int widgetWidth = this->frameGeometry().width();
-    int widgetHeight = this->frameGeometry().height();
-    m_minX = (widgetWidth - previewWidth) / 2;
-    m_maxX = m_minX + previewWidth - 1;
-    m_minY = (widgetHeight - previewHeight) / 2;
-    m_maxY = m_minY + previewHeight - 1;
-
-    // Put all areas to their respective position on the preview
-    remapAreas();
+    updateScaleFactors();
 
     // Clear the full size image (if we have loaded one)
     m_fullSizeImage = QImage();
@@ -272,7 +282,7 @@ void ImagePreview::PreviewLoader::cancelPreload()
     ImageManager::AsyncLoader::instance()->stop(this);
 }
 
-QImage AnnotationDialog::ImagePreview::rotateAndScale(QImage img, int width, int height, int angle) const
+QImage ImagePreview::rotateAndScale(QImage img, int width, int height, int angle) const
 {
     if ( angle != 0 )  {
         QMatrix matrix;
@@ -281,6 +291,28 @@ QImage AnnotationDialog::ImagePreview::rotateAndScale(QImage img, int width, int
     }
     img = Utilities::scaleImage(img, width, height, Qt::KeepAspectRatio );
     return img;
+}
+
+void ImagePreview::updateScaleFactors()
+{
+    // Calculate a scale factor from the original image's size and it's current preview
+    QSize actualSize = getActualImageSize();
+    QSize previewSize = pixmap()->size();
+    m_scaleWidth = double(actualSize.width()) / double(previewSize.width());
+    m_scaleHeight = double(actualSize.height()) / double(previewSize.height());
+
+    // Calculate the min and max coordinates inside the preview widget
+    int previewWidth = previewSize.width();
+    int previewHeight = previewSize.height();
+    int widgetWidth = this->frameGeometry().width();
+    int widgetHeight = this->frameGeometry().height();
+    m_minX = (widgetWidth - previewWidth) / 2;
+    m_maxX = m_minX + previewWidth - 1;
+    m_minY = (widgetHeight - previewHeight) / 2;
+    m_maxY = m_minY + previewHeight - 1;
+
+    // Put all areas to their respective position on the preview
+    remapAreas();
 }
 
 void ImagePreview::mousePressEvent(QMouseEvent *event)
@@ -346,6 +378,14 @@ void ImagePreview::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+QPixmap ImagePreview::grabAreaImage(QRect area)
+{
+    return QPixmap::fromImage(m_currentImage.getImage().copy(area.left() - m_minX,
+                                                             area.top() - m_minY,
+                                                             area.width(),
+                                                             area.height()));
+}
+
 QRect ImagePreview::areaPreviewToActual(QRect area) const
 {
     return QRect(QPoint(int(double(area.left() - m_minX) * m_scaleWidth),
@@ -377,7 +417,7 @@ void ImagePreview::createNewArea(QRect geometry, QRect actualGeometry)
     emit areaCreated(newArea);
 
     newArea->show();
-    newArea->checkShowContextMenu();
+    newArea->showContextMenu();
 }
 
 void ImagePreview::processNewArea()
@@ -437,6 +477,14 @@ void ImagePreview::rotateAreas(int angle)
     foreach (ResizableFrame *area, allAreas) {
         area->setActualCoordinates(rotateArea(area->actualCoordinates(), angle));
     }
+}
+
+void ImagePreview::resizeFinished()
+{
+    Debug() << "Reloading image after resize";
+    m_preloader.cancelPreload();
+    m_lastImage.reset();
+    reload();
 }
 
 QRect ImagePreview::minMaxAreaPreview() const

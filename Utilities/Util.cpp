@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-kpa-exiv2.h>
 #include "Util.h"
 
 extern "C" {
@@ -28,10 +27,6 @@ extern "C" {
 #include <sys/types.h>
 #include <unistd.h>
 }
-
-#ifdef Q_WS_X11
-#include <X11/X.h>
-#endif
 
 #include <QApplication>
 #include <QCryptographicHash>
@@ -60,9 +55,7 @@ extern "C" {
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <DB/ImageInfo.h>
-#ifdef HAVE_EXIV2
-#  include <Exif/Info.h>
-#endif
+#include <Exif/Info.h>
 #include <ImageManager/ImageDecoder.h>
 #include <ImageManager/RawImageDecoder.h>
 #include <MainWindow/Window.h>
@@ -138,8 +131,12 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
         if ( info->rating() != -1 ) {
             if ( ! result.isEmpty() )
                 result += QString::fromLatin1("<br/>");
-            result += QString::fromLatin1("<img src=\"KRatingWidget://%1\"/>"
-                    ).arg( qMin( qMax( static_cast<short int>(0), info->rating() ), static_cast<short int>(10) ) );
+            QUrl rating;
+            rating.setScheme(QString::fromLatin1("kratingwidget"));
+            // we don't use the host part, but if we don't set it, we can't use port:
+            rating.setHost(QString::fromLatin1("int"));
+            rating.setPort(qMin( qMax( static_cast<short int>(0), info->rating() ), static_cast<short int>(10)));
+            result += QString::fromLatin1("<img src=\"%1\"/>").arg( rating.toString(QUrl::None) );
         }
     }
 
@@ -193,7 +190,6 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
                         &result);
     }
 
-#ifdef HAVE_EXIV2
     QString exifText;
     if ( Settings::SettingsData::instance()->showEXIF() ) {
         typedef QMap<QString,QStringList> ExifMap;
@@ -230,7 +226,6 @@ QString Utilities::createInfoText( DB::ImageInfoPtr info, QMap< int,QPair<QStrin
     if ( !result.isEmpty() && !exifText.isEmpty() )
         result += QString::fromLatin1( "<hr>" );
     result += exifText;
-#endif
 
     return result;
 }
@@ -404,8 +399,8 @@ QString Utilities::setupDemo()
 
     // Images
     const QStringList kpaDemoDirs = QStandardPaths::locateAll(
-                QStandardPaths::GenericDataLocation,
-                QString::fromLatin1("kphotoalbum/demo"),
+                QStandardPaths::DataLocation,
+                QString::fromLatin1("demo"),
                 QStandardPaths::LocateDirectory);
     QStringList images;
     Q_FOREACH(const QString &dir, kpaDemoDirs)
@@ -429,8 +424,8 @@ QString Utilities::setupDemo()
     }
 
     const QStringList kpaDemoCatDirs = QStandardPaths::locateAll(
-                QStandardPaths::GenericDataLocation,
-                QString::fromLatin1("kphotoalbum/demo/CategoryImages"),
+                QStandardPaths::DataLocation,
+                QString::fromLatin1("demo/CategoryImages"),
                 QStandardPaths::LocateDirectory);
     QStringList catImages;
     Q_FOREACH(const QString &dir, kpaDemoCatDirs)
@@ -482,7 +477,7 @@ bool Utilities::canReadImage( const DB::FileName& fileName )
 
 QString Utilities::locateDataFile(const QString& fileName)
 {
-    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString::fromLatin1("kphotoalbum/") + fileName);
+    return QStandardPaths::locate(QStandardPaths::DataLocation, fileName);
 }
 
 QString Utilities::readFile( const QString& fileName )
