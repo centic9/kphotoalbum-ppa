@@ -20,10 +20,10 @@
 #define MYIMAGEINFO_H
 
 #include <config-kpa-kipi.h>
-#include <libkipi/version.h>
-#include <libkipi/imageinfoshared.h>
-#include <kdemacros.h>
-#include "DB/ImageInfoPtr.h"
+
+#include <KIPI/ImageInfoShared>
+
+#include <DB/ImageInfoPtr.h>
 
 namespace DB
 {
@@ -33,18 +33,17 @@ namespace DB
 namespace Plugins
 {
 
-class KDE_EXPORT ImageInfo :public KIPI::ImageInfoShared
+class ImageInfo :public KIPI::ImageInfoShared
 {
 public:
-    ImageInfo( KIPI::Interface* interface, const KUrl& url );
+    ImageInfo( KIPI::Interface* interface, const QUrl &url );
 
+    QMap<QString,QVariant> attributes() override;
+    void clearAttributes() override;
+    void addAttributes( const QMap<QString,QVariant>& ) override;
+    void delAttributes( const QStringList& ) override;
 
-    QMap<QString,QVariant> attributes();
-    void clearAttributes();
-    void addAttributes( const QMap<QString,QVariant>& );
-    void delAttributes( const QStringList& );
-
-    void cloneData( ImageInfoShared* const other);
+    void cloneData( ImageInfoShared* const other) override;
 
 
 private:

@@ -23,7 +23,7 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include "ImportSettings.h"
-#include <klocale.h>
+#include <KLocalizedString>
 using namespace ImportExport;
 
 ImportMatcher::ImportMatcher( const QString& otherCategory, const QString& myCategory,
@@ -78,7 +78,7 @@ CategoryMatch::CategoryMatch( bool allowNew, const QString& kimFileItem, QString
 
     myItems.sort();
     m_combobox->addItems( myItems );
-    QObject::connect( m_checkbox, SIGNAL(toggled(bool)), m_combobox, SLOT(setEnabled(bool)) );
+    QObject::connect(m_checkbox, &QCheckBox::toggled, m_combobox, &QComboBox::setEnabled);
     grid->addWidget( m_combobox, row, 1 );
 
     if ( myItems.contains( kimFileItem ) ) {

@@ -30,10 +30,10 @@
  * @author David Jarvie <software@astrojar.org.uk>
  * @author Jesper Pedersen <blackie@kde.org>
  */
-#ifndef ANNOTATIONDIALOG_KDATEEDIT_H
-#define ANNOTATIONDIALOG_KDATEEDIT_H
+#ifndef ANNOTATIONDIALOG_DATEEDIT_H
+#define ANNOTATIONDIALOG_DATEEDIT_H
 
-#include <KComboBox>
+#include <QComboBox>
 #include <qmap.h>
 #include <QEvent>
 #include <QMouseEvent>
@@ -45,12 +45,12 @@ class KDatePicker;
 namespace AnnotationDialog
 {
 
-class KDateEdit : public KComboBox
+class DateEdit : public QComboBox
 {
     Q_OBJECT
 public:
-    explicit KDateEdit( bool isStartEdit, QWidget *parent=nullptr );
-    virtual ~KDateEdit();
+    explicit DateEdit( bool isStartEdit, QWidget *parent=nullptr );
+    virtual ~DateEdit();
 
     /** @return True if the date in the text edit is valid,
      * false otherwise. This will not modify the display of the date,
@@ -136,17 +136,17 @@ private:
     /** Maps the text that the user can enter to the offset in days from
      * today. For example, the text 'tomorrow' is mapped to +1.
      */
-    QMap<QString, int> mKeywordMap;
-    bool mTextChanged;
-    bool mHandleInvalid;
+    QMap<QString, int> m_KeywordMap;
+    bool m_TextChanged;
+    bool m_HandleInvalid;
 
-    KDatePicker *mDatePicker;
-    QFrame *mDateFrame;
-    QDate  defaultValue;
-    QDate  value;
-    bool   mReadOnly;
-    bool   mDiscardNextMousePress;
-    bool   mIsStartEdit;
+    KDatePicker *m_DatePicker;
+    QFrame *m_DateFrame;
+    QDate  m_defaultValue;
+    QDate  m_value;
+    bool   m_ReadOnly;
+    bool   m_DiscardNextMousePress;
+    bool   m_IsStartEdit;
 };
 
 }

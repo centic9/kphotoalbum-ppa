@@ -20,30 +20,36 @@
 #define MYIMAGECOLLECTION_H
 
 #include <config-kpa-kipi.h>
-#include <libkipi/imagecollectionshared.h>
-#include "DB/ImageInfoList.h"
-#include <kdemacros.h>
+
+#include <KIPI/ImageCollectionShared>
+
+#include <DB/ImageInfoList.h>
 
 namespace Plugins
 {
 
-class KDE_EXPORT ImageCollection :public KIPI::ImageCollectionShared
+class ImageCollection :public KIPI::ImageCollectionShared
 {
 public:
     enum Type { CurrentAlbum, CurrentSelection, SubClass };
 
     explicit ImageCollection( Type tp );
-    virtual QString name();
-    virtual QString comment();
-    virtual KUrl::List images();
-    virtual KUrl path();
-    virtual KUrl uploadPath();
-    virtual KUrl uploadRoot();
+
+    virtual QString name() override;
+    virtual QList<QUrl> images() override;
+
+    // FIXME: url() should not called unless isDirectory() is true
+    //        therefore, we should also to implement isDirectory
+    virtual QUrl url() override;
+    virtual QUrl uploadUrl() override;
+    virtual QUrl uploadRootUrl() override;
+    virtual QString uploadRootName() override;
+    // isDirectory
 
 protected:
-    KUrl::List imageListToUrlList( const DB::ImageInfoList& list );
-    KUrl::List stringListToUrlList( const QStringList& list );
-    KUrl commonRoot();
+    QList<QUrl> imageListToUrlList( const DB::ImageInfoList& list );
+    QList<QUrl> stringListToUrlList( const QStringList& list );
+    QUrl commonRoot();
 
 private:
     Type m_type;

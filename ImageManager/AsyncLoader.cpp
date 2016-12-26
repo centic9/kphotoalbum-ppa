@@ -17,19 +17,20 @@
 */
 
 #include "AsyncLoader.h"
-#include <KIcon>
-#include "ThumbnailCache.h"
-#include "ImageLoaderThread.h"
-#include "ImageManager/ImageClientInterface.h"
-#include "Utilities/Util.h"
-#include <MainWindow/FeatureDialog.h>
 
-#include <kurl.h>
-#include <qpixmapcache.h>
-#include "ImageEvent.h"
-#include "CancelEvent.h"
-#include <BackgroundTaskManager/JobManager.h>
+#include <QIcon>
+#include <QPixmapCache>
+
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
+#include <BackgroundTaskManager/JobManager.h>
+#include <ImageManager/ImageClientInterface.h>
+#include <MainWindow/FeatureDialog.h>
+#include <Utilities/Util.h>
+
+#include "CancelEvent.h"
+#include "ImageEvent.h"
+#include "ImageLoaderThread.h"
+#include "ThumbnailCache.h"
 
 ImageManager::AsyncLoader* ImageManager::AsyncLoader::s_instance = nullptr;
 
@@ -76,19 +77,18 @@ bool ImageManager::AsyncLoader::load( ImageRequest* request )
         return false;
 
     if ( Utilities::isVideo( request->fileSystemFileName() ) ) {
-        if ( MainWindow::FeatureDialog::mplayerBinary().isNull() )
+        if (!loadVideo( request ))
             return false;
-        loadVideo( request );
     } else {
         loadImage( request );
     }
     return true;
 }
 
-void ImageManager::AsyncLoader::loadVideo( ImageRequest* request)
+bool ImageManager::AsyncLoader::loadVideo( ImageRequest* request)
 {
-    if ( MainWindow::FeatureDialog::mplayerBinary().isNull() )
-        return;
+    if ( ! MainWindow::FeatureDialog::hasVideoThumbnailer() )
+        return false;
 
     BackgroundTaskManager::Priority priority =
             (request->priority() > ThumbnailInvisible)
@@ -97,6 +97,7 @@ void ImageManager::AsyncLoader::loadVideo( ImageRequest* request)
 
     BackgroundTaskManager::JobManager::instance()->addJob(
                 new BackgroundJobs::HandleVideoThumbnailRequestJob(request,priority));
+    return true;
 }
 
 void ImageManager::AsyncLoader::loadImage( ImageRequest* request )
@@ -167,9 +168,9 @@ void ImageManager::AsyncLoader::customEvent( QEvent* ev )
         if ( !request->loadedOK() ) {
             if ( m_brokenImage.size() != request->size() ) {
                 // we can ignore the krazy warning here because we have a valid fallback
-                KIcon brokenFileIcon( QLatin1String("file-broken") ); // krazy:exclude=iconnames
+                QIcon brokenFileIcon = QIcon::fromTheme( QLatin1String("file-broken") ); // krazy:exclude=iconnames
                 if ( brokenFileIcon.isNull() ) {
-                    brokenFileIcon = KIcon( QLatin1String("image-x-generic") );
+                    brokenFileIcon = QIcon::fromTheme( QLatin1String("image-x-generic") );
                 }
                 m_brokenImage = brokenFileIcon.pixmap( request->size() ).toImage();
             }

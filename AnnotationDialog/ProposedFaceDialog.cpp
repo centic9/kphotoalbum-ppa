@@ -29,7 +29,7 @@
 #include <QPainter>
 
 // KDE includes
-#include <KLocale>
+#include <KLocalizedString>
 #include <KIconLoader>
 
 
@@ -50,18 +50,19 @@ AnnotationDialog::ProposedFaceDialog::ProposedFaceDialog(QWidget* parent) : QDia
             );
 
     QToolButton* acceptButton = new QToolButton;
-    acceptButton->setIcon(KIcon(QString::fromUtf8("dialog-ok-apply")));
+    acceptButton->setIcon(QIcon::fromTheme(QString::fromUtf8("dialog-ok-apply")));
     acceptButton->setStyleSheet( buttonStyle );
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(acceptTag()));
     layout->addWidget(acceptButton);
 
-    QLabel* isThisLabel = new QLabel(i18n("Is this %1 (%2)?",
+    QLabel* isThisLabel = new QLabel(i18nc("Identifying a person; e.g. 'Is this <Person A> (<Category People>)'",
+                                           "Is this %1 (%2)?",
                                           m_area->proposedTagData().second,
                                           m_area->proposedTagData().first));
     layout->addWidget(isThisLabel);
 
     QToolButton* declineButton = new QToolButton;
-    declineButton->setIcon(KIcon(QString::fromUtf8("dialog-close")));
+    declineButton->setIcon(QIcon::fromTheme(QString::fromUtf8("dialog-close")));
     declineButton->setStyleSheet( buttonStyle );
     connect(declineButton, SIGNAL(clicked()), this, SLOT(declineTag()));
     layout->addWidget(declineButton);

@@ -16,12 +16,16 @@
    Boston, MA 02110-1301, USA.
 */
 #include "ThumbnailDND.h"
-#include "ThumbnailModel.h"
+
+#include <QMimeData>
 #include <QTimer>
-#include "Browser/BrowserWidget.h"
-#include "DB/ImageDB.h"
+
 #include <KMessageBox>
-#include <klocale.h>
+#include <KLocalizedString>
+
+#include <Browser/BrowserWidget.h>
+#include <DB/ImageDB.h>
+#include "ThumbnailModel.h"
 #include "ThumbnailWidget.h"
 
 ThumbnailView::ThumbnailDND::ThumbnailDND( ThumbnailFactory* factory )
@@ -31,16 +35,21 @@ ThumbnailView::ThumbnailDND::ThumbnailDND( ThumbnailFactory* factory )
 
 void ThumbnailView::ThumbnailDND::contentsDragMoveEvent( QDragMoveEvent* event )
 {
-    if ( event->provides( "text/uri-list" ) && widget()->m_selectionInteraction.isDragging() )
+    if ( event->mimeData()->hasUrls() && widget()->m_selectionInteraction.isDragging() )
         event->accept();
     else {
         event->ignore();
         return;
     }
 
-    const DB::FileName fileName = widget()->mediaIdUnderCursor();
-
     removeDropIndications();
+
+    const DB::FileName fileName = widget()->mediaIdUnderCursor();
+    if (fileName.isNull())
+    {
+        // cursor not in drop zone (e.g. empty space right/below of the thumbnails)
+        return;
+    }
 
     const QRect rect = widget()->visualRect( widget()->indexUnderCursor() );
 
@@ -77,9 +86,16 @@ void ThumbnailView::ThumbnailDND::contentsDragLeaveEvent( QDragLeaveEvent* )
     removeDropIndications();
 }
 
-void ThumbnailView::ThumbnailDND::contentsDropEvent( QDropEvent* )
+void ThumbnailView::ThumbnailDND::contentsDropEvent(QDropEvent *event)
 {
-    QTimer::singleShot( 0, this, SLOT(realDropEvent()) );
+    if (model()->leftDropItem().isNull() && model()->rightDropItem().isNull())
+    {
+        // drop outside drop zone
+        removeDropIndications();
+        event->ignore();
+    } else {
+        QTimer::singleShot( 0, this, SLOT(realDropEvent()) );
+    }
 }
 
 /**
@@ -133,7 +149,7 @@ void ThumbnailView::ThumbnailDND::removeDropIndications()
 
 void ThumbnailView::ThumbnailDND::contentsDragEnterEvent( QDragEnterEvent * event )
 {
-    if ( event->provides( "text/uri-list" ) && widget()->m_selectionInteraction.isDragging() )
+    if ( event->mimeData()->hasUrls() && widget()->m_selectionInteraction.isDragging() )
         event->accept();
     else
         event->ignore();

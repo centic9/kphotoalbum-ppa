@@ -24,7 +24,7 @@
 #include <qfileinfo.h>
 #include <QStringList>
 #include <QProgressDialog>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qapplication.h>
 #include <qeventloop.h>
 #include <kmessagebox.h>
@@ -80,7 +80,7 @@ bool NewImageFinder::findImages()
     }
 
     // Man this is not super optimal, but will be changed onces the image finder moves to become a background task.
-    if ( ! MainWindow::FeatureDialog::mplayerBinary().isNull() ) {
+    if ( MainWindow::FeatureDialog::hasVideoThumbnailer() ) {
         BackgroundTaskManager::JobManager::instance()->addJob(
                 new BackgroundJobs::SearchForVideosWithoutVideoThumbnailsJob );
     }
@@ -107,13 +107,14 @@ void NewImageFinder::searchForNewFiles( const DB::FileNameSet& loadedFiles, QStr
 
     bool skipSymlinks = Settings::SettingsData::instance()->skipSymlinks();
 
-    for( QStringList::const_iterator it = dirList.constBegin(); it != dirList.constEnd(); ++it ) {
+    for( QStringList::const_iterator it = dirList.constBegin(); it != dirList.constEnd(); ++it )
+    {
         const DB::FileName file = DB::FileName::fromAbsolutePath(directory + QString::fromLatin1("/") + *it);
-    if ( (*it) == QString::fromLatin1(".") || (*it) == QString::fromLatin1("..") ||
-                excluded.contains( (*it) ) || loadedFiles.contains( file ) ||
-                dec._skipThisFile(loadedFiles, file) ||
-                (*it) == QString::fromLatin1("CategoryImages") )
-        continue;
+        if ( (*it) == QString::fromLatin1(".") || (*it) == QString::fromLatin1("..") ||
+             excluded.contains( (*it) ) || loadedFiles.contains( file ) ||
+             dec._skipThisFile(loadedFiles, file) ||
+             (*it) == QString::fromLatin1("CategoryImages") )
+            continue;
 
         QFileInfo fi( file.absolute() );
 
@@ -171,7 +172,7 @@ void NewImageFinder::loadExtraFiles()
     DB::ImageDB::instance()->addImages( newImages );
 
     // I would have loved to do this in loadExtraFile, but the image has not been added to the database yet
-    if ( ! MainWindow::FeatureDialog::mplayerBinary().isNull() ) {
+    if ( MainWindow::FeatureDialog::hasVideoThumbnailer() ) {
         Q_FOREACH( const ImageInfoPtr& info, newImages ) {
             if ( info->isVideo() )
                 BackgroundTaskManager::JobManager::instance()->addJob(

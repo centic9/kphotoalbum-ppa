@@ -15,32 +15,34 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#include "FeatureDialog.h"
-#include <QDebug>
 #include <config-kpa-kipi.h>
 #include <config-kpa-exiv2.h>
 #include <config-kpa-kface.h>
 #include <config-kpa-kgeomap.h>
-#include <klocale.h>
-#include <qlayout.h>
+#include "FeatureDialog.h"
+
+#include <QLayout>
 #include <QList>
-#include <kapplication.h>
-#include "Exif/Database.h"
-#include <kparts/componentfactory.h>
-#include <ktoolinvocation.h>
-#include <phonon/backendcapabilities.h>
-#include <KStandardDirs>
 #include <QProcess>
+#include <QStandardPaths>
+#include <QTextBrowser>
+#include <QVBoxLayout>
+
+#include <KLocalizedString>
+#include <phonon/backendcapabilities.h>
+
+#ifdef HAVE_EXIV2
+#include "Exif/Database.h"
+#endif
 
 using namespace MainWindow;
 
 FeatureDialog::FeatureDialog( QWidget* parent )
-    :KDialog( parent )
+    :QDialog( parent )
 {
-    setWindowTitle( makeStandardCaption( i18n("Feature Status"), this ) );
+    setWindowTitle( i18n("KPhotoAlbum Feature Status") );
 
-    HelpBrowser* edit = new HelpBrowser( this );
-    setMainWidget( edit );
+    QTextBrowser* browser = new QTextBrowser( this );
 
     QString text = i18n("<h1>Overview</h1>"
                         "<p>Below you may see the list of compile- and runtime features KPhotoAlbum has, and their status:</p>"
@@ -110,33 +112,29 @@ FeatureDialog::FeatureDialog( QWidget* parent )
         text += i18n("<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></ul></p>", mimeTypes.join(QString::fromLatin1( "</li><li>" ) ) );
 
     text += i18n("<h1><a name=\"videoPreview\">Video thumbnail support</a></h1>"
-                 "<p>KPhotoAlbum uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails are used to preview "
+                 "<p>KPhotoAlbum can use <tt>ffmpeg</tt> or <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails are used to preview "
                  "videos in the thumbnail viewer.</p>"
-                 "<p>If at all possible you should install the <b>MPlayer2</b> package rather than the <b>MPlayer</b> package, as it has important "
-                 "improvements over the MPlayer package. MPlayer (in contrast to MPlayer2) often has problems extracting the length "
-                 "of videos and also often fails to extract the thumbnails used for cycling video thumbnails.</p>");
+                 "<p>In the past, MPlayer (in contrast to MPlayer2) often had problems extracting the length "
+                 "of videos and also often fails to extract the thumbnails used for cycling video thumbnails. "
+                 "For that reason, you should prefer ffmpeg or MPlayer2 over MPlayer, if possible.</p>"
+                 );
 
-    edit->setText( text );
+    text += i18n("<h1><a name=\"videoInfo\">Video metadata support</a></h1>"
+                 "<p>KPhotoAlbum can use <tt>ffprobe</tt> or <tt>MPlayer</tt> to extract length information from videos."
+                 "</p>"
+                 "<p>Correct length information is also necessary for correct rendering of video thumbnails.</p>"
+                 );
 
-    resize( 800, 600 );
+    browser->setText( text );
+
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(browser);
+    this->setLayout(layout);
 }
 
-HelpBrowser::HelpBrowser( QWidget* parent, const char* name )
-    :KTextBrowser( parent )
+QSize FeatureDialog::sizeHint() const
 {
-    setObjectName(QString::fromLatin1(name));
-}
-
-void HelpBrowser::setSource( const QUrl& url )
-{
-    const QString name = url.toString();
-
-    if ( name.startsWith( QString::fromLatin1( "#" ) ) ) {
-        // Must be QTextBrowser rather than KTextBrowser, as KTextBrowser opens the URL in an external browser, rather than jumping to the target.
-        QTextBrowser::setSource( name ); //krazy:exclude=qclasses
-    }
-    else
-        KToolInvocation::invokeBrowser( name );
+    return QSize(800,600);
 }
 
 bool MainWindow::FeatureDialog::hasKIPISupport()
@@ -186,12 +184,12 @@ bool MainWindow::FeatureDialog::hasGeoMapSupport()
 
 QString FeatureDialog::mplayerBinary()
 {
-    const QString mplayer2 = KStandardDirs::findExe(QString::fromLatin1("mplayer2"));
+    QString mplayer = QStandardPaths::findExecutable( QString::fromLatin1("mplayer2"));
 
-    if ( !mplayer2.isNull() )
-        return mplayer2;
-    else
-        return KStandardDirs::findExe(QString::fromLatin1("mplayer"));
+    if ( mplayer.isNull() )
+        mplayer = QStandardPaths::findExecutable( QString::fromLatin1("mplayer"));
+
+    return mplayer;
 }
 
 bool FeatureDialog::isMplayer2()
@@ -203,10 +201,32 @@ bool FeatureDialog::isMplayer2()
     return output.contains(QString::fromLatin1("MPlayer2"));
 }
 
+QString FeatureDialog::ffmpegBinary()
+{
+    QString ffmpeg = QStandardPaths::findExecutable( QString::fromLatin1("ffmpeg"));
+    return ffmpeg;
+}
+
+QString FeatureDialog::ffprobeBinary()
+{
+    QString ffprobe = QStandardPaths::findExecutable( QString::fromLatin1("ffprobe"));
+    return ffprobe;
+}
+
+bool FeatureDialog::hasVideoThumbnailer()
+{
+    return ! ( ffmpegBinary().isEmpty() && mplayerBinary().isEmpty());
+}
+
+bool FeatureDialog::hasVideoProber()
+{
+    return ! ( ffprobeBinary().isEmpty() && mplayerBinary().isEmpty());
+}
+
 bool MainWindow::FeatureDialog::hasAllFeaturesAvailable()
 {
     // Only answer those that are compile time tests, otherwise we will pay a penalty each time we start up.
-    return hasKIPISupport() && hasEXIV2Support() && hasEXIV2DBSupport() && hasKfaceSupport() && hasGeoMapSupport() && !mplayerBinary().isNull() && isMplayer2();
+    return hasKIPISupport() && hasEXIV2Support() && hasEXIV2DBSupport() && hasKfaceSupport() && hasGeoMapSupport() && hasVideoThumbnailer() && hasVideoProber();
 }
 
 struct Data
@@ -231,6 +251,7 @@ QString MainWindow::FeatureDialog::featureString()
 
     QString result = QString::fromLatin1("<p><table>");
     const QString red = QString::fromLatin1("<font color=\"red\">%1</font>");
+    const QString yellow = QString::fromLatin1("<font color=\"yellow\">%1</font>");
     const QString yes = i18nc("Feature available","Yes");
     const QString no =  red.arg( i18nc("Feature not available","No") );
     const QString formatString = QString::fromLatin1( "<tr><td><a href=\"%1\">%2</a></td><td><b>%3</b></td></tr>" );
@@ -239,8 +260,11 @@ QString MainWindow::FeatureDialog::featureString()
                   .arg( (*featureIt).tag ).arg( (*featureIt).title ).arg( (*featureIt).featureFound ? yes : no  );
     }
 
-     QString thumbnailSupport = mplayerBinary().isNull() ? no : ( isMplayer2() ? yes : red.arg(i18n("Only with MPlayer1")));
+     QString thumbnailSupport = hasVideoThumbnailer() ? ( !ffmpegBinary().isEmpty() || isMplayer2() ? yes : yellow.arg(i18n("Only with MPlayer1"))) : no ;
     result += formatString.arg(QString::fromLatin1("#videoPreview")).arg(i18n("Video thumbnail support")).arg(thumbnailSupport);
+
+     QString videoinfoSupport = hasVideoProber() ? yes : no;
+    result += formatString.arg(QString::fromLatin1("#videoInfo")).arg(i18n("Video metadata support")).arg(videoinfoSupport);
     result += QString::fromLatin1( "</table></p>" );
 
     return result;

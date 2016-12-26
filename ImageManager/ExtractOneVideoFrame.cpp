@@ -18,19 +18,22 @@
 */
 
 #include "ExtractOneVideoFrame.h"
-#include <Utilities/Process.h>
-#include <MainWindow/FeatureDialog.h>
-#include <QDir>
+
 #include <cstdlib>
-#include <QMetaObject>
-#include <KLocale>
+
+#include <QDir>
+
+#include <KLocalizedString>
 #include <KMessageBox>
-#include <MainWindow/Window.h>
-#include <DB/ImageDB.h>
+
 #include <DB/CategoryCollection.h>
-#include "MainWindow/TokenEditor.h"
-#include "Utilities/Set.h"
-#include "MainWindow/DirtyIndicator.h"
+#include <DB/ImageDB.h>
+#include <MainWindow/DirtyIndicator.h>
+#include <MainWindow/FeatureDialog.h>
+#include <MainWindow/TokenEditor.h>
+#include <MainWindow/Window.h>
+#include <Utilities/Process.h>
+#include <Utilities/Set.h>
 
 namespace ImageManager {
 QString ExtractOneVideoFrame::s_tokenForShortVideos;
@@ -38,7 +41,7 @@ QString ExtractOneVideoFrame::s_tokenForShortVideos;
 #define STR(x) QString::fromUtf8(x)
 void ExtractOneVideoFrame::extract(const DB::FileName &fileName, double offset, QObject* receiver, const char* slot)
 {
-    if ( ! MainWindow::FeatureDialog::mplayerBinary().isEmpty())
+    if ( MainWindow::FeatureDialog::hasVideoThumbnailer())
         new ExtractOneVideoFrame(fileName, offset, receiver, slot);
 }
 
@@ -53,12 +56,24 @@ ExtractOneVideoFrame::ExtractOneVideoFrame(const DB::FileName &fileName, double 
     connect( m_process, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleError(QProcess::ProcessError)));
     connect( this, SIGNAL(result(QImage)), receiver, slot);
 
-    QStringList arguments;
-    arguments << STR("-nosound") << STR("-ss") << QString::number(offset,'f',4) << STR("-vf")
-              << STR("screenshot") << STR("-frames") << STR("20") << STR("-vo") << STR("png:z=9") << fileName.absolute();
-    //qDebug( "%s %s", qPrintable(MainWindow::FeatureDialog::mplayerBinary()), qPrintable(arguments.join(QString::fromLatin1(" "))));
+    if (MainWindow::FeatureDialog::ffmpegBinary().isEmpty())
+    {
+        QStringList arguments;
+        arguments << STR("-nosound") << STR("-ss") << QString::number(offset,'f',4) << STR("-vf")
+                  << STR("screenshot") << STR("-frames") << STR("20") << STR("-vo") << STR("png:z=9") << fileName.absolute();
+        //qDebug( "%s %s", qPrintable(MainWindow::FeatureDialog::mplayerBinary()), qPrintable(arguments.join(QString::fromLatin1(" "))));
 
-    m_process->start(MainWindow::FeatureDialog::mplayerBinary(), arguments);
+        m_process->start(MainWindow::FeatureDialog::mplayerBinary(), arguments);
+    } else {
+        QStringList arguments;
+        arguments << STR("-i") << fileName.absolute()
+                  << STR("-sn") << STR("-an") << STR("-ss") << QString::number(offset,'f',4)
+                  << STR("-vframes") << STR("20")
+                  << m_workingDirectory + STR("/000000%02d.png");
+        //qDebug( "%s %s", qPrintable(MainWindow::FeatureDialog::ffmpegBinary()), qPrintable(arguments.join(QString::fromLatin1(" "))));
+
+        m_process->start(MainWindow::FeatureDialog::ffmpegBinary(), arguments);
+    }
 }
 
 void ExtractOneVideoFrame::frameFetched()
@@ -70,7 +85,10 @@ void ExtractOneVideoFrame::frameFetched()
     for (int i = 20; i>0; --i) {
         name = m_workingDirectory +STR("/000000%1.png").arg(i,2, 10, QChar::fromLatin1('0'));
         if (QFile::exists(name))
+        {
+            //qDebug() << "Using video frame " << i;
             break;
+        }
     }
 
     QImage image(name);
@@ -136,8 +154,8 @@ void ExtractOneVideoFrame::markShortVideo(const DB::FileName &fileName)
                                       "For your convenience, the token '%1' "
                                       "has been set on those videos.\n\n"
                                       "(You might need to wait till the video extraction led in your status bar has stopped blinking, "
-                                      "to see all affected videos.)")
-                                 .arg(s_tokenForShortVideos));
+                                      "to see all affected videos.)",
+                                      s_tokenForShortVideos));
     }
 
     DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);

@@ -16,113 +16,110 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "Window.h"
-#include "ImageManager/ThumbnailCache.h"
-#include "ThumbnailView/ThumbnailFacade.h"
-#include <KActionCollection>
-#include "BreadcrumbViewer.h"
-#include <QDebug>
-
-#include "StatisticsDialog.h"
-#include "Settings/SettingsDialog.h"
-#include <qapplication.h>
-#include <QMoveEvent>
-#include <QResizeEvent>
-#include <QContextMenuEvent>
-#include <QLabel>
-#include <QPixmap>
-#include <QCloseEvent>
-#include <QVBoxLayout>
-#include <QFrame>
-#include "ImageManager/ThumbnailBuilder.h"
-#include "AnnotationDialog/Dialog.h"
-#include <qdir.h>
-#include <qmessagebox.h>
-#include "Viewer/ViewerWidget.h"
-#include "WelcomeDialog.h"
-#include <qcursor.h>
-#include "Utilities/ShowBusyCursor.h"
-#include <klocale.h>
-
-#include <QStackedWidget>
-#include "HTMLGenerator/HTMLDialog.h"
-#include "ImageCounter.h"
-#include <qtimer.h>
-#include <kmessagebox.h>
-#include "Settings/SettingsData.h"
-#include "Browser/BrowserWidget.h"
-#include "DB/ImageDB.h"
-#include "Utilities/Util.h"
-#include "Utilities/List.h"
-#include <kapplication.h>
-#include <ktip.h>
-#include <KProcess>
-#include "DeleteDialog.h"
-#include <ksimpleconfig.h>
-#include <kcmdlineargs.h>
-#include <QMenu>
-#include <kiconloader.h>
-#include <kpassworddialog.h>
-#include <KShortcutsDialog>
-#include <kdebug.h>
-#include "ExternalPopup.h"
-#include "CopyPopup.h"
-#include <kstandardaction.h>
-#include <kedittoolbar.h>
-#include "ImportExport/Export.h"
-#include "ImportExport/Import.h"
 #include <config-kpa-kipi.h>
-#ifdef HASKIPI
-#  include "Plugins/Interface.h"
-#  include <libkipi/pluginloader.h>
-#  include <libkipi/plugin.h>
-#endif
 #include <config-kpa-exiv2.h>
-#ifdef HAVE_EXIV2
-#  include "Exif/ReReadDialog.h"
-#endif
-#include "SplashScreen.h"
-#include <qobject.h>
-#include "SearchBar.h"
-#include "TokenEditor.h"
-#include "DB/CategoryCollection.h"
-#include <qlayout.h>
-#include "DateBar/DateBarWidget.h"
-#include "DB/ImageDateCollection.h"
-#include "InvalidDateFinder.h"
-#include "AutoStackImages.h"
-#include "DB/ImageInfo.h"
+#include "Window.h"
+
+#include <stdexcept>
 #ifdef HAVE_STDLIB_H
 #  include <stdlib.h>
 #endif
-#ifdef HAVE_EXIV2
-#  include "Exif/Info.h"
-#  include "Exif/InfoDialog.h"
-#  include "Exif/Database.h"
+
+#include <QApplication>
+#include <QClipboard>
+#include <QCloseEvent>
+#include <QContextMenuEvent>
+#include <QCursor>
+#include <QDebug>
+#include <QDir>
+#include <QFrame>
+#include <QInputDialog>
+#include <QLayout>
+#include <QMenu>
+#include <QMessageBox>
+#include <QMimeData>
+#include <QMoveEvent>
+#include <QObject>
+#include <QResizeEvent>
+#include <QStackedWidget>
+#include <QTimer>
+#include <QVBoxLayout>
+
+#include <KActionCollection>
+#include <KActionMenu>
+#include <KEditToolBar>
+#include <KIconLoader>
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KPasswordDialog>
+#include <KProcess>
+#include <KRun>
+#include <KSharedConfig>
+#include <KShortcutsDialog>
+#include <KStandardAction>
+#include <ktip.h>
+#include <KToggleAction>
+#include <KConfigGroup>
+
+#ifdef HASKIPI
+#  include <KIPI/PluginLoader>
+#  include <KIPI/Plugin>
 #endif
 
-#include "FeatureDialog.h"
-
-#include <krun.h>
-#include <kglobal.h>
-#include <kvbox.h>
-#include "DirtyIndicator.h"
-#include <KToggleAction>
-#include <KActionMenu>
-#include <KHBox>
-#include <qclipboard.h>
-#include <stdexcept>
-#include <KInputDialog>
-#include "ThumbnailView/enums.h"
-#include "DB/MD5.h"
-#include "DB/MD5Map.h"
-#include "StatusBar.h"
-#include <BackgroundTaskManager/JobManager.h>
+#include <AnnotationDialog/Dialog.h>
 #include <BackgroundJobs/SearchForVideosWithoutLengthInfo.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
-#include "UpdateVideoThumbnail.h"
+#include <BackgroundTaskManager/JobManager.h>
+#include <Browser/BrowserWidget.h>
+#include <DateBar/DateBarWidget.h>
+#include <DB/CategoryCollection.h>
+#include <DB/ImageDateCollection.h>
+#include <DB/ImageDB.h>
+#include <DB/ImageInfo.h>
+#include <DB/MD5.h>
+#include <DB/MD5Map.h>
+#ifdef HAVE_EXIV2
+#  include <Exif/Database.h>
+#  include <Exif/InfoDialog.h>
+#  include <Exif/Info.h>
+#  include <Exif/ReReadDialog.h>
+#endif
+#include <HTMLGenerator/HTMLDialog.h>
+#include <ImageManager/ThumbnailBuilder.h>
+#include <ImageManager/ThumbnailCache.h>
+#include <ImportExport/Export.h>
+#include <ImportExport/Import.h>
+#ifdef HASKIPI
+#  include <Plugins/Interface.h>
+#endif
+#include <RemoteControl/RemoteInterface.h>
+#include <Settings/SettingsData.h>
+#include <Settings/SettingsDialog.h>
+#include <ThumbnailView/enums.h>
+#include <ThumbnailView/ThumbnailFacade.h>
+#include <Utilities/List.h>
+#include <Utilities/ShowBusyCursor.h>
+#include <Utilities/Util.h>
+#include <Viewer/ViewerWidget.h>
+
+#include "AutoStackImages.h"
+#include "BreadcrumbViewer.h"
+#include "CopyPopup.h"
+#include "DeleteDialog.h"
+#include "DirtyIndicator.h"
 #include "DuplicateMerger/DuplicateMerger.h"
-#include "RemoteControl/RemoteInterface.h"
+#include "ExternalPopup.h"
+#include "FeatureDialog.h"
+#include "ImageCounter.h"
+#include "InvalidDateFinder.h"
+#include "Options.h"
+#include "SearchBar.h"
+#include "SplashScreen.h"
+#include "StatisticsDialog.h"
+#include "StatusBar.h"
+#include "TokenEditor.h"
+#include "UpdateVideoThumbnail.h"
+#include "WelcomeDialog.h"
 
 using namespace DB;
 
@@ -133,14 +130,12 @@ MainWindow::Window::Window( QWidget* parent )
       m_annotationDialog(nullptr),
       m_deleteDialog( nullptr ), m_htmlDialog(nullptr), m_tokenEditor( nullptr )
 {
-    checkIfMplayerIsInstalled();
-
     SplashScreen::instance()->message( i18n("Loading Database") );
     s_instance = this;
 
     bool gotConfigFile = load();
     if ( !gotConfigFile )
-        exit(0);
+        throw 0;
     SplashScreen::instance()->message( i18n("Loading Main Window") );
 
     QWidget* top = new QWidget( this );
@@ -182,37 +177,39 @@ MainWindow::Window::Window( QWidget* parent )
 
     // Misc
     m_autoSaveTimer = new QTimer( this );
-    connect( m_autoSaveTimer, SIGNAL(timeout()), this, SLOT(slotAutoSave()) );
+    connect(m_autoSaveTimer, &QTimer::timeout, this, &Window::slotAutoSave);
     startAutoSaveTimer();
 
-    connect( m_browser, SIGNAL(showingOverview()), this, SLOT(showBrowser()) );
+    connect(m_browser, &Browser::BrowserWidget::showingOverview, this, &Window::showBrowser);
     connect( m_browser, SIGNAL(pathChanged(Browser::BreadcrumbList)), m_statusBar->mp_pathIndicator, SLOT(setBreadcrumbs(Browser::BreadcrumbList)) );
     connect( m_statusBar->mp_pathIndicator, SIGNAL(widenToBreadcrumb(Browser::Breadcrumb)), m_browser, SLOT(widenToBreadcrumb(Browser::Breadcrumb)) );
     connect( m_browser, SIGNAL(pathChanged(Browser::BreadcrumbList)), this, SLOT(updateDateBar(Browser::BreadcrumbList)) );
 
-    connect( m_dateBar, SIGNAL(dateSelected(DB::ImageDate,bool)), m_thumbnailView, SLOT(gotoDate(DB::ImageDate,bool)) );
-    connect( m_dateBar, SIGNAL(toolTipInfo(QString)), this, SLOT(showDateBarTip(QString)) );
+    connect(m_dateBar, &DateBar::DateBarWidget::dateSelected, m_thumbnailView, &ThumbnailView::ThumbnailFacade::gotoDate);
+    connect(m_dateBar, &DateBar::DateBarWidget::toolTipInfo, this, &Window::showDateBarTip);
     connect( Settings::SettingsData::instance(), SIGNAL(histogramSizeChanged(QSize)), m_dateBar, SLOT(setHistogramBarSize(QSize)) );
     connect( Settings::SettingsData::instance(), SIGNAL(actualThumbnailSizeChanged(int)), this, SLOT(slotThumbnailSizeChanged()) );
 
-    connect( m_dateBar, SIGNAL(dateRangeChange(DB::ImageDate)), this, SLOT(setDateRange(DB::ImageDate)) );
-    connect( m_dateBar, SIGNAL(dateRangeCleared()), this, SLOT(clearDateRange()) );
-    connect( m_thumbnailView, SIGNAL(currentDateChanged(QDateTime)), m_dateBar, SLOT(setDate(QDateTime)) );
+    connect(m_dateBar, &DateBar::DateBarWidget::dateRangeChange, this, &Window::setDateRange);
+    connect(m_dateBar, &DateBar::DateBarWidget::dateRangeCleared, this, &Window::clearDateRange);
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::currentDateChanged, m_dateBar, &DateBar::DateBarWidget::setDate);
 
-    connect( m_thumbnailView, SIGNAL(showImage(DB::FileName)), this, SLOT(showImage(DB::FileName)) );
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::showImage, this, &Window::showImage);
     connect( m_thumbnailView, SIGNAL(showSelection()), this, SLOT(slotView()) );
 
-    connect( m_thumbnailView, SIGNAL(fileIdUnderCursorChanged(DB::FileName)), this, SLOT(slotSetFileName(DB::FileName)) );
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::fileIdUnderCursorChanged, this, &Window::slotSetFileName);
     connect( DB::ImageDB::instance(), SIGNAL(totalChanged(uint)), this, SLOT(updateDateBar()) );
     connect( DB::ImageDB::instance()->categoryCollection(), SIGNAL(categoryCollectionChanged()), this, SLOT(slotOptionGroupChanged()) );
     connect( m_browser, SIGNAL(imageCount(uint)), m_statusBar->mp_partial, SLOT(showBrowserMatches(uint)) );
-    connect( m_thumbnailView, SIGNAL(selectionChanged(int)), this, SLOT(updateContextMenuFromSelectionSize(int)) );
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged, this, &Window::updateContextMenuFromSelectionSize);
 
     QTimer::singleShot( 0, this, SLOT(delayedInit()) );
     updateContextMenuFromSelectionSize(0);
 
     // Automatically save toolbar settings
     setAutoSaveSettings();
+
+    checkIfMplayerIsInstalled();
 
     executeStartupActions();
 }
@@ -245,15 +242,14 @@ void MainWindow::Window::delayedInit()
     splash->done();
     show();
 
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if ( args->isSet( "import" ) ) {
+    QUrl importUrl = Options::the()->importFile();
+    if ( importUrl.isValid() )
+    {
         // I need to do this in delayed init to get the import window on top of the normal window
-        ImportExport::Import::imageImport( KCmdLineArgs::makeURL( args->getOption("import").toLocal8Bit() ) );
-    }
-    else {
+        ImportExport::Import::imageImport( importUrl );
+    } else {
         // I need to postpone this otherwise the tip dialog will not get focus on start up
         KTipDialog::showTip( this );
-
     }
 
 #ifdef HAVE_EXIV2
@@ -263,7 +259,9 @@ void MainWindow::Window::delayedInit()
     }
 #endif
 
-    if ( args->isSet( "listen-network" ) &&  Settings::SettingsData::instance()->listenForAndroidDevicesOnStartup())
+    if (!Options::the()->listen().isNull())
+        RemoteControl::RemoteInterface::instance().listen(Options::the()->listen());
+    else if ( Settings::SettingsData::instance()->listenForAndroidDevicesOnStartup())
         RemoteControl::RemoteInterface::instance().listen();
 
     announceAndroidVersion();
@@ -272,7 +270,7 @@ void MainWindow::Window::delayedInit()
 
 bool MainWindow::Window::slotExit()
 {
-    if ( Utilities::runningDemo() ) {
+    if ( Options::the()->demoMode() ) {
         QString txt = i18n("<p><b>Delete Your Temporary Demo Database</b></p>"
                            "<p>I hope you enjoyed the KPhotoAlbum demo. The demo database was copied to "
                            "/tmp, should it be deleted now? If you do not delete it, it will waste disk space; "
@@ -316,8 +314,8 @@ void MainWindow::Window::slotOptions()
     if ( ! m_settingsDialog ) {
         m_settingsDialog = new Settings::SettingsDialog( this );
         connect( m_settingsDialog, SIGNAL(changed()), this, SLOT(reloadThumbnails()) );
-        connect( m_settingsDialog, SIGNAL(changed()), this, SLOT(startAutoSaveTimer()) );
-        connect(m_settingsDialog, SIGNAL(changed()), m_browser, SLOT(reload()));
+        connect(m_settingsDialog, &Settings::SettingsDialog::changed, this, &Window::startAutoSaveTimer);
+        connect(m_settingsDialog, &Settings::SettingsDialog::changed, m_browser, &Browser::BrowserWidget::reload);
     }
     m_settingsDialog->show();
 }
@@ -459,7 +457,7 @@ void MainWindow::Window::createAnnotationDialog()
         return;
 
     m_annotationDialog = new AnnotationDialog::Dialog( nullptr );
-    connect( m_annotationDialog, SIGNAL(imageRotated(DB::FileName)), this, SLOT(slotImageRotated(DB::FileName)) );
+    connect(m_annotationDialog.data(), &AnnotationDialog::Dialog::imageRotated, this, &Window::slotImageRotated);
 }
 
 void MainWindow::Window::slotSave()
@@ -484,14 +482,14 @@ void MainWindow::Window::slotDeleteSelected()
 
 void MainWindow::Window::slotCopySelectedURLs()
 {
-    KUrl::List urls; int urlcount = 0;
+    QList<QUrl> urls; int urlcount = 0;
     Q_FOREACH(const DB::FileName &fileName, selected()) {
-        urls.append( fileName.absolute() );
+        urls.append( QUrl::fromLocalFile(fileName.absolute()) );
         urlcount++;
     }
     if (urlcount == 1) m_paste->setEnabled (true); else m_paste->setEnabled(false);
     QMimeData* mimeData = new QMimeData;
-    urls.populateMimeData(mimeData);
+    mimeData->setUrls(urls);
 
     QApplication::clipboard()->setMimeData( mimeData );
 }
@@ -501,7 +499,7 @@ void MainWindow::Window::slotPasteInformation()
     const QMimeData* mimeData = QApplication::clipboard()->mimeData();
 
     // Idealy this would look like
-    // KUrl::List urls;
+    // QList<QUrl> urls;
     // urls.fromMimeData(mimeData);
     // if ( urls.count() != 1 ) return;
     // const QString string = urls.first().path();
@@ -636,8 +634,8 @@ void MainWindow::Window::launchViewer(const DB::FileNameList& inputMediaList, bo
     else
         viewer = new Viewer::ViewerWidget(Viewer::ViewerWidget::ViewerWindow,
                                           &m_viewerInputMacros);
-    connect( viewer, SIGNAL(soughtTo(DB::FileName)), m_thumbnailView, SLOT(changeSingleSelection(DB::FileName)) );
-    connect( viewer, SIGNAL(imageRotated(DB::FileName)), this, SLOT(slotImageRotated(DB::FileName)) );
+    connect(viewer, &Viewer::ViewerWidget::soughtTo, m_thumbnailView, &ThumbnailView::ThumbnailFacade::changeSingleSelection);
+    connect(viewer, &Viewer::ViewerWidget::imageRotated, this, &Window::slotImageRotated);
 
     viewer->show( slideShow );
     viewer->load( mediaList, seek < 0 ? 0 : seek );
@@ -664,7 +662,11 @@ QString MainWindow::Window::welcome()
 {
     QString configFileName;
     QPointer<MainWindow::WelcomeDialog> dialog = new WelcomeDialog( this );
-    dialog->exec();
+    // exit if the user dismissed the welcome dialog
+    if (!dialog->exec())
+    {
+        qApp->quit();
+    }
     configFileName = dialog->configFileName();
     delete dialog;
     return configFileName;
@@ -695,9 +697,9 @@ void MainWindow::Window::setupMenuBar()
     KStandardAction::quit( this, SLOT(slotExit()), actionCollection() );
     m_generateHtml = actionCollection()->addAction( QString::fromLatin1("exportHTML") );
     m_generateHtml->setText( i18n("Generate HTML...") );
-    connect( m_generateHtml, SIGNAL(triggered()), this, SLOT(slotExportToHTML()) );
+    connect(m_generateHtml, &QAction::triggered, this, &Window::slotExportToHTML);
 
-    KAction* a = actionCollection()->addAction( QString::fromLatin1("import"), this, SLOT(slotImport()) );
+    QAction* a = actionCollection()->addAction( QString::fromLatin1("import"), this, SLOT(slotImport()) );
     a->setText( i18n( "Import...") );
 
     a = actionCollection()->addAction( QString::fromLatin1("export"), this, SLOT(slotExport()) );
@@ -706,18 +708,18 @@ void MainWindow::Window::setupMenuBar()
 
     // Go menu
     a = KStandardAction::back( m_browser, SLOT(back()), actionCollection() );
-    connect( m_browser, SIGNAL(canGoBack(bool)), a, SLOT(setEnabled(bool)) );
+    connect(m_browser, &Browser::BrowserWidget::canGoBack, a, &QAction::setEnabled);
     a->setEnabled( false );
 
     a = KStandardAction::forward( m_browser, SLOT(forward()), actionCollection() );
-    connect( m_browser, SIGNAL(canGoForward(bool)), a, SLOT(setEnabled(bool)) );
+    connect(m_browser, &Browser::BrowserWidget::canGoForward, a, &QAction::setEnabled);
     a->setEnabled( false );
 
     a = KStandardAction::home( m_browser, SLOT(home()), actionCollection() );
-    a->setShortcut( Qt::CTRL + Qt::Key_Home );
-    connect( a, SIGNAL(activated()), m_dateBar, SLOT(clearSelection()) );
+    actionCollection()->setDefaultShortcut(a, Qt::CTRL + Qt::Key_Home);
+    connect(a, &QAction::triggered, m_dateBar, &DateBar::DateBarWidget::clearSelection);
 
-    a = KStandardAction::redisplay( m_browser, SLOT(go()), actionCollection() );
+    KStandardAction::redisplay( m_browser, SLOT(go()), actionCollection() );
 
     // The Edit menu
     m_copy = KStandardAction::copy( this, SLOT(slotCopySelectedURLs()), actionCollection() );
@@ -728,9 +730,9 @@ void MainWindow::Window::setupMenuBar()
 
     m_deleteSelected = actionCollection()->addAction(QString::fromLatin1("deleteSelected"));
     m_deleteSelected->setText( i18nc("Delete selected images", "Delete Selected" ) );
-    m_deleteSelected->setIcon( KIcon( QString::fromLatin1("edit-delete") ) );
-    m_deleteSelected->setShortcut( Qt::Key_Delete );
-    connect( m_deleteSelected, SIGNAL(triggered()), this, SLOT(slotDeleteSelected()) );
+    m_deleteSelected->setIcon( QIcon::fromTheme( QString::fromLatin1("edit-delete") ) );
+    actionCollection()->setDefaultShortcut(m_deleteSelected, Qt::Key_Delete);
+    connect(m_deleteSelected, &QAction::triggered, this, &Window::slotDeleteSelected);
 
     a = actionCollection()->addAction(QString::fromLatin1("removeTokens"), this, SLOT(slotRemoveTokens()));
     a->setText( i18n("Remove Tokens") );
@@ -741,58 +743,58 @@ void MainWindow::Window::setupMenuBar()
 
     m_configOneAtATime = actionCollection()->addAction( QString::fromLatin1("oneProp"), this, SLOT(slotConfigureImagesOneAtATime()) );
     m_configOneAtATime->setText( i18n( "Annotate Individual Items" ) );
-    m_configOneAtATime->setShortcut(  Qt::CTRL+Qt::Key_1 );
+    actionCollection()->setDefaultShortcut(m_configOneAtATime, Qt::CTRL + Qt::Key_1);
 
     m_configAllSimultaniously = actionCollection()->addAction( QString::fromLatin1("allProp"), this, SLOT(slotConfigureAllImages()) );
     m_configAllSimultaniously->setText( i18n( "Annotate Multiple Items at a Time" ) );
-    m_configAllSimultaniously->setShortcut(  Qt::CTRL+Qt::Key_2 );
+    actionCollection()->setDefaultShortcut(m_configAllSimultaniously, Qt::CTRL + Qt::Key_2);
 
     m_createImageStack = actionCollection()->addAction( QString::fromLatin1("createImageStack"), this, SLOT(slotCreateImageStack()) );
     m_createImageStack->setText( i18n("Merge Images into a Stack") );
-    m_createImageStack->setShortcut( Qt::CTRL + Qt::Key_3 );
+    actionCollection()->setDefaultShortcut(m_createImageStack, Qt::CTRL + Qt::Key_3);
 
     m_unStackImages = actionCollection()->addAction( QString::fromLatin1("unStackImages"), this, SLOT(slotUnStackImages()) );
     m_unStackImages->setText( i18n("Remove Images from Stack") );
 
     m_setStackHead = actionCollection()->addAction( QString::fromLatin1("setStackHead"), this, SLOT(slotSetStackHead()) );
     m_setStackHead->setText( i18n("Set as First Image in Stack") );
-    m_setStackHead->setShortcut( Qt::CTRL + Qt::Key_4 );
+    actionCollection()->setDefaultShortcut(m_setStackHead, Qt::CTRL + Qt::Key_4);
 
     m_rotLeft = actionCollection()->addAction( QString::fromLatin1("rotateLeft"), this, SLOT(slotRotateSelectedLeft()) );
     m_rotLeft->setText( i18n( "Rotate counterclockwise" ) );
-    m_rotLeft->setShortcut( Qt::Key_7 );
+    actionCollection()->setDefaultShortcut(m_rotLeft, Qt::Key_7);
 
 
     m_rotRight = actionCollection()->addAction( QString::fromLatin1("rotateRight"), this, SLOT(slotRotateSelectedRight()) );
     m_rotRight->setText( i18n( "Rotate clockwise" ) );
-    m_rotRight->setShortcut( Qt::Key_9 );
+    actionCollection()->setDefaultShortcut(m_rotRight, Qt::Key_9);
 
 
     // The Images menu
     m_view = actionCollection()->addAction( QString::fromLatin1("viewImages"), this, SLOT(slotView()) );
     m_view->setText( i18n("View") );
-    m_view->setShortcut(  Qt::CTRL+Qt::Key_I );
+    actionCollection()->setDefaultShortcut(m_view, Qt::CTRL + Qt::Key_I);
 
     m_viewInNewWindow = actionCollection()->addAction( QString::fromLatin1("viewImagesNewWindow"), this, SLOT(slotViewNewWindow()) );
     m_viewInNewWindow->setText( i18n("View (In New Window)") );
 
     m_runSlideShow = actionCollection()->addAction( QString::fromLatin1("runSlideShow"), this, SLOT(slotRunSlideShow()) );
     m_runSlideShow->setText( i18n("Run Slide Show") );
-    m_runSlideShow->setIcon( KIcon( QString::fromLatin1("view-presentation") ) );
-    m_runSlideShow->setShortcut( Qt::CTRL+Qt::Key_R );
+    m_runSlideShow->setIcon( QIcon::fromTheme( QString::fromLatin1("view-presentation") ) );
+    actionCollection()->setDefaultShortcut(m_runSlideShow, Qt::CTRL + Qt::Key_R);
 
     m_runRandomSlideShow = actionCollection()->addAction( QString::fromLatin1("runRandomizedSlideShow"), this, SLOT(slotRunRandomizedSlideShow()) );
     m_runRandomSlideShow->setText( i18n( "Run Randomized Slide Show" ) );
 
     a = actionCollection()->addAction( QString::fromLatin1("collapseAllStacks"),
                                        m_thumbnailView, SLOT(collapseAllStacks()) );
-    connect(m_thumbnailView, SIGNAL(collapseAllStacksEnabled(bool)), a, SLOT(setEnabled(bool)));
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::collapseAllStacksEnabled, a, &QAction::setEnabled);
     a->setEnabled(false);
     a->setText( i18n("Collapse all stacks" ));
 
     a = actionCollection()->addAction( QString::fromLatin1("expandAllStacks"),
                                        m_thumbnailView, SLOT(expandAllStacks()) );
-    connect(m_thumbnailView, SIGNAL(expandAllStacksEnabled(bool)), a, SLOT(setEnabled(bool)));
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::expandAllStacksEnabled, a, &QAction::setEnabled);
     a->setEnabled(false);
     a->setText( i18n("Expand all stacks" ));
 
@@ -816,8 +818,8 @@ void MainWindow::Window::setupMenuBar()
 
     m_jumpToContext = actionCollection()->addAction( QString::fromLatin1("jumpToContext"), this, SLOT(slotJumpToContext()) );
     m_jumpToContext->setText( i18n("Jump to Context") );
-    m_jumpToContext->setShortcut(  Qt::CTRL+Qt::Key_J );
-    m_jumpToContext->setIcon( KIcon( QString::fromLatin1( "kphotoalbum" ) ) ); // icon suggestion: go-jump (don't know the exact meaning though, so I didn't replace it right away
+    actionCollection()->setDefaultShortcut(m_jumpToContext, Qt::CTRL + Qt::Key_J);
+    m_jumpToContext->setIcon( QIcon::fromTheme( QString::fromLatin1( "kphotoalbum" ) ) ); // icon suggestion: go-jump (don't know the exact meaning though, so I didn't replace it right away
 
     m_lock = actionCollection()->addAction( QString::fromLatin1("lockToDefaultScope"), this, SLOT(lockToDefaultScope()) );
     m_lock->setText( i18n("Lock Images") );
@@ -827,7 +829,7 @@ void MainWindow::Window::setupMenuBar()
 
     a = actionCollection()->addAction( QString::fromLatin1("changeScopePasswd"), this, SLOT(changePassword()) );
     a->setText( i18n("Change Password...") );
-    a->setShortcut( 0 );
+    actionCollection()->setDefaultShortcut(a, 0);
 
     m_setDefaultPos = actionCollection()->addAction( QString::fromLatin1("setDefaultScopePositive"), this, SLOT(setDefaultScopePositive()) );
     m_setDefaultPos->setText( i18n("Lock Away All Other Items") );
@@ -855,10 +857,10 @@ void MainWindow::Window::setupMenuBar()
     a = actionCollection()->addAction( QString::fromLatin1("rescan"), DB::ImageDB::instance(), SLOT(slotRescan()) );
     a->setText( i18n("Rescan for Images and Videos") );
 
-    KAction* recreateExif = actionCollection()->addAction( QString::fromLatin1( "recreateExifDB" ), this, SLOT(slotRecreateExifDB()) );
+    QAction* recreateExif = actionCollection()->addAction( QString::fromLatin1( "recreateExifDB" ), this, SLOT(slotRecreateExifDB()) );
     recreateExif->setText( i18n("Recreate Exif Search Database") );
 
-    KAction* rereadExif = actionCollection()->addAction( QString::fromLatin1("reReadExifInfo"), this, SLOT(slotReReadExifInfo()) );
+    QAction* rereadExif = actionCollection()->addAction( QString::fromLatin1("reReadExifInfo"), this, SLOT(slotReReadExifInfo()) );
     rereadExif->setText( i18n("Read EXIF Info From Files...") );
 #ifndef HAVE_EXIV2
     recreateExif->setText( i18n("Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)") );
@@ -896,7 +898,7 @@ void MainWindow::Window::setupMenuBar()
     m_viewMenu = actionCollection()->add<KActionMenu>( QString::fromLatin1("configureView") );
     m_viewMenu->setText( i18n("Configure Current View") );
 
-    m_viewMenu->setIcon( KIcon( QString::fromLatin1( "view-list-details" ) ) );
+    m_viewMenu->setIcon( QIcon::fromTheme( QString::fromLatin1( "view-list-details" ) ) );
     m_viewMenu->setDelayed( false );
 
     QActionGroup* viewGrp = new QActionGroup( this );
@@ -917,17 +919,16 @@ void MainWindow::Window::setupMenuBar()
     m_viewMenu->addAction( m_largeIconView );
     m_largeIconView->setActionGroup( viewGrp );
 
-    connect( m_browser, SIGNAL(isViewChangeable(bool)), viewGrp, SLOT(setEnabled(bool)) );
+    connect(m_browser, &Browser::BrowserWidget::isViewChangeable, viewGrp, &QActionGroup::setEnabled);
 
-    connect( m_browser, SIGNAL(currentViewTypeChanged(DB::Category::ViewType)),
-             this, SLOT(slotUpdateViewMenu(DB::Category::ViewType)) );
+    connect(m_browser, &Browser::BrowserWidget::currentViewTypeChanged, this, &Window::slotUpdateViewMenu);
     // The help menu
     KStandardAction::tipOfDay( this, SLOT(showTipOfDay()), actionCollection() );
 
     a = actionCollection()->add<KToggleAction>( QString::fromLatin1("showToolTipOnImages") );
     a->setText( i18n("Show Tooltips in Thumbnails Window") );
-    a->setShortcut( Qt::CTRL+Qt::Key_T );
-    connect( a, SIGNAL(toggled(bool)), m_thumbnailView, SLOT(showToolTipsOnImages(bool)) );
+    actionCollection()->setDefaultShortcut(a, Qt::CTRL + Qt::Key_T);
+    connect(a, &QAction::toggled, m_thumbnailView, &ThumbnailView::ThumbnailFacade::showToolTipsOnImages);
 
 
     a = actionCollection()->addAction( QString::fromLatin1("runDemo"), this, SLOT(runDemo()) );
@@ -949,11 +950,11 @@ void MainWindow::Window::setupMenuBar()
 
     m_useNextVideoThumbnail = actionCollection()->addAction( QString::fromLatin1("useNextVideoThumbnail"), this, SLOT(useNextVideoThumbnail()));
     m_useNextVideoThumbnail->setText(i18n("Use next video thumbnail"));
-    m_useNextVideoThumbnail->setShortcut(Qt::CTRL + Qt::Key_Plus);
+    actionCollection()->setDefaultShortcut(m_useNextVideoThumbnail, Qt::CTRL + Qt::Key_Plus);
 
     m_usePreviousVideoThumbnail = actionCollection()->addAction( QString::fromLatin1("usePreviousVideoThumbnail"), this, SLOT(usePreviousVideoThumbnail()));
     m_usePreviousVideoThumbnail->setText(i18n("Use previous video thumbnail"));
-    m_usePreviousVideoThumbnail->setShortcut(Qt::CTRL + Qt::Key_Minus);
+    actionCollection()->setDefaultShortcut(m_usePreviousVideoThumbnail, Qt::CTRL + Qt::Key_Minus);
 
     createGUI( QString::fromLatin1( "kphotoalbumui.rc" ) );
 }
@@ -1023,26 +1024,29 @@ void MainWindow::Window::showTipOfDay()
 void MainWindow::Window::runDemo()
 {
     KProcess* process = new KProcess;
-    *process << QLatin1String("kphotoalbum") << QLatin1String("-demo");
+    *process << QLatin1String("kphotoalbum") << QLatin1String("--demo");
     process->startDetached();
 }
 
 bool MainWindow::Window::load()
 {
     // Let first try to find a config file.
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     QString configFile;
 
-    if ( args->isSet( "c" ) ) {
-        configFile = args->getOption( "c" );
+    QUrl dbFileUrl = Options::the()->dbFile();
+    if ( !dbFileUrl.isEmpty() && dbFileUrl.isLocalFile() )
+    {
+        configFile = dbFileUrl.toLocalFile();
     }
-    else if ( args->isSet( "demo" ) )
+    else if ( Options::the()->demoMode() )
+    {
         configFile = Utilities::setupDemo();
+    }
     else {
         bool showWelcome = false;
-        KConfigGroup config = KGlobal::config()->group(QString());
-        if ( config.hasKey( QString::fromLatin1("configfile") ) ) {
-            configFile = config.readEntry<QString>( QString::fromLatin1("configfile"), QString() );
+        KConfigGroup config = KSharedConfig::openConfig()->group(QString::fromUtf8("General"));
+        if ( config.hasKey( QString::fromLatin1("imageDBFile") ) ) {
+            configFile = config.readEntry<QString>( QString::fromLatin1("imageDBFile"), QString() );
             if ( !QFileInfo( configFile ).exists() )
                 showWelcome = true;
         }
@@ -1061,7 +1065,7 @@ bool MainWindow::Window::load()
         configFile = QDir::home().path() + QString::fromLatin1( "/" ) + configFile.mid(1);
 
     // To avoid a race conditions where both the image loader thread creates an instance of
-    // Options, and where the main thread crates an instance, we better get it created now.
+    // Settings, and where the main thread crates an instance, we better get it created now.
     Settings::SettingsData::setup( QFileInfo( configFile ).absolutePath() );
 
     if ( Settings::SettingsData::instance()->showSplashScreen() ) {
@@ -1070,7 +1074,7 @@ bool MainWindow::Window::load()
     }
 
     // Doing some validation on user provided index file
-    if ( args->isSet( "c" ) ) {
+    if ( Options::the()->dbFile().isValid() ) {
         QFileInfo fi( configFile );
 
         if ( !fi.dir().exists() ) {
@@ -1095,7 +1099,7 @@ bool MainWindow::Window::load()
     if ( ! Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
          && ! (Settings::SettingsData::instance()->untaggedCategory().isEmpty()
                && Settings::SettingsData::instance()->untaggedTag().isEmpty() )
-         && ! Utilities::runningDemo() )
+         && ! Options::the()->demoMode() )
     {
         KMessageBox::error( this, i18n(
                                 "<p>You have configured a tag for untagged images, but either the tag itself "
@@ -1139,33 +1143,29 @@ void MainWindow::Window::contextMenuEvent( QContextMenuEvent* e )
 
         // "Invoke external program"
 
-        ExternalPopup* externalCommands = new ExternalPopup( &menu );
+        ExternalPopup externalCommands { &menu };
         DB::ImageInfoPtr info = m_thumbnailView->mediaIdUnderCursor().info();
 
-        externalCommands->populate( info, selected());
-        QAction* action = menu.addMenu( externalCommands );
-        if (info.isNull() && selected().isEmpty())
+        externalCommands.populate( info, selected());
+        QAction* action = menu.addMenu( &externalCommands );
+        if (!info && selected().isEmpty())
             action->setEnabled( false );
 
         // "Copy image(s) to ..."
-        CopyPopup *copyMenu = new CopyPopup(&menu, info, selected(), CopyPopup::Copy);
-        QAction *copyAction = menu.addMenu(copyMenu);
-        if (info.isNull() and selected().isEmpty()) {
+        CopyPopup copyMenu (&menu, info, selected(), CopyPopup::Copy);
+        QAction *copyAction = menu.addMenu(&copyMenu);
+        if (!info && selected().isEmpty()) {
             copyAction->setEnabled(false);
         }
 
         // "Link image(s) to ..."
-        CopyPopup *linkMenu = new CopyPopup(&menu, info, selected(), CopyPopup::Link);
-        QAction *linkAction = menu.addMenu(linkMenu);
-        if (info.isNull() and selected().isEmpty()) {
+        CopyPopup linkMenu (&menu, info, selected(), CopyPopup::Link);
+        QAction *linkAction = menu.addMenu(&linkMenu);
+        if (!info && selected().isEmpty()) {
             linkAction->setEnabled(false);
         }
 
         menu.exec( QCursor::pos() );
-
-        delete externalCommands;
-        delete linkMenu;
-        delete copyMenu;
     }
     e->setAccepted(true);
 }
@@ -1445,7 +1445,7 @@ void MainWindow::Window::setupPluginMenu()
 
 
 #ifdef HASKIPI
-    connect( menu, SIGNAL(aboutToShow()), this, SLOT(loadPlugins()) );
+    connect(menu, &QMenu::aboutToShow, this, &Window::loadPlugins);
     m_hasLoadedPlugins = false;
 #else
     menu->setEnabled(false);
@@ -1460,8 +1460,8 @@ void MainWindow::Window::loadPlugins()
     if ( m_hasLoadedPlugins )
         return;
 
-    m_pluginInterface = new Plugins::Interface( this, "demo interface" );
-    connect( m_pluginInterface, SIGNAL(imagesChanged(KUrl::List)), this, SLOT(slotImagesChanged(KUrl::List)) );
+    m_pluginInterface = new Plugins::Interface( this, QString::fromLatin1("KPhotoAlbum kipi interface") );
+    connect(m_pluginInterface, &Plugins::Interface::imagesChanged, this, &Window::slotImagesChanged);
 
     QStringList ignores;
     ignores << QString::fromLatin1( "CommentsEditor" )
@@ -1471,11 +1471,11 @@ void MainWindow::Window::loadPlugins()
     m_pluginLoader->setIgnoredPluginsList( ignores );
     m_pluginLoader->setInterface( m_pluginInterface );
     m_pluginLoader->init();
-    connect( m_pluginLoader, SIGNAL(replug()), this, SLOT(plug()) );
+    connect(m_pluginLoader, &KIPI::PluginLoader::replug, this, &Window::plug);
     m_pluginLoader->loadPlugins();
 
     // Setup signals
-    connect( m_thumbnailView, SIGNAL(selectionChanged(int)), this, SLOT(slotSelectionChanged(int)) );
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged, this, &Window::slotSelectionChanged);
     m_hasLoadedPlugins = true;
 
     // Make sure selection is updated also when plugin loading is
@@ -1509,8 +1509,8 @@ void MainWindow::Window::plug()
 
         plugin->setup( this );
 
-        QList<KAction*> actions = plugin->actions();
-        Q_FOREACH( KAction *action, actions ) {
+        QList<QAction*> actions = plugin->actions();
+        Q_FOREACH( QAction *action, actions ) {
             KIPI::Category category = plugin->category( action );
             if (  category == KIPI::ImagesPlugin ||  category == KIPI::CollectionsPlugin )
                 imageActions.append( action );
@@ -1528,10 +1528,10 @@ void MainWindow::Window::plug()
                 batchActions.append( action );
 
             else {
-                kDebug() << "Unknown category\n";
+                qDebug() << "Unknown category\n";
             }
         }
-        KConfigGroup group = KGlobal::config()->group( QString::fromLatin1("Shortcuts") );
+        KConfigGroup group = KSharedConfig::openConfig()->group( QString::fromLatin1("Shortcuts") );
         plugin->actionCollection()->importGlobalShortcuts( &group );
     }
 
@@ -1560,9 +1560,9 @@ void MainWindow::Window::setPluginMenuState( const char* name, const QList<QActi
 
 
 
-void MainWindow::Window::slotImagesChanged( const KUrl::List& urls )
+void MainWindow::Window::slotImagesChanged( const QList<QUrl>& urls )
 {
-    for( KUrl::List::ConstIterator it = urls.begin(); it != urls.end(); ++it ) {
+    for( QList<QUrl>::ConstIterator it = urls.begin(); it != urls.end(); ++it ) {
         DB::FileName fileName = DB::FileName::fromAbsolutePath((*it).path());
         if ( !fileName.isNull()) {
             // Plugins may report images outsite of the photodatabase
@@ -1614,12 +1614,15 @@ void MainWindow::Window::slotRemoveTokens()
     if ( !m_tokenEditor )
         m_tokenEditor = new TokenEditor( this );
     m_tokenEditor->show();
-    connect( m_tokenEditor, SIGNAL(finished()), m_browser, SLOT(go()) );
+    connect(m_tokenEditor, &TokenEditor::finished, m_browser, &Browser::BrowserWidget::go);
 }
 
 void MainWindow::Window::slotShowListOfFiles()
 {
-    QStringList list = KInputDialog::getMultiLineText( i18n("Open List of Files"), i18n("You can open a set of files from KPhotoAlbum's image root by listing the files here.") )
+    QStringList list = QInputDialog::getMultiLineText( this,
+                                                       i18n("Open List of Files"),
+                                                       i18n("You can open a set of files from KPhotoAlbum's image root by listing the files here.")
+                                                       )
             .split( QChar::fromLatin1('\n'), QString::SkipEmptyParts );
     if ( list.isEmpty() )
         return;
@@ -1748,7 +1751,7 @@ void MainWindow::Window::slotOrderDecr()
 
 void MainWindow::Window::showVideos()
 {
-    KRun::runUrl(KUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos")), QString::fromLatin1( "text/html" ), this );
+    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos")), QString::fromLatin1( "text/html" ), this );
 }
 
 void MainWindow::Window::slotStatistics()
@@ -1817,9 +1820,11 @@ void MainWindow::Window::slotThumbnailSizeChanged()
 {
     QString thumbnailSizeMsg = i18nc( "@info:status",
                                       //xgettext:no-c-format
-                                      "Thumbnail width: %1px (storage size: %2px)");
-    m_statusBar->showMessage( thumbnailSizeMsg.arg( Settings::SettingsData::instance()->actualThumbnailSize())
-                              .arg(Settings::SettingsData::instance()->thumbnailSize()), 4000);
+                                      "Thumbnail width: %1px (storage size: %2px)",
+                                      Settings::SettingsData::instance()->actualThumbnailSize(),
+                                      Settings::SettingsData::instance()->thumbnailSize()
+                                      );
+    m_statusBar->showMessage( thumbnailSizeMsg, 4000);
 }
 
 void MainWindow::Window::createSarchBar()
@@ -1827,13 +1832,13 @@ void MainWindow::Window::createSarchBar()
     // Set up the search tool bar
     SearchBar* bar = new SearchBar( this );
     bar->setLineEditEnabled(false);
-    bar->setObjectName( QString::fromAscii("searchBar" ) );
+    bar->setObjectName(QString::fromUtf8("searchBar"));
 
-    connect( bar, SIGNAL(textChanged(QString)), m_browser, SLOT(slotLimitToMatch(QString)) );
-    connect( bar, SIGNAL(returnPressed()), m_browser, SLOT(slotInvokeSeleted()) );
-    connect( bar, SIGNAL(keyPressed(QKeyEvent*)), m_browser, SLOT(scrollKeyPressed(QKeyEvent*)) );
-    connect( m_browser, SIGNAL(viewChanged()), bar, SLOT(reset()) );
-    connect( m_browser, SIGNAL(isSearchable(bool)), bar, SLOT(setLineEditEnabled(bool)) );
+    connect(bar, &SearchBar::textChanged, m_browser, &Browser::BrowserWidget::slotLimitToMatch);
+    connect(bar, &SearchBar::returnPressed, m_browser, &Browser::BrowserWidget::slotInvokeSeleted);
+    connect(bar, &SearchBar::keyPressed, m_browser, &Browser::BrowserWidget::scrollKeyPressed);
+    connect(m_browser, &Browser::BrowserWidget::viewChanged, bar, &SearchBar::reset);
+    connect(m_browser, &Browser::BrowserWidget::isSearchable, bar, &SearchBar::setLineEditEnabled);
 }
 
 void MainWindow::Window::executeStartupActions()
@@ -1843,7 +1848,7 @@ void MainWindow::Window::executeStartupActions()
         ImageManager::ThumbnailBuilder::instance()->buildMissing();
     connect( Settings::SettingsData::instance(), SIGNAL(thumbnailSizeChanged(int)), this, SLOT(slotBuildThumbnailsIfWanted()) );
 
-    if ( ! FeatureDialog::mplayerBinary().isNull() ) {
+    if ( ! FeatureDialog::hasVideoThumbnailer() ) {
         BackgroundTaskManager::JobManager::instance()->addJob(
                     new BackgroundJobs::SearchForVideosWithoutLengthInfo );
 
@@ -1854,16 +1859,19 @@ void MainWindow::Window::executeStartupActions()
 
 void MainWindow::Window::checkIfMplayerIsInstalled()
 {
-    if ( FeatureDialog::mplayerBinary().isNull() ) {
+    if (Options::the()->demoMode())
+        return;
+
+    if ( !FeatureDialog::hasVideoThumbnailer() ) {
         KMessageBox::information( this,
-                                  i18n("<p>Unable to find MPlayer on the system.</p>"
-                                       "<p>Without MPlayer, KPhotoAlbum will not be able to display video thumbnails and video lengths. "
-                                       "Please install the MPlayer2 package</p>"),
+                                  i18n("<p>Unable to find ffmpeg or MPlayer on the system.</p>"
+                                       "<p>Without either of these, KPhotoAlbum will not be able to display video thumbnails and video lengths. "
+                                       "Please install the ffmpeg or MPlayer package</p>"),
                                   i18n("Video thumbnails are not available"), QString::fromLatin1("mplayerNotInstalled"));
     } else {
         KMessageBox::enableMessage( QString::fromLatin1("mplayerNotInstalled") );
 
-        if ( !FeatureDialog::isMplayer2() ) {
+        if ( FeatureDialog::ffmpegBinary().isEmpty() && !FeatureDialog::isMplayer2() ) {
             KMessageBox::information( this,
                                       i18n("<p>You have MPlayer installed on your system, but it is unfortunately not version 2. "
                                            "MPlayer2 is on most systems a separate package, please install that if at all possible, "

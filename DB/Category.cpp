@@ -22,14 +22,13 @@
 #include <Settings/SettingsData.h>
 #include <QPixmapCache>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include "DB/ImageDB.h"
 #include "DB/MemberMap.h"
 #include "CategoryItem.h"
 #include <QPixmap>
-#include <KIcon>
+#include <QIcon>
 #include <Utilities/Util.h>
-#include <QDebug>
 
 using Utilities::StringSet;
 
@@ -41,7 +40,7 @@ QPixmap DB::Category::icon( int size, KIconLoader::States state ) const
         This->blockSignals(true);
         This->setIconName(defaultIconName());
         This->blockSignals(false);
-        pixmap = KIcon(iconName()).pixmap(size);
+        pixmap = QIcon::fromTheme(iconName()).pixmap(size);
     }
     return pixmap;
 }

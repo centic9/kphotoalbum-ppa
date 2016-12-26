@@ -19,7 +19,6 @@
 #include "VideoThumbnails.h"
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
 #include "VideoLengthExtractor.h"
-#include <QFile>
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/ExtractOneThumbnailJob.h>
 #include <BackgroundTaskManager/JobManager.h>
@@ -40,7 +39,7 @@ void ImageManager::VideoThumbnails::setVideoFile(const DB::FileName &fileName)
         return;
 
     // no video thumbnails without mplayer:
-    if (MainWindow::FeatureDialog::mplayerBinary().isEmpty())
+    if (!MainWindow::FeatureDialog::hasVideoThumbnailer())
         return;
 
     cancelPreviousJobs();
@@ -55,7 +54,7 @@ void ImageManager::VideoThumbnails::setVideoFile(const DB::FileName &fileName)
         BackgroundJobs::ExtractOneThumbnailJob* extractJob =
                 new BackgroundJobs::ExtractOneThumbnailJob(fileName, i, BackgroundTaskManager::ForegroundCycleRequest);
         extractJob->addDependency(lengthJob);
-        connect( extractJob, SIGNAL(completed()), this, SLOT(gotFrame()));
+        connect(extractJob, &BackgroundJobs::ExtractOneThumbnailJob::completed, this, &VideoThumbnails::gotFrame);
         m_activeRequests.append( QPointer<BackgroundJobs::ExtractOneThumbnailJob>(extractJob) );
     }
     BackgroundTaskManager::JobManager::instance()->addJob(lengthJob);

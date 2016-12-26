@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2016-07-21 01:46+0000\n"
+"POT-Creation-Date: 2016-10-17 06:56+0000\n"
 "PO-Revision-Date: 2013-07-03 11:26+0300\n"
 "Last-Translator: Safa Alfulaij <safaalfulaij@hotmail.con>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 1.4\n"
 
 #, fuzzy
@@ -28,26 +28,38 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "metehyi@free.fr"
 
-#: AnnotationDialog/Dialog.cpp:90
+#: AnnotationDialog/DateEdit.cpp:87
+msgid "tomorrow"
+msgstr "غداً"
+
+#: AnnotationDialog/DateEdit.cpp:88
+msgid "today"
+msgstr "اليوم"
+
+#: AnnotationDialog/DateEdit.cpp:89
+msgid "yesterday"
+msgstr "البارحة"
+
+#: AnnotationDialog/Dialog.cpp:92
 msgid ""
 "(You have differing descriptions on individual images, setting text here "
 "will override them all)"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:110
+#: AnnotationDialog/Dialog.cpp:115
 msgid "Label and Dates"
 msgstr "اللاصقة و التاريخ"
 
-#: AnnotationDialog/Dialog.cpp:112
+#: AnnotationDialog/Dialog.cpp:117
 msgid "Image Preview"
 msgstr "معاينة الصورة"
 
-#: AnnotationDialog/Dialog.cpp:116 AnnotationDialog/Dialog.cpp:126
-#: HTMLGenerator/HTMLDialog.cpp:130 ImportExport/MD5CheckPage.cpp:75
+#: AnnotationDialog/Dialog.cpp:121 AnnotationDialog/Dialog.cpp:131
+#: HTMLGenerator/HTMLDialog.cpp:160 ImportExport/MD5CheckPage.cpp:75
 msgid "Description"
 msgstr "الوصف"
 
-#: AnnotationDialog/Dialog.cpp:120
+#: AnnotationDialog/Dialog.cpp:125
 msgctxt "@info:whatsthis"
 msgid ""
 "<para>A descriptive text of the image.</para><para>If <emphasis>Use EXIF "
@@ -56,74 +68,74 @@ msgid ""
 "information is imported to this field if available.</para>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:147 DB/ImageDB.cpp:147
+#: AnnotationDialog/Dialog.cpp:152 DB/ImageDB.cpp:145
 #, fuzzy
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: AnnotationDialog/Dialog.cpp:152 AnnotationDialog/Dialog.cpp:154
+#: AnnotationDialog/Dialog.cpp:157 AnnotationDialog/Dialog.cpp:159
 #, fuzzy
 #| msgctxt "Abbreviated month name"
 #| msgid "apr"
 msgid "Map"
 msgstr "أبريل"
 
-#: AnnotationDialog/Dialog.cpp:161
+#: AnnotationDialog/Dialog.cpp:166
 msgctxt "@info:whatsthis"
 msgid ""
 "The map widget allows you to view the location of images if GPS coordinates "
 "are found in the EXIF information."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:207
+#: AnnotationDialog/Dialog.cpp:214
 msgid "Revert This Item"
 msgstr "إسترجع هذا العنصر"
 
-#: AnnotationDialog/Dialog.cpp:211
+#: AnnotationDialog/Dialog.cpp:220
 msgid "Clear Form"
 msgstr "محو الإستمارة"
 
-#: AnnotationDialog/Dialog.cpp:217
+#: AnnotationDialog/Dialog.cpp:226
 #, fuzzy
 msgid "Options..."
 msgstr "خيارات"
 
-#: AnnotationDialog/Dialog.cpp:223
+#: AnnotationDialog/Dialog.cpp:232
 #, fuzzy
 msgid "&Done"
 msgstr "لا شيئ"
 
-#: AnnotationDialog/Dialog.cpp:226
+#: AnnotationDialog/Dialog.cpp:235
 msgid "Continue &Later"
 msgstr "تابع &لاحقًا"
 
-#: AnnotationDialog/Dialog.cpp:233 AnnotationDialog/Dialog.cpp:782
+#: AnnotationDialog/Dialog.cpp:243 AnnotationDialog/Dialog.cpp:795
 msgctxt "@action:button"
 msgid "&Search"
 msgstr "ا&بحث"
 
-#: AnnotationDialog/Dialog.cpp:294
+#: AnnotationDialog/Dialog.cpp:307
 msgid "Label: "
 msgstr "اللاصقة: "
 
-#: AnnotationDialog/Dialog.cpp:298 ImportExport/MD5CheckPage.cpp:74
+#: AnnotationDialog/Dialog.cpp:311 ImportExport/MD5CheckPage.cpp:74
 #, fuzzy
 msgid "Label"
 msgstr "اللاصقة:"
 
-#: AnnotationDialog/Dialog.cpp:308
+#: AnnotationDialog/Dialog.cpp:321
 msgid "Date: "
 msgstr "التاريخ: "
 
-#: AnnotationDialog/Dialog.cpp:324
+#: AnnotationDialog/Dialog.cpp:337
 msgid "Time: "
 msgstr "الوقت: "
 
-#: AnnotationDialog/Dialog.cpp:330
+#: AnnotationDialog/Dialog.cpp:343
 msgid "Use Fuzzy Date"
 msgstr "استخدم تاريخ مبهم"
 
-#: AnnotationDialog/Dialog.cpp:332
+#: AnnotationDialog/Dialog.cpp:345
 msgctxt "@info"
 msgid ""
 "<para>In KPhotoAlbum, images can either have an exact date and time, or a "
@@ -134,132 +146,132 @@ msgid ""
 "Fuzzy Date</interface>.</para>"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:347
+#: AnnotationDialog/Dialog.cpp:360
 msgid "Minimum megapixels:"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:360
+#: AnnotationDialog/Dialog.cpp:373
 msgid "Rating:"
 msgstr "التقييم:"
 
-#: AnnotationDialog/Dialog.cpp:367
+#: AnnotationDialog/Dialog.cpp:380
 msgid "Rating search mode:"
 msgstr "وضع بحث التقييم:"
 
-#: AnnotationDialog/Dialog.cpp:371
+#: AnnotationDialog/Dialog.cpp:384
 msgid "=="
 msgstr "=="
 
-#: AnnotationDialog/Dialog.cpp:371
+#: AnnotationDialog/Dialog.cpp:384
 msgid "&gt;="
 msgstr "&gt;="
 
-#: AnnotationDialog/Dialog.cpp:371
+#: AnnotationDialog/Dialog.cpp:384
 msgid "&lt;="
 msgstr "&lt;="
 
-#: AnnotationDialog/Dialog.cpp:371
+#: AnnotationDialog/Dialog.cpp:384
 msgid "!="
 msgstr "!="
 
-#: AnnotationDialog/Dialog.cpp:379
+#: AnnotationDialog/Dialog.cpp:392
 msgid "File Name Pattern: "
 msgstr "نمط اسم الملف: "
 
-#: AnnotationDialog/Dialog.cpp:382
+#: AnnotationDialog/Dialog.cpp:395
 msgid "File Name Pattern"
 msgstr "نمط اسم الملف"
 
-#: AnnotationDialog/Dialog.cpp:387
+#: AnnotationDialog/Dialog.cpp:400
 #, fuzzy
 msgid "Search only for RAW files"
 msgstr "يجري البحث لـ جديد ملفات"
 
-#: AnnotationDialog/Dialog.cpp:580
+#: AnnotationDialog/Dialog.cpp:593
 #, kde-format
 msgid "KPhotoAlbum Annotations (%1/%2)"
 msgstr "التعليقات على KPhotoAlbum (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:787
+#: AnnotationDialog/Dialog.cpp:800
 msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "ابحث"
 
-#: AnnotationDialog/Dialog.cpp:791
+#: AnnotationDialog/Dialog.cpp:804
 #, fuzzy
 msgid "Done"
 msgstr "لا شيئ"
 
-#: AnnotationDialog/Dialog.cpp:797
+#: AnnotationDialog/Dialog.cpp:810
 msgid "Annotations"
 msgstr "التعليقات"
 
-#: AnnotationDialog/Dialog.cpp:830
+#: AnnotationDialog/Dialog.cpp:843
 msgid "Configure window layout..."
 msgstr "اضبط تخطيط النافذة..."
 
-#: AnnotationDialog/Dialog.cpp:831
+#: AnnotationDialog/Dialog.cpp:844
 msgid "Save Current Window Setup"
 msgstr "أحفظ تعيين النافذة الحالي"
 
-#: AnnotationDialog/Dialog.cpp:832
+#: AnnotationDialog/Dialog.cpp:845
 msgid "Reset layout"
 msgstr "إسترجع التصميم"
 
-#: AnnotationDialog/Dialog.cpp:839 AnnotationDialog/Dialog.cpp:1217
-#: AnnotationDialog/ListSelect.cpp:91
+#: AnnotationDialog/Dialog.cpp:852 AnnotationDialog/Dialog.cpp:1230
+#: AnnotationDialog/ListSelect.cpp:95
 #, fuzzy
 msgid "Sort Alphabetically (Tree)"
 msgstr "أفرز أبجدياً"
 
-#: AnnotationDialog/Dialog.cpp:843 AnnotationDialog/Dialog.cpp:1221
-#: AnnotationDialog/ListSelect.cpp:97
+#: AnnotationDialog/Dialog.cpp:856 AnnotationDialog/Dialog.cpp:1234
+#: AnnotationDialog/ListSelect.cpp:101
 #, fuzzy
 msgid "Sort Alphabetically (Flat)"
 msgstr "أفرز أبجدياً"
 
-#: AnnotationDialog/Dialog.cpp:847 AnnotationDialog/ListSelect.cpp:103
+#: AnnotationDialog/Dialog.cpp:860 AnnotationDialog/ListSelect.cpp:107
 msgid "Sort by date"
 msgstr "افرز حسب التاريخ"
 
-#: AnnotationDialog/Dialog.cpp:863
+#: AnnotationDialog/Dialog.cpp:876
 msgid "Match tags from the first character."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:864
+#: AnnotationDialog/Dialog.cpp:877
 msgid "Match tags from word boundaries."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:865
+#: AnnotationDialog/Dialog.cpp:878
 msgid "Match tags anywhere."
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:883 AnnotationDialog/ListSelect.cpp:109
+#: AnnotationDialog/Dialog.cpp:896 AnnotationDialog/ListSelect.cpp:113
 msgid "Show only selected Ctrl+S"
 msgstr "أظهر المحدّد فقط Ctrl+S"
 
-#: AnnotationDialog/Dialog.cpp:926
+#: AnnotationDialog/Dialog.cpp:939
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
 "of the following error: %2"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:933
+#: AnnotationDialog/Dialog.cpp:946
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
 "of the following error: %2"
 msgstr ""
 
-#: AnnotationDialog/Dialog.cpp:994
+#: AnnotationDialog/Dialog.cpp:1007
 #, fuzzy
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
 "recent changes for each affected file?</p>"
 msgstr "<p> بعض إلى تنفيذ إلى إلغاء الكل لـ ملفّ</p>"
 
-#: AnnotationDialog/Dialog.cpp:1096
+#: AnnotationDialog/Dialog.cpp:1109
 #, fuzzy
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
@@ -275,7 +287,7 @@ msgstr ""
 "يعمل استعمال أداء القراءة حوْل<a href=\"help:/kphotoalbum/chp-typingIn.html"
 "\"> كتابة بوصة</a></p>"
 
-#: AnnotationDialog/Dialog.cpp:1105
+#: AnnotationDialog/Dialog.cpp:1118
 #, fuzzy
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
@@ -287,60 +299,60 @@ msgstr ""
 "مفضّل دقائق إلى قراءة<a href=\"help:/kphotoalbum/chp-typingIn.html\"> توثيق "
 "لـ حوار</a></p>"
 
-#: AnnotationDialog/Dialog.cpp:1224
+#: AnnotationDialog/Dialog.cpp:1237
 msgid "Sort Most Recently Used"
 msgstr "أفرز الأحدث إستعمال"
 
-#: AnnotationDialog/Dialog.cpp:1227
+#: AnnotationDialog/Dialog.cpp:1240
 msgid "Toggle Sorting"
 msgstr "أقلب حالة الفرز"
 
-#: AnnotationDialog/Dialog.cpp:1232
+#: AnnotationDialog/Dialog.cpp:1245
 #, fuzzy
 msgid "Toggle Showing Selected Items Only"
 msgstr "تبديل العرض مختار عناصر فقط"
 
-#: AnnotationDialog/Dialog.cpp:1237
+#: AnnotationDialog/Dialog.cpp:1250
 msgid "Annotate Next"
 msgstr "إضافة التعليقات على التالي"
 
-#: AnnotationDialog/Dialog.cpp:1241
+#: AnnotationDialog/Dialog.cpp:1254
 msgid "Annotate Previous"
 msgstr "إضافة التعليقات على السابق"
 
-#: AnnotationDialog/Dialog.cpp:1245
+#: AnnotationDialog/Dialog.cpp:1258
 msgid "OK dialog"
 msgstr "حوار الموافقة"
 
-#: AnnotationDialog/Dialog.cpp:1249 AnnotationDialog/ListSelect.cpp:334
-#: Settings/CategoryPage.cpp:90
+#: AnnotationDialog/Dialog.cpp:1262 AnnotationDialog/ListSelect.cpp:338
+#: Settings/CategoryPage.cpp:86
 #, fuzzy
 msgid "Delete"
 msgstr "احذف"
 
-#: AnnotationDialog/Dialog.cpp:1253
+#: AnnotationDialog/Dialog.cpp:1266
 #, fuzzy
 msgid "Copy tags from previous image"
 msgstr "نسخ من السابق صورة"
 
-#: AnnotationDialog/Dialog.cpp:1257 AnnotationDialog/ImagePreviewWidget.cpp:64
-#: MainWindow/Window.cpp:762
+#: AnnotationDialog/Dialog.cpp:1270 AnnotationDialog/ImagePreviewWidget.cpp:68
+#: MainWindow/Window.cpp:764
 #, fuzzy
 msgid "Rotate counterclockwise"
 msgstr "تدوير إلى يسار"
 
-#: AnnotationDialog/Dialog.cpp:1260 AnnotationDialog/ImagePreviewWidget.cpp:70
-#: MainWindow/Window.cpp:767
+#: AnnotationDialog/Dialog.cpp:1273 AnnotationDialog/ImagePreviewWidget.cpp:74
+#: MainWindow/Window.cpp:769
 #, fuzzy
 msgid "Rotate clockwise"
 msgstr "تدوير إلى يمين"
 
-#: AnnotationDialog/Dialog.cpp:1263
+#: AnnotationDialog/Dialog.cpp:1276
 #, fuzzy
 msgid "Toggle fullscreen preview"
 msgstr "أقلب حالة العرض ملء الشاشة"
 
-#: AnnotationDialog/ImagePreview.cpp:474
+#: AnnotationDialog/ImagePreview.cpp:494
 #, kde-format
 msgid ""
 "<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
@@ -349,7 +361,7 @@ msgid ""
 "recognition database anymore, it can be deleted in the settings.</p>"
 msgstr ""
 
-#: AnnotationDialog/ImagePreview.cpp:490
+#: AnnotationDialog/ImagePreview.cpp:510
 #, kde-format
 msgid ""
 "<p><b>Can't associate tag \"%2\"</b></p><p>The category \"%1\" the tag "
@@ -358,55 +370,55 @@ msgid ""
 "recognition database anymore, it can be deleted in the settings dialog.</p>"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:50
+#: AnnotationDialog/ImagePreviewWidget.cpp:54
 #, fuzzy
 msgid "Annotate previous image"
 msgstr "علّق السابق صورة"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:56
+#: AnnotationDialog/ImagePreviewWidget.cpp:60
 #, fuzzy
 msgid "Annotate next image"
 msgstr "علّق التالي صورة"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:76
+#: AnnotationDialog/ImagePreviewWidget.cpp:80
 #, fuzzy
 msgid "Copy tags from previously tagged image"
 msgstr "نسخ من وُسِم صورة"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:77
+#: AnnotationDialog/ImagePreviewWidget.cpp:81
 msgctxt "@info:whatsthis"
 msgid ""
 "<para>Set the same tags on this image than on the previous one. The image "
 "date, label, rating, and description are left unchanged.</para>"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:101
+#: AnnotationDialog/ImagePreviewWidget.cpp:105
 #, fuzzy
 msgid "Delete image"
 msgstr "احذف صورة"
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:116
+#: AnnotationDialog/ImagePreviewWidget.cpp:120
 msgid "Train face recognition database automatically"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:300
+#: AnnotationDialog/ImagePreviewWidget.cpp:304
 msgctxt "@info:tooltip"
 msgid "Hide or show areas on the image"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:302
+#: AnnotationDialog/ImagePreviewWidget.cpp:306
 msgctxt "@info:tooltip"
 msgid "Search for faces on the current image"
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:304
+#: AnnotationDialog/ImagePreviewWidget.cpp:308
 msgctxt "@info:whatsthis"
 msgid ""
 "If a tag for an area found by the face detector is set manually, the face "
 "recognition database will be trained automatically with that tag."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:312
+#: AnnotationDialog/ImagePreviewWidget.cpp:316
 msgctxt "@info:tooltip"
 msgid ""
 "If you enable <emphasis>positionable tags</emphasis> for at least one "
@@ -414,12 +426,12 @@ msgid ""
 "interface>, you can associate specific image areas with tags."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:318
+#: AnnotationDialog/ImagePreviewWidget.cpp:322
 msgctxt "@info:tooltip"
 msgid "Areas on an image can only be shown in single-image annotation mode."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:325
+#: AnnotationDialog/ImagePreviewWidget.cpp:329
 msgctxt "@info"
 msgid ""
 "To use face detection, enable <emphasis>positionable tags</emphasis> for at "
@@ -427,32 +439,20 @@ msgid ""
 "Categories</interface>."
 msgstr ""
 
-#: AnnotationDialog/ImagePreviewWidget.cpp:331
+#: AnnotationDialog/ImagePreviewWidget.cpp:335
 msgctxt "@info"
 msgid "Face detection is only available in single-image annotation mode."
 msgstr ""
 
-#: AnnotationDialog/KDateEdit.cpp:88
-msgid "tomorrow"
-msgstr "غداً"
-
-#: AnnotationDialog/KDateEdit.cpp:89
-msgid "today"
-msgstr "اليوم"
-
-#: AnnotationDialog/KDateEdit.cpp:90
-msgid "yesterday"
-msgstr "البارحة"
-
-#: AnnotationDialog/ListSelect.cpp:78 DB/ImageSearchInfo.cpp:268
+#: AnnotationDialog/ListSelect.cpp:82 DB/ImageSearchInfo.cpp:273
 msgid "or"
 msgstr "أو"
 
-#: AnnotationDialog/ListSelect.cpp:79 DB/ImageSearchInfo.cpp:263
+#: AnnotationDialog/ListSelect.cpp:83 DB/ImageSearchInfo.cpp:268
 msgid "and"
 msgstr "و"
 
-#: AnnotationDialog/ListSelect.cpp:152
+#: AnnotationDialog/ListSelect.cpp:156
 msgid ""
 "The tag you entered is the tag that is set automatically for newly found, "
 "untagged images (cf. <interface>Settings|Configure KPhotoAlbum...|Categories|"
@@ -460,59 +460,65 @@ msgid ""
 "selected for this purpose."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:324
+#: AnnotationDialog/ListSelect.cpp:328
 msgid "No Item Selected"
 msgstr "لم يتم إختيار عنصر"
 
-#: AnnotationDialog/ListSelect.cpp:335
+#: AnnotationDialog/ListSelect.cpp:332
+#, fuzzy, kde-format
+#| msgid "<b>Sorting</b>"
+msgid "<b>%1</b>"
+msgstr "<b>الفرز</b>"
+
+#: AnnotationDialog/ListSelect.cpp:339
 msgid "Rename..."
 msgstr "إعادة التسمية..."
 
-#: AnnotationDialog/ListSelect.cpp:337
+#: AnnotationDialog/ListSelect.cpp:341
 #, fuzzy
 #| msgid "New Group"
 msgid "<b>Tag Groups</b>"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:345
+#: AnnotationDialog/ListSelect.cpp:349
 #, fuzzy
 #| msgid "New Group"
 msgid "Tag groups"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:362
+#: AnnotationDialog/ListSelect.cpp:366
 msgid "Add this tag to a new tag group..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:365
+#: AnnotationDialog/ListSelect.cpp:369
 msgid "Make this tag a tag group and add a tag..."
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:371
+#: AnnotationDialog/ListSelect.cpp:375
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgid "Remove from tag group %1"
 msgstr "محو المجموعة %1 فعلاً ؟"
 
-#: AnnotationDialog/ListSelect.cpp:374
+#: AnnotationDialog/ListSelect.cpp:378
 msgid "<b>Sorting</b>"
 msgstr "<b>الفرز</b>"
 
-#: AnnotationDialog/ListSelect.cpp:380
+#: AnnotationDialog/ListSelect.cpp:384
 msgid "Usage"
 msgstr "الإستعمالية"
 
-#: AnnotationDialog/ListSelect.cpp:381
+#: AnnotationDialog/ListSelect.cpp:385
 #, fuzzy
 msgid "Alphabetical (Flat)"
 msgstr "أبجدي"
 
-#: AnnotationDialog/ListSelect.cpp:382
+#: AnnotationDialog/ListSelect.cpp:386
 #, fuzzy
 msgid "Alphabetical (Tree)"
 msgstr "أبجدي"
 
-#: AnnotationDialog/ListSelect.cpp:402
+#: AnnotationDialog/ListSelect.cpp:406
 #, fuzzy, kde-format
 msgid ""
 "<p>Do you really want to delete \"%1\"?<br/>Deleting the item will remove "
@@ -521,26 +527,26 @@ msgstr ""
 "<p>هل تريد فعلاً محو \"%1\"?<br>إنّ محو العنصر سوف يحذف أي معلومات عنه من أيّ "
 "صورة تحتوي على العنصر.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:406
+#: AnnotationDialog/ListSelect.cpp:410
 #, kde-format
 msgid "Really Delete %1?"
 msgstr "محو %1 حقاً ؟"
 
-#: AnnotationDialog/ListSelect.cpp:407 Settings/TagGroupsPage.cpp:554
-#: Settings/TagGroupsPage.cpp:797
+#: AnnotationDialog/ListSelect.cpp:411 Settings/TagGroupsPage.cpp:570
+#: Settings/TagGroupsPage.cpp:815
 #, fuzzy
 msgid "&Delete"
 msgstr "ا&حذف"
 
-#: AnnotationDialog/ListSelect.cpp:429
+#: AnnotationDialog/ListSelect.cpp:435
 msgid "Rename Item"
 msgstr "إعادة تسمية العنصر"
 
-#: AnnotationDialog/ListSelect.cpp:429
+#: AnnotationDialog/ListSelect.cpp:435
 msgid "Enter new name:"
 msgstr "أدخل الاسم الجديد:"
 
-#: AnnotationDialog/ListSelect.cpp:433
+#: AnnotationDialog/ListSelect.cpp:440
 #, fuzzy, kde-format
 msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
@@ -549,33 +555,51 @@ msgstr ""
 "<p>هل تريد حقاً إعادة تسمية \"%1\" إلى \"%2\" ؟<br> عند تطبيق ذلك ستعاد تسمية "
 "\"%3\" على اسم أي صورة تحتويه.</p>"
 
-#: AnnotationDialog/ListSelect.cpp:437
+#: AnnotationDialog/ListSelect.cpp:444
 #, kde-format
 msgid "Really Rename %1?"
 msgstr "هل حقاً تريد إعادة تسمية %1 ؟"
 
-#: AnnotationDialog/ListSelect.cpp:474
+#: AnnotationDialog/ListSelect.cpp:482
 #, fuzzy
 #| msgid "New Group"
 msgid "New tag group"
 msgstr "مجموعة جديدة"
 
-#: AnnotationDialog/ListSelect.cpp:475
+#: AnnotationDialog/ListSelect.cpp:483
 msgid "Name for the new tag group the tag will be added to:"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:486
+#: AnnotationDialog/ListSelect.cpp:495
 msgid "Add a tag"
 msgstr ""
 
-#: AnnotationDialog/ListSelect.cpp:487
+#: AnnotationDialog/ListSelect.cpp:496
 msgid "Name for the tag to be added to this tag group:"
 msgstr ""
 
-#: AnnotationDialog/ProposedFaceDialog.cpp:58
-#, kde-format
+#: AnnotationDialog/ListSelect.cpp:736
+#, fuzzy, kde-format
+#| msgid "%1 (by %2)"
+msgctxt ""
+"Category name, then min-max of selected tags across several images. E.g. "
+"'People (1-2)'"
+msgid "%1 (%2-%3)"
+msgstr "%1 (من %2)"
+
+#: AnnotationDialog/ListSelect.cpp:749
+#, fuzzy, kde-format
+#| msgid "%1 (by %2)"
+msgctxt "Category name, then number of selected tags. E.g. 'People (1)'"
+msgid "%1 (%2)"
+msgstr "%1 (من %2)"
+
+#: AnnotationDialog/ProposedFaceDialog.cpp:59
+#, fuzzy, kde-format
+#| msgid "%1 (by %2)"
+msgctxt "Identifying a person; e.g. 'Is this <Person A> (<Category People>)'"
 msgid "Is this %1 (%2)?"
-msgstr ""
+msgstr "%1 (من %2)"
 
 #: AnnotationDialog/ResizableFrame.cpp:84
 #, fuzzy
@@ -588,18 +612,18 @@ msgstr "أحذف العلام"
 msgid "Try to recognize this face"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:338
+#: AnnotationDialog/ResizableFrame.cpp:336
 #, kde-format
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:350
-#: AnnotationDialog/ResizableFrame.cpp:370
+#: AnnotationDialog/ResizableFrame.cpp:348
 msgid "Associate with"
 msgstr ""
 
+#: AnnotationDialog/ResizableFrame.cpp:370
 #: AnnotationDialog/ResizableFrame.cpp:379
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
@@ -621,7 +645,7 @@ msgctxt ""
 msgid "%1 %2 (%3)"
 msgstr "%1 إلى %2  %3"
 
-#: AnnotationDialog/ResizableFrame.cpp:430
+#: AnnotationDialog/ResizableFrame.cpp:431
 #, fuzzy, kde-format
 #| msgid "%1 (by %2)"
 msgctxt "%1 is the tag name and %2 is the tag's category"
@@ -633,7 +657,7 @@ msgstr "%1 (من %2)"
 msgid "Extracting Thumbnail"
 msgstr "إنشاء الأظافر"
 
-#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:44
+#: BackgroundJobs/HandleVideoThumbnailRequestJob.cpp:48
 #, fuzzy
 msgid "Extract Video Thumbnail"
 msgstr "إنشاء الأظافر"
@@ -655,22 +679,22 @@ msgstr ""
 msgid "Not Started"
 msgstr "لا دوران"
 
-#: BackgroundTaskManager/JobModel.cpp:97
+#: BackgroundTaskManager/JobModel.cpp:98
 msgctxt "@title:column Background job id"
 msgid "ID"
 msgstr "المُعرّف"
 
-#: BackgroundTaskManager/JobModel.cpp:98
+#: BackgroundTaskManager/JobModel.cpp:99
 msgctxt "@title:column Background job title"
 msgid "Title"
 msgstr "العنوان"
 
-#: BackgroundTaskManager/JobModel.cpp:99
+#: BackgroundTaskManager/JobModel.cpp:100
 msgctxt "@title:column Additional information on background job"
 msgid "Details"
 msgstr "تفاصيل"
 
-#: BackgroundTaskManager/JobModel.cpp:100
+#: BackgroundTaskManager/JobModel.cpp:101
 msgctxt "@title:column Elapsed time"
 msgid "Elapsed"
 msgstr "المنقضي"
@@ -679,21 +703,14 @@ msgstr "المنقضي"
 msgid "Background Job Viewer"
 msgstr ""
 
-#: BackgroundTaskManager/JobViewer.cpp:66
-msgid "Continue"
-msgstr "تابع"
-
-#. i18n: ectx: property (text), widget (QPushButton, pause)
-#: BackgroundTaskManager/JobViewer.cpp:66
-#: BackgroundTaskManager/JobViewer.ui:45
+#: BackgroundTaskManager/JobViewer.cpp:42
+#: BackgroundTaskManager/JobViewer.cpp:77
 msgid "Pause"
 msgstr "وقفة"
 
-#. i18n: ectx: property (text), widget (QPushButton, pushButton)
-#: BackgroundTaskManager/JobViewer.ui:52 ImportExport/MiniViewer.cpp:69
-#, fuzzy
-msgid "Close"
-msgstr "إغلاق"
+#: BackgroundTaskManager/JobViewer.cpp:77
+msgid "Continue"
+msgstr "تابع"
 
 #: BackgroundTaskManager/StatusIndicator.cpp:89
 #, kde-format
@@ -706,7 +723,7 @@ msgid ""
 "which is currently shown in the thumbnail viewer)</li></ul></p>"
 msgstr ""
 
-#: Browser/AbstractCategoryModel.cpp:46 Exif/SearchDialog.cpp:397
+#: Browser/AbstractCategoryModel.cpp:46 Exif/SearchDialog.cpp:411
 #: Exif/SearchInfo.cpp:183
 msgctxt "As in No persons, no locations etc."
 msgid "None"
@@ -756,42 +773,42 @@ msgctxt "As in 'all pictures'."
 msgid "All"
 msgstr "الكل"
 
-#: Browser/OverviewPage.cpp:132
+#: Browser/OverviewPage.cpp:134
 msgid "Exif Info"
 msgstr "المعلومات EXIF"
 
-#: Browser/OverviewPage.cpp:143
+#: Browser/OverviewPage.cpp:145
 msgctxt "@action Search button in the browser view."
 msgid "Search"
 msgstr "ابحث"
 
-#: Browser/OverviewPage.cpp:152 Settings/UntaggedGroupBox.cpp:31
+#: Browser/OverviewPage.cpp:154 Settings/UntaggedGroupBox.cpp:30
 #, fuzzy
 msgid "Untagged Images"
 msgstr "صور جديدة"
 
-#: Browser/OverviewPage.cpp:162
+#: Browser/OverviewPage.cpp:164
 msgid "Show Thumbnails"
 msgstr "أعرض الأظافر"
 
-#: Browser/OverviewPage.cpp:232 Browser/OverviewPage.cpp:255
+#: Browser/OverviewPage.cpp:234 Browser/OverviewPage.cpp:257
 msgid "Search did not match any images or videos."
 msgstr "البحث لم يتابق أي صور أو أي مرئيات."
 
-#: Browser/OverviewPage.cpp:232 Browser/OverviewPage.cpp:255
+#: Browser/OverviewPage.cpp:234 Browser/OverviewPage.cpp:257
 msgid "Empty Search Result"
 msgstr "إفراغ نتائج البحث"
 
-#: Browser/OverviewPage.cpp:236 Exif/SearchDialog.cpp:36
+#: Browser/OverviewPage.cpp:238 Exif/SearchDialog.cpp:39
 msgid "EXIF Search"
 msgstr "بحث EXIF"
 
-#: Browser/OverviewPage.cpp:259
+#: Browser/OverviewPage.cpp:261
 msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "ابحث"
 
-#: Browser/OverviewPage.cpp:285 MainWindow/Window.cpp:1774
+#: Browser/OverviewPage.cpp:287 MainWindow/Window.cpp:1777
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
 "images.</p><p>Please follow these steps to do so:<ul><li>In the menu bar "
@@ -800,7 +817,7 @@ msgid ""
 "section <b>Untagged Images</b></li></ul></p>"
 msgstr ""
 
-#: Browser/OverviewPage.cpp:291 MainWindow/Window.cpp:1781
+#: Browser/OverviewPage.cpp:293 MainWindow/Window.cpp:1784
 msgid "Feature has not been configured"
 msgstr "لم تُضبط الميزة"
 
@@ -878,12 +895,12 @@ msgstr[5] ""
 msgid "Move Items"
 msgstr "أنقل العناصر"
 
-#: DateBar/DateBarWidget.cpp:81
+#: DateBar/DateBarWidget.cpp:86
 #, fuzzy
 msgid "Widen selection to include all images and videos again"
 msgstr "توسّع منتقى إلى تضمين الكل و فيديو"
 
-#: DateBar/DateBarWidget.cpp:89
+#: DateBar/DateBarWidget.cpp:94
 msgctxt "@info"
 msgid ""
 "<title>The date bar</title><para>The date bar gives you an overview of the "
@@ -900,16 +917,16 @@ msgid ""
 "focus.</item></list></para>"
 msgstr ""
 
-#: DateBar/DateBarWidget.cpp:552
+#: DateBar/DateBarWidget.cpp:557
 #, fuzzy
 msgid "Show Ranges"
 msgstr "اعرض النطاقات"
 
-#: DateBar/DateBarWidget.cpp:558
+#: DateBar/DateBarWidget.cpp:563
 msgid "Show Resolution Indicator"
 msgstr "أعرض مدل الدقة"
 
-#: DateBar/DateBarWidget.cpp:682
+#: DateBar/DateBarWidget.cpp:687
 #, kde-format
 msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
@@ -921,7 +938,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: DateBar/DateBarWidget.cpp:684
+#: DateBar/DateBarWidget.cpp:689
 #, kde-format
 msgctxt ""
 "@info:status additional images captured in a date range that overlaps with "
@@ -935,7 +952,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: DateBar/DateBarWidget.cpp:685
+#: DateBar/DateBarWidget.cpp:690
 #, kde-format
 msgctxt "@info:status total image count"
 msgid " = 1 total"
@@ -947,7 +964,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: DateBar/DateBarWidget.cpp:687
+#: DateBar/DateBarWidget.cpp:692
 #, fuzzy, kde-format
 msgctxt "@info:status image count"
 msgid "%1 image/video"
@@ -959,52 +976,52 @@ msgstr[3] "%1 صور/مرئيات"
 msgstr[4] "%1 صور/مرئيات"
 msgstr[5] "%1 صور/مرئيات"
 
-#: DateBar/DateBarWidget.cpp:689
+#: DateBar/DateBarWidget.cpp:694
 #, kde-format
 msgctxt ""
 "@info:status Time range vs. image count (e.g. 'Jun 2012 | 4 images/videos')."
 msgid "%1 | %2"
 msgstr "%1 | %2"
 
-#: DateBar/ViewHandler.cpp:129
+#: DateBar/ViewHandler.cpp:132
 msgid "1 Year"
 msgstr "سنة واحِدة"
 
-#: DateBar/ViewHandler.cpp:161
+#: DateBar/ViewHandler.cpp:164
 msgid "1 Month"
 msgstr "شهر واحِد"
 
-#: DateBar/ViewHandler.cpp:201
+#: DateBar/ViewHandler.cpp:204
 msgid "1 Week"
 msgstr "أسبوع واحِد"
 
-#: DateBar/ViewHandler.cpp:229
+#: DateBar/ViewHandler.cpp:232
 msgid "1 Day"
 msgstr "يوم واحِد"
 
-#: DateBar/ViewHandler.cpp:272
+#: DateBar/ViewHandler.cpp:275
 msgid "2 Hours"
 msgstr "ساعتين"
 
-#: DateBar/ViewHandler.cpp:308
+#: DateBar/ViewHandler.cpp:311
 msgid "10 Minutes"
 msgstr "عشرة دقائق"
 
-#: DB/Category.cpp:167
+#: DB/Category.cpp:166
 #, kde-format
 msgid "Unable to create directory '%1'."
 msgstr "غير قادر على إنشاء الدليل '%1'."
 
-#: DB/Category.cpp:167
+#: DB/Category.cpp:166
 msgid "Unable to Create Directory"
 msgstr "غير قادر على إنشاء الدليل"
 
-#: DB/Category.cpp:174
+#: DB/Category.cpp:173
 #, kde-format
 msgid "Error when saving image '%1'."
 msgstr "خطأ عند حفظ الصورة '%1'."
 
-#: DB/Category.cpp:174
+#: DB/Category.cpp:173
 msgid "Error Saving Image"
 msgstr "خطأ حفظ الصورة"
 
@@ -1068,11 +1085,11 @@ msgctxt "Abbreviated month name"
 msgid "dec"
 msgstr "ديسمبر"
 
-#: DB/ImageDB.cpp:146
+#: DB/ImageDB.cpp:144
 msgid "Loading information from images"
 msgstr "جاري تحميل المعلومات من الصور"
 
-#: DB/ImageSearchInfo.cpp:260
+#: DB/ImageSearchInfo.cpp:265
 #, fuzzy, kde-format
 msgctxt ""
 "As in No persons, no locations etc. I do realize that translators may have "
@@ -1081,11 +1098,11 @@ msgctxt ""
 msgid "No %1"
 msgstr "لا 1"
 
-#: DB/ImageSearchInfo.cpp:269
+#: DB/ImageSearchInfo.cpp:274
 msgid "not"
 msgstr "ليس"
 
-#: DB/ImageSearchInfo.cpp:273
+#: DB/ImageSearchInfo.cpp:278
 #, fuzzy, kde-format
 msgctxt ""
 "As in no other persons, or no other locations. I do realize that translators "
@@ -1095,7 +1112,7 @@ msgctxt ""
 msgid "No other %1"
 msgstr "لا غير ذلك 1"
 
-#: DB/NewImageFinder.cpp:142
+#: DB/NewImageFinder.cpp:143
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
 "of images, this may take some time.<br/>However, there is only a delay when "
@@ -1104,7 +1121,7 @@ msgstr ""
 "<p><b>تحميل معلومات من ملفات جديدة</b></p><p>قد يستغرق ذلك بعض الوقت حسب عدد "
 "الصور.<br/>ولكن سيكون هناك تأخير عند العثور على صور جديدة.</p>"
 
-#: DB/NewImageFinder.cpp:334
+#: DB/NewImageFinder.cpp:335
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -1115,7 +1132,7 @@ msgstr[3] "<p><b>يحسب تدقيق مجموع %1 ملفات</b></p>"
 msgstr[4] "<p><b>يحسب تدقيق مجموع %1 ملفًا</b></p>"
 msgstr[5] "<p><b>يحسب تدقيق مجموع %1 ملف</b></p>"
 
-#: DB/NewImageFinder.cpp:335
+#: DB/NewImageFinder.cpp:336
 #, fuzzy
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
@@ -1125,7 +1142,7 @@ msgstr ""
 "تدقيق المجموع لكل صورة ، يستطيع عندئداً العثور على الصور حتى و لو قمت "
 "بتحريكها على القرص الصلب.</p>"
 
-#: DB/NewImageFinder.cpp:378
+#: DB/NewImageFinder.cpp:379
 #, fuzzy
 msgid "Following files could not be read:"
 msgstr "المتابعة ملفات ليس قراءة:"
@@ -1149,49 +1166,49 @@ msgstr ""
 msgid "Rereading EXIF information from all images"
 msgstr "جاري تحميل المعلومات من الصور"
 
-#: Exif/InfoDialog.cpp:38
+#: Exif/InfoDialog.cpp:40
 msgid "EXIF Information"
 msgstr "المعلومات EXIF"
 
-#: Exif/InfoDialog.cpp:68
+#: Exif/InfoDialog.cpp:73
 #, fuzzy
 msgid "EXIF Label Search: "
 msgstr "بحث اللاصقة EXIF الحالي: "
 
-#: Exif/InfoDialog.cpp:74
+#: Exif/InfoDialog.cpp:79
 msgid "IPTC character set:"
 msgstr ""
 
-#: Exif/ReReadDialog.cpp:35
+#: Exif/ReReadDialog.cpp:40
 #, fuzzy
 msgid "Read EXIF info from files"
 msgstr "إقرء معلومات الــ EXIF من الملفات..."
 
-#: Exif/ReReadDialog.cpp:42
+#: Exif/ReReadDialog.cpp:47
 msgid "Update EXIF search database"
 msgstr "حدِث البحث في قاعدة البيانات EXIF"
 
-#: Exif/ReReadDialog.cpp:48
+#: Exif/ReReadDialog.cpp:53
 msgid "Update image date"
 msgstr "حدِث تاريخ الصورة"
 
-#: Exif/ReReadDialog.cpp:51
+#: Exif/ReReadDialog.cpp:56
 msgid "Use modification date if EXIF not found"
 msgstr "إستعمل تاريخ التغيير إذا لم تجد EXIF"
 
-#: Exif/ReReadDialog.cpp:54
+#: Exif/ReReadDialog.cpp:59
 msgid "Update image orientation from EXIF information"
 msgstr "حدِث إتجاه الصورة من المعلومات EXIF"
 
-#: Exif/ReReadDialog.cpp:57
+#: Exif/ReReadDialog.cpp:62
 msgid "Update image description from EXIF information"
 msgstr "حدِث وصف الصورة من المعلومات EXIF"
 
-#: Exif/ReReadDialog.cpp:60
+#: Exif/ReReadDialog.cpp:65
 msgid "Affected Files"
 msgstr "الملفات المتأثرة"
 
-#: Exif/ReReadDialog.cpp:126
+#: Exif/ReReadDialog.cpp:136
 msgid ""
 "<p>Be aware that setting the data from EXIF may <b>overwrite</b> data you "
 "have previously entered manually using the image configuration dialog.</p>"
@@ -1199,268 +1216,290 @@ msgstr ""
 "<p>كن على علم أنّ تعيين البيانات من EXIF يمكن أن <b>يكتب على بياناتك</b> "
 "اللتي أدخلتها سابقاً مستعملاً حوار إعداد الصورة.</p>"
 
-#: Exif/ReReadDialog.cpp:129
+#: Exif/ReReadDialog.cpp:139
 msgid "Override image dates"
 msgstr "تبطيل تواريخ الصور"
 
-#: Exif/SearchDialog.cpp:41 Settings/SettingsDialog.cpp:112
+#: Exif/SearchDialog.cpp:55 Settings/SettingsDialog.cpp:117
 msgid "Settings"
 msgstr "التعيينات"
 
-#: Exif/SearchDialog.cpp:62
+#: Exif/SearchDialog.cpp:76
 msgid "Aperture Value"
 msgstr "قيمة الفتحة"
 
-#: Exif/SearchDialog.cpp:63
+#: Exif/SearchDialog.cpp:77
 msgid "F Number"
 msgstr "رقم البؤرة"
 
-#: Exif/SearchDialog.cpp:73
+#: Exif/SearchDialog.cpp:87
 msgid "Focal Length"
 msgstr "طول البؤرة"
 
-#: Exif/SearchDialog.cpp:81
+#: Exif/SearchDialog.cpp:95
 msgctxt "As in 'A range from x to y'"
 msgid "to"
 msgstr "إلى"
 
-#: Exif/SearchDialog.cpp:90
+#: Exif/SearchDialog.cpp:104
 #, fuzzy
 msgctxt "This is millimeter for focal length, like 35mm"
 msgid "mm"
 msgstr "مم"
 
-#: Exif/SearchDialog.cpp:106
+#: Exif/SearchDialog.cpp:120
 msgid "Camera"
 msgstr "الكاميرا"
 
-#: Exif/SearchDialog.cpp:110
+#: Exif/SearchDialog.cpp:124
 msgid "Lens"
 msgstr ""
 
-#: Exif/SearchDialog.cpp:115 Settings/GeneralPage.cpp:124
+#: Exif/SearchDialog.cpp:129 Settings/GeneralPage.cpp:122
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "متنوع"
 
-#: Exif/SearchDialog.cpp:141
+#: Exif/SearchDialog.cpp:155
 msgid "Iso setting"
 msgstr "تعيينات الــ Iso"
 
-#: Exif/SearchDialog.cpp:146
+#: Exif/SearchDialog.cpp:160
 #, fuzzy
 msgctxt "Example 1.6 secs (as in seconds)"
 msgid "secs."
 msgstr "ثوانى."
 
-#: Exif/SearchDialog.cpp:185
+#: Exif/SearchDialog.cpp:199
 msgid "1 second"
 msgstr "ثانية واحدة"
 
-#: Exif/SearchDialog.cpp:202
+#: Exif/SearchDialog.cpp:216
 msgid "Exposure time"
 msgstr "زمن التعرض"
 
-#: Exif/SearchDialog.cpp:252
+#: Exif/SearchDialog.cpp:266
 msgid "Exposure Program"
 msgstr "برنامج التعرض"
 
-#: Exif/SearchDialog.cpp:269 ImportExport/MD5CheckPage.cpp:76
+#: Exif/SearchDialog.cpp:283 ImportExport/MD5CheckPage.cpp:76
 #, fuzzy
 msgid "Orientation"
 msgstr "الاتجاه"
 
-#: Exif/SearchDialog.cpp:281
+#: Exif/SearchDialog.cpp:295
 msgid "Metering Mode"
 msgstr "نمط القياس"
 
-#: Exif/SearchDialog.cpp:297
+#: Exif/SearchDialog.cpp:311
 msgid "Contrast"
 msgstr "التباين"
 
-#: Exif/SearchDialog.cpp:308
+#: Exif/SearchDialog.cpp:322
 msgid "Sharpness"
 msgstr "الوضوح"
 
-#: Exif/SearchDialog.cpp:319
+#: Exif/SearchDialog.cpp:333
 msgid "Saturation"
 msgstr "الإشباع"
 
-#: Exif/SearchDialog.cpp:372
+#: Exif/SearchDialog.cpp:386
 msgid "No cameras found in the database"
 msgstr ""
 
-#: Exif/SearchDialog.cpp:393
+#: Exif/SearchDialog.cpp:407
 msgid "No lenses found in the database"
 msgstr ""
 
-#: Exif/SearchDialog.cpp:409
+#: Exif/SearchDialog.cpp:423
 msgid ""
 "Not all images in the database have lens information. <note>Recreate the "
 "EXIF search database to ensure lens data for all images.</note>"
 msgstr ""
 
-#: HTMLGenerator/Generator.cpp:52
+#: HTMLGenerator/Generator.cpp:66
 msgid "Generating images for HTML page "
 msgstr "توليد الصور لصفحة لغة علامات النص الفائق HTML "
 
-#: HTMLGenerator/Generator.cpp:150
+#: HTMLGenerator/Generator.cpp:172
 #, kde-format
 msgid "Error copying %1 to %2"
 msgstr "خطأ في نسخ %1 غلى %2"
 
-#: HTMLGenerator/Generator.cpp:414
+#: HTMLGenerator/Generator.cpp:459
 #, kde-format
 msgid "<a href=\"%1\">prev</a>"
 msgstr "<a href=\"%1\">السابق</a>"
 
-#: HTMLGenerator/Generator.cpp:416 HTMLGenerator/Generator.cpp:424
+#: HTMLGenerator/Generator.cpp:461 HTMLGenerator/Generator.cpp:469
 msgid "prev"
 msgstr "السابق"
 
-#: HTMLGenerator/Generator.cpp:428
+#: HTMLGenerator/Generator.cpp:473
 #, c-format, kde-format
 msgid "<a href=\"index-%1.html\">index</a>"
 msgstr ""
 
-#: HTMLGenerator/Generator.cpp:437
+#: HTMLGenerator/Generator.cpp:482
 #, kde-format
 msgid "<a href=\"%1\">next</a>"
 msgstr "<a href=\"%1\">التالي</a>"
 
-#: HTMLGenerator/Generator.cpp:439 HTMLGenerator/Generator.cpp:446
+#: HTMLGenerator/Generator.cpp:484 HTMLGenerator/Generator.cpp:491
 msgid "next"
 msgstr "التالي"
 
-#: HTMLGenerator/Generator.cpp:585
+#: HTMLGenerator/Generator.cpp:629
 #, kde-format
 msgid "Could not create file '%1'."
 msgstr "لم أتمكن من إنشاء الملف '%1'."
 
-#: HTMLGenerator/Generator.cpp:586
+#: HTMLGenerator/Generator.cpp:630
 msgid "Could Not Create File"
 msgstr "لم أتمكن من إنشاء الملف"
 
-#: HTMLGenerator/Generator.cpp:618
+#: HTMLGenerator/Generator.cpp:663
 #, kde-format
 msgid "<p>Unable to copy %1 to %2</p>"
 msgstr "<p>غير قادر على نسخ الملف %1 إلى %2</p>"
 
-#: HTMLGenerator/Generator.cpp:653
+#: HTMLGenerator/Generator.cpp:698
 #, kde-format
 msgid "Unable to write image '%1'."
 msgstr "غير قادر على كتابة الصورة '%1'."
 
-#: HTMLGenerator/Generator.cpp:730 HTMLGenerator/HTMLDialog.cpp:134
+#: HTMLGenerator/Generator.cpp:775 HTMLGenerator/HTMLDialog.cpp:164
 #, fuzzy
 msgid "Date"
 msgstr "التاريخ: "
 
-#: HTMLGenerator/HTMLDialog.cpp:52
+#: HTMLGenerator/HTMLDialog.cpp:68
 msgid "HTML Export"
 msgstr "التصدير إلى لغة علامات النص الفائق HTML"
 
-#: HTMLGenerator/HTMLDialog.cpp:65 HTMLGenerator/HTMLDialog.cpp:66
+#: HTMLGenerator/HTMLDialog.cpp:94 HTMLGenerator/HTMLDialog.cpp:95
 msgid "Content"
 msgstr "المحتوى"
 
-#: HTMLGenerator/HTMLDialog.cpp:74
+#: HTMLGenerator/HTMLDialog.cpp:103
 msgid "Page title:"
 msgstr "عنوان الصفحة:"
 
-#: HTMLGenerator/HTMLDialog.cpp:81
+#: HTMLGenerator/HTMLDialog.cpp:110
 msgid "Copyright:"
 msgstr "حقوق النسخ:"
 
-#: HTMLGenerator/HTMLDialog.cpp:90
+#: HTMLGenerator/HTMLDialog.cpp:119
 msgid "Description:"
 msgstr "الوصف:"
 
-#: HTMLGenerator/HTMLDialog.cpp:97
+#: HTMLGenerator/HTMLDialog.cpp:126
 msgid "Create .kim export file"
 msgstr "أنشئ ملف التصدير .kim"
 
-#: HTMLGenerator/HTMLDialog.cpp:101
+#: HTMLGenerator/HTMLDialog.cpp:131
+#, fuzzy
+#| msgid "Inline Movies in pages"
+msgctxt ""
+"Inline as a verb, i.e. 'please show movies right on the page, not as links'"
 msgid "Inline Movies in pages"
 msgstr "مرئيات على الخط في الصفحات"
 
-#: HTMLGenerator/HTMLDialog.cpp:105
+#: HTMLGenerator/HTMLDialog.cpp:135
 #, fuzzy
+msgctxt "Tag as in HTML-tag, not as in image tag"
 msgid "Use HTML5 video tag"
 msgstr "أنشئ الأظافر"
 
-#: HTMLGenerator/HTMLDialog.cpp:116
+#: HTMLGenerator/HTMLDialog.cpp:146
 msgid ""
 "<p>This selection will generate video files suitable for displaying on web. "
 "avconv and ffmpeg2theora are required for video file generation.</p>"
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:118
+#: HTMLGenerator/HTMLDialog.cpp:148
 msgid "Generate HTML5 video files (mp4 and ogg)"
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:126
+#: HTMLGenerator/HTMLDialog.cpp:156
 msgid "What to Include"
 msgstr "ما هي الأشياء اللتي يجب ضمّها"
 
-#: HTMLGenerator/HTMLDialog.cpp:163 HTMLGenerator/HTMLDialog.cpp:164
+#: HTMLGenerator/HTMLDialog.cpp:193 HTMLGenerator/HTMLDialog.cpp:194
 msgid "Layout"
 msgstr "التصميم"
 
-#: HTMLGenerator/HTMLDialog.cpp:173
+#: HTMLGenerator/HTMLDialog.cpp:203
 msgid "Thumbnail size:"
 msgstr "قياس الظفر:"
 
-#: HTMLGenerator/HTMLDialog.cpp:188
+#: HTMLGenerator/HTMLDialog.cpp:218
 msgid "Number of columns:"
 msgstr "عدد العواميد:"
 
-#: HTMLGenerator/HTMLDialog.cpp:203
+#: HTMLGenerator/HTMLDialog.cpp:233
 msgid "Theme:"
 msgstr "السمة:"
 
-#: HTMLGenerator/HTMLDialog.cpp:211
+#: HTMLGenerator/HTMLDialog.cpp:241
 #, fuzzy
 msgid "Theme Description"
 msgstr "أعرض الوصف"
 
-#: HTMLGenerator/HTMLDialog.cpp:218
+#: HTMLGenerator/HTMLDialog.cpp:248
 msgid "Image Sizes"
 msgstr "قياسات الصور"
 
-#: HTMLGenerator/HTMLDialog.cpp:227
+#: HTMLGenerator/HTMLDialog.cpp:257
 msgid "Full size"
 msgstr "كامل القياس"
 
-#: HTMLGenerator/HTMLDialog.cpp:272 HTMLGenerator/HTMLDialog.cpp:273
+#: HTMLGenerator/HTMLDialog.cpp:302 HTMLGenerator/HTMLDialog.cpp:303
 msgid "Destination"
 msgstr "الهدف"
 
-#: HTMLGenerator/HTMLDialog.cpp:282
+#: HTMLGenerator/HTMLDialog.cpp:313
 msgid "Base directory:"
 msgstr "المجلّد الأساسي:"
 
-#: HTMLGenerator/HTMLDialog.cpp:300
-msgid "Base URL:"
-msgstr "عنوان المورد النظامي الأساسي  URL:"
+#: HTMLGenerator/HTMLDialog.cpp:330
+#, fuzzy
+#| msgid "Base directory:"
+msgid "Gallery directory:"
+msgstr "المجلّد الأساسي:"
 
-#: HTMLGenerator/HTMLDialog.cpp:309
-msgid "URL for final destination:"
-msgstr "عنوان المورد النظامي URL للهدف الأخير:"
-
-#: HTMLGenerator/HTMLDialog.cpp:317
+#: HTMLGenerator/HTMLDialog.cpp:337
 msgid "Output directory:"
 msgstr "مجلّد للإخراج:"
 
-#: HTMLGenerator/HTMLDialog.cpp:323
-msgid "<b>Hint: Press the help button for descriptions of the fields</b>"
-msgstr "<b>رأي: إضغط زرّ المساعدة لتحصل على وصف الخقول</b>"
+#: HTMLGenerator/HTMLDialog.cpp:348
+#, fuzzy
+#| msgid "URL for final destination:"
+msgid "URL for final destination of .kim file:"
+msgstr "عنوان المورد النظامي URL للهدف الأخير:"
 
-#: HTMLGenerator/HTMLDialog.cpp:334
+#: HTMLGenerator/HTMLDialog.cpp:350
+msgid ""
+"<p>If you move the gallery to a remote location, set this to the destination "
+"URL.</p><p>This only affects the generated <filename>.kim</filename> file.</"
+"p>"
+msgstr ""
+
+#: HTMLGenerator/HTMLDialog.cpp:361
+msgid "Open gallery in browser:"
+msgstr ""
+
+#: HTMLGenerator/HTMLDialog.cpp:377
 msgid "You must select at least one resolution."
 msgstr "يجب عليك أن تختار غلى الأقل دقة ( الصورة) واحدة."
 
-#: HTMLGenerator/HTMLDialog.cpp:374
+#: HTMLGenerator/HTMLDialog.cpp:404
+#, fuzzy
+#| msgid "Base directory:"
+msgid "Select base directory..."
+msgstr "المجلّد الأساسي:"
+
+#: HTMLGenerator/HTMLDialog.cpp:418
 #, fuzzy
 msgid ""
 "<p>You did not specify a base directory. This is the topmost directory for "
@@ -1469,11 +1508,11 @@ msgid ""
 msgstr ""
 "<p> أنت ليس تحديد a القاعدة دليل هذا هو دليل لـ تحت دليل ابحث مجموعة بوصة</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:378
+#: HTMLGenerator/HTMLDialog.cpp:422
 msgid "No Base Directory Specified"
 msgstr "لم تحدد مجلّد أساسي"
 
-#: HTMLGenerator/HTMLDialog.cpp:384
+#: HTMLGenerator/HTMLDialog.cpp:428
 #, fuzzy
 msgid ""
 "<p>You did not specify an output directory. This is a directory containing "
@@ -1483,24 +1522,27 @@ msgstr ""
 "<p> أنت ليس تحديد مخرجات دليل هذا هو a دليل الـ دليل بوصة القاعدة دليل أعلى</"
 "p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:387
+#: HTMLGenerator/HTMLDialog.cpp:431
 msgid "No Output Directory Specified"
 msgstr "لم تحدد مجلّد للإخراج"
 
-#: HTMLGenerator/HTMLDialog.cpp:395
-#, kde-format
+#: HTMLGenerator/HTMLDialog.cpp:440
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>Error while reading information about %1. This is most likely because "
+#| "the directory does not exist.</p>"
 msgid ""
 "<p>Error while reading information about %1. This is most likely because the "
-"directory does not exist.</p>"
+"directory does not exist.</p><p>The error message was: %2</p>"
 msgstr ""
 "<p>خطأ عند قراءة المعلومات عن %1. الإحتمال الأكبر هو أنّ الدليل غير موجود.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:403
+#: HTMLGenerator/HTMLDialog.cpp:449
 #, kde-format
 msgid "<p>%1 does not exist, is not a directory or cannot be written to.</p>"
 msgstr "<p>إنّ %1 غير موجود ، أو هو ليس دليل أو أنه لا يمكن الكتابة عليه.</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:413
+#: HTMLGenerator/HTMLDialog.cpp:461
 #, fuzzy, kde-format
 msgid ""
 "<p>Output directory %1 already exists. Usually, this means you should "
@@ -1509,25 +1551,25 @@ msgstr ""
 "<p>إنّ ملف الإخراج %1 موجود مسبقاً. يجب عليك عادتاً تحديد دليل جديد.</p><p>هل "
 "يجب أن أمحي %2  أولاً ؟</p>"
 
-#: HTMLGenerator/HTMLDialog.cpp:416
+#: HTMLGenerator/HTMLDialog.cpp:464
 msgid "Directory Exists"
 msgstr "الدليل موجود مسبقاً"
 
-#: HTMLGenerator/HTMLDialog.cpp:493 MainWindow/SplashScreen.cpp:66
+#: HTMLGenerator/HTMLDialog.cpp:549 MainWindow/SplashScreen.cpp:67
 #, kde-format
 msgid "%1"
 msgstr "%1"
 
-#: HTMLGenerator/HTMLDialog.cpp:504
+#: HTMLGenerator/HTMLDialog.cpp:560
 msgid "Could not find any themes - this is very likely an installation error"
 msgstr "لم أستطع العثور على أي سمة - يمكن أن يكون هذا خطأ في التثبيت"
 
-#: HTMLGenerator/HTMLDialog.cpp:511
+#: HTMLGenerator/HTMLDialog.cpp:567
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:518
+#: HTMLGenerator/HTMLDialog.cpp:574
 msgctxt ""
 "This is to show the author of the theme. E.g. copyright character (&#169;) "
 "by itself will work fine on this context if no proper word is available in "
@@ -1535,7 +1577,7 @@ msgctxt ""
 msgid "by "
 msgstr ""
 
-#: HTMLGenerator/HTMLDialog.cpp:520
+#: HTMLGenerator/HTMLDialog.cpp:576
 msgid ""
 "\n"
 " "
@@ -1543,36 +1585,44 @@ msgstr ""
 "\n"
 " "
 
-#: ImageManager/ExtractOneVideoFrame.cpp:86
+#: HTMLGenerator/HTMLDialog.cpp:590
+msgid "<p>Gallery directory cannot be empty.</p>"
+msgstr ""
+
+#: HTMLGenerator/HTMLDialog.cpp:594
+msgid "<p>The output directory already exists.</p>"
+msgstr ""
+
+#: ImageManager/ExtractOneVideoFrame.cpp:104
 msgid "Failed to start"
 msgstr "فشل البدء"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:87
+#: ImageManager/ExtractOneVideoFrame.cpp:105
 msgid "Crashed"
 msgstr "انهار"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:88
+#: ImageManager/ExtractOneVideoFrame.cpp:106
 msgid "Timedout"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:89
+#: ImageManager/ExtractOneVideoFrame.cpp:107
 msgid "Read error"
 msgstr "خطأ قراءة"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:90
+#: ImageManager/ExtractOneVideoFrame.cpp:108
 msgid "Write error"
 msgstr "خطأ كتابة"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:91
+#: ImageManager/ExtractOneVideoFrame.cpp:109
 msgid "Unknown error"
 msgstr "خطأ مجهول"
 
-#: ImageManager/ExtractOneVideoFrame.cpp:95
+#: ImageManager/ExtractOneVideoFrame.cpp:113
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
 msgstr ""
 
-#: ImageManager/ExtractOneVideoFrame.cpp:134
+#: ImageManager/ExtractOneVideoFrame.cpp:152
 #, kde-format
 msgid ""
 "Unable to extract video thumbnails from some files. Either the file is "
@@ -1588,57 +1638,62 @@ msgstr ""
 msgid "Building thumbnails"
 msgstr "بناء الأظافر"
 
-#: ImportExport/Export.cpp:55 ImportExport/Import.cpp:34
+#: ImportExport/Export.cpp:64
+#, fuzzy
+#| msgid "Create .kim export file"
+msgid "Save an export file"
+msgstr "أنشئ ملف التصدير .kim"
+
+#: ImportExport/Export.cpp:66 ImportExport/Import.cpp:43
 #, fuzzy
 #| msgid "KPhotoAlbum database files (*.db)"
-msgctxt ".kim files"
-msgid "KPhotoAlbum Export Files"
+msgid "KPhotoAlbum import files"
 msgstr "ملفاق قاعدة بيانات Kphotoalbum (*.db)"
 
-#: ImportExport/Export.cpp:71
+#: ImportExport/Export.cpp:84
 #, fuzzy
 msgid "Export Configuration / Copy Images"
 msgstr "صدِّر إعدادات نسخ صور"
 
-#: ImportExport/Export.cpp:79
+#: ImportExport/Export.cpp:97
 msgid "How to Handle Images"
 msgstr "كيفية التعامل مع الصور"
 
-#: ImportExport/Export.cpp:83
+#: ImportExport/Export.cpp:101
 msgid "Include in .kim file"
 msgstr "ضمّن في الملف .kim"
 
-#: ImportExport/Export.cpp:84
+#: ImportExport/Export.cpp:102
 msgid "Do not copy files, only generate .kim file"
 msgstr "لا تنسخ الملفات، ولّد فقط ملف .kim"
 
-#: ImportExport/Export.cpp:85
+#: ImportExport/Export.cpp:103
 msgid "Automatically copy next to .kim file"
 msgstr "أنسخ تلقائياً التالي إلى الملف .kim"
 
-#: ImportExport/Export.cpp:86
+#: ImportExport/Export.cpp:104
 #, fuzzy
 msgid "Hard link next to .kim file"
 msgstr "صعب وصلة التالي إلى ملفّ"
 
-#: ImportExport/Export.cpp:87
+#: ImportExport/Export.cpp:105
 #, fuzzy
 msgid "Symbolic link next to .kim file"
 msgstr "صعب وصلة التالي إلى ملفّ"
 
-#: ImportExport/Export.cpp:97
+#: ImportExport/Export.cpp:115
 msgid "Compress export file"
 msgstr "إضغط ملف التصدير"
 
-#: ImportExport/Export.cpp:101
+#: ImportExport/Export.cpp:119
 msgid "Generate thumbnails"
 msgstr "أنشئ الأظافر"
 
-#: ImportExport/Export.cpp:109
+#: ImportExport/Export.cpp:127
 msgid "Limit maximum image dimensions to: "
 msgstr "حدّد أقصى قياسات الصورة إلى: "
 
-#: ImportExport/Export.cpp:121
+#: ImportExport/Export.cpp:139
 #, fuzzy
 msgid ""
 "<p>If your images are stored in a non-compressed file format then you may "
@@ -1650,11 +1705,11 @@ msgstr ""
 "<p> إذا بوصة a مضغوط ملفّ تنسيق أيار تفقّد وقت استيراد و تصدير عمليات</p><p> "
 "داخل غير ذلك ليس تفقّد IF بوصة أو تفقّد IF بوصة</p>"
 
-#: ImportExport/Export.cpp:127
+#: ImportExport/Export.cpp:145
 msgid "<p>Generate thumbnail images</p>"
 msgstr "<p>أنشئ صور الأظافر</p>"
 
-#: ImportExport/Export.cpp:130
+#: ImportExport/Export.cpp:148
 #, fuzzy
 msgid ""
 "<p>With this option you may limit the maximum dimensions (width and height) "
@@ -1665,7 +1720,7 @@ msgstr ""
 "<p> مع خيار أيار الأقصى العرض و الارتفاع من العمل make تصدير ملفّ من make "
 "جودة IF إلى مع</p>"
 
-#: ImportExport/Export.cpp:137
+#: ImportExport/Export.cpp:155
 #, fuzzy
 msgid ""
 "<p>When exporting images, bear in mind that there are two things the person "
@@ -1685,33 +1740,33 @@ msgstr ""
 "أية حال يعمل ويب a من تنزيلات a من itإيطالياهو بوصة من حالة إلى و ملفّ أداء "
 "التالي إلى غير ذلك مستخدم وصول s</p>"
 
-#: ImportExport/Export.cpp:198
+#: ImportExport/Export.cpp:233
 msgid "Error creating zip file"
 msgstr "خطأ في إنشاء الملف المضغوط zip"
 
-#: ImportExport/Export.cpp:212
+#: ImportExport/Export.cpp:247
 #, fuzzy
 msgid "&Cancel"
 msgstr "إل&غاء"
 
-#: ImportExport/Export.cpp:231
+#: ImportExport/Export.cpp:266
 msgid "Creating index file"
 msgstr "إنشاء ملف الفهرسة"
 
-#: ImportExport/Export.cpp:246
+#: ImportExport/Export.cpp:279
 msgid "Creating thumbnails"
 msgstr "إنشاء الأظافر"
 
-#: ImportExport/Export.cpp:268
+#: ImportExport/Export.cpp:301
 msgid "Copying image files"
 msgstr "نسخ ملفات الصورة"
 
-#: ImportExport/Export.cpp:335
+#: ImportExport/Export.cpp:368
 #, kde-format
 msgid "Error writing file %1"
 msgstr "خطأ عند كتابة الملف %1"
 
-#: ImportExport/Export.cpp:365
+#: ImportExport/Export.cpp:398
 #, fuzzy
 msgid ""
 "<p>Other KPhotoAlbum users may now load the import file into their database, "
@@ -1731,23 +1786,29 @@ msgstr ""
 "هذا make أو الوب خادم الإيطالية هو a ملفّ يعمل وصلة أو الوب خادم الإيطالية هو "
 "a نص عادي نص ملفّ</p>"
 
-#: ImportExport/Export.cpp:374
+#: ImportExport/Export.cpp:407
 msgid "How to Use the Export File"
 msgstr "كيفية إستعمال ملف التصدير"
 
-#: ImportExport/Import.cpp:63
+#: ImportExport/Import.cpp:41
+#, fuzzy
+#| msgid "KPhotoAlbum database files (*.db)"
+msgid "KPhotoAlbum Export Files"
+msgstr "ملفاق قاعدة بيانات Kphotoalbum (*.db)"
+
+#: ImportExport/Import.cpp:74
 #, fuzzy
 msgid "Unable to create temporary file"
 msgstr "غير قادر على إنشاء الدليل"
 
-#: ImportExport/ImportDialog.cpp:86
+#: ImportExport/ImportDialog.cpp:88
 #, fuzzy
 msgid ""
 "<p>XML file did not specify the source of the images, this is a strong "
 "indication that the file is corrupted</p>"
 msgstr "<p> XML ملفّ ليس تحديد مصدر من هو a ملفّ هو</p>"
 
-#: ImportExport/ImportDialog.cpp:119
+#: ImportExport/ImportDialog.cpp:122
 #, fuzzy
 msgid ""
 "<h1><font size=\"+2\">Welcome to KPhotoAlbum Import</font></h1>This wizard "
@@ -1780,97 +1841,97 @@ msgstr ""
 "صورة قاعدة بيانات بينما إلى نداء أداء الاسم<b> K</b> داخل خطوة بوصة أحمر ليس "
 "موجود بوصة قاعدة بيانات أو a طابق</li></ol>"
 
-#: ImportExport/ImportDialog.cpp:138
+#: ImportExport/ImportDialog.cpp:141
 msgctxt "@title:tab introduction page"
 msgid "Introduction"
 msgstr "المقدمة"
 
-#: ImportExport/ImportDialog.cpp:154 MainWindow/TokenEditor.cpp:64
+#: ImportExport/ImportDialog.cpp:157 MainWindow/TokenEditor.cpp:77
 #, fuzzy
 msgid "Select All"
 msgstr "اختر الكل"
 
-#: ImportExport/ImportDialog.cpp:156
+#: ImportExport/ImportDialog.cpp:159
 msgid "Deselect All"
 msgstr "ألغي خيار الكلّ"
 
-#: ImportExport/ImportDialog.cpp:191
+#: ImportExport/ImportDialog.cpp:194
 msgid "Select Which Images to Import"
 msgstr "إختر الصورة للإستيراد"
 
-#: ImportExport/ImportDialog.cpp:203
+#: ImportExport/ImportDialog.cpp:206
 msgid "Destination of images: "
 msgstr "هدف الصور: "
 
-#: ImportExport/ImportDialog.cpp:217
+#: ImportExport/ImportDialog.cpp:220
 msgid "Destination of Images"
 msgstr "هدف الصور"
 
-#: ImportExport/ImportDialog.cpp:225
+#: ImportExport/ImportDialog.cpp:228
 #, kde-format
 msgid "The directory must be a subdirectory of %1"
 msgstr "يجب أن يكون الدليل دليل فرعي من %1"
 
-#: ImportExport/ImportDialog.cpp:230
+#: ImportExport/ImportDialog.cpp:233
 msgid "This directory is reserved for category images."
 msgstr ""
 
-#: ImportExport/ImportDialog.cpp:261 Settings/CategoryPage.cpp:275
-#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/FileReader.cpp:91
+#: ImportExport/ImportDialog.cpp:264 Settings/CategoryPage.cpp:269
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:350
+#: XMLDB/FileReader.cpp:86
 msgid "Folder"
 msgstr "المجلّد"
 
-#: ImportExport/ImportDialog.cpp:262 XMLDB/FileReader.cpp:113
-#: XMLDB/FileReader.cpp:125
+#: ImportExport/ImportDialog.cpp:265 XMLDB/FileReader.cpp:108
+#: XMLDB/FileReader.cpp:120
 msgid "Tokens"
 msgstr "العلّامات"
 
-#: ImportExport/ImportDialog.cpp:263 Settings/CategoryPage.cpp:277
-#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:349
-#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:139
+#: ImportExport/ImportDialog.cpp:266 Settings/CategoryPage.cpp:271
+#: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:350
+#: XMLDB/Database.cpp:223 XMLDB/Database.cpp:570 XMLDB/FileReader.cpp:134
 msgid "Media Type"
 msgstr "نوع الوسائط"
 
-#: ImportExport/ImportDialog.cpp:271
+#: ImportExport/ImportDialog.cpp:274
 msgid "Match Categories"
 msgstr "مواءمة الأصناف"
 
-#: ImportExport/ImportDialog.cpp:303
+#: ImportExport/ImportDialog.cpp:306
 #, fuzzy, kde-format
 msgid "Directory %1 does not exist. Should it be created?"
 msgstr "الدليل %1 غير موجود. هل يجب إنشاءه ؟"
 
-#: ImportExport/ImportDialog.cpp:307
+#: ImportExport/ImportDialog.cpp:310
 #, kde-format
 msgid "Error creating directory %1"
 msgstr "خطأ في إنشاء الدليل %1"
 
-#: ImportExport/ImportDialog.cpp:389
+#: ImportExport/ImportDialog.cpp:392
 #, fuzzy
 msgid "How to resolve clashes"
 msgstr "كيفية التعامل مع الصور"
 
-#: ImportExport/ImportHandler.cpp:95 ImportExport/ImportHandler.cpp:148
+#: ImportExport/ImportHandler.cpp:98 ImportExport/ImportHandler.cpp:156
 msgid "Copying Images"
 msgstr "جاري نسخ الصور"
 
-#: ImportExport/ImportHandler.cpp:163
+#: ImportExport/ImportHandler.cpp:171
 #, fuzzy, kde-format
 msgid "Error when writing image %1"
 msgstr "خطأ صورة 1"
 
-#: ImportExport/ImportHandler.cpp:182
+#: ImportExport/ImportHandler.cpp:190
 #, fuzzy
 msgid "Updating Database"
 msgstr "التحديث قاعدة بيانات"
 
-#: ImportExport/ImportHandler.cpp:228
+#: ImportExport/ImportHandler.cpp:236
 #, fuzzy
 msgid "Cannot copy from any of the following locations:"
 msgstr "يمكن أن t نسخ ملفّ من أي منها من متابعة:"
 
-#: ImportExport/ImportHandler.cpp:229
+#: ImportExport/ImportHandler.cpp:237
 #, fuzzy
 msgid "Continue without Asking"
 msgstr "استمر السّؤال"
@@ -1971,6 +2032,11 @@ msgstr "ادمج البيانات"
 msgid "Date and Time"
 msgstr "التاريخ والوقت"
 
+#: ImportExport/MiniViewer.cpp:69
+#, fuzzy
+msgid "Close"
+msgstr "إغلاق"
+
 #. i18n: ectx: Menu (view)
 #: kphotoalbumui.rc:28
 #, fuzzy
@@ -2020,76 +2086,76 @@ msgstr "الأدوات"
 msgid "Main Toolbar"
 msgstr "شريط الأدوات الرئيسي"
 
-#: main.cpp:37
+#: main.cpp:67
 msgid "KPhotoAlbum"
 msgstr ""
 
-#: main.cpp:38
+#: main.cpp:69
 msgid "KDE Photo Album"
 msgstr "دفتر الصور KDE"
 
-#: main.cpp:40
+#: main.cpp:76
 #, fuzzy
 msgid "Jesper K. Pedersen"
 msgstr "K"
 
-#: main.cpp:40 main.cpp:41 main.cpp:42 main.cpp:44 main.cpp:45 main.cpp:46
-#: main.cpp:47 main.cpp:48
+#: main.cpp:76 main.cpp:77 main.cpp:78 main.cpp:80 main.cpp:81 main.cpp:82
+#: main.cpp:83 main.cpp:84
 msgid "Development"
 msgstr "التطوير"
 
-#: main.cpp:41
+#: main.cpp:77
 msgid "Hassan Ibraheem"
 msgstr ""
 
-#: main.cpp:42
+#: main.cpp:78
 msgid "Miika Turkia"
 msgstr ""
 
-#: main.cpp:43
+#: main.cpp:79
 msgid "Tuomas Suutari"
 msgstr ""
 
-#: main.cpp:43
+#: main.cpp:79
 #, fuzzy
 msgid "SQL backend and numerous features"
 msgstr "SQL منتهى خلفي و"
 
-#: main.cpp:44
+#: main.cpp:80
 msgid "Jan Kundr&aacute;t"
 msgstr ""
 
-#: main.cpp:45
+#: main.cpp:81
 msgid "Henner Zeller"
 msgstr ""
 
-#: main.cpp:46
+#: main.cpp:82
 msgid "Andreas Neustifter"
 msgstr ""
 
-#: main.cpp:47
+#: main.cpp:83
 msgid "Johannes Zarl-Zierl"
 msgstr ""
 
-#: main.cpp:48
+#: main.cpp:84
 msgid "Tobias Leupold"
 msgstr ""
 
-#: main.cpp:51
+#: main.cpp:87
 #, fuzzy
 msgid "Will Stephenson"
 msgstr "سوف ستيففنسن"
 
-#: main.cpp:51
+#: main.cpp:87
 #, fuzzy
 msgid "Developing an Icon for KPhotoAlbum"
 msgstr "التطوير أيقونة لـ"
 
-#: main.cpp:52
+#: main.cpp:88
 msgid "Teemu Rytilahti"
 msgstr ""
 
-#: main.cpp:53
+#: main.cpp:89
 #, fuzzy
 msgid ""
 "Sending patches implementing (.) the \"Set As Wallpaper\" menu in the viewer."
@@ -2097,21 +2163,21 @@ msgid ""
 msgstr ""
 "يجري الإرسال ضبط ك ورق جدران قائمة بوصة مُظهر سمة دعم لـ HTML توليد، جيل"
 
-#: main.cpp:55
+#: main.cpp:91
 msgid "Reimar Imhof"
 msgstr ""
 
-#: main.cpp:55
+#: main.cpp:91
 #, fuzzy
 msgid "Patch to sort items in option listboxes"
 msgstr "الرقعة إلى رتّب عناصر بوصة خيار"
 
-#: main.cpp:56
+#: main.cpp:92
 #, fuzzy
 msgid "Thomas Schwarzgruber"
 msgstr "توماس"
 
-#: main.cpp:56
+#: main.cpp:92
 #, fuzzy
 msgid ""
 "Patch to sort images in the thumbnail view, plus reading time info out of "
@@ -2120,12 +2186,12 @@ msgstr ""
 "الرقعة إلى رتّب بوصة صورة مصغّرة اعرض زائد القراءة وقت معلومات خارج من EXIF لـ "
 "موجود"
 
-#: main.cpp:57
+#: main.cpp:93
 #, fuzzy
 msgid "Marcel Wiesweg"
 msgstr "مارسيل"
 
-#: main.cpp:57
+#: main.cpp:93
 #, fuzzy
 msgid ""
 "Patch which speed up loading of thumbnails plus preview in image property "
@@ -2133,22 +2199,22 @@ msgid ""
 msgstr ""
 "الرقعة سرعة أعلى يجري التحميل من زائد معاينة بوصة صورة خاصية، ملكية حوار."
 
-#: main.cpp:58
+#: main.cpp:94
 #, fuzzy
 msgid "Marco Caldarelli"
 msgstr "ماركو"
 
-#: main.cpp:58
+#: main.cpp:94
 #, fuzzy
 msgid "Patch for making it possible to reread EXIF info using a nice dialog."
 msgstr "الرقعة لـ الإيطالية إلى EXIF معلومات a ظريف حوار."
 
-#: main.cpp:59
+#: main.cpp:95
 #, fuzzy
 msgid "Jean-Michel FAYARD"
 msgstr "جين ميتشل"
 
-#: main.cpp:59
+#: main.cpp:95
 #, fuzzy
 msgid ""
 "(.) Patch with directory info made available through the browser. (.) Patch "
@@ -2157,79 +2223,60 @@ msgstr ""
 "الرقعة مع دليل معلومات متوفّر متصفح الرقعة لـ a تفقّد مربّع لـ و أو بوصة ابحث "
 "صفحة."
 
-#: main.cpp:60
+#: main.cpp:96
 #, fuzzy
 msgid "Robert L Krawitz"
 msgstr "روبرت L"
 
-#: main.cpp:60
+#: main.cpp:96
 #, fuzzy
 msgid "Numerous patches plus profiling KPhotoAlbum again and again."
 msgstr "عديد زائد و."
 
-#: main.cpp:61
+#: main.cpp:97
 #, fuzzy
 msgid "Christoph Moseler"
 msgstr "كريستوف"
 
-#: main.cpp:61
+#: main.cpp:97
 #, fuzzy
 msgid "Numerous patches for lots of bugs plus patches for a few new features"
 msgstr "عديد لـ من علل زائد لـ a جديد"
 
-#: main.cpp:62
+#: main.cpp:98
 msgid "Clytie Siddall"
 msgstr ""
 
-#: main.cpp:62
+#: main.cpp:98
 #, fuzzy
 msgid "Tremendous help with the English text in the application."
 msgstr "كبير مساعدة مع نص بوصة تطبيق."
 
-#: main.cpp:63
+#: main.cpp:99
 msgid "Wes Hardaker"
 msgstr ""
 
-#: main.cpp:63
+#: main.cpp:99
 msgid "Some very useful features to improve workflow"
 msgstr ""
 
-#: main.cpp:68
-msgid "Config file"
-msgstr "ملف الإعداد"
-
-#: main.cpp:69
-#, fuzzy
-msgid "Starts KPhotoAlbum with a prebuilt set of demo images"
-msgstr "يبدء مع a set من عرض"
-
-#: main.cpp:70
-msgid "Import file"
-msgstr "إستورد الملف"
-
-#: main.cpp:71
-#, fuzzy
-#| msgid "Search for new images and videos on startup"
-msgid "Don't start listening for android devices on startup."
-msgstr "إبحث عن الصور و امرئيات الجديدة عند بدء التشغيل"
-
-#: MainWindow/AutoStackImages.cpp:43
+#: MainWindow/AutoStackImages.cpp:50
 msgid "Automatically Stack Images"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:54
+#: MainWindow/AutoStackImages.cpp:73
 msgid "Stack images with identical MD5 sum"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:62
+#: MainWindow/AutoStackImages.cpp:81
 msgid "Stack images based on file version detection"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:66
+#: MainWindow/AutoStackImages.cpp:85
 msgid "Original to top"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:78
+#: MainWindow/AutoStackImages.cpp:97
 msgctxt ""
 "The whole sentence should read: *Stack images that are shot within x seconds "
 "of each other*. So images that are shot in one burst are automatically "
@@ -2237,7 +2284,7 @@ msgctxt ""
 msgid "Stack images that are shot within"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:88
+#: MainWindow/AutoStackImages.cpp:107
 #, fuzzy
 msgctxt ""
 "The whole sentence should read: *Stack images that are shot within x seconds "
@@ -2245,20 +2292,20 @@ msgctxt ""
 msgid "seconds"
 msgstr "ثانية واحدة"
 
-#: MainWindow/AutoStackImages.cpp:91
+#: MainWindow/AutoStackImages.cpp:110
 msgid "AutoStacking Options"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:95
+#: MainWindow/AutoStackImages.cpp:114
 msgid "Include matching image to appropriate stack (if one exists)"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:99
+#: MainWindow/AutoStackImages.cpp:118
 msgid ""
 "Unstack images from their current stack and create new one for the matches"
 msgstr ""
 
-#: MainWindow/AutoStackImages.cpp:103
+#: MainWindow/AutoStackImages.cpp:122
 msgid "Skip images that are already in a stack"
 msgstr ""
 
@@ -2271,75 +2318,70 @@ msgstr "أعرض محرر الأصناف"
 msgid "Make Category Image"
 msgstr "إعداد صنف الصورة"
 
-#: MainWindow/CopyPopup.cpp:39
+#: MainWindow/CopyPopup.cpp:41
 #, fuzzy
 msgid "Copy image(s) to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:40
+#: MainWindow/CopyPopup.cpp:42
 #, fuzzy
 msgid "Copy currently selected image to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:43
+#: MainWindow/CopyPopup.cpp:45
 #, fuzzy
 msgid "Copy all selected images to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:49
+#: MainWindow/CopyPopup.cpp:51
 #, fuzzy
 msgid "Link image(s) to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:50
+#: MainWindow/CopyPopup.cpp:52
 #, fuzzy
 msgid "Link currently selected image to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:53
+#: MainWindow/CopyPopup.cpp:55
 #, fuzzy
 msgid "Link all selected images to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:82 Viewer/ViewerWidget.cpp:1543
+#: MainWindow/CopyPopup.cpp:85 Viewer/ViewerWidget.cpp:1535
 msgctxt "@action:button"
 msgid "Copy"
 msgstr ""
 
-#: MainWindow/CopyPopup.cpp:86 Viewer/ViewerWidget.cpp:1542
+#: MainWindow/CopyPopup.cpp:89 Viewer/ViewerWidget.cpp:1530
 #, fuzzy
 msgctxt "@title:window"
 msgid "Copy image to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:88
+#: MainWindow/CopyPopup.cpp:91
 #, fuzzy
 msgctxt "@title:window"
 msgid "Link image to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:93
+#: MainWindow/CopyPopup.cpp:96
 #, fuzzy
 msgctxt "@title:window"
 msgid "Copy images to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/CopyPopup.cpp:95
+#: MainWindow/CopyPopup.cpp:98
 #, fuzzy
 msgctxt "@title:window"
 msgid "Link images to..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/DeleteDialog.cpp:34
+#: MainWindow/DeleteDialog.cpp:36
 msgid "Removing items"
 msgstr ""
 
-#: MainWindow/DeleteDialog.cpp:36
-#, fuzzy
-msgid "OK"
-msgstr "موافق"
-
-#: MainWindow/DeleteDialog.cpp:70
+#: MainWindow/DeleteDialog.cpp:75
 #, kde-format
 msgid "Removing 1 item"
 msgid_plural "Removing %1 items"
@@ -2350,7 +2392,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: MainWindow/DeleteDialog.cpp:71
+#: MainWindow/DeleteDialog.cpp:76
 #, kde-format
 msgid ""
 "Selected item will be removed from the database.<br/>What do you want to do "
@@ -2365,7 +2407,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: MainWindow/DeleteDialog.cpp:77
+#: MainWindow/DeleteDialog.cpp:82
 #, kde-format
 msgid "Move file to Trash"
 msgid_plural "Move %1 files to Trash"
@@ -2376,7 +2418,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: MainWindow/DeleteDialog.cpp:78
+#: MainWindow/DeleteDialog.cpp:83
 #, fuzzy, kde-format
 msgid "Delete file from disk"
 msgid_plural "Delete %1 files from disk"
@@ -2387,7 +2429,7 @@ msgstr[3] "احذف ملفّ من قرص"
 msgstr[4] "احذف ملفّ من قرص"
 msgstr[5] "احذف ملفّ من قرص"
 
-#: MainWindow/DeleteDialog.cpp:79
+#: MainWindow/DeleteDialog.cpp:84
 #, fuzzy, kde-format
 msgid "Only remove the item from database"
 msgid_plural "Only remove %1 items from database"
@@ -2398,22 +2440,22 @@ msgstr[3] "احذف من قاعدة بيانات"
 msgstr[4] "احذف من قاعدة بيانات"
 msgstr[5] "احذف من قاعدة بيانات"
 
-#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:53
+#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:58
 #, fuzzy
 msgid "Merge these images"
 msgstr "احذف صورة"
 
-#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:63
+#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:68
 #, fuzzy
 msgid "Select target:"
 msgstr "إختر لا شيئ"
 
-#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:78
+#: MainWindow/DuplicateMerger/DuplicateMatch.cpp:83
 msgctxt "i for info"
 msgid "i"
 msgstr ""
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:48
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:53
 msgid ""
 "<p>Below is a list of all images that are duplicate in your database.<br/"
 ">Select which you want merged, and which of the duplicates should be kept."
@@ -2421,71 +2463,70 @@ msgid ""
 "the kept image</p>"
 msgstr ""
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:57
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:62
 msgid "Move to &trash"
 msgstr ""
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:58
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:63
 #, fuzzy
 msgid "&Delete from disk"
 msgstr "احذف ملفّ من قرص"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:59
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:64
 msgid "&Block from database"
 msgstr ""
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:80
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:86
 #, fuzzy
 msgid "Select &All"
 msgstr "اختر الكل"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:81
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:87
 #, fuzzy
 msgid "Select &None"
 msgstr "إختر لا شيئ"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:124
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:144
 #, fuzzy, kde-format
 msgid "%1 of %2 selected"
 msgstr "لم يتم إختيار عنصر"
 
-#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:167
+#: MainWindow/DuplicateMerger/DuplicateMerger.cpp:192
 #, fuzzy
 msgid "No duplicates found"
 msgstr "لم أعثر على ملف تعيينات إفتراضي"
 
-#: MainWindow/ExternalPopup.cpp:47
+#: MainWindow/ExternalPopup.cpp:51
 msgid "Current Item"
 msgstr "العنصر الحالي"
 
-#: MainWindow/ExternalPopup.cpp:47
+#: MainWindow/ExternalPopup.cpp:51
 msgid "All Selected Items"
 msgstr "كلّ العناصر المختارة"
 
-#: MainWindow/ExternalPopup.cpp:47
+#: MainWindow/ExternalPopup.cpp:51
 msgid "Copy and Open"
 msgstr ""
 
-#: MainWindow/ExternalPopup.cpp:75 MainWindow/ExternalPopup.cpp:76
-#: MainWindow/ExternalPopup.cpp:146
+#: MainWindow/ExternalPopup.cpp:79 MainWindow/ExternalPopup.cpp:80
+#: MainWindow/ExternalPopup.cpp:150
 msgid "Open With..."
 msgstr ""
 
-#: MainWindow/ExternalPopup.cpp:83 MainWindow/ExternalPopup.cpp:84
-#: MainWindow/ExternalPopup.cpp:136
+#: MainWindow/ExternalPopup.cpp:87 MainWindow/ExternalPopup.cpp:88
+#: MainWindow/ExternalPopup.cpp:140
 msgid "Your Command Line"
 msgstr ""
 
-#: MainWindow/ExternalPopup.cpp:162
+#: MainWindow/ExternalPopup.cpp:166
 msgid "Invoke External Program"
 msgstr "منادات برنامج خارجي"
 
-#: MainWindow/FeatureDialog.cpp:40
-#, fuzzy
-msgid "Feature Status"
-msgstr "الميّزات الحالة"
+#: MainWindow/FeatureDialog.cpp:43 MainWindow/Window.cpp:938
+msgid "KPhotoAlbum Feature Status"
+msgstr "حالة الميزات لـ KPhotoAlbum"
 
-#: MainWindow/FeatureDialog.cpp:45
+#: MainWindow/FeatureDialog.cpp:47
 #, fuzzy, kde-format
 msgid ""
 "<h1>Overview</h1><p>Below you may see the list of compile- and runtime "
@@ -2494,7 +2535,7 @@ msgstr ""
 "<h1> الرؤية العامة</h1><p> أسفل أيار قائمة من ترجمة و زمن التشغيل و الحالة</"
 "p> 1"
 
-#: MainWindow/FeatureDialog.cpp:48
+#: MainWindow/FeatureDialog.cpp:50
 #, fuzzy
 msgid ""
 "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
@@ -2520,7 +2561,7 @@ msgstr ""
 "org/download-source.htm\"> home صفحة</a> إذا never a كدي تطبيق المطور مُثبّتة "
 "بوصة اذهب مثل<i></i></p>"
 
-#: MainWindow/FeatureDialog.cpp:64
+#: MainWindow/FeatureDialog.cpp:66
 #, fuzzy
 msgid ""
 "<h1><a name=\"kipi\">Plug-ins support</a></h1><p>KPhotoAlbum has a plug-in "
@@ -2536,7 +2577,7 @@ msgstr ""
 "الجعل a رزنامة<li> الإرسال إلى</ul></p><p> الـ بوصة مكتبة هو KIPI و أيار "
 "من<a href=\"http://extragear.kde.org/apps/kipi/\"> KIPI المنزل صفحة</a></p>"
 
-#: MainWindow/FeatureDialog.cpp:77
+#: MainWindow/FeatureDialog.cpp:79
 #, fuzzy
 msgid ""
 "<h1><a name=\"exiv2\">EXIF support</a></h1><p>Images store information like "
@@ -2549,7 +2590,7 @@ msgstr ""
 "صورة زاوية الطول و سرعة بوصة هو EXIF معلومات</p><p><a href=\"http://"
 "freshmeat.net/projects/exiv2/\"> مكتبة</a> إلى قراءة EXIF معلومات من</p>"
 
-#: MainWindow/FeatureDialog.cpp:85
+#: MainWindow/FeatureDialog.cpp:87
 #, fuzzy
 msgid ""
 "<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
@@ -2561,21 +2602,21 @@ msgstr ""
 "EXIF لـ a قاعدة بيانات لسوء الحظ لـ إلى إلى تنفيذ النسخة make يمين النسخة هو "
 "مُثبّتة يعمل نظام داخل حزمة لـ e g مُثبّتة</p>"
 
-#: MainWindow/FeatureDialog.cpp:90
+#: MainWindow/FeatureDialog.cpp:92
 msgid ""
 "<h1><a name=\"kface\">Face detection and recognition support</a></h1><p>If "
 "KPhotoAlbum has been built with support for libkface, face detection and "
 "recognition features are enabled in the annotation dialog.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:95
+#: MainWindow/FeatureDialog.cpp:97
 msgid ""
 "<h1><a name=\"geomap\">Map view for geotagged images</a></h1><p>If "
 "KPhotoAlbum has been built with support for libkgeomap, KPhotoAlbum can show "
 "images with GPS information on a map.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:100
+#: MainWindow/FeatureDialog.cpp:102
 #, fuzzy
 msgid ""
 "<h1><a name=\"video\">Video support</a></h1><p>KPhotoAlbum relies on Qt's "
@@ -2588,79 +2629,91 @@ msgstr ""
 "إذا ميزة هو ليس ممكن لـ a عند<a href=\"http://wiki.kde.org/tiki-index.php?"
 "page=KPhotoAlbum+Video+Support\"> مقالة يعمل فيديو دعم</a></p>"
 
-#: MainWindow/FeatureDialog.cpp:108
+#: MainWindow/FeatureDialog.cpp:110
 msgid ""
 "<p>No video mime types found, which indicates that either Qt was compiled "
 "without phonon support, or there were missing codecs</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:110
+#: MainWindow/FeatureDialog.cpp:112
 #, kde-format
 msgid ""
 "<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></"
 "ul></p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:112
+#: MainWindow/FeatureDialog.cpp:114
 msgid ""
 "<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
-"uses <tt>MPlayer</tt> to extract thumbnails from videos. These thumbnails "
-"are used to preview videos in the thumbnail viewer.</p><p>If at all possible "
-"you should install the <b>MPlayer2</b> package rather than the <b>MPlayer</"
-"b> package, as it has important improvements over the MPlayer package. "
-"MPlayer (in contrast to MPlayer2) often has problems extracting the length "
-"of videos and also often fails to extract the thumbnails used for cycling "
-"video thumbnails.</p>"
+"can use <tt>ffmpeg</tt> or <tt>MPlayer</tt> to extract thumbnails from "
+"videos. These thumbnails are used to preview videos in the thumbnail viewer."
+"</p><p>In the past, MPlayer (in contrast to MPlayer2) often had problems "
+"extracting the length of videos and also often fails to extract the "
+"thumbnails used for cycling video thumbnails. For that reason, you should "
+"prefer ffmpeg or MPlayer2 over MPlayer, if possible.</p>"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:225
+#: MainWindow/FeatureDialog.cpp:122
+msgid ""
+"<h1><a name=\"videoInfo\">Video metadata support</a></h1><p>KPhotoAlbum can "
+"use <tt>ffprobe</tt> or <tt>MPlayer</tt> to extract length information from "
+"videos.</p><p>Correct length information is also necessary for correct "
+"rendering of video thumbnails.</p>"
+msgstr ""
+
+#: MainWindow/FeatureDialog.cpp:245
 #, fuzzy
 msgid "Plug-ins available"
 msgstr "القوابس المتوفرة"
 
-#: MainWindow/FeatureDialog.cpp:226
+#: MainWindow/FeatureDialog.cpp:246
 #, fuzzy
 msgid "EXIF info supported"
 msgstr "دعم معلومات الــ EXIF"
 
-#: MainWindow/FeatureDialog.cpp:227
+#: MainWindow/FeatureDialog.cpp:247
 #, fuzzy
 msgid "Sqlite database support (used for EXIF searches)"
 msgstr "قاعدة بيانات دعم مُستخدَم لـ EXIF"
 
-#: MainWindow/FeatureDialog.cpp:228
+#: MainWindow/FeatureDialog.cpp:248
 msgid "Face detection and recognition support"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:229
+#: MainWindow/FeatureDialog.cpp:249
 msgid "Map view for geotagged images."
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:230
+#: MainWindow/FeatureDialog.cpp:250
 #, fuzzy
 msgid "Video support"
 msgstr "دعم المرئي AVI"
 
-#: MainWindow/FeatureDialog.cpp:234
+#: MainWindow/FeatureDialog.cpp:255
 #, fuzzy
 msgctxt "Feature available"
 msgid "Yes"
 msgstr "نعم"
 
-#: MainWindow/FeatureDialog.cpp:235
+#: MainWindow/FeatureDialog.cpp:256
 #, fuzzy
 msgctxt "Feature not available"
 msgid "No"
 msgstr "لا"
 
-#: MainWindow/FeatureDialog.cpp:242
+#: MainWindow/FeatureDialog.cpp:263
 msgid "Only with MPlayer1"
 msgstr ""
 
-#: MainWindow/FeatureDialog.cpp:243
+#: MainWindow/FeatureDialog.cpp:264
 #, fuzzy
 msgid "Video thumbnail support"
 msgstr "دعم أظافر المرئيات"
+
+#: MainWindow/FeatureDialog.cpp:267
+#, fuzzy
+msgid "Video metadata support"
+msgstr "دعم المرئي AVI"
 
 #: MainWindow/ImageCounter.cpp:32
 #, fuzzy, kde-format
@@ -2694,56 +2747,89 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: MainWindow/InvalidDateFinder.cpp:41
+#: MainWindow/InvalidDateFinder.cpp:43
 msgid "Search for Images and Videos with Missing Dates"
 msgstr "إبحث عن الصور و المرئيات ذات التاريخ المفقود"
 
-#: MainWindow/InvalidDateFinder.cpp:48
+#: MainWindow/InvalidDateFinder.cpp:62
 msgid "Which Images and Videos to Display"
 msgstr "أي صور و مرئيات للعرض"
 
-#: MainWindow/InvalidDateFinder.cpp:52
+#: MainWindow/InvalidDateFinder.cpp:66
 msgid ""
 "Search for images and videos with a valid date but an invalid time stamp"
 msgstr ""
 "إبحث عن الصور و المرئيات ذات التاريخ الصالح و لكن ذات دمغة التوقيت غير "
 "الصالحة"
 
-#: MainWindow/InvalidDateFinder.cpp:53
+#: MainWindow/InvalidDateFinder.cpp:67
 msgid "Search for images and videos missing date and time"
 msgstr "إبحث عن الصور و المرئيات ذات التاريخ و دمغة التوقيت المفقودة"
 
-#: MainWindow/InvalidDateFinder.cpp:54
+#: MainWindow/InvalidDateFinder.cpp:68
 msgid ""
 "Search for images and videos with only partial dates (like 1971 vs. "
 "11/7-1971)"
 msgstr ""
 "إبحث عن الصور و المرئيات ذات التاريخ غير التام ( مثلاً 1971 عن 11/7/1971 )"
 
-#: MainWindow/InvalidDateFinder.cpp:69
+#: MainWindow/InvalidDateFinder.cpp:85
 msgid "Image Info"
 msgstr "معلومات الصورة"
 
-#: MainWindow/InvalidDateFinder.cpp:78
+#: MainWindow/InvalidDateFinder.cpp:102
 msgid "<h1>Here you may see the date changes for the displayed items.</h1>"
 msgstr "<h1>يمكنك هنا مشاهدة تغييرات التاريخ للعناصر المعروضة.</h1>"
 
-#: MainWindow/InvalidDateFinder.cpp:83
+#: MainWindow/InvalidDateFinder.cpp:108
 msgid "Reading file properties"
 msgstr "جاري قراءة خصائص الملف"
 
-#: MainWindow/InvalidDateFinder.cpp:84
-msgid "Reading File Properties"
-msgstr "جاري قراءة خصائص الملف"
+#: MainWindow/Options.cpp:37
+msgid "Use <databaseFile> instead of the default."
+msgstr ""
 
-#: MainWindow/RunDialog.cpp:37
+#: MainWindow/Options.cpp:38
+#, fuzzy
+#| msgid "Database file:"
+msgid "databaseFile"
+msgstr "ملف قاعدة البيانات:"
+
+#: MainWindow/Options.cpp:40
+#, fuzzy
+msgid "Starts KPhotoAlbum with a prebuilt set of demo images."
+msgstr "يبدء مع a set من عرض"
+
+#: MainWindow/Options.cpp:43
+#, fuzzy
+#| msgid "Import file"
+msgid "Import file."
+msgstr "إستورد الملف"
+
+#: MainWindow/Options.cpp:44
+msgid "file.kim"
+msgstr ""
+
+#: MainWindow/Options.cpp:50
+msgid "Listen for network connections."
+msgstr ""
+
+#: MainWindow/Options.cpp:54
+msgid "Listen for network connections on address <interface_address>."
+msgstr ""
+
+#: MainWindow/Options.cpp:55
+msgid "interface_address"
+msgstr ""
+
+#: MainWindow/RunDialog.cpp:39
 #, no-c-format
 msgid ""
 "<p>Enter your command to run below:</p><p><i>%all will be replaced with a "
 "file list</i></p>"
 msgstr ""
 
-#: MainWindow/RunDialog.cpp:46
+#: MainWindow/RunDialog.cpp:48
 #, no-c-format
 msgid ""
 "<p>Enter the command you want to run on your image file(s). KPhotoAlbum will "
@@ -2753,7 +2839,7 @@ msgid ""
 "use %each to have a command be run once per file.</p>"
 msgstr ""
 
-#: MainWindow/RunDialog.cpp:69
+#: MainWindow/RunDialog.cpp:71
 #, no-c-format
 msgctxt ""
 "As in 'Execute a command and replace any occurrence of %all with the "
@@ -2761,7 +2847,7 @@ msgctxt ""
 msgid "%all"
 msgstr ""
 
-#: MainWindow/RunDialog.cpp:71
+#: MainWindow/RunDialog.cpp:73
 #, fuzzy, no-c-format
 msgctxt ""
 "As in 'Execute a command for each selected file in turn and replace any "
@@ -2769,7 +2855,7 @@ msgctxt ""
 msgid "%each"
 msgstr "إبحث"
 
-#: MainWindow/SearchBar.cpp:32
+#: MainWindow/SearchBar.cpp:31
 #, fuzzy
 msgctxt "@label:textbox label on the search bar"
 msgid "Search:"
@@ -2820,12 +2906,12 @@ msgid ""
 "specify it here."
 msgstr ""
 
-#: MainWindow/StatisticsDialog.cpp:116 Settings/BirthdayPage.cpp:58
-#: Settings/UntaggedGroupBox.cpp:40
+#: MainWindow/StatisticsDialog.cpp:116 Settings/BirthdayPage.cpp:57
+#: Settings/UntaggedGroupBox.cpp:39
 msgid "Category:"
 msgstr "الصنف:"
 
-#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:47
+#: MainWindow/StatisticsDialog.cpp:122 Settings/UntaggedGroupBox.cpp:46
 msgid "Tag:"
 msgstr ""
 
@@ -2845,31 +2931,31 @@ msgstr ""
 msgid "Total"
 msgstr "المجموع: %1"
 
-#: MainWindow/StatusBar.cpp:107
+#: MainWindow/StatusBar.cpp:114
 #, fuzzy
 #| msgid "Thumbnail image size:"
 msgid "Decrease thumbnail storage size"
 msgstr "قياس صورة الظفر:"
 
-#: MainWindow/StatusBar.cpp:114
+#: MainWindow/StatusBar.cpp:121
 #, fuzzy
 #| msgid "Thumbnail image size:"
 msgid "Increase thumbnail storage size"
 msgstr "قياس صورة الظفر:"
 
-#: MainWindow/TokenEditor.cpp:39 MainWindow/Window.cpp:736
+#: MainWindow/TokenEditor.cpp:40 MainWindow/Window.cpp:738
 msgid "Remove Tokens"
 msgstr "أحذف العلام"
 
-#: MainWindow/TokenEditor.cpp:46
+#: MainWindow/TokenEditor.cpp:59
 msgid "Select tokens to remove from all images and videos:"
 msgstr "إختر العلًامات اللتي تحذف من كلّ الصور و المرئيات:"
 
-#: MainWindow/TokenEditor.cpp:65
+#: MainWindow/TokenEditor.cpp:78
 msgid "Select None"
 msgstr "إختر لا شيئ"
 
-#: MainWindow/WelcomeDialog.cpp:56
+#: MainWindow/WelcomeDialog.cpp:59
 msgid ""
 "<h1>Welcome to KPhotoAlbum</h1><p>KPhotoAlbum is a powerful free tool to "
 "archive, tag and manage your photos and videos. It will not modify or change "
@@ -2881,19 +2967,19 @@ msgid ""
 "images, press the Load Demo button.</p>"
 msgstr ""
 
-#: MainWindow/WelcomeDialog.cpp:71
+#: MainWindow/WelcomeDialog.cpp:74
 msgid "Create My Own Database..."
 msgstr "أنشئ قاعدة البيانات الخاصة بك..."
 
-#: MainWindow/WelcomeDialog.cpp:74
+#: MainWindow/WelcomeDialog.cpp:77
 msgid "Load Demo"
 msgstr "حمّل العرض التوضيحي"
 
-#: MainWindow/WelcomeDialog.cpp:77
+#: MainWindow/WelcomeDialog.cpp:80
 msgid "Check My Feature Set"
 msgstr ""
 
-#: MainWindow/WelcomeDialog.cpp:113
+#: MainWindow/WelcomeDialog.cpp:114
 msgid ""
 "<h1>KPhotoAlbum database creation</h1><p>You need to show where the photos "
 "and videos are for KPhotoAlbum to find them. They all need to be under one "
@@ -2910,22 +2996,22 @@ msgstr ""
 msgid "Image/Video root directory: "
 msgstr "دليل الصور/المرئيات الجذري: "
 
-#: MainWindow/WelcomeDialog.cpp:158
+#: MainWindow/WelcomeDialog.cpp:169
 #, fuzzy
 msgid "Directory does not exist, create it?"
 msgstr "الدليل غير موجود ، هل أقوم بإنشائه ؟"
 
-#: MainWindow/WelcomeDialog.cpp:162
+#: MainWindow/WelcomeDialog.cpp:173
 #, kde-format
 msgid "Could not create directory %1"
 msgstr "لم أتمكن من إنشاء الدليل %1"
 
-#: MainWindow/WelcomeDialog.cpp:169
+#: MainWindow/WelcomeDialog.cpp:180
 #, kde-format
 msgid "%1 exists, but is not a directory"
 msgstr "إنّ %1 موجود مسبقاً ، و لكنه ليس دليلاً"
 
-#: MainWindow/WelcomeDialog.cpp:188
+#: MainWindow/WelcomeDialog.cpp:199
 #, fuzzy, kde-format
 msgid ""
 "<p>KPhotoAlbum does not seem to be build with support for all its features. "
@@ -2937,40 +3023,40 @@ msgstr ""
 "p><p> لـ تفاصيل يعمل إلى اختيار<b> مساعدة</b><b> الميّزات الحالة</b> من "
 "القوائم</p>"
 
-#: MainWindow/WelcomeDialog.cpp:192 MainWindow/WelcomeDialog.cpp:196
+#: MainWindow/WelcomeDialog.cpp:203 MainWindow/WelcomeDialog.cpp:207
 #, fuzzy
 msgid "Feature Check"
 msgstr "الميّزات كِش"
 
-#: MainWindow/WelcomeDialog.cpp:195
+#: MainWindow/WelcomeDialog.cpp:206
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr ""
 
-#: MainWindow/Window.cpp:138
+#: MainWindow/Window.cpp:133
 msgid "Loading Database"
 msgstr "جاري تحميل قاعدة البيانات"
 
-#: MainWindow/Window.cpp:144
+#: MainWindow/Window.cpp:139
 msgid "Loading Main Window"
 msgstr "جاري تحميل النافذة الرئيسية"
 
-#: MainWindow/Window.cpp:235
+#: MainWindow/Window.cpp:232
 #, fuzzy
 msgid "Searching for New Files"
 msgstr "يجري البحث لـ جديد ملفات"
 
-#: MainWindow/Window.cpp:241
+#: MainWindow/Window.cpp:238
 msgid "Loading Plug-ins"
 msgstr "جاري تحميل القوابس"
 
-#: MainWindow/Window.cpp:262
+#: MainWindow/Window.cpp:258
 msgid ""
 "EXIF database cannot be opened. Check that the image root directory is "
 "writable."
 msgstr ""
 "لا يمكن فتح قاعدة البيانات EXIF. تأكد من أنّ دليل الصور الجذري قابل للكتابة."
 
-#: MainWindow/Window.cpp:276
+#: MainWindow/Window.cpp:274
 #, fuzzy
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
@@ -2983,311 +3069,307 @@ msgstr ""
 "بيانات إلى الإيطالية محذوف الآن إذا ليس حذف الإيطالية الإيطالية قرص فراغ "
 "يعمل غير ذلك IF إلى إلى الخلف و عرض إلى إبقاء الإيطالية مع جلسة</p>"
 
-#: MainWindow/Window.cpp:281
+#: MainWindow/Window.cpp:279
 msgid "Delete Demo Database"
 msgstr "أمحي قاعدة بيانات العرض التوضيحي"
 
-#: MainWindow/Window.cpp:296
+#: MainWindow/Window.cpp:294
 msgid "Do you want to save the changes?"
 msgstr "هل تريد حفظ التغييرات ؟"
 
-#: MainWindow/Window.cpp:297
+#: MainWindow/Window.cpp:295
 msgid "Save Changes?"
 msgstr "حفظ التغييرات ؟"
 
-#: MainWindow/Window.cpp:336
+#: MainWindow/Window.cpp:334
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
 msgstr ""
 
-#: MainWindow/Window.cpp:338 MainWindow/Window.cpp:343
+#: MainWindow/Window.cpp:336 MainWindow/Window.cpp:341
 msgid "Stacking Error"
 msgstr ""
 
-#: MainWindow/Window.cpp:342
+#: MainWindow/Window.cpp:340
 msgid "Unknown error, stack creation failed."
 msgstr ""
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
 #: MainWindow/Window.cpp:1316
 msgid "No item is selected."
 msgstr "لم تحدد عنصر"
 
-#: MainWindow/Window.cpp:420 MainWindow/Window.cpp:554
+#: MainWindow/Window.cpp:418 MainWindow/Window.cpp:552
 #: MainWindow/Window.cpp:1317
 msgid "No Selection"
 msgstr "لا خيار"
 
-#: MainWindow/Window.cpp:468
+#: MainWindow/Window.cpp:466
 msgid "Saving..."
 msgstr "جاري الحفظ..."
 
-#: MainWindow/Window.cpp:472
+#: MainWindow/Window.cpp:470
 msgid "Saving... Done"
 msgstr "إنتهيت من الحفظ"
 
-#: MainWindow/Window.cpp:622
+#: MainWindow/Window.cpp:620
 #, fuzzy
 msgid "There are no images to be shown."
 msgstr "هناك لا إلى."
 
-#: MainWindow/Window.cpp:697
+#: MainWindow/Window.cpp:699
 msgid "Generate HTML..."
 msgstr "توليد لغة علامات النص الفائق HTML"
 
-#: MainWindow/Window.cpp:701
+#: MainWindow/Window.cpp:703
 msgid "Import..."
 msgstr "إستورِد..."
 
-#: MainWindow/Window.cpp:704
+#: MainWindow/Window.cpp:706
 #, fuzzy
 msgid "Export/Copy Images..."
 msgstr "صدِّر نسخ صور."
 
-#: MainWindow/Window.cpp:730
+#: MainWindow/Window.cpp:732
 #, fuzzy
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "أمحي المحدد"
 
-#: MainWindow/Window.cpp:739
+#: MainWindow/Window.cpp:741
 msgid "Open List of Files..."
 msgstr ""
 
-#: MainWindow/Window.cpp:743
+#: MainWindow/Window.cpp:745
 msgid "Annotate Individual Items"
 msgstr "أضف تعليقات على العناصر الفردية"
 
-#: MainWindow/Window.cpp:747
+#: MainWindow/Window.cpp:749
 msgid "Annotate Multiple Items at a Time"
 msgstr "أضف تعليقات على العناصر المتعددة بوقت واحد"
 
-#: MainWindow/Window.cpp:751
+#: MainWindow/Window.cpp:753
 msgid "Merge Images into a Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:755
+#: MainWindow/Window.cpp:757
 msgid "Remove Images from Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:760
 msgid "Set as First Image in Stack"
 msgstr ""
 
-#: MainWindow/Window.cpp:773
+#: MainWindow/Window.cpp:775
 #, fuzzy
 msgid "View"
 msgstr "عرض"
 
-#: MainWindow/Window.cpp:777
+#: MainWindow/Window.cpp:779
 msgid "View (In New Window)"
 msgstr "أعرض ( في نافذة جديدة )"
 
-#: MainWindow/Window.cpp:780
+#: MainWindow/Window.cpp:782
 msgid "Run Slide Show"
 msgstr "شغّل عرض الشرائح"
 
-#: MainWindow/Window.cpp:785
+#: MainWindow/Window.cpp:787
 msgid "Run Randomized Slide Show"
 msgstr "شغّل عرض الشرائح العشوائي"
 
-#: MainWindow/Window.cpp:791
+#: MainWindow/Window.cpp:793
 msgid "Collapse all stacks"
 msgstr ""
 
-#: MainWindow/Window.cpp:797
+#: MainWindow/Window.cpp:799
 msgid "Expand all stacks"
 msgstr ""
 
-#: MainWindow/Window.cpp:802
+#: MainWindow/Window.cpp:804
 msgid "Show &Oldest First"
 msgstr "أعرض ال&أقدم أولاً"
 
-#: MainWindow/Window.cpp:807
+#: MainWindow/Window.cpp:809
 msgid "Show &Newest First"
 msgstr "أعرض الأ&جدد أولاً"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:814
 msgid "Sort Selected by Date && Time"
 msgstr "أفرز الخيار حسب التاريخ و الوقت"
 
-#: MainWindow/Window.cpp:815
+#: MainWindow/Window.cpp:817
 #, fuzzy
 msgid "Limit View to Selection"
 msgstr "حدّد العرض للتي هي معلّمة"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:820
 msgid "Jump to Context"
 msgstr "أقفز إلى السياق"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:825
 msgid "Lock Images"
 msgstr "أقفل الصور"
 
-#: MainWindow/Window.cpp:826
+#: MainWindow/Window.cpp:828
 msgid "Unlock"
 msgstr "فك القفل"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:831
 msgid "Change Password..."
 msgstr "غيير كلمة المرور..."
 
-#: MainWindow/Window.cpp:833
+#: MainWindow/Window.cpp:835
 msgid "Lock Away All Other Items"
 msgstr "فك قفل كلّ العناصر الأخرى"
 
-#: MainWindow/Window.cpp:836
+#: MainWindow/Window.cpp:838
 msgid "Lock Away Current Set of Items"
 msgstr "فك قفل طاقم العناصر الحالي"
 
-#: MainWindow/Window.cpp:840
+#: MainWindow/Window.cpp:842
 msgid "Display Images and Videos Not on Disk"
 msgstr "أعرض الصور و المرئيات غير الموجودة على القرص"
 
-#: MainWindow/Window.cpp:843
+#: MainWindow/Window.cpp:845
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "أعرض الصور و المرئيات ذي التواريخ غير الكاملة..."
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:849
 #, fuzzy
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "العرض صور و المرئيات مع غُيِّر MD5 مجموع"
 
-#: MainWindow/Window.cpp:851
+#: MainWindow/Window.cpp:853
 msgid "Merge duplicates"
 msgstr ""
 
-#: MainWindow/Window.cpp:853
+#: MainWindow/Window.cpp:855
 msgid "Recalculate Checksum"
 msgstr "إعادة حساب تدقيق المجموع"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:858
 msgid "Rescan for Images and Videos"
 msgstr "إعادة المسح للصور و المرئيات"
 
-#: MainWindow/Window.cpp:859
+#: MainWindow/Window.cpp:861
 #, fuzzy
 msgid "Recreate Exif Search Database"
 msgstr "حدِث البحث في قاعدة البيانات EXIF"
 
-#: MainWindow/Window.cpp:862
+#: MainWindow/Window.cpp:864
 msgid "Read EXIF Info From Files..."
 msgstr "إقرء معلومات الــ EXIF من الملفات..."
 
-#: MainWindow/Window.cpp:864
+#: MainWindow/Window.cpp:866
 msgid ""
 "Recreate Exif Search Database (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 
-#: MainWindow/Window.cpp:865
+#: MainWindow/Window.cpp:867
 msgid ""
 "Read EXIF Info From Files... (need to compile KPhotoAlbum with Exif support)"
 msgstr ""
 
-#: MainWindow/Window.cpp:871
+#: MainWindow/Window.cpp:873
 #, fuzzy
 #| msgid "Sort Selected by Date && Time"
 msgid "Sort All by Date && Time"
 msgstr "أفرز الخيار حسب التاريخ و الوقت"
 
-#: MainWindow/Window.cpp:875
+#: MainWindow/Window.cpp:877
 msgid "Automatically Stack Selected Images..."
 msgstr ""
 
-#: MainWindow/Window.cpp:878
+#: MainWindow/Window.cpp:880
 msgid "Build Thumbnails"
 msgstr "بناء الأظافر"
 
-#: MainWindow/Window.cpp:881
+#: MainWindow/Window.cpp:883
 msgid "Statistics"
 msgstr ""
 
-#: MainWindow/Window.cpp:885
+#: MainWindow/Window.cpp:887
 msgid "Mark As Untagged"
 msgstr ""
 
-#: MainWindow/Window.cpp:894
+#: MainWindow/Window.cpp:896
 msgid "Enable All Messages"
 msgstr "مكّن كلّ الرسائل"
 
-#: MainWindow/Window.cpp:897
+#: MainWindow/Window.cpp:899
 #, fuzzy
 msgid "Configure Current View"
 msgstr "إعداد العرض"
 
-#: MainWindow/Window.cpp:906
+#: MainWindow/Window.cpp:908
 #, fuzzy
 msgid "Tree"
 msgstr "السمة:"
 
-#: MainWindow/Window.cpp:911
+#: MainWindow/Window.cpp:913
 msgid "Tree with User Icons"
 msgstr ""
 
-#: MainWindow/Window.cpp:916
+#: MainWindow/Window.cpp:918
 #, fuzzy
 msgid "Icons"
 msgstr "الأيقونة:"
 
-#: MainWindow/Window.cpp:928
+#: MainWindow/Window.cpp:929
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "أعرض تلميحات الأدوات في نافذة الأظافر"
 
-#: MainWindow/Window.cpp:934
+#: MainWindow/Window.cpp:935
 msgid "Run KPhotoAlbum Demo"
 msgstr "شغّل عرض KPhotoAlbum التوضيحي"
 
-#: MainWindow/Window.cpp:937
-msgid "KPhotoAlbum Feature Status"
-msgstr "حالة الميزات لـ KPhotoAlbum"
-
-#: MainWindow/Window.cpp:940
+#: MainWindow/Window.cpp:941
 #, fuzzy
 msgid "Show Demo Videos"
 msgstr "أعرض المرئيات"
 
-#: MainWindow/Window.cpp:945
+#: MainWindow/Window.cpp:946
 msgid "Show Exif Info"
 msgstr "أعرض المعلومات لــ EXIF"
 
-#: MainWindow/Window.cpp:948
+#: MainWindow/Window.cpp:949
 msgid "Recreate Selected Thumbnails"
 msgstr "إعادة إنشاء الأظافر المحددة"
 
-#: MainWindow/Window.cpp:951
+#: MainWindow/Window.cpp:952
 #, fuzzy
 msgid "Use next video thumbnail"
 msgstr "أنشئ الأظافر"
 
-#: MainWindow/Window.cpp:955
+#: MainWindow/Window.cpp:956
 #, fuzzy
 msgid "Use previous video thumbnail"
 msgstr "أنشئ الأظافر"
 
-#: MainWindow/Window.cpp:981
+#: MainWindow/Window.cpp:982
 msgid "Auto saving...."
 msgstr "جاري الحفظ التلقائي..."
 
-#: MainWindow/Window.cpp:983
+#: MainWindow/Window.cpp:984
 msgid "Auto saving.... Done"
 msgstr "إنتهى الحفظ التلقائي...."
 
-#: MainWindow/Window.cpp:1077
+#: MainWindow/Window.cpp:1081
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
 "%1</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1085
+#: MainWindow/Window.cpp:1089
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
 "index.xml</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1101
+#: MainWindow/Window.cpp:1105
 msgid ""
 "<p>You have configured a tag for untagged images, but either the tag itself "
 "or its category does not exist in the database.</p><p>Please review your "
@@ -3360,45 +3442,45 @@ msgstr ""
 msgid "Internal Error"
 msgstr "منادات برنامج خارجي"
 
-#: MainWindow/Window.cpp:1622
+#: MainWindow/Window.cpp:1623
 msgid "Open List of Files"
 msgstr ""
 
-#: MainWindow/Window.cpp:1622
+#: MainWindow/Window.cpp:1624
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
 "files here."
 msgstr ""
 
-#: MainWindow/Window.cpp:1638
+#: MainWindow/Window.cpp:1641
 msgid "No images matching your input were found."
 msgstr ""
 
-#: MainWindow/Window.cpp:1638
+#: MainWindow/Window.cpp:1641
 #, fuzzy
 msgid "No Matches"
 msgstr "لا آخر"
 
-#: MainWindow/Window.cpp:1820
+#: MainWindow/Window.cpp:1823
 #, fuzzy, no-c-format, kde-format
 #| msgid "Thumbnail image size:"
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "قياس صورة الظفر:"
 
-#: MainWindow/Window.cpp:1859
+#: MainWindow/Window.cpp:1867
 msgid ""
-"<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, KPhotoAlbum "
-"will not be able to display video thumbnails and video lengths. Please "
-"install the MPlayer2 package</p>"
+"<p>Unable to find ffmpeg or MPlayer on the system.</p><p>Without either of "
+"these, KPhotoAlbum will not be able to display video thumbnails and video "
+"lengths. Please install the ffmpeg or MPlayer package</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1862
+#: MainWindow/Window.cpp:1870
 #, fuzzy
 msgid "Video thumbnails are not available"
 msgstr "الملف غير موجود"
 
-#: MainWindow/Window.cpp:1868
+#: MainWindow/Window.cpp:1876
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
 "version 2. MPlayer2 is on most systems a separate package, please install "
@@ -3406,11 +3488,11 @@ msgid ""
 "extracting thumbnails from videos.</p>"
 msgstr ""
 
-#: MainWindow/Window.cpp:1871
+#: MainWindow/Window.cpp:1879
 msgid "MPlayer is too old"
 msgstr ""
 
-#: MainWindow/Window.cpp:1893
+#: MainWindow/Window.cpp:1901
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
 "the Android client you can view your images from your desktop.</p><p><a href="
@@ -3419,83 +3501,90 @@ msgid ""
 "id=org.kde.kphotoalbum\">install from google play</a></p>"
 msgstr ""
 
-#: Map/MapView.cpp:63
+#: Map/MapView.cpp:66
 msgid "Save the current map settings"
 msgstr ""
 
-#: Map/MapView.cpp:69
+#: Map/MapView.cpp:72
 msgid "Go to last map position"
 msgstr ""
 
-#: Map/MapView.cpp:138
+#: Map/MapView.cpp:141
 #, fuzzy
 #| msgid "Settings"
 msgid "Settings saved"
 msgstr "التعيينات"
 
-#: Map/MapView.cpp:138
+#: Map/MapView.cpp:141
 msgid "Map view"
 msgstr ""
 
-#: Map/MapView.cpp:151
+#: Map/MapView.cpp:154
 #, fuzzy
 #| msgid "Loading information from images"
 msgid "<i>Loading coordinates from the images ...</i>"
 msgstr "جاري تحميل المعلومات من الصور"
 
-#: Map/MapView.cpp:168
+#: Map/MapView.cpp:171
 msgid "<i>This image does not contain geographic coordinates.</i>"
 msgstr ""
 
-#: Map/MapView.cpp:175
+#: Map/MapView.cpp:178
 msgid ""
 "<i>Some of the selected images do not contain geographic coordinates.</i>"
 msgstr ""
 
-#: Map/MapView.cpp:187
+#: Map/MapView.cpp:190
 msgid "<i>Search for geographic coordinates.</i>"
 msgstr ""
 
-#: Map/MapView.cpp:199
+#: Map/MapView.cpp:202
 msgid "<i>None of the selected images contain geographic coordinates.</i>"
 msgstr ""
 
-#: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:55
+#: Plugins/CategoryImageCollection.cpp:32 Plugins/ImageCollection.cpp:59
 #, fuzzy
 msgctxt "The 'name' of an unnamed image collection."
 msgid "None"
 msgstr "لا شيئ"
 
-#: Plugins/ImageCollection.cpp:42
+#: Plugins/ImageCollection.cpp:46
 #, fuzzy
 msgctxt "As in 'an unknown set of images, created from the selection'."
 msgid "Unknown (Selection)"
 msgstr "لا خيار"
 
-#: Plugins/ImageCollection.cpp:45
+#: Plugins/ImageCollection.cpp:49
 #, fuzzy
 msgctxt "As in 'A selection of [a generated context description]'"
 msgid " (Selection)"
 msgstr "لا خيار"
 
-#: Plugins/ImageCollection.cpp:50
+#: Plugins/ImageCollection.cpp:54
 #, fuzzy
 msgctxt "A set of images with no description."
 msgid "Unknown"
 msgstr "غير معروف"
 
-#: Plugins/Interface.cpp:107 XMLDB/FileReader.cpp:464
+#: Plugins/ImageCollection.cpp:151 Plugins/UploadImageCollection.cpp:55
+#, fuzzy
+#| msgid "Image/Video root directory: "
+msgctxt "'Name' of the image directory"
+msgid "Image/Video root directory"
+msgstr "دليل الصور/المرئيات الجذري: "
+
+#: Plugins/Interface.cpp:112 XMLDB/FileReader.cpp:459
 msgid "Places"
 msgstr "الأمكنة"
 
-#: Plugins/Interface.cpp:161
+#: Plugins/Interface.cpp:126
 #, fuzzy, kde-format
 msgid ""
 "<p>Image needs to be placed in a sub directory of your photo album, which is "
 "rooted at %1. Image path was %2</p>"
 msgstr "<p> صورة إلى بوصة a دليل من هو عند صورة المسار</p>"
 
-#: RemoteControl/ConnectionIndicator.cpp:37
+#: RemoteControl/ConnectionIndicator.cpp:39
 msgid ""
 "This icon indicates if KPhotoAlbum is connected to an android device.\n"
 "Click on the icon to toggle listening for clients in the local area "
@@ -3506,7 +3595,7 @@ msgid ""
 "The android client can be downloaded from google play."
 msgstr ""
 
-#: RemoteControl/ConnectionIndicator.cpp:93
+#: RemoteControl/ConnectionIndicator.cpp:99
 #, fuzzy
 #| msgid "Server address:"
 msgid "Android device address: "
@@ -3536,45 +3625,45 @@ msgid ""
 "Remote Control protocol version: %2"
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:66
+#: Settings/BirthdayPage.cpp:65
 msgid "Filter (Alt+f)"
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:105
+#: Settings/BirthdayPage.cpp:94
 #, fuzzy
 #| msgid "Remove Tokens"
 msgid "Remove birthday"
 msgstr "أحذف العلام"
 
-#: Settings/BirthdayPage.cpp:111
+#: Settings/BirthdayPage.cpp:100
 msgid ""
 "Set the date of birth for items (say people) here, and then see their age "
 "when viewing the images."
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:147 XMLDB/FileReader.cpp:463
+#: Settings/BirthdayPage.cpp:136 XMLDB/FileReader.cpp:458
 msgid "People"
 msgstr "الأشخاص"
 
-#: Settings/BirthdayPage.cpp:169
+#: Settings/BirthdayPage.cpp:158
 msgid "Name"
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:169
+#: Settings/BirthdayPage.cpp:158
 msgid "Birthday"
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:237
+#: Settings/BirthdayPage.cpp:226
 #, kde-format
 msgid "Birthday of %1:"
 msgstr ""
 
-#: Settings/BirthdayPage.cpp:245
+#: Settings/BirthdayPage.cpp:234
 #, fuzzy
 msgid "Enter a date..."
 msgstr "أضف تعليق..."
 
-#: Settings/BirthdayPage.cpp:292
+#: Settings/BirthdayPage.cpp:283
 msgid "<i>Select an item on the left to edit the birthday</i>"
 msgstr ""
 
@@ -3584,76 +3673,76 @@ msgstr ""
 msgid "Category Settings"
 msgstr "الأصناف"
 
-#: Settings/CategoryPage.cpp:86
+#: Settings/CategoryPage.cpp:82
 msgid "New"
 msgstr "جديد"
 
-#: Settings/CategoryPage.cpp:94
+#: Settings/CategoryPage.cpp:90
 #, fuzzy
 #| msgid "Rename..."
 msgid "Rename"
 msgstr "إعادة التسمية..."
 
-#: Settings/CategoryPage.cpp:126
+#: Settings/CategoryPage.cpp:123
 msgid "Positionable tags:"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:128
+#: Settings/CategoryPage.cpp:125
 msgid "Tags in this category can be associated with an area of the image"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:134
+#: Settings/CategoryPage.cpp:131
 msgid "Icon:"
 msgstr "الأيقونة:"
 
-#: Settings/CategoryPage.cpp:144
+#: Settings/CategoryPage.cpp:141
 #, fuzzy
 #| msgid "Thumbnail Size: "
 msgid "Thumbnail Size:"
 msgstr "قياس الظفر: "
 
-#: Settings/CategoryPage.cpp:155
+#: Settings/CategoryPage.cpp:151
 msgid "Preferred view:"
 msgstr "العرض المفضل:"
 
-#: Settings/CategoryPage.cpp:160
+#: Settings/CategoryPage.cpp:156
 msgid "List View"
 msgstr "عرض مسرد"
 
-#: Settings/CategoryPage.cpp:161
+#: Settings/CategoryPage.cpp:157
 msgid "List View with Custom Thumbnails"
 msgstr "عرض مسرد مع الأظافر المعتادة"
 
-#: Settings/CategoryPage.cpp:162
+#: Settings/CategoryPage.cpp:158
 msgid "Icon View"
 msgstr "عرض أيقوني"
 
-#: Settings/CategoryPage.cpp:163
+#: Settings/CategoryPage.cpp:159
 msgid "Icon View with Custom Thumbnails"
 msgstr "عرض أيقونة مع الأظافر المعتادة"
 
-#: Settings/CategoryPage.cpp:173
+#: Settings/CategoryPage.cpp:169
 msgid ""
 "<font color='red'>The database has unsaved changes. As long as those are not "
-"saved, the names of categories can't be changed and new ones can't be added."
-"</font>"
+"saved,<br/>the names of categories can't be changed and new ones can't be "
+"added.</font>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:181
+#: Settings/CategoryPage.cpp:177
 msgid "Save the DB now"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:223
-#, fuzzy
-msgid "Settings for category"
+#: Settings/CategoryPage.cpp:218
+#, fuzzy, kde-format
+msgid "Settings for category <b>%1</b>"
 msgstr "<b>الأصناف الفرعية</b>"
 
-#: Settings/CategoryPage.cpp:226
+#: Settings/CategoryPage.cpp:221
 #, kde-format
 msgid "<i>Pending change: rename to \"%1\"</i>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:282
+#: Settings/CategoryPage.cpp:276
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>\"%2\" is a "
@@ -3661,20 +3750,20 @@ msgid ""
 "category.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:286 Settings/CategoryPage.cpp:297
+#: Settings/CategoryPage.cpp:280 Settings/CategoryPage.cpp:291
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Invalid category name"
 msgstr "السائق غير صالح."
 
-#: Settings/CategoryPage.cpp:294
+#: Settings/CategoryPage.cpp:288
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:311
+#: Settings/CategoryPage.cpp:305
 #, kde-format
 msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>There's a "
@@ -3682,58 +3771,58 @@ msgid ""
 "</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:315
+#: Settings/CategoryPage.cpp:309
 msgid "Unsaved pending renaming action"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:347
+#: Settings/CategoryPage.cpp:341
 #, kde-format
 msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
 "linked against this category will be deleted!</p>"
 msgstr ""
 
-#: Settings/CategoryPage.cpp:396
+#: Settings/CategoryPage.cpp:390
 #, fuzzy
 #| msgid "New Category..."
 msgid "New category"
 msgstr "الصنف الجديد"
 
-#: Settings/CategoryPage.cpp:428
+#: Settings/CategoryPage.cpp:422
 #, fuzzy, kde-format
 msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p> حقا حذف التصنيف</p>"
 
-#: Settings/CategoryPage.cpp:587
+#: Settings/CategoryPage.cpp:580
 msgid "<i>choose a category to edit it</i>"
 msgstr ""
 
-#: Settings/DatabaseBackendPage.cpp:36
+#: Settings/DatabaseBackendPage.cpp:34
 #, fuzzy
 msgid "Choose speed over readability for index.xml file"
 msgstr "اختر سرعة لـ فهرس ملفّ"
 
-#: Settings/DatabaseBackendPage.cpp:40
+#: Settings/DatabaseBackendPage.cpp:38
 msgid "Compress backup file"
 msgstr "إضغط ملف النسخة الإحتياطية"
 
-#: Settings/DatabaseBackendPage.cpp:44
+#: Settings/DatabaseBackendPage.cpp:42
 msgid "Auto save every:"
 msgstr "إحفظ تلقائياً كلّ:"
 
-#: Settings/DatabaseBackendPage.cpp:47
+#: Settings/DatabaseBackendPage.cpp:45
 msgid "min."
 msgstr " دقائق"
 
-#: Settings/DatabaseBackendPage.cpp:58
+#: Settings/DatabaseBackendPage.cpp:56
 msgid "Number of backups to keep:"
 msgstr "عدد النسخات الإحتياطية المحافظ عليها:"
 
-#: Settings/DatabaseBackendPage.cpp:63
+#: Settings/DatabaseBackendPage.cpp:61
 msgid "Infinite"
 msgstr "لا نهائي"
 
-#: Settings/DatabaseBackendPage.cpp:70
+#: Settings/DatabaseBackendPage.cpp:68
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum is capable of backing up the index.xml file by keeping copies "
@@ -3749,7 +3838,7 @@ msgstr ""
 "ملفات</p><p> الـ فهرس ملفّ أيار IF و بوصة حالة الإيطالية هو إلى اسأل إلى "
 "احتياطي ملفات إلى قرص فراغ</p>"
 
-#: Settings/DatabaseBackendPage.cpp:80
+#: Settings/DatabaseBackendPage.cpp:78
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum is using a single index.xml file as its <i>data base</i>. "
@@ -3775,103 +3864,103 @@ msgstr "EXIF معلومات إلى إظهار بوصة EXIF حوار"
 msgid "Character set for image metadata:"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:49
+#: Settings/FaceManagementPage.cpp:48
 #, fuzzy
 #| msgid "No Selection"
 msgid "Face detection"
 msgstr "لا خيار"
 
-#: Settings/FaceManagementPage.cpp:57
+#: Settings/FaceManagementPage.cpp:56
 msgid "Accuracy"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:61
+#: Settings/FaceManagementPage.cpp:60
 msgid "fast"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:71
+#: Settings/FaceManagementPage.cpp:70
 msgid "accurate"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:76
+#: Settings/FaceManagementPage.cpp:75
 msgid "Sensitivity"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:80
+#: Settings/FaceManagementPage.cpp:79
 msgid "more false positives"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:90
+#: Settings/FaceManagementPage.cpp:89
 msgid "more missed faces"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:102
+#: Settings/FaceManagementPage.cpp:101
 msgid "Face recognition"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:111
+#: Settings/FaceManagementPage.cpp:110
 #, fuzzy
 msgid "Database entry"
 msgstr "قاعدة بيانات منتهى خلفي"
 
-#: Settings/FaceManagementPage.cpp:112
+#: Settings/FaceManagementPage.cpp:111
 msgid "Trained faces"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:127
+#: Settings/FaceManagementPage.cpp:126
 #, fuzzy
 msgid "Delete selected"
 msgstr "أمحي المحدد"
 
-#: Settings/FaceManagementPage.cpp:133
+#: Settings/FaceManagementPage.cpp:132
 #, fuzzy
 msgid "Erase database"
 msgstr "التحديث قاعدة بيانات"
 
-#: Settings/FaceManagementPage.cpp:138
+#: Settings/FaceManagementPage.cpp:137
 msgid ""
 "<b>Caution:</b> Changes to category names or category deletions are not "
 "adopted by the recognition database until the changes are saved!"
 msgstr ""
 
-#: Settings/FaceManagementPage.cpp:213
+#: Settings/FaceManagementPage.cpp:212
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to delete the selected tags?"
 msgstr "هل تريد حفظ التغييرات ؟"
 
-#: Settings/FaceManagementPage.cpp:238
+#: Settings/FaceManagementPage.cpp:237
 #, fuzzy
 #| msgid "Do you want to save the changes?"
 msgid "Do you really want to erase the database?"
 msgstr "هل تريد حفظ التغييرات ؟"
 
-#: Settings/FileVersionDetectionPage.cpp:38
+#: Settings/FileVersionDetectionPage.cpp:35
 msgid "New File Searches"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:43
+#: Settings/FileVersionDetectionPage.cpp:40
 msgid "Search for new images and videos on startup"
 msgstr "إبحث عن الصور و امرئيات الجديدة عند بدء التشغيل"
 
-#: Settings/FileVersionDetectionPage.cpp:46
+#: Settings/FileVersionDetectionPage.cpp:43
 msgid "Ignore file extensions when searching for new images and videos"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:49
+#: Settings/FileVersionDetectionPage.cpp:46
 msgid "Skip symbolic links when searching for new images"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:52
+#: Settings/FileVersionDetectionPage.cpp:49
 #, fuzzy
 msgid "Do not read RAW files if a matching JPEG/TIFF file exists"
 msgstr "دون t قراءة خام ملفات IF مواءمة JPEG TIFF ملفّ موجود"
 
-#: Settings/FileVersionDetectionPage.cpp:56
+#: Settings/FileVersionDetectionPage.cpp:53
 msgid "Directories to exclude from new file search:"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:63
+#: Settings/FileVersionDetectionPage.cpp:60
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum is capable of searching for new images and videos when "
@@ -3882,7 +3971,7 @@ msgstr ""
 "<p> هو من لـ جديد و فيديو بعض وقت أيار إلى يدويّاً إلى ابحث لـ جديد<b> الصيانة "
 "إعادة المسح لـ جديد</b></p>"
 
-#: Settings/FileVersionDetectionPage.cpp:68
+#: Settings/FileVersionDetectionPage.cpp:65
 msgid ""
 "<p>KPhotoAlbum will normally search new images and videos by their file "
 "extension. If this option is set, <em>all</em> files neither in the database "
@@ -3891,7 +3980,7 @@ msgid ""
 "extension!</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:74
+#: Settings/FileVersionDetectionPage.cpp:71
 msgid ""
 "<p>KPhotoAlbum attempts to read all image files whether actual files or "
 "symbolic links. If you wish to ignore symbolic links, check this option. "
@@ -3899,7 +3988,7 @@ msgid ""
 "symbolic links to these files within your image directory.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:79
+#: Settings/FileVersionDetectionPage.cpp:76
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum is capable of reading certain kinds of RAW images. Some "
@@ -3912,39 +4001,39 @@ msgstr ""
 "هذا مكرر :: تكرار إلى بوصة أيار إذا خيار هو مؤكّد ليس قراءة خام ملفات لـ "
 "مواءمة صورة ملفات</p>"
 
-#: Settings/FileVersionDetectionPage.cpp:85
+#: Settings/FileVersionDetectionPage.cpp:82
 msgid ""
 "<p>Directories defined here (separated by comma <tt>,</tt>) are skipped when "
 "searching for new photos. Thumbnail directories of different tools should be "
 "configured here. E.g. <tt>xml,ThumbNails,.thumbs,.thumbnails</tt>.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:94
+#: Settings/FileVersionDetectionPage.cpp:91
 msgid "File Version Detection Settings"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:98
+#: Settings/FileVersionDetectionPage.cpp:95
 msgid "Try to detect multiple versions of files"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:101
+#: Settings/FileVersionDetectionPage.cpp:98
 msgid "File versions search regexp:"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:107
+#: Settings/FileVersionDetectionPage.cpp:104
 msgid "Original file replacement text:"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:113
+#: Settings/FileVersionDetectionPage.cpp:110
 msgid "Move meta-data (i.e. delete tags from the original):"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:116
+#: Settings/FileVersionDetectionPage.cpp:113
 #, fuzzy
 msgid "Automatically stack new versions of images"
 msgstr "أنسخ تلقائياً التالي إلى الملف .kim"
 
-#: Settings/FileVersionDetectionPage.cpp:119
+#: Settings/FileVersionDetectionPage.cpp:116
 msgid ""
 "<p>When KPhotoAlbum searches for new files and finds a file that matches the "
 "<i>modified file search regexp</i> it is assumed that an original version of "
@@ -3954,7 +4043,7 @@ msgid ""
 "moved from the original file to the new one.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:126
+#: Settings/FileVersionDetectionPage.cpp:123
 msgid ""
 "<p>A perl regular expression that should match a modified file. <ul><li>A "
 "dot matches a single character (<tt>\\.</tt> matches a dot)</li>   <li>You "
@@ -3965,7 +4054,7 @@ msgid ""
 "ul>Example: <tt>-modified\\.(jpg|tiff)</tt> </p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:136
+#: Settings/FileVersionDetectionPage.cpp:133
 msgid ""
 "<p>A string that is used to replace the match from the <i>File versions "
 "search regexp</i>. This can be a semicolon (<tt>;</tt>) separated list. Each "
@@ -3973,35 +4062,35 @@ msgid ""
 "file is found or we run out of options.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:142
+#: Settings/FileVersionDetectionPage.cpp:139
 msgid ""
 "<p>The tagging is moved from the original file to the new file. This way "
 "only the latest version of an image is tagged.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:146
+#: Settings/FileVersionDetectionPage.cpp:143
 msgid ""
 "<p>If this option is set, new versions of an image are automatically stacked "
 "and placed to the top of the stack. This way the new image is shown when the "
 "stack is in collapsed state - the default state in KPhotoAlbum.</p>"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:154
+#: Settings/FileVersionDetectionPage.cpp:151
 msgctxt ""
 "Configure the feature to make a copy of a file first and then open the "
 "copied file with an external application"
 msgid "Copy File and Open with an External Application"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:158
+#: Settings/FileVersionDetectionPage.cpp:155
 msgid "Copy file search regexp:"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:164
+#: Settings/FileVersionDetectionPage.cpp:161
 msgid "Copy file replacement text:"
 msgstr ""
 
-#: Settings/FileVersionDetectionPage.cpp:170
+#: Settings/FileVersionDetectionPage.cpp:167
 msgid ""
 "<p>KPhotoAlbum can make a copy of an image before opening it with an "
 "external application. This configuration defines how the new file is named.</"
@@ -4011,83 +4100,83 @@ msgid ""
 "test-mod.jpg and open the new file in selected application.</p>"
 msgstr ""
 
-#: Settings/GeneralPage.cpp:41
+#: Settings/GeneralPage.cpp:39
 #, fuzzy
 msgid "Loading New Images"
 msgstr "صور جديدة"
 
-#: Settings/GeneralPage.cpp:49
+#: Settings/GeneralPage.cpp:47
 msgid "Trust image dates:"
 msgstr "الثقة في تواريخ الصور:"
 
-#: Settings/GeneralPage.cpp:51
+#: Settings/GeneralPage.cpp:49
 #, fuzzy
 msgctxt "As in 'always trust image dates'"
 msgid "Always"
 msgstr "دائماً"
 
-#: Settings/GeneralPage.cpp:52
+#: Settings/GeneralPage.cpp:50
 #, fuzzy
 msgctxt "As in 'ask whether to trust image dates'"
 msgid "Ask"
 msgstr "إسأل"
 
-#: Settings/GeneralPage.cpp:53
+#: Settings/GeneralPage.cpp:51
 #, fuzzy
 msgctxt "As in 'never trust image dates'"
 msgid "Never"
 msgstr "أبداً"
 
-#: Settings/GeneralPage.cpp:60
+#: Settings/GeneralPage.cpp:58
 #, fuzzy
 msgid "Use EXIF orientation information"
 msgstr "إستعمل EXIF توجيه :: توجه معلومات"
 
-#: Settings/GeneralPage.cpp:65
+#: Settings/GeneralPage.cpp:63
 msgid "Use EXIF description"
 msgstr "إستعمل الوصف EXIF"
 
-#: Settings/GeneralPage.cpp:69
+#: Settings/GeneralPage.cpp:67
 msgid "Strip out camera generated default descriptions"
 msgstr ""
 
-#: Settings/GeneralPage.cpp:81
+#: Settings/GeneralPage.cpp:79
 msgid "Use the embedded thumbnail in RAW file or halfsized RAW"
 msgstr ""
 
-#: Settings/GeneralPage.cpp:85
+#: Settings/GeneralPage.cpp:83
 #, fuzzy
 msgid "Required size for the thumbnail:"
 msgstr "إعادة ترتيب الأظافر"
 
-#: Settings/GeneralPage.cpp:99
+#: Settings/GeneralPage.cpp:97
 msgid "Histogram"
 msgstr ""
 
-#: Settings/GeneralPage.cpp:106
+#: Settings/GeneralPage.cpp:104
 msgid "Show histogram:"
 msgstr ""
 
-#: Settings/GeneralPage.cpp:111
+#: Settings/GeneralPage.cpp:109
 #, fuzzy
 msgid "Size of histogram columns in date bar:"
 msgstr "قياس عواميد المدرج التكراري في شريط التاريخ:"
 
-#: Settings/GeneralPage.cpp:132
+#: Settings/GeneralPage.cpp:130
 msgid "Show splash screen"
 msgstr "أعرض شاشة البداية"
 
-#: Settings/GeneralPage.cpp:137
+#: Settings/GeneralPage.cpp:135
 msgid "Category for virtual albums:"
 msgstr "الصنف لدفاتر الصور الوهمية:"
 
-#: Settings/GeneralPage.cpp:147
+#: Settings/GeneralPage.cpp:145
 #, fuzzy
 #| msgid "Search for new images and videos on startup"
 msgid "Listen for Android devices on startup"
 msgstr "إبحث عن الصور و امرئيات الجديدة عند بدء التشغيل"
 
-#: Settings/GeneralPage.cpp:155
+#: Settings/GeneralPage.cpp:153
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum will try to read the image date from EXIF information in the "
@@ -4105,7 +4194,7 @@ msgstr ""
 "رد<b> لا</b> إذا never مسح رد<b> نعم</b> رد<b> اسأل</b> هذا اسمح إلى من "
 "الماسحة الضّوئيّة أو آلة التصوير من جلسة إلى جلسة</p>"
 
-#: Settings/GeneralPage.cpp:166
+#: Settings/GeneralPage.cpp:164
 #, fuzzy
 msgid ""
 "<p>JPEG images may contain information about rotation. If you have a reason "
@@ -4117,7 +4206,7 @@ msgstr ""
 "تفقّد مربّع</p><p> ملاحظة ملكك رقمي آلة التصوير أيار ليس كتابة معلومات عند "
 "الكل</p>"
 
-#: Settings/GeneralPage.cpp:172
+#: Settings/GeneralPage.cpp:170
 #, fuzzy
 msgid ""
 "<p>JPEG images may contain a description. Check this checkbox to specify if "
@@ -4126,7 +4215,7 @@ msgstr ""
 "<p> JPEG أيار تحوي على a الوصف كِش مربع اختيار إلى تحديد IF إلى استخدام a "
 "افتراضي الوصف لـ</p>"
 
-#: Settings/GeneralPage.cpp:177
+#: Settings/GeneralPage.cpp:175
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum shares plugins with other imaging applications, some of which "
@@ -4152,11 +4241,11 @@ msgstr ""
 "أناس مع خيار IF إلى عرض و استدعاء ملحق إلى حوْل الكل</p><p> أكثر مستخدمون إلى "
 "تحديد الكلمات المفاتيح</p>"
 
-#: Settings/GeneralPage.cpp:193
+#: Settings/GeneralPage.cpp:191
 msgid "Show the KPhotoAlbum splash screen on start up"
 msgstr "أعرض شاشة البداية لِــ KPhotoAlbum عند بدء التشغيل"
 
-#: Settings/GeneralPage.cpp:196
+#: Settings/GeneralPage.cpp:194
 msgid ""
 "<p>KPhotoAlbum is capable of showing your images on android devices. "
 "KPhotoAlbum will automatically pair with the app from android. This, "
@@ -4166,7 +4255,7 @@ msgid ""
 "in the status bar to start listening."
 msgstr ""
 
-#: Settings/GeneralPage.cpp:202
+#: Settings/GeneralPage.cpp:200
 msgid ""
 "<p>Some cameras automatically store generic comments in each image. These "
 "comments can be ignored automatically.</p><p>Enter the comments that you "
@@ -4174,16 +4263,16 @@ msgid ""
 "comment, including all whitespace.</p>"
 msgstr ""
 
-#: Settings/PluginsPage.cpp:37
+#: Settings/PluginsPage.cpp:42
 msgid "Choose Plugins to load:"
 msgstr "إختر القوابس للتحميل:"
 
-#: Settings/PluginsPage.cpp:43
+#: Settings/PluginsPage.cpp:48
 #, fuzzy
 msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "التأخير يجري التحميل بوصة قائمة هو"
 
-#: Settings/SettingsData.cpp:213
+#: Settings/SettingsData.cpp:207
 msgid ""
 "When reading time information of images, their EXIF info is used. Exif info "
 "may, however, not be supported by your KPhotoAlbum installation, or no valid "
@@ -4193,15 +4282,15 @@ msgid ""
 "on your images?"
 msgstr ""
 
-#: Settings/SettingsData.cpp:219
+#: Settings/SettingsData.cpp:213
 msgid "Trust Time Stamps?"
 msgstr "أثق في دمغة التوقيت ؟"
 
-#: Settings/SettingsData.cpp:353 XMLDB/FileReader.cpp:465
+#: Settings/SettingsData.cpp:347 XMLDB/FileReader.cpp:460
 msgid "Events"
 msgstr ""
 
-#: Settings/SettingsData.cpp:354 XMLDB/FileReader.cpp:466
+#: Settings/SettingsData.cpp:348 XMLDB/FileReader.cpp:461
 #, fuzzy
 msgid "untagged"
 msgstr "صور جديدة"
@@ -4243,91 +4332,91 @@ msgstr "قاعدة بيانات منتهى خلفي"
 msgid "Face management"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:50
+#: Settings/TagGroupsPage.cpp:49
 #, fuzzy
 #| msgid "Categories"
 msgctxt "@label"
 msgid "Categories and groups:"
 msgstr "الأصناف"
 
-#: Settings/TagGroupsPage.cpp:61
+#: Settings/TagGroupsPage.cpp:58
 msgctxt "@label/rich"
-msgid "<emphasis>Select a group on the left side to add tags to it</emphasis>"
+msgid "<strong>Select a group on the left side to add tags to it</strong>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:74
+#: Settings/TagGroupsPage.cpp:69
 msgctxt "@label/rich"
 msgid ""
-"<emphasis>There are pending changes on the categories page.<nl> Please save "
-"the changes before working on tag groups.</emphasis>"
+"<strong>There are pending changes on the categories page.<nl> Please save "
+"the changes before working on tag groups.</strong>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:82
+#: Settings/TagGroupsPage.cpp:78
 msgctxt "@action:inmenu"
 msgid "Add group ..."
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:265
+#: Settings/TagGroupsPage.cpp:258
 #, fuzzy, kde-format
 #| msgid "Really delete group %1?"
 msgctxt "@action:inmenu"
 msgid "Rename group \"%1\""
 msgstr "محو المجموعة %1 فعلاً ؟"
 
-#: Settings/TagGroupsPage.cpp:267
+#: Settings/TagGroupsPage.cpp:260
 #, fuzzy, kde-format
 #| msgid "Delete Group"
 msgctxt "@action:inmenu"
 msgid "Delete group \"%1\""
 msgstr "أمحي المجموعة"
 
-#: Settings/TagGroupsPage.cpp:347
+#: Settings/TagGroupsPage.cpp:340
 #, fuzzy, kde-format
 #| msgid "Take item out of category %1"
 msgctxt "@label"
 msgid "Tags in group \"%1\" of category \"%2\""
 msgstr "خذ العنصر خارجاً عن الصنف %1"
 
-#: Settings/TagGroupsPage.cpp:365
+#: Settings/TagGroupsPage.cpp:371
 #, fuzzy
 #| msgid "New Group"
 msgctxt "@title:window"
 msgid "New Group"
 msgstr "مجموعة جديدة"
 
-#: Settings/TagGroupsPage.cpp:366
+#: Settings/TagGroupsPage.cpp:372
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "Group name:"
 msgstr "اسم المجموعة:"
 
-#: Settings/TagGroupsPage.cpp:383
+#: Settings/TagGroupsPage.cpp:387
 #, kde-format
 msgctxt "@info"
 msgid "<p>The group \"%1\" already exists.</p>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:384
+#: Settings/TagGroupsPage.cpp:388
 msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:462 Settings/TagGroupsPage.cpp:485
+#: Settings/TagGroupsPage.cpp:479 Settings/TagGroupsPage.cpp:501
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "أمحي المجموعة"
 
-#: Settings/TagGroupsPage.cpp:463
+#: Settings/TagGroupsPage.cpp:480
 #, fuzzy
 #| msgid "Group name:"
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "اسم المجموعة:"
 
-#: Settings/TagGroupsPage.cpp:480
+#: Settings/TagGroupsPage.cpp:496
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4335,7 +4424,7 @@ msgid ""
 "category \"%3\"</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:542
+#: Settings/TagGroupsPage.cpp:558
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -4344,47 +4433,47 @@ msgid ""
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
 
-#: Settings/TagGroupsPage.cpp:548
+#: Settings/TagGroupsPage.cpp:564
 #, fuzzy, kde-format
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<p> حقا حذف التصنيف</p>"
 
-#: Settings/TagGroupsPage.cpp:553
+#: Settings/TagGroupsPage.cpp:569
 #, fuzzy
 #| msgid "Delete Group"
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "أمحي المجموعة"
 
-#: Settings/TagGroupsPage.cpp:731
+#: Settings/TagGroupsPage.cpp:747
 #, fuzzy, kde-format
 #| msgid "Rename..."
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "إعادة التسمية..."
 
-#: Settings/TagGroupsPage.cpp:733
+#: Settings/TagGroupsPage.cpp:749
 #, fuzzy, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "احذف"
 
-#: Settings/TagGroupsPage.cpp:743
+#: Settings/TagGroupsPage.cpp:760
 #, fuzzy
 #| msgid "New Sub Category Name:"
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "اسم الصنف الفرعي الجديد"
 
-#: Settings/TagGroupsPage.cpp:744
+#: Settings/TagGroupsPage.cpp:761
 #, fuzzy
 #| msgid "Database name:"
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "اسم قاعدة البيانات:"
 
-#: Settings/TagGroupsPage.cpp:792
+#: Settings/TagGroupsPage.cpp:810
 #, fuzzy, kde-format
 msgctxt "@info"
 msgid ""
@@ -4395,104 +4484,104 @@ msgstr ""
 "<p>هل تريد فعلاً محو \"%1\"?<br>إنّ محو العنصر سوف يحذف أي معلومات عنه من أيّ "
 "صورة تحتوي على العنصر.</p>"
 
-#: Settings/TagGroupsPage.cpp:796
+#: Settings/TagGroupsPage.cpp:814
 #, fuzzy, kde-format
 #| msgid "Really Delete %1?"
 msgctxt "@title:window"
 msgid "Really delete %1?"
 msgstr "محو %1 حقاً ؟"
 
-#: Settings/ThumbnailsPage.cpp:37
+#: Settings/ThumbnailsPage.cpp:36
 #, fuzzy
 msgid "Tooltip preview image size:"
 msgstr "تلميحة معاينة صورة حجم:"
 
-#: Settings/ThumbnailsPage.cpp:41
+#: Settings/ThumbnailsPage.cpp:40
 msgid "No Image Preview"
 msgstr "لا معاينة للصور"
 
-#: Settings/ThumbnailsPage.cpp:47
+#: Settings/ThumbnailsPage.cpp:46
 msgid "Thumbnail image size:"
 msgstr "قياس صورة الظفر:"
 
-#: Settings/ThumbnailsPage.cpp:56
+#: Settings/ThumbnailsPage.cpp:55
 #, fuzzy
 #| msgid "Build Thumbnails"
 msgid "Build thumbnails on demand"
 msgstr "بناء الأظافر"
 
-#: Settings/ThumbnailsPage.cpp:61
+#: Settings/ThumbnailsPage.cpp:60
 #, fuzzy
 msgid "Thumbnail table cells aspect ratio"
 msgstr "الظفر جدول جانب نسبة"
 
-#: Settings/ThumbnailsPage.cpp:63
+#: Settings/ThumbnailsPage.cpp:62
 #, fuzzy
 msgid "1:1"
 msgstr "1:1"
 
-#: Settings/ThumbnailsPage.cpp:63
+#: Settings/ThumbnailsPage.cpp:62
 #, fuzzy
 msgid "4:3"
 msgstr "4:3"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:63
 #, fuzzy
 msgid "3:2"
 msgstr "2"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:63
 #, fuzzy
 msgid "16:9"
 msgstr "16:9"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:63
 #, fuzzy
 msgid "3:4"
 msgstr "4"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:63
 #, fuzzy
 msgid "2:3"
 msgstr "3"
 
-#: Settings/ThumbnailsPage.cpp:64
+#: Settings/ThumbnailsPage.cpp:63
 #, fuzzy
 msgid "9:16"
 msgstr "16"
 
-#: Settings/ThumbnailsPage.cpp:70
+#: Settings/ThumbnailsPage.cpp:69
 #, fuzzy
 msgid "Space around cells"
 msgstr "فضائي"
 
-#: Settings/ThumbnailsPage.cpp:78
+#: Settings/ThumbnailsPage.cpp:77
 msgid "Background Color"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:85
+#: Settings/ThumbnailsPage.cpp:84
 #, fuzzy
 msgid "Display grid around thumbnails"
 msgstr "العرض"
 
-#: Settings/ThumbnailsPage.cpp:90
+#: Settings/ThumbnailsPage.cpp:89
 msgid "Display labels in thumbnail view"
 msgstr "أعرض اللاصقات في العرض للأظافر"
 
-#: Settings/ThumbnailsPage.cpp:95
+#: Settings/ThumbnailsPage.cpp:94
 msgid "Display categories in thumbnail view"
 msgstr "أعرض الأصناف في العرض للأظافر"
 
-#: Settings/ThumbnailsPage.cpp:100
+#: Settings/ThumbnailsPage.cpp:99
 msgid "Threshold for automatic thumbnail view: "
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:104
+#: Settings/ThumbnailsPage.cpp:103
 msgctxt "Describing: 'ThumbnailView will not be automatically shown'"
 msgid "Disabled"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:115
+#: Settings/ThumbnailsPage.cpp:114
 #, fuzzy
 msgid ""
 "<p>If you select <b>Settings -&gt; Show Tooltips</b> in the thumbnail view, "
@@ -4504,13 +4593,13 @@ msgstr ""
 "أداة تلميحة نافذة معلومات حوْل هذا نافذة a صغير معاينة صورة هذا خيار صورة "
 "حجم</p>"
 
-#: Settings/ThumbnailsPage.cpp:122
+#: Settings/ThumbnailsPage.cpp:121
 msgid ""
 "<p>Thumbnail image size. Changing the thumbnail size here triggers a rebuild "
 "of the thumbnail database.</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:126
+#: Settings/ThumbnailsPage.cpp:125
 msgid ""
 "<p>If this is set, thumbnails are built on demand. As you browse your image "
 "database, only those thumbnails that are needed are actually built. This "
@@ -4522,43 +4611,43 @@ msgid ""
 "browsing.</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:135
+#: Settings/ThumbnailsPage.cpp:134
 #, fuzzy
 msgid ""
 "<p>Choose what aspect ratio the cells holding thumbnails should have.</p>"
 msgstr "<p> اختر جانب نسبة</p>"
 
-#: Settings/ThumbnailsPage.cpp:138
+#: Settings/ThumbnailsPage.cpp:137
 #, fuzzy
 msgid "<p>How thick the cell padding should be.</p>"
 msgstr "<p> كيف خلية</p>"
 
-#: Settings/ThumbnailsPage.cpp:141
+#: Settings/ThumbnailsPage.cpp:140
 msgid "<p>Background color to use in the thumbnail viewer</p>"
 msgstr ""
 
-#: Settings/ThumbnailsPage.cpp:145
+#: Settings/ThumbnailsPage.cpp:144
 #, fuzzy
 msgid ""
 "<p>If you want to see grid around your thumbnail images, select this option."
 "</p>"
 msgstr "<p> إذا إلى صورة مصغّرة تحديد خيار</p>"
 
-#: Settings/ThumbnailsPage.cpp:149
+#: Settings/ThumbnailsPage.cpp:148
 #, fuzzy
 msgid ""
 "<p>Checking this option will show the base name for the file under "
 "thumbnails in the thumbnail view.</p>"
 msgstr "<p> الفحص خيار إظهار القاعدة الاسم لـ ملفّ بوصة صورة مصغّرة اعرض</p>"
 
-#: Settings/ThumbnailsPage.cpp:153
+#: Settings/ThumbnailsPage.cpp:152
 #, fuzzy
 msgid ""
 "<p>Checking this option will show the Categories for the file under "
 "thumbnails in the thumbnail view</p>"
 msgstr "<p> الفحص خيار إظهار الفئات لـ ملفّ بوصة صورة مصغّرة اعرض</p>"
 
-#: Settings/ThumbnailsPage.cpp:157
+#: Settings/ThumbnailsPage.cpp:156
 #, fuzzy
 msgid ""
 "<p>When you are browsing, and the count gets below the value specified here, "
@@ -4568,29 +4657,29 @@ msgstr ""
 "<p> متى و العدد أسفل قيمة الـ بديل هو إلى متابعة متصفح حتّى ضغط<i> اعرض صور</"
 "i></p>"
 
-#: Settings/UntaggedGroupBox.cpp:33
+#: Settings/UntaggedGroupBox.cpp:32
 msgid ""
 "If a tag is selected here, it will be added to new (untagged) images "
 "automatically, so that they can be easily found. It will be removed as soon "
 "as the image has been annotated."
 msgstr ""
 
-#: Settings/UntaggedGroupBox.cpp:54
+#: Settings/UntaggedGroupBox.cpp:53
 msgid "Show the untagged images tag as a normal tag"
 msgstr ""
 
-#: Settings/UntaggedGroupBox.cpp:63
+#: Settings/UntaggedGroupBox.cpp:62
 #, fuzzy
 msgid "None Selected"
 msgstr "لم يتم إختيار عنصر"
 
-#: Settings/UntaggedGroupBox.cpp:121
+#: Settings/UntaggedGroupBox.cpp:120
 #, fuzzy
 #| msgid "New Sub Category Name:"
 msgid "New tag added"
 msgstr "اسم الصنف الفرعي الجديد"
 
-#: Settings/UntaggedGroupBox.cpp:122
+#: Settings/UntaggedGroupBox.cpp:121
 #, kde-format
 msgid ""
 "<p>The new tag \"%1\" has been added to the category \"%2\" and will be used "
@@ -4683,7 +4772,7 @@ msgstr "أطلق في نمط ملء الشاشة"
 msgid "Size:"
 msgstr "القياس:"
 
-#: ThumbnailView/Delegate.cpp:254
+#: ThumbnailView/Delegate.cpp:252
 #, fuzzy
 msgctxt ""
 "No video length could be determined, so we just display 'video' instead of "
@@ -4691,18 +4780,18 @@ msgctxt ""
 msgid "video"
 msgstr "فيديو"
 
-#: ThumbnailView/GridResizeSlider.cpp:155
+#: ThumbnailView/GridResizeSlider.cpp:157
 msgid ""
 "Really resize the stored thumbnail size? It will result in all thumbnails "
 "being regenerated!"
 msgstr ""
 
-#: ThumbnailView/GridResizeSlider.cpp:157
+#: ThumbnailView/GridResizeSlider.cpp:159
 #, fuzzy
 msgid "Really resize the thumbnails?"
 msgstr "إعادة ترتيب الأظافر"
 
-#: ThumbnailView/ThumbnailDND.cpp:93
+#: ThumbnailView/ThumbnailDND.cpp:109
 #, fuzzy
 msgid ""
 "<p><b>Really reorder thumbnails?</b></p><p>By dragging images around in the "
@@ -4715,7 +4804,7 @@ msgstr ""
 "لـ تشغيل غير ذلك IF سليم استخدام<b> صور&gt; رتّب مختار بواسطة التاريخ و "
 "الوقت</b></p>"
 
-#: ThumbnailView/ThumbnailDND.cpp:100
+#: ThumbnailView/ThumbnailDND.cpp:116
 msgid "Reorder Thumbnails"
 msgstr "إعادة ترتيب الأظافر"
 
@@ -5017,62 +5106,62 @@ msgstr ""
 "<p> هذا هو الأخير تلميحة إذا أي منها أو بريد إلكتروني إلى<a href=\"mailto:"
 "blackie@kde.org\">blackie@kde.org</a></p> n"
 
-#: Utilities/DeleteFiles.cpp:46
+#: Utilities/DeleteFiles.cpp:51
 #, fuzzy
 msgid "Error Deleting Files"
 msgstr "خطأ محو الملفات"
 
-#: Utilities/Util.cpp:98
+#: Utilities/Util.cpp:103
 msgid "<b>File Name: </b> "
 msgstr "<b>اسم الملف: </b> "
 
-#: Utilities/Util.cpp:102
+#: Utilities/Util.cpp:107
 msgid "<b>Date: </b> "
 msgstr "<b>التاريخ: </b> "
 
-#: Utilities/Util.cpp:112
+#: Utilities/Util.cpp:117
 #, kde-format
 msgctxt "width x height"
 msgid "%1x%2"
 msgstr ""
 
-#: Utilities/Util.cpp:116
+#: Utilities/Util.cpp:121
 #, kde-format
 msgctxt "short for: x megapixels"
 msgid " (%1MP)"
 msgstr ""
 
-#: Utilities/Util.cpp:121
+#: Utilities/Util.cpp:126
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (%1:1)"
 msgstr ""
 
-#: Utilities/Util.cpp:124
+#: Utilities/Util.cpp:129
 msgctxt "aspect ratio"
 msgid " (1:1)"
 msgstr ""
 
-#: Utilities/Util.cpp:126
+#: Utilities/Util.cpp:131
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (1:%1)"
 msgstr ""
 
-#: Utilities/Util.cpp:128
+#: Utilities/Util.cpp:133
 msgid "<b>Image Size: </b> "
 msgstr "<b>قياس الصورة: </b> "
 
-#: Utilities/Util.cpp:183
+#: Utilities/Util.cpp:188
 #, fuzzy
 msgid "<b>Label: </b> "
 msgstr "<b> تسمية</b> "
 
-#: Utilities/Util.cpp:187
+#: Utilities/Util.cpp:192
 msgid "<b>Description: </b> "
 msgstr "<b>الوصف: </b> "
 
-#: Utilities/Util.cpp:266
+#: Utilities/Util.cpp:271
 #, kde-format
 msgid "1 day"
 msgid_plural "%1 days"
@@ -5083,7 +5172,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: Utilities/Util.cpp:268
+#: Utilities/Util.cpp:273
 #, fuzzy, kde-format
 #| msgid "1 Month"
 msgid "1 month"
@@ -5095,7 +5184,7 @@ msgstr[3] "شهر واحِد"
 msgstr[4] "شهر واحِد"
 msgstr[5] "شهر واحِد"
 
-#: Utilities/Util.cpp:270
+#: Utilities/Util.cpp:275
 #, kde-format
 msgid "1 year"
 msgid_plural "%1 years"
@@ -5106,7 +5195,7 @@ msgstr[3] ""
 msgstr[4] ""
 msgstr[5] ""
 
-#: Utilities/Util.cpp:330
+#: Utilities/Util.cpp:335
 #, fuzzy, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
@@ -5115,12 +5204,12 @@ msgstr ""
 "ملف النسخ الإحتياطي '%1' موجود مسبقاً و هو أجدد من '%2'. هل أستعمل ملف النسخ "
 "الإحتياطي ؟"
 
-#: Utilities/Util.cpp:332
+#: Utilities/Util.cpp:337
 #, fuzzy
 msgid "Found Autosave File"
 msgstr "وجدتُ ملف نسخ إحتياطي"
 
-#: Utilities/Util.cpp:334
+#: Utilities/Util.cpp:339
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -5128,71 +5217,66 @@ msgid ""
 "verifying and copying the file might be a good idea)</small></p>"
 msgstr ""
 
-#: Utilities/Util.cpp:337
+#: Utilities/Util.cpp:342
 msgid "Recover from Autosave?"
 msgstr ""
 
-#: Utilities/Util.cpp:339
+#: Utilities/Util.cpp:344
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
 "backup files exist and can be used to restore index.xml.</p>"
 msgstr ""
 
-#: Utilities/Util.cpp:371
+#: Utilities/Util.cpp:376
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "غير قادر على نسخ '%1' إلى '%2'."
 
-#: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:403
-#: Utilities/Util.cpp:420 XMLDB/FileReader.cpp:476
+#: Utilities/Util.cpp:376 Utilities/Util.cpp:390 Utilities/Util.cpp:426
+#: XMLDB/FileReader.cpp:471
 msgid "Error Running Demo"
 msgstr "خطأ تنفيذ العرض التوضيحي"
 
-#: Utilities/Util.cpp:385 Utilities/Util.cpp:420
+#: Utilities/Util.cpp:390 Utilities/Util.cpp:426
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr "غير قادر على إنشاء الدليل '%1' لغاية العرض التوضيحي."
 
-#: Utilities/Util.cpp:403
-#, kde-format
-msgid "Unable to open '%1' for writing."
-msgstr "غير قادر على فتح '%1' للكتابة."
-
-#: Utilities/Util.cpp:472
+#: Utilities/Util.cpp:491
 msgid "<p>No file name given!</p>"
 msgstr ""
 
-#: Viewer/CategoryImageConfig.cpp:42
+#: Viewer/CategoryImageConfig.cpp:47
 #, fuzzy
 msgctxt "@title:window"
 msgid "Configure Category Image"
 msgstr "إعداد صنف الصورة"
 
-#: Viewer/CategoryImageConfig.cpp:44
+#: Viewer/CategoryImageConfig.cpp:54
 #, fuzzy
 msgctxt "@action:button As in 'Set the category image'"
 msgid "Set"
 msgstr "عيين"
 
-#: Viewer/CategoryImageConfig.cpp:54
+#: Viewer/CategoryImageConfig.cpp:67
 #, fuzzy
 msgctxt "@label:listbox As in 'select the tag category'"
 msgid "Category:"
 msgstr "الصنف:"
 
-#: Viewer/CategoryImageConfig.cpp:61
+#: Viewer/CategoryImageConfig.cpp:74
 msgctxt "@label:listbox As in 'select a tag'"
 msgid "Tag:"
 msgstr ""
 
-#: Viewer/CategoryImageConfig.cpp:70
+#: Viewer/CategoryImageConfig.cpp:83
 #, fuzzy
 msgctxt "@label The current category image"
 msgid "Current image:"
 msgstr "الصورة الحالية:"
 
-#: Viewer/CategoryImageConfig.cpp:78
+#: Viewer/CategoryImageConfig.cpp:91
 #, fuzzy
 msgctxt "@label Preview of the new category imape"
 msgid "New image:"
@@ -5208,17 +5292,17 @@ msgstr ""
 msgid "[ zoom x%1 ]"
 msgstr "[ كبّرx%1 ]"
 
-#: Viewer/InfoBox.cpp:86
+#: Viewer/InfoBox.cpp:78
 msgid "Show the geographic position of this image on a map"
 msgstr ""
 
-#: Viewer/SpeedDisplay.cpp:44
+#: Viewer/SpeedDisplay.cpp:45
 #, fuzzy, kde-format
 msgctxt "OSD for slideshow, num of seconds per image"
 msgid "<p><center><font size=\"+4\">%1&nbsp;s</font></center></p>"
 msgstr "<p><center><font size=\"+4\">%1&nbsp;s</font></center></p>"
 
-#: Viewer/SpeedDisplay.cpp:50
+#: Viewer/SpeedDisplay.cpp:51
 #, fuzzy
 msgctxt "OSD for slideshow"
 msgid ""
@@ -5226,477 +5310,477 @@ msgid ""
 "slideshow faster<br/>Ctrl + - makes the slideshow slower</font></center></p>"
 msgstr "<p><center><font size=\"+4\">بدء تشغيل عرض الشرائح</font></center></p>"
 
-#: Viewer/SpeedDisplay.cpp:70
+#: Viewer/SpeedDisplay.cpp:71
 #, fuzzy
 msgctxt "OSD for slideshow"
 msgid "<p><center><font size=\"+4\">Ending Slideshow</font></center></p>"
 msgstr "<p><center><font size=\"+4\">إنتهاء عرض الشرائح</font></center></p>"
 
-#: Viewer/VideoDisplay.cpp:200
+#: Viewer/VideoDisplay.cpp:192
 #, fuzzy
 msgid "Error playing media"
 msgstr "خطأ حفظ الصورة"
 
-#: Viewer/ViewerWidget.cpp:156
+#: Viewer/ViewerWidget.cpp:148
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Annotate..."
 msgstr "أضف تعليق..."
 
-#: Viewer/ViewerWidget.cpp:161
+#: Viewer/ViewerWidget.cpp:153
 msgctxt "@action:inmenu"
 msgid "Set as First Image in Stack"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:167
+#: Viewer/ViewerWidget.cpp:159
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Show EXIF Viewer"
 msgstr "أعرض المتصفح لــ EXIF"
 
-#: Viewer/ViewerWidget.cpp:172
+#: Viewer/ViewerWidget.cpp:164
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Copy image to..."
 msgstr "صدِّر نسخ صور."
 
-#: Viewer/ViewerWidget.cpp:178
+#: Viewer/ViewerWidget.cpp:170
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Close"
 msgstr "إغلاق"
 
-#: Viewer/ViewerWidget.cpp:203
+#: Viewer/ViewerWidget.cpp:195
 #, fuzzy
 msgctxt "@title:inmenu"
 msgid "Set as Wallpaper"
 msgstr "عيين كورق جدار"
 
-#: Viewer/ViewerWidget.cpp:206
+#: Viewer/ViewerWidget.cpp:198
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Centered"
 msgstr "مُرَكّز"
 
-#: Viewer/ViewerWidget.cpp:210
+#: Viewer/ViewerWidget.cpp:202
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Tiled"
 msgstr "مبلّط"
 
-#: Viewer/ViewerWidget.cpp:214
+#: Viewer/ViewerWidget.cpp:206
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Center Tiled"
 msgstr "مركّز التبليط"
 
-#: Viewer/ViewerWidget.cpp:218
+#: Viewer/ViewerWidget.cpp:210
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Centered Maxpect"
 msgstr "مركز مكبر"
 
-#: Viewer/ViewerWidget.cpp:222
+#: Viewer/ViewerWidget.cpp:214
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Tiled Maxpect"
 msgstr "متكرر مكبر"
 
-#: Viewer/ViewerWidget.cpp:226
+#: Viewer/ViewerWidget.cpp:218
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Scaled"
 msgstr "مدرّج"
 
-#: Viewer/ViewerWidget.cpp:230
+#: Viewer/ViewerWidget.cpp:222
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Centered Auto Fit"
 msgstr "تلقائي التركيز الأوفق"
 
-#: Viewer/ViewerWidget.cpp:272
+#: Viewer/ViewerWidget.cpp:264
 #, fuzzy
 msgctxt "@title:inmenu"
 msgid "Rotate"
 msgstr "دوران"
 
-#: Viewer/ViewerWidget.cpp:275
+#: Viewer/ViewerWidget.cpp:267
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Rotate clockwise"
 msgstr "تدوير إلى يمين"
 
-#: Viewer/ViewerWidget.cpp:280
+#: Viewer/ViewerWidget.cpp:272
 msgctxt "@action:inmenu"
 msgid "Flip Over"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:286
+#: Viewer/ViewerWidget.cpp:278
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Rotate counterclockwise"
 msgstr "تدوير إلى يسار"
 
-#: Viewer/ViewerWidget.cpp:296
+#: Viewer/ViewerWidget.cpp:288
 #, fuzzy
 msgctxt "@title:inmenu As in 'skip 2 images'"
 msgid "Skip"
 msgstr "تخطى"
 
-#: Viewer/ViewerWidget.cpp:299
+#: Viewer/ViewerWidget.cpp:291
 #, fuzzy
 msgctxt "@action:inmenu Go to first image"
 msgid "First"
 msgstr "الأول"
 
-#: Viewer/ViewerWidget.cpp:305
+#: Viewer/ViewerWidget.cpp:297
 #, fuzzy
 msgctxt "@action:inmenu Go to last image"
 msgid "Last"
 msgstr "الأخير"
 
-#: Viewer/ViewerWidget.cpp:311
+#: Viewer/ViewerWidget.cpp:303
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Show Next"
 msgstr "أعرض التالي"
 
-#: Viewer/ViewerWidget.cpp:321
+#: Viewer/ViewerWidget.cpp:309
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 10 Forward"
 msgstr "تخطى عشرة إلى الأمام"
 
-#: Viewer/ViewerWidget.cpp:327
+#: Viewer/ViewerWidget.cpp:315
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 100 Forward"
 msgstr "تخطى مئة إلى الأمام"
 
-#: Viewer/ViewerWidget.cpp:333
+#: Viewer/ViewerWidget.cpp:321
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 1000 Forward"
 msgstr "تخطى ألف إلى الأمام"
 
-#: Viewer/ViewerWidget.cpp:339
+#: Viewer/ViewerWidget.cpp:327
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Show Previous"
 msgstr "أعرض السابق"
 
-#: Viewer/ViewerWidget.cpp:348
+#: Viewer/ViewerWidget.cpp:333
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 10 Backward"
 msgstr "تخطى عشرة إلى الخلف"
 
-#: Viewer/ViewerWidget.cpp:354
+#: Viewer/ViewerWidget.cpp:339
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 100 Backward"
 msgstr "تخطى مئة إلى الخلف"
 
-#: Viewer/ViewerWidget.cpp:360
+#: Viewer/ViewerWidget.cpp:345
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Skip 1000 Backward"
 msgstr "تخطى ألف إلى الخلف"
 
-#: Viewer/ViewerWidget.cpp:366
+#: Viewer/ViewerWidget.cpp:351
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Delete Image"
 msgstr "احذف صورة"
 
-#: Viewer/ViewerWidget.cpp:371
+#: Viewer/ViewerWidget.cpp:356
 msgctxt "@action:inmenu"
 msgid "Remove Image from Display List"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:381
+#: Viewer/ViewerWidget.cpp:366
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Zoom"
 msgstr "تكبير"
 
-#: Viewer/ViewerWidget.cpp:385
+#: Viewer/ViewerWidget.cpp:370
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Zoom In"
 msgstr "كبّر"
 
-#: Viewer/ViewerWidget.cpp:390
+#: Viewer/ViewerWidget.cpp:375
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Zoom Out"
 msgstr "صغّر"
 
-#: Viewer/ViewerWidget.cpp:395
+#: Viewer/ViewerWidget.cpp:380
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Full View"
 msgstr "ملء الرؤية"
 
-#: Viewer/ViewerWidget.cpp:400
+#: Viewer/ViewerWidget.cpp:385
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Pixel for Pixel View"
 msgstr "عرض بكسل لبكسل"
 
-#: Viewer/ViewerWidget.cpp:405
+#: Viewer/ViewerWidget.cpp:390
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Toggle Full Screen"
 msgstr "أقلب حالة العرض ملء الشاشة"
 
-#: Viewer/ViewerWidget.cpp:416
+#: Viewer/ViewerWidget.cpp:401
 #, fuzzy
 msgctxt "@title:inmenu"
 msgid "Slideshow"
 msgstr "عرض الشرائح"
 
-#: Viewer/ViewerWidget.cpp:419 Viewer/ViewerWidget.cpp:873
+#: Viewer/ViewerWidget.cpp:404 Viewer/ViewerWidget.cpp:858
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Run Slideshow"
 msgstr "نفّذ عرض الشرائح"
 
-#: Viewer/ViewerWidget.cpp:424
+#: Viewer/ViewerWidget.cpp:409
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Run Faster"
 msgstr "أسرع"
 
-#: Viewer/ViewerWidget.cpp:429
+#: Viewer/ViewerWidget.cpp:414
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Run Slower"
 msgstr "أبطء"
 
-#: Viewer/ViewerWidget.cpp:463
+#: Viewer/ViewerWidget.cpp:448
 #, fuzzy
 msgid "File not available"
 msgstr "الملف غير موجود"
 
-#: Viewer/ViewerWidget.cpp:525
+#: Viewer/ViewerWidget.cpp:510
 #, fuzzy
 msgctxt "@action:inmenu Start video playback"
 msgid "Play"
 msgstr "شغّل"
 
-#: Viewer/ViewerWidget.cpp:527
+#: Viewer/ViewerWidget.cpp:512
 #, fuzzy
 msgctxt "@action:inmenu Pause video playback"
 msgid "Pause"
 msgstr "وقفة"
 
-#: Viewer/ViewerWidget.cpp:819
+#: Viewer/ViewerWidget.cpp:804
 #, fuzzy
 msgctxt "Basically 'enter a category name'"
 msgid "<b>Setting Category: </b>"
 msgstr "<b>الأصناف الفرعية</b>"
 
-#: Viewer/ViewerWidget.cpp:826
+#: Viewer/ViewerWidget.cpp:811
 #, fuzzy
 msgctxt "Basically 'enter a tag name'"
 msgid "<b>Assigning: </b>"
 msgstr "<b>الوصف: </b> "
 
-#: Viewer/ViewerWidget.cpp:880
+#: Viewer/ViewerWidget.cpp:865
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Stop Slideshow"
 msgstr "قف عرض شرائح"
 
-#: Viewer/ViewerWidget.cpp:1309
+#: Viewer/ViewerWidget.cpp:1294
 #, fuzzy
 msgctxt "@title:inmenu"
 msgid "Seek"
 msgstr "أسبوع واحِد"
 
-#: Viewer/ViewerWidget.cpp:1313
+#: Viewer/ViewerWidget.cpp:1298
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "10 minutes backward"
 msgstr "عشرة دقائق"
 
-#: Viewer/ViewerWidget.cpp:1314
+#: Viewer/ViewerWidget.cpp:1299
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "1 minute backward"
 msgstr "عشرة دقائق"
 
-#: Viewer/ViewerWidget.cpp:1315
+#: Viewer/ViewerWidget.cpp:1300
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "10 seconds backward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1316
+#: Viewer/ViewerWidget.cpp:1301
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "1 seconds backward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1317
+#: Viewer/ViewerWidget.cpp:1302
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "100 milliseconds backward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1318
+#: Viewer/ViewerWidget.cpp:1303
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "100 milliseconds forward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1319
+#: Viewer/ViewerWidget.cpp:1304
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "1 seconds forward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1320
+#: Viewer/ViewerWidget.cpp:1305
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "10 seconds forward"
 msgstr "ثانية واحدة"
 
-#: Viewer/ViewerWidget.cpp:1321
+#: Viewer/ViewerWidget.cpp:1306
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "1 minute forward"
 msgstr "عشرة دقائق"
 
-#: Viewer/ViewerWidget.cpp:1322
+#: Viewer/ViewerWidget.cpp:1307
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "10 minutes forward"
 msgstr "عشرة دقائق"
 
-#: Viewer/ViewerWidget.cpp:1345
+#: Viewer/ViewerWidget.cpp:1330
 #, fuzzy
 msgctxt "@action:inmenu Stop video playback"
 msgid "Stop"
 msgstr "قف"
 
-#: Viewer/ViewerWidget.cpp:1358
+#: Viewer/ViewerWidget.cpp:1343
 #, fuzzy
 msgctxt "@action:inmenu"
 msgid "Use current frame in thumbnail view"
 msgstr "أعرض الأصناف في العرض للأظافر"
 
-#: Viewer/ViewerWidget.cpp:1363
+#: Viewer/ViewerWidget.cpp:1348
 #, fuzzy
 msgctxt "@action:inmenu Restart video playback."
 msgid "Restart"
 msgstr "إعادة بدء التشغيل"
 
-#: Viewer/ViewerWidget.cpp:1378
+#: Viewer/ViewerWidget.cpp:1363
 #, fuzzy
 msgctxt "@title:inmenu"
 msgid "Filters"
 msgstr "الأول"
 
-#: Viewer/ViewerWidget.cpp:1381
+#: Viewer/ViewerWidget.cpp:1366
 msgctxt "@action:inmenu"
 msgid "Remove All Filters"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:1385
+#: Viewer/ViewerWidget.cpp:1370
 msgctxt "@action:inmenu"
 msgid "Apply Grayscale Filter"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:1390
+#: Viewer/ViewerWidget.cpp:1375
 msgctxt "@action:inmenu"
 msgid "Apply Contrast Stretching Filter"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:1395
+#: Viewer/ViewerWidget.cpp:1380
 msgctxt "@action:inmenu"
 msgid "Apply Histogram Equalization Filter"
 msgstr ""
 
-#: Viewer/ViewerWidget.cpp:1400
+#: Viewer/ViewerWidget.cpp:1385
 msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr ""
 
-#: Viewer/VisibleOptionsMenu.cpp:33
+#: Viewer/VisibleOptionsMenu.cpp:30
 #, fuzzy
 msgid "Show..."
 msgstr "أعرض"
 
-#: Viewer/VisibleOptionsMenu.cpp:36
+#: Viewer/VisibleOptionsMenu.cpp:33
 msgid "Show"
 msgstr "أعرض"
 
-#: Viewer/VisibleOptionsMenu.cpp:40
+#: Viewer/VisibleOptionsMenu.cpp:37
 msgid "Show Info Box"
 msgstr "أعرض صندوق المعلومات"
 
-#: Viewer/VisibleOptionsMenu.cpp:47
+#: Viewer/VisibleOptionsMenu.cpp:44
 #, fuzzy
 msgid "Show Label"
 msgstr "اعرض تسمية"
 
-#: Viewer/VisibleOptionsMenu.cpp:53
+#: Viewer/VisibleOptionsMenu.cpp:50
 msgid "Show Description"
 msgstr "أعرض الوصف"
 
-#: Viewer/VisibleOptionsMenu.cpp:59
+#: Viewer/VisibleOptionsMenu.cpp:56
 msgid "Show Date"
 msgstr "أعرض التاريخ"
 
-#: Viewer/VisibleOptionsMenu.cpp:64
+#: Viewer/VisibleOptionsMenu.cpp:61
 msgid "Show Time"
 msgstr "أعرض الوقت"
 
-#: Viewer/VisibleOptionsMenu.cpp:70
+#: Viewer/VisibleOptionsMenu.cpp:67
 msgid "Show Filename"
 msgstr "أعرض اسم الملف"
 
-#: Viewer/VisibleOptionsMenu.cpp:75
+#: Viewer/VisibleOptionsMenu.cpp:72
 msgid "Show EXIF"
 msgstr "أعرض EXIF"
 
-#: Viewer/VisibleOptionsMenu.cpp:80
+#: Viewer/VisibleOptionsMenu.cpp:77
 msgid "Show Image Size"
 msgstr "أعرض قياس الصورة"
 
-#: Viewer/VisibleOptionsMenu.cpp:85
+#: Viewer/VisibleOptionsMenu.cpp:82
 #, fuzzy
 msgid "Show Rating"
 msgstr "اعرض النطاقات"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:141
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:571 XMLDB/FileReader.cpp:136
 #, fuzzy
 #| msgctxt "Denotes the media type (video,image)"
 #| msgid "Image"
 msgid "Image"
 msgstr "صورة"
 
-#: XMLDB/Database.cpp:225 XMLDB/Database.cpp:573 XMLDB/FileReader.cpp:142
+#: XMLDB/Database.cpp:224 XMLDB/Database.cpp:572 XMLDB/FileReader.cpp:137
 #, fuzzy
 #| msgctxt "Denotes the media type (video,image)"
 #| msgid "Video"
 msgid "Video"
 msgstr "فيديو"
 
-#: XMLDB/FileReader.cpp:62
+#: XMLDB/FileReader.cpp:57
 msgid ""
 "<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</"
 "p><p>Chances are you will be able to read this file, but when writing it "
 "back, information saved in the newer version will be lost</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:65
+#: XMLDB/FileReader.cpp:60
 msgid "index.xml version mismatch"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:191
+#: XMLDB/FileReader.cpp:186
 #, kde-format
 msgid ""
 "<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
@@ -5704,13 +5788,13 @@ msgid ""
 "to quit.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:198
+#: XMLDB/FileReader.cpp:193
 #, fuzzy
 #| msgid "Converting database"
 msgid "Error in database file"
 msgstr "جاري تحويل قاعدة البيانات"
 
-#: XMLDB/FileReader.cpp:242
+#: XMLDB/FileReader.cpp:237
 msgctxt ""
 "Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
 "with these exact names. Thanks :-)"
@@ -5723,13 +5807,13 @@ msgid ""
 "and \"Media Type\". You can delete those.</p>"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:250
+#: XMLDB/FileReader.cpp:245
 #, fuzzy
 #| msgid "Invalid driver."
 msgid "Changed standard category names"
 msgstr "السائق غير صالح."
 
-#: XMLDB/FileReader.cpp:388
+#: XMLDB/FileReader.cpp:383
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5748,7 +5832,7 @@ msgstr ""
 "الصيانة اقرأ EXIF معلومات</b> إلى معلومات</p><p> أخيرا الكل set نفِّذ<b> صور "
 "رتّب مختار أداء التاريخ الوقت</b> إلى رتّب بوصة قاعدة بيانات</p>"
 
-#: XMLDB/FileReader.cpp:398
+#: XMLDB/FileReader.cpp:393
 #, fuzzy
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -5762,11 +5846,11 @@ msgstr ""
 "قراءة صورة من JPEG بيانات أعلى itإيطالياهو s مفضّل إلى مع<code></code> مكتبة "
 "بعد done إلى إلى صح الكل مفقود معلومات</p>"
 
-#: XMLDB/FileReader.cpp:405
+#: XMLDB/FileReader.cpp:400
 msgid "Images/Videos Are Not Sorted"
 msgstr "الصور/المرئيات هي غير مفرزة"
 
-#: XMLDB/FileReader.cpp:420
+#: XMLDB/FileReader.cpp:415
 #, fuzzy
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
@@ -5781,11 +5865,11 @@ msgstr ""
 "مُسْتعْرضة</b> و بعد اختيار<tt> ابني مُسْتعْرضة</tt></p><p> لا نتيجو بوصة إضافي "
 "فراغ بوصة صورة مصغّرة اعرض هو الكل هو لا بوصة الإيطالية</p>"
 
-#: XMLDB/FileReader.cpp:425
+#: XMLDB/FileReader.cpp:420
 msgid "Not All Images Have Size Information"
 msgstr "ليست كلّ الصور تحتوي على معلومات عن القياس"
 
-#: XMLDB/FileReader.cpp:448
+#: XMLDB/FileReader.cpp:443
 #, fuzzy
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -5804,51 +5888,51 @@ msgstr ""
 "KDEDIRS محليّ</b></p><p> داخل حالة KDEDIRS set تذييل سلسلة نص IF<b> المسار</"
 "b> بيئة متغير</p>"
 
-#: XMLDB/FileReader.cpp:455
+#: XMLDB/FileReader.cpp:450
 msgid "No default setup file found"
 msgstr "لم أعثر على ملف تعيينات إفتراضي"
 
-#: XMLDB/FileReader.cpp:476
+#: XMLDB/FileReader.cpp:471
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "غير قادر على فتح '%1' للقراءة"
 
-#: XMLDB/FileReader.cpp:489
+#: XMLDB/FileReader.cpp:484
 #, fuzzy, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "يوجد خطأ على السطر %1 العمود %2 في الملف %3: %4"
 
-#: XMLDB/FileReader.cpp:491
+#: XMLDB/FileReader.cpp:486
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr ""
 
-#: XMLDB/FileReader.cpp:502
+#: XMLDB/FileReader.cpp:497
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "خطأ في الملف %1: لم أجد إي عنصر"
 
-#: XMLDB/FileReader.cpp:508
+#: XMLDB/FileReader.cpp:503
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
 "خطأ في الملف %1: كنت أتوقع 'KPhotoAlbum' ككلعنصر الأعلى و لكنني وجدتُ '%2'"
 
-#: XMLDB/FileWriter.cpp:66
+#: XMLDB/FileWriter.cpp:69
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
 "because of the following error: %2"
 msgstr ""
 
-#: XMLDB/FileWriter.cpp:95
+#: XMLDB/FileWriter.cpp:98
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
 "replace the file %1 with file %2 manually!</p>"
 msgstr ""
 
-#: XMLDB/FileWriter.cpp:105
+#: XMLDB/FileWriter.cpp:108
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
@@ -5907,839 +5991,3 @@ msgstr ""
 #| msgid "Converting database"
 msgid "Error while reading database file"
 msgstr "جاري تحويل قاعدة البيانات"
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-#, fuzzy
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy
-
-
-
-
-#, fuzzy

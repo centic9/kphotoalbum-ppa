@@ -16,31 +16,31 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include "config-kpa-kipi.h"
+#include "config-kpa-kface.h"
 #include "SettingsDialog.h"
+
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+
+#include <KLocalizedString>
+#include <KSharedConfig>
+
+#include "BirthdayPage.h"
+#include "CategoryPage.h"
 #include "DatabaseBackendPage.h"
 #include "ExifPage.h"
-#include "PluginsPage.h"
-#include "ViewerPage.h"
-#include "FileVersionDetectionPage.h"
-#include "ThumbnailsPage.h"
-#include "GeneralPage.h"
-#include "TagGroupsPage.h"
-#include "CategoryPage.h"
-#include "SettingsDialog.moc"
-#include <QDebug>
-
-#include <klocale.h>
-#include <kglobal.h>
-#include "Utilities/ShowBusyCursor.h"
-
-#include "config-kpa-kipi.h"
-
-#include "config-kpa-kface.h"
 #ifdef HAVE_KFACE
 #include "FaceManagementPage.h"
 #endif
-
-#include "BirthdayPage.h"
+#include "FileVersionDetectionPage.h"
+#include "GeneralPage.h"
+#include "PluginsPage.h"
+#include "TagGroupsPage.h"
+#include "ThumbnailsPage.h"
+#include "ViewerPage.h"
+#include <Utilities/ShowBusyCursor.h>
 
 struct Data
 {
@@ -77,23 +77,23 @@ Settings::SettingsDialog::SettingsDialog( QWidget* parent)
 
 
     Data data[] = {
-        { i18n("General"), "kphotoalbum", m_generalPage },
+        { i18n("General"), "configure-shortcuts", m_generalPage },
         { i18n("File Searching & Versions"), "system-search", m_fileVersionDetectionPage },
-        { i18n("Thumbnail View" ), "view-list-icons", m_thumbnailsPage },
-        { i18n("Categories"), "user-identity", m_categoryPage },
-        { i18n("Birthdays"), "office-calendar", m_birthdayPage },
-        { i18n("Tag Groups" ), "edit-copy", m_tagGroupsPage },
+        { i18n("Thumbnail View" ), "view-preview", m_thumbnailsPage },
+        { i18n("Categories"), "edit-group", m_categoryPage },
+        { i18n("Birthdays"), "view-calendar-birthday", m_birthdayPage },
+        { i18n("Tag Groups" ), "view-group", m_tagGroupsPage },
         { i18n("Viewer" ), "document-preview", m_viewerPage },
 #ifdef HASKIPI
-        { i18n("Plugins" ), "preferences-plugin", m_pluginsPage },
+        { i18n("Plugins" ), "plugins", m_pluginsPage },
 #endif
 
 #ifdef HAVE_EXIV2
         { i18n("EXIF/IPTC Information" ), "document-properties", m_exifPage },
 #endif
-        { i18n("Database backend"), "system-file-manager", m_databaseBackendPage },
+        { i18n("Database backend"), "document-save", m_databaseBackendPage },
 #ifdef HAVE_KFACE
-        { i18n("Face management" ), "edit-find-user", m_faceManagementPage },
+        { i18n("Face management" ), "edit-image-face-detect", m_faceManagementPage },
 #endif
         { QString(), "", 0 }
     };
@@ -102,30 +102,34 @@ Settings::SettingsDialog::SettingsDialog( QWidget* parent)
     while ( data[i].widget != 0 ) {
         KPageWidgetItem* page = new KPageWidgetItem( data[i].widget, data[i].title );
         page->setHeader( data[i].title );
-        page->setIcon( KIcon( QString::fromLatin1( data[i].icon ) ) );
+        page->setIcon( QIcon::fromTheme( QString::fromLatin1( data[i].icon ) ) );
         addPage( page );
         ++i;
     }
 
+    setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
+    connect(this, &QDialog::accepted,
+            this, &SettingsDialog::slotMyOK);
+    connect(button(QDialogButtonBox::Apply), &QPushButton::clicked,
+            this, &SettingsDialog::slotMyOK);
+    connect(this, &QDialog::rejected, m_birthdayPage, &Settings::BirthdayPage::discardChanges);
 
-    setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
-    setCaption( i18n( "Settings" ) );
+    setWindowTitle( i18n( "Settings" ) );
 
-    connect(m_categoryPage, SIGNAL(categoryChangesPending()),
-            m_tagGroupsPage, SLOT(categoryChangesPending()));
-    connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
-            m_tagGroupsPage, SLOT(slotPageChange()));
+    connect(m_categoryPage, &Settings::CategoryPage::categoryChangesPending,
+            m_tagGroupsPage, &Settings::TagGroupsPage::categoryChangesPending);
+    connect(this, &SettingsDialog::currentPageChanged,
+            m_tagGroupsPage, &Settings::TagGroupsPage::slotPageChange);
 #ifdef HAVE_KFACE
-    connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
-            m_faceManagementPage, SLOT(slotPageChange(KPageWidgetItem*)));
+    connect(this, &SettingsDialog::currentPageChanged,
+            m_faceManagementPage, &Settings::FaceManagementPage::slotPageChange);
 #endif
-    connect(this, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)),
-            m_birthdayPage, SLOT(pageChange(KPageWidgetItem*)));
-    connect(this, SIGNAL(cancelClicked()), m_birthdayPage, SLOT(discardChanges()));
-    connect(this, SIGNAL(cancelClicked()), m_categoryPage, SLOT(resetCategoryLabel()));
+    connect(this, &SettingsDialog::currentPageChanged,
+            m_birthdayPage, &Settings::BirthdayPage::pageChange);
 
-    connect( this, SIGNAL(applyClicked()), this, SLOT(slotMyOK()) );
-    connect( this, SIGNAL(okClicked()), this, SLOT(slotMyOK()) );
+    // slot is protected -> use old style connect:
+    connect(this, SIGNAL(rejected()),
+            m_categoryPage, SLOT(resetCategoryLabel()));
 }
 
 void Settings::SettingsDialog::show()
@@ -158,10 +162,10 @@ void Settings::SettingsDialog::show()
     m_birthdayPage->reload();
     m_categoryPage->resetCategoryNamesChanged();
 
-    KDialog::show();
+    QDialog::show();
 }
 
-// KDialog has a slotOK which we do not want to override.
+// QDialog has a slotOK which we do not want to override.
 void Settings::SettingsDialog::slotMyOK()
 {
     Utilities::ShowBusyCursor dummy;
@@ -194,7 +198,7 @@ void Settings::SettingsDialog::slotMyOK()
     m_databaseBackendPage->saveSettings(opt);
 
     emit changed();
-    KGlobal::config()->sync();
+    KSharedConfig::openConfig()->sync();
 }
 
 void Settings::SettingsDialog::showBackendPage()
@@ -207,4 +211,5 @@ void Settings::SettingsDialog::keyPressEvent(QKeyEvent*)
     // This prevents the dialog to be closed if the ENTER key is pressed anywhere
 }
 
+#include "SettingsDialog.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

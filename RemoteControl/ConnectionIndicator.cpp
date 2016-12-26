@@ -17,16 +17,18 @@
 */
 
 #include "ConnectionIndicator.h"
-#include <KIcon>
 #include "RemoteInterface.h"
+#include <MainWindow/Options.h>
+#include <Settings/SettingsData.h>
+
+#include <KLocalizedString>
 #include <QDialog>
-#include <QTimer>
-#include <QLabel>
-#include <KLocale>
-#include <QLineEdit>
 #include <QHBoxLayout>
 #include <QHostAddress>
-#include "Settings/SettingsData.h"
+#include <QIcon>
+#include <QLabel>
+#include <QLineEdit>
+#include <QTimer>
 #include <QValidator>
 
 namespace RemoteControl {
@@ -54,7 +56,11 @@ ConnectionIndicator::ConnectionIndicator(QWidget* parent) :
 void ConnectionIndicator::mouseReleaseEvent(QMouseEvent*)
 {
     if (m_state == Off) {
-        RemoteInterface::instance().listen();
+        QHostAddress bindTo = MainWindow::Options::the()->listen();
+        if (bindTo.isNull())
+            bindTo = QHostAddress::Any;
+        RemoteInterface::instance().listen(bindTo);
+
         wait();
     }
     else {
@@ -115,14 +121,16 @@ void ConnectionIndicator::on()
 {
     m_state = On;
     m_timer->stop();
-    setPixmap(KIcon(QString::fromUtf8("network-wireless")).pixmap(32,32));
+    QIcon icon { QIcon::fromTheme(QString::fromUtf8("network-wireless")) };
+    setPixmap(icon.pixmap(32,32));
 }
 
 void ConnectionIndicator::off()
 {
     m_timer->stop();
     m_state = Off;
-    setPixmap(KIcon(QString::fromUtf8("network-disconnect")).pixmap(32,32));
+    QIcon icon { QIcon::fromTheme(QString::fromUtf8("network-disconnect")) };
+    setPixmap(icon.pixmap(32,32));
 }
 
 void ConnectionIndicator::wait()
@@ -136,11 +144,11 @@ void ConnectionIndicator::waitingAnimation()
     static int index = 0;
     static QList<QPixmap> icons;
     if (icons.isEmpty()) {
-        icons.append(KIcon(QString::fromUtf8("network-wireless-disconnected")).pixmap(32,32));
-        icons.append(KIcon(QString::fromUtf8("network-wireless-connected-25")).pixmap(32,32));
-        icons.append(KIcon(QString::fromUtf8("network-wireless-connected-50")).pixmap(32,32));
-        icons.append(KIcon(QString::fromUtf8("network-wireless-connected-75")).pixmap(32,32));
-        icons.append(KIcon(QString::fromUtf8("network-wireless")).pixmap(32,32));
+        icons.append(QIcon::fromTheme(QString::fromUtf8("network-wireless-disconnected")).pixmap(32,32));
+        icons.append(QIcon::fromTheme(QString::fromUtf8("network-wireless-connected-25")).pixmap(32,32));
+        icons.append(QIcon::fromTheme(QString::fromUtf8("network-wireless-connected-50")).pixmap(32,32));
+        icons.append(QIcon::fromTheme(QString::fromUtf8("network-wireless-connected-75")).pixmap(32,32));
+        icons.append(QIcon::fromTheme(QString::fromUtf8("network-wireless")).pixmap(32,32));
     }
     index = (index+1) % icons.count();
     setPixmap(icons[index]);

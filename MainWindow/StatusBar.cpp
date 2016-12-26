@@ -16,27 +16,30 @@
    Boston, MA 02110-1301, USA.
 */
 #include "StatusBar.h"
+
 #include <QApplication>
-#include <QToolButton>
-#include <QTimer>
+#include <QHBoxLayout>
+#include <QIcon>
+#include <QLabel>
 #include <QProgressBar>
 #include <QSlider>
-#include "DB/ImageDB.h"
-#include "ImageCounter.h"
-#include "Settings/SettingsData.h"
-#include <QLabel>
-#include "DirtyIndicator.h"
-#include <KHBox>
-#include <KVBox>
-#include <kiconloader.h>
-#include <KIcon>
-#include "BackgroundTaskManager/StatusIndicator.h"
-#include "RemoteControl/ConnectionIndicator.h"
-#include "ThumbnailView/ThumbnailFacade.h"
-#include <KLocale>
+#include <QTimer>
+#include <QToolButton>
+#include <QVBoxLayout>
 
-MainWindow::StatusBar::StatusBar()
-    : KStatusBar()
+#include <KIconLoader>
+#include <KLocalizedString>
+
+#include <BackgroundTaskManager/StatusIndicator.h>
+#include <DB/ImageDB.h>
+#include <RemoteControl/ConnectionIndicator.h>
+#include <Settings/SettingsData.h>
+#include <ThumbnailView/ThumbnailFacade.h>
+
+#include "DirtyIndicator.h"
+#include "ImageCounter.h"
+
+MainWindow::StatusBar::StatusBar() : QStatusBar()
 {
     QPalette pal = palette();
     pal.setBrush( QPalette::Base, QApplication::palette().color( QPalette::Background ) );
@@ -46,36 +49,40 @@ MainWindow::StatusBar::StatusBar()
     setupGUI();
     m_pendingShowTimer = new QTimer(this);
     m_pendingShowTimer->setSingleShot( true );
-    connect( m_pendingShowTimer, SIGNAL(timeout()), this, SLOT(showStatusBar()) );
+    connect(m_pendingShowTimer, &QTimer::timeout, this, &StatusBar::showStatusBar);
 }
 
 void MainWindow::StatusBar::setupGUI()
 {
     setContentsMargins(7,2,7,2);
 
-    KHBox* indicators = new KHBox( this );
-    indicators->setSpacing(10);
+    QWidget* indicators = new QWidget( this );
+    QHBoxLayout *indicatorsHBoxLayout = new QHBoxLayout(indicators);
+    indicatorsHBoxLayout->setMargin(0);
+    indicatorsHBoxLayout->setSpacing(10);
     mp_dirtyIndicator = new DirtyIndicator( indicators );
+    indicatorsHBoxLayout->addWidget(mp_dirtyIndicator);
     connect( DB::ImageDB::instance(), SIGNAL(dirty()), mp_dirtyIndicator, SLOT(markDirtySlot()) );
 
-    new RemoteControl::ConnectionIndicator(indicators);
+    auto *remoteIndicator = new RemoteControl::ConnectionIndicator(indicators);
+    indicatorsHBoxLayout->addWidget( remoteIndicator );
 
-    KVBox* statusIndicatorBox = new KVBox(indicators);
-    new BackgroundTaskManager::StatusIndicator(statusIndicatorBox);
-    statusIndicatorBox->setContentsMargins(0,7,0,0);
+    auto *jobIndicator = new BackgroundTaskManager::StatusIndicator( indicators );
+    indicatorsHBoxLayout->addWidget( jobIndicator );
 
     m_progressBar = new QProgressBar( this );
     m_progressBar->setMinimumWidth( 400 );
     addPermanentWidget( m_progressBar, 0 );
 
     m_cancel = new QToolButton( this );
-    m_cancel->setIcon( KIcon( QString::fromLatin1( "dialog-close" ) ) );
+    m_cancel->setIcon( QIcon::fromTheme( QString::fromLatin1( "dialog-close" ) ) );
     m_cancel->setShortcut( Qt::Key_Escape );
     addPermanentWidget( m_cancel, 0 );
-    connect( m_cancel, SIGNAL(clicked()), this, SIGNAL(cancelRequest()) );
-    connect( m_cancel, SIGNAL(clicked()), this, SLOT(hideStatusBar()) );
+    connect(m_cancel, &QToolButton::clicked, this, &StatusBar::cancelRequest);
+    connect(m_cancel, &QToolButton::clicked, this, &StatusBar::hideStatusBar);
 
     m_lockedIndicator = new QLabel( indicators );
+    indicatorsHBoxLayout->addWidget(m_lockedIndicator);
 
     addPermanentWidget( indicators, 0 );
 
@@ -103,20 +110,20 @@ void MainWindow::StatusBar::setupGUI()
     m_thumbnailSizeSlider->hide();
 
     m_thumbnailsSmaller = new QToolButton;
-    m_thumbnailsSmaller->setIcon(KIcon(QString::fromUtf8("zoom-out")));
+    m_thumbnailsSmaller->setIcon(QIcon::fromTheme(QString::fromUtf8("zoom-out")));
     m_thumbnailsSmaller->setToolTip(i18n("Decrease thumbnail storage size"));
     addPermanentWidget(m_thumbnailsSmaller, 0);
     m_thumbnailsSmaller->setEnabled(false);
     m_thumbnailsSmaller->hide();
 
     m_thumbnailsBigger = new QToolButton;
-    m_thumbnailsBigger->setIcon(KIcon(QString::fromUtf8("zoom-in")));
+    m_thumbnailsBigger->setIcon(QIcon::fromTheme(QString::fromUtf8("zoom-in")));
     m_thumbnailsBigger->setToolTip(i18n("Increase thumbnail storage size"));
     addPermanentWidget(m_thumbnailsBigger, 0);
     m_thumbnailsBigger->setEnabled(false);
     m_thumbnailsBigger->hide();
 
-    connect(m_thumbnailSizeSlider, SIGNAL(valueChanged(int)), this, SLOT(checkSliderValue(int)));
+    connect(m_thumbnailSizeSlider, &QSlider::valueChanged, this, &StatusBar::checkSliderValue);
     connect(m_thumbnailsSmaller, SIGNAL(clicked()),
             m_thumbnailSizeSlider, SLOT(decreaseThumbnailSize()));
     connect(m_thumbnailsBigger, SIGNAL(clicked()),
@@ -175,6 +182,12 @@ void MainWindow::StatusBar::hideThumbnailSlider()
     m_thumbnailSizeSlider->setVisible( false );
     m_thumbnailsBigger->hide();
     m_thumbnailsSmaller->hide();
+}
+
+void MainWindow::StatusBar::enterEvent(QEvent *)
+{
+    // make sure that breadcrumbs are not obscured by messages
+    clearMessage();
 }
 
 void MainWindow::StatusBar::hideStatusBar()

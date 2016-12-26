@@ -16,33 +16,37 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "ListSelect.h"
 #include "config-kpa-kface.h"
-#include <qlayout.h>
-#include <QLabel>
-#include <QMenu>
-#include <QList>
-#include <QMouseEvent>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kinputdialog.h>
-#include "DB/ImageDB.h"
-#include <kio/copyjob.h>
-#include <qtoolbutton.h>
-#include <QButtonGroup>
-#include "DB/MemberMap.h"
-#include <Utilities/Set.h>
+#include "ListSelect.h"
+
 #include "CompletableLineEdit.h"
-#include "DB/CategoryItem.h"
+#include "Dialog.h"
 #include "ListViewItemHider.h"
 #include "ShowSelectionOnlyManager.h"
-#include "CategoryListView/DragableTreeWidget.h"
-#include "CategoryListView/CheckDropItem.h"
-#include <qradiobutton.h>
-#include <QWidgetAction>
-#include <QHeaderView>
-#include "Dialog.h"
+
+#include <CategoryListView/CheckDropItem.h>
+#include <CategoryListView/DragableTreeWidget.h>
+#include <DB/CategoryItem.h>
+#include <DB/ImageDB.h>
+#include <DB/MemberMap.h>
+#include <Utilities/Set.h>
+
+#include <KIO/CopyJob>
+#include <KLocalizedString>
+#include <KMessageBox>
+
+#include <QButtonGroup>
 #include <QDebug>
+#include <QHeaderView>
+#include <QInputDialog>
+#include <QLabel>
+#include <QLayout>
+#include <QList>
+#include <QMenu>
+#include <QMouseEvent>
+#include <QRadioButton>
+#include <QToolButton>
+#include <QWidgetAction>
 
 using namespace AnnotationDialog;
 using CategoryListView::CheckDropItem;
@@ -325,7 +329,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     if ( item )
         title = item->text(0);
 
-    QLabel* label = new QLabel( QString::fromLatin1("<b>%1</b>").arg(title), menu );
+    QLabel* label = new QLabel( i18n("<b>%1</b>",title), menu );
     label->setAlignment( Qt::AlignCenter );
     QWidgetAction* action = new QWidgetAction(menu);
     action->setDefaultWidget( label );
@@ -397,12 +401,12 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
     QAction* which = menu->exec( m_treeWidget->mapToGlobal(pos));
     if ( which == nullptr )
         return;
-
     else if ( which == deleteAction ) {
+        Q_ASSERT( item );
         int code = KMessageBox::warningContinueCancel( this, i18n("<p>Do you really want to delete \"%1\"?<br/>"
                                                                   "Deleting the item will remove any information "
                                                                   "about it from any image containing the item.</p>"
-                                                       ,item->text(0)),
+                                                       ,title),
                                                        i18n("Really Delete %1?",item->text(0)),
                                                        KGuiItem(i18n("&Delete"),QString::fromLatin1("editdelete")) );
         if ( code == KMessageBox::Continue ) {
@@ -425,11 +429,14 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
         }
     }
     else if ( which == renameAction ) {
+        Q_ASSERT( item );
         bool ok;
-        QString newStr = KInputDialog::getText( i18n("Rename Item"), i18n("Enter new name:"),
-                                                item->text(0), &ok, this );
+        QString newStr = QInputDialog::getText( this,
+                                                i18n("Rename Item"), i18n("Enter new name:"),
+                                                QLineEdit::Normal,
+                                                item->text(0), &ok );
 
-        if ( ok && newStr != item->text(0) ) {
+        if ( ok && !newStr.isEmpty() && newStr != item->text(0) ) {
             int code = KMessageBox::questionYesNo( this, i18n("<p>Do you really want to rename \"%1\" to \"%2\"?<br/>"
                                                               "Doing so will rename \"%3\" "
                                                               "on any image containing it.</p>"
@@ -446,7 +453,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
                 // rename the category image too
                 QString oldFile = m_category->fileForCategoryImage( category(), oldStr );
                 QString newFile = m_category->fileForCategoryImage( category(), newStr );
-                KIO::move( KUrl(oldFile), KUrl(newFile) );
+                KIO::move( QUrl(oldFile), QUrl(newFile) );
 
                 if (m_positionable) {
 #ifdef HAVE_KFACE
@@ -470,7 +477,8 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
         Settings::SettingsData::instance()->setViewSortType( Settings::SortAlphaFlat );
     }
     else if ( which == newCategoryAction ) {
-        QString superCategory = KInputDialog::getText(
+        Q_ASSERT( item );
+        QString superCategory = QInputDialog::getText( this,
             i18n("New tag group"),
             i18n("Name for the new tag group the tag will be added to:")
         );
@@ -482,7 +490,8 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
         rePopulate();
     }
     else if ( which == newSubcategoryAction ) {
-        QString subCategory = KInputDialog::getText(
+        Q_ASSERT( item );
+        QString subCategory = QInputDialog::getText( this,
             i18n("Add a tag"),
             i18n("Name for the tag to be added to this tag group:")
         );
@@ -501,10 +510,12 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
             checkItem( subCategory, true );
     }
     else if ( which == takeAction ) {
+        Q_ASSERT( item );
         memberMap.removeMemberFromGroup( m_category->name(), parent->text(0), item->text(0) );
         rePopulate();
     }
     else {
+        Q_ASSERT( item );
         QString checkedItem = which->data().value<QString>();
         if ( which->isChecked() ) // choosing the item doesn't check it, so this is the value before.
             memberMap.addMemberToGroup( m_category->name(), checkedItem, item->text(0) );
@@ -720,19 +731,23 @@ void AnnotationDialog::ListSelect::updateSelectionCount()
         if (itemsUnchanged().size() > 0) {
             // if min != max
             // tri-state selection -> show min-max (selected items vs. partially selected items):
-            parentWidget()->setWindowTitle(QString::fromUtf8("%1 (%2-%3)")
-                .arg(m_baseTitle)
-                .arg(itemsOnCount)
-                .arg(itemsOnCount + itemsUnchanged().size()));
+            parentWidget()->setWindowTitle(i18nc(
+                                               "Category name, then min-max of selected tags across several images. E.g. 'People (1-2)'",
+                                               "%1 (%2-%3)",
+                                               m_baseTitle,
+                                               itemsOnCount,
+                                               itemsOnCount + itemsUnchanged().size() )
+                                           );
             break;
         } // else fall through and only show one number:
     case InputSingleImageConfigMode:
         if (itemsOnCount > 0) {
             // if any tags have been selected
             // "normal" on/off states -> show selected items
-            parentWidget()->setWindowTitle(QString::fromUtf8("%1 (%2)")
-                .arg(m_baseTitle)
-                .arg(itemsOnCount));
+            parentWidget()->setWindowTitle(
+                        i18nc("Category name, then number of selected tags. E.g. 'People (1)'",
+                              "%1 (%2)",
+                              m_baseTitle, itemsOnCount));
             break;
         } // else fall through and only show category
     case SearchMode:

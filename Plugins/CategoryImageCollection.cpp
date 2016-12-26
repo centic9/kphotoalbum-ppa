@@ -17,7 +17,7 @@
 */
 
 #include "CategoryImageCollection.h"
-#include <klocale.h>
+#include <KLocalizedString>
 #include "DB/ImageDB.h"
 Plugins::CategoryImageCollection::CategoryImageCollection( const DB::ImageSearchInfo& context, const QString& category,
                                                   const QString& value )
@@ -34,7 +34,7 @@ QString Plugins::CategoryImageCollection::name()
         return m_value;
 }
 
-KUrl::List Plugins::CategoryImageCollection::images()
+QList<QUrl> Plugins::CategoryImageCollection::images()
 {
     DB::ImageSearchInfo context( m_context );
     context.addAnd( m_category, m_value );

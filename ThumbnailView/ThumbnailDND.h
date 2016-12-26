@@ -17,8 +17,11 @@
 */
 #ifndef THUMBNAILDND_H
 #define THUMBNAILDND_H
+
 #include <QObject>
+
 #include "ThumbnailComponent.h"
+
 class QDragEnterEvent;
 class QDropEvent;
 class QDragLeaveEvent;
@@ -35,7 +38,7 @@ public:
     explicit ThumbnailDND( ThumbnailFactory* factory );
     void contentsDragMoveEvent( QDragMoveEvent* event );
     void contentsDragLeaveEvent( QDragLeaveEvent* );
-    void contentsDropEvent( QDropEvent* );
+    void contentsDropEvent( QDropEvent *event );
     void contentsDragEnterEvent( QDragEnterEvent * event );
 
 private slots:
