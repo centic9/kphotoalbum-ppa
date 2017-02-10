@@ -5,9 +5,16 @@ Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
 Uploaders: Fathi Boudra <fabo@debian.org>, Mark Purcell <msp@debian.org>
 Build-Depends: debhelper (>= 9), cmake (>= 2.8.3), pkg-kde-tools (>= 0.6.4),
  docbook-to-man,
- libexiv2-dev (>= 0.19), libjpeg-dev, libkdcraw-dev, libkipi-dev,
+ libexiv2-dev (>= 0.19), libjpeg-dev,
  x11proto-core-dev,
- pkg-config, libkgeomap-dev (>=1.0~digikam4.12.0-0ubuntu8~ppa6), libkface-dev
+ pkg-config,
+ extra-cmake-modules, kio-dev,
+ libkf5archive-dev, libkf5config-dev, libkf5coreaddons-dev, libkf5i18n-dev,
+ libkf5iconthemes-dev, libkf5jobwidgets-dev, libkf5kdcraw-dev, libkf5kgeomap-dev,
+ libkf5kipi-dev, libkf5parts-dev, libkf5widgetsaddons-dev, libmarble-dev,
+ libphonon4qt5-dev, libphonon4qt5experimental-dev, libqt5webkit5-dev,
+ qtbase5-dev, libkf5doctools-dev | kdoctools-dev, libkf5kface-dev,
+ ffmpeg
 Standards-Version: 3.9.8
 Homepage: http://kphotoalbum.org
 Vcs-Browser: https://anonscm.debian.org/viewvc/pkg-kde/kde-extras/kphotoalbum/trunk
