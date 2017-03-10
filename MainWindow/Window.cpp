@@ -47,6 +47,7 @@
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KEditToolBar>
+#include <kio_version.h> // for #if KIO_VERSION...
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -127,6 +128,10 @@ MainWindow::Window::Window( QWidget* parent )
       m_annotationDialog(nullptr),
       m_deleteDialog( nullptr ), m_htmlDialog(nullptr), m_tokenEditor( nullptr )
 {
+#ifdef HAVE_KGEOMAP
+    m_positionBrowser = 0;
+#endif
+
     SplashScreen::instance()->message( i18n("Loading Database") );
     s_instance = this;
 
@@ -223,7 +228,8 @@ void MainWindow::Window::delayedInit()
     SplashScreen* splash = SplashScreen::instance();
     setupPluginMenu();
 
-    if ( Settings::SettingsData::instance()->searchForImagesOnStart() ) {
+    if ( Settings::SettingsData::instance()->searchForImagesOnStart() ||
+	 Options::the()->searchForImagesOnStart() ) {
         splash->message( i18n("Searching for New Files") );
         qApp->processEvents();
         DB::ImageDB::instance()->slotRescan();
@@ -726,7 +732,7 @@ void MainWindow::Window::setupMenuBar()
     connect(m_deleteSelected, &QAction::triggered, this, &Window::slotDeleteSelected);
 
     a = actionCollection()->addAction(QString::fromLatin1("removeTokens"), this, SLOT(slotRemoveTokens()));
-    a->setText( i18n("Remove Tokens") );
+    a->setText( i18n("Remove Tokens...") );
 
     a = actionCollection()->addAction(QString::fromLatin1("showListOfFiles"), this, SLOT(slotShowListOfFiles()));
     a->setText( i18n("Open List of Files...")) ;
@@ -1737,7 +1743,20 @@ void MainWindow::Window::slotOrderDecr()
 
 void MainWindow::Window::showVideos()
 {
-    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos")), QString::fromLatin1( "text/html" ), this );
+#if (KIO_VERSION >= ((5<<16)|(31<<8)|(0)))
+    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos"))
+                 , QString::fromLatin1( "text/html" )
+                 , this
+                 , KRun::RunFlags()
+                 );
+#else
+    // this signature is deprecated in newer kio versions
+    // TODO: remove this when we don't support Ubuntu 16.04 LTS anymore
+    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos"))
+                 , QString::fromLatin1( "text/html" )
+                 , this
+                 );
+#endif
 }
 
 void MainWindow::Window::slotStatistics()
@@ -1914,6 +1933,31 @@ bool MainWindow::Window::dbIsDirty() const
 {
     return m_statusBar->mp_dirtyIndicator->isSaveDirty();
 }
+
+#ifdef HAVE_KGEOMAP
+void MainWindow::Window::showPositionBrowser()
+{
+    Browser::PositionBrowserWidget *positionBrowser = positionBrowserWidget();
+    m_stack->setCurrentWidget(positionBrowser);
+    updateStates( false );
+}
+
+Browser::PositionBrowserWidget* MainWindow::Window::positionBrowserWidget()
+{
+    if (m_positionBrowser == 0) {
+        m_positionBrowser = createPositionBrowser();
+    }
+    return m_positionBrowser;
+}
+
+Browser::PositionBrowserWidget* MainWindow::Window::createPositionBrowser()
+{
+    Browser::PositionBrowserWidget* widget = new Browser::PositionBrowserWidget(m_stack);
+    m_stack->addWidget(widget);
+    return widget;
+}
+#endif
+
 
 #include "Window.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

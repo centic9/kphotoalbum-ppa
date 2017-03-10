@@ -77,6 +77,7 @@
 #include <tuple>
 #include <KConfigGroup>
 #include <QDialogButtonBox>
+#include <QtGlobal>
 
 #ifdef DEBUG_AnnotationDialog
 #define Debug qDebug
@@ -117,9 +118,9 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     m_dockWindow->setDockNestingEnabled( true );
 
     // -------------------------------------------------- Dock widgets
-    createDock( i18n("Label and Dates"), QString::fromLatin1("Label and Dates"), Qt::TopDockWidgetArea, createDateWidget(shortCutManager) );
+    m_generalDock = createDock( i18n("Label and Dates"), QString::fromLatin1("Label and Dates"), Qt::TopDockWidgetArea, createDateWidget(shortCutManager) );
 
-    createDock( i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget() );
+    m_previewDock = createDock( i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget() );
 
     m_description = new DescriptionEdit(this);
     m_description->setProperty( "WantsFocus", true );
@@ -133,8 +134,8 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
                 "embedded in the image EXIF information is imported to this field if available.</para>"
                 ));
 
-    QDockWidget* dock = createDock( i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, m_description );
-    shortCutManager.addDock( dock, m_description );
+    m_descriptionDock = createDock( i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, m_description );
+    shortCutManager.addDock( m_descriptionDock, m_description );
 
     connect( m_description, SIGNAL(pageUpDownPressed(QKeyEvent*)), this, SLOT(descriptionPageUpDownPressed(QKeyEvent*)) );
 
@@ -160,15 +161,15 @@ AnnotationDialog::Dialog::Dialog( QWidget* parent )
     connect(m_cancelMapLoadingButton, SIGNAL(clicked()), this, SLOT(setCancelMapLoading()));
 
     m_annotationMapContainer->setObjectName(i18n("Map"));
-    QDockWidget *map = createDock(
+    m_mapDock = createDock(
         i18n("Map"),
         QString::fromLatin1("map"),
         Qt::LeftDockWidgetArea,
         m_annotationMapContainer
     );
-    shortCutManager.addDock(map, m_annotationMapContainer);
-    connect(map, SIGNAL(visibilityChanged(bool)), this, SLOT(annotationMapVisibilityChanged(bool)));
-    map->setWhatsThis( i18nc( "@info:whatsthis", "The map widget allows you to view the location of images if GPS coordinates are found in the EXIF information." ));
+    shortCutManager.addDock(m_mapDock, m_annotationMapContainer);
+    connect(m_mapDock, SIGNAL(visibilityChanged(bool)), this, SLOT(annotationMapVisibilityChanged(bool)));
+    m_mapDock->setWhatsThis( i18nc( "@info:whatsthis", "The map widget allows you to view the location of images if GPS coordinates are found in the EXIF information." ));
 #endif
 
     // -------------------------------------------------- Categories
@@ -1234,7 +1235,27 @@ void AnnotationDialog::Dialog::loadWindowLayout()
 {
     QString fileName =  QString::fromLatin1( "%1/layout.dat" ).arg( Settings::SettingsData::instance()->imageDirectory() );
     if ( !QFileInfo(fileName).exists() )
+    {
+        // create default layout
+        // label/date/rating in a visual block with description:
+        m_dockWindow->splitDockWidget(m_generalDock, m_descriptionDock, Qt::Vertical);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+        // This conditional block is added to still be compatible with distributions shipping
+        // older Qt versions. TODO: remove the check for Qt 5.6 as soon as it's reasonable
+
+        // more space for description:
+        m_dockWindow->resizeDocks({m_generalDock, m_descriptionDock},{60,100}, Qt::Vertical);
+        // more space for preview:
+        m_dockWindow->resizeDocks({m_generalDock, m_descriptionDock, m_previewDock},{200,200,800}, Qt::Horizontal);
+#endif
+#ifdef HAVE_KGEOMAP
+        // group the map with the preview
+        m_dockWindow->tabifyDockWidget(m_previewDock, m_mapDock);
+        // make sure the preview tab is active:
+        m_previewDock->raise();
+#endif
         return;
+    }
 
     QFile file( fileName );
     file.open( QIODevice::ReadOnly );
@@ -1489,7 +1510,7 @@ void AnnotationDialog::Dialog::addTagToCandidateList(QString category, QString t
 void AnnotationDialog::Dialog::removeTagFromCandidateList(QString category, QString tag)
 {
     // Is the deselected tag the last selected positionable tag?
-    if (m_lastSelectedPositionableTag.first == category and m_lastSelectedPositionableTag.second == tag) {
+    if (m_lastSelectedPositionableTag.first == category && m_lastSelectedPositionableTag.second == tag) {
         m_lastSelectedPositionableTag = QPair<QString, QString>();
     }
 
@@ -1519,7 +1540,7 @@ void AnnotationDialog::Dialog::slotShowAreas(bool showAreas)
 void AnnotationDialog::Dialog::positionableTagRenamed(QString category, QString oldTag, QString newTag)
 {
     // Is the renamed tag the last selected positionable tag?
-    if (m_lastSelectedPositionableTag.first == category and m_lastSelectedPositionableTag.second == oldTag) {
+    if (m_lastSelectedPositionableTag.first == category && m_lastSelectedPositionableTag.second == oldTag) {
         m_lastSelectedPositionableTag.second = newTag;
     }
 
@@ -1561,8 +1582,8 @@ void AnnotationDialog::Dialog::checkProposedTagData(
     foreach (ResizableFrame *area, areas())
     {
         if (area != areaToExclude
-            and area->proposedTagData() == tagData
-            and area->tagData().first.isEmpty()) {
+            && area->proposedTagData() == tagData
+            && area->tagData().first.isEmpty()) {
             area->removeProposedTagData();
         }
     }

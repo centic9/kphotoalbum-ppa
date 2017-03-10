@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(kphotoalbum VERSION 5.1)
+project(kphotoalbum VERSION 5.2)
 
 if(POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
@@ -21,19 +21,12 @@ include(FeatureSummary)
 # enable exceptions:
 kde_enable_exceptions()
 
-# This seems to be needed for KPA to compile with KDE 4.0.0
-set(INSTALL_TARGETS_DEFAULT_ARGS
-    RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
-    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
-    COMPONENT Devel
-    )
-
 add_definitions(
     -DQT_NO_CAST_FROM_ASCII
     -DQT_NO_CAST_TO_ASCII
     -DQT_NO_URL_CAST_FROM_STRING
     -DQT_NO_CAST_FROM_BYTEARRAY
+    -DQT_DEPRECATED_WARNINGS
     )
 
 
@@ -118,6 +111,7 @@ add_custom_target(
     -DBASE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" -DPROJECT_NAME=KPA -DPROJECT_VERSION="${PROJECT_VERSION}"
     -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/UpdateVersion.cmake"
     COMMENT "Updating version header."
+    BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/version.h"
     )
 
 # For config-kpa-*.h
@@ -408,6 +402,8 @@ endif()
 set(libMap_SRCS)
 if(KF5KGeoMap_FOUND)
     set(libMap_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/Browser/GeoPositionPage.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Browser/PositionBrowserWidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapView.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapMarkerModelHelper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/SearchMarkerTiler.cpp
@@ -491,14 +487,14 @@ if(KF5KGeoMap_FOUND)
     target_link_libraries(kphotoalbum KF5::KGeoMap )
 endif()
 
-install(TARGETS kphotoalbum ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kphotoalbum ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install(PROGRAMS org.kde.kphotoalbum.desktop org.kde.kphotoalbum-import.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES kphotoalbumrc DESTINATION ${CONFIG_INSTALL_DIR})
-install(FILES tips DESTINATION ${KDE_INSTALL_DATADIR}/kphotoalbum)
-install(FILES kphotoalbumui.rc default-setup default-layout.xml DESTINATION ${KDE_INSTALL_DATADIR}/kphotoalbum)
+install(PROGRAMS org.kde.kphotoalbum.desktop org.kde.kphotoalbum-import.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kphotoalbumrc DESTINATION ${KDE_INSTALL_CONFDIR})
+install(FILES tips default-setup DESTINATION ${KDE_INSTALL_DATADIR}/kphotoalbum)
+install(FILES kphotoalbumui.rc DESTINATION ${KDE_INSTALL_KXMLGUI5DIR}/kphotoalbum)
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 configure_file(config-kpa-kdcraw.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kdcraw.h)
