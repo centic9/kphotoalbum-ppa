@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2016-2017 Matthias Füssel <matthias.fuessel@gmx.net>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,25 +15,36 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#include "DescriptionEdit.h"
-#include <QKeyEvent>
 
-AnnotationDialog::DescriptionEdit::DescriptionEdit(QWidget *parent) : KTextEdit(parent)
-{
+#ifndef POSITIONBROWSERWIDGET_H_
+#define POSITIONBROWSERWIDGET_H_
+
+#include "qwidget.h"
+#include "DB/FileNameList.h"
+#include "DB/ImageSearchInfo.h"
+#include "Map/MapView.h"
+
+namespace Browser {
+
+class PositionBrowserWidget : public QWidget {
+    Q_OBJECT
+
+public:
+    PositionBrowserWidget( QWidget* parent );
+    virtual ~PositionBrowserWidget();
+    virtual void showImages( const DB::ImageSearchInfo& searchInfo );
+    virtual void clearImages();
+
+Q_SIGNALS:
+    void signalNewRegionSelected(KGeoMap::GeoCoordinates::Pair coordinates);
+
+public slots:
+    void slotRegionSelectionChanged();
+
+private:
+    Map::MapView *m_mapView;
+};
+
 }
 
-AnnotationDialog::DescriptionEdit::~DescriptionEdit()
-{
-}
-
-void AnnotationDialog::DescriptionEdit::keyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_PageUp || event->key() == Qt::Key_PageDown) {
-        emit pageUpDownPressed(event);
-    } else {
-        QTextEdit::keyPressEvent(event);
-    }
-}
-
-#include "DescriptionEdit.moc"
-// vi:expandtab:tabstop=4 shiftwidth=4:
+#endif /* POSITIONBROWSERWIDGET_H_ */

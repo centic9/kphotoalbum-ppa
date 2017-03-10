@@ -65,13 +65,13 @@ Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
     saveButton->setIcon(QPixmap(SmallIcon(QString::fromUtf8("media-floppy"))));
     saveButton->setToolTip(i18n("Save the current map settings"));
     m_mapWidget->addWidgetToControlWidget(saveButton);
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(saveButton, &QPushButton::clicked, this, &MapView::saveSettings);
 
     m_setLastCenterButton = new QPushButton;
     m_setLastCenterButton->setIcon(QPixmap(SmallIcon(QString::fromUtf8("go-first"))));
     m_setLastCenterButton->setToolTip(i18n("Go to last map position"));
     m_mapWidget->addWidgetToControlWidget(m_setLastCenterButton);
-    connect(m_setLastCenterButton, SIGNAL(clicked()), this, SLOT(setLastCenter()));
+    connect(m_setLastCenterButton, &QPushButton::clicked, this, &MapView::setLastCenter);
 
     // We first try set the default backend "marble" or the first one available ...
     const QString defaultBackend = QString::fromUtf8("marble");
@@ -91,6 +91,9 @@ Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
     m_modelHelper = new MapMarkerModelHelper();
     m_itemMarkerTiler = new SearchMarkerTiler(m_modelHelper, this);
     m_mapWidget->setGroupedModel(m_itemMarkerTiler);
+
+    connect(m_mapWidget, &KGeoMap::MapWidget::signalRegionSelectionChanged,
+            this, &MapView::signalRegionSelectionChanged);
 }
 
 Map::MapView::~MapView()
@@ -116,7 +119,10 @@ void Map::MapView::addImage(const DB::ImageInfoPtr image)
 
 void Map::MapView::zoomToMarkers()
 {
-    m_mapWidget->adjustBoundariesToGroupedMarkers();
+    if (m_modelHelper->model()->rowCount()>0)
+    {
+        m_mapWidget->adjustBoundariesToGroupedMarkers();
+    }
     m_lastCenter = m_mapWidget->getCenter();
 }
 
@@ -190,10 +196,12 @@ void Map::MapView::displayStatus(MapStatus status)
         m_statusLabel->setText(i18n("<i>Search for geographic coordinates.</i>"));
         m_statusLabel->show();
         m_mapWidget->setAvailableMouseModes(KGeoMap::MouseModePan
+                                            | KGeoMap::MouseModeRegionSelectionFromIcon
                                             | KGeoMap::MouseModeRegionSelection);
         m_mapWidget->setVisibleMouseModes(KGeoMap::MouseModePan
+                                          | KGeoMap::MouseModeRegionSelectionFromIcon
                                           | KGeoMap::MouseModeRegionSelection);
-        m_mapWidget->setMouseMode(KGeoMap::MouseModePan);
+        m_mapWidget->setMouseMode(KGeoMap::MouseModeRegionSelectionFromIcon);
         m_mapWidget->show();
         m_mapWidget->setCenter(KGeoMap::GeoCoordinates());
         m_setLastCenterButton->hide();
@@ -207,6 +215,7 @@ void Map::MapView::displayStatus(MapStatus status)
         m_setLastCenterButton->setEnabled(false);
         break;
     }
+    emit displayStatusChanged(status);
 }
 
 void Map::MapView::setLastCenter()
