@@ -3,9 +3,11 @@
 export DEB_LDFLAGS_MAINT_APPEND := -Wl,--as-needed
 
 %:
-	dh $@ --parallel --with kde
+	dh $@ --parallel --with kf5
 
 override_dh_auto_build:
+	# force generation of version.h, to avoid races later on
+	dh_auto_build --no-parallel -- UpdateVersion
 	dh_auto_build
 	/usr/bin/docbook-to-man debian/kphotoalbum.sgml > kphotoalbum.1
 

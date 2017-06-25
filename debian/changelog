@@ -1,3 +1,48 @@
+kphotoalbum (5.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Force generation of version.h as first step of the build, to avoid races
+    later on.
+  * Bump Standards-Version to 4.0.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 25 Jun 2017 09:19:45 +0200
+
+kphotoalbum (5.2-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Update watch file.
+  * Update the build dependencies following the port to Frameworks:
+    - remove libkdcraw-dev
+    - add extra-cmake-modules, qtbase5-dev, libphonon4qt5-dev,
+      libkf5archive-dev, libkf5completion-dev, libkf5config-dev,
+      libkf5coreaddons-dev, libkf5doctools-dev, libkf5i18n-dev,
+      libkf5iconthemes-dev, libkf5jobwidgets-dev, libkf5kio-dev,
+      libkf5textwidgets-dev, libkf5widgetsaddons-dev, libkf5xmlgui-dev,
+      libkf5kdcraw-dev, libkf5kgeomap-dev, and libkf5kipi-dev
+  * Use the right dh addon:
+    - switch from kde to kf5 dh addon
+    - bump the pkg-kde-tools build dependency to >= 0.15.16
+  * Update the runtime dependencies/recommends:
+    - replace libqt4-sql-sqlite with libqt5sql5-sqlite
+    - replace khelpcenter4 with khelpcenter
+  * Manually add libqt5webkit5-dev, and libmarble-dev as build dependencies,
+    to workaround the missing dependencies in libkf5kgeomap-dev.
+  * Bump the cmake build dependency to 3.1, as indicated in the upstream
+    build system.
+  * Since the KIPI support is back, add kipi-plugins as recommend again.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 18 Jun 2017 11:09:45 +0200
+
+kphotoalbum (4.7.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Disable KIPI support, since they are available only for Frameworks now:
+    - drop the libkipi-dev build dependency
+    - drop the kipi-plugins recommend
+
+ -- Pino Toscano <pino@debian.org>  Fri, 19 Aug 2016 21:11:01 +0200
+
 kphotoalbum (4.7.2-1) unstable; urgency=medium
 
   * Team upload.

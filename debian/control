@@ -3,12 +3,30 @@ Section: graphics
 Priority: optional
 Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
 Uploaders: Fathi Boudra <fabo@debian.org>, Mark Purcell <msp@debian.org>
-Build-Depends: debhelper (>= 9), cmake (>= 2.8.3), pkg-kde-tools (>= 0.6.4),
+Build-Depends: debhelper (>= 9), cmake (>= 3.1), pkg-kde-tools (>= 0.15.16),
  docbook-to-man,
- libexiv2-dev (>= 0.19), libjpeg-dev, libkdcraw-dev, libkipi-dev,
+ extra-cmake-modules,
+ qtbase5-dev,
+ libphonon4qt5-dev,
+ libkf5archive-dev,
+ libkf5completion-dev,
+ libkf5config-dev,
+ libkf5coreaddons-dev,
+ libkf5doctools-dev,
+ libkf5i18n-dev,
+ libkf5iconthemes-dev,
+ libkf5jobwidgets-dev,
+ libkf5kio-dev,
+ libkf5textwidgets-dev,
+ libkf5widgetsaddons-dev,
+ libkf5xmlgui-dev,
+ libkf5kdcraw-dev,
+ libkf5kgeomap-dev, libqt5webkit5-dev, libmarble-dev,
+ libkf5kipi-dev,
+ libexiv2-dev (>= 0.19), libjpeg-dev,
  x11proto-core-dev,
  pkg-config,
-Standards-Version: 3.9.8
+Standards-Version: 4.0.0
 Homepage: http://kphotoalbum.org
 Vcs-Browser: https://anonscm.debian.org/viewvc/pkg-kde/kde-extras/kphotoalbum/trunk
 Vcs-Svn: svn://anonscm.debian.org/pkg-kde/kde-extras/kphotoalbum/trunk/
@@ -16,8 +34,8 @@ Vcs-Svn: svn://anonscm.debian.org/pkg-kde/kde-extras/kphotoalbum/trunk/
 Package: kphotoalbum
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends},
- libqt4-sql-sqlite, mplayer
-Recommends: kipi-plugins, khelpcenter4, ffmpeg
+ libqt5sql5-sqlite, mplayer
+Recommends: khelpcenter, ffmpeg, kipi-plugins
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of
