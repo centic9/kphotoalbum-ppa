@@ -17,8 +17,8 @@
 */
 
 #include "ImageInfo.h"
+#include "Logging.h"
 
-#include <QDebug>
 #include <QFileInfo>
 #include <QList>
 
@@ -29,12 +29,6 @@
 #include <DB/ImageInfo.h>
 #include <DB/MemberMap.h>
 #include <MainWindow/DirtyIndicator.h>
-
-#ifdef DEBUG_KIPI
-#define Debug qDebug
-#else
-#define Debug if (0) qDebug
-#endif
 
 #define KEXIV_ORIENTATION_UNSPECIFIED   0
 #define KEXIV_ORIENTATION_NORMAL        1
@@ -62,7 +56,7 @@ static int deg2KexivOrientation( int deg)
         case 270:
             return KEXIV_ORIENTATION_ROT_270;
         default:
-            qWarning() << "Rotation of " << deg << "degrees can't be mapped to KExiv2::ImageOrientation value.";
+            qCWarning(PluginsLog) << "Rotation of " << deg << "degrees can't be mapped to KExiv2::ImageOrientation value.";
             return KEXIV_ORIENTATION_UNSPECIFIED;
     }
 }
@@ -82,7 +76,7 @@ static int kexivOrientation2deg( int orient)
         case KEXIV_ORIENTATION_ROT_270:
             return 270;
         default:
-            qWarning() << "KExiv2::ImageOrientation value " << orient << " not a pure rotation. Discarding orientation info.";
+            qCWarning(PluginsLog) << "KExiv2::ImageOrientation value " << orient << " not a pure rotation. Discarding orientation info.";
             return 0;
     }
 }
@@ -197,7 +191,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
         {
             // plugin renamed the item
             // TODO: implement this
-            qWarning("File renaming by kipi-plugin not supported.");
+            qCWarning(PluginsLog, "File renaming by kipi-plugin not supported.");
             //map.remove(QLatin1String("name"));
         }
         if ( map.contains(QLatin1String("comment")) )
@@ -222,7 +216,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
         }
         if ( map.contains(QLatin1String("angle")) )
         {
-            qWarning("Kipi-plugin uses deprecated attribute \"angle\".");
+            qCWarning(PluginsLog, "Kipi-plugin uses deprecated attribute \"angle\".");
             m_info->setAngle( kexivOrientation2deg( map[QLatin1String("angle")].toInt() ) );
             map.remove(QLatin1String("angle"));
         }
@@ -248,13 +242,13 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
             DB::MemberMap &memberMap = DB::ImageDB::instance()->memberMap();
             Q_FOREACH( const QString &path, tagspaths )
             {
-                Debug() << "Adding tags: " << path;
+                qCDebug(PluginsLog) << "Adding tags: " << path;
                 QStringList tagpath = path.split( QLatin1String("/"), QString::SkipEmptyParts );
                 // Note: maybe tagspaths with only one component or with unknown first component
                 //  should be added to the "keywords"/"Events" category?
                 if ( tagpath.size() < 2 )
                 {
-                    qWarning() << "Ignoring incompatible tag: " << path;
+                    qCWarning(PluginsLog) << "Ignoring incompatible tag: " << path;
                     continue;
                 }
 
@@ -270,7 +264,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                     {
                         if ( ! cat->items().contains( currentTag ) )
                         {
-                            Debug() << "Adding tag " << currentTag << " to category " << categoryName;
+                            qCDebug(PluginsLog) << "Adding tag " << currentTag << " to category " << categoryName;
                             // before we can use a tag, we have to add it
                             cat->addItem( currentTag );
                         }
@@ -286,18 +280,18 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
                                 // make currentTag a member of the previousTag group
                                 memberMap.addMemberToGroup( categoryName, previousTag, currentTag );
                             } else {
-                                qWarning() << "Cannot make " << currentTag << " a subcategory of "
+                                qCWarning(PluginsLog) << "Cannot make " << currentTag << " a subcategory of "
                                     << categoryName << "/" << previousTag << "!";
                             }
                         }
                         previousTag = currentTag;
                     }
-                    Debug() << "Adding tag " << previousTag << " in category " << categoryName
+                    qCDebug(PluginsLog) << "Adding tag " << previousTag << " in category " << categoryName
                         << " to image " << m_info->label();
                     // previousTag must be a valid category (see addItem() above...)
                     m_info->addCategoryInfo( categoryName, previousTag );
                 } else {
-                    qWarning() << "Unknown category: " << categoryName;
+                    qCWarning(PluginsLog) << "Unknown category: " << categoryName;
                 }
             }
             map.remove(QLatin1String("tagspath"));
@@ -322,7 +316,7 @@ void Plugins::ImageInfo::addAttributes( const QMap<QString,QVariant>& amap )
         MainWindow::DirtyIndicator::markDirty();
         if ( ! map.isEmpty() )
         {
-            qWarning() << "The following attributes are not (yet) supported by the KPhotoAlbum KIPI interface:" << map;
+            qCWarning(PluginsLog) << "The following attributes are not (yet) supported by the KPhotoAlbum KIPI interface:" << map;
         }
     }
 }
@@ -369,7 +363,7 @@ void Plugins::ImageInfo::delAttributes( const QStringList& attrs)
         MainWindow::DirtyIndicator::markDirty();
         if ( ! delAttrs.isEmpty() )
         {
-            qWarning() << "The following attributes are not (yet) supported by the KPhotoAlbum KIPI interface:" << delAttrs;
+            qCWarning(PluginsLog) << "The following attributes are not (yet) supported by the KPhotoAlbum KIPI interface:" << delAttrs;
         }
     }
 }

@@ -23,9 +23,6 @@
 #include "ResizableFrame.h"
 
 // Local includes
-#ifdef HAVE_KFACE
-#  include "ProposedFaceDialog.h"
-#endif
 #include "AreaTagSelectDialog.h"
 #include "CompletableLineEdit.h"
 #include "ImagePreview.h"
@@ -33,23 +30,15 @@
 
 // Qt includes
 #include <QApplication>
-#include <QDebug>
 #include <QDockWidget>
 #include <QList>
 #include <QMenu>
 #include <QMouseEvent>
-#include <QScopedPointer>
 #include <QTimer>
 
 // KDE includes
 #include <KLocalizedString>
 #include <KMessageBox>
-
-#ifdef DEBUG_AnnotationDialog
-#define Debug qDebug
-#else
-#define Debug if(0) qDebug
-#endif
 
 static const int SCALE_TOP    = 0b00000001;
 static const int SCALE_BOTTOM = 0b00000010;
@@ -75,17 +64,6 @@ AnnotationDialog::ResizableFrame::ResizableFrame(QWidget* parent) : QFrame(paren
     m_preview = dynamic_cast<ImagePreview*>(parent);
     m_previewWidget = dynamic_cast<ImagePreviewWidget *>(m_preview->parentWidget());
 
-#ifdef HAVE_KFACE
-    // The area has not been changed yet
-    m_changed = false;
-    // The area has not be used to train the recognition database yet
-    m_trained = false;
-    // Until we are told otherwise, assume this area was drawn manually by the user.
-    m_detectedFace = false;
-    // When we're constructing, there's no proposed face dialog.
-    m_proposedFaceDialog = 0;
-#endif
-
     setFrameShape(QFrame::Box);
     setMouseTracking(true);
     setStyleSheet(STYLE_UNASSOCIATED);
@@ -98,14 +76,6 @@ AnnotationDialog::ResizableFrame::ResizableFrame(QWidget* parent) : QFrame(paren
 
     m_removeTagAct = new QAction(this);
     connect(m_removeTagAct, SIGNAL(triggered()), this, SLOT(removeTag()));
-
-#ifdef HAVE_KFACE
-    m_updateRecognitionDatabaseAct = new QAction(this);
-    connect(m_updateRecognitionDatabaseAct, SIGNAL(triggered()), this, SLOT(updateRecognitionDatabase()));
-
-    m_recognizeAct = new QAction(i18n("Try to recognize this face"), this);
-    connect(m_recognizeAct, SIGNAL(triggered()), this, SLOT(recognize()));
-#endif
 }
 
 AnnotationDialog::ResizableFrame::~ResizableFrame()
@@ -384,6 +354,10 @@ void AnnotationDialog::ResizableFrame::setTagData(QString category, QString tag,
     // check existing areas for consistency
     Q_FOREACH(ResizableFrame *area, m_dialog->areas())
     {
+        if (area->isTidied()) {
+            continue;
+        }
+
         if (area->tagData() == selectedData)
         {
             if (KMessageBox::Cancel == KMessageBox::warningContinueCancel(
@@ -411,28 +385,6 @@ void AnnotationDialog::ResizableFrame::setTagData(QString category, QString tag,
 
     // Remove the associated tag from the tag candidate list
     m_dialog->removeTagFromCandidateList(m_tagData.first, m_tagData.second);
-
-#ifdef HAVE_KFACE
-    // Check if the selected data is the data that has been (probably) proposed by face recognition
-    if (selectedData == m_proposedTagData) {
-        // Disable to offer training with this area (it has already been recognized correctly)
-        m_trained = true;
-    }
-
-    // Check of other areas contain this tag as a proposed tag
-    m_dialog->checkProposedTagData(m_tagData, this);
-
-    // If this is a manual update, update m_changed so that
-    // we can (probably) train the recognition database
-    if (changeOrigin == ManualChange) {
-        m_changed = true;
-
-        if (m_detectedFace && ! m_trained && m_previewWidget->automatedTraining()) {
-            m_preview->trainRecognitionDatabase(m_actualCoordinates, m_tagData);
-            m_trained = true;
-        }
-    }
-#endif
 
     if (changeOrigin != AutomatedChange) {
         // Tell the dialog an area has been changed
@@ -462,12 +414,6 @@ void AnnotationDialog::ResizableFrame::removeTagData()
         setStyleSheet(STYLE_PROPOSED);
     }
 
-#ifdef HAVE_KFACE
-    // Also reset the trained and changed state
-    m_changed = false;
-    m_trained = false;
-#endif
-
     // Tell the dialog an area has been changed
     m_dialog->areaChanged();
 }
@@ -487,12 +433,13 @@ void AnnotationDialog::ResizableFrame::showContextMenu()
 {
     // Display a dialog where a tag can be selected directly
     QString category = m_previewWidget->defaultPositionableCategory();
-    QScopedPointer<AreaTagSelectDialog> tagMenu ( new AreaTagSelectDialog(
+    // this is not a memory leak: AreaTagSelectDialog is a regular parented dialog
+    AreaTagSelectDialog* tagMenu = new AreaTagSelectDialog(
                 this,
                 m_dialog->listSelectForCategory(category),
                 m_preview->grabAreaImage(geometry()),
                 m_dialog
-                ));
+                );
 
     tagMenu->show();
     tagMenu->moveToArea(mapToGlobal(QPoint(0, 0)));
@@ -592,78 +539,18 @@ void AnnotationDialog::ResizableFrame::addTagActions(QMenu *menu)
     // clicking the separator should not dismiss the menu:
     sep->setEnabled(false);
 
-#ifdef HAVE_KFACE
-    if (m_tagData.first.isEmpty() &&  m_proposedTagData.first.isEmpty()) {
-        // If we have nothing, offer a recognition database lookup
-        menu->addAction(m_recognizeAct);
-    }
-
-    if (! m_tagData.first.isEmpty() && m_changed && ! m_trained) {
-        // Append a "Update recognition database with this face" action
-        m_updateRecognitionDatabaseAct->setText(
-            i18n("Train the recognition database with the face of %1", m_tagData.second)
-        );
-        menu->addAction(m_updateRecognitionDatabaseAct);
-    }
-#endif
-
     // Append the "Remove area" action
     menu->addAction(m_removeAct);
 }
 
-#ifdef HAVE_KFACE
-void AnnotationDialog::ResizableFrame::acceptTag()
+void AnnotationDialog::ResizableFrame::markTidied()
 {
-    // Be sure that the proposed tag is selected and update this area's tag information
-    m_preview->acceptProposedTag(m_proposedTagData, this);
-
-    // Tell the dialog an area has been changed
-    m_dialog->areaChanged();
+    m_tidied = true;
 }
 
-void AnnotationDialog::ResizableFrame::updateRecognitionDatabase()
+bool AnnotationDialog::ResizableFrame::isTidied() const
 {
-    m_preview->trainRecognitionDatabase(m_actualCoordinates, m_tagData);
-    m_trained = true;
+    return m_tidied;
 }
-
-void AnnotationDialog::ResizableFrame::recognize()
-{
-    m_preview->recognizeArea(this);
-}
-
-void AnnotationDialog::ResizableFrame::markAsFace()
-{
-    m_detectedFace = true;
-}
-
-void AnnotationDialog::ResizableFrame::enterEvent(QEvent*)
-{
-    if (! m_proposedTagData.first.isEmpty()
-        && m_tagData.first.isEmpty()
-        && m_proposedFaceDialog == 0) {
-
-        m_proposedFaceDialog = new ProposedFaceDialog(this);
-    }
-}
-
-void AnnotationDialog::ResizableFrame::leaveEvent(QEvent*)
-{
-    QTimer::singleShot(0, m_proposedFaceDialog, SLOT(checkUnderMouse()));
-}
-
-void AnnotationDialog::ResizableFrame::checkUnderMouse()
-{
-    if (! underMouse()) {
-        m_proposedFaceDialog->deleteLater();
-        m_proposedFaceDialog = 0;
-    }
-}
-
-void AnnotationDialog::ResizableFrame::proposedFaceDialogRemoved()
-{
-    m_proposedFaceDialog = 0;
-}
-#endif
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,6 @@
 */
 
 #include "SettingsData.h"
-#include "SettingsData.moc"
 
 #include <stdlib.h>
 
@@ -365,15 +364,6 @@ property_copy( updateImageDate          , setUpdateImageDate          , bool , E
 property_copy( useModDateIfNoExif       , setUseModDateIfNoExif       , bool , ExifImport, true )
 property_copy( updateOrientation        , setUpdateOrientation        , bool , ExifImport, false )
 property_copy( updateDescription        , setUpdateDescription        , bool , ExifImport, false )
-
-/////////////////////////
-//// Face Management ////
-/////////////////////////
-
-#ifdef HAVE_KFACE
-property_copy(faceDetectionAccuracy   , setFaceDetectionAccuracy   , int, FaceManagement, 80);
-property_copy(faceDetectionSensitivity, setFaceDetectionSensitivity, int, FaceManagement, 80);
-#endif
 
 ///////////////////////
 //// Miscellaneous ////

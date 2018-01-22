@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2016 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -22,6 +22,7 @@
 #include <QLineEdit>
 #include <QTextCodec>
 #include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <KLocalizedString>
 
@@ -41,6 +42,7 @@ Exif::InfoDialog::InfoDialog(const DB::FileName& fileName, QWidget* parent) : QD
 
     setAttribute(Qt::WA_DeleteOnClose);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    buttonBox->button(QDialogButtonBox::Close)->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QWidget* top = new QWidget(this);
@@ -120,5 +122,4 @@ void Exif::InfoDialog::enterEvent(QEvent *)
     m_grid->setFocus();
 }
 
-#include "InfoDialog.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

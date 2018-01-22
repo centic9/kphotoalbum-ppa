@@ -29,18 +29,11 @@
 #include <KLocalizedString>
 
 // Qt includes
-#include <QDebug>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPainter>
-
-#ifdef DEBUG_AnnotationDialog
-#define Debug qDebug
-#else
-#define Debug if(0) qDebug
-#endif
 
 AnnotationDialog::AreaTagSelectDialog::AreaTagSelectDialog(AnnotationDialog::ResizableFrame *area,
                                                            ListSelect *ls,

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -55,6 +55,7 @@ DeleteDialog::DeleteDialog( QWidget* parent )
     lay1->addWidget( m_deleteFromDb );
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    buttonBox->button(QDialogButtonBox::Ok)->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &DeleteDialog::deleteImages);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &DeleteDialog::reject);
     mainLayout->addWidget(buttonBox);
@@ -105,5 +106,4 @@ void DeleteDialog::deleteImages()
         reject();
 }
 
-#include "DeleteDialog.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

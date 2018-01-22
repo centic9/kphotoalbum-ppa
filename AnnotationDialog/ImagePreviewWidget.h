@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -26,7 +26,6 @@
 // Local includes
 #include "DB/ImageInfo.h"
 #include "ImagePreview.h"
-#include "config-kpa-kface.h"
 
 class QCheckBox;
 class QPushButton;
@@ -51,12 +50,10 @@ public:
     bool showAreas() const;
     void canCreateAreas(bool state);
     void setFacedetectButEnabled(bool state);
-#ifdef HAVE_KFACE
-    bool automatedTraining();
-#endif
     void setSearchMode(bool state);
     void updatePositionableCategories(QList<QString> positionableCategories = QList<QString>());
     QString defaultPositionableCategory() const;
+    void setToggleFullscreenPreviewEnabled(bool state);
 
 public slots:
     void slotNext();
@@ -74,15 +71,20 @@ signals:
     void indexChanged( int newIndex );
     void copyPrevClicked();
     void areaVisibilityChanged(bool visible);
+    void togglePreview();
 
-private:
+private: // Functions
     /**
      * Update labels and tooltip texts when canCreateAreas() changes.
      */
     void updateTexts();
+    void toggleFullscreenPreview();
+
+private: // Variables
     ImagePreview* m_preview;
     QPushButton* m_prevBut;
     QPushButton* m_nextBut;
+    QPushButton *m_toggleFullscreenPreview;
     QPushButton* m_rotateLeft;
     QPushButton* m_rotateRight;
     QPushButton* m_delBut;
@@ -92,9 +94,6 @@ private:
     QList<DB::ImageInfo>* m_imageList;
     int m_current;
     bool m_singleEdit;
-#ifdef HAVE_KFACE
-    QCheckBox *m_autoTrainDatabase;
-#endif
     QLabel* m_defaultAreaCategoryLabel;
     QComboBox* m_defaultAreaCategory;
     QWidget* m_controlWidget;

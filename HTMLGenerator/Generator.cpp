@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2016 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,7 +15,9 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
 #include "Generator.h"
+#include "Logging.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -24,7 +26,6 @@
 #include <QApplication>
 #include <QList>
 #include <QDir>
-#include <QDebug>
 #include <QDomDocument>
 #include <QMimeDatabase>
 #include <QStandardPaths>
@@ -48,12 +49,6 @@
 #include "Setup.h"
 #include "MainWindow/Window.h"
 
-#ifdef DEBUG_HTMLGENERATOR
-#define Debug qDebug
-#else
-#define Debug if(0) qDebug
-#endif
-
 HTMLGenerator::Generator::Generator( const Setup& setup, QWidget* parent )
     : QProgressDialog( parent )
     , m_tempDirHandle()
@@ -75,10 +70,10 @@ HTMLGenerator::Generator::~Generator()
 }
 void HTMLGenerator::Generator::generate()
 {
-    Debug() << "Generating gallery" << m_setup.title() << "containing" << m_setup.imageList().size() << "entries in" << m_setup.baseDir();
+    qCDebug(HTMLGeneratorLog) << "Generating gallery" << m_setup.title() << "containing" << m_setup.imageList().size() << "entries in" << m_setup.baseDir();
     // Generate .kim file
     if ( m_setup.generateKimFile() ) {
-        Debug() << "Generating .kim file...";
+        qCDebug(HTMLGeneratorLog) << "Generating .kim file...";
         bool ok;
         QString destURL = m_setup.destURL();
 
@@ -87,7 +82,7 @@ void HTMLGenerator::Generator::generate()
                                   destURL + QDir::separator() + m_setup.outputDir(), true, &ok);
         if ( !ok )
         {
-            Debug() << ".kim file failed!";
+            qCDebug(HTMLGeneratorLog) << ".kim file failed!";
             return;
         }
     }
@@ -100,7 +95,7 @@ void HTMLGenerator::Generator::generate()
 
     m_filenameMapper.reset();
 
-    Debug() << "Generating content pages...";
+    qCDebug(HTMLGeneratorLog) << "Generating content pages...";
     // Iterate over each of the image sizes needed.
     for( QList<ImageSizeCheckBox*>::ConstIterator sizeIt = m_setup.activeResolutions().begin();
          sizeIt != m_setup.activeResolutions().end(); ++sizeIt )
@@ -125,7 +120,7 @@ void HTMLGenerator::Generator::generate()
     }
 
     // Now generate the thumbnail images
-    Debug() << "Generating thumbnail images...";
+    qCDebug(HTMLGeneratorLog) << "Generating thumbnail images...";
     for (const DB::FileName& fileName : m_setup.imageList()) {
         if ( wasCanceled() )
             return;
@@ -144,19 +139,19 @@ void HTMLGenerator::Generator::generate()
     if ( wasCanceled() )
         return;
 
-    Debug() << "Linking image file...";
+    qCDebug(HTMLGeneratorLog) << "Linking image file...";
     bool ok = linkIndexFile();
     if ( !ok )
         return;
 
-    Debug() << "Copying theme files...";
+    qCDebug(HTMLGeneratorLog) << "Copying theme files...";
     // Copy over the mainpage.css, imagepage.css
     QString themeDir, themeAuthor, themeName;
     getThemeInfo( &themeDir, &themeName, &themeAuthor );
     QDir dir( themeDir );
     QStringList files = dir.entryList( QDir::Files );
     if( files.count() < 1 )
-        qWarning() << QString::fromLatin1("theme '%1' doesn't have enough files to be a theme").arg( themeDir );
+        qCWarning(HTMLGeneratorLog) << QString::fromLatin1("theme '%1' doesn't have enough files to be a theme").arg( themeDir );
 
     for( QStringList::Iterator it = files.begin(); it != files.end(); ++it ) {
         if( *it == QString::fromLatin1("kphotoalbum.theme") ||
@@ -174,7 +169,7 @@ void HTMLGenerator::Generator::generate()
 
     // Copy files over to destination.
     QString outputDir = m_setup.baseDir() + QString::fromLatin1( "/" ) + m_setup.outputDir();
-    Debug() << "Copying files from" << m_tempDir.path() << "to final location"<< outputDir<<"...";
+    qCDebug(HTMLGeneratorLog) << "Copying files from" << m_tempDir.path() << "to final location"<< outputDir<<"...";
     KIO::CopyJob* job = KIO::move( QUrl::fromLocalFile( m_tempDir.path() ), QUrl::fromUserInput(outputDir) );
     connect(job, &KIO::CopyJob::result, this, &Generator::showBrowser);
 
@@ -786,5 +781,5 @@ QString HTMLGenerator::Generator::populateDescription( QList<DB::CategoryPtr> ca
 
     return description;
 }
-#include "Generator.moc"
+
 // vi:expandtab:tabstop=4 shiftwidth=4:

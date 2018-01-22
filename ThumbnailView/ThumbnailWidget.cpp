@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2011 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,6 +15,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
 #include "ThumbnailWidget.h"
 #include <QScrollBar>
 #include <QTimer>
@@ -24,7 +25,6 @@
 #include "ThumbnailFactory.h"
 #include "ThumbnailModel.h"
 #include "CellGeometry.h"
-#include "ThumbnailWidget.moc"
 #include <math.h>
 
 #include <KLocalizedString>
@@ -36,7 +36,6 @@
 #include "DB/ImageDB.h"
 #include "DB/ImageInfoPtr.h"
 #include "Settings/SettingsData.h"
-#include "Utilities/Set.h"
 #include "Utilities/Util.h"
 #include "SelectionMaintainer.h"
 
@@ -48,7 +47,6 @@
  * simply was too many problems, so after years of tears and pains I
  * rewrote it.
  */
-using Utilities::StringSet;
 
 ThumbnailView::ThumbnailWidget::ThumbnailWidget( ThumbnailFactory* factory)
     :QListView(),
@@ -380,7 +378,7 @@ DB::FileNameList ThumbnailView::ThumbnailWidget::selection( ThumbnailView::Selec
         {
             case IncludeAllStacks:
                 includeAllStacks = true;
-                // no break!
+                /* FALLTHROUGH */
             case ExpandCollapsedStacks:
                 {
                     // if the selected image belongs to a collapsed thread,

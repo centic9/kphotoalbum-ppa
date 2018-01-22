@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,10 +30,12 @@
 #include <QContextMenuEvent>
 #include <QCursor>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QDir>
 #include <QFrame>
 #include <QInputDialog>
 #include <QLayout>
+#include <QLoggingCategory>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
@@ -110,6 +112,7 @@
 #include "FeatureDialog.h"
 #include "ImageCounter.h"
 #include "InvalidDateFinder.h"
+#include "Logging.h"
 #include "Options.h"
 #include "SearchBar.h"
 #include "SplashScreen.h"
@@ -132,12 +135,17 @@ MainWindow::Window::Window( QWidget* parent )
     m_positionBrowser = 0;
 #endif
 
+    qCDebug(MainWindowLog) << "Using icon theme: " << QIcon::themeName();
+    qCDebug(MainWindowLog) << "Icon search paths: " << QIcon::themeSearchPaths();
+    QElapsedTimer timer;
+    timer.start();
     SplashScreen::instance()->message( i18n("Loading Database") );
     s_instance = this;
 
     bool gotConfigFile = load();
     if ( !gotConfigFile )
         throw 0;
+    qCInfo(TimingLog) << "MainWindow: Loading Database: " << timer.restart() << "ms.";
     SplashScreen::instance()->message( i18n("Loading Main Window") );
 
     QWidget* top = new QWidget( this );
@@ -172,10 +180,13 @@ MainWindow::Window::Window( QWidget* parent )
     m_stack->setCurrentWidget( m_browser );
 
     m_settingsDialog = nullptr;
+    qCInfo(TimingLog) << "MainWindow: Loading MainWindow: " << timer.restart() << "ms.";
     setupMenuBar();
-
+    qCInfo(TimingLog) << "MainWindow: setupMenuBar: " << timer.restart() << "ms.";
     createSarchBar();
+    qCInfo(TimingLog) << "MainWindow: createSearchBar: " << timer.restart() << "ms.";
     setupStatusBar();
+    qCInfo(TimingLog) << "MainWindow: setupStatusBar: " << timer.restart() << "ms.";
 
     // Misc
     m_autoSaveTimer = new QTimer( this );
@@ -213,7 +224,9 @@ MainWindow::Window::Window( QWidget* parent )
 
     checkIfMplayerIsInstalled();
 
+    qCInfo(TimingLog) << "MainWindow: misc setup time: " << timer.restart() << "ms.";
     executeStartupActions();
+    qCInfo(TimingLog) << "MainWindow: executeStartupActions " << timer.restart() << "ms.";
 }
 
 MainWindow::Window::~Window()
@@ -225,29 +238,37 @@ MainWindow::Window::~Window()
 
 void MainWindow::Window::delayedInit()
 {
+    QElapsedTimer timer;
+    timer.start();
     SplashScreen* splash = SplashScreen::instance();
     setupPluginMenu();
+    qCInfo(TimingLog) << "MainWindow: setupPluginMenu: " << timer.restart() << "ms.";
+
 
     if ( Settings::SettingsData::instance()->searchForImagesOnStart() ||
 	 Options::the()->searchForImagesOnStart() ) {
         splash->message( i18n("Searching for New Files") );
         qApp->processEvents();
         DB::ImageDB::instance()->slotRescan();
+        qCInfo(TimingLog) << "MainWindow: Search for New Files: " << timer.restart() << "ms.";
     }
 
     if ( !Settings::SettingsData::instance()->delayLoadingPlugins() ) {
         splash->message( i18n( "Loading Plug-ins" ) );
         loadPlugins();
+        qCInfo(TimingLog) << "MainWindow: Loading Plug-ins: " << timer.restart() << "ms.";
     }
 
     splash->done();
     show();
+    qCInfo(TimingLog) << "MainWindow: MainWindow.show():" << timer.restart() << "ms.";
 
     QUrl importUrl = Options::the()->importFile();
     if ( importUrl.isValid() )
     {
         // I need to do this in delayed init to get the import window on top of the normal window
         ImportExport::Import::imageImport( importUrl );
+        qCInfo(TimingLog) << "MainWindow: imageImport:" << timer.restart() << "ms.";
     } else {
         // I need to postpone this otherwise the tip dialog will not get focus on start up
         KTipDialog::showTip( this );
@@ -257,6 +278,7 @@ void MainWindow::Window::delayedInit()
     if ( exifDB->isAvailable() && !exifDB->isOpen() ) {
         KMessageBox::sorry( this, i18n("EXIF database cannot be opened. Check that the image root directory is writable.") );
     }
+    qCInfo(TimingLog) << "MainWindow: Loading EXIF DB:" << timer.restart() << "ms.";
 
     if (!Options::the()->listen().isNull())
         RemoteControl::RemoteInterface::instance().listen(Options::the()->listen());
@@ -871,7 +893,7 @@ void MainWindow::Window::setupMenuBar()
     a->setText( i18n("Build Thumbnails") );
 
     a = actionCollection()->addAction( QString::fromLatin1("statistics"), this, SLOT(slotStatistics()) );
-    a->setText( i18n("Statistics") );
+    a->setText( i18n("Statistics...") );
 
     m_markUntagged = actionCollection()->addAction(QString::fromUtf8("markUntagged"),
                                                    this, SLOT(slotMarkUntagged()));
@@ -1211,7 +1233,7 @@ void MainWindow::Window::unlockFromDefaultScope()
     delete dialog;
 }
 
-void MainWindow::Window::setLocked( bool locked, bool force )
+void MainWindow::Window::setLocked( bool locked, bool force, bool recount )
 {
     m_statusBar->setLocked( locked );
     Settings::SettingsData::instance()->setLocked( locked, force );
@@ -1220,7 +1242,8 @@ void MainWindow::Window::setLocked( bool locked, bool force )
     m_unlock->setEnabled( locked );
     m_setDefaultPos->setEnabled( !locked );
     m_setDefaultNeg->setEnabled( !locked );
-    m_browser->reload();
+    if (recount)
+        m_browser->reload();
 }
 
 void MainWindow::Window::changePassword()
@@ -1795,7 +1818,7 @@ void MainWindow::Window::setupStatusBar()
 {
     m_statusBar = new MainWindow::StatusBar;
     setStatusBar( m_statusBar );
-    setLocked( Settings::SettingsData::instance()->locked(), true );
+    setLocked( Settings::SettingsData::instance()->locked(), true, false );
 }
 
 void MainWindow::Window::slotRecreateExifDB()
@@ -1958,6 +1981,4 @@ Browser::PositionBrowserWidget* MainWindow::Window::createPositionBrowser()
 }
 #endif
 
-
-#include "Window.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

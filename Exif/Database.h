@@ -18,11 +18,12 @@
 #ifndef EXIFDATABASE_H
 #define EXIFDATABASE_H
 
-#include <QSqlDatabase>
-#include <qstring.h>
+#include <DB/FileNameList.h>
+
 #include <QList>
-#include <qpair.h>
-#include <DB/FileName.h>
+#include <QPair>
+#include <QSqlDatabase>
+#include <QString>
 
 namespace Exiv2 { class ExifData; }
 
@@ -84,6 +85,7 @@ public:
      */
     bool add( const DB::FileName& fileName );
     void remove( const DB::FileName& fileName );
+    void remove( const DB::FileNameList& list );
     /**
      * @brief readFields searches the exif database for a given file and fills the element list with values.
      * If the query fails or has no result, the ElementList is not changed.

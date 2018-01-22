@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -24,6 +24,7 @@
 #include "DB/ImageInfo.h"
 #include <qmatrix.h>
 #include <QDialogButtonBox>
+#include <QPushButton>
 
 using namespace ImportExport;
 
@@ -64,9 +65,9 @@ MiniViewer::MiniViewer( QWidget* parent ): QDialog( parent )
     m_pixmap = new QLabel( this );
     vlay->addWidget( m_pixmap );
     QDialogButtonBox* box = new QDialogButtonBox( QDialogButtonBox::Close, this );
+    box->button(QDialogButtonBox::Close)->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(box, &QDialogButtonBox::rejected, this, &MiniViewer::slotClose);
     vlay->addWidget( box );
 }
 
-#include "MiniViewer.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

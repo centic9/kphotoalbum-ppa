@@ -16,31 +16,32 @@
    Boston, MA 02110-1301, USA.
 */
 #include "NewImageFinder.h"
-#include "ImageManager/ThumbnailBuilder.h"
 #include "FastDir.h"
-#include "ImageManager/ThumbnailCache.h"
+#include "Logging.h"
 
-#include "DB/ImageDB.h"
-#include <qfileinfo.h>
-#include <QStringList>
-#include <QProgressDialog>
-#include <KLocalizedString>
-#include <qapplication.h>
-#include <qeventloop.h>
-#include <kmessagebox.h>
-#include "DB/MD5Map.h"
-
-#include "Exif/Database.h"
-
-#include "ImageManager/RawImageDecoder.h"
-#include "Settings/SettingsData.h"
-#include "Utilities/Util.h"
-#include <MainWindow/Window.h>
-#include <MainWindow/FeatureDialog.h>
-#include <BackgroundTaskManager/JobManager.h>
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
-#include <QDebug>
+#include <BackgroundTaskManager/JobManager.h>
+#include <DB/ImageDB.h>
+#include <DB/MD5Map.h>
+#include <Exif/Database.h>
+#include <ImageManager/RawImageDecoder.h>
+#include <ImageManager/ThumbnailBuilder.h>
+#include <ImageManager/ThumbnailCache.h>
+#include <MainWindow/FeatureDialog.h>
+#include <MainWindow/Window.h>
+#include <Settings/SettingsData.h>
+#include <Utilities/Util.h>
+
+#include <QApplication>
+#include <QEventLoop>
+#include <QFileInfo>
+#include <QProgressBar>
+#include <QProgressDialog>
+#include <QStringList>
+
+#include <KLocalizedString>
+#include <KMessageBox>
 
 using namespace DB;
 
@@ -140,6 +141,9 @@ void NewImageFinder::loadExtraFiles()
     dialog.setLabelText( i18n("<p><b>Loading information from new files</b></p>"
                               "<p>Depending on the number of images, this may take some time.<br/>"
                               "However, there is only a delay when new images are found.</p>") );
+    QProgressBar *progressBar = new QProgressBar;
+    progressBar->setFormat( QLatin1String("%v/%m") );
+    dialog.setBar(progressBar);
     dialog.setMaximum( m_pendingLoad.count() );
     dialog.setMinimumDuration( 1000 );
 
@@ -210,24 +214,24 @@ ImageInfoPtr NewImageFinder::loadExtraFile( const DB::FileName& newFileName, DB:
                 tmp.replace(m_modifiedFileComponent, (*it));
                 originalFileName = DB::FileName::fromRelativePath(tmp);
 
-                MD5 originalSum = Utilities::MD5Sum( originalFileName );
+                MD5 originalSum = (newFileName == originalFileName ? sum : Utilities::MD5Sum( originalFileName ));
                 if ( DB::ImageDB::instance()->md5Map()->contains( originalSum ) ) {
                     // we have a previous copy of this file; copy it's data
                     // from the original.
                     originalInfo = DB::ImageDB::instance()->info( originalFileName );
                     if ( !originalInfo ) {
-                        qDebug() << "Original info not found by name for " << originalFileName.absolute() << ", trying by MD5 sum.";
+                        qCDebug(DBLog) << "Original info not found by name for " << originalFileName.absolute() << ", trying by MD5 sum.";
                         originalFileName = DB::ImageDB::instance()->md5Map()->lookup( originalSum );
 
                         if (!originalFileName.isNull())
                         {
-                            qDebug() << "Substitute image " << originalFileName.absolute() << " found.";
+                            qCDebug(DBLog) << "Substitute image " << originalFileName.absolute() << " found.";
                             originalInfo = DB::ImageDB::instance()->info( originalFileName );
                         }
 
                         if ( !originalInfo )
                         {
-                            qWarning("How did that happen? We couldn't find info for the original image %s; can't copy the original data to %s",
+                            qCWarning(DBLog,"How did that happen? We couldn't find info for the original image %s; can't copy the original data to %s",
                                      qPrintable(originalFileName.absolute()), qPrintable(newFileName.absolute()));
                             continue;
                         }
@@ -294,7 +298,7 @@ bool NewImageFinder::handleIfImageHasBeenMoved(const FileName &newFileName, cons
             // The file we had a collapse with didn't exists anymore so it is likely moved to this new name
             ImageInfoPtr info = DB::ImageDB::instance()->info( matchedFileName);
             if ( !info )
-                qWarning("How did that happen? We couldn't find info for the images %s", qPrintable(matchedFileName.relative()));
+                qCWarning(DBLog, "How did that happen? We couldn't find info for the images %s", qPrintable(matchedFileName.relative()));
             else {
                 info->delaySavingChanges(true);
                 fi = QFileInfo ( matchedFileName.relative() );

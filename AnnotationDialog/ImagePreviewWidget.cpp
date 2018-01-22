@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,7 +20,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QWidget>
-#include <QDebug>
 #include <QApplication>
 #include <QCheckBox>
 #include <QPushButton>
@@ -62,6 +61,14 @@ ImagePreviewWidget::ImagePreviewWidget() : QWidget()
 
     controlButtonsLayout->addStretch(1);
 
+    m_toggleFullscreenPreview = new QPushButton;
+    m_toggleFullscreenPreview->setIcon(QIcon::fromTheme(QString::fromUtf8("file-zoom-in")));
+    m_toggleFullscreenPreview->setFixedWidth(40);
+    m_toggleFullscreenPreview->setToolTip(i18n("Toggle full-screen preview (CTRL+Space)"));
+    controlButtonsLayout->addWidget(m_toggleFullscreenPreview);
+    connect(m_toggleFullscreenPreview, &QPushButton::clicked,
+            this, &ImagePreviewWidget::toggleFullscreenPreview);
+
     m_rotateLeft = new QPushButton( this );
     controlButtonsLayout->addWidget( m_rotateLeft );
     m_rotateLeft->setIcon( QIcon::fromTheme( QString::fromLatin1( "object-rotate-left" ) ) );
@@ -89,16 +96,6 @@ ImagePreviewWidget::ImagePreviewWidget() : QWidget()
     m_toggleAreasBut->setChecked(true);
     // tooltip text is set in updateTexts()
 
-#ifdef HAVE_KFACE
-    m_facedetectBut = new QPushButton(this);
-    controlButtonsLayout->addWidget(m_facedetectBut);
-    m_facedetectBut->setIcon(QIcon::fromTheme(QString::fromLatin1("edit-find-user")));
-    m_facedetectBut->setFixedWidth(40);
-    m_facedetectBut->setCheckable(true);
-    m_facedetectBut->setChecked(false);
-    // tooltip text is set in updateTexts()
-#endif
-
     controlButtonsLayout->addStretch(1);
     m_delBut = new QPushButton( this );
     m_delBut->setIcon( QIcon::fromTheme( QString::fromLatin1( "edit-delete" ) ) );
@@ -115,14 +112,6 @@ ImagePreviewWidget::ImagePreviewWidget() : QWidget()
     connect( m_rotateLeft, SIGNAL(clicked()), this, SLOT(rotateLeft()) );
     connect( m_rotateRight, SIGNAL(clicked()), this, SLOT(rotateRight()) );
     connect( m_toggleAreasBut, SIGNAL(clicked(bool)), this, SLOT(slotShowAreas(bool)) );
-#ifdef HAVE_KFACE
-    connect(m_facedetectBut, SIGNAL(clicked()), m_preview, SLOT(detectFaces()));
-
-    m_autoTrainDatabase = new QCheckBox(i18n("Train face recognition database automatically"), this);
-    // whatsThis text is set in updateTexts()
-    m_autoTrainDatabase->setChecked(Qt::Checked);
-    controlLayout->addWidget(m_autoTrainDatabase, 0, Qt::AlignCenter);
-#endif
 
     QHBoxLayout* defaultAreaCategoryLayout = new QHBoxLayout;
     controlLayout->addLayout(defaultAreaCategoryLayout);
@@ -158,12 +147,6 @@ QString ImagePreviewWidget::defaultPositionableCategory() const
     return m_defaultAreaCategory->currentText();
 }
 
-#ifdef HAVE_KFACE
-bool ImagePreviewWidget::automatedTraining()
-{
-    return m_autoTrainDatabase->isChecked();
-}
-#endif
 
 int ImagePreviewWidget::angle() const
 {
@@ -183,9 +166,6 @@ void ImagePreviewWidget::configure( QList<DB::ImageInfo>* imageList, bool single
   m_copyPreviousBut->setEnabled( m_singleEdit );
   m_rotateLeft->setEnabled( m_singleEdit );
   m_rotateRight->setEnabled( m_singleEdit );
-#ifdef HAVE_KFACE
-  m_autoTrainDatabase->setEnabled(m_singleEdit);
-#endif
 }
 
 void ImagePreviewWidget::slotPrev()
@@ -323,10 +303,6 @@ void ImagePreviewWidget::canCreateAreas(bool state)
         m_toggleAreasBut->setEnabled(state);
         emit areaVisibilityChanged(state);
     }
-#ifdef HAVE_KFACE
-    m_facedetectBut->setEnabled(state);
-    m_autoTrainDatabase->setEnabled(state);
-#endif
     m_preview->setAreaCreationEnabled(state);
     updateTexts();
 }
@@ -337,13 +313,6 @@ void ImagePreviewWidget::updateTexts()
     {
         // positionable tags enabled
         m_toggleAreasBut->setToolTip(i18nc("@info:tooltip", "Hide or show areas on the image"));
-#ifdef HAVE_KFACE
-        m_facedetectBut->setToolTip(i18nc("@info:tooltip", "Search for faces on the current image"));
-        m_autoTrainDatabase->setWhatsThis(i18nc("@info:whatsthis",
-            "If a tag for an area found by the face detector is set manually, the face recognition "
-            "database will be trained automatically with that tag."
-        ));
-#endif
     } else {
         if (m_singleEdit) {
             // positionable tags disabled
@@ -357,22 +326,6 @@ void ImagePreviewWidget::updateTexts()
                 "Areas on an image can only be shown in single-image annotation mode."
             ));
         }
-#ifdef HAVE_KFACE
-        QString faceDetectionPlaceholderText;
-        if (m_singleEdit) {
-            faceDetectionPlaceholderText = i18nc("@info",
-                "To use face detection, enable <emphasis>positionable tags</emphasis> for at least "
-                "one category in <interface>Settings|Configure KPhotoAlbum..."
-                "|Categories</interface>."
-            );
-        } else {
-            faceDetectionPlaceholderText = i18nc("@info",
-                "Face detection is only available in single-image annotation mode."
-            );
-        }
-        m_facedetectBut->setToolTip( faceDetectionPlaceholderText );
-        m_autoTrainDatabase->setWhatsThis( faceDetectionPlaceholderText );
-#endif
     }
 }
 
@@ -395,6 +348,16 @@ void ImagePreviewWidget::setFacedetectButEnabled(bool state)
 void ImagePreviewWidget::setSearchMode(bool state)
 {
     m_controlWidget->setVisible(! state);
+}
+
+void ImagePreviewWidget::toggleFullscreenPreview()
+{
+    emit togglePreview();
+}
+
+void ImagePreviewWidget::setToggleFullscreenPreviewEnabled(bool state)
+{
+    m_toggleFullscreenPreview->setEnabled(state);
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

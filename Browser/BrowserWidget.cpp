@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -295,7 +295,10 @@ void Browser::BrowserWidget::setModel( QAbstractItemModel* model)
     m_curView->setModel( m_filterProxy );
 
     if (qobject_cast<TreeCategoryModel*>(model)) {
-        connect(model, &QAbstractItemModel::dataChanged, this, &BrowserWidget::reload);
+        // FIXME: The new-style connect here does not work, reload() is not triggered
+        //connect(model, &QAbstractItemModel::dataChanged, this, &BrowserWidget::reload);
+        // The old-style one triggers reload() correctly
+        connect(model, SIGNAL(dataChanged()), this, SLOT(reload()));
     }
 }
 
@@ -473,7 +476,5 @@ void Browser::BrowserWidget::handleResizeEvent( QMouseEvent* event )
         update();
     }
 }
-
-#include "BrowserWidget.moc"
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

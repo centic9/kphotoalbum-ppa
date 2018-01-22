@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,7 +18,14 @@
 
 #include "ExternalPopup.h"
 
-#include <QDebug>
+#include "Logging.h"
+#include "RunDialog.h"
+#include "Window.h"
+
+#include <DB/FileNameList.h>
+#include <DB/ImageInfo.h>
+#include <Settings/SettingsData.h>
+
 #include <QFile>
 #include <QIcon>
 #include <QLabel>
@@ -33,13 +40,6 @@
 #include <KRun>
 #include <KService>
 #include <KShell>
-
-#include <DB/FileNameList.h>
-#include <DB/ImageInfo.h>
-#include <Settings/SettingsData.h>
-
-#include "RunDialog.h"
-#include "Window.h"
 
 void MainWindow::ExternalPopup::populate( DB::ImageInfoPtr current, const DB::FileNameList& imageList )
 {
@@ -125,7 +125,7 @@ void MainWindow::ExternalPopup::slotExecuteService( QAction* action )
             QFile::copy(origFile, newFile);
             lst.append( QUrl::fromLocalFile(newFile) );
         } else {
-            qWarning("No settings were appropriate for modifying the file name (you must fill in the regexp field; Opening the original instead");
+            qCWarning(MainWindowLog, "No settings were appropriate for modifying the file name (you must fill in the regexp field; Opening the original instead");
             lst.append( QUrl::fromLocalFile(origFile) );
         }
 
@@ -208,6 +208,4 @@ bool operator<( const QPair<QString,QPixmap>& a, const QPair<QString,QPixmap>& b
     return a.first < b.first;
 }
 
-
-#include "ExternalPopup.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

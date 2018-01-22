@@ -17,23 +17,29 @@
 */
 
 #include "OverviewPage.h"
-#include <AnnotationDialog/Dialog.h>
-#include <Utilities/ShowBusyCursor.h>
-#include "enums.h"
-#include <KMessageBox>
-#include <Exif/SearchDialog.h>
-#include "ImageViewPage.h"
-#include "CategoryPage.h"
-#include "BrowserWidget.h"
-#include <MainWindow/Window.h>
-#include <KLocalizedString>
-#include <DB/ImageDB.h>
-#include <QIcon>
-#include "DB/CategoryCollection.h"
 
+#include "BrowserWidget.h"
+#include "CategoryPage.h"
+#include "enums.h"
+#include "ImageViewPage.h"
+
+#include <AnnotationDialog/Dialog.h>
 #ifdef HAVE_KGEOMAP
-#include "Browser/GeoPositionPage.h"
+#include <Browser/GeoPositionPage.h>
 #endif
+#include <DB/CategoryCollection.h>
+#include <DB/ImageDB.h>
+#include <Exif/SearchDialog.h>
+#include <MainWindow/Logging.h>
+#include <Utilities/ShowBusyCursor.h>
+
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <MainWindow/Window.h>
+
+#include <QElapsedTimer>
+#include <QIcon>
+#include <QPixmap>
 
 const int THUMBNAILSIZE = 70;
 
@@ -41,7 +47,7 @@ AnnotationDialog::Dialog* Browser::OverviewPage::s_config = nullptr;
 Browser::OverviewPage::OverviewPage( const Breadcrumb& breadcrumb, const DB::ImageSearchInfo& info, BrowserWidget* browser )
     : BrowserPage( info, browser), m_breadcrumb( breadcrumb )
 {
-    updateImageCount();
+    //updateImageCount();
 }
 
 int Browser::OverviewPage::rowCount( const QModelIndex& parent ) const
@@ -181,7 +187,21 @@ QVariant Browser::OverviewPage::imageInfo( int role ) const
     if ( role == Qt::DisplayRole )
         return i18n("Show Thumbnails");
     else if ( role == Qt::DecorationRole )
-        return QIcon::fromTheme(QString::fromUtf8("view-preview")).pixmap(THUMBNAILSIZE);
+    {
+        QIcon icon = QIcon::fromTheme(QString::fromUtf8("view-preview"));
+        QPixmap pixmap = icon.pixmap(THUMBNAILSIZE);
+        // workaround for QListView in Qt 5.5:
+        // On Qt5.5 if the last item in the list view has no DecorationRole, then
+        // the whole list view "collapses" to the size of text-only items,
+        // cutting off the existing thumbnails.
+        // This can be triggered by an incomplete icon theme.
+        if (pixmap.isNull())
+        {
+            pixmap = QPixmap(THUMBNAILSIZE,THUMBNAILSIZE);
+            pixmap.fill(Qt::transparent);
+        }
+        return pixmap;
+    }
     return QVariant();
 }
 
@@ -216,7 +236,7 @@ void Browser::OverviewPage::activate()
 
 Qt::ItemFlags Browser::OverviewPage::flags( const QModelIndex & index ) const
 {
-    if ( isCategoryIndex(index.row() ) && m_count[index.row()].total() <= 1 )
+    if ( isCategoryIndex(index.row() ) && m_count[index.row()] <= 1 )
         return QAbstractListModel::flags(index) & ~Qt::ItemIsEnabled;
     else
         return QAbstractListModel::flags(index);
@@ -293,14 +313,15 @@ bool Browser::OverviewPage::showDuringMovement() const
 
 void Browser::OverviewPage::updateImageCount()
 {
+    QElapsedTimer timer;
+    timer.start();
     int row = 0;
     for (const DB::CategoryPtr& category : categories() ) {
-        QMap<QString, uint> images = DB::ImageDB::instance()->classify( BrowserPage::searchInfo(), category->name(), DB::Image );
-        QMap<QString, uint> videos = DB::ImageDB::instance()->classify( BrowserPage::searchInfo(), category->name(), DB::Video );
-        DB::MediaCount count( images.count(), videos.count() );
-        m_count[row] = count;
+        QMap<QString, uint> items = DB::ImageDB::instance()->classify( BrowserPage::searchInfo(), category->name(), DB::anyMediaType );
+        m_count[row] = items.count();
         ++row;
     }
+    qCDebug(TimingLog) << "Browser::Overview::updateImageCount(): " << timer.elapsed() << "ms.";
 }
 
 Browser::BrowserPage* Browser::OverviewPage::activateUntaggedImagesAction()

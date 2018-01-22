@@ -1,9 +1,3 @@
-add_subdirectory(nl)
-add_subdirectory(en)
-add_subdirectory(uk)
-add_subdirectory(pt_BR)
-add_subdirectory(sv)
-add_subdirectory(fr)
-add_subdirectory(pt)
-add_subdirectory(it)
-add_subdirectory(de)
+kdoctools_create_handbook(index.docbook INSTALL_DESTINATION ${KDE_INSTALL_DOCBUNDLEDIR}/en SUBDIR kphotoalbum)
+
+# vi:expandtab:tabstop=4 shiftwidth=4:

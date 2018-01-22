@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -45,21 +45,10 @@ Viewer::CategoryImageConfig::CategoryImageConfig()
     : m_image( QImage() )
 {
     setWindowTitle( i18nc("@title:window","Configure Category Image") );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
-    QPushButton *user1Button = new QPushButton;
-    user1Button->setText(i18nc("@action:button As in 'Set the category image'", "Set"));
-    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    connect(user1Button, &QPushButton::clicked, this, &CategoryImageConfig::slotSet);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryImageConfig::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryImageConfig::reject);
-
     QWidget* top = new QWidget;
 
     QVBoxLayout* lay1 = new QVBoxLayout( top );
+    setLayout(lay1);
     QGridLayout* lay2 = new QGridLayout;
     lay1->addLayout( lay2 );
 
@@ -95,9 +84,14 @@ Viewer::CategoryImageConfig::CategoryImageConfig()
     m_imageLabel->setFixedSize( 128, 128 );
     lay3->addWidget( m_imageLabel, 1, 1 );
 
-    mainLayout->addWidget(top);
-    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
-    mainLayout->addWidget(buttonBox);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton *user1Button = new QPushButton;
+    user1Button->setText(i18nc("@action:button As in 'Set the category image'", "Set"));
+    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
+    connect(user1Button, &QPushButton::clicked, this, &CategoryImageConfig::slotSet);
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &CategoryImageConfig::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &CategoryImageConfig::reject);
+    lay1->addWidget(buttonBox);
 }
 
 void Viewer::CategoryImageConfig::groupChanged()
@@ -199,5 +193,4 @@ void Viewer::CategoryImageConfig::show()
     QDialog::show();
 }
 
-#include "CategoryImageConfig.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:
