@@ -19,14 +19,11 @@
 #ifndef SETTINGS_SETTINGSDATA_H
 #define SETTINGS_SETTINGSDATA_H
 
-#include <config-kpa-kface.h>
-
-
 #include <AnnotationDialog/enums.h>
 #include <DB/Category.h>
 #include <DB/ImageSearchInfo.h>
 #include <Exif/Info.h>
-#include <Utilities/Set.h>
+#include <Utilities/StringSet.h>
 
 #define property( GET_TYPE,GET_FUNC, SET_FUNC,SET_TYPE ) \
     GET_TYPE GET_FUNC() const;                           \
@@ -167,15 +164,6 @@ public:
     property_ref( exifForViewer, setExifForViewer, StringSet );
     property_ref( exifForDialog, setExifForDialog, StringSet );
     property_ref( iptcCharset  , setIptcCharset  , QString   );
-
-    /////////////////////////
-    //// Face Management ////
-    /////////////////////////
-
-#ifdef HAVE_KFACE
-    property_copy(faceDetectionAccuracy   , setFaceDetectionAccuracy   , int);
-    property_copy(faceDetectionSensitivity, setFaceDetectionSensitivity, int);
-#endif
 
     /////////////////////
     //// Exif Import ////

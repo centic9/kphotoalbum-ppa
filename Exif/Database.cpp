@@ -16,6 +16,7 @@
    Boston, MA 02110-1301, USA.
 */
 #include "Database.h"
+#include "Logging.h"
 
 #include "DB/ImageDB.h"
 #include "Exif/DatabaseElement.h"
@@ -108,7 +109,7 @@ static void showError( QSqlQuery& query )
     KMessageBox::information( MainWindow::Window::theMainWindow(), txt, i18n("Error Executing Exif Command"), QString::fromLatin1( "sql_error_in_exif_DB" )
         );
 
-    qWarning( "Error running query: %s\nError was: %s", qPrintable(query.lastQuery()), qPrintable(query.lastError().text()));
+    qCWarning(ExifLog, "Error running query: %s\nError was: %s", qPrintable(query.lastQuery()), qPrintable(query.lastError().text()));
 }
 
 Exif::Database::Database()
@@ -123,7 +124,7 @@ void Exif::Database::openDatabase()
     m_db.setDatabaseName( exifDBFile() );
 
     if ( !m_db.open() )
-        qWarning("Couldn't open db %s", qPrintable(m_db.lastError().text()) );
+        qCWarning(ExifLog,"Couldn't open db %s", qPrintable(m_db.lastError().text()) );
     else
         m_isOpen = true;
 
@@ -216,7 +217,7 @@ bool Exif::Database::add( const DB::FileName& fileName )
     }
     catch (...)
     {
-        qWarning("Error while reading exif information from %s", qPrintable(fileName.absolute()) );
+        qCWarning(ExifLog, "Error while reading exif information from %s", qPrintable(fileName.absolute()) );
         return false;
     }
 }
@@ -226,10 +227,31 @@ void Exif::Database::remove( const DB::FileName& fileName )
     if ( !isUsable() )
         return;
 
-    QSqlQuery query( QString::fromLatin1( "DELETE FROM exif WHERE fileName=?" ), m_db );
+    QSqlQuery query( m_db);
+    query.prepare( QString::fromLatin1( "DELETE FROM exif WHERE fileName=?" ));
     query.bindValue( 0, fileName.absolute() );
     if ( !query.exec() )
         showError( query );
+}
+
+void Exif::Database::remove( const DB::FileNameList& list )
+{
+    if ( !isUsable() )
+        return;
+
+    m_db.transaction();
+    QSqlQuery query( m_db);
+    query.prepare( QString::fromLatin1( "DELETE FROM exif WHERE fileName=?" ));
+    Q_FOREACH(const DB::FileName& fileName, list) {
+        query.bindValue( 0, fileName.absolute() );
+        if ( !query.exec() )
+        {
+            m_db.rollback();
+            showError( query );
+            return;
+        }
+    }
+    m_db.commit();
 }
 
 bool Exif::Database::insert(const DB::FileName& filename, Exiv2::ExifData data )
@@ -248,8 +270,8 @@ bool Exif::Database::insert(const DB::FileName& filename, Exiv2::ExifData data )
         }
         _queryString = QString::fromLatin1( "INSERT OR REPLACE into exif values (?, %1) " ).arg( formalList.join( QString::fromLatin1( ", " ) ) );
     }
-
-    QSqlQuery query( _queryString, m_db );
+    QSqlQuery query(m_db);
+    query.prepare( _queryString );
     query.bindValue(  0, filename.absolute() );
     int i = 1;
     for( const DatabaseElement *e : elements() )

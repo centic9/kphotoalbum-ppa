@@ -17,39 +17,39 @@
 */
 
 #include "ImageSearchInfo.h"
-
-#include <QDebug>
-#include <QRegExp>
-#include <QApplication>
-
-#include <KConfigGroup>
-#include <KLocalizedString>
-#include <KSharedConfig>
-
-#include <ImageManager/RawImageDecoder.h>
-#include <Settings/SettingsData.h>
-
 #include "AndCategoryMatcher.h"
 #include "CategoryMatcher.h"
 #include "ContainerCategoryMatcher.h"
 #include "ExactCategoryMatcher.h"
 #include "ImageDB.h"
+#include "Logging.h"
 #include "NegationCategoryMatcher.h"
 #include "NoTagCategoryMatcher.h"
 #include "OrCategoryMatcher.h"
 #include "ValueCategoryMatcher.h"
+
+#include <ImageManager/RawImageDecoder.h>
+#include <Settings/SettingsData.h>
+
+#include <KConfigGroup>
+#include <KLocalizedString>
+#include <KSharedConfig>
+
+#include <QRegExp>
+#include <QApplication>
+
 using namespace DB;
 
 ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
                                   const QString& label, const QString& description )
-    : m_date( date), m_label( label ), m_description( description ), m_rating( -1 ), m_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( false ), m_compiled( false )
+    : m_date( date), m_label( label ), m_description( description ), m_rating( -1 ), m_megapixel( 0 ), m_max_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( false ), m_compiled( false )
 {
 }
 
 ImageSearchInfo::ImageSearchInfo( const ImageDate& date,
                                   const QString& label, const QString& description,
                   const QString& fnPattern )
-    : m_date( date), m_label( label ), m_description( description ), m_fnPattern( fnPattern ), m_rating( -1 ), m_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( false ), m_compiled( false )
+    : m_date( date), m_label( label ), m_description( description ), m_fnPattern( fnPattern ), m_rating( -1 ), m_megapixel( 0 ), m_max_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( false ), m_compiled( false )
 {
 }
 
@@ -69,7 +69,7 @@ QString ImageSearchInfo::description() const
 }
 
 ImageSearchInfo::ImageSearchInfo()
-    : m_rating( -1 ), m_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( true ), m_compiled( false )
+    : m_rating( -1 ), m_megapixel( 0 ), m_max_megapixel( 0 ), m_ratingSearchMode( 0 ), m_searchRAW( false ), m_isNull( true ), m_compiled( false )
 {
 }
 
@@ -158,6 +158,9 @@ bool ImageSearchInfo::match( ImageInfoPtr info ) const
     if ( m_megapixel )
         ok = ok && ( m_megapixel * 1000000 <= info->size().width() * info->size().height() );
 
+    if ( m_max_megapixel && m_max_megapixel > m_megapixel )
+        ok = ok && ( m_max_megapixel * 1000000 > info->size().width() * info->size().height() );
+
     // -------------------------------------------------- Text
     QString txt = info->description();
     if ( !m_description.isEmpty() ) {
@@ -233,6 +236,11 @@ void ImageSearchInfo::setMegaPixel( short megapixel )
   m_megapixel = megapixel;
 }
 
+void ImageSearchInfo::setMaxMegaPixel( short max_megapixel )
+{
+  m_max_megapixel = max_megapixel;
+}
+
 void ImageSearchInfo::setSearchMode(int index)
 {
   m_ratingSearchMode = index;
@@ -283,7 +291,7 @@ QString ImageSearchInfo::toString() const
 void ImageSearchInfo::debug()
 {
     for( QMap<QString,QString>::Iterator it= m_categoryMatchText.begin(); it != m_categoryMatchText.end(); ++it ) {
-        qDebug() << it.key() << ", " << it.value();
+        qCDebug(DBCategoryMatcherLog) << it.key() << ", " << it.value();
     }
 }
 
@@ -325,6 +333,7 @@ ImageSearchInfo::ImageSearchInfo( const ImageSearchInfo& other )
     m_rating = other.m_rating;
     m_ratingSearchMode = other.m_ratingSearchMode;
     m_megapixel = other.m_megapixel;
+    m_max_megapixel = other.m_max_megapixel;
     m_searchRAW = other.m_searchRAW;
     m_exifSearchInfo = other.m_exifSearchInfo;
 #ifdef HAVE_KGEOMAP
@@ -425,15 +434,15 @@ void ImageSearchInfo::compile() const
 
 
         if ( matcher )
-            m_categoryMatchers.append( matcher );
-#ifdef DEBUG_CATEGORYMATCHERS
-        if ( matcher )
         {
-            qDebug() << "Matching text '" << matchText << "' in category "<< category <<":";
-            matcher->debug(0);
-            qDebug() << ".";
+            m_categoryMatchers.append( matcher );
+            if ( DBCategoryMatcherLog().isDebugEnabled() )
+            {
+                qCDebug(DBCategoryMatcherLog) << "Matching text '" << matchText << "' in category "<< category <<":";
+                matcher->debug(0);
+                qCDebug(DBCategoryMatcherLog) << ".";
+            }
         }
-#endif
     }
     m_compiled = true;
 }
@@ -448,7 +457,7 @@ void ImageSearchInfo::debugMatcher() const
     if ( !m_compiled )
         compile();
 
-    qDebug("And:");
+    qCDebug(DBCategoryMatcherLog, "And:");
     for (CategoryMatcher* optionMatcher : m_categoryMatchers) {
         optionMatcher->debug(1);
     }

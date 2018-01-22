@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "config-kpa-kface.h"
 #include "ListSelect.h"
 
 #include "CompletableLineEdit.h"
@@ -29,14 +28,13 @@
 #include <DB/CategoryItem.h>
 #include <DB/ImageDB.h>
 #include <DB/MemberMap.h>
-#include <Utilities/Set.h>
+#include <Utilities/StringSet.h>
 
 #include <KIO/CopyJob>
 #include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QButtonGroup>
-#include <QDebug>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QLabel>
@@ -419,14 +417,6 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
                 emit positionableTagDeselected(m_category->name(), item->text(0));
             }
 
-#ifdef HAVE_KFACE
-            // Also delete this tag from the recognition database (if it's there)
-            if (m_positionable) {
-                m_recognizer = FaceManagement::Recognizer::instance();
-                m_recognizer->deleteTag(m_category->name(), item->text(0));
-            }
-#endif
-
             m_category->removeItem( item->text(0) );
             rePopulate();
         }
@@ -456,14 +446,9 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint& pos)
                 // rename the category image too
                 QString oldFile = m_category->fileForCategoryImage( category(), oldStr );
                 QString newFile = m_category->fileForCategoryImage( category(), newStr );
-                KIO::move( QUrl(oldFile), QUrl(newFile) );
+                KIO::move( QUrl::fromLocalFile(oldFile), QUrl::fromLocalFile(newFile) );
 
                 if (m_positionable) {
-#ifdef HAVE_KFACE
-                    // Handle the identity name that we probably have in the recognition database
-                    m_recognizer = FaceManagement::Recognizer::instance();
-                    m_recognizer->changeIdentityName(m_category->name(), oldStr, newStr);
-#endif
                     // Also take care of areas that could be linked against this
                     emit positionableTagRenamed(m_category->name(), oldStr, newStr);
                 }
@@ -743,6 +728,7 @@ void AnnotationDialog::ListSelect::updateSelectionCount()
                                            );
             break;
         } // else fall through and only show one number:
+        /* FALLTHROUGH */
     case InputSingleImageConfigMode:
         if (itemsOnCount > 0) {
             // if any tags have been selected
@@ -753,6 +739,7 @@ void AnnotationDialog::ListSelect::updateSelectionCount()
                               m_baseTitle, itemsOnCount));
             break;
         } // else fall through and only show category
+        /* FALLTHROUGH */
     case SearchMode:
         // no indicator while searching
         parentWidget()->setWindowTitle(m_baseTitle);
@@ -886,5 +873,4 @@ void AnnotationDialog::ListSelect::deselectTag(QString tag)
     matchingTags.first()->setCheckState(0, Qt::Unchecked);
 }
 
-#include "ListSelect.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

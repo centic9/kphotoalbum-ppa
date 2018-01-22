@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,6 +15,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
 #include "SearchDialog.h"
 #include <KLocalizedString>
 #include <qlayout.h>
@@ -37,18 +38,6 @@ Exif::SearchDialog::SearchDialog( QWidget* parent )
     : KPageDialog( parent )
 {
     setWindowTitle( i18n("EXIF Search") );
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::Help);
-    QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
-    mainLayout->addWidget(mainWidget);
-    QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    //PORTING SCRIPT: WARNING mainLayout->addWidget(buttonBox) must be last item in layout. Please move it.
-    mainLayout->addWidget(buttonBox);
     setFaceType( Tabbed );
 
     QWidget* settings = new QWidget;
@@ -440,6 +429,4 @@ void Exif::SearchDialog::toFocalLengthChanged( int val )
         m_fromFocalLength->setValue( val );
 }
 
-
-#include "SearchDialog.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

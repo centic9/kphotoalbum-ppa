@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,21 +17,25 @@
 */
 
 #include "ImageDisplay.h"
-#include <qpainter.h>
+#include "Logging.h"
+
+#include <QApplication>
+#include <QCursor>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
-#include <QMouseEvent>
-#include <KMessageBox>
+#include <QTimer>
+
 #include <KLocalizedString>
+#include <KMessageBox>
+
+#include "DB/ImageDB.h"
+#include "ImageManager/AsyncLoader.h"
 #include "Settings/SettingsData.h"
 #include "Viewer/ViewHandler.h"
-#include "ImageManager/AsyncLoader.h"
-#include <qcursor.h>
-#include <qapplication.h>
-#include <math.h>
-#include "DB/ImageDB.h"
-#include <qtimer.h>
-#include <QDebug>
+
+#include <cmath>
 
 /**
    Area displaying the actual image in the viewer.
@@ -581,7 +585,7 @@ void Viewer::ImageDisplay::updatePreload()
 
         DB::ImageInfoPtr info = DB::ImageDB::instance()->info(m_imageList[i]);
         if ( !info ) {
-            qWarning("Info was null for index %d!", i);
+            qCWarning(ViewerLog, "Info was null for index %d!", i);
             return;
         }
 
@@ -731,5 +735,4 @@ void Viewer::ImageDisplay::hideEvent(QHideEvent *)
   m_viewHandler->hideEvent();
 }
 
-#include "ImageDisplay.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

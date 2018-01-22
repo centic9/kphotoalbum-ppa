@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -24,6 +24,7 @@
 #include <QListWidget>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -75,6 +76,7 @@ Exif::ReReadDialog::ReReadDialog(QWidget* parent) : QDialog(parent)
     connect( m_date, SIGNAL(toggled(bool)), this, SLOT(warnAboutDates(bool)) );
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    buttonBox->button(QDialogButtonBox::Ok)->setShortcut(Qt::CTRL | Qt::Key_Return);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ReReadDialog::readInfo);
     lay1->addWidget(buttonBox);
@@ -141,5 +143,4 @@ void Exif::ReReadDialog::warnAboutDates( bool b )
         m_date->setChecked( false );
 }
 
-#include "ReReadDialog.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

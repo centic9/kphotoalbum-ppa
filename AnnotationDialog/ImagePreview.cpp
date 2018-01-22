@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,7 @@
 */
 
 #include "ImagePreview.h"
+#include "Logging.h"
 
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
@@ -25,7 +26,6 @@
 
 #include "ResizableFrame.h"
 
-#include <QDebug>
 #include <QImageReader>
 #include <QMouseEvent>
 #include <QRubberBand>
@@ -35,12 +35,6 @@
 #include <KMessageBox>
 
 #include <math.h>
-
-#ifdef DEBUG_AnnotationDialog
-#define Debug qDebug
-#else
-#define Debug if(0) qDebug
-#endif
 
 using namespace AnnotationDialog;
 
@@ -62,7 +56,7 @@ ImagePreview::ImagePreview( QWidget* parent )
 
 void ImagePreview::resizeEvent( QResizeEvent* ev )
 {
-    Debug() << "Resizing from" << ev->oldSize() <<"to"<<ev->size();
+    qCDebug(AnnotationDialogLog) << "Resizing from" << ev->oldSize() <<"to"<<ev->size();
     // during resizing, a scaled image will do
     QImage scaledImage = m_currentImage.getImage().scaled(size(),Qt::KeepAspectRatio);
     setPixmap(QPixmap::fromImage(scaledImage));
@@ -83,7 +77,7 @@ int ImagePreview::heightForWidth(int width) const
 QSize ImagePreview::sizeHint() const
 {
     QSize hint = m_info.size();
-    Debug() << "Preview size hint is" << hint;
+    qCDebug(AnnotationDialogLog) << "Preview size hint is" << hint;
     return hint;
 }
 
@@ -130,10 +124,10 @@ void ImagePreview::reload()
     if ( !m_info.isNull() ) {
         if (m_preloader.has(m_info.fileName(), m_info.angle()))
         {
-            Debug() << "reload(): set preloader image";
+            qCDebug(AnnotationDialogLog) << "reload(): set preloader image";
             setCurrentImage(m_preloader.getImage());
         } else if (m_lastImage.has(m_info.fileName(), m_info.angle())) {
-            Debug() << "reload(): set last image";
+            qCDebug(AnnotationDialogLog) << "reload(): set last image";
             //don't pass by reference, the additional constructor is needed here
             //see setCurrentImage for the reason (where m_lastImage is changed...)
             setCurrentImage(QImage(m_lastImage.getImage()));
@@ -145,14 +139,14 @@ void ImagePreview::reload()
                 // (otherwise we get flicker when resizing)
                 setPixmap(QPixmap());
             }
-            Debug() << "reload(): set another image";
+            qCDebug(AnnotationDialogLog) << "reload(): set another image";
             ImageManager::AsyncLoader::instance()->stop(this);
             ImageManager::ImageRequest* request = new ImageManager::ImageRequest( m_info.fileName(), size(), m_info.angle(), this );
             request->setPriority( ImageManager::Viewer );
             ImageManager::AsyncLoader::instance()->load( request );
         }
     } else {
-        Debug() << "reload(): set image from file";
+        qCDebug(AnnotationDialogLog) << "reload(): set image from file";
         QImage img( m_fileName );
         img = rotateAndScale( img, width(), height(), m_angle );
         setPixmap( QPixmap::fromImage(img) );
@@ -484,7 +478,7 @@ void ImagePreview::rotateAreas(int angle)
 
 void ImagePreview::resizeFinished()
 {
-    Debug() << "Reloading image after resize";
+    qCDebug(AnnotationDialogLog) << "Reloading image after resize";
     m_preloader.cancelPreload();
     m_lastImage.reset();
     reload();
@@ -601,105 +595,4 @@ float ImagePreview::distance(QPoint point1, QPoint point2)
     return sqrt(pow(difference.x(), 2) + pow(difference.y(), 2));
 }
 
-#ifdef HAVE_KFACE
-
-void ImagePreview::detectFaces()
-{
-    m_detector = FaceManagement::Detector::instance();
-    m_recognizer = FaceManagement::Recognizer::instance();
-
-    ImagePreviewWidget *parent = dynamic_cast<ImagePreviewWidget *>(parentWidget());
-    parent->setFacedetectButEnabled(false);
-
-    // We need the whole image, not only the preview.
-    fetchFullSizeImage();
-
-    // Search for faces
-    QList<QRect> faces = m_detector->detectFaces(m_fullSizeImage);
-
-    if (faces.size() == 0) {
-        // No faces found, so we can stop here
-        parent->setFacedetectButEnabled(true);
-        return;
-    }
-
-    // Get all geometries and all tags of all areas we have
-    QList<QRect> existingAreaGeometries;
-    QList<QPair<QString, QString>> existingAreaTagData;
-    foreach (ResizableFrame *area, findChildren<ResizableFrame *>()) {
-        existingAreaGeometries << area->geometry();
-        existingAreaTagData << area->tagData();
-    }
-
-    QPair<QString, QString> proposedTagData;
-
-    for (int i = 0; i < faces.size(); ++i) {
-        // Check if we already have the area (the button has already been pressed)
-        if (fuzzyAreaExists(existingAreaGeometries, areaActualToPreview(faces.at(i)))) {
-            continue;
-        }
-
-        // Create a new area for the found face
-        ResizableFrame *newArea = new ResizableFrame(this);
-        newArea->setActualCoordinates(faces.at(i));
-        newArea->setGeometry(areaActualToPreview(faces.at(i)));
-        // allow auto-training of the face:
-        newArea->markAsFace();
-        newArea->show();
-        emit areaCreated(newArea);
-
-        // Check the recognition database for a matching person
-        QPair<QString, QString> proposedTagData = m_recognizer->recognizeFace(m_fullSizeImage.copy(faces.at(i)));
-        if (! proposedTagData.first.isEmpty()) {
-            // Check if the matching person is not alreday associated to another area
-            if (! existingAreaTagData.contains(proposedTagData)) {
-                // Propose the found tag
-                newArea->setProposedTagData(proposedTagData);
-            }
-        }
-    }
-
-    parent->setFacedetectButEnabled(true);
-}
-
-void ImagePreview::trainRecognitionDatabase(QRect geometry, QPair<QString, QString> tagData)
-{
-    ImagePreviewWidget* parent = dynamic_cast<ImagePreviewWidget*>(parentWidget());
-    parent->setFacedetectButEnabled(false);
-
-    // Be sure to have the full size image
-    fetchFullSizeImage();
-
-    // Train the database
-    m_recognizer->trainRecognitionDatabase(tagData, m_fullSizeImage.copy(geometry));
-
-    parent->setFacedetectButEnabled(true);
-}
-
-void ImagePreview::recognizeArea(ResizableFrame *area)
-{
-    // Be sure to actually have a recognizer instance
-    m_recognizer = FaceManagement::Recognizer::instance();
-
-    // Be sure to have the full size image
-    fetchFullSizeImage();
-
-    // Check the recognition database for a matching person
-    QPair<QString, QString> proposedTagData = m_recognizer->recognizeFace(m_fullSizeImage.copy(area->actualCoordinates()));
-    if (! proposedTagData.first.isEmpty()) {
-        // Let's see if an area is already associated with this tag
-        foreach (ResizableFrame *area, findChildren<ResizableFrame *>()) {
-            if (area->tagData() == proposedTagData) {
-                return;
-            }
-        }
-
-        // Set the proposed data
-        area->setProposedTagData(proposedTagData);
-    }
-}
-
-#endif // HAVE_KFACE
-
-#include "ImagePreview.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

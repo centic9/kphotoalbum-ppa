@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,8 +17,8 @@
 */
 
 #include "MemberMap.h"
+#include "Logging.h"
 #include "DB/Category.h"
-#include <QDebug>
 
 using namespace DB;
 
@@ -225,7 +225,7 @@ void MemberMap::addMemberToGroup( const QString& category, const QString& group,
         return;
 
     if ( item.isEmpty() ) {
-        qWarning( "Null item tried inserted into group %s", qPrintable(group));
+        qCWarning(DBLog, "Null item tried inserted into group %s", qPrintable(group));
         return;
     }
 
@@ -339,5 +339,4 @@ void DB::MemberMap::setLoading( bool b )
     m_loading = b;
 }
 
-#include "MemberMap.moc"
 // vi:expandtab:tabstop=4 shiftwidth=4:

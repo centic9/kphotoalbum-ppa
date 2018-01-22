@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,7 +16,6 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "config-kpa-kface.h"
 #include "Dialog.h"
 
 #include "DescriptionEdit.h"
@@ -24,6 +23,7 @@
 #include "ImagePreviewWidget.h"
 #include "DateEdit.h"
 #include "ListSelect.h"
+#include "Logging.h"
 #include "ResizableFrame.h"
 #include "ShortCutManager.h"
 #include "ShowSelectionOnlyManager.h"
@@ -51,7 +51,6 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QCursor>
-#include <QDebug>
 #include <QDir>
 #include <QDockWidget>
 #include <QFile>
@@ -78,12 +77,6 @@
 #include <KConfigGroup>
 #include <QDialogButtonBox>
 #include <QtGlobal>
-
-#ifdef DEBUG_AnnotationDialog
-#define Debug qDebug
-#else
-#define Debug if(0) qDebug
-#endif
 
 using Utilities::StringSet;
 
@@ -373,6 +366,16 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
     lay8->addWidget( m_megapixel );
     lay8->addStretch( 1 );
 
+    m_max_megapixelLabel = new QLabel( i18n("Maximum megapixels:") );
+    lay8->addWidget( m_max_megapixelLabel );
+
+    m_max_megapixel = new QSpinBox;
+    m_max_megapixel->setRange( 0, 99 );
+    m_max_megapixel->setSingleStep( 1 );
+    m_max_megapixelLabel->setBuddy( m_max_megapixel );
+    lay8->addWidget( m_max_megapixel );
+    lay8->addStretch( 1 );
+
     QHBoxLayout* lay9 = new QHBoxLayout;
     lay2->addLayout( lay9 );
 
@@ -415,6 +418,7 @@ QWidget* AnnotationDialog::Dialog::createDateWidget(ShortCutManager& shortCutMan
 QWidget* AnnotationDialog::Dialog::createPreviewWidget()
 {
     m_preview = new ImagePreviewWidget();
+    connect(m_preview, &ImagePreviewWidget::togglePreview, this, &Dialog::togglePreview);
     return m_preview;
 }
 
@@ -666,6 +670,8 @@ void AnnotationDialog::Dialog::ShowHideSearch( bool show )
 {
     m_megapixel->setVisible( show );
     m_megapixelLabel->setVisible( show );
+    m_max_megapixel->setVisible( show );
+    m_max_megapixelLabel->setVisible( show );
     m_searchRAW->setVisible( show );
     m_imageFilePatternLabel->setVisible( show );
     m_imageFilePattern->setVisible( show );
@@ -788,6 +794,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search( DB::ImageSearchInfo* searc
         m_ratingChanged = false;
         m_oldSearch.setSearchMode( m_ratingSearchMode->currentIndex() );
         m_oldSearch.setMegaPixel( m_megapixel->value() );
+        m_oldSearch.setMaxMegaPixel( m_max_megapixel->value() );
         m_oldSearch.setSearchRAW( m_searchRAW->isChecked() );
 #ifdef HAVE_KGEOMAP
         const KGeoMap::GeoCoordinates::Pair regionSelection = m_annotationMap->getRegionSelection();
@@ -823,6 +830,7 @@ void AnnotationDialog::Dialog::setup()
         m_clearBut->hide();
         m_revertBut->show();
         m_preview->setSearchMode(false);
+        m_preview->setToggleFullscreenPreviewEnabled(m_setup == InputSingleImageConfigMode);
         setWindowTitle( i18n("Annotations") );
     }
 
@@ -978,7 +986,7 @@ void AnnotationDialog::Dialog::hideTornOfWindows()
     for( QDockWidget* dock : m_dockWidgets ) {
         if ( dock->isFloating() )
         {
-            Debug() << "Hiding dock: " << dock->objectName();
+            qCDebug(AnnotationDialogLog) << "Hiding dock: " << dock->objectName();
             dock->hide();
         }
     }
@@ -989,7 +997,7 @@ void AnnotationDialog::Dialog::showTornOfWindows()
     for (QDockWidget* dock: m_dockWidgets ) {
         if ( dock->isFloating() )
         {
-            Debug() << "Showing dock: " << dock->objectName();
+            qCDebug(AnnotationDialogLog) << "Showing dock: " << dock->objectName();
             dock->show();
         }
     }
@@ -1024,6 +1032,11 @@ void AnnotationDialog::Dialog::slotRenameOption( DB::Category* category, const Q
 
 void AnnotationDialog::Dialog::reject()
 {
+    if (m_stack->currentWidget() == m_fullScreenPreview) {
+        togglePreview();
+        return;
+    }
+
     m_fullScreenPreview->stopPlayback();
     if (hasChanges()) {
         int code =  KMessageBox::questionYesNo( this, i18n("<p>Some changes are made to annotations. Do you really want to cancel all recent changes for each affected file?</p>") );
@@ -1453,8 +1466,8 @@ void AnnotationDialog::Dialog::togglePreview()
 void AnnotationDialog::Dialog::tidyAreas()
 {
     // Remove all areas marked on the preview image
-    foreach (ResizableFrame *area, areas())
-    {
+    foreach (ResizableFrame *area, areas()) {
+        area->markTidied();
         area->deleteLater();
     }
 }
@@ -1554,11 +1567,6 @@ void AnnotationDialog::Dialog::positionableTagRenamed(QString category, QString 
 
     // Check if an area on the current image contains the changed or proposed tag
     foreach (ResizableFrame *area, areas()) {
-#ifdef HAVE_KFACE
-        if (area->proposedTagData() == oldTagData) {
-            area->setProposedTagData(QPair<QString, QString>(category, newTag));
-        }
-#endif
         if (area->tagData() == oldTagData) {
             area->setTagData(category, newTag);
         }
@@ -1737,7 +1745,5 @@ void AnnotationDialog::Dialog::mapLoadingFinished(bool mapHasImages, bool allIma
     }
 }
 #endif
-
-#include "Dialog.moc"
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.1.0)
-project(kphotoalbum VERSION 5.2)
+cmake_minimum_required(VERSION 3.2.0)
+project(kphotoalbum VERSION 5.3)
 
 if(POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
@@ -33,31 +33,6 @@ add_definitions(
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_REQUIRED TRUE)
 
-########## general options ##############
-
-option(ENABLE_PLAYGROUND "Enable features that are not quite polished enough for general consumption" OFF)
-add_feature_info(ENABLE_PLAYGROUND "${ENABLE_PLAYGROUND}" "Enable features that are not quite polished enough for general consumption")
-
-########### Debug options ###############
-
-foreach(part in
-        AnnotationDialog
-        EXIF
-        HTMLGENERATOR
-        JOBMANAGER
-        KIM_IMPORT
-        KIPI
-        MAP
-        ResizeSlider
-        )
-    set(_opt "DEBUG_${part}")
-    option(${_opt} "Enable debug output for ${part}" OFF)
-    if (${_opt})
-        message(STATUS "Enabling debug output for ${part}")
-        add_definitions(-D${_opt})
-    endif()
-endforeach()
-
 ########### dependencies  ###############
 
 find_package(Qt5 REQUIRED COMPONENTS Sql Xml Widgets Network)
@@ -87,16 +62,6 @@ set_package_properties(KF5KDcraw
     )
 set(HAVE_KDCRAW ${KF5KDcraw_FOUND} )
 
-if(ENABLE_PLAYGROUND)
-    find_package(KF5KFace 5.0.0 CONFIG)
-    set_package_properties(KF5KFace
-        PROPERTIES
-        TYPE OPTIONAL
-        PURPOSE "Enables support for face detection and recognition."
-        )
-    set(HAVE_KFACE ${KF5KFace_FOUND})
-endif()
-
 find_package(KF5KGeoMap)
 set_package_properties(KF5KGeoMap
     PROPERTIES
@@ -108,7 +73,7 @@ set(HAVE_KGEOMAP ${KF5KGeoMap_FOUND})
 add_custom_target(
     UpdateVersion ALL
     COMMAND ${CMAKE_COMMAND}
-    -DBASE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" -DPROJECT_NAME=KPA -DPROJECT_VERSION="${PROJECT_VERSION}"
+    -DBASE_DIR=${CMAKE_CURRENT_SOURCE_DIR} -DPROJECT_NAME=KPA -DPROJECT_VERSION="${PROJECT_VERSION}"
     -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/UpdateVersion.cmake"
     COMMENT "Updating version header."
     BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/version.h"
@@ -120,6 +85,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(libdatebar_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/DateBarWidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/ViewHandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/MouseHandler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DateBar/MouseHandler.cpp
     )
 
@@ -139,6 +105,7 @@ set(libSettings_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoriesGroupsWidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/BirthdayPage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/DateTableWidgetItem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Settings/Logging.cpp
     )
 
 set(libxmldb_SRCS
@@ -152,6 +119,7 @@ set(libxmldb_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/ElementWriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XmlReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/CompressFileInfo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/Logging.cpp
     )
 
 set(libThumbnailView_SRCS
@@ -171,6 +139,7 @@ set(libThumbnailView_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/Delegate.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/SelectionMaintainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/VideoThumbnailCycler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/Logging.cpp
     )
 
 set(libPlugins_SRCS)
@@ -184,6 +153,7 @@ if(KF5Kipi_FOUND)
         ${CMAKE_CURRENT_SOURCE_DIR}/Settings/PluginsPage.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadWidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadImageCollection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Logging.cpp
         )
 endif()
 
@@ -201,12 +171,14 @@ set(libViewer_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VisibleOptionsMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VideoShooter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/TaggedArea.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Viewer/Logging.cpp
     )
 
 set(libCategoryListView_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragableTreeWidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/CheckDropItem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/DragItemInfo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/CategoryListView/Logging.cpp
     )
 
 set(libHTMLGenerator_SRCS
@@ -214,19 +186,20 @@ set(libHTMLGenerator_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/Generator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/Setup.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/ImageSizeCheckBox.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/HTMLGenerator/Logging.cpp
     )
 
 set(libUtilities_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/AlgorithmHelper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ShowBusyCursor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/List.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Graph.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/UniqFilenameMapper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Set.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DeleteFiles.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ToolTip.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Logging.cpp
     )
 
 set(libMainWindow_SRCS
@@ -253,6 +226,7 @@ set(libMainWindow_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/MergeToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CopyPopup.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/Options.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/Logging.cpp
     )
 
 set(libImageManager_SRCS
@@ -272,6 +246,7 @@ set(libImageManager_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoThumbnails.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoLengthExtractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ExtractOneVideoFrame.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/Logging.cpp
     )
 
 set(libDB_SRCS
@@ -299,6 +274,7 @@ set(libDB_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/FileName.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/FileNameList.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DB/Logging.cpp
     )
 
 set(libImportExport_SRCS
@@ -313,6 +289,7 @@ set(libImportExport_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ImportExport/ImportSettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ImportExport/KimFileReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ImportExport/MD5CheckPage.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImportExport/Logging.cpp
     )
 
 set(libAnnotationDialog_SRCS
@@ -328,6 +305,7 @@ set(libAnnotationDialog_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/ResizableFrame.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/DescriptionEdit.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/AreaTagSelectDialog.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/Logging.cpp
     )
 
 set(libBrowser_SRCS
@@ -343,6 +321,7 @@ set(libBrowser_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Browser/FlatCategoryModel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Browser/TreeCategoryModel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Browser/CenteringIconView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Browser/Logging.cpp
     )
 
 set(libExif_SRCS
@@ -356,6 +335,7 @@ set(libExif_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Grid.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Exif/Logging.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp
     )
 
@@ -368,6 +348,7 @@ set(libBackgroundTaskManager_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/JobInfo.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/CompletedJobInfo.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/PriorityQueue.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundTaskManager/Logging.cpp
     )
 
 set(libBackgroundJobs_SRCS
@@ -387,17 +368,8 @@ set(libRemoteControl_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteImageRequest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ImageNameStore.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ConnectionIndicator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Logging.cpp
     )
-
-set(libFaceManagement_SRCS)
-if(KF5KFace_FOUND)
-    set(libFaceManagement_SRCS
-        ${CMAKE_CURRENT_SOURCE_DIR}/FaceManagement/Detector.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/FaceManagement/Recognizer.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Settings/FaceManagementPage.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/ProposedFaceDialog.cpp
-        )
-endif()
 
 set(libMap_SRCS)
 if(KF5KGeoMap_FOUND)
@@ -407,6 +379,7 @@ if(KF5KGeoMap_FOUND)
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapView.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/MapMarkerModelHelper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Map/SearchMarkerTiler.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Map/Logging.cpp
         )
 endif()
 
@@ -414,7 +387,7 @@ add_subdirectory(images)
 add_subdirectory(icons)
 add_subdirectory(demo)
 add_subdirectory(themes)
-add_subdirectory(script)
+add_subdirectory(scripts)
 add_subdirectory(doc)
 
 
@@ -441,12 +414,12 @@ set(kphotoalbum_SRCS
     ${libBackgroundTaskManager_SRCS}
     ${libBackgroundJobs_SRCS}
     ${libRemoteControl_SRCS}
-    ${libFaceManagement_SRCS}
     ${libMap_SRCS}
     ${libUtilities_SRCS}
     )
 
 add_executable(kphotoalbum ${kphotoalbum_SRCS})
+add_dependencies(kphotoalbum UpdateVersion)
 
 # External components
 target_link_libraries(kphotoalbum
@@ -478,11 +451,6 @@ if(KF5KDcraw_FOUND)
     target_link_libraries(kphotoalbum KF5::KDcraw)
 endif()
 
-
-if(KF5KFace_FOUND)
-    target_link_libraries(kphotoalbum KF5::KFace )
-endif()
-
 if(KF5KGeoMap_FOUND)
     target_link_libraries(kphotoalbum KF5::KGeoMap )
 endif()
@@ -499,7 +467,6 @@ install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFO
 
 configure_file(config-kpa-kdcraw.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kdcraw.h)
 configure_file(config-kpa-kipi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kipi.h)
-configure_file(config-kpa-kface.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kface.h)
 configure_file(config-kpa-kgeomap.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kgeomap.h)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
@@ -508,3 +475,8 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 find_package(KF5I18n CONFIG REQUIRED)
 ki18n_install(po)
+
+  find_package(KF5DocTools CONFIG)
+  if(KF5DocTools_FOUND)
+    kdoctools_install(po)
+  endif()

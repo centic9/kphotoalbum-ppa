@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 Johannes Zarl <johannes@zarl.at>
+/* Copyright (C) 2015-2018 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,7 +17,6 @@
 */
 
 // Qt includes
-#include <QDebug>
 #include <QTimer>
 
 // KDE includes
@@ -34,13 +33,7 @@
 #include "GridResizeSlider.h"
 #include "ThumbnailModel.h"
 #include "ThumbnailWidget.h"
-
-#ifdef DEBUG_ResizeSlider
-#define Debug qDebug
-#else
-#define Debug if (0) qDebug
-#endif
-
+#include "Logging.h"
 
 ThumbnailView::GridResizeSlider::GridResizeSlider( ThumbnailFactory* factory )
     : QSlider( Qt::Horizontal ), ThumbnailComponent( factory )
@@ -74,14 +67,14 @@ ThumbnailView::GridResizeSlider::~GridResizeSlider()
 
 void ThumbnailView::GridResizeSlider::mousePressEvent( QMouseEvent* event)
 {
-    Debug() << "Mouse pressed";
+    qCDebug(ThumbnailViewLog) << "Mouse pressed";
     enterGridResizingMode();
     QSlider::mousePressEvent( event );
 }
 
 void ThumbnailView::GridResizeSlider::mouseReleaseEvent( QMouseEvent* event)
 {
-    Debug() << "Mouse released";
+    qCDebug(ThumbnailViewLog) << "Mouse released";
     leaveGridResizingMode();
     QSlider::mouseReleaseEvent( event );
 }
@@ -90,7 +83,7 @@ void ThumbnailView::GridResizeSlider::wheelEvent( QWheelEvent* event)
 {
     // set (or reset) the timer to leave resizing mode:
     m_timer->start(200);
-    Debug() << "(Re)starting timer";
+    qCDebug(ThumbnailViewLog) << "(Re)starting timer";
     if (!m_resizing) {
         enterGridResizingMode();
     }
@@ -103,7 +96,7 @@ void ThumbnailView::GridResizeSlider::enterGridResizingMode()
         return; //already resizing
     m_resizing = true;
 
-    Debug() << "Entering grid resizing mode";
+    qCDebug(ThumbnailViewLog) << "Entering grid resizing mode";
     ImageManager::ThumbnailBuilder::instance()->cancelRequests();
     emit isResizing( true );
 }
@@ -113,7 +106,7 @@ void ThumbnailView::GridResizeSlider::leaveGridResizingMode()
     if (!m_resizing)
         return; //not resizing
     m_resizing = false;
-    Debug() << "Leaving grid resizing mode";
+    qCDebug(ThumbnailViewLog) << "Leaving grid resizing mode";
 
     model()->beginResetModel();
     cellGeometryInfo()->flushCache();
@@ -192,7 +185,5 @@ void ThumbnailView::GridResizeSlider::calculateNewThumbnailSize(int perRowDiffer
     model()->endResetModel();
     model()->updateVisibleRowInfo();
 }
-
-#include "GridResizeSlider.moc"
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

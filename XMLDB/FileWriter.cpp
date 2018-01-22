@@ -17,22 +17,23 @@
 */
 #include "FileWriter.h"
 
-#include <QDebug>
-#include <QFile>
-#include <QXmlStreamWriter>
+#include "CompressFileInfo.h"
+#include "Database.h"
+#include "ElementWriter.h"
+#include "Logging.h"
+#include "NumberedBackup.h"
+#include "XMLCategory.h"
 
-#include <KLocalizedString>
-#include <KMessageBox>
-
+#include <MainWindow/Logging.h>
 #include <MainWindow/Window.h>
 #include <Settings/SettingsData.h>
 #include <Utilities/List.h>
 
-#include "CompressFileInfo.h"
-#include "Database.h"
-#include "ElementWriter.h"
-#include "NumberedBackup.h"
-#include "XMLCategory.h"
+#include <KLocalizedString>
+#include <KMessageBox>
+
+#include <QFile>
+#include <QXmlStreamWriter>
 
 // I've added this to provide anyone interested
 // with a quick and easy means to benchmark performance differences
@@ -84,10 +85,9 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
                             );
         return;
     }
-#ifdef BENCHMARK_FILEWRITER
     QTime t;
-    t.start();
-#endif
+    if (TimingLog().isDebugEnabled())
+        t.start();
     QXmlStreamWriter writer(&out);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();
@@ -104,9 +104,7 @@ void XMLDB::FileWriter::save( const QString& fileName, bool isAutoSave )
         //saveSettings(writer);
     }
     writer.writeEndDocument();
-#ifdef BENCHMARK_FILEWRITER
-    qDebug() << "Saving took" << t.elapsed() <<"ms";
-#endif
+    qCDebug(TimingLog) << "XMLDB::FileWriter::save(): Saving took" << t.elapsed() <<"ms";
 
     // State: index.xml has previous DB version, index.xml.tmp has the current version.
 
@@ -254,7 +252,7 @@ void XMLDB::FileWriter::saveMemberGroups( QXmlStreamWriter& writer )
                     DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName( categoryName );
                     XMLCategory* category = static_cast<XMLCategory*>( catPtr.data() );
                     if (category->idForName(member)==0)
-                        qWarning() << "Member" << member << "in group" << categoryName << "->" << groupMapIt.key() << "has no id!";
+                        qCWarning(XMLDBLog) << "Member" << member << "in group" << categoryName << "->" << groupMapIt.key() << "has no id!";
                     idList.append( QString::number( category->idForName( member ) ) );
                 }
 #ifdef DETERMINISTIC_DBSAVE
@@ -476,7 +474,7 @@ bool XMLDB::FileWriter::shouldSaveCategory( const QString& categoryName ) const
 
     // A few bugs has shown up, where an invalid category name has crashed KPA. It therefore checks for such invalid names here.
     if ( !m_db->m_categoryCollection.categoryForName( categoryName ) ) {
-        qWarning("Invalid category name: %s", qPrintable(categoryName));
+        qCWarning(XMLDBLog,"Invalid category name: %s", qPrintable(categoryName));
         cache.insert(categoryName,false);
         return false;
     }
