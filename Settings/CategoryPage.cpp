@@ -138,7 +138,7 @@ Settings::CategoryPage::CategoryPage(QWidget* parent) : QWidget(parent)
     row++;
 
     // Thumbnail size
-    m_thumbnailSizeInCategoryLabel = new QLabel(i18n("Thumbnail Size:"));
+    m_thumbnailSizeInCategoryLabel = new QLabel(i18n("Thumbnail size:"));
     settingsLayout->addWidget(m_thumbnailSizeInCategoryLabel, row, 0);
     m_thumbnailSizeInCategory = new QSpinBox;
     m_thumbnailSizeInCategory->setRange(32, 512);
@@ -264,7 +264,7 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem* item)
     // We don't want to have special category names.
     // We do have to search both for the localized version and the C locale version, because a user
     // could start KPA e. g. with a German locale and create a "Folder" category (which would not
-    // be catched by i18n("Folder")), and then start KPA with the C locale, which would produce a
+    // be caught by i18n("Folder")), and then start KPA with the C locale, which would produce a
     // doubled "Folder" category.
     if (newCategoryName == i18n("Folder")
         || newCategoryName == QString::fromUtf8("Folder")
@@ -545,7 +545,7 @@ void Settings::CategoryPage::listWidgetEditEnd(QWidget*, QAbstractItemDelegate::
 
 void Settings::CategoryPage::resetCategoryLabel()
 {
-    m_categoryLabel->setText(i18n("<i>choose a category to edit it</i>"));
+    m_categoryLabel->setText(i18n("<i>Choose a category to edit it</i>"));
 }
 
 void Settings::CategoryPage::saveDbNow()

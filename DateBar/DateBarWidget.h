@@ -49,12 +49,12 @@ class DateBarWidget :public QWidget {
 
 public:
     explicit DateBarWidget( QWidget* parent );
-    enum ViewType { DecadeView, YearView, MonthView, WeekView, DayView, HourView };
+    enum ViewType { DecadeView, YearView, MonthView, WeekView, DayView, HourView, MinuteView };
     bool includeFuzzyCounts() const;
 
 public slots:
     void clearSelection();
-    void setViewType( ViewType tp );
+    void setViewType( ViewType tp, bool redrawNow=true );
     void setDate( const QDateTime& date );
     void setImageDateCollection(const QExplicitlySharedDataPointer<DB::ImageDateCollection> & );
     void scrollLeft();
@@ -130,6 +130,7 @@ private:
     WeekViewHandler m_weekViewHandler;
     DayViewHandler m_dayViewHandler;
     HourViewHandler m_hourViewHandler;
+    MinuteViewHandler m_minuteViewHandler;
     ViewHandler* m_currentHandler;
     ViewType m_tp;
 

@@ -2,8 +2,8 @@ Source: kphotoalbum
 Section: graphics
 Priority: optional
 Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
-Uploaders: Fathi Boudra <fabo@debian.org>, Mark Purcell <msp@debian.org>
-Build-Depends: debhelper (>= 9), cmake (>= 3.1), pkg-kde-tools (>= 0.15.16),
+Uploaders: Mark Purcell <msp@debian.org>,
+Build-Depends: debhelper (>= 11~), cmake (>= 3.1), pkg-kde-tools (>= 0.15.16),
  docbook-to-man,
  extra-cmake-modules,
  qtbase5-dev,
@@ -26,10 +26,10 @@ Build-Depends: debhelper (>= 9), cmake (>= 3.1), pkg-kde-tools (>= 0.15.16),
  libexiv2-dev (>= 0.19), libjpeg-dev,
  x11proto-core-dev,
  pkg-config,
-Standards-Version: 4.0.0
+Standards-Version: 4.3.0
 Homepage: http://kphotoalbum.org
-Vcs-Browser: https://anonscm.debian.org/viewvc/pkg-kde/kde-extras/kphotoalbum/trunk
-Vcs-Svn: svn://anonscm.debian.org/pkg-kde/kde-extras/kphotoalbum/trunk/
+Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum
+Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum.git
 
 Package: kphotoalbum
 Architecture: any
@@ -39,7 +39,7 @@ Recommends: khelpcenter, ffmpeg, kipi-plugins
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of
- images when you have thousands of pictures on your hard disk. 
+ images when you have thousands of pictures on your hard disk.
  .
  The information associated with each photo is stored in an XML file. Together
  with its keywords, KPhotoAlbum stores each picture's MD5 sum, so it will

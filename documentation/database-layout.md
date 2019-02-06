@@ -1,4 +1,4 @@
-Image database overview for KPhotoAlbum
+Image database overview for KPhotoAlbum {#database-layout}
 =======================================
 
 Concepts
@@ -35,6 +35,31 @@ Exif information is stored in an sqlite database called `exif-info.db` in the im
 If the exif database is removed, it can be recreated from the image files.
 
 
+### Thunmbnails ###
+
+Thumbnails are stored in packed form in `.thumbnails` in the image root folder.  Thumbnails can be recreated from the image files.  The packed format is much more efficient in terms of I/O than storing the thumbnails as individual image files in the filesystem.
+
+The thumbnails themselves are stored in JPEG format, packed into 32 MB container files named `thumb-<n>`, with n starting from 0 and incrementing as needed.  The size of the JPEG images is determined by the user's configuration choice.  The choice of 32 MB is arbitrary, but it combines good I/O efficiency (many thumbnails per file and the ability to stream thumbnails efficiently) with backup efficiency (not modifying very large files constantly).  There is no header, delimiter, or descriptor for the thumbnails in the container files; they require the index described below to be of use.
+
+Additionally, an index file named `thumbnailindex` contains an index allowing KPhotoAlbum to quickly locate the thumbnail for any given file.  The thumbnailindex file is stored in binary form as implemented by QDataStream, as depicted below.  The thumbnailindex cannot be regenerated from the thumbnail containers.
+
+```
+thumbnailindex
+|
++-Header
+| +-File version (int, currently 4)
+| +-Current file (file index of last written thumbnail) being written to (int)
+| +-Current offset into current file, in bytes (int)
+| +-Total number of thumbnails indexed (int)
+|
++-images
+| +-image
+|   +-relative pathname (QString)
+|   +-file index (int)
+|   +-file offset (int)
+|   +-thumbnail size (int)
+```
+
 index.xml
 ---------
 
@@ -54,8 +79,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (desctiption, stackId, stackOrder, rating, videoLength) [optional]
 |   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
 |
 +-blocklist
@@ -75,8 +100,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (desctiption, stackId, stackOrder, rating, videoLength) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
 |       +-value(value=#Categories.Category.value.value#)
@@ -102,8 +127,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
@@ -126,8 +151,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
 |       +-value(value=#Categories.Category.value.value#, area="x y w h")
@@ -162,8 +187,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
@@ -188,8 +213,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
 |       +-value(value=#Categories.Category.value.value#, area="x y w h")
@@ -240,8 +265,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
@@ -268,8 +293,8 @@ KPhotoAlbum
 |
 +-images
 | +-image
-|   (file, label, description, startDate, endDate, angle, md5sum, width, height)
-|   (stackId, stackOrder, rating) [optional]
+|   (file, label, startDate, endDate, angle, md5sum, width, height)
+|   (description, stackId, stackOrder, rating, videoLength) [optional]
 |   +-options
 |     +-option(name=#Categories.Category.name#)
 |       +-value(value=#Categories.Category.value.value#, area="x y w h")
@@ -289,6 +314,71 @@ Added an additional optional "meta" attribute to the Category-tag, so that the "
 "special" category like "Folder", but stored in the database and thus causing the same translation
 problems like the old "standard" categories) can be marked as such and does not need to have a fixed
 name anymore.
+
+
+### Version 8 ###
+Used in KPA v5.4
+
+```
+KPhotoAlbum
+| (version=8, compressed=1)
+|
++-Categories
+| +-Category
+|   (name, icon, show, viewtype, thumbnailsize, positionable)
+|   (meta) [optional]
+|   +-value
+|     (value, id)
+|     (birthDate) [optional]
+|
++-images
+| +-image
+|   (file, startDate, md5sum, width, height)
+|   (angle, description, endDate, label, rating, stackId, stackOrder, videoLength) [optional]
+|   (#Categories.Category.name#=#Categories.Category.value.id#) [optional]
+|   +-options
+|     +-option(name=#Categories.Category.name#)
+|       +-value(value=#Categories.Category.value.value#, area="x y w h")
+|
++-blocklist
+| +-block (file)
+|
++-member-groups
+  +-member (category,group-name,members)
+```
+
+```
+KPhotoAlbum
+| (version=8, compressed=0)
+|
++-Categories
+| +-Category
+|   (name, icon, show, viewtype, thumbnailsize, positionable)
+|   (meta) [optional]
+|   +-value
+|     (value, id)
+|     (birthDate) [optional]
+|
++-images
+| +-image
+|   (file, startDate, md5sum, width, height)
+|   (angle, description, endDate, label, rating, stackId, stackOrder, videoLength) [optional]
+|   +-options
+|     +-option(name=#Categories.Category.name#)
+|       +-value(value=#Categories.Category.value.value#, area="x y w h")
+|
++-blocklist
+| +-block (file)
+|
++-member-groups
+  +-member (category,group-name,member)
+```
+
+#### Differences to version 7 ####
+
+ * ```images.image.angle``` is only saved when it differs from the default angle (0)
+ * ```images.image.endDate``` is only saved when it differs from the start date
+ * ```images.image.label``` is only saved when it differs from the default label
 
 
 ### Attribute values explained ###
@@ -360,12 +450,15 @@ name anymore.
       + ```rating``` (since KPA 3.1)<br/>
         Integer rating ("stars"), between 0 and 10.
       + ```stackId``` (since KPA 3.1)<br/>
-        Numerical stack ID; images with the same stackId are displayed as an image stack.
+        Numerical stack ID; images with the same stackId are displayed as an image stack.  Stack ID starts with 1.
       + ```stackOrder``` (since KPA 3.1)<br/>
         Image position within a stack; only valid when stackId is set.<br/>
-        Unique within the same stack.
+        Unique within the same stack.  Stack order starts with 1.
       + ```startDate```<br/>
         Start date of the image (see fuzzy dates) (```yyyy-mm-dd[Thh:mm:ss]```, second optional part starts with uppercase 'T')
+      + ```videoLength```<br/>
+        Length of the video in seconds; -1 if length is not known.
+        Only applicable to video files.
       + ```width```<br/>
         Image width in pixel.
  * member-groups
@@ -378,3 +471,13 @@ name anymore.
         A single tag name.
       + ```members``` (compressed format)<br/>
         Numerical tag ids, separated by comma.
+
+#### Encoding of category names ####
+
+In the compressed format, category names are used as attributes to the images.
+In this context, the allowed character set is restricted by the rules for [XML attribute syntax](https://www.w3.org/TR/xml/#NT-NameStartChar),
+and category names therefore need to be escaped.
+
+The details for character escaping can be seen here:
+ * [XMLDB::FileWriter::escape()](@ref XMLDB::FileWriter::escape)
+ * [XMLDB::FileReader::unescape()](@ref XMLDB::FileReader::unescape)

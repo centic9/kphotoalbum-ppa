@@ -1,4 +1,4 @@
-/* Copyright (C) 2014-2016 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -46,6 +46,8 @@ MainWindow::CopyPopup::CopyPopup(QWidget *parent,
             setTitle(i18n("Copy image(s) to..."));
             action = addAction(i18n("Copy currently selected image to..."));
             action->setData(CopyAction::CopyCurrent);
+            if (m_selectedFile.isEmpty())
+                action->setEnabled(false);
             action = addAction(i18n("Copy all selected images to..."));
             action->setData(CopyAction::CopyAll);
             action->setEnabled(haveSeveralFiles);
@@ -55,6 +57,8 @@ MainWindow::CopyPopup::CopyPopup(QWidget *parent,
             action = addAction(i18n("Link currently selected image to..."));
             setTitle(i18n("Link image(s) to..."));
             action->setData(CopyAction::LinkCurrent);
+            if (m_selectedFile.isEmpty())
+                action->setEnabled(false);
             action = addAction(i18n("Link all selected images to..."));
             action->setData(CopyAction::LinkAll);
             action->setEnabled(haveSeveralFiles);
@@ -75,10 +79,10 @@ void MainWindow::CopyPopup::slotCopy(QAction *action)
     if (copyAction == CopyCurrent || copyAction == LinkCurrent) {
 
         if (copyAction == CopyCurrent) {
-            dialog.setWindowTitle(i18nc("@title:window", "Copy image to..."));
+            dialog.setWindowTitle(i18nc("@title:window", "Copy Image to..."));
             dialog.setLabelText(QFileDialog::Accept, i18nc("@action:button", "Copy"));
         } else if (copyAction == LinkCurrent) {
-            dialog.setWindowTitle(i18nc("@title:window", "Link image to..."));
+            dialog.setWindowTitle(i18nc("@title:window", "Link Image to..."));
             dialog.setLabelText(QFileDialog::Accept, i18nc("@action:button", "Link"));
         }
         dialog.setDirectory(m_lastTarget);

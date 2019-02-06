@@ -8,10 +8,10 @@
   <title
 >Flux de treball RAW utilitzant el &kphotoalbum; i Bibble5/AfterShot Pro</title>
   <para
->Quan es prenen imatges RAW, els fitxers de la càmera s'han de desenvolupar a un format comunament reconegut com JPEG o TIFF. Hi ha diverses opcions per triar a l'hora de treballar sota Linux. Per exemple RAWTherapee i UFRaw són alternatives de codi obert, mentre que Bibble5/AfterShot Pro són aplicacions comercials per a aquest propòsit.</para>
+>Quan es prenen imatges RAW, els fitxers de la càmera s'han de desenvolupar a un format comunament reconegut com a JPEG o TIFF. Hi ha diverses opcions per triar a l'hora de treballar sota Linux. Per exemple RAWTherapee i UFRaw són alternatives de codi obert, mentre que Bibble5/AfterShot Pro són aplicacions comercials per a aquest propòsit.</para>
 
   <para
->Recomanen uns quants ajustaments per a un flux de treball RAW. En primer lloc permetre l'ús de la imatge incrustada. Això donarà un gran impuls de velocitat sobre la descodificació de cada fitxer RAW, cada vegada que es visualitza (comproveu també la configuració de la dimensió mínima per assegurar una qualitat decent). En segon lloc, és per a que el cercador d'imatges noves apili automàticament les versions desenvolupades sobre el fitxer RAW (la imatge desenvolupada haurà d'estar al mateix directori que l'original). Això requereix expressions regulars com es descriu a la <xref linkend="opt-search-new"/>. Es proporcionen dos scripts d'ajuda amb el codi font del &kphotoalbum; per ajudar en el flux de treball RAW. Aquestes són open-raw.desktop i open-raw.pl. El primer permet a les aplicacions IGU obrir els fitxers RAW i el segon intenta trobar el fitxer RAW original i l'obre, en comptes de la imatge desenvolupada. </para>
+>Recomanen uns quants ajustaments per a un flux de treball RAW. En primer lloc permetre l'ús de la imatge incrustada. Això donarà un gran impuls de velocitat sobre la descodificació de cada fitxer RAW, cada vegada que es visualitza (comproveu també la configuració de la dimensió mínima per assegurar una qualitat decent). En segon lloc, és perquè el cercador d'imatges noves apili automàticament les versions desenvolupades sobre el fitxer RAW (la imatge desenvolupada haurà d'estar al mateix directori que l'original). Això requereix expressions regulars com es descriu a la <xref linkend="opt-search-new"/>. Es proporcionen dos scripts d'ajuda amb el codi font del &kphotoalbum; per ajudar en el flux de treball RAW. Aquestes són open-raw.desktop i open-raw.pl. El primer permet a les aplicacions IGU obrir els fitxers RAW i el segon intenta trobar el fitxer RAW original i l'obre, en comptes de la imatge desenvolupada. </para>
 
   <figure id="fig-raw-workflow">
     <title
@@ -24,7 +24,7 @@
   </figure>
 
   <para
->El primer pas en un flux de treball real consisteix en copiar les imatges des de la càmera a l'ordinador. Una simple còpia des d'una finestra de terminal és tot el que es necessita: </para>
+>El primer pas en un flux de treball real consisteix a copiar les imatges des de la càmera a l'ordinador. Una simple còpia des d'una finestra de terminal és tot el que es necessita: </para>
   <screen
 ><userinput
 ><command
@@ -54,7 +54,7 @@
 >&Ctrl;<keycap
 >2</keycap
 ></keycombo
->. Introduïu el lloc que li correspon com Finland-Helsinki (veure la <xref linkend="sec-member-groups-in-property-editor"/>). </para>
+>. Introduïu el lloc que li correspon com Finland-Helsinki (vegeu la <xref linkend="sec-member-groups-in-property-editor"/>). </para>
 
   <para
 >Ara que les noves imatges són fàcils de trobar, faig una classificació i eliminació inicial. Ho faré a la vista de miniatures i iniciaré el visor prement &Intro;. Utilitzo la valoració per a les imatges bones, només cal prémer el número corresponent de l'<keycap
@@ -74,7 +74,7 @@
 >&Ctrl;<keycap
 >F</keycap
 ></keycombo
->. No obstant, si s'invoca la cerca des de la finestra principal, la selecció actual s'aprofundeix per obtenir una coincidència més precisa. De totes maneres, en aquest punt vaig de nou a les imatges millor valorades, refinant sobre la valoració. Per exemple, si tinc 5 fotografies similars d'una espècie Nudibranch, en general disminueixo la valoració de les imatges més dolentes i podria incrementar les més bones. El comparar les imatges es pot fer seleccionant les que voleu comparar i iniciar el visor. L'esborrat de les imatges des del visor es pot fer amb la tecla <keycap
+>. No obstant això, si s'invoca la cerca des de la finestra principal, la selecció actual s'aprofundeix per obtenir una coincidència més precisa. De totes maneres, en aquest punt vaig de nou a les imatges millor valorades, refinant sobre la valoració. Per exemple, si tinc 5 fotografies similars d'una espècie Nudibranch, en general disminueixo la valoració de les imatges més dolentes i podria incrementar les més bones. Comparar les imatges es pot fer seleccionant les que voleu comparar i iniciar el visor. L'esborrat de les imatges des del visor es pot fer amb la tecla <keycap
 >Supr</keycap
 >. Això només s'inhabilita en la visualització de la imatge actual, mentre que en el visor no s'esborra o elimina res. Això permet la comparació de 2 o 3 bones imatges, una al costat de l'altra, movent-nos entre elles amb les tecles <keysym
 >Re Pàg</keysym
@@ -104,7 +104,7 @@
 >Ara que hi ha un munt de JPEG nous als directoris d'imatges, vaig deixar que el &kphotoalbum; cerqui per a noves imatges i apili de forma automàtica les noves a la part superior del RAW original (<xref linkend="fig-options-file-versions"/>). A continuació, una ronda final de selecció amb les imatges desenvolupades i l'afegit d'algunes descripcions, si cal.</para>
 
   <para
->El pas final és la generació de pàgines &HTML; estàtiques i publicar-les al meu servidor web per a que els amics i col·legues en gaudeixin. Això ho faig amb les piles plegades per a només obtenir les imatges desenvolupades a la pàgina web. La generació &HTML; es descriu en el <xref linkend="chp-generating-html"/>.</para>
+>El pas final és la generació de pàgines &HTML; estàtiques i publicar-les al meu servidor web perquè els amics i col·legues en gaudeixin. Això ho faig amb les piles plegades per a només obtenir les imatges desenvolupades a la pàgina web. La generació &HTML; es descriu en el <xref linkend="chp-generating-html"/>.</para>
   </sect1>
 
   <sect1 id="pano-workflow">

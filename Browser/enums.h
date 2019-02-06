@@ -19,6 +19,8 @@
 #ifndef BROWSER_ENUMS_H
 #define BROWSER_ENUMS_H
 
+#include <Qt>
+
 namespace Browser
 {
 

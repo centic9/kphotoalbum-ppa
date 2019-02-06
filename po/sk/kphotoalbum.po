@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2018-01-14 03:04+0100\n"
+"POT-Creation-Date: 2018-10-04 03:42+0200\n"
 "PO-Revision-Date: 2016-09-23 19:38+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -72,12 +72,18 @@ msgid "Description"
 msgstr "Popis"
 
 #: AnnotationDialog/Dialog.cpp:124
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:whatsthis"
+#| msgid ""
+#| "<para>A descriptive text of the image.</para><para>If <emphasis>Use EXIF "
+#| "description</emphasis> is enabled under <interface>Settings|Configure "
+#| "KPhotoAlbum...|General</interface>, a description embedded in the image "
+#| "EXIF information is imported to this field if available.</para>"
 msgctxt "@info:whatsthis"
 msgid ""
-"<para>A descriptive text of the image.</para><para>If <emphasis>Use EXIF "
+"<para>A descriptive text of the image.</para><para>If <emphasis>Use Exif "
 "description</emphasis> is enabled under <interface>Settings|Configure "
-"KPhotoAlbum...|General</interface>, a description embedded in the image EXIF "
+"KPhotoAlbum...|General</interface>, a description embedded in the image Exif "
 "information is imported to this field if available.</para>"
 msgstr ""
 "<para>Popisný text z obrázka.</para><para>Ak je <emphasis>Použiť EXIF popis</"
@@ -96,11 +102,15 @@ msgid "Map"
 msgstr "Mapa"
 
 #: AnnotationDialog/Dialog.cpp:165
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@info:whatsthis"
+#| msgid ""
+#| "The map widget allows you to view the location of images if GPS "
+#| "coordinates are found in the EXIF information."
 msgctxt "@info:whatsthis"
 msgid ""
 "The map widget allows you to view the location of images if GPS coordinates "
-"are found in the EXIF information."
+"are found in the Exif information."
 msgstr ""
 "Mapový grafický prvok vám umožňuje zobraziť polohu obrázkov, ak sú GPS "
 "súradnice uvedené v informáciách EXIF."
@@ -130,7 +140,7 @@ msgstr "Hotovo"
 msgid "Continue &Later"
 msgstr "Pokračovať neskôr"
 
-#: AnnotationDialog/Dialog.cpp:242 AnnotationDialog/Dialog.cpp:818
+#: AnnotationDialog/Dialog.cpp:242 AnnotationDialog/Dialog.cpp:820
 #, kde-format
 msgctxt "@action:button"
 msgid "&Search"
@@ -208,13 +218,13 @@ msgstr "=="
 
 #: AnnotationDialog/Dialog.cpp:393
 #, kde-format
-msgid "&gt;="
-msgstr "&gt;="
+msgid ">="
+msgstr ""
 
 #: AnnotationDialog/Dialog.cpp:393
 #, kde-format
-msgid "&lt;="
-msgstr "&lt;="
+msgid "<="
+msgstr ""
 
 #: AnnotationDialog/Dialog.cpp:393
 #, kde-format
@@ -237,79 +247,89 @@ msgid "Search only for RAW files"
 msgstr "Hľadať iba pre RAW súbory"
 
 #: AnnotationDialog/Dialog.cpp:602
-#, kde-format
-msgid "KPhotoAlbum Annotations (%1/%2)"
+#, fuzzy, kde-format
+#| msgid "KPhotoAlbum Annotations (%1/%2)"
+msgctxt "@title:window image %1 of %2 images"
+msgid "Annotations (%1/%2)"
 msgstr "Anotácie KPhotoAlbum (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:823
+#: AnnotationDialog/Dialog.cpp:825
 #, kde-format
 msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "Hľadať"
 
-#: AnnotationDialog/Dialog.cpp:827
+#: AnnotationDialog/Dialog.cpp:829
 #, kde-format
 msgid "Done"
 msgstr "Hotovo"
 
-#: AnnotationDialog/Dialog.cpp:834
-#, kde-format
+#: AnnotationDialog/Dialog.cpp:836
+#, fuzzy, kde-format
+#| msgid "Annotations"
+msgctxt "@title:window"
 msgid "Annotations"
 msgstr "Vysvetlivky"
 
-#: AnnotationDialog/Dialog.cpp:867
-#, kde-format
-msgid "Configure window layout..."
+#: AnnotationDialog/Dialog.cpp:869
+#, fuzzy, kde-format
+#| msgid "Configure window layout..."
+msgid "Configure Window Layout..."
 msgstr "Nastaviť rozloženie okien"
 
-#: AnnotationDialog/Dialog.cpp:868
+#: AnnotationDialog/Dialog.cpp:870
 #, kde-format
 msgid "Save Current Window Setup"
 msgstr "Uložiť aktuálne nastavenie okna"
 
-#: AnnotationDialog/Dialog.cpp:869
+#: AnnotationDialog/Dialog.cpp:871
 #, kde-format
 msgid "Reset layout"
 msgstr "Vynulovať rozloženie"
 
-#: AnnotationDialog/Dialog.cpp:876 AnnotationDialog/Dialog.cpp:1285
+#: AnnotationDialog/Dialog.cpp:878 AnnotationDialog/Dialog.cpp:1287
 #: AnnotationDialog/ListSelect.cpp:92
 #, kde-format
 msgid "Sort Alphabetically (Tree)"
 msgstr "Triediť abecedne (strom)"
 
-#: AnnotationDialog/Dialog.cpp:880 AnnotationDialog/Dialog.cpp:1289
+#: AnnotationDialog/Dialog.cpp:882 AnnotationDialog/Dialog.cpp:1291
 #: AnnotationDialog/ListSelect.cpp:98
 #, kde-format
 msgid "Sort Alphabetically (Flat)"
 msgstr "Triediť abecedne (plocho)"
 
-#: AnnotationDialog/Dialog.cpp:884 AnnotationDialog/ListSelect.cpp:104
-#, kde-format
-msgid "Sort by date"
+#: AnnotationDialog/Dialog.cpp:886
+#, fuzzy, kde-format
+#| msgid "Sort by date"
+msgid "Sort by Date"
 msgstr "Triediť podľa dátumu"
 
-#: AnnotationDialog/Dialog.cpp:900
-#, kde-format
-msgid "Match tags from the first character."
+#: AnnotationDialog/Dialog.cpp:902
+#, fuzzy, kde-format
+#| msgid "Match tags from the first character."
+msgid "Match Tags from the First Character"
 msgstr "Párovať značky od prvého znaku."
 
-#: AnnotationDialog/Dialog.cpp:901
-#, kde-format
-msgid "Match tags from word boundaries."
+#: AnnotationDialog/Dialog.cpp:903
+#, fuzzy, kde-format
+#| msgid "Match tags from word boundaries."
+msgid "Match Tags from Word Boundaries"
 msgstr "Párovať značky od okrajov slov."
 
-#: AnnotationDialog/Dialog.cpp:902
-#, kde-format
-msgid "Match tags anywhere."
+#: AnnotationDialog/Dialog.cpp:904
+#, fuzzy, kde-format
+#| msgid "Match tags anywhere."
+msgid "Match Tags Anywhere"
 msgstr "Párovať značky kdekoľvek."
 
-#: AnnotationDialog/Dialog.cpp:920 AnnotationDialog/ListSelect.cpp:110
-#, kde-format
-msgid "Show only selected Ctrl+S"
+#: AnnotationDialog/Dialog.cpp:922
+#, fuzzy, kde-format
+#| msgid "Show only selected Ctrl+S"
+msgid "Show Only Selected Ctrl+S"
 msgstr "Zobraziť iba vybrané Ctrl+S"
 
-#: AnnotationDialog/Dialog.cpp:963
+#: AnnotationDialog/Dialog.cpp:965
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be opened because "
@@ -318,7 +338,7 @@ msgstr ""
 "<p>Nepodarilo sa uložiť rozloženie okien.</p>Súbor %1 nebolo možné otvoriť z "
 "dôvodu nasledujúcej chyby: %2"
 
-#: AnnotationDialog/Dialog.cpp:970
+#: AnnotationDialog/Dialog.cpp:972
 #, kde-format
 msgid ""
 "<p>Could not save the window layout.</p>File %1 could not be written because "
@@ -327,7 +347,7 @@ msgstr ""
 "<p>Nepodarilo sa uložiť rozloženie okien.</p>Súbor %1 nebolo možné zapísať z "
 "dôvodu nasledujúcej chyby: %2"
 
-#: AnnotationDialog/Dialog.cpp:1042
+#: AnnotationDialog/Dialog.cpp:1044
 #, kde-format
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to cancel all "
@@ -336,7 +356,7 @@ msgstr ""
 "<p>Niektoré zmeny sú vykonané v anotáciách. Naozaj chcete zrušiť všetky "
 "nedávne zmeny v každom ovplyvnenom súbore?</p>"
 
-#: AnnotationDialog/Dialog.cpp:1144
+#: AnnotationDialog/Dialog.cpp:1146
 #, kde-format
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
@@ -353,7 +373,7 @@ msgstr ""
 "obrázku; ďalšie tipy na jeho použitie nájdete pri prečítaní o <a href="
 "\"help:/kphotoalbum/chp-typingIn.html\">vkladanie</a>.</p>"
 
-#: AnnotationDialog/Dialog.cpp:1153
+#: AnnotationDialog/Dialog.cpp:1155
 #, kde-format
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
@@ -366,60 +386,60 @@ msgstr ""
 "sa odporúča, aby ste strávili 5 minút pri čítaní <a href=\"help:/kphotoalbum/"
 "chp-typingIn.html\">Dokumentácia k tomuto dialógu</a></p>"
 
-#: AnnotationDialog/Dialog.cpp:1292
+#: AnnotationDialog/Dialog.cpp:1294
 #, kde-format
 msgid "Sort Most Recently Used"
 msgstr "Triediť naposledy použité"
 
-#: AnnotationDialog/Dialog.cpp:1295
+#: AnnotationDialog/Dialog.cpp:1297
 #, kde-format
 msgid "Toggle Sorting"
 msgstr "Prepnúť triedenie"
 
-#: AnnotationDialog/Dialog.cpp:1300
+#: AnnotationDialog/Dialog.cpp:1302
 #, kde-format
 msgid "Toggle Showing Selected Items Only"
 msgstr "Prepnúť iba zobrazenie vybraných položiek"
 
-#: AnnotationDialog/Dialog.cpp:1305
+#: AnnotationDialog/Dialog.cpp:1307
 #, kde-format
 msgid "Annotate Next"
 msgstr "Anotovať ďalší"
 
-#: AnnotationDialog/Dialog.cpp:1309
+#: AnnotationDialog/Dialog.cpp:1311
 #, kde-format
 msgid "Annotate Previous"
 msgstr "Anotovať predošlý"
 
-#: AnnotationDialog/Dialog.cpp:1313
+#: AnnotationDialog/Dialog.cpp:1315
 #, kde-format
 msgid "OK dialog"
 msgstr "OK dialóg"
 
-#: AnnotationDialog/Dialog.cpp:1317 AnnotationDialog/ListSelect.cpp:339
+#: AnnotationDialog/Dialog.cpp:1319 AnnotationDialog/ListSelect.cpp:339
 #: Settings/CategoryPage.cpp:86
 #, kde-format
 msgid "Delete"
 msgstr "Odstrániť"
 
-#: AnnotationDialog/Dialog.cpp:1321
+#: AnnotationDialog/Dialog.cpp:1323
 #, kde-format
 msgid "Copy tags from previous image"
 msgstr "Kopírovať značky z predchádzajúceho obrázka"
 
-#: AnnotationDialog/Dialog.cpp:1325 AnnotationDialog/ImagePreviewWidget.cpp:76
-#: MainWindow/Window.cpp:783
+#: AnnotationDialog/Dialog.cpp:1327 AnnotationDialog/ImagePreviewWidget.cpp:76
+#: MainWindow/Window.cpp:785
 #, kde-format
 msgid "Rotate counterclockwise"
 msgstr "Otočiť proti smeru hodinových ručičiek"
 
-#: AnnotationDialog/Dialog.cpp:1328 AnnotationDialog/ImagePreviewWidget.cpp:82
-#: MainWindow/Window.cpp:788
+#: AnnotationDialog/Dialog.cpp:1330 AnnotationDialog/ImagePreviewWidget.cpp:82
+#: MainWindow/Window.cpp:790
 #, kde-format
 msgid "Rotate clockwise"
 msgstr "Otočiť po smere hodinových ručičiek"
 
-#: AnnotationDialog/Dialog.cpp:1331
+#: AnnotationDialog/Dialog.cpp:1333
 #, kde-format
 msgid "Toggle fullscreen preview"
 msgstr "Prepnúť celoobrazovkový náhľad"
@@ -527,6 +547,16 @@ msgstr "alebo"
 msgid "and"
 msgstr "a"
 
+#: AnnotationDialog/ListSelect.cpp:104
+#, kde-format
+msgid "Sort by date"
+msgstr "Triediť podľa dátumu"
+
+#: AnnotationDialog/ListSelect.cpp:110
+#, kde-format
+msgid "Show only selected Ctrl+S"
+msgstr "Zobraziť iba vybrané Ctrl+S"
+
 #: AnnotationDialog/ListSelect.cpp:151
 #, kde-format
 msgid ""
@@ -614,8 +644,8 @@ msgstr ""
 msgid "Really Delete %1?"
 msgstr "Naozaj vymazať %1?"
 
-#: AnnotationDialog/ListSelect.cpp:412 Settings/TagGroupsPage.cpp:570
-#: Settings/TagGroupsPage.cpp:815
+#: AnnotationDialog/ListSelect.cpp:412 Settings/TagGroupsPage.cpp:557
+#: Settings/TagGroupsPage.cpp:802
 #, kde-format
 msgid "&Delete"
 msgstr "O&dstrániť"
@@ -678,13 +708,13 @@ msgctxt "Category name, then number of selected tags. E.g. 'People (1)'"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: AnnotationDialog/ResizableFrame.cpp:73
+#: AnnotationDialog/ResizableFrame.cpp:75
 #, kde-format
 msgctxt "area of an image; rectangle that is overlayed upon the image"
 msgid "Remove area"
 msgstr "Odstrániť oblasť"
 
-#: AnnotationDialog/ResizableFrame.cpp:322
+#: AnnotationDialog/ResizableFrame.cpp:324
 #, kde-format
 msgctxt ""
 "%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the tag's "
@@ -692,38 +722,38 @@ msgctxt ""
 msgid "%1 %2 (%3)"
 msgstr "%1 %2 (%3)"
 
-#: AnnotationDialog/ResizableFrame.cpp:326
+#: AnnotationDialog/ResizableFrame.cpp:328
 #, kde-format
 msgctxt "%1 is the tag name and %2 is the tag's category"
 msgid "%1 (%2)"
 msgstr "%1 (%2)"
 
-#: AnnotationDialog/ResizableFrame.cpp:365
+#: AnnotationDialog/ResizableFrame.cpp:367
 #, kde-format
 msgid ""
 "<p>%1 has already been tagged in another area on this image.</p><p>If you "
 "continue, the previous tag will be removed...</p>"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:368
+#: AnnotationDialog/ResizableFrame.cpp:370
 #, kde-format
 msgid "Replace existing area?"
 msgstr ""
 
-#: AnnotationDialog/ResizableFrame.cpp:483
+#: AnnotationDialog/ResizableFrame.cpp:485
 #, kde-format
 msgctxt ""
 "As in: remove tag %1 in category %2 [from this marked area of the image]"
 msgid "Remove tag %1 (%2)"
 msgstr "Odstrániť značku %1 (%2)"
 
-#: AnnotationDialog/ResizableFrame.cpp:495
+#: AnnotationDialog/ResizableFrame.cpp:497
 #, kde-format
 msgid "Associate with"
 msgstr "Asociovať s"
 
-#: AnnotationDialog/ResizableFrame.cpp:517
-#: AnnotationDialog/ResizableFrame.cpp:526
+#: AnnotationDialog/ResizableFrame.cpp:519
+#: AnnotationDialog/ResizableFrame.cpp:528
 #, kde-format
 msgctxt ""
 "As in: associate [this marked area of the image] with one of the following "
@@ -786,7 +816,9 @@ msgid "Elapsed"
 msgstr "Uplynulo"
 
 #: BackgroundTaskManager/JobViewer.cpp:33
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Background Job Viewer"
+msgctxt "@title:window"
 msgid "Background Job Viewer"
 msgstr "Prehliadač úloh na pozadí"
 
@@ -850,7 +882,7 @@ msgstr[1] "%1 videá"
 msgstr[2] "%1 videí"
 
 #. i18n: ectx: Menu (imagesplugins)
-#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:84
+#: Browser/AbstractCategoryModel.cpp:134 kphotoalbumui.rc:85
 #, kde-format
 msgid "Images"
 msgstr "Obrázky"
@@ -909,9 +941,10 @@ msgstr "Hľadanie nenašlo žiadne obrázky ani videá."
 msgid "Empty Search Result"
 msgstr "Prázdny výsledok hľadania"
 
-#: Browser/OverviewPage.cpp:280 Exif/SearchDialog.cpp:40
-#, kde-format
-msgid "EXIF Search"
+#: Browser/OverviewPage.cpp:280
+#, fuzzy, kde-format
+#| msgid "EXIF Search"
+msgid "Exif Search"
 msgstr "Hľadanie EXIF"
 
 #: Browser/OverviewPage.cpp:300
@@ -920,7 +953,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "hľadať"
 
-#: Browser/OverviewPage.cpp:339 MainWindow/Window.cpp:1805
+#: Browser/OverviewPage.cpp:339 MainWindow/Window.cpp:1808
 #, kde-format
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
@@ -935,7 +968,7 @@ msgstr ""
 "KPhotoAlbum</b></li><li>Teraz vyberte ikonu <b>Kategórie</b></li><li>Teraz "
 "nastavte sekciu <b>Neoznačené obrázky</b></li></ul></p>"
 
-#: Browser/OverviewPage.cpp:345 MainWindow/Window.cpp:1812
+#: Browser/OverviewPage.cpp:345 MainWindow/Window.cpp:1815
 #, kde-format
 msgid "Feature has not been configured"
 msgstr "Funkcia ešte nebola nastavená"
@@ -1009,12 +1042,12 @@ msgstr[2] ""
 msgid "Move Items"
 msgstr "Presunúť položky"
 
-#: DateBar/DateBarWidget.cpp:86
+#: DateBar/DateBarWidget.cpp:92
 #, kde-format
 msgid "Widen selection to include all images and videos again"
 msgstr "Rozšíriť výber na zahrnutie všetkých obrázok a videí znova"
 
-#: DateBar/DateBarWidget.cpp:94
+#: DateBar/DateBarWidget.cpp:100
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -1043,17 +1076,17 @@ msgstr ""
 "nastaví <emphasis>zameranie</emphasis> pre pohľad miniatúr, teda skočí na "
 "prvú miniatúru časovej jednotky v zameraní.</item></list></para>"
 
-#: DateBar/DateBarWidget.cpp:557
+#: DateBar/DateBarWidget.cpp:571
 #, kde-format
 msgid "Show Ranges"
 msgstr "Zobraziť rozsahy"
 
-#: DateBar/DateBarWidget.cpp:563
+#: DateBar/DateBarWidget.cpp:577
 #, kde-format
 msgid "Show Resolution Indicator"
 msgstr "Zobraziť indikátor riešenia"
 
-#: DateBar/DateBarWidget.cpp:687
+#: DateBar/DateBarWidget.cpp:701
 #, kde-format
 msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
@@ -1062,7 +1095,7 @@ msgstr[0] "1 presné"
 msgstr[1] "%1 presné"
 msgstr[2] "%1 presných"
 
-#: DateBar/DateBarWidget.cpp:689
+#: DateBar/DateBarWidget.cpp:703
 #, kde-format
 msgctxt ""
 "@info:status additional images captured in a date range that overlaps with "
@@ -1073,7 +1106,7 @@ msgstr[0] " + 1 rozsah"
 msgstr[1] " + %1 rozsahy"
 msgstr[2] " + %1 rozsahov"
 
-#: DateBar/DateBarWidget.cpp:690
+#: DateBar/DateBarWidget.cpp:704
 #, kde-format
 msgctxt "@info:status total image count"
 msgid " = 1 total"
@@ -1082,7 +1115,7 @@ msgstr[0] " = 1 celkovo"
 msgstr[1] " = %1 celkovo"
 msgstr[2] " = %1 celkovo"
 
-#: DateBar/DateBarWidget.cpp:692
+#: DateBar/DateBarWidget.cpp:706
 #, kde-format
 msgctxt "@info:status image count"
 msgid "%1 image/video"
@@ -1091,7 +1124,7 @@ msgstr[0] "%1 obrázok/video"
 msgstr[1] "%1 obrázky/videá"
 msgstr[2] "%1 obrázkov/videí"
 
-#: DateBar/DateBarWidget.cpp:694
+#: DateBar/DateBarWidget.cpp:708
 #, kde-format
 msgctxt ""
 "@info:status Time range vs. image count (e.g. 'Jun 2012 | 4 images/videos')."
@@ -1128,6 +1161,12 @@ msgstr "2 hodiny"
 msgid "10 Minutes"
 msgstr "10 minút"
 
+#: DateBar/ViewHandler.cpp:348
+#, fuzzy, kde-format
+#| msgid "1 second"
+msgid "10 Seconds"
+msgstr "1 sekunda"
+
 #: DB/Category.cpp:167
 #, kde-format
 msgid "Unable to create directory '%1'."
@@ -1148,73 +1187,73 @@ msgstr "Chyba pri ukladaní obrázka '%1'."
 msgid "Error Saving Image"
 msgstr "Chyba pri ukladaní obrázka"
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:351
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "jan"
 msgstr "jan"
 
-#: DB/ImageDate.cpp:348
+#: DB/ImageDate.cpp:351
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "feb"
 msgstr "feb"
 
-#: DB/ImageDate.cpp:349
+#: DB/ImageDate.cpp:352
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "mar"
 msgstr "mar"
 
-#: DB/ImageDate.cpp:349
+#: DB/ImageDate.cpp:352
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "apr"
 msgstr "apr"
 
-#: DB/ImageDate.cpp:350
+#: DB/ImageDate.cpp:353
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "may"
 msgstr "máj"
 
-#: DB/ImageDate.cpp:350
+#: DB/ImageDate.cpp:353
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "jun"
 msgstr "jún"
 
-#: DB/ImageDate.cpp:351
+#: DB/ImageDate.cpp:354
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "jul"
 msgstr "júl"
 
-#: DB/ImageDate.cpp:351
+#: DB/ImageDate.cpp:354
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "aug"
 msgstr "aug"
 
-#: DB/ImageDate.cpp:352
+#: DB/ImageDate.cpp:355
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "sep"
 msgstr "sep"
 
-#: DB/ImageDate.cpp:352
+#: DB/ImageDate.cpp:355
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "oct"
 msgstr "okt"
 
-#: DB/ImageDate.cpp:353
+#: DB/ImageDate.cpp:356
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "nov"
 msgstr "nov"
 
-#: DB/ImageDate.cpp:353
+#: DB/ImageDate.cpp:356
 #, kde-format
 msgctxt "Abbreviated month name"
 msgid "dec"
@@ -1249,7 +1288,7 @@ msgctxt ""
 msgid "No other %1"
 msgstr "Žiadne iné %1"
 
-#: DB/NewImageFinder.cpp:141
+#: DB/NewImageFinder.cpp:468
 #, kde-format
 msgid ""
 "<p><b>Loading information from new files</b></p><p>Depending on the number "
@@ -1260,7 +1299,7 @@ msgstr ""
 "počte obrázkov, môže to chvíľu trvať.<br/>Zdržanie však nastane iba vtedy, "
 "ak sa nájdu nové obrázky.</p>"
 
-#: DB/NewImageFinder.cpp:334
+#: DB/NewImageFinder.cpp:684
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
@@ -1268,7 +1307,7 @@ msgstr[0] "<p><b>Počítanie kontrolného súčtu pre súbor %1</b></p>"
 msgstr[1] "<p><b>Počítanie kontrolných súčtov pre %1 súbory</b></p>"
 msgstr[2] "<p><b>Počítanie kontrolných súčtov pre %1 súborov</b></p>"
 
-#: DB/NewImageFinder.cpp:335
+#: DB/NewImageFinder.cpp:685
 #, kde-format
 msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
@@ -1277,15 +1316,21 @@ msgstr ""
 "<p>Uložením kontrolného súčtu pre každý obrázok je KPhotoAlbum schopný nájsť "
 "obrázky, aj keď ste ich presunuli na disku.</p>"
 
-#: DB/NewImageFinder.cpp:378
+#: DB/NewImageFinder.cpp:728
 #, kde-format
 msgid "Following files could not be read:"
 msgstr "Nasledujúce súbory sa nepodarilo načítať:"
 
-#: Exif/Database.cpp:101
-#, kde-format
+#: Exif/Database.cpp:106
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>There was an error while executing the SQL backend command. The error "
+#| "is likely due to a broken database file.</p><p>To fix this problem run "
+#| "Maintenance->Recreate Exif Search database.</p><hr/><p>For debugging: the "
+#| "command that was attempted to be executed was:<br/>%1</p><p>The error "
+#| "message obtained was:<br/>%2</p>"
 msgid ""
-"<p>There was an error while executing the SQL backend command. The error is "
+"<p>There was an error while accessing the Exif search database. The error is "
 "likely due to a broken database file.</p><p>To fix this problem run "
 "Maintenance->Recreate Exif Search database.</p><hr/><p>For debugging: the "
 "command that was attempted to be executed was:<br/>%1</p><p>The error "
@@ -1297,24 +1342,55 @@ msgstr ""
 "<p>Pre ladenie: príkaz, ktorý sa spúšťal, bol:<br/>%1</p> <p>Chybová správa "
 "bola:<br/>%2</p>"
 
-#: Exif/Database.cpp:109
-#, kde-format
-msgid "Error Executing Exif Command"
-msgstr "Chyba pri spúšťaní príkazu EXIF"
+#: Exif/Database.cpp:122
+#, fuzzy, kde-format
+#| msgid "Error in database file"
+msgid "Error in Exif database"
+msgstr "Chyba v súbore databázy"
 
-#: Exif/Database.cpp:504
+#: Exif/Database.cpp:146
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>There was an error while executing the SQL backend command. The error "
+#| "is likely due to a broken database file.</p><p>To fix this problem run "
+#| "Maintenance->Recreate Exif Search database.</p><hr/><p>For debugging: the "
+#| "command that was attempted to be executed was:<br/>%1</p><p>The error "
+#| "message obtained was:<br/>%2</p>"
+msgid ""
+"<p>There was an error while opening the Exif search database.</p> <p>To fix "
+"this problem run Maintenance->Recreate Exif Search database.</p><hr/><p>The "
+"error message obtained was:<br/>%1</p>"
+msgstr ""
+"<p>Nastala chyba počas spúšťania príkazu SQL backendu. Chyba je "
+"pravdepodobne kvôli poškodenému súboru databázy.</p> <p>Na opravenie tohto "
+"problému spustite Údržba->Znovu vytvoriť databázu hľadania EXIF.</p><hr/> "
+"<p>Pre ladenie: príkaz, ktorý sa spúšťal, bol:<br/>%1</p> <p>Chybová správa "
+"bola:<br/>%2</p>"
+
+#: Exif/Database.cpp:195
 #, kde-format
-msgid "Rereading EXIF information from all images"
+msgid ""
+"<p>The Exif search database is corrupted and has no data.</p> <p>To fix this "
+"problem run Maintenance->Recreate Exif Search database.</p>"
+msgstr ""
+
+#: Exif/Database.cpp:653
+#, fuzzy, kde-format
+#| msgid "Rereading EXIF information from all images"
+msgid "Rereading Exif information from all images"
 msgstr "Znovu načítavam EXIF informácie zo všetkých obrázkov"
 
 #: Exif/InfoDialog.cpp:41
-#, kde-format
-msgid "EXIF Information"
+#, fuzzy, kde-format
+#| msgid "EXIF Information"
+msgctxt "@title:window"
+msgid "Exif Information"
 msgstr "Informácia EXIF"
 
 #: Exif/InfoDialog.cpp:75
-#, kde-format
-msgid "EXIF Label Search: "
+#, fuzzy, kde-format
+#| msgid "EXIF Label Search: "
+msgid "Exif label search: "
 msgstr "Hľadanie štítku EXIF: "
 
 #: Exif/InfoDialog.cpp:81
@@ -1323,13 +1399,16 @@ msgid "IPTC character set:"
 msgstr "Znaková sada IPTC:"
 
 #: Exif/ReReadDialog.cpp:41
-#, kde-format
-msgid "Read EXIF info from files"
+#, fuzzy, kde-format
+#| msgid "Read EXIF info from files"
+msgctxt "@title:window"
+msgid "Read Exif Info from Files"
 msgstr "Prečítať EXIF info zo súborov"
 
 #: Exif/ReReadDialog.cpp:48
-#, kde-format
-msgid "Update EXIF search database"
+#, fuzzy, kde-format
+#| msgid "Update EXIF search database"
+msgid "Update Exif search database"
 msgstr "Aktualizovať databázu hľadania EXIF"
 
 #: Exif/ReReadDialog.cpp:54
@@ -1338,18 +1417,21 @@ msgid "Update image date"
 msgstr "Aktualizovať dátum obrázku"
 
 #: Exif/ReReadDialog.cpp:57
-#, kde-format
-msgid "Use modification date if EXIF not found"
+#, fuzzy, kde-format
+#| msgid "Use modification date if EXIF not found"
+msgid "Use modification date if Exif not found"
 msgstr "Použiť dátum zmeny, ak sa nenájde EXIF"
 
 #: Exif/ReReadDialog.cpp:60
-#, kde-format
-msgid "Update image orientation from EXIF information"
+#, fuzzy, kde-format
+#| msgid "Update image orientation from EXIF information"
+msgid "Update image orientation from Exif information"
 msgstr "Aktualizovať orientáciu obrázku podľa EXIF informácie"
 
 #: Exif/ReReadDialog.cpp:63
-#, kde-format
-msgid "Update image description from EXIF information"
+#, fuzzy, kde-format
+#| msgid "Update image description from EXIF information"
+msgid "Update image description from Exif information"
 msgstr "Aktualizovať popis obrázku podľa EXIF informácie"
 
 #: Exif/ReReadDialog.cpp:66
@@ -1358,9 +1440,12 @@ msgid "Affected Files"
 msgstr "Ovplyvnené súbory"
 
 #: Exif/ReReadDialog.cpp:138
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>Be aware that setting the data from EXIF may <b>overwrite</b> data you "
+#| "have previously entered manually using the image configuration dialog.</p>"
 msgid ""
-"<p>Be aware that setting the data from EXIF may <b>overwrite</b> data you "
+"<p>Be aware that setting the data from Exif may <b>overwrite</b> data you "
 "have previously entered manually using the image configuration dialog.</p>"
 msgstr ""
 "<p>Dajte si pozor, že nastavenie údajov  z EXIF môže <b>prepísať</b> údaje, "
@@ -1371,7 +1456,14 @@ msgstr ""
 msgid "Override image dates"
 msgstr "Prepísať dátumy obrázkov"
 
-#: Exif/SearchDialog.cpp:44 Settings/SettingsDialog.cpp:103
+#: Exif/SearchDialog.cpp:40
+#, fuzzy, kde-format
+#| msgid "EXIF Search"
+msgctxt "@title:window"
+msgid "Exif Search"
+msgstr "Hľadanie EXIF"
+
+#: Exif/SearchDialog.cpp:44
 #, kde-format
 msgid "Settings"
 msgstr "Nastavenia"
@@ -1480,10 +1572,13 @@ msgid "No lenses found in the database"
 msgstr "Nenašli sa šošovky v databáze"
 
 #: Exif/SearchDialog.cpp:412
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Not all images in the database have lens information. <note>Recreate the "
+#| "EXIF search database to ensure lens data for all images.</note>"
 msgid ""
 "Not all images in the database have lens information. <note>Recreate the "
-"EXIF search database to ensure lens data for all images.</note>"
+"Exif search database to ensure lens data for all images.</note>"
 msgstr ""
 "Nie všetky obrázky v databáze majú informácie o objektíve. <note>Znovu "
 "vytvorte databázu hľadania EXIF na zaistenie údajov a objektíve pre všetky "
@@ -1550,7 +1645,9 @@ msgid "Date"
 msgstr "Dátum"
 
 #: HTMLGenerator/HTMLDialog.cpp:63
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "HTML Export"
+msgctxt "@title:window"
 msgid "HTML Export"
 msgstr "HTML Export"
 
@@ -1618,7 +1715,7 @@ msgstr "Čo zahrnúť"
 msgid "Layout"
 msgstr "Rozloženie"
 
-#: HTMLGenerator/HTMLDialog.cpp:198
+#: HTMLGenerator/HTMLDialog.cpp:198 Settings/CategoryPage.cpp:141
 #, kde-format
 msgid "Thumbnail size:"
 msgstr "Veľkosť miniatúry:"
@@ -1857,73 +1954,75 @@ msgstr ""
 "(Možno potrebujete počkať, kým ledka video extrakcie v stavovom riadku "
 "prestane blikať, aby ste videli všetky ovplyvnené videá.)"
 
-#: ImageManager/ThumbnailBuilder.cpp:104
+#: ImageManager/ThumbnailBuilder.cpp:167
 #, kde-format
 msgid "Building thumbnails"
 msgstr "Zostavujem miniatúry"
 
-#: ImportExport/Export.cpp:64
+#: ImportExport/Export.cpp:63
 #, kde-format
 msgid "Save an export file"
 msgstr "Uložiť exportovaný súbor"
 
-#: ImportExport/Export.cpp:66 ImportExport/Import.cpp:43
+#: ImportExport/Export.cpp:65 ImportExport/Import.cpp:42
 #, fuzzy, kde-format
 #| msgid "KPhotoAlbum Export Files"
 msgid "KPhotoAlbum import files"
 msgstr "Súbory exportu KPhotoAlbum"
 
-#: ImportExport/Export.cpp:84
-#, kde-format
+#: ImportExport/Export.cpp:83
+#, fuzzy, kde-format
+#| msgid "Export Configuration / Copy Images"
+msgctxt "@title:window"
 msgid "Export Configuration / Copy Images"
 msgstr "Nastavenie exportu / kopírovanie obrázkov"
 
-#: ImportExport/Export.cpp:97
+#: ImportExport/Export.cpp:96
 #, kde-format
 msgid "How to Handle Images"
 msgstr "Ako spracovať obrázky"
 
-#: ImportExport/Export.cpp:101
+#: ImportExport/Export.cpp:100
 #, kde-format
 msgid "Include in .kim file"
 msgstr "Zahrnúť do .kim súboru"
 
-#: ImportExport/Export.cpp:102
+#: ImportExport/Export.cpp:101
 #, kde-format
 msgid "Do not copy files, only generate .kim file"
 msgstr "Nekopírovať súbory, iba generovať .kim súbor"
 
-#: ImportExport/Export.cpp:103
+#: ImportExport/Export.cpp:102
 #, kde-format
 msgid "Automatically copy next to .kim file"
 msgstr "Automaticky kopírovať ďalší do .kim súboru"
 
-#: ImportExport/Export.cpp:104
+#: ImportExport/Export.cpp:103
 #, kde-format
 msgid "Hard link next to .kim file"
 msgstr "Pevný odkaz pri .kim súbore"
 
-#: ImportExport/Export.cpp:105
+#: ImportExport/Export.cpp:104
 #, kde-format
 msgid "Symbolic link next to .kim file"
 msgstr "Symbolický odkaz pri .kim súbore"
 
-#: ImportExport/Export.cpp:115
+#: ImportExport/Export.cpp:114
 #, kde-format
 msgid "Compress export file"
 msgstr "Komprimovať exportný súbor"
 
-#: ImportExport/Export.cpp:119
+#: ImportExport/Export.cpp:118
 #, kde-format
 msgid "Generate thumbnails"
 msgstr "Vytvoriť miniatúry"
 
-#: ImportExport/Export.cpp:127
+#: ImportExport/Export.cpp:126
 #, kde-format
 msgid "Limit maximum image dimensions to: "
 msgstr "Obmedziť maximálne rozmery obrázka na: "
 
-#: ImportExport/Export.cpp:139
+#: ImportExport/Export.cpp:138
 #, kde-format
 msgid ""
 "<p>If your images are stored in a non-compressed file format then you may "
@@ -1937,12 +2036,12 @@ msgstr ""
 "exportu.</p> <p>Inými slovami, nezaškrtávajte to, ak vaše obrázky sú uložené "
 "v jpg, png alebo gif, ale zaškrtnite, ak sú vaše obrázky uložené v tiff.</p>"
 
-#: ImportExport/Export.cpp:145
+#: ImportExport/Export.cpp:144
 #, kde-format
 msgid "<p>Generate thumbnail images</p>"
 msgstr "<p>Vytvoriť obrázky miniatúr</p>"
 
-#: ImportExport/Export.cpp:148
+#: ImportExport/Export.cpp:147
 #, kde-format
 msgid ""
 "<p>With this option you may limit the maximum dimensions (width and height) "
@@ -1955,7 +2054,7 @@ msgstr ""
 "kvalita bude nižšia, ak si bude niekto chcieť pozrieť exportované obrázky s "
 "väčšími rozmermi.</p>"
 
-#: ImportExport/Export.cpp:155
+#: ImportExport/Export.cpp:154
 #, kde-format
 msgid ""
 "<p>When exporting images, bear in mind that there are two things the person "
@@ -1981,37 +2080,37 @@ msgstr ""
 "kim súbor umiestnením ich vedľa seba, teda používateľ môže získať obrázok, "
 "ktorý chce.</p>"
 
-#: ImportExport/Export.cpp:233
+#: ImportExport/Export.cpp:232
 #, kde-format
 msgid "Error creating zip file"
 msgstr "Chyba vytvorenia zip súboru"
 
-#: ImportExport/Export.cpp:247
+#: ImportExport/Export.cpp:246
 #, kde-format
 msgid "&Cancel"
 msgstr "&Zrušiť"
 
-#: ImportExport/Export.cpp:266
+#: ImportExport/Export.cpp:265
 #, kde-format
 msgid "Creating index file"
 msgstr "Vytváram súbor indexu"
 
-#: ImportExport/Export.cpp:279
+#: ImportExport/Export.cpp:278
 #, kde-format
 msgid "Creating thumbnails"
 msgstr "Vytváram miniatúry"
 
-#: ImportExport/Export.cpp:301
+#: ImportExport/Export.cpp:300
 #, kde-format
 msgid "Copying image files"
 msgstr "Kopírujem súbory obrázkov"
 
-#: ImportExport/Export.cpp:368
+#: ImportExport/Export.cpp:367
 #, kde-format
 msgid "Error writing file %1"
 msgstr "Chyba pri zápise súboru %1"
 
-#: ImportExport/Export.cpp:398
+#: ImportExport/Export.cpp:397
 #, kde-format
 msgid ""
 "<p>Other KPhotoAlbum users may now load the import file into their database, "
@@ -2034,17 +2133,17 @@ msgstr ""
 "to súbor KPhotoAlbum pri kliknutí na odkaz, inak webový server povie "
 "Konqueroru, že je to čistý textový súbor.</p>"
 
-#: ImportExport/Export.cpp:407
+#: ImportExport/Export.cpp:406
 #, kde-format
 msgid "How to Use the Export File"
 msgstr "Ako použiť exportný súbor"
 
-#: ImportExport/Import.cpp:41
+#: ImportExport/Import.cpp:40
 #, kde-format
 msgid "KPhotoAlbum Export Files"
 msgstr "Súbory exportu KPhotoAlbum"
 
-#: ImportExport/Import.cpp:74
+#: ImportExport/Import.cpp:73
 #, kde-format
 msgid "Unable to create temporary file"
 msgstr "Nepodarilo sa vytvoriť dočasný súbor"
@@ -2105,7 +2204,7 @@ msgctxt "@title:tab introduction page"
 msgid "Introduction"
 msgstr "Úvod"
 
-#: ImportExport/ImportDialog.cpp:165 MainWindow/TokenEditor.cpp:65
+#: ImportExport/ImportDialog.cpp:165 MainWindow/TokenEditor.cpp:64
 #, kde-format
 msgid "Select All"
 msgstr "Vybrať všetko"
@@ -2157,7 +2256,7 @@ msgstr "Tokeny"
 
 #: ImportExport/ImportDialog.cpp:274 Settings/CategoryPage.cpp:271
 #: ThumbnailView/CellGeometry.cpp:77 ThumbnailView/ThumbnailModel.cpp:350
-#: XMLDB/Database.cpp:218 XMLDB/Database.cpp:565 XMLDB/FileReader.cpp:135
+#: XMLDB/Database.cpp:237 XMLDB/Database.cpp:598 XMLDB/FileReader.cpp:135
 #, kde-format
 msgid "Media Type"
 msgstr "Typ média"
@@ -2182,27 +2281,29 @@ msgstr "Chyba vytvorenia priečinka %1"
 msgid "How to resolve clashes"
 msgstr "Ako riešiť konflikty"
 
-#: ImportExport/ImportHandler.cpp:95 ImportExport/ImportHandler.cpp:154
-#, kde-format
+#: ImportExport/ImportHandler.cpp:94 ImportExport/ImportHandler.cpp:153
+#, fuzzy, kde-format
+#| msgid "Copying Images"
+msgctxt "@title:window"
 msgid "Copying Images"
 msgstr "Kopírujem obrázky"
 
-#: ImportExport/ImportHandler.cpp:169
+#: ImportExport/ImportHandler.cpp:168
 #, kde-format
 msgid "Error when writing image %1"
 msgstr "Chyba pri zápise obrázku %1"
 
-#: ImportExport/ImportHandler.cpp:188
+#: ImportExport/ImportHandler.cpp:187
 #, kde-format
 msgid "Updating Database"
 msgstr "Aktualizujem databázu"
 
-#: ImportExport/ImportHandler.cpp:234
+#: ImportExport/ImportHandler.cpp:233
 #, kde-format
 msgid "Cannot copy from any of the following locations:"
 msgstr "Nemôžem kopírovať z jedného z nasledovných umiestnení:"
 
-#: ImportExport/ImportHandler.cpp:235
+#: ImportExport/ImportHandler.cpp:234
 #, kde-format
 msgid "Continue without Asking"
 msgstr "Pokračovať bez opýtania"
@@ -2342,123 +2443,129 @@ msgid "&Maintenance"
 msgstr "Údržba"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:74 Settings/SettingsDialog.cpp:78
+#: kphotoalbumui.rc:75 Settings/SettingsDialog.cpp:78
 #, kde-format
 msgid "Plugins"
 msgstr "Moduly"
 
 #. i18n: ectx: Menu (exportplugin)
-#: kphotoalbumui.rc:76
+#: kphotoalbumui.rc:77
 #, kde-format
 msgid "Export"
 msgstr "Exportovať"
 
 #. i18n: ectx: Menu (importplugin)
-#: kphotoalbumui.rc:80
+#: kphotoalbumui.rc:81
 #, kde-format
 msgid "Import"
 msgstr "Importovať"
 
 #. i18n: ectx: Menu (batch_plugins)
-#: kphotoalbumui.rc:88
+#: kphotoalbumui.rc:89
 #, kde-format
 msgid "Batch Plugins"
 msgstr "Dávkové pluginy"
 
 #. i18n: ectx: Menu (tool_plugins)
-#: kphotoalbumui.rc:92
+#: kphotoalbumui.rc:93
 #, kde-format
 msgid "Tools"
 msgstr "Nástroje"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:109
+#: kphotoalbumui.rc:110
 #, kde-format
 msgid "Main Toolbar"
 msgstr "Hlavný panel nástrojov"
 
-#: main.cpp:67
+#: main.cpp:68
 #, kde-format
 msgid "KPhotoAlbum"
 msgstr "KPhotoAlbum"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "KDE Photo Album"
 msgstr "KDE fotoalbum"
 
-#: main.cpp:76
+#: main.cpp:77
 #, kde-format
 msgid "Jesper K. Pedersen"
 msgstr "Jesper K. Pedersen"
 
-#: main.cpp:76 main.cpp:77 main.cpp:78 main.cpp:80 main.cpp:81 main.cpp:82
-#: main.cpp:83 main.cpp:84
+#: main.cpp:77 main.cpp:78 main.cpp:79 main.cpp:81 main.cpp:82 main.cpp:83
+#: main.cpp:84 main.cpp:85 main.cpp:86
 #, kde-format
 msgid "Development"
 msgstr "Vývoj"
 
-#: main.cpp:77
+#: main.cpp:78
 #, kde-format
 msgid "Hassan Ibraheem"
 msgstr "Hassan Ibraheem"
 
-#: main.cpp:78
+#: main.cpp:79
 #, kde-format
 msgid "Miika Turkia"
 msgstr "Miika Turkia"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgid "Tuomas Suutari"
 msgstr "Tuomas Suutari"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgid "SQL backend and numerous features"
 msgstr "SQL backend a početné funkcie"
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "Jan Kundr&aacute;t"
 msgstr "Jan Kundr&aacute;t"
 
-#: main.cpp:81
+#: main.cpp:82
 #, kde-format
 msgid "Henner Zeller"
 msgstr "Henner Zeller"
 
-#: main.cpp:82
+#: main.cpp:83
 #, kde-format
 msgid "Andreas Neustifter"
 msgstr "Andreas Neustifter"
 
-#: main.cpp:83
+#: main.cpp:84
 #, kde-format
 msgid "Johannes Zarl-Zierl"
 msgstr "Johannes Zarl-Zierl"
 
-#: main.cpp:84
+#: main.cpp:85
 #, kde-format
 msgid "Tobias Leupold"
 msgstr "Tobias Leupold"
 
-#: main.cpp:87
+#: main.cpp:86
+#, fuzzy, kde-format
+#| msgid "Robert L Krawitz"
+msgid "Robert Krawitz"
+msgstr "Robert L Krawitz"
+
+#: main.cpp:88
 #, kde-format
 msgid "Will Stephenson"
 msgstr "Will Stephenson"
 
-#: main.cpp:87
+#: main.cpp:88
 #, kde-format
 msgid "Developing an Icon for KPhotoAlbum"
 msgstr "Vývoj ikony pre KPhotoAlbum"
 
-#: main.cpp:88
+#: main.cpp:89
 #, kde-format
 msgid "Teemu Rytilahti"
 msgstr "Teemu Rytilahti"
 
-#: main.cpp:89
+#: main.cpp:90
 #, kde-format
 msgid ""
 "Sending patches implementing (.) the \"Set As Wallpaper\" menu in the viewer."
@@ -2467,36 +2574,39 @@ msgstr ""
 "Poslanie záplat implementujúcich (.) ponuku \"Nastaviť ako tapetu\" v "
 "prehliadači. (.) Podpora tém pre generovanie HTML"
 
-#: main.cpp:91
+#: main.cpp:92
 #, kde-format
 msgid "Reimar Imhof"
 msgstr "Reimar Imhof"
 
-#: main.cpp:91
+#: main.cpp:92
 #, kde-format
 msgid "Patch to sort items in option listboxes"
 msgstr "Záplata na triedenie položiek v listboxoch volieb"
 
-#: main.cpp:92
+#: main.cpp:93
 #, kde-format
 msgid "Thomas Schwarzgruber"
 msgstr "Thomas Schwarzgruber"
 
-#: main.cpp:92
-#, kde-format
+#: main.cpp:93
+#, fuzzy, kde-format
+#| msgid ""
+#| "Patch to sort images in the thumbnail view, plus reading time info out of "
+#| "EXIF images for existing images"
 msgid ""
 "Patch to sort images in the thumbnail view, plus reading time info out of "
-"EXIF images for existing images"
+"Exif images for existing images"
 msgstr ""
 "Záplata na triedenie obrázkov v pohľade miniatúr a čítanie informácií o čase "
 "z EXIF obrázkov pre existujúce obrázky"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid "Marcel Wiesweg"
 msgstr "Marcel Wiesweg"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid ""
 "Patch which speed up loading of thumbnails plus preview in image property "
@@ -2505,23 +2615,25 @@ msgstr ""
 "Záplata, ktorá urýchli načítanie miniatúr a náhľad v dialógu vlastností "
 "obrázku."
 
-#: main.cpp:94
+#: main.cpp:95
 #, kde-format
 msgid "Marco Caldarelli"
 msgstr "Marco Caldarelli"
 
-#: main.cpp:94
-#, kde-format
-msgid "Patch for making it possible to reread EXIF info using a nice dialog."
+#: main.cpp:95
+#, fuzzy, kde-format
+#| msgid ""
+#| "Patch for making it possible to reread EXIF info using a nice dialog."
+msgid "Patch for making it possible to reread Exif info using a nice dialog."
 msgstr ""
 "Záplata na umožnenie znovu prečítania EXIF info pomocou pekného dialógu."
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid "Jean-Michel FAYARD"
 msgstr "Jean-Michel FAYARD"
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid ""
 "(.) Patch with directory info made available through the browser. (.) Patch "
@@ -2530,48 +2642,50 @@ msgstr ""
 "(.) Záplata s info o adresári dostupná cez prehliadač. (.) Záplata na "
 "pridanie checkboxu pre \"a/alebo\" hľadanie na stránke vyhľadávania."
 
-#: main.cpp:96
+#: main.cpp:97
 #, kde-format
 msgid "Robert L Krawitz"
 msgstr "Robert L Krawitz"
 
-#: main.cpp:96
+#: main.cpp:97
 #, kde-format
 msgid "Numerous patches plus profiling KPhotoAlbum again and again."
 msgstr "Rôzne záplaty a profilovanie programu KPhotoAlbum znova a znova."
 
-#: main.cpp:97
+#: main.cpp:98
 #, kde-format
 msgid "Christoph Moseler"
 msgstr "Christoph Moseler"
 
-#: main.cpp:97
+#: main.cpp:98
 #, kde-format
 msgid "Numerous patches for lots of bugs plus patches for a few new features"
 msgstr "Početné záplaty pre mnoho chýb a záplaty pre niekoľko nových funkcií"
 
-#: main.cpp:98
+#: main.cpp:99
 #, kde-format
 msgid "Clytie Siddall"
 msgstr "Clytie Siddall"
 
-#: main.cpp:98
+#: main.cpp:99
 #, kde-format
 msgid "Tremendous help with the English text in the application."
 msgstr "Obrovská pomoc s anglickým textom v aplikácii."
 
-#: main.cpp:99
+#: main.cpp:100
 #, kde-format
 msgid "Wes Hardaker"
 msgstr "Wes Hardaker"
 
-#: main.cpp:99
+#: main.cpp:100
 #, kde-format
 msgid "Some very useful features to improve workflow"
 msgstr "Niektoré veľmi užitočné funkcie na zlepšenie workflowu"
 
 #: MainWindow/AutoStackImages.cpp:49
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Automatically Stack Images"
+msgctxt "@title:window"
 msgid "Automatically Stack Images"
 msgstr "Automaticky skladať obrázky"
 
@@ -2668,22 +2782,26 @@ msgstr "Linkovať obrázok(y) na..."
 msgid "Link all selected images to..."
 msgstr "Linkovať všetky vybrané obrázky na..."
 
-#: MainWindow/CopyPopup.cpp:78 Viewer/ViewerWidget.cpp:1520
-#, kde-format
+#: MainWindow/CopyPopup.cpp:78 Viewer/ViewerWidget.cpp:1515
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Copy image to..."
 msgctxt "@title:window"
-msgid "Copy image to..."
+msgid "Copy Image to..."
 msgstr "Kopírovať obrázok do..."
 
-#: MainWindow/CopyPopup.cpp:79 Viewer/ViewerWidget.cpp:1525
+#: MainWindow/CopyPopup.cpp:79 Viewer/ViewerWidget.cpp:1520
 #, kde-format
 msgctxt "@action:button"
 msgid "Copy"
 msgstr "Kopírovať"
 
 #: MainWindow/CopyPopup.cpp:81
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@title:window"
+#| msgid "Link image to..."
 msgctxt "@title:window"
-msgid "Link image to..."
+msgid "Link Image to..."
 msgstr "Linkovať obrázok na..."
 
 #: MainWindow/CopyPopup.cpp:82
@@ -2705,8 +2823,10 @@ msgid "Link images to..."
 msgstr "Linkovať obrázky na..."
 
 #: MainWindow/DeleteDialog.cpp:36
-#, kde-format
-msgid "Removing items"
+#, fuzzy, kde-format
+#| msgid "Removing items"
+msgctxt "@title:window"
+msgid "Removing Items"
 msgstr "Odstraňujem položky"
 
 #: MainWindow/DeleteDialog.cpp:76
@@ -2855,10 +2975,11 @@ msgstr "Váš príkazový riadok"
 msgid "Invoke External Program"
 msgstr "Vyvolať externý program"
 
-#: MainWindow/FeatureDialog.cpp:42 MainWindow/Window.cpp:951
-#, kde-format
-msgid "KPhotoAlbum Feature Status"
-msgstr "Stav funkcie KPhotoAlbum"
+#: MainWindow/FeatureDialog.cpp:42
+#, fuzzy, kde-format
+msgctxt "@title:window"
+msgid "Feature Status"
+msgstr "Filter stavu"
 
 #: MainWindow/FeatureDialog.cpp:46
 #, kde-format
@@ -2921,12 +3042,17 @@ msgstr ""
 "<a href=\"http://userbase.kde.org/KIPI\">KDE Userbase Wiki</a></p>"
 
 #: MainWindow/FeatureDialog.cpp:78
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
+#| "allows you to search using a certain number of EXIF tags. For this "
+#| "KPhotoAlbum needs an Sqlite database. In addition the qt package for "
+#| "sqlite (e.g.qt-sql-sqlite) must be installed.</p>"
 msgid ""
 "<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
-"allows you to search using a certain number of EXIF tags. For this "
-"KPhotoAlbum needs an Sqlite database. In addition the qt package for sqlite "
-"(e.g.qt-sql-sqlite) must be installed.</p>"
+"allows you to search using a certain number of Exif tags. For this "
+"KPhotoAlbum needs an SQLite database. In addition the Qt package for SQLite "
+"(e.g. qt-sql-sqlite) must be installed.</p>"
 msgstr ""
 "<h1><a name=\"database\">Podpora databázy SQLite</a></h1> <p>KPhotoAlbum vám "
 "umožní hľadať pomocou určitého počtu EXIF značiek. Na toto potrebuje "
@@ -3020,8 +3146,9 @@ msgid "Plug-ins available"
 msgstr "Dostupné pluginy"
 
 #: MainWindow/FeatureDialog.cpp:216
-#, kde-format
-msgid "Sqlite database support (used for EXIF searches)"
+#, fuzzy, kde-format
+#| msgid "Sqlite database support (used for EXIF searches)"
+msgid "SQLite database support (used for Exif searches)"
 msgstr "Podpora databázy Sqlite (použitá pre hľadanie EXIF)"
 
 #: MainWindow/FeatureDialog.cpp:217
@@ -3089,7 +3216,9 @@ msgstr[1] "%1 odpovedajúce"
 msgstr[2] "%1 odpovedajúcich"
 
 #: MainWindow/InvalidDateFinder.cpp:43
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Search for Images and Videos with Missing Dates"
+msgctxt "@title:window"
 msgid "Search for Images and Videos with Missing Dates"
 msgstr "Hľadať obrázky a videá s chýbajúcim dátumom"
 
@@ -3118,7 +3247,9 @@ msgid ""
 msgstr "Hľadať obrázky a videá s čiastočnými dátumami (ako 1971 vs. 11/7-1971)"
 
 #: MainWindow/InvalidDateFinder.cpp:80
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Image Info"
+msgctxt "@title:window"
 msgid "Image Info"
 msgstr "Info o obrázku"
 
@@ -3128,9 +3259,10 @@ msgid "<h1>Here you may see the date changes for the displayed items.</h1>"
 msgstr "<h1>Tu môžete vidieť zmeny dátumov pre zobrazené položky.</h1>"
 
 #: MainWindow/InvalidDateFinder.cpp:98
-#, kde-format
-msgid "Reading file properties"
-msgstr "Načítavam vlastnosti súboru"
+#, fuzzy, kde-format
+msgctxt "@title:window"
+msgid "Reading File Properties"
+msgstr "Vlastnosti súboru s prílohou"
 
 #: MainWindow/Options.cpp:37
 #, fuzzy, kde-format
@@ -3334,22 +3466,24 @@ msgstr "Zmenšiť veľkosť úložiska miniatúr"
 msgid "Increase thumbnail storage size"
 msgstr "Zväčšiť veľkosť úložiska miniatúr"
 
-#: MainWindow/TokenEditor.cpp:41
-#, kde-format
+#: MainWindow/TokenEditor.cpp:40
+#, fuzzy, kde-format
+#| msgid "Remove Tokens"
+msgctxt "@title:window"
 msgid "Remove Tokens"
 msgstr "Odstrániť tokeny"
 
-#: MainWindow/TokenEditor.cpp:47
+#: MainWindow/TokenEditor.cpp:46
 #, kde-format
 msgid "Select tokens to remove from all images and videos:"
 msgstr "Vyberte tokeny na odstránenie zo všetkých obrázkov a videa:"
 
-#: MainWindow/TokenEditor.cpp:66
+#: MainWindow/TokenEditor.cpp:65
 #, kde-format
 msgid "Select None"
 msgstr "Nevybrať nič"
 
-#: MainWindow/WelcomeDialog.cpp:59
+#: MainWindow/WelcomeDialog.cpp:58
 #, kde-format
 msgid ""
 "<h1>Welcome to KPhotoAlbum</h1><p>KPhotoAlbum is a powerful free tool to "
@@ -3370,22 +3504,22 @@ msgstr ""
 "zase používať.</p> <p>Ak sa cítite lepšie, ak si vyskúšate KPhotoAlbum s "
 "prednastavenou sadou obrázkov, stlačte tlačidlo Načítať demo.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:74
+#: MainWindow/WelcomeDialog.cpp:73
 #, kde-format
 msgid "Create My Own Database..."
 msgstr "Vytvoriť moju vlastnú databázu..."
 
-#: MainWindow/WelcomeDialog.cpp:77
+#: MainWindow/WelcomeDialog.cpp:76
 #, kde-format
 msgid "Load Demo"
 msgstr "Načítať demo"
 
-#: MainWindow/WelcomeDialog.cpp:80
+#: MainWindow/WelcomeDialog.cpp:79
 #, kde-format
 msgid "Check My Feature Set"
 msgstr "Skontrolovať moju sadu funkcií"
 
-#: MainWindow/WelcomeDialog.cpp:114
+#: MainWindow/WelcomeDialog.cpp:113
 #, kde-format
 msgid ""
 "<h1>KPhotoAlbum database creation</h1><p>You need to show where the photos "
@@ -3407,27 +3541,27 @@ msgstr ""
 "KPhotoAlbum a koreňový adresár niekde, nasmerujte KPhotoAlbum na tento "
 "adresár, aby ste ho použili znova.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:128
+#: MainWindow/WelcomeDialog.cpp:127
 #, kde-format
 msgid "Image/Video root directory: "
 msgstr "Koreňový adresár obrázkov/videa: "
 
-#: MainWindow/WelcomeDialog.cpp:169
+#: MainWindow/WelcomeDialog.cpp:168
 #, kde-format
 msgid "Directory does not exist, create it?"
 msgstr "Adresár neexistuje, má sa vytvoriť?"
 
-#: MainWindow/WelcomeDialog.cpp:173
+#: MainWindow/WelcomeDialog.cpp:172
 #, kde-format
 msgid "Could not create directory %1"
 msgstr "Nie je možné vytvoriť adresár %1"
 
-#: MainWindow/WelcomeDialog.cpp:180
+#: MainWindow/WelcomeDialog.cpp:179
 #, kde-format
 msgid "%1 exists, but is not a directory"
 msgstr "%1 existuje, ale nie je adresár"
 
-#: MainWindow/WelcomeDialog.cpp:199
+#: MainWindow/WelcomeDialog.cpp:198
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum does not seem to be build with support for all its features. "
@@ -3440,12 +3574,12 @@ msgstr ""
 "<p>Pre podrobnosti, ako vyriešiť tento problém, prosím vyberte <b>Pomocník</"
 "b>|<b>Stav funkcií KPhotoAlbum</b> z ponuky.</p>"
 
-#: MainWindow/WelcomeDialog.cpp:203 MainWindow/WelcomeDialog.cpp:207
+#: MainWindow/WelcomeDialog.cpp:202 MainWindow/WelcomeDialog.cpp:206
 #, kde-format
 msgid "Feature Check"
 msgstr "Kontrola funkcií"
 
-#: MainWindow/WelcomeDialog.cpp:206
+#: MainWindow/WelcomeDialog.cpp:205
 #, kde-format
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "Blahoželáme: všetky dynamické funkcie boli povolené."
@@ -3470,16 +3604,7 @@ msgstr "Hľadanie nových súborov"
 msgid "Loading Plug-ins"
 msgstr "Načítavam pluginy"
 
-#: MainWindow/Window.cpp:279
-#, kde-format
-msgid ""
-"EXIF database cannot be opened. Check that the image root directory is "
-"writable."
-msgstr ""
-"EXIF databázu nie je možné otvoriť. Skontrolujte, či koreňový adresár "
-"obrázkov je zapisovateľný."
-
-#: MainWindow/Window.cpp:295
+#: MainWindow/Window.cpp:293
 #, kde-format
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
@@ -3494,22 +3619,22 @@ msgstr ""
 "strane, ak sa budete chcieť vrátiť a skúsiť demo znova, môžete si ju nechať "
 "so zmenami, ktoré ste urobili v tomto sedení.</p>"
 
-#: MainWindow/Window.cpp:300
+#: MainWindow/Window.cpp:298
 #, kde-format
 msgid "Delete Demo Database"
 msgstr "Vymazať demo databázu"
 
-#: MainWindow/Window.cpp:315
+#: MainWindow/Window.cpp:313
 #, kde-format
 msgid "Do you want to save the changes?"
 msgstr "Chcete uložiť zmeny?"
 
-#: MainWindow/Window.cpp:316
+#: MainWindow/Window.cpp:314
 #, kde-format
 msgid "Save Changes?"
 msgstr "Uložiť zmeny?"
 
-#: MainWindow/Window.cpp:355
+#: MainWindow/Window.cpp:356
 #, kde-format
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
@@ -3518,317 +3643,323 @@ msgstr ""
 "Niektoré z vybraných obrázkov patria do skupiny. Chcete ich odstrániť z ich "
 "skupín a vytvoriť úplne novú?"
 
-#: MainWindow/Window.cpp:357 MainWindow/Window.cpp:362
+#: MainWindow/Window.cpp:358 MainWindow/Window.cpp:363
 #, kde-format
 msgid "Stacking Error"
 msgstr "Chyba skladania"
 
-#: MainWindow/Window.cpp:361
+#: MainWindow/Window.cpp:362
 #, kde-format
 msgid "Unknown error, stack creation failed."
 msgstr "Neznáma chyba, vytvorenie zásobníka zlyhalo."
 
-#: MainWindow/Window.cpp:439 MainWindow/Window.cpp:571
-#: MainWindow/Window.cpp:1333
+#: MainWindow/Window.cpp:440 MainWindow/Window.cpp:573
+#: MainWindow/Window.cpp:1336
 #, kde-format
 msgid "No item is selected."
 msgstr "Žiadna vybraná položka."
 
-#: MainWindow/Window.cpp:439 MainWindow/Window.cpp:571
-#: MainWindow/Window.cpp:1334
+#: MainWindow/Window.cpp:440 MainWindow/Window.cpp:573
+#: MainWindow/Window.cpp:1337
 #, kde-format
 msgid "No Selection"
 msgstr "Žiadny výber"
 
-#: MainWindow/Window.cpp:487
+#: MainWindow/Window.cpp:488
 #, kde-format
 msgid "Saving..."
 msgstr "Ukladám..."
 
-#: MainWindow/Window.cpp:491
+#: MainWindow/Window.cpp:493
 #, kde-format
 msgid "Saving... Done"
 msgstr "Ukladám... hotovo"
 
-#: MainWindow/Window.cpp:639
+#: MainWindow/Window.cpp:641
 #, kde-format
 msgid "There are no images to be shown."
 msgstr "Nie sú žiadne obrázku na zobrazenie."
 
-#: MainWindow/Window.cpp:718
+#: MainWindow/Window.cpp:720
 #, kde-format
 msgid "Generate HTML..."
 msgstr "Vygenerovať HTML..."
 
-#: MainWindow/Window.cpp:722
+#: MainWindow/Window.cpp:724
 #, kde-format
 msgid "Import..."
 msgstr "Importovať..."
 
-#: MainWindow/Window.cpp:725
+#: MainWindow/Window.cpp:727
 #, kde-format
 msgid "Export/Copy Images..."
 msgstr "Exportovať/kopírovať obrázky..."
 
-#: MainWindow/Window.cpp:751
+#: MainWindow/Window.cpp:753
 #, kde-format
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "Odstrániť vybrané"
 
-#: MainWindow/Window.cpp:757
+#: MainWindow/Window.cpp:759
 #, fuzzy, kde-format
 #| msgid "Remove Tokens"
 msgid "Remove Tokens..."
 msgstr "Odstrániť tokeny"
 
-#: MainWindow/Window.cpp:760
+#: MainWindow/Window.cpp:762
 #, kde-format
 msgid "Open List of Files..."
 msgstr "Otvoriť zoznam súborov..."
 
-#: MainWindow/Window.cpp:764
+#: MainWindow/Window.cpp:766
 #, kde-format
 msgid "Annotate Individual Items"
 msgstr "Anotovať individuálne položky"
 
-#: MainWindow/Window.cpp:768
+#: MainWindow/Window.cpp:770
 #, kde-format
 msgid "Annotate Multiple Items at a Time"
 msgstr "Anotovať súčasne viac položiek"
 
-#: MainWindow/Window.cpp:772
+#: MainWindow/Window.cpp:774
 #, kde-format
 msgid "Merge Images into a Stack"
 msgstr "Zlúčiť obrázky do kopy"
 
-#: MainWindow/Window.cpp:776
+#: MainWindow/Window.cpp:778
 #, kde-format
 msgid "Remove Images from Stack"
 msgstr "Odstrániť obrázky zo zásobníka"
 
-#: MainWindow/Window.cpp:779
+#: MainWindow/Window.cpp:781
 #, kde-format
 msgid "Set as First Image in Stack"
 msgstr "Nastaviť ako prvý obrázok v zásobníku"
 
-#: MainWindow/Window.cpp:794
+#: MainWindow/Window.cpp:796
 #, kde-format
 msgid "View"
 msgstr "Zobraziť"
 
-#: MainWindow/Window.cpp:798
+#: MainWindow/Window.cpp:800
 #, kde-format
 msgid "View (In New Window)"
 msgstr "Zobraziť (v novom okne)"
 
-#: MainWindow/Window.cpp:801
+#: MainWindow/Window.cpp:803
 #, kde-format
 msgid "Run Slide Show"
 msgstr "Spustiť prezentáciu"
 
-#: MainWindow/Window.cpp:806
+#: MainWindow/Window.cpp:808
 #, kde-format
 msgid "Run Randomized Slide Show"
 msgstr "Spustiť náhodnú prezentáciu"
 
-#: MainWindow/Window.cpp:812
+#: MainWindow/Window.cpp:814
 #, kde-format
 msgid "Collapse all stacks"
 msgstr "Zabaliť všetky zásobníky"
 
-#: MainWindow/Window.cpp:818
+#: MainWindow/Window.cpp:820
 #, kde-format
 msgid "Expand all stacks"
 msgstr "Rozbaliť všetky zásobníky"
 
-#: MainWindow/Window.cpp:823
+#: MainWindow/Window.cpp:825
 #, kde-format
 msgid "Show &Oldest First"
 msgstr "Zobraziť najstaršie najskôr"
 
-#: MainWindow/Window.cpp:828
+#: MainWindow/Window.cpp:830
 #, kde-format
 msgid "Show &Newest First"
 msgstr "Zobraziť najnovšie najskôr"
 
-#: MainWindow/Window.cpp:833
+#: MainWindow/Window.cpp:835
 #, kde-format
 msgid "Sort Selected by Date && Time"
 msgstr "Triediť vybrané podľa dátumu && času"
 
-#: MainWindow/Window.cpp:836
+#: MainWindow/Window.cpp:838
 #, kde-format
 msgid "Limit View to Selection"
 msgstr "Obmedziť pohľad na výber"
 
-#: MainWindow/Window.cpp:839
+#: MainWindow/Window.cpp:841
 #, kde-format
 msgid "Jump to Context"
 msgstr "Skočiť na kontext"
 
-#: MainWindow/Window.cpp:844
+#: MainWindow/Window.cpp:846
 #, kde-format
 msgid "Lock Images"
 msgstr "Zamknúť obrázky"
 
-#: MainWindow/Window.cpp:847
+#: MainWindow/Window.cpp:849
 #, kde-format
 msgid "Unlock"
 msgstr "Odomknúť"
 
-#: MainWindow/Window.cpp:850
+#: MainWindow/Window.cpp:852
 #, kde-format
 msgid "Change Password..."
 msgstr "Zmeniť heslo..."
 
-#: MainWindow/Window.cpp:854
+#: MainWindow/Window.cpp:856
 #, kde-format
 msgid "Lock Away All Other Items"
 msgstr "Uzamknúť všetky ostatné položky"
 
-#: MainWindow/Window.cpp:857
+#: MainWindow/Window.cpp:859
 #, kde-format
 msgid "Lock Away Current Set of Items"
 msgstr "Uzamknúť aktuálnu sadu položiek"
 
-#: MainWindow/Window.cpp:861
+#: MainWindow/Window.cpp:863
 #, kde-format
 msgid "Display Images and Videos Not on Disk"
 msgstr "Zobraziť obrázky a videá nie na disku"
 
-#: MainWindow/Window.cpp:864
+#: MainWindow/Window.cpp:866
 #, kde-format
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "Zobraziť obrázky a videá s nekompletnými dátumami..."
 
-#: MainWindow/Window.cpp:868
+#: MainWindow/Window.cpp:870
 #, kde-format
 msgid "Display Images and Videos with Changed MD5 Sum"
 msgstr "Zobraziť obrázky a videá so zmeneným MD5 súčtom"
 
-#: MainWindow/Window.cpp:872
+#: MainWindow/Window.cpp:874
 #, kde-format
 msgid "Merge duplicates"
 msgstr "Zlúčiť duplikáty"
 
-#: MainWindow/Window.cpp:874
+#: MainWindow/Window.cpp:876
 #, kde-format
 msgid "Recalculate Checksum"
 msgstr "Prepočítať kontrolný súčet"
 
-#: MainWindow/Window.cpp:877
+#: MainWindow/Window.cpp:879
 #, kde-format
 msgid "Rescan for Images and Videos"
 msgstr "Znovu prehľadať obrázky a videá"
 
-#: MainWindow/Window.cpp:880
+#: MainWindow/Window.cpp:882
 #, kde-format
 msgid "Recreate Exif Search Database"
 msgstr "Znovu vytvoriť EXIF databázu hľadania"
 
-#: MainWindow/Window.cpp:883
-#, kde-format
-msgid "Read EXIF Info From Files..."
+#: MainWindow/Window.cpp:885
+#, fuzzy, kde-format
+#| msgid "Read EXIF Info From Files..."
+msgid "Read Exif Info from Files..."
 msgstr "Čítať EXIF informácie zo súborov..."
 
-#: MainWindow/Window.cpp:886
+#: MainWindow/Window.cpp:888
 #, kde-format
 msgid "Sort All by Date && Time"
 msgstr "Triediť všetko podľa dátumu && času"
 
-#: MainWindow/Window.cpp:890
+#: MainWindow/Window.cpp:892
 #, kde-format
 msgid "Automatically Stack Selected Images..."
 msgstr "Automaticky skladať vybrané obrázky..."
 
-#: MainWindow/Window.cpp:893
+#: MainWindow/Window.cpp:895
 #, kde-format
 msgid "Build Thumbnails"
 msgstr "Zostaviť miniatúry"
 
-#: MainWindow/Window.cpp:896
+#: MainWindow/Window.cpp:897
 #, fuzzy, kde-format
 #| msgid "Statistics"
 msgid "Statistics..."
 msgstr "Štatistika"
 
-#: MainWindow/Window.cpp:900
+#: MainWindow/Window.cpp:901
 #, kde-format
 msgid "Mark As Untagged"
 msgstr "Označiť ako neoznačené"
 
-#: MainWindow/Window.cpp:909
+#: MainWindow/Window.cpp:910
 #, kde-format
 msgid "Enable All Messages"
 msgstr "Povoliť všetky správy"
 
-#: MainWindow/Window.cpp:912
+#: MainWindow/Window.cpp:913
 #, kde-format
 msgid "Configure Current View"
 msgstr "Nastaviť aktuálny pohľad"
 
-#: MainWindow/Window.cpp:921
+#: MainWindow/Window.cpp:922
 #, kde-format
 msgid "Tree"
 msgstr "Strom"
 
-#: MainWindow/Window.cpp:926
+#: MainWindow/Window.cpp:927
 #, kde-format
 msgid "Tree with User Icons"
 msgstr "Strom s ikonami používateľa"
 
-#: MainWindow/Window.cpp:931
+#: MainWindow/Window.cpp:932
 #, kde-format
 msgid "Icons"
 msgstr "Ikony"
 
-#: MainWindow/Window.cpp:942
+#: MainWindow/Window.cpp:943
 #, kde-format
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "Zobraziť tipy v okne miniatúr"
 
-#: MainWindow/Window.cpp:948
+#: MainWindow/Window.cpp:949
 #, kde-format
 msgid "Run KPhotoAlbum Demo"
 msgstr "Spustiť demo KPhotoAlbum"
 
-#: MainWindow/Window.cpp:954
+#: MainWindow/Window.cpp:952
+#, kde-format
+msgid "KPhotoAlbum Feature Status"
+msgstr "Stav funkcie KPhotoAlbum"
+
+#: MainWindow/Window.cpp:955
 #, kde-format
 msgid "Show Demo Videos"
 msgstr "Zobraziť demo videá"
 
-#: MainWindow/Window.cpp:958
+#: MainWindow/Window.cpp:959
 #, kde-format
 msgid "Show Exif Info"
 msgstr "Zobraziť EXIF informácie"
 
-#: MainWindow/Window.cpp:961
+#: MainWindow/Window.cpp:962
 #, kde-format
 msgid "Recreate Selected Thumbnails"
 msgstr "Znovu vytvoriť vybrané miniatúry"
 
-#: MainWindow/Window.cpp:964
+#: MainWindow/Window.cpp:965
 #, kde-format
 msgid "Use next video thumbnail"
 msgstr "Použiť ďalšiu video miniatúru"
 
-#: MainWindow/Window.cpp:968
+#: MainWindow/Window.cpp:969
 #, kde-format
 msgid "Use previous video thumbnail"
 msgstr "Použiť predošlú video miniatúru"
 
-#: MainWindow/Window.cpp:994
+#: MainWindow/Window.cpp:995
 #, kde-format
 msgid "Auto saving...."
 msgstr "Automatické uloženie..."
 
-#: MainWindow/Window.cpp:996
+#: MainWindow/Window.cpp:998
 #, kde-format
 msgid "Auto saving.... Done"
 msgstr "Automaticky ukladám... hotovo"
 
-#: MainWindow/Window.cpp:1093
+#: MainWindow/Window.cpp:1095
 #, kde-format
 msgid ""
 "<p>Could not open given index.xml as provided directory does not exist.<br />"
@@ -3837,7 +3968,7 @@ msgstr ""
 "<p>Nemôžem otvoriť daný index.xml, pretože zadaný adresár neexistuje.<br />"
 "%1</p>"
 
-#: MainWindow/Window.cpp:1101
+#: MainWindow/Window.cpp:1103
 #, kde-format
 msgid ""
 "<p>Given index file does not exist, do you want to create following?<br />%1/"
@@ -3846,7 +3977,7 @@ msgstr ""
 "<p>Daný index súbor neexistuje, chcete vytvoriť nasledovný?<br />%1/index."
 "xml</p>"
 
-#: MainWindow/Window.cpp:1117
+#: MainWindow/Window.cpp:1119
 #, kde-format
 msgid ""
 "<p>You have configured a tag for untagged images, but either the tag itself "
@@ -3859,7 +3990,7 @@ msgstr ""
 "nastavenia neoznačenej značky pod <interface>Nastavenia|Nastaviť "
 "KPhotoAlbum...|Kategórie</interface></p>"
 
-#: MainWindow/Window.cpp:1202
+#: MainWindow/Window.cpp:1204
 #, kde-format
 msgid ""
 "<p>The password protection is only a means of allowing your little sister to "
@@ -3872,47 +4003,55 @@ msgstr ""
 "<p><b>Inými slovami, ktokoľvek s prístupom do index.xml vie jednoducho obísť "
 "toto heslo.</b></p>"
 
-#: MainWindow/Window.cpp:1207
+#: MainWindow/Window.cpp:1209
 #, kde-format
 msgid "Password Protection"
 msgstr "Ochrana heslom"
 
-#: MainWindow/Window.cpp:1221
+#: MainWindow/Window.cpp:1223
 #, kde-format
 msgid "Type in Password to Unlock"
 msgstr "Zadajte heslo na odomknutie"
 
-#: MainWindow/Window.cpp:1230 MainWindow/Window.cpp:1265
+#: MainWindow/Window.cpp:1232 MainWindow/Window.cpp:1267
 #, kde-format
 msgid "Invalid password."
 msgstr "Neplatné heslo."
 
-#: MainWindow/Window.cpp:1256
+#: MainWindow/Window.cpp:1258
 #, kde-format
 msgid "Type in Old Password"
 msgstr "Zadajte staré heslo"
 
-#: MainWindow/Window.cpp:1268
+#: MainWindow/Window.cpp:1270
 #, kde-format
 msgid "Type in New Password"
 msgstr "Zadajte nové heslo"
 
-#: MainWindow/Window.cpp:1279 Settings/SettingsDialog.cpp:70
+#: MainWindow/Window.cpp:1281 Settings/SettingsDialog.cpp:70
 #, kde-format
 msgid "General"
 msgstr "Všeobecné"
 
-#: MainWindow/Window.cpp:1280 Settings/SettingsDialog.cpp:76
+#: MainWindow/Window.cpp:1282 Settings/SettingsDialog.cpp:76
 #, kde-format
 msgid "Viewer"
 msgstr "Prehliadač"
 
-#: MainWindow/Window.cpp:1292
+#: MainWindow/Window.cpp:1290
+#, fuzzy, kde-format
+#| msgid "Plugins"
+msgctxt ""
+"Add 'Plugin' prefix so that KIPI plugins are obvious in KShortcutsDialog…"
+msgid "Plugin: %1"
+msgstr "Moduly"
+
+#: MainWindow/Window.cpp:1295
 #, kde-format
 msgid "Annotation Dialog"
 msgstr "Dialóg anotácie"
 
-#: MainWindow/Window.cpp:1447
+#: MainWindow/Window.cpp:1450
 #, kde-format
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
@@ -3921,7 +4060,7 @@ msgstr ""
 "<p>Naozaj povoliť všetky správy, kde ste predtým zaškrtli Nabudúce "
 "nezobrazovať?</p>"
 
-#: MainWindow/Window.cpp:1458
+#: MainWindow/Window.cpp:1461
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
@@ -3937,17 +4076,17 @@ msgstr ""
 "nie, prosím oznámte to ako chybu.</p> <p>KPhotoAlbum bude bežať ďalej, ale "
 "nie je nemožné, že spadne neskôr kvôli chýbajúcemu make install.</p>"
 
-#: MainWindow/Window.cpp:1458
+#: MainWindow/Window.cpp:1461
 #, kde-format
 msgid "Internal Error"
 msgstr "Interná chyba"
 
-#: MainWindow/Window.cpp:1640
+#: MainWindow/Window.cpp:1643
 #, kde-format
 msgid "Open List of Files"
 msgstr "Otvoriť zoznam súborov"
 
-#: MainWindow/Window.cpp:1641
+#: MainWindow/Window.cpp:1644
 #, kde-format
 msgid ""
 "You can open a set of files from KPhotoAlbum's image root by listing the "
@@ -3956,23 +4095,23 @@ msgstr ""
 "Môžete otvoriť sadu súborov z koreňového adresára KPhotoAlbum prechádzaním "
 "cez tieto súbory."
 
-#: MainWindow/Window.cpp:1658
+#: MainWindow/Window.cpp:1661
 #, kde-format
 msgid "No images matching your input were found."
 msgstr "Nenašli sa žiadne obrázky vyhovujúce vášmu vstupu."
 
-#: MainWindow/Window.cpp:1658
+#: MainWindow/Window.cpp:1661
 #, kde-format
 msgid "No Matches"
 msgstr "Žiadne zhody"
 
-#: MainWindow/Window.cpp:1849
+#: MainWindow/Window.cpp:1852
 #, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
 msgstr "Šírka miniatúry: %1px (veľkosť úložiska: %2px)"
 
-#: MainWindow/Window.cpp:1893
+#: MainWindow/Window.cpp:1896
 #, fuzzy, kde-format
 #| msgid ""
 #| "<p>Unable to find MPlayer on the system.</p><p>Without MPlayer, "
@@ -3987,12 +4126,12 @@ msgstr ""
 "schopný zobraziť video miniatúry a dĺžku videa. Prosím, nainštalujte balík "
 "MPlayer2</p>"
 
-#: MainWindow/Window.cpp:1896
+#: MainWindow/Window.cpp:1899
 #, kde-format
 msgid "Video thumbnails are not available"
 msgstr "Video miniatúry nie sú dostupné"
 
-#: MainWindow/Window.cpp:1902
+#: MainWindow/Window.cpp:1905
 #, kde-format
 msgid ""
 "<p>You have MPlayer installed on your system, but it is unfortunately not "
@@ -4005,12 +4144,12 @@ msgstr ""
 "nainštalujte ho, ak je to možné, pretože táto verzia má omnoho lepšiu "
 "podporu pre extrakciu miniatúr z videa.</p>"
 
-#: MainWindow/Window.cpp:1905
+#: MainWindow/Window.cpp:1908
 #, kde-format
 msgid "MPlayer is too old"
 msgstr "MPlayer je príliš nahlas"
 
-#: MainWindow/Window.cpp:1927
+#: MainWindow/Window.cpp:1930
 #, kde-format
 msgid ""
 "<p>Did you know that there is an Android client for KPhotoAlbum?<br/>With "
@@ -4026,49 +4165,49 @@ msgstr ""
 "store/apps/details?id=org.kde.kphotoalbum\">nainštalujte z google play</a></"
 "p>"
 
-#: Map/MapView.cpp:66
+#: Map/MapView.cpp:68
 #, kde-format
 msgid "Save the current map settings"
 msgstr "Uložiť aktuálne nastavenia mapy"
 
-#: Map/MapView.cpp:72
+#: Map/MapView.cpp:74
 #, kde-format
 msgid "Go to last map position"
 msgstr "Prejsť na poslednú pozíciu mapy"
 
-#: Map/MapView.cpp:147
+#: Map/MapView.cpp:149
 #, kde-format
 msgid "Settings saved"
 msgstr "Nastavenia uložené"
 
-#: Map/MapView.cpp:147
+#: Map/MapView.cpp:149
 #, kde-format
 msgid "Map view"
 msgstr "Zobraznie mapy"
 
-#: Map/MapView.cpp:160
+#: Map/MapView.cpp:162
 #, kde-format
 msgid "<i>Loading coordinates from the images ...</i>"
 msgstr "<i>Načítavam súradnice z obrázkov ...</i>"
 
-#: Map/MapView.cpp:177
+#: Map/MapView.cpp:179
 #, kde-format
 msgid "<i>This image does not contain geographic coordinates.</i>"
 msgstr "<i>Tento obrázok neobsahuje geografické súradnice.</i>"
 
-#: Map/MapView.cpp:184
+#: Map/MapView.cpp:186
 #, kde-format
 msgid ""
 "<i>Some of the selected images do not contain geographic coordinates.</i>"
 msgstr ""
 "<i>Niektoré z vybraných obrázkov neobsahujú geografické súradnice..</i>"
 
-#: Map/MapView.cpp:196
+#: Map/MapView.cpp:198
 #, kde-format
 msgid "<i>Search for geographic coordinates.</i>"
 msgstr "<i>Hľadať geografické súradnice.</i>"
 
-#: Map/MapView.cpp:210
+#: Map/MapView.cpp:212
 #, kde-format
 msgid "<i>None of the selected images contain geographic coordinates.</i>"
 msgstr "<i>Žiadny z vybraných obrázkov neobsahuje geografické súradnice.</i>"
@@ -4249,11 +4388,6 @@ msgstr "Značky v tejto kategórii môžu byť asociované s oblasťou obrázku"
 msgid "Icon:"
 msgstr "Ikona:"
 
-#: Settings/CategoryPage.cpp:141
-#, kde-format
-msgid "Thumbnail Size:"
-msgstr "Veľkosť miniatúry:"
-
 #: Settings/CategoryPage.cpp:151
 #, kde-format
 msgid "Preferred view:"
@@ -4364,8 +4498,9 @@ msgid "<p>Really delete category \"%1\"?</p>"
 msgstr "<p>Naozaj vymazať kategóriu \"%1\"?</p>"
 
 #: Settings/CategoryPage.cpp:548
-#, kde-format
-msgid "<i>choose a category to edit it</i>"
+#, fuzzy, kde-format
+#| msgid "<i>choose a category to edit it</i>"
+msgid "<i>Choose a category to edit it</i>"
 msgstr "<i>vyberte kategóriu na úpravu</i>"
 
 #: Settings/DatabaseBackendPage.cpp:34
@@ -4430,13 +4565,15 @@ msgstr ""
 "index.xml je menej čitateľný pre človeka.</p>"
 
 #: Settings/ExifPage.cpp:39
-#, kde-format
-msgid "EXIF/IPTC info to show in the Viewer"
+#, fuzzy, kde-format
+#| msgid "EXIF/IPTC info to show in the Viewer"
+msgid "Exif/IPTC info to show in the viewer"
 msgstr "EXIF/IPTC info na zobrazenie v prehliadači"
 
 #: Settings/ExifPage.cpp:42
-#, kde-format
-msgid "EXIF/IPTC info to show in the EXIF dialog"
+#, fuzzy, kde-format
+#| msgid "EXIF/IPTC info to show in the EXIF dialog"
+msgid "Exif/IPTC info to show in the Exif dialog"
 msgstr "EXIF/IPTC info na zobrazenie v EXIF dialógu"
 
 #: Settings/ExifPage.cpp:45
@@ -4562,8 +4699,9 @@ msgid "Original file replacement text:"
 msgstr "Pôvodný text náhrady súboru:"
 
 #: Settings/FileVersionDetectionPage.cpp:110
-#, kde-format
-msgid "Move meta-data (i.e. delete tags from the original):"
+#, fuzzy, kde-format
+#| msgid "Move meta-data (i.e. delete tags from the original):"
+msgid "Move meta-data (i.e. delete tags from the original)"
 msgstr "Presunúť metadáta (teda vymazať značky z originálu):"
 
 #: Settings/FileVersionDetectionPage.cpp:113
@@ -4704,13 +4842,15 @@ msgid "Never"
 msgstr "Nikdy"
 
 #: Settings/GeneralPage.cpp:58
-#, kde-format
-msgid "Use EXIF orientation information"
+#, fuzzy, kde-format
+#| msgid "Use EXIF orientation information"
+msgid "Use Exif orientation information"
 msgstr "Použiť EXIF informáciu o orientácii"
 
 #: Settings/GeneralPage.cpp:63
-#, kde-format
-msgid "Use EXIF description"
+#, fuzzy, kde-format
+#| msgid "Use EXIF description"
+msgid "Use Exif description"
 msgstr "Použiť EXIF popis"
 
 #: Settings/GeneralPage.cpp:67
@@ -4759,9 +4899,19 @@ msgid "Listen for Android devices on startup"
 msgstr "Zisťovať Android zariadenia pri spustení"
 
 #: Settings/GeneralPage.cpp:153
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>KPhotoAlbum will try to read the image date from EXIF information in "
+#| "the image. If that fails it will try to get the date from the file's time "
+#| "stamp.</p><p>However, this information will be wrong if the image was "
+#| "scanned in (you want the date the image was taken, not the date of the "
+#| "scan).</p><p>If you only scan images, in contrast to sometimes using a "
+#| "digital camera, you should reply <b>no</b>. If you never scan images, you "
+#| "should reply <b>yes</b>, otherwise reply <b>ask</b>. This will allow you "
+#| "to decide whether the images are from the scanner or the camera, from "
+#| "session to session.</p>"
 msgid ""
-"<p>KPhotoAlbum will try to read the image date from EXIF information in the "
+"<p>KPhotoAlbum will try to read the image date from Exif information in the "
 "image. If that fails it will try to get the date from the file's time stamp."
 "</p><p>However, this information will be wrong if the image was scanned in "
 "(you want the date the image was taken, not the date of the scan).</p><p>If "
@@ -4878,9 +5028,16 @@ msgid "Delay loading plugins until the plugin menu is opened"
 msgstr "Zdržať načítanie pluginov, kým sa neotvorí plugin menu"
 
 #: Settings/SettingsData.cpp:206
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "When reading time information of images, their EXIF info is used. Exif "
+#| "info may, however, not be supported by your KPhotoAlbum installation, or "
+#| "no valid information may be in the file. As a backup, KPhotoAlbum may use "
+#| "the timestamp of the image - this may, however, not be valid in case the "
+#| "image is scanned in. So the question is, should KPhotoAlbum trust the "
+#| "time stamp on your images?"
 msgid ""
-"When reading time information of images, their EXIF info is used. Exif info "
+"When reading time information of images, their Exif info is used. Exif info "
 "may, however, not be supported by your KPhotoAlbum installation, or no valid "
 "information may be in the file. As a backup, KPhotoAlbum may use the "
 "timestamp of the image - this may, however, not be valid in case the image "
@@ -4934,14 +5091,23 @@ msgid "Tag Groups"
 msgstr "Skupiny značiek"
 
 #: Settings/SettingsDialog.cpp:81
-#, kde-format
-msgid "EXIF/IPTC Information"
+#, fuzzy, kde-format
+#| msgid "EXIF/IPTC Information"
+msgid "Exif/IPTC Information"
 msgstr "EXIF/IPTC informácia"
 
 #: Settings/SettingsDialog.cpp:82
-#, kde-format
-msgid "Database backend"
+#, fuzzy, kde-format
+#| msgid "Database backend"
+msgid "Database Backend"
 msgstr "Backend databázy"
+
+#: Settings/SettingsDialog.cpp:103
+#, fuzzy, kde-format
+#| msgid "Settings"
+msgctxt "@title:window"
+msgid "Settings"
+msgstr "Nastavenia"
 
 #: Settings/TagGroupsPage.cpp:49
 #, kde-format
@@ -5014,19 +5180,19 @@ msgctxt "@title:window"
 msgid "Cannot add group"
 msgstr "Nemôžem pridať skupinu"
 
-#: Settings/TagGroupsPage.cpp:479 Settings/TagGroupsPage.cpp:501
+#: Settings/TagGroupsPage.cpp:466 Settings/TagGroupsPage.cpp:488
 #, kde-format
 msgctxt "@title:window"
 msgid "Rename Group"
 msgstr "Premenovať skupinu"
 
-#: Settings/TagGroupsPage.cpp:480
+#: Settings/TagGroupsPage.cpp:467
 #, kde-format
 msgctxt "@label:textbox"
 msgid "New group name:"
 msgstr "Názov novej skupiny:"
 
-#: Settings/TagGroupsPage.cpp:496
+#: Settings/TagGroupsPage.cpp:483
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -5036,7 +5202,7 @@ msgstr ""
 "<para>Nemôžem premenovať skupiny \"%1\" na \"%2\": \"%2\" už existuje v "
 "kategórii \"%3\"</para>"
 
-#: Settings/TagGroupsPage.cpp:558
+#: Settings/TagGroupsPage.cpp:545
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -5048,43 +5214,43 @@ msgstr ""
 "budú presunuté do vyššej kategórie \"%1\" (\"%2\").<nl/> Všetci ostatní "
 "členovia podkategórií ostanú nezmenení.</para>"
 
-#: Settings/TagGroupsPage.cpp:564
+#: Settings/TagGroupsPage.cpp:551
 #, kde-format
 msgctxt "@info"
 msgid "<para>Really delete group \"%1\"?</para>"
 msgstr "<para>Naozaj vymazať skupinu \"%1\"?</para>"
 
-#: Settings/TagGroupsPage.cpp:569
+#: Settings/TagGroupsPage.cpp:556
 #, kde-format
 msgctxt "@title:window"
 msgid "Delete Group"
 msgstr "Odstrániť skupinu"
 
-#: Settings/TagGroupsPage.cpp:747
+#: Settings/TagGroupsPage.cpp:734
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Rename \"%1\""
 msgstr "Premenovať \"%1\""
 
-#: Settings/TagGroupsPage.cpp:749
+#: Settings/TagGroupsPage.cpp:736
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Delete \"%1\""
 msgstr "Vymazať \"%1\""
 
-#: Settings/TagGroupsPage.cpp:760
+#: Settings/TagGroupsPage.cpp:747
 #, kde-format
 msgctxt "@title:window"
 msgid "New Tag Name"
 msgstr "Nový názov značky"
 
-#: Settings/TagGroupsPage.cpp:761
+#: Settings/TagGroupsPage.cpp:748
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Tag name:"
 msgstr "Názov značky:"
 
-#: Settings/TagGroupsPage.cpp:810
+#: Settings/TagGroupsPage.cpp:797
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -5095,7 +5261,7 @@ msgstr ""
 "<para>Naozaj chcete vymazať \"%1\"?</para> </para>Zmazanie položky odstráni "
 "všetky informácie o ňom z akéhokoľvek obrázka, ktorý obsahuje položku.</para>"
 
-#: Settings/TagGroupsPage.cpp:814
+#: Settings/TagGroupsPage.cpp:801
 #, kde-format
 msgctxt "@title:window"
 msgid "Really delete %1?"
@@ -5122,8 +5288,9 @@ msgid "Build thumbnails on demand"
 msgstr "Vytvoriť miniatúry na požiadanie"
 
 #: Settings/ThumbnailsPage.cpp:60
-#, kde-format
-msgid "Thumbnail table cells aspect ratio"
+#, fuzzy, kde-format
+#| msgid "Thumbnail table cells aspect ratio"
+msgid "Thumbnail table cells aspect ratio:"
 msgstr "Pomer strán buniek tabuľky miniatúr"
 
 #: Settings/ThumbnailsPage.cpp:62
@@ -5162,13 +5329,15 @@ msgid "9:16"
 msgstr "9:16"
 
 #: Settings/ThumbnailsPage.cpp:69
-#, kde-format
-msgid "Space around cells"
+#, fuzzy, kde-format
+#| msgid "Space around cells"
+msgid "Space around cells:"
 msgstr "Medzery okolo buniek"
 
 #: Settings/ThumbnailsPage.cpp:77
-#, kde-format
-msgid "Background Color"
+#, fuzzy, kde-format
+#| msgid "Background Color"
+msgid "Background color:"
 msgstr "Farba pozadia"
 
 #: Settings/ThumbnailsPage.cpp:84
@@ -5402,8 +5571,9 @@ msgstr ""
 "prehliadača.</p>"
 
 #: Settings/ViewerPage.cpp:77
-#, kde-format
-msgid "Scaling Algorithm"
+#, fuzzy, kde-format
+#| msgid "Scaling Algorithm"
+msgid "Scaling algorithm:"
 msgstr "Algoritmus škálovania"
 
 #: Settings/ViewerPage.cpp:79
@@ -5903,62 +6073,62 @@ msgstr ""
 msgid "Error Deleting Files"
 msgstr "Chyba mazania súborov"
 
-#: Utilities/Util.cpp:96
+#: Utilities/Util.cpp:106
 #, kde-format
 msgid "<b>File Name: </b> "
 msgstr "<b>Názov súboru: </b> "
 
-#: Utilities/Util.cpp:100
+#: Utilities/Util.cpp:110
 #, kde-format
 msgid "<b>Date: </b> "
 msgstr "<b>Dátum: </b> "
 
-#: Utilities/Util.cpp:110
+#: Utilities/Util.cpp:120
 #, kde-format
 msgctxt "width x height"
 msgid "%1x%2"
 msgstr "%1x%2"
 
-#: Utilities/Util.cpp:114
+#: Utilities/Util.cpp:124
 #, kde-format
 msgctxt "short for: x megapixels"
 msgid " (%1MP)"
 msgstr " (%1MP)"
 
-#: Utilities/Util.cpp:119
+#: Utilities/Util.cpp:129
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (%1:1)"
 msgstr " (%1:1)"
 
-#: Utilities/Util.cpp:122
+#: Utilities/Util.cpp:132
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (1:1)"
 msgstr " (1:1)"
 
-#: Utilities/Util.cpp:124
+#: Utilities/Util.cpp:134
 #, kde-format
 msgctxt "aspect ratio"
 msgid " (1:%1)"
 msgstr " (1:%1)"
 
-#: Utilities/Util.cpp:126
+#: Utilities/Util.cpp:136
 #, kde-format
 msgid "<b>Image Size: </b> "
 msgstr "<b>Veľkosť obrázku: </b> "
 
-#: Utilities/Util.cpp:185
+#: Utilities/Util.cpp:195
 #, kde-format
 msgid "<b>Label: </b> "
 msgstr "<b>Štítok: </b> "
 
-#: Utilities/Util.cpp:189
+#: Utilities/Util.cpp:199
 #, kde-format
 msgid "<b>Description: </b> "
 msgstr "<b>Popis: </b> "
 
-#: Utilities/Util.cpp:266
+#: Utilities/Util.cpp:276
 #, kde-format
 msgid "1 day"
 msgid_plural "%1 days"
@@ -5966,7 +6136,7 @@ msgstr[0] "1 deň"
 msgstr[1] "%1 dni"
 msgstr[2] "%1 dní"
 
-#: Utilities/Util.cpp:268
+#: Utilities/Util.cpp:278
 #, kde-format
 msgid "1 month"
 msgid_plural "%1 months"
@@ -5974,7 +6144,7 @@ msgstr[0] "1 mesiac"
 msgstr[1] "%1 mesiace"
 msgstr[2] "%1 mesiacov"
 
-#: Utilities/Util.cpp:270
+#: Utilities/Util.cpp:280
 #, kde-format
 msgid "1 year"
 msgid_plural "%1 years"
@@ -5982,7 +6152,7 @@ msgstr[0] "1 rok"
 msgstr[1] "%1 roky"
 msgstr[2] "%1 rokov"
 
-#: Utilities/Util.cpp:330
+#: Utilities/Util.cpp:340
 #, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
@@ -5991,12 +6161,12 @@ msgstr ""
 "Automaticky uložené súbor '%1' existuje (veľkosť %3 KB) a je novší ako '%2'. "
 "Má sa použiť tento súbor?"
 
-#: Utilities/Util.cpp:332
+#: Utilities/Util.cpp:342
 #, kde-format
 msgid "Found Autosave File"
 msgstr "Našiel sa automaticky uložený súbor"
 
-#: Utilities/Util.cpp:334
+#: Utilities/Util.cpp:344
 #, kde-format
 msgid ""
 "<p>Error: Cannot use current database file '%1':</p><p>%2</p><p>Do you want "
@@ -6008,12 +6178,12 @@ msgstr ""
 "<p><small>(Ručné overenie a skopírovanie súboru môže byť dobrý nápad)</"
 "small></p>"
 
-#: Utilities/Util.cpp:337
+#: Utilities/Util.cpp:347
 #, kde-format
 msgid "Recover from Autosave?"
 msgstr "Obnoviť z automatického uloženia?"
 
-#: Utilities/Util.cpp:339
+#: Utilities/Util.cpp:349
 #, kde-format
 msgid ""
 "<p>Error: %1</p><p>Also autosave file is empty, check manually if numbered "
@@ -6023,23 +6193,23 @@ msgstr ""
 "ručne, či existujú číslované záložné súbory a dajú sa použiť na obnovu index."
 "xml.backup files exist and can be used to restore index.xml.</p>"
 
-#: Utilities/Util.cpp:371
+#: Utilities/Util.cpp:381
 #, kde-format
 msgid "Unable to copy '%1' to '%2'."
 msgstr "Nepodarilo sa skopírovať '%1' do '%2'."
 
-#: Utilities/Util.cpp:371 Utilities/Util.cpp:385 Utilities/Util.cpp:421
+#: Utilities/Util.cpp:381 Utilities/Util.cpp:395 Utilities/Util.cpp:431
 #: XMLDB/FileReader.cpp:463
 #, kde-format
 msgid "Error Running Demo"
 msgstr "Chyba spustenia dema"
 
-#: Utilities/Util.cpp:385 Utilities/Util.cpp:421
+#: Utilities/Util.cpp:395 Utilities/Util.cpp:431
 #, kde-format
 msgid "Unable to create directory '%1' needed for demo."
 msgstr "Nepodarilo sa vytvoriť adresár '%1' potrebný pre demo."
 
-#: Utilities/Util.cpp:486
+#: Utilities/Util.cpp:496
 #, kde-format
 msgid "<p>No file name given!</p>"
 msgstr "<p>Bez názvu súboru!</p>"
@@ -6136,15 +6306,19 @@ msgid "Set as First Image in Stack"
 msgstr "Nastaviť ako prvý obrázok v zásobníku"
 
 #: Viewer/ViewerWidget.cpp:155
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:inmenu"
+#| msgid "Show EXIF Viewer"
 msgctxt "@action:inmenu"
-msgid "Show EXIF Viewer"
+msgid "Show Exif Viewer"
 msgstr "Zobraziť prehliadač EXIF"
 
 #: Viewer/ViewerWidget.cpp:159
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:inmenu"
+#| msgid "Copy image to..."
 msgctxt "@action:inmenu"
-msgid "Copy image to..."
+msgid "Copy Image to..."
 msgstr "Kopírovať obrázok do..."
 
 #: Viewer/ViewerWidget.cpp:165
@@ -6368,6 +6542,16 @@ msgstr "Spustiť pomalšie"
 msgid "File not available"
 msgstr "Súbor nedostupný"
 
+#: Viewer/ViewerWidget.cpp:494
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "%1 is a prefix like 'Associate with', %2 is the tag name and %3 is the "
+#| "tag's category"
+#| msgid "%1 %2 (%3)"
+msgctxt "@title:window %1 is the filename, %2 its detail info"
+msgid "%1 %2"
+msgstr "%1 %2 (%3)"
+
 #: Viewer/ViewerWidget.cpp:503
 #, kde-format
 msgctxt "@action:inmenu Start video playback"
@@ -6398,121 +6582,121 @@ msgctxt "@action:inmenu"
 msgid "Stop Slideshow"
 msgstr "Zastaviť prezentáciu"
 
-#: Viewer/ViewerWidget.cpp:1284
+#: Viewer/ViewerWidget.cpp:1279
 #, kde-format
 msgctxt "@title:inmenu"
 msgid "Seek"
 msgstr "Posunúť"
 
-#: Viewer/ViewerWidget.cpp:1288
+#: Viewer/ViewerWidget.cpp:1283
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 minutes backward"
 msgstr "10 minút dozadu"
 
-#: Viewer/ViewerWidget.cpp:1289
+#: Viewer/ViewerWidget.cpp:1284
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 minute backward"
 msgstr "1 minútu dozadu"
 
-#: Viewer/ViewerWidget.cpp:1290
+#: Viewer/ViewerWidget.cpp:1285
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 seconds backward"
 msgstr "10 sekúnd dozadu"
 
-#: Viewer/ViewerWidget.cpp:1291
+#: Viewer/ViewerWidget.cpp:1286
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 seconds backward"
 msgstr "1 sekundu dozadu"
 
-#: Viewer/ViewerWidget.cpp:1292
+#: Viewer/ViewerWidget.cpp:1287
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "100 milliseconds backward"
 msgstr "100 milisekúnd dozadu"
 
-#: Viewer/ViewerWidget.cpp:1293
+#: Viewer/ViewerWidget.cpp:1288
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "100 milliseconds forward"
 msgstr "100 milisekúnd dopredu"
 
-#: Viewer/ViewerWidget.cpp:1294
+#: Viewer/ViewerWidget.cpp:1289
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 seconds forward"
 msgstr "1 sekundu dopredu"
 
-#: Viewer/ViewerWidget.cpp:1295
+#: Viewer/ViewerWidget.cpp:1290
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 seconds forward"
 msgstr "10 sekúnd dopredu"
 
-#: Viewer/ViewerWidget.cpp:1296
+#: Viewer/ViewerWidget.cpp:1291
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 minute forward"
 msgstr "1 minútu dopredu"
 
-#: Viewer/ViewerWidget.cpp:1297
+#: Viewer/ViewerWidget.cpp:1292
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 minutes forward"
 msgstr "10 minút dopredu"
 
-#: Viewer/ViewerWidget.cpp:1320
+#: Viewer/ViewerWidget.cpp:1315
 #, kde-format
 msgctxt "@action:inmenu Stop video playback"
 msgid "Stop"
 msgstr "Zastaviť"
 
-#: Viewer/ViewerWidget.cpp:1333
+#: Viewer/ViewerWidget.cpp:1328
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Use current frame in thumbnail view"
 msgstr "Použiť aktuálny rámec v zobrazení náhľadu"
 
-#: Viewer/ViewerWidget.cpp:1338
+#: Viewer/ViewerWidget.cpp:1333
 #, kde-format
 msgctxt "@action:inmenu Restart video playback."
 msgid "Restart"
 msgstr "Reštart"
 
-#: Viewer/ViewerWidget.cpp:1353
+#: Viewer/ViewerWidget.cpp:1348
 #, kde-format
 msgctxt "@title:inmenu"
 msgid "Filters"
 msgstr "Filtre"
 
-#: Viewer/ViewerWidget.cpp:1356
+#: Viewer/ViewerWidget.cpp:1351
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Remove All Filters"
 msgstr "Odstrániť všetky filtre"
 
-#: Viewer/ViewerWidget.cpp:1360
+#: Viewer/ViewerWidget.cpp:1355
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Grayscale Filter"
 msgstr "Použiť filter šedej škály"
 
-#: Viewer/ViewerWidget.cpp:1365
+#: Viewer/ViewerWidget.cpp:1360
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Contrast Stretching Filter"
 msgstr "Použiť filter roztiahnutia kontrastu"
 
-#: Viewer/ViewerWidget.cpp:1370
+#: Viewer/ViewerWidget.cpp:1365
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Histogram Equalization Filter"
 msgstr "Použiť filter úpravy histogramu"
 
-#: Viewer/ViewerWidget.cpp:1375
+#: Viewer/ViewerWidget.cpp:1370
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
@@ -6559,9 +6743,10 @@ msgid "Show Filename"
 msgstr "Zobraziť názov súboru"
 
 #: Viewer/VisibleOptionsMenu.cpp:72
-#, kde-format
-msgid "Show EXIF"
-msgstr "Zobraziť EXIF"
+#, fuzzy, kde-format
+#| msgid "Show Exif Info"
+msgid "Show Exif"
+msgstr "Zobraziť EXIF informácie"
 
 #: Viewer/VisibleOptionsMenu.cpp:77
 #, kde-format
@@ -6573,12 +6758,12 @@ msgstr "Zobraziť veľkosť obrázka"
 msgid "Show Rating"
 msgstr "Zobraziť hodnotenie"
 
-#: XMLDB/Database.cpp:219 XMLDB/Database.cpp:566 XMLDB/FileReader.cpp:137
+#: XMLDB/Database.cpp:238 XMLDB/Database.cpp:599 XMLDB/FileReader.cpp:137
 #, kde-format
 msgid "Image"
 msgstr "Obrázok"
 
-#: XMLDB/Database.cpp:219 XMLDB/Database.cpp:567 XMLDB/FileReader.cpp:138
+#: XMLDB/Database.cpp:238 XMLDB/Database.cpp:600 XMLDB/FileReader.cpp:138
 #, kde-format
 msgid "Video"
 msgstr "Video"
@@ -6641,14 +6826,24 @@ msgid "Changed standard category names"
 msgstr "Zmenené štandardné mená kategórií"
 
 #: XMLDB/FileReader.cpp:383
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>Your images/videos are not sorted, which means that navigating using "
+#| "the date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> "
+#| "menu, you can find <b>Display Images with Incomplete Dates</b> which you "
+#| "can use to find the images that are missing date information.</p><p>You "
+#| "can then select the images that you have reason to believe have a correct "
+#| "date in either their EXIF data or on the file, and execute <b>Maintenance-"
+#| ">Read EXIF Info</b> to reread the information.</p><p>Finally, once all "
+#| "images have their dates set, you can execute <b>Maintenance->Sort All by "
+#| "Date & Time</b> to sort them in the database. </p>"
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
 "date bar will only work suboptimally.</p><p>In the <b>Maintenance</b> menu, "
 "you can find <b>Display Images with Incomplete Dates</b> which you can use "
 "to find the images that are missing date information.</p><p>You can then "
 "select the images that you have reason to believe have a correct date in "
-"either their EXIF data or on the file, and execute <b>Maintenance->Read EXIF "
+"either their Exif data or on the file, and execute <b>Maintenance->Read Exif "
 "Info</b> to reread the information.</p><p>Finally, once all images have "
 "their dates set, you can execute <b>Maintenance->Sort All by Date & Time</b> "
 "to sort them in the database. </p>"
@@ -6745,7 +6940,7 @@ msgstr ""
 "Chyba v súbore %1: očakávaný 'KPhotoAlbum' ako vrchný prvok, ale našiel sa "
 "'%2'"
 
-#: XMLDB/FileWriter.cpp:82
+#: XMLDB/FileWriter.cpp:83
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
@@ -6754,7 +6949,7 @@ msgstr ""
 "<p>Nemôžem uložiť databázu obrázkov do XML.</p>Súbor %1 nie je možné otvoriť "
 "kvôli nasledovnej chybe: %2"
 
-#: XMLDB/FileWriter.cpp:115
+#: XMLDB/FileWriter.cpp:116
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
@@ -6763,7 +6958,7 @@ msgstr ""
 "<p>Zlyhalo odstránenie starej verzie databázy obrázkov.</p> <p>Prosím, "
 "skúste znova alebo nahraďte súbor %1 súborom %2 ručne!</p>"
 
-#: XMLDB/FileWriter.cpp:125
+#: XMLDB/FileWriter.cpp:126
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "

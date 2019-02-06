@@ -19,6 +19,7 @@
 #define EXIFDATABASE_H
 
 #include <DB/FileNameList.h>
+#include <DB/FileInfo.h>
 
 #include <QList>
 #include <QPair>
@@ -29,6 +30,7 @@ namespace Exiv2 { class ExifData; }
 
 typedef QPair<int,int> Rational;
 typedef QList<Rational> RationalList;
+typedef QPair<DB::FileName, Exiv2::ExifData> DBExifInfo;
 
 namespace Exif
 {
@@ -80,10 +82,12 @@ public:
     /**
      * @brief add a file and its exif data to the database.
      * If the file already exists in the database, the new data replaces the existing data.
-     * @param fileName the file
+     * @param fileInfo the file
      * @return
      */
+    bool add( DB::FileInfo& fileInfo );
     bool add( const DB::FileName& fileName );
+    bool add( const DB::FileNameList& list );
     void remove( const DB::FileName& fileName );
     void remove( const DB::FileNameList& list );
     /**
@@ -98,6 +102,9 @@ public:
     CameraList cameras() const;
     LensList lenses() const;
     void recreate();
+    bool startInsertTransaction();
+    bool commitInsertTransaction();
+    bool abortInsertTransaction();
 
 protected:
     enum DBSchemaChangeType { SchemaChanged, SchemaAndDataChanged };
@@ -108,15 +115,23 @@ protected:
     void createMetadataTable(DBSchemaChangeType change);
     static QString connectionName();
     bool insert( const DB::FileName& filename, Exiv2::ExifData );
+    bool insert( QList<DBExifInfo> );
 
 private:
+    void showErrorAndFail( QSqlQuery &query ) const;
+    void showErrorAndFail(const QString &errorMessage , const QString &technicalInfo) const;
     bool m_isOpen;
     bool m_doUTF8Conversion;
+    mutable bool m_isFailed;
     Database();
     ~Database();
     void init();
+    QSqlQuery *getInsertQuery();
+    void concludeInsertQuery(QSqlQuery *);
     static Database* s_instance;
+    QString m_queryString;
     QSqlDatabase m_db;
+    QSqlQuery *m_insertTransaction;
 };
 
 }

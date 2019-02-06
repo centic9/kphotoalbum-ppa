@@ -1,3 +1,49 @@
+kphotoalbum (5.4.2-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Bump Standards-Version to 4.3.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Wed, 06 Feb 2019 21:53:49 +0100
+
+kphotoalbum (5.4-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Add upstream signing key.
+  * Update the patches:
+    - upstream_Fix-build-with-Qt-5.11.patch: drop, backported from upstream
+
+ -- Pino Toscano <pino@debian.org>  Sun, 14 Oct 2018 22:07:29 +0200
+
+kphotoalbum (5.3-2) unstable; urgency=medium
+
+  * Team upload.
+  * Switch Vcs-* fields to salsa.debian.org.
+  * Backport upstream commit 47f4c00adaa442cd03b02d44517b5503718f2813 to fix
+    build with Qt >= 5.11; patch upstream_Fix-build-with-Qt-5.11.patch.
+    (Closes: #906660)
+  * Bump Standards-Version to 4.2.1, no changes required.
+  * Bump the debhelper compatibility to 11:
+    - bump the debhelper build dependency to 11~
+    - bump compat to 11
+    - remove --parallel for dh, as now done by default
+
+ -- Pino Toscano <pino@debian.org>  Tue, 04 Sep 2018 23:44:32 +0200
+
+kphotoalbum (5.3-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Bump Standards-Version to 4.1.3, no changes required.
+  * Remove Fathi Boudra from Uploaders, as requested by the MIA team.
+    (Closes: #879364)
+  * Remove trailing whitespaces in changelog, and control.
+  * Use https in watch file.
+  * Remove obsolete get-orig-source-dpatch target in rules.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 11 Feb 2018 10:25:37 +0100
+
 kphotoalbum (5.2-2) unstable; urgency=medium
 
   * Team upload.
@@ -136,19 +182,19 @@ kphotoalbum (4.5-1) unstable; urgency=low
 kphotoalbum (4.4-2) unstable; urgency=low
 
   * Update Standards Version 3.9.4 - no changes
-  * Update debian/control - fix vcs-field-not-canonical 
+  * Update debian/control - fix vcs-field-not-canonical
 
  -- Mark Purcell <msp@debian.org>  Sun, 12 May 2013 09:26:03 +1000
 
 kphotoalbum (4.4-1) experimental; urgency=low
 
-  * New upstream release 
+  * New upstream release
 
  -- Mark Purcell <msp@debian.org>  Sat, 02 Mar 2013 11:05:13 +1100
 
 kphotoalbum (4.3-1) experimental; urgency=low
 
-  * New upstream release 
+  * New upstream release
   * Add Depends: mplayer2
 
  -- Mark Purcell <msp@debian.org>  Fri, 28 Sep 2012 21:45:33 +1000
@@ -198,7 +244,7 @@ kphotoalbum (4.1.1-4) unstable; urgency=low
 
 kphotoalbum (4.1.1-3) unstable; urgency=low
 
-  * Update Build-Depends for KDE SC 4.4.3 (Closes: #579986) 
+  * Update Build-Depends for KDE SC 4.4.3 (Closes: #579986)
 
  -- Mark Purcell <msp@debian.org>  Mon, 03 May 2010 20:15:11 +1000
 
@@ -350,7 +396,7 @@ kphotoalbum (3.0-1) experimental; urgency=low
 
 kphotoalbum (2.2-2) unstable; urgency=low
 
-  * Add version to libexiv2 dependency (Closes: #386855) 
+  * Add version to libexiv2 dependency (Closes: #386855)
 
  -- Fathi Boudra <fboudra@free.fr>  Mon, 11 Sep 2006 00:07:52 +0200
 
@@ -379,34 +425,34 @@ kphotoalbum (2.2-1) unstable; urgency=low
 kimdaba (2.1-1) unstable; urgency=low
 
   * New upstream release, (closes: #316861, #314689).
-  * Adapted to follow new version (3.6.2) of the Debian Policy. 
+  * Adapted to follow new version (3.6.2) of the Debian Policy.
   * Build-depends cleanup. Thanks to Ubuntu developer Jonathan Riddell
-    <jr@jriddell.org> and Debian Developers Adeodato Simó <asp16@alu.ua.es> 
+    <jr@jriddell.org> and Debian Developers Adeodato Simó <asp16@alu.ua.es>
     and Steve Langasek <vorlon@debian.org> (closes: #326416).
-      - Removed build-depends on libraries: kdelibs4, libqt3c102-mt, libacl1, 
-      libart-2.0-2, libattr1, libgcc1, libice6, libidn11, libncurses5, 
+      - Removed build-depends on libraries: kdelibs4, libqt3c102-mt, libacl1,
+      libart-2.0-2, libattr1, libgcc1, libice6, libidn11, libncurses5,
       libpng12-0, libsm6, libx11-6, libxcursor1, libxext6, libxft2, libxrandr2,
       libxrender1, libxt6, libaudio2, libexpat1, libfam0c102, libfontconfig1,
       libfreetype6, and zlib1g.
       - Removed build-depends on 'Priority: required' packages: base-files,
-      coreutils. 
+      coreutils.
       - Also removed build-depends on binutils, zlib1g-dev, gettext and xutils.
   * KIPI interface added, (closes: #306386).
       - Added build dependency on libkipi0-dev.
       - Added Recommends: kipi-plugins.
   * Added Recommends: kdegraphics, as it gives EXIF support for Kimdaba.
   * Package description extended to inform of the new plugin capability.
-  * First version after C++ ABI change. 
- 
+  * First version after C++ ABI change.
+
  -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Wed,  3 Sep 2005 23:23:55 +0200
-   
+
 kimdaba (2.0-4) unstable; urgency=low
 
   * Broken i386 package on Sid, unnecessary dependency on kdelibs 4:4.3.0
     removed (closes: #309752).
   * Upstream KDE-help documentation is only in Docbook format. Only HTML,
     DebianDoc-SGML or Text are acceptable. Removed debian/kimdaba.doc-base
-    (closes: #308985).     
+    (closes: #308985).
 
  -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Thu, 19 May 2005 12:56:00 +0200
 
@@ -420,7 +466,7 @@ kimdaba (2.0-3) unstable; urgency=low
 
 kimdaba (2.0-2) unstable; urgency=low
 
-  * Changelog fixed, ITP bug closed (closes: #227525). 
+  * Changelog fixed, ITP bug closed (closes: #227525).
   * Cleaned up build dependencies on versioned libraries.
 
  -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Fri,  3 Dec 2004 11:44:22 +0100
@@ -428,7 +474,7 @@ kimdaba (2.0-2) unstable; urgency=low
 kimdaba (2.0-1) unstable; urgency=low
 
   * New upstream release
-  * Manpage updated. New option --import added. 
+  * Manpage updated. New option --import added.
 
  -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Tue, 19 Oct 2004 09:22:37 +0200
 

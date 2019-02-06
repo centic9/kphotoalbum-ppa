@@ -26,7 +26,6 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <QDialogButtonBox>
-#include <QPushButton>
 #include "DB/ImageDB.h"
 #include "DB/CategoryCollection.h"
 #include "DB/Category.h"
@@ -38,7 +37,7 @@ using namespace MainWindow;
 TokenEditor::TokenEditor( QWidget* parent )
     :QDialog( parent )
 {
-    setWindowTitle( i18n( "Remove Tokens" ) );
+    setWindowTitle( i18nc("@title:window", "Remove Tokens" ) );
     QVBoxLayout *dialogLayout = new QVBoxLayout(this);
 
     QWidget* mainContents = new QWidget;

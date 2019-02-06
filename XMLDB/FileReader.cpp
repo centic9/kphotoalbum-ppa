@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -385,7 +385,7 @@ void XMLDB::FileReader::checkIfImagesAreSorted()
                                        "<p>In the <b>Maintenance</b> menu, you can find <b>Display Images with Incomplete Dates</b> "
                                        "which you can use to find the images that are missing date information.</p>"
                                        "<p>You can then select the images that you have reason to believe have a correct date "
-                                       "in either their EXIF data or on the file, and execute <b>Maintenance->Read EXIF Info</b> "
+                                       "in either their Exif data or on the file, and execute <b>Maintenance->Read Exif Info</b> "
                                        "to reread the information.</p>"
                                        "<p>Finally, once all images have their dates set, you can execute "
                                        "<b>Maintenance->Sort All by Date & Time</b> to sort them in the database. </p>"),
@@ -501,11 +501,22 @@ XMLDB::ReaderPtr XMLDB::FileReader::readConfigFile( const QString& configFile )
     return reader;
 }
 
+/**
+ * @brief Unescape a string used as an XML attribute name.
+ *
+ * @see XMLDB::FileWriter::escape
+ *
+ * @param str the string to be unescaped
+ * @return the unescaped string
+ */
 QString XMLDB::FileReader::unescape( const QString& str )
 {
-    static QHash<QString,QString> cache;
-    if ( cache.contains(str) )
-        return cache[str];
+    static bool hashUsesCompressedFormat = useCompressedFileFormat();
+    static QHash<QString,QString> s_cache;
+    if (hashUsesCompressedFormat != useCompressedFileFormat())
+        s_cache.clear();
+    if ( s_cache.contains(str) )
+        return s_cache[str];
 
     QString tmp( str );
     // Matches encoded characters in attribute names
@@ -523,7 +534,7 @@ QString XMLDB::FileReader::unescape( const QString& str )
     } else
         tmp.replace( QString::fromLatin1( "_" ), QString::fromLatin1( " " ) );
 
-    cache.insert(str,tmp);
+    s_cache.insert(str,tmp);
     return tmp;
 }
 
