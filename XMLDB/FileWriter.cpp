@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2014 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -34,6 +34,7 @@
 
 #include <QFile>
 #include <QXmlStreamWriter>
+#include <QFileInfo>
 
 // I've added this to provide anyone interested
 // with a quick and easy means to benchmark performance differences
@@ -318,7 +319,8 @@ void XMLDB::FileWriter::save( QXmlStreamWriter& writer, const DB::ImageInfoPtr& 
 {
     ElementWriter dummy( writer, QString::fromLatin1("image") );
     writer.writeAttribute( QString::fromLatin1("file"),  info->fileName().relative() );
-    writer.writeAttribute( QString::fromLatin1("label"),  info->label() );
+    if ( info->label() != QFileInfo(info->fileName().relative()).completeBaseName() )
+        writer.writeAttribute( QString::fromLatin1("label"),  info->label() );
     if ( !info->description().isEmpty() )
         writer.writeAttribute( QString::fromLatin1("description"), info->description() );
 
@@ -327,9 +329,11 @@ void XMLDB::FileWriter::save( QXmlStreamWriter& writer, const DB::ImageInfoPtr& 
     QDateTime end = date.end();
 
     writer.writeAttribute( QString::fromLatin1( "startDate" ), start.toString(Qt::ISODate) );
-    writer.writeAttribute( QString::fromLatin1( "endDate" ), end.toString(Qt::ISODate) );
+    if ( start != end )
+        writer.writeAttribute( QString::fromLatin1( "endDate" ), end.toString(Qt::ISODate) );
 
-    writer.writeAttribute( QString::fromLatin1("angle"),  QString::number(info->angle()));
+    if ( info->angle() != 0 )
+        writer.writeAttribute( QString::fromLatin1("angle"),  QString::number(info->angle()));
     writer.writeAttribute( QString::fromLatin1( "md5sum" ), info->MD5Sum().toHexString() );
     writer.writeAttribute( QString::fromLatin1( "width" ), QString::number(info->size().width()));
     writer.writeAttribute( QString::fromLatin1( "height" ), QString::number(info->size().height()));
@@ -485,14 +489,23 @@ bool XMLDB::FileWriter::shouldSaveCategory( const QString& categoryName ) const
 }
 
 /**
- * Escape problematic characters in a string that forms an XML attribute name.
+ * @brief Escape problematic characters in a string that forms an XML attribute name.
+ *
  * N.B.: Attribute values do not need to be escaped!
+ * @see XMLDB::FileReader::unescape
+ *
+ * @param str the string to be escaped
+ * @return the escaped string
  */
 QString XMLDB::FileWriter::escape( const QString& str )
 {
-    static QHash<QString,QString> cache;
-    if ( cache.contains(str) )
-        return cache[str];
+    static bool hashUsesCompressedFormat = useCompressedFileFormat();
+    static QHash<QString,QString> s_cache;
+    if (hashUsesCompressedFormat != useCompressedFileFormat())
+        s_cache.clear();
+
+    if ( s_cache.contains(str) )
+        return s_cache[str];
 
     QString tmp( str );
     // Regex to match characters that are not allowed to start XML attribute names
@@ -510,7 +523,7 @@ QString XMLDB::FileWriter::escape( const QString& str )
         }
     } else
         tmp.replace( QString::fromLatin1( " " ), QString::fromLatin1( "_" ) );
-    cache.insert(str,tmp);
+    s_cache.insert(str,tmp);
     return tmp;
 }
 

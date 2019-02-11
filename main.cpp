@@ -1,4 +1,5 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2010-2018 The KPhotoAlbum development team
+   Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -81,17 +82,17 @@ int main( int argc, char** argv ) {
     aboutData.addAuthor( i18n("Henner Zeller"),i18n("Development"), QStringLiteral("h.zeller@acm.org"));
     aboutData.addAuthor( i18n("Andreas Neustifter"),i18n("Development"), QStringLiteral("andreas.neustifter@gmail.com"));
     aboutData.addAuthor( i18n("Johannes Zarl-Zierl"),i18n("Development"), QStringLiteral("johannes@zarl-zierl.at"));
-    aboutData.addAuthor( i18n("Tobias Leupold"),i18n("Development"), QStringLiteral("tobias.leupold@web.de"));
-
+    aboutData.addAuthor( i18n("Tobias Leupold"),i18n("Development"), QStringLiteral("tobias.leupold@gmx.de"));
+    aboutData.addAuthor( i18n("Robert Krawitz"),i18n("Development"), QStringLiteral("rlk@alum.mit.edu"));
 
     aboutData.addCredit( i18n("Will Stephenson"), i18n("Developing an Icon for KPhotoAlbum"), QStringLiteral("will@stevello.free-online.co.uk") );
     aboutData.addCredit( i18n("Teemu Rytilahti"),
                          i18n("Sending patches implementing (.) the \"Set As Wallpaper\" menu in the viewer."
                          "(.) Theme support for HTML generation"), QStringLiteral("teemu.rytilahti@kde-fi.org") );
     aboutData.addCredit( i18n("Reimar Imhof"), i18n("Patch to sort items in option listboxes"), QStringLiteral("Reimar.Imhof@netCologne.de") );
-    aboutData.addCredit( i18n("Thomas Schwarzgruber"), i18n("Patch to sort images in the thumbnail view, plus reading time info out of EXIF images for existing images"), QStringLiteral("possebaer@gmx.at") );
+    aboutData.addCredit( i18n("Thomas Schwarzgruber"), i18n("Patch to sort images in the thumbnail view, plus reading time info out of Exif images for existing images"), QStringLiteral("possebaer@gmx.at") );
     aboutData.addCredit( i18n("Marcel Wiesweg"), i18n("Patch which speed up loading of thumbnails plus preview in image property dialog."), QStringLiteral("marcel.wiesweg@gmx.de") );
-    aboutData.addCredit( i18n("Marco Caldarelli"), i18n("Patch for making it possible to reread EXIF info using a nice dialog."), QStringLiteral("caldarel@yahoo.it") );
+    aboutData.addCredit( i18n("Marco Caldarelli"), i18n("Patch for making it possible to reread Exif info using a nice dialog."), QStringLiteral("caldarel@yahoo.it") );
     aboutData.addCredit( i18n("Jean-Michel FAYARD"), i18n("(.) Patch with directory info made available through the browser. (.) Patch for adding a check box for \"and/or\" searches in the search page."), QStringLiteral("jmfayard@gmail.com") );
     aboutData.addCredit( i18n("Robert L Krawitz"), i18n("Numerous patches plus profiling KPhotoAlbum again and again."), QStringLiteral("rlk@alum.mit.edu") );
     aboutData.addCredit( i18n("Christoph Moseler"), i18n("Numerous patches for lots of bugs plus patches for a few new features"), QStringLiteral("forums@moseler.net") );
@@ -109,25 +110,22 @@ int main( int argc, char** argv ) {
 
     new MainWindow::SplashScreen();
 
+    // a KXmlGuiWindow per-default is created with the Qt::WA_DeleteOnClose attribute set
+    // -> don't delete the view directly!
     MainWindow::Window *view = nullptr;
     try {
-        view = new MainWindow::Window( 0 );
+        view = new MainWindow::Window( nullptr );
     }
     catch (int retVal) {
         // MainWindow ctor throws if no config is loaded
         return retVal;
     }
 
-    // qApp->setMainWidget( view );
     view->setGeometry( Settings::SettingsData::instance()->windowGeometry( Settings::MainWindow ) );
 
     (void) RemoteControl::RemoteInterface::instance();
 
-    int code = app.exec();
-    // I've heard multiple people complain about a crash in this line.
-    // unfortunately valgrind doesn't tell me why that should be, and I haven't seen it myself.
-    // Anyway, the line is really only needed when searching for memory leaks.
-    // delete view;
+    int code = QApplication::exec();
     return code;
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:
