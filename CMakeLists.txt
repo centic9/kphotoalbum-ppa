@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2.0)
-project(kphotoalbum VERSION 5.4.2)
+project(kphotoalbum VERSION 5.5)
 
 if(POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
@@ -35,16 +35,26 @@ set(CMAKE_CXX_REQUIRED TRUE)
 
 ########### dependencies  ###############
 
-find_package(Qt5 REQUIRED COMPONENTS Sql Xml Widgets Network)
+find_package(Qt5 5.9 REQUIRED COMPONENTS Sql Xml Widgets Network)
 find_package(Phonon4Qt5 REQUIRED)
-find_package(KF5 REQUIRED COMPONENTS Archive Completion Config CoreAddons DocTools I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
+find_package(KF5 5.44 REQUIRED COMPONENTS Archive Completion Config CoreAddons DocTools I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
     include_directories(${JPEG_INCLUDE_DIR})
 endif()
 
-find_package(Exiv2 REQUIRED)
+### 2018-12-30 jzarl
+# When Exiv2 0.26 can be deprecated, FindExiv2.cmake should be removed
+# and only find_package(exiv2) should be used
+find_package(exiv2 CONFIG QUIET)
+if(exiv2_FOUND)
+    # search againg with REQUIRED, so that the feature summary correctly shows exiv as required dependency
+    find_package(exiv2 CONFIG REQUIRED)
+    set(EXIV2_LIBRARIES exiv2lib)
+else()
+    find_package(Exiv2 REQUIRED)
+endif()
 
 find_package(KF5Kipi 5.1.0)
 set_package_properties(KF5Kipi
@@ -207,15 +217,20 @@ set(libUtilities_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ShowBusyCursor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/List.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/UniqFilenameMapper.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Util.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FileUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DeleteFiles.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Logging.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/JpeglibWithFix.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/QStr.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/StringSet.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastJpeg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DemoUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DescriptionUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FileNameUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/VideoUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ImageUtil.cpp
     )
 
 set(libMainWindow_SRCS
@@ -306,6 +321,7 @@ set(libDB_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/MediaCount.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/RawId.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/DB/SimpleCategoryMatcher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/DB/UIDelegate.cpp
     )
 
 set(libImportExport_SRCS

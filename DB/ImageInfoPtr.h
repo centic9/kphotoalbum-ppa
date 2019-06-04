@@ -22,7 +22,7 @@
 namespace DB
 {
     class ImageInfo;
-    typedef QExplicitlySharedDataPointer<ImageInfo> ImageInfoPtr;
+    using ImageInfoPtr = QExplicitlySharedDataPointer<ImageInfo>;
 }
 
 #endif /* IMAGEINFOPTR_H */

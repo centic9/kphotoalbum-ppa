@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,4 +16,26 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "QStr.h"
+#ifndef UTIL_H
+#define UTIL_H
+
+#include <QString>
+
+/**
+ * \file Utility functions for copying and linking files.
+ *
+ * \see FileNameUtils.h
+ */
+
+namespace Utilities
+{
+bool copyOrOverwrite( const QString& from, const QString& to );
+bool makeSymbolicLink( const QString& from, const QString& to );
+bool makeHardLink( const QString& from, const QString& to );
+
+}
+
+
+#endif /* UTIL_H */
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

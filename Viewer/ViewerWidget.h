@@ -58,7 +58,7 @@ public:
 
     ViewerWidget( UsageType type = ViewerWindow,
                   QMap<Qt::Key, QPair<QString,QString> > *macroStore = nullptr);
-    ~ViewerWidget();
+    ~ViewerWidget() override;
     static ViewerWidget* latest();
     void load( const DB::FileNameList& list, int index = 0 );
     void infoBoxMove();
@@ -87,12 +87,10 @@ protected:
     void wheelEvent( QWheelEvent* event ) override;
 
     void moveInfoBox();
-    void setAsWallpaper(int mode);
 
     void load();
     void setupContextMenu();
     void createShowContextMenu();
-    void createWallPaperMenu();
     void createInvokeExternalMenu();
     void createRotateMenu();
     void createSkipMenu();
@@ -147,13 +145,6 @@ protected slots:
     void filterMono();
     void slotSetStackHead();
     void updateCategoryConfig();
-    void slotSetWallpaperC();
-    void slotSetWallpaperT();
-    void slotSetWallpaperCT();
-    void slotSetWallpaperCM();
-    void slotSetWallpaperTM();
-    void slotSetWallpaperS();
-    void slotSetWallpaperCAF();
     void populateExternalPopup();
     void populateCategoryImagePopup();
     void videoStopped();
@@ -197,7 +188,6 @@ private:
     QRect m_textRect;
     QMenu* m_popup;
     QMenu* m_rotateMenu;
-    QMenu* m_wallpaperMenu;
     QMenu* m_filterMenu;
     MainWindow::ExternalPopup* m_externalPopup;
     MainWindow::CategoryImagePopup* m_categoryImagePopup;
