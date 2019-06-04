@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -49,7 +49,7 @@ namespace XMLDB {
             bool requireOnDisk=false) const override;
         void renameCategory( const QString& oldName, const QString newName ) override;
 
-        QMap<QString,uint> classify( const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask ) override;
+        QMap<QString, DB::CountWithRange> classify( const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask, DB::ClassificationMode mode) override;
         DB::FileNameList images() override;
         void addImages( const DB::ImageInfoList& images, bool doUpdate ) override;
         void commitDelayedImages() override;
@@ -101,7 +101,7 @@ namespace XMLDB {
         friend class FileReader;
         friend class FileWriter;
 
-        Database( const QString& configFile );
+        Database(const QString &configFile, DB::UIDelegate &delegate );
         void forceUpdate( const DB::ImageInfoList& );
 
         QString m_fileName;

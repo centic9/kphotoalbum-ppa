@@ -44,6 +44,7 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QDesktopServices>
 
 #include <KActionCollection>
 #include <KActionMenu>
@@ -54,7 +55,6 @@
 #include <KMessageBox>
 #include <KPasswordDialog>
 #include <KProcess>
-#include <KRun>
 #include <KSharedConfig>
 #include <KShortcutsDialog>
 #include <KStandardAction>
@@ -79,6 +79,7 @@
 #include <DB/ImageInfo.h>
 #include <DB/MD5.h>
 #include <DB/MD5Map.h>
+#include <DB/UIDelegate.h>
 #include <Exif/Database.h>
 #include <Exif/InfoDialog.h>
 #include <Exif/Info.h>
@@ -97,9 +98,11 @@
 #include <Settings/SettingsDialog.h>
 #include <ThumbnailView/enums.h>
 #include <ThumbnailView/ThumbnailFacade.h>
+#include <Utilities/DemoUtil.h>
+#include <Utilities/FileNameUtil.h>
 #include <Utilities/List.h>
 #include <Utilities/ShowBusyCursor.h>
-#include <Utilities/Util.h>
+#include <Utilities/VideoUtil.h>
 #include <Viewer/ViewerWidget.h>
 
 #include "AutoStackImages.h"
@@ -183,7 +186,7 @@ MainWindow::Window::Window( QWidget* parent )
     qCInfo(TimingLog) << "MainWindow: Loading MainWindow: " << timer.restart() << "ms.";
     setupMenuBar();
     qCInfo(TimingLog) << "MainWindow: setupMenuBar: " << timer.restart() << "ms.";
-    createSarchBar();
+    createSearchBar();
     qCInfo(TimingLog) << "MainWindow: createSearchBar: " << timer.restart() << "ms.";
     setupStatusBar();
     qCInfo(TimingLog) << "MainWindow: setupStatusBar: " << timer.restart() << "ms.";
@@ -216,7 +219,7 @@ MainWindow::Window::Window( QWidget* parent )
     connect( m_browser, SIGNAL(imageCount(uint)), m_statusBar->mp_partial, SLOT(showBrowserMatches(uint)) );
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged, this, &Window::updateContextMenuFromSelectionSize);
 
-    checkIfMplayerIsInstalled();
+    checkIfVideoThumbnailerIsInstalled();
     executeStartupActions();
 
     qCInfo(TimingLog) << "MainWindow: executeStartupActions " << timer.restart() << "ms.";
@@ -282,8 +285,6 @@ void MainWindow::Window::delayedInit()
         RemoteControl::RemoteInterface::instance().listen(Options::the()->listen());
     else if ( Settings::SettingsData::instance()->listenForAndroidDevicesOnStartup())
         RemoteControl::RemoteInterface::instance().listen();
-
-    announceAndroidVersion();
 }
 
 
@@ -540,7 +541,7 @@ void MainWindow::Window::slotPasteInformation()
     // fail silent if there is no file.
     if (fileName.isNull()) return;
 
-    MD5 originalSum = Utilities::MD5Sum( fileName );
+    MD5 originalSum = MD5Sum( fileName );
     ImageInfoPtr originalInfo;
     if ( DB::ImageDB::instance()->md5Map()->contains( originalSum ) ) {
         originalInfo = DB::ImageDB::instance()->info( fileName );
@@ -747,6 +748,8 @@ void MainWindow::Window::setupMenuBar()
     m_paste = KStandardAction::paste( this, SLOT(slotPasteInformation()), actionCollection() );
     m_paste->setEnabled(false);
     m_selectAll = KStandardAction::selectAll( m_thumbnailView, SLOT(selectAll()), actionCollection() );
+    m_clearSelection = KStandardAction::deselect( m_thumbnailView, SLOT(clearSelection()), actionCollection() );
+    m_clearSelection->setEnabled(false);
     KStandardAction::find( this, SLOT(slotSearch()), actionCollection() );
 
     m_deleteSelected = actionCollection()->addAction(QString::fromLatin1("deleteSelected"));
@@ -876,6 +879,7 @@ void MainWindow::Window::setupMenuBar()
     a->setText( i18n("Recalculate Checksum") );
 
     a = actionCollection()->addAction( QString::fromLatin1("rescan"), DB::ImageDB::instance(), SLOT(slotRescan()) );
+    a->setIcon(QIcon::fromTheme( QString::fromLatin1( "document-import" ) ));
     a->setText( i18n("Rescan for Images and Videos") );
 
     QAction* recreateExif = actionCollection()->addAction( QString::fromLatin1( "recreateExifDB" ), this, SLOT(slotRecreateExifDB()) );
@@ -894,6 +898,7 @@ void MainWindow::Window::setupMenuBar()
     a = actionCollection()->addAction( QString::fromLatin1("buildThumbs"), this, SLOT(slotBuildThumbnails()) );
     a->setText( i18n("Build Thumbnails") );
 
+    a = actionCollection()->addAction( QString::fromLatin1("statistics"), this, SLOT(slotStatistics()) );
     a->setText( i18n("Statistics...") );
 
     m_markUntagged = actionCollection()->addAction(QString::fromUtf8("markUntagged"),
@@ -1107,7 +1112,7 @@ bool MainWindow::Window::load()
         }
         configFile = fi.absoluteFilePath();
     }
-    DB::ImageDB::setupXMLDB( configFile );
+    DB::ImageDB::setupXMLDB( configFile, *this );
 
     // some sanity checks:
     if ( ! Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
@@ -1329,6 +1334,7 @@ void MainWindow::Window::updateContextMenuFromSelectionSize(int selectionSize)
     m_AutoStackImages->setEnabled(selectionSize > 1);
     m_markUntagged->setEnabled(selectionSize >= 1);
     m_statusBar->mp_selected->setSelectionCount( selectionSize );
+    m_clearSelection->setEnabled(selectionSize > 0);
 }
 
 void MainWindow::Window::rotateSelected( int angle )
@@ -1434,7 +1440,7 @@ void MainWindow::Window::slotConfigureToolbars()
 void MainWindow::Window::slotNewToolbarConfig()
 {
     createGUI();
-    createSarchBar();
+    createSearchBar();
 }
 
 void MainWindow::Window::slotImport()
@@ -1591,7 +1597,7 @@ void MainWindow::Window::slotImagesChanged( const QList<QUrl>& urls )
             // This seems to be the case with the border image plugin, which reports the destination image
             ImageManager::ThumbnailCache::instance()->removeThumbnail( fileName );
             // update MD5sum:
-            MD5 md5sum = Utilities::MD5Sum( fileName );
+            MD5 md5sum = MD5Sum( fileName );
             fileName.info()->setMD5Sum( md5sum );
         }
     }
@@ -1771,20 +1777,8 @@ void MainWindow::Window::slotOrderDecr()
 
 void MainWindow::Window::showVideos()
 {
-#if (KIO_VERSION >= ((5<<16)|(31<<8)|(0)))
-    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos"))
-                 , QString::fromLatin1( "text/html" )
-                 , this
-                 , KRun::RunFlags()
-                 );
-#else
-    // this signature is deprecated in newer kio versions
-    // TODO: remove this when we don't support Ubuntu 16.04 LTS anymore
-    KRun::runUrl(QUrl(QString::fromLatin1("http://www.kphotoalbum.org/index.php?page=videos"))
-                 , QString::fromLatin1( "text/html" )
-                 , this
-                 );
-#endif
+    QDesktopServices::openUrl(QUrl(
+        QStringLiteral("http://www.kphotoalbum.org/documentation/videos/")));
 }
 
 void MainWindow::Window::slotStatistics()
@@ -1824,6 +1818,11 @@ void MainWindow::Window::setupStatusBar()
     m_statusBar = new MainWindow::StatusBar;
     setStatusBar( m_statusBar );
     setLocked( Settings::SettingsData::instance()->locked(), true, false );
+    connect(m_statusBar, &StatusBar::thumbnailSettingsRequested
+            , [this](){
+        this->slotOptions();
+        m_settingsDialog->activatePage(Settings::SettingsPage::ThumbnailsPage);
+    });
 }
 
 void MainWindow::Window::slotRecreateExifDB()
@@ -1858,7 +1857,7 @@ void MainWindow::Window::slotThumbnailSizeChanged()
     m_statusBar->showMessage( thumbnailSizeMsg, 4000);
 }
 
-void MainWindow::Window::createSarchBar()
+void MainWindow::Window::createSearchBar()
 {
     // Set up the search tool bar
     SearchBar* bar = new SearchBar( this );
@@ -1888,28 +1887,17 @@ void MainWindow::Window::executeStartupActions()
     }
 }
 
-void MainWindow::Window::checkIfMplayerIsInstalled()
+void MainWindow::Window::checkIfVideoThumbnailerIsInstalled()
 {
     if (Options::the()->demoMode())
         return;
 
     if ( !FeatureDialog::hasVideoThumbnailer() ) {
         KMessageBox::information( this,
-                                  i18n("<p>Unable to find ffmpeg or MPlayer on the system.</p>"
-                                       "<p>Without either of these, KPhotoAlbum will not be able to display video thumbnails and video lengths. "
-                                       "Please install the ffmpeg or MPlayer package</p>"),
-                                  i18n("Video thumbnails are not available"), QString::fromLatin1("mplayerNotInstalled"));
-    } else {
-        KMessageBox::enableMessage( QString::fromLatin1("mplayerNotInstalled") );
-
-        if ( FeatureDialog::ffmpegBinary().isEmpty() && !FeatureDialog::isMplayer2() ) {
-            KMessageBox::information( this,
-                                      i18n("<p>You have MPlayer installed on your system, but it is unfortunately not version 2. "
-                                           "MPlayer2 is on most systems a separate package, please install that if at all possible, "
-                                           "as that version has much better support for extracting thumbnails from videos.</p>"),
-                                      i18n("MPlayer is too old"), QString::fromLatin1("mplayerVersionTooOld"));
-        } else
-            KMessageBox::enableMessage( QString::fromLatin1("mplayerVersionTooOld") );
+                                  i18n("<p>Unable to find ffmpeg on the system.</p>"
+                                       "<p>Without it, KPhotoAlbum will not be able to display video thumbnails and video lengths. "
+                                       "Please install the ffmpeg package</p>"),
+                                  i18n("Video thumbnails are not available"), QString::fromLatin1("VideoThumbnailerNotInstalled"));
     }
 }
 
@@ -1920,20 +1908,6 @@ bool MainWindow::Window::anyVideosSelected() const
             return true;
     }
     return false;
-}
-
-void MainWindow::Window::announceAndroidVersion()
-{
-    // Don't bother people with this information when they are starting KPA the first time
-    if (DB::ImageDB::instance()->totalCount() < 100)
-        return;
-
-    const QString doNotShowKey = QString::fromLatin1( "announce_android_version_key" );
-    const QString txt = i18n("<p>Did you know that there is an Android client for KPhotoAlbum?<br/>"
-                             "With the Android client you can view your images from your desktop.</p>"
-                             "<p><a href=\"https://www.youtube.com/results?search_query=kphotoalbum+on+android\">See youtube video</a> or "
-                             "<a href=\"https://play.google.com/store/apps/details?id=org.kde.kphotoalbum\">install from google play</a></p>" );
-    KMessageBox::information( this, txt, QString(), doNotShowKey, KMessageBox::AllowLink );
 }
 
 void MainWindow::Window::setHistogramVisibilty( bool visible ) const
@@ -1985,5 +1959,40 @@ Browser::PositionBrowserWidget* MainWindow::Window::createPositionBrowser()
     return widget;
 }
 #endif
+
+UserFeedback MainWindow::Window::askWarningContinueCancel(const QString &msg, const QString &title, const QString &dialogId)
+{
+    auto answer = KMessageBox::warningContinueCancel(this, msg, title, KStandardGuiItem::cont(), KStandardGuiItem::cancel(), dialogId);
+    return (answer==KMessageBox::Continue) ? UserFeedback::Confirm : UserFeedback::Deny;
+}
+
+UserFeedback MainWindow::Window::askQuestionYesNo(const QString &msg, const QString &title, const QString &dialogId)
+{
+    auto answer = KMessageBox::questionYesNo(this, msg, title, KStandardGuiItem::yes(), KStandardGuiItem::no(), dialogId);
+    return (answer==KMessageBox::Yes) ? UserFeedback::Confirm : UserFeedback::Deny;
+}
+
+void MainWindow::Window::showInformation(const QString &msg, const QString &title, const QString &dialogId)
+{
+    KMessageBox::information(this, msg, title, dialogId);
+}
+
+void MainWindow::Window::showSorry(const QString &msg, const QString &title, const QString &)
+{
+    KMessageBox::sorry(this, msg, title);
+}
+
+void MainWindow::Window::showError(const QString &msg, const QString &title, const QString &)
+{
+    KMessageBox::error(this, msg, title);
+}
+
+bool MainWindow::Window::isDialogDisabled(const QString &dialogId)
+{
+    // Note(jzarl): there are different methods for different kinds of dialogs.
+    // However, all these methods share exactly the same code in KMessageBox.
+    // If that ever changes, we can still update our implementation - until then I won't just copy a stupid API...
+    return !KMessageBox::shouldBeShownContinue(dialogId);
+}
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

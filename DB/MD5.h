@@ -26,33 +26,45 @@
 
 namespace DB
 {
-    class MD5
-    {
-    public:
-        MD5();
+class FileName;
 
-        explicit MD5(const QString& md5str);
+class MD5
+{
+public:
+    MD5();
 
-        bool isNull() const;
+    explicit MD5(const QString& md5str);
 
-        MD5& operator=(const QString& md5str);
+    bool isNull() const;
 
-        /** Get hex string representation of this.
-         * If this->isNull(), returns null string.
-         */
-        QString toHexString() const;
+    MD5& operator=(const QString& md5str);
 
-        bool operator==(const MD5 &other) const;
+    /** Get hex string representation of this.
+     * If this->isNull(), returns null string.
+     */
+    QString toHexString() const;
 
-        bool operator!=(const MD5& other) const;
+    bool operator==(const MD5 &other) const;
 
-        bool operator<(const MD5& other) const;
+    bool operator!=(const MD5& other) const;
 
-    private:
-        bool m_isNull;
-        qulonglong m_v0;
-        qulonglong m_v1;
-    };
+    bool operator<(const MD5& other) const;
+
+    inline uint hash() const { return (uint) m_v0 ^ m_v1; }
+
+private:
+    bool m_isNull;
+    qulonglong m_v0;
+    qulonglong m_v1;
+};
+
+inline uint qHash(const MD5 &key)
+{
+    return key.hash();
+}
+
+DB::MD5 MD5Sum( const DB::FileName& fileName );
+
 }
 
 #endif /* DB_MD5_H */

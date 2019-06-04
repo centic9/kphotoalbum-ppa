@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,31 +17,72 @@
 */
 
 #include "Database.h"
-#include "Settings/SettingsData.h"
-#include <kmessagebox.h>
-#include <KLocalizedString>
-#include "Utilities/Util.h"
-#include "DB/GroupCounter.h"
-#include "Browser/BrowserWidget.h"
-#include "DB/ImageInfo.h"
-#include "DB/ImageInfoPtr.h"
-#include "DB/CategoryCollection.h"
-#include "XMLCategory.h"
-#include <QExplicitlySharedDataPointer>
-#include <QFileInfo>
-#include "XMLImageDateCollection.h"
+
 #include "FileReader.h"
 #include "FileWriter.h"
-#include "Exif/Database.h"
+#include "XMLCategory.h"
+#include "XMLImageDateCollection.h"
+#include "Logging.h"
+
+#include <Browser/BrowserWidget.h>
+#include <DB/CategoryCollection.h>
 #include <DB/FileName.h>
+#include <DB/GroupCounter.h>
+#include <DB/ImageInfo.h>
+#include <DB/ImageInfoPtr.h>
+#include <DB/UIDelegate.h>
+#include <Exif/Database.h>
+#include <MainWindow/Logging.h>
+#include <Settings/SettingsData.h>
+#include <Utilities/VideoUtil.h>
+
+#include <KLocalizedString>
+#include <QElapsedTimer>
+#include <QExplicitlySharedDataPointer>
+#include <QFileInfo>
 
 using Utilities::StringSet;
 
-bool XMLDB::Database::s_anyImageWithEmptySize = false;
-XMLDB::Database::Database( const QString& configFile ):
-    m_fileName(configFile)
+namespace {
+void checkForBackupFile( const QString& fileName, DB::UIDelegate &ui)
 {
-    Utilities::checkForBackupFile( configFile );
+    QString backupName = QFileInfo( fileName ).absolutePath() + QString::fromLatin1("/.#") + QFileInfo( fileName ).fileName();
+    QFileInfo backUpFile( backupName);
+    QFileInfo indexFile( fileName );
+
+    if ( !backUpFile.exists() || indexFile.lastModified() > backUpFile.lastModified() || backUpFile.size() == 0 )
+        return;
+
+    const long backupSizeKB = backUpFile.size() >> 10;
+    const DB::UserFeedback choice = ui.questionYesNo(
+                QString::fromUtf8("Autosave file found: '%1', %2KB.").arg(backupName).arg(backupSizeKB)
+                , i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
+                       "Should the autosave file be used?", backupName, fileName, backupSizeKB)
+                , i18n("Found Autosave File")
+                );
+
+    if ( choice == DB::UserFeedback::Confirm ) {
+        qCInfo(XMLDBLog) << "Using autosave file:" << backupName;
+        QFile in( backupName );
+        if ( in.open( QIODevice::ReadOnly ) ) {
+            QFile out( fileName );
+            if (out.open( QIODevice::WriteOnly ) ) {
+                char data[1024];
+                int len;
+                while ( (len = in.read( data, 1024 ) ) )
+                    out.write( data, len );
+            }
+        }
+    }
+}
+} // namespace
+
+bool XMLDB::Database::s_anyImageWithEmptySize = false;
+XMLDB::Database::Database(const QString& configFile , DB::UIDelegate &delegate)
+    : ImageDB(delegate)
+    , m_fileName(configFile)
+{
+    checkForBackupFile( configFile, uiDelegate() );
     FileReader reader( this );
     reader.read( configFile );
     m_nextStackId = reader.nextStackId();
@@ -70,9 +111,11 @@ uint XMLDB::Database::totalCount() const
  * imageInfo is of the right type, and as a match can't be both, this really
  * would buy me nothing.
  */
-QMap<QString,uint> XMLDB::Database::classify( const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask )
+QMap<QString, DB::CountWithRange> XMLDB::Database::classify(const DB::ImageSearchInfo& info, const QString &category, DB::MediaType typemask , DB::ClassificationMode mode)
 {
-    QMap<QString, uint> map;
+    QElapsedTimer timer;
+    timer.start();
+    QMap<QString, DB::CountWithRange> map;
     DB::GroupCounter counter( category );
     Utilities::StringSet alreadyMatched = info.findAlreadyMatched( category );
 
@@ -82,33 +125,45 @@ QMap<QString,uint> XMLDB::Database::classify( const DB::ImageSearchInfo& info, c
         noMatchInfo.setCategoryMatchText( category, DB::ImageDB::NONE() );
     else
         noMatchInfo.setCategoryMatchText( category, QString::fromLatin1( "%1 & %2" ).arg(currentMatchTxt).arg(DB::ImageDB::NONE()) );
+    noMatchInfo.setCacheable( false );
 
     // Iterate through the whole database of images.
-    for( DB::ImageInfoListConstIterator it = m_images.constBegin(); it != m_images.constEnd(); ++it ) {
-        bool match = ( (*it)->mediaType() & typemask ) && !(*it)->isLocked() && info.match( *it ) && rangeInclude( *it );
+    for (const auto &imageInfo : m_images)
+    {
+        bool match = ( (imageInfo)->mediaType() & typemask ) && !(imageInfo)->isLocked() && info.match( imageInfo ) && rangeInclude( imageInfo );
         if ( match ) { // If the given image is currently matched.
 
             // Now iterate through all the categories the current image
             // contains, and increase them in the map mapping from category
             // to count.
-            StringSet items = (*it)->itemsOfCategory(category);
-            counter.count( items );
-            for( StringSet::const_iterator it2 = items.begin(); it2 != items.end(); ++it2 ) {
-                if ( !alreadyMatched.contains(*it2) ) // We do not want to match "Jesper & Jesper"
-                    map[*it2]++;
+            StringSet items = (imageInfo)->itemsOfCategory(category);
+            counter.count( items, imageInfo->date() );
+            for (const auto &categoryName: items)
+            {
+                if ( !alreadyMatched.contains(categoryName) ) // We do not want to match "Jesper & Jesper"
+                    map[categoryName].add(imageInfo->date());
             }
 
             // Find those with no other matches
-            if ( noMatchInfo.match( *it ) )
-                map[DB::ImageDB::NONE()]++;
+            if ( noMatchInfo.match( imageInfo ) )
+                map[DB::ImageDB::NONE()].count++;
+
+            // this is a shortcut for the browser overview page,
+            // where we are only interested whether there are sub-categories to a category
+            if (mode == DB::ClassificationMode::PartialCount && map.size()>1)
+            {
+                qCInfo(TimingLog) << "Database::classify(partial): " << timer.restart() << "ms.";
+                return map;
+            }
         }
     }
 
-    QMap<QString,uint> groups = counter.result();
-    for( QMap<QString,uint>::iterator it= groups.begin(); it != groups.end(); ++it ) {
+    QMap<QString,DB::CountWithRange> groups = counter.result();
+    for( QMap<QString,DB::CountWithRange>::iterator it= groups.begin(); it != groups.end(); ++it ) {
         map[it.key()] = it.value();
     }
 
+    qCInfo(TimingLog) << "Database::classify(): " << timer.restart() << "ms.";
     return map;
 }
 
@@ -587,10 +642,6 @@ DB::ImageInfoPtr XMLDB::Database::createImageInfo( const DB::FileName& fileName,
     static QString _rating_ = QString::fromUtf8("rating");
     static QString _stackId_ = QString::fromUtf8("stackId");
     static QString _stackOrder_ = QString::fromUtf8("stackOrder");
-    static QString _gpsPrec_ = QString::fromUtf8("gpsPrec");
-    static QString _gpsLon_ = QString::fromUtf8("gpsLon");
-    static QString _gpsLat_ = QString::fromUtf8("gpsLat");
-    static QString _gpsAlt_ = QString::fromUtf8("gpsAlt");
     static QString _videoLength_ = QString::fromUtf8("videoLength");
     static QString _options_ = QString::fromUtf8("options");
     static QString _0_ = QString::fromUtf8("0");

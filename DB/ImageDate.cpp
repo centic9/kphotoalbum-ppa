@@ -116,7 +116,7 @@ QString ImageDate::toString( bool withTime ) const
         }
     }
 
-    if ( isFirstSecOfDay( m_start ) && isLastSecOfDay( m_end ) ) {
+    if ( !withTime || (isFirstSecOfDay( m_start ) && isLastSecOfDay( m_end )) ) {
         if (m_start.date() == m_end.date() ) {
             // A whole day
             return m_start.toString( QString::fromLatin1( "d. MMM yyyy" ) );
@@ -183,8 +183,26 @@ bool ImageDate::operator<( const ImageDate& other ) const
 
 ImageDate::ImageDate( const QDateTime& start, const QDateTime& end )
 {
-    m_start = start;
-    m_end = end;
+    if (!start.isValid() || !end.isValid() || start <= end)
+    {
+        m_start = start;
+        m_end = end;
+    } else {
+        m_start = end;
+        m_end = start;
+    }
+}
+
+ImageDate::ImageDate( const QDate& start, const QDate& end )
+{
+    if (!start.isValid() || !end.isValid() || start <= end)
+    {
+        m_start = QDateTime( start, QTime( 0,0,0 ) );
+        m_end = QDateTime( end, QTime( 23, 59, 59 ) );
+    } else {
+        m_start = QDateTime( end, QTime( 0,0,0 ) );
+        m_end = QDateTime (start, QTime( 23, 59, 59 ) );
+    }
 }
 
 static QDate addMonth( int year, int month )
@@ -244,6 +262,8 @@ ImageDate::ImageDate( int yearFrom, int monthFrom, int dayFrom, int yearTo, int 
                     m_end = QDateTime( QDate( yearTo, monthTo, dayTo ).addDays(1) ).addSecs(-1);
             }
         }
+        // It should not be possible here for m_end < m_start.
+        Q_ASSERT( m_start <= m_end );
     }
 }
 
@@ -308,7 +328,7 @@ bool ImageDate::hasValidTime() const
 
 ImageDate::ImageDate( const QDate& start, QDate end, const QTime& time )
 {
-    if ( end.isNull() )
+    if ( !end.isValid() )
         end = start;
 
     if ( start == end && time.isValid() ) {
@@ -316,8 +336,13 @@ ImageDate::ImageDate( const QDate& start, QDate end, const QTime& time )
         m_end = m_start;
     }
     else {
-        m_start = QDateTime( start, QTime( 0,0,0 ) );
-        m_end = QDateTime( end, QTime( 23, 59, 59 ) );
+        if (start > end) {
+            m_end = QDateTime( start, QTime( 0,0,0 ) );
+            m_start = QDateTime( end, QTime( 23, 59, 59 ) );
+        } else {
+            m_start = QDateTime( start, QTime( 0,0,0 ) );
+            m_end = QDateTime( end, QTime( 23, 59, 59 ) );
+        }
     }
 }
 
@@ -335,6 +360,25 @@ ImageDate::MatchType ImageDate::isIncludedIn( const ImageDate& searchRange ) con
 bool ImageDate::includes( const QDateTime& date ) const
 {
     return ImageDate( date ).isIncludedIn( *this ) == ExactMatch;
+}
+
+void ImageDate::extendTo(const ImageDate &other)
+{
+    if (other.isNull())
+        return;
+
+    if (isNull())
+    {
+        m_start = other.m_start;
+        m_end = other.m_end;
+    }
+    else
+    {
+        if (other.m_start < m_start)
+            m_start = other.m_start;
+        if (other.m_end > m_end)
+            m_end = other.m_end;
+    }
 }
 
 QStringList DB::ImageDate::monthNames()

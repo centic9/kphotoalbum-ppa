@@ -22,7 +22,8 @@
 #include "ImageDecoder.h"
 #include "AsyncLoader.h"
 #include "RawImageDecoder.h"
-#include "Utilities/Util.h"
+#include "Utilities/FastJpeg.h"
+#include "Utilities/ImageUtil.h"
 
 #include <qapplication.h>
 #include <qfileinfo.h>
@@ -91,7 +92,7 @@ QImage ImageManager::ImageLoaderThread::loadImage( ImageRequest* request, bool& 
 
     QImage img;
     if (Utilities::isJPEG(request->fileSystemFileName())) {
-      ok = Utilities::loadJPEG( &img, request->fileSystemFileName(),  &fullSize, dim, 
+      ok = Utilities::loadJPEG( &img, request->fileSystemFileName(),  &fullSize, dim,
                                 m_imageLoadBuffer, m_bufSize );
         if (ok == true)
             request->setFullSize( fullSize );
@@ -137,7 +138,7 @@ QImage ImageManager::ImageLoaderThread::scaleAndRotate( ImageRequest* request, Q
 
     // If we are looking for a scaled version, then scale
     if ( shouldImageBeScale( img, request ) )
-        img = Utilities::scaleImage(img, request->width(), request->height(), Qt::KeepAspectRatio );
+        img = Utilities::scaleImage(img, request->size(), Qt::KeepAspectRatio );
 
     return img;
 }

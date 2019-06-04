@@ -29,6 +29,7 @@ namespace DB
 class ImageDate {
 public:
     ImageDate();
+    ImageDate( const QDate& start, const QDate& end );
     ImageDate( const QDateTime& start, const QDateTime& end );
     ImageDate( int yearFrom, int monthFrom, int dayFrom, int yearTo, int monthTo, int dayTo, int hourFrom, int minuteFrom, int secondFrom );
     explicit ImageDate( const QDate& );
@@ -53,6 +54,8 @@ public:
     enum MatchType { DontMatch, ExactMatch, RangeMatch };
     MatchType isIncludedIn( const ImageDate& searchRange ) const;
     bool includes( const QDateTime& date ) const;
+
+    void extendTo( const ImageDate& other);
 
 protected:
     static QStringList monthNames();

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -21,6 +21,7 @@
 
 #include <QObject>
 
+#include <DB/Category.h>
 #include <DB/FileNameList.h>
 #include <DB/ImageInfoList.h>
 #include <DB/ImageInfoPtr.h>
@@ -38,16 +39,32 @@ class MD5Map;
 class MemberMap;
 class ImageSearchInfo;
 class FileName;
+class UIDelegate;
+
+/**
+ * @brief The ClassificationMode enum can be used to short-circuit classification in the classify() method.
+ * This allows you to only check whether a given category has more than one sub-category (including the "No other" category).
+ * In other words, you can use a partial count when all you want to know is whether further search refinement is possible
+ * in a category.
+ * @see ImageDB::classify()
+ * @see Browser::OverviewPage::updateImageCount()
+ */
+enum class ClassificationMode
+{
+    FullCount ///< @brief run a full classification. This is normally what you want.
+    , PartialCount ///< @brief Count until at least 2 categories are found
+};
 
 class ImageDB  :public QObject {
     Q_OBJECT
 
 public:
     static ImageDB* instance();
-    static void setupXMLDB( const QString& configFile );
+    static void setupXMLDB( const QString &configFile, UIDelegate &delegate );
     static void deleteInstance();
 
     DB::FileNameSet imagesWithMD5Changed();
+    UIDelegate& uiDelegate() const;
 
 public slots:
     void setDateRange( const ImageDate&, bool includeFuzzyCounts );
@@ -61,13 +78,14 @@ protected:
     ImageDate m_selectionRange;
     bool m_includeFuzzyCounts;
     ImageInfoList m_clipboard;
+    UIDelegate &m_UI;
 
 private:
     static void connectSlots();
     static ImageDB* s_instance;
 
 protected:
-    ImageDB();
+    ImageDB( UIDelegate &delegate);
 
 public:
     static QString NONE();
@@ -84,7 +102,18 @@ public: // Methods that must be overridden
 
     virtual void renameCategory( const QString& oldName, const QString newName ) = 0;
 
-    virtual QMap<QString,uint> classify( const ImageSearchInfo& info, const QString & category, MediaType typemask ) = 0;
+    /**
+     * @brief classify computes a histogram of tags within a category.
+     * I.e. for each sub-category within a given category it counts all images matching the current context, and
+     * computes the date range for those images.
+     *
+     * @param info ImageSearchInfo describing the current search context
+     * @param category the category for which images should be classified
+     * @param typemask images/videos/both
+     * @param mode whether accurate counts are required or not
+     * @return a mapping of sub-category (tags/tag-groups) to the number of images (and the associated date range)
+     */
+    virtual QMap<QString, CountWithRange> classify( const ImageSearchInfo& info, const QString & category, MediaType typemask, ClassificationMode mode=ClassificationMode::FullCount ) = 0;
     virtual FileNameList images() = 0;
     /**
      * @brief addImages to the database.

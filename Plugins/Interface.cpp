@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -38,7 +38,7 @@
 #include <Plugins/ImageCollection.h>
 #include <Plugins/ImageCollectionSelector.h>
 #include <Plugins/ImageInfo.h>
-#include "Utilities/Util.h"
+#include "Utilities/FileUtil.h"
 
 #include "UploadWidget.h"
 namespace KIPI { class UploadWidget; }
@@ -70,10 +70,10 @@ QList<KIPI::ImageCollection> Plugins::Interface::allAlbums()
     if ( category.isNull() )
         category = Settings::SettingsData::instance()->albumCategory();
 
-    QMap<QString,uint> categories = DB::ImageDB::instance()->classify( context, category, DB::Image );
+    QMap<QString, DB::CountWithRange> categories = DB::ImageDB::instance()->classify( context, category, DB::Image );
 
-    for( QMap<QString,uint>::iterator it = categories.begin(); it != categories.end(); ++it ) {
-        CategoryImageCollection* col = new CategoryImageCollection( context, category, it.key() );
+    for( auto it = categories.constBegin(); it != categories.constEnd(); ++it ) {
+        auto* col = new CategoryImageCollection( context, category, it.key() );
         result.append( KIPI::ImageCollection( col ) );
     }
 

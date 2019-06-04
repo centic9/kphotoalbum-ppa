@@ -86,11 +86,11 @@ signals:
     void viewGeometryChanged(QSize viewSize, QRect zoomWindow, double sizeRatio);
 
 protected:
-    virtual void mousePressEvent( QMouseEvent* event ) override;
-    virtual void mouseMoveEvent( QMouseEvent* event ) override;
-    virtual void mouseReleaseEvent( QMouseEvent* event ) override;
-    virtual void resizeEvent( QResizeEvent* event ) override;
-    virtual void paintEvent( QPaintEvent* event ) override;
+    void mousePressEvent( QMouseEvent* event ) override;
+    void mouseMoveEvent( QMouseEvent* event ) override;
+    void mouseReleaseEvent( QMouseEvent* event ) override;
+    void resizeEvent( QResizeEvent* event ) override;
+    void paintEvent( QPaintEvent* event ) override;
     void hideEvent(QHideEvent* ) override;
     QPoint mapPos( QPoint );
     QPoint offset( int logicalWidth, int logicalHeight, int physicalWidth, int physicalHeight, double* ratio );
@@ -107,12 +107,11 @@ protected:
     void zoom( QPoint p1, QPoint p2 );
     void normalize( QPoint& p1, QPoint& p2 );
     void pan( const QPoint& );
-    void retryZoom();
     void busy();
     void unbusy();
     bool isImageZoomed( const Settings::StandardViewSize type, const QSize& imgSize );
     void updateZoomPoints( const Settings::StandardViewSize type, const QSize& imgSize );
-    void potentialyLoadFullSize();
+    void potentiallyLoadFullSize();
     double sizeRatio( const QSize& baseSize, const QSize& newSize ) const;
 
 private:
