@@ -18,11 +18,12 @@
 
 #ifndef IMAGESCOUT_H
 #define IMAGESCOUT_H
-#include "DB/FileName.h"
-#include <QQueue>
+#include "FileName.h"
+
 #include <QAtomicInt>
-#include <QMutex>
 #include <QList>
+#include <QMutex>
+#include <QQueue>
 
 namespace DB
 {
@@ -34,7 +35,8 @@ class ImageScoutThread;
  * Scout thread for image loading: preload images from disk to have them in
  * RAM to mask I/O latency.
  */
-class ImageScout {
+class ImageScout
+{
 public:
     // count is an atomic variable containing the number of images
     // that have been loaded thus far.  Used to prevent the scout from

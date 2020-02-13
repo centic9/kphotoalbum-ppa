@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,14 +17,8 @@
 */
 
 #include "config-kpa-kipi.h"
+
 #include "SettingsDialog.h"
-
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QVBoxLayout>
-
-#include <KLocalizedString>
-#include <KSharedConfig>
 
 #include "BirthdayPage.h"
 #include "CategoryPage.h"
@@ -36,18 +30,24 @@
 #include "TagGroupsPage.h"
 #include "ThumbnailsPage.h"
 #include "ViewerPage.h"
+
 #include <Utilities/ShowBusyCursor.h>
 
-struct Data
-{
+#include <KLocalizedString>
+#include <KSharedConfig>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+
+struct Data {
     Settings::SettingsPage page;
     QString title;
-    const char* icon;
-    QWidget* widget;
+    const char *icon;
+    QWidget *widget;
 };
 
-Settings::SettingsDialog::SettingsDialog( QWidget* parent)
-     :KPageDialog( parent )
+Settings::SettingsDialog::SettingsDialog(QWidget *parent)
+    : KPageDialog(parent)
 {
     m_generalPage = new Settings::GeneralPage(this);
     m_fileVersionDetectionPage = new Settings::FileVersionDetectionPage(this);
@@ -66,62 +66,54 @@ Settings::SettingsDialog::SettingsDialog( QWidget* parent)
 
     m_databaseBackendPage = new Settings::DatabaseBackendPage(this);
 
-
     Data data[] = {
-        { SettingsPage::GeneralPage ,i18n("General"), "configure-shortcuts", m_generalPage },
-        { SettingsPage::FileVersionDetectionPage ,i18n("File Searching & Versions"), "system-search", m_fileVersionDetectionPage },
-        { SettingsPage::ThumbnailsPage ,i18n("Thumbnail View" ), "view-preview", m_thumbnailsPage },
-        { SettingsPage::CategoryPage ,i18n("Categories"), "edit-group", m_categoryPage },
-        { SettingsPage::BirthdayPage ,i18n("Birthdays"), "view-calendar-birthday", m_birthdayPage },
-        { SettingsPage::TagGroupsPage ,i18n("Tag Groups" ), "view-group", m_tagGroupsPage },
-        { SettingsPage::ViewerPage ,i18n("Viewer" ), "document-preview", m_viewerPage },
+        { SettingsPage::GeneralPage, i18n("General"), "configure-shortcuts", m_generalPage },
+        { SettingsPage::FileVersionDetectionPage, i18n("File Searching & Versions"), "system-search", m_fileVersionDetectionPage },
+        { SettingsPage::ThumbnailsPage, i18n("Thumbnail View"), "view-preview", m_thumbnailsPage },
+        { SettingsPage::CategoryPage, i18n("Categories"), "edit-group", m_categoryPage },
+        { SettingsPage::BirthdayPage, i18n("Birthdays"), "view-calendar-birthday", m_birthdayPage },
+        { SettingsPage::TagGroupsPage, i18n("Tag Groups"), "view-group", m_tagGroupsPage },
+        { SettingsPage::ViewerPage, i18n("Viewer"), "document-preview", m_viewerPage },
 #ifdef HASKIPI
-        { SettingsPage::PluginsPage ,i18n("Plugins" ), "plugins", m_pluginsPage },
+        { SettingsPage::PluginsPage, i18n("Plugins"), "plugins", m_pluginsPage },
 #endif
 
-        { SettingsPage::ExifPage ,i18n("Exif/IPTC Information" ), "document-properties", m_exifPage },
-        { SettingsPage::DatabaseBackendPage ,i18n("Database Backend"), "document-save", m_databaseBackendPage },
+        { SettingsPage::ExifPage, i18n("Exif/IPTC Information"), "document-properties", m_exifPage },
+        { SettingsPage::DatabaseBackendPage, i18n("Database Backend"), "document-save", m_databaseBackendPage },
         { SettingsPage::GeneralPage, QString(), "", 0 }
     };
 
     int i = 0;
-    while ( data[i].widget != 0 ) {
-        KPageWidgetItem* page = new KPageWidgetItem( data[i].widget, data[i].title );
-        page->setHeader( data[i].title );
-        page->setIcon( QIcon::fromTheme( QString::fromLatin1( data[i].icon ) ) );
-        addPage( page );
+    while (data[i].widget != 0) {
+        KPageWidgetItem *page = new KPageWidgetItem(data[i].widget, data[i].title);
+        page->setHeader(data[i].title);
+        page->setIcon(QIcon::fromTheme(QString::fromLatin1(data[i].icon)));
+        addPage(page);
         m_pages[data[i].page] = page;
         ++i;
     }
 
     setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::Apply);
     button(QDialogButtonBox::Ok)->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(this, &QDialog::accepted,
-            this, &SettingsDialog::slotMyOK);
-    connect(button(QDialogButtonBox::Apply), &QPushButton::clicked,
-            this, &SettingsDialog::slotMyOK);
+    connect(this, &QDialog::accepted, this, &SettingsDialog::slotMyOK);
+    connect(button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &SettingsDialog::slotMyOK);
     connect(this, &QDialog::rejected, m_birthdayPage, &Settings::BirthdayPage::discardChanges);
 
-    setWindowTitle( i18nc("@title:window", "Settings" ) );
+    setWindowTitle(i18nc("@title:window", "Settings"));
 
-    connect(m_categoryPage, &Settings::CategoryPage::categoryChangesPending,
-            m_tagGroupsPage, &Settings::TagGroupsPage::categoryChangesPending);
-    connect(this, &SettingsDialog::currentPageChanged,
-            m_tagGroupsPage, &Settings::TagGroupsPage::slotPageChange);
-    connect(this, &SettingsDialog::currentPageChanged,
-            m_birthdayPage, &Settings::BirthdayPage::pageChange);
+    connect(m_categoryPage, &Settings::CategoryPage::categoryChangesPending, m_tagGroupsPage, &Settings::TagGroupsPage::categoryChangesPending);
+    connect(this, &SettingsDialog::currentPageChanged, m_tagGroupsPage, &Settings::TagGroupsPage::slotPageChange);
+    connect(this, &SettingsDialog::currentPageChanged, m_birthdayPage, &Settings::BirthdayPage::pageChange);
 
-    // slot is protected -> use old style connect:
-    connect(this, SIGNAL(rejected()),
-            m_categoryPage, SLOT(resetCategoryLabel()));
+    connect(this, &SettingsDialog::rejected, m_categoryPage, &Settings::CategoryPage::resetCategoryLabel);
 }
 
 void Settings::SettingsDialog::show()
 {
-    Settings::SettingsData* opt = Settings::SettingsData::instance();
+    Settings::SettingsData *opt = Settings::SettingsData::instance();
 
-    m_generalPage->loadSettings( opt );
-    m_fileVersionDetectionPage->loadSettings( opt );
+    m_generalPage->loadSettings(opt);
+    m_fileVersionDetectionPage->loadSettings(opt);
     m_thumbnailsPage->loadSettings(opt);
     m_tagGroupsPage->loadSettings();
     m_databaseBackendPage->loadSettings(opt);
@@ -133,9 +125,9 @@ void Settings::SettingsDialog::show()
 
     m_categoryPage->loadSettings(opt);
 
-    m_exifPage->loadSettings( opt );
+    m_exifPage->loadSettings(opt);
 
-    m_categoryPage->enableDisable( false );
+    m_categoryPage->enableDisable(false);
 
     m_birthdayPage->reload();
     m_categoryPage->resetCategoryNamesChanged();
@@ -154,21 +146,21 @@ void Settings::SettingsDialog::activatePage(Settings::SettingsPage pageId)
 void Settings::SettingsDialog::slotMyOK()
 {
     Utilities::ShowBusyCursor dummy;
-    Settings::SettingsData* opt = Settings::SettingsData::instance();
+    Settings::SettingsData *opt = Settings::SettingsData::instance();
 
     m_categoryPage->resetInterface();
-    m_generalPage->saveSettings( opt );
-    m_fileVersionDetectionPage->saveSettings( opt );
+    m_generalPage->saveSettings(opt);
+    m_fileVersionDetectionPage->saveSettings(opt);
     m_thumbnailsPage->saveSettings(opt);
 
     m_birthdayPage->saveSettings();
     m_tagGroupsPage->saveSettings();
-    m_categoryPage->saveSettings( opt, m_tagGroupsPage->memberMap() );
+    m_categoryPage->saveSettings(opt, m_tagGroupsPage->memberMap());
 
-    m_viewerPage->saveSettings( opt );
+    m_viewerPage->saveSettings(opt);
 
 #ifdef HASKIPI
-    m_pluginsPage->saveSettings( opt );
+    m_pluginsPage->saveSettings(opt);
 #endif
 
     m_exifPage->saveSettings(opt);
@@ -179,7 +171,7 @@ void Settings::SettingsDialog::slotMyOK()
     KSharedConfig::openConfig()->sync();
 }
 
-void Settings::SettingsDialog::keyPressEvent(QKeyEvent*)
+void Settings::SettingsDialog::keyPressEvent(QKeyEvent *)
 {
     // This prevents the dialog to be closed if the ENTER key is pressed anywhere
 }

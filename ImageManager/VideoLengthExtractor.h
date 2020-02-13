@@ -20,12 +20,17 @@
 #ifndef VIDEOLENGTHEXTRACTOR_H
 #define VIDEOLENGTHEXTRACTOR_H
 
-#include <QObject>
 #include <DB/FileName.h>
 
-namespace Utilities { class Process; }
+#include <QObject>
 
-namespace ImageManager {
+namespace Utilities
+{
+class Process;
+}
+
+namespace ImageManager
+{
 
 /**
   \brief \todo
@@ -36,7 +41,7 @@ class VideoLengthExtractor : public QObject
     Q_OBJECT
 public:
     explicit VideoLengthExtractor(QObject *parent = nullptr);
-    void extract(const DB::FileName& fileName );
+    void extract(const DB::FileName &fileName);
 
 signals:
     void lengthFound(int length);
@@ -46,7 +51,7 @@ private slots:
     void processEnded();
 
 private:
-    Utilities::Process* m_process;
+    Utilities::Process *m_process;
     DB::FileName m_fileName;
 };
 

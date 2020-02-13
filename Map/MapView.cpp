@@ -1,4 +1,4 @@
-/* Copyright (C) 2014-2015 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,7 @@
 */
 
 #include "MapView.h"
+
 #include "Logging.h"
 
 // Qt includes
@@ -40,14 +41,23 @@
 #include "MapMarkerModelHelper.h"
 #include "SearchMarkerTiler.h"
 
-Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
+namespace
+{
+inline QPixmap smallIcon(const QString &iconName)
+{
+    return QIcon::fromTheme(iconName).pixmap(KIconLoader::StdSizes::SizeSmall);
+}
+}
+
+Map::MapView::MapView(QWidget *parent, UsageType type)
+    : QWidget(parent)
 {
     if (type == MapViewWindow) {
         setWindowFlags(Qt::Window);
         setAttribute(Qt::WA_DeleteOnClose);
     }
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     m_statusLabel = new QLabel;
     m_statusLabel->setAlignment(Qt::AlignCenter);
@@ -58,19 +68,19 @@ Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
     m_mapWidget = new KGeoMap::MapWidget(this);
     layout->addWidget(m_mapWidget);
 
-    QWidget* controlWidget = m_mapWidget->getControlWidget();
+    QWidget *controlWidget = m_mapWidget->getControlWidget();
     controlWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     layout->addWidget(controlWidget);
     m_mapWidget->setActive(true);
 
-    QPushButton* saveButton = new QPushButton;
-    saveButton->setIcon(QPixmap(SmallIcon(QString::fromUtf8("media-floppy"))));
+    QPushButton *saveButton = new QPushButton;
+    saveButton->setIcon(QPixmap(smallIcon(QString::fromUtf8("media-floppy"))));
     saveButton->setToolTip(i18n("Save the current map settings"));
     m_mapWidget->addWidgetToControlWidget(saveButton);
     connect(saveButton, &QPushButton::clicked, this, &MapView::saveSettings);
 
     m_setLastCenterButton = new QPushButton;
-    m_setLastCenterButton->setIcon(QPixmap(SmallIcon(QString::fromUtf8("go-first"))));
+    m_setLastCenterButton->setIcon(QPixmap(smallIcon(QString::fromUtf8("go-first"))));
     m_setLastCenterButton->setToolTip(i18n("Go to last map position"));
     m_mapWidget->addWidgetToControlWidget(m_setLastCenterButton);
     connect(m_setLastCenterButton, &QPushButton::clicked, this, &MapView::setLastCenter);
@@ -86,7 +96,7 @@ Map::MapView::MapView(QWidget* parent, UsageType type) : QWidget(parent)
     }
 
     // ... then we try to set the (probably) saved settings
-    KConfigGroup configGroup = KSharedConfig::openConfig()->group( QString::fromUtf8("MapView") );
+    KConfigGroup configGroup = KSharedConfig::openConfig()->group(QString::fromUtf8("MapView"));
     m_mapWidget->readSettingsFromGroup(&configGroup);
 
     // Add the item model for the coordinates display
@@ -109,7 +119,7 @@ void Map::MapView::clear()
     m_modelHelper->clearItems();
 }
 
-void Map::MapView::addImage(const DB::ImageInfo& image)
+void Map::MapView::addImage(const DB::ImageInfo &image)
 {
     m_modelHelper->addImage(image);
 }
@@ -121,14 +131,13 @@ void Map::MapView::addImage(const DB::ImageInfoPtr image)
 
 void Map::MapView::zoomToMarkers()
 {
-    if (m_modelHelper->model()->rowCount()>0)
-    {
+    if (m_modelHelper->model()->rowCount() > 0) {
         m_mapWidget->adjustBoundariesToGroupedMarkers();
     }
     m_lastCenter = m_mapWidget->getCenter();
 }
 
-void Map::MapView::setCenter(const DB::ImageInfo& image)
+void Map::MapView::setCenter(const DB::ImageInfo &image)
 {
     m_lastCenter = image.coordinates();
     m_mapWidget->setCenter(m_lastCenter);
@@ -156,8 +165,7 @@ void Map::MapView::setShowThumbnails(bool state)
 
 void Map::MapView::displayStatus(MapStatus status)
 {
-    switch (status)
-    {
+    switch (status) {
     case MapStatus::Loading:
         m_statusLabel->setText(i18n("<i>Loading coordinates from the images ...</i>"));
         m_statusLabel->show();
@@ -233,7 +241,7 @@ KGeoMap::GeoCoordinates::Pair Map::MapView::getRegionSelection() const
 bool Map::MapView::regionSelected() const
 {
     return m_mapWidget->getRegionSelection().first.hasCoordinates()
-           && m_mapWidget->getRegionSelection().second.hasCoordinates();
+        && m_mapWidget->getRegionSelection().second.hasCoordinates();
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

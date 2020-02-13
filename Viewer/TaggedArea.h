@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,28 +20,61 @@
 
 #include <QFrame>
 
-namespace Viewer {
+namespace Viewer
+{
 
 class TaggedArea : public QFrame
 {
     Q_OBJECT
+    Q_PROPERTY(bool selected MEMBER m_selected READ selected WRITE setSelected RESET deselect)
+    Q_PROPERTY(bool highlighted MEMBER m_highlighted READ highlighted WRITE setHighlighted)
 
 public:
-    explicit TaggedArea(QWidget *parent = 0);
-    ~TaggedArea() override;
+    explicit TaggedArea(QWidget *parent = nullptr);
     void setTagInfo(QString category, QString localizedCategory, QString tag);
     void setActualGeometry(QRect geometry);
     QRect actualGeometry() const;
 
+    /**
+     * @brief When selected, the TaggedArea is shown (just like when hovering with the mouse).
+     * This is used to make the area visible when the corresponding tag in the ViewerWidget is hovered.
+     * @return \c true, if the area is visible.
+     */
+    bool selected() const;
+    void setSelected(bool selected);
+    void deselect();
+
+    /**
+     * @brief highlighted
+     * @return \c true, when the area should be visibly highlighted, \c false otherwise.
+     */
+    bool highlighted() const;
+    /**
+     * @brief setHighlighted sets the highlighted property of the area.
+     * An area with the highlighted tag set to \c true will be visibly highlighted.
+     * @param highlighted
+     */
+    void setHighlighted(bool highlighted);
+
 public slots:
-    void checkShowArea(QPair<QString, QString> tagData);
-    void resetViewStyle();
+    /**
+     * @brief checkIsSelected set the \c selected property if tagData matches the tag.
+     * @param tagData
+     */
+    void checkIsSelected(const QPair<QString, QString> &tagData);
+
+protected:
+    /**
+     * @brief repolish tells the widget to reevaluate its style.
+     * This required when the style is dynamically changed because a property changed.
+     */
+    void repolish();
 
 private:
     QPair<QString, QString> m_tagInfo;
     QRect m_actualGeometry;
-    QString m_styleDefault;
-    QString m_styleHighlighted;
+    bool m_selected = false;
+    bool m_highlighted = false;
 };
 
 }

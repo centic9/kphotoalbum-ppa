@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -15,48 +15,48 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#include <config-kpa-kipi.h>
 #include "PluginsPage.h"
 
+#include <KLocalizedString>
 #include <QCheckBox>
 #include <QLabel>
 #include <QVBoxLayout>
-
-#include <KLocalizedString>
+#include <config-kpa-kipi.h>
 
 #ifdef HASKIPI
-#  include <KIPI/ConfigWidget>
-#  include <KIPI/PluginLoader>
+#include <KIPI/ConfigWidget>
+#include <KIPI/PluginLoader>
 #endif
 
-#include <MainWindow/Window.h>
-#include <Settings/SettingsData.h>
+#include "SettingsData.h"
 
-Settings::PluginsPage::PluginsPage( QWidget* parent )
+#include <MainWindow/Window.h>
+
+Settings::PluginsPage::PluginsPage(QWidget *parent)
     : QWidget(parent)
 {
     // TODO: DEPENDENCY: the circular dependency on mainwindow is unfortunate.
-    ::MainWindow::Window::theMainWindow()->loadPlugins();
-    QVBoxLayout* lay1 = new QVBoxLayout( this );
+    ::MainWindow::Window::theMainWindow()->loadKipiPlugins();
+    QVBoxLayout *lay1 = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel( i18n("Choose Plugins to load:"), this );
-    lay1->addWidget( label );
+    QLabel *label = new QLabel(i18n("Choose Plugins to load:"), this);
+    lay1->addWidget(label);
 
-    m_pluginConfig = KIPI::PluginLoader::instance()->configWidget( this );
-    lay1->addWidget( m_pluginConfig );
+    m_pluginConfig = KIPI::PluginLoader::instance()->configWidget(this);
+    lay1->addWidget(m_pluginConfig);
 
-    m_delayLoadingPlugins = new QCheckBox( i18n("Delay loading plugins until the plugin menu is opened"), this );
-    lay1->addWidget( m_delayLoadingPlugins );
+    m_delayLoadingPlugins = new QCheckBox(i18n("Delay loading plugins until the plugin menu is opened"), this);
+    lay1->addWidget(m_delayLoadingPlugins);
 }
 
-void Settings::PluginsPage::saveSettings( Settings::SettingsData* opt )
+void Settings::PluginsPage::saveSettings(Settings::SettingsData *opt)
 {
     m_pluginConfig->apply();
-    opt->setDelayLoadingPlugins( m_delayLoadingPlugins->isChecked() );
+    opt->setDelayLoadingPlugins(m_delayLoadingPlugins->isChecked());
 }
 
-void Settings::PluginsPage::loadSettings( Settings::SettingsData* opt )
+void Settings::PluginsPage::loadSettings(Settings::SettingsData *opt)
 {
-    m_delayLoadingPlugins->setChecked( opt->delayLoadingPlugins() );
+    m_delayLoadingPlugins->setChecked(opt->delayLoadingPlugins());
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,4 +1,4 @@
-/* Copyright (C) 2012-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2012-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,6 +17,7 @@
 */
 
 #include "JobInterface.h"
+
 #include "JobManager.h"
 #include "Logging.h"
 
@@ -29,10 +30,11 @@
 */
 
 BackgroundTaskManager::JobInterface::JobInterface(BackgroundTaskManager::Priority priority)
-    : JobInfo(priority), m_dependencies(0)
+    : JobInfo(priority)
+    , m_dependencies(0)
 {
     qCDebug(BackgroundTaskManagerLog) << "Created Job #" << jobIndex();
-    connect( this, SIGNAL(completed()), this, SLOT(stop()));
+    connect(this, &JobInterface::completed, this, &JobInterface::stop);
 }
 
 BackgroundTaskManager::JobInterface::~JobInterface()
@@ -49,13 +51,13 @@ void BackgroundTaskManager::JobInterface::start()
 void BackgroundTaskManager::JobInterface::addDependency(BackgroundTaskManager::JobInterface *job)
 {
     m_dependencies++;
-    connect(job,SIGNAL(completed()),this, SLOT(dependedJobCompleted()));
+    connect(job, SIGNAL(completed()), this, SLOT(dependedJobCompleted()));
 }
 
 void BackgroundTaskManager::JobInterface::dependedJobCompleted()
 {
     m_dependencies--;
-    if ( m_dependencies == 0 )
+    if (m_dependencies == 0)
         BackgroundTaskManager::JobManager::instance()->addJob(this);
 }
 

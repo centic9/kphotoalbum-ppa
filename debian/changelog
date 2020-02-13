@@ -1,3 +1,41 @@
+kphotoalbum (5.6.1-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+
+ -- Pino Toscano <pino@debian.org>  Thu, 13 Feb 2020 06:44:36 +0100
+
+kphotoalbum (5.6-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Add the configuration for the CI on salsa.
+  * Update the build dependencies according to the upstream build system:
+    - add libkf5purpose-dev
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 09 Feb 2020 10:52:17 +0100
+
+kphotoalbum (5.5-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release.
+  * Bump some build dependencies according to the upstream build system:
+    - cmake to >= 3.2
+    - some Qt 5 packages to >= 5.9
+    - KF5 packages to >= 5.44.0
+  * Switch the Homepage to https.
+  * Remove the mplayer dependency, as the new version does not use it anymore.
+  * Install README.md instead of README as documentation.
+  * Drop the man page, as it is very obsolete.
+  * Explicitly add the gettext build dependency.
+  * Bump Standards-Version to 4.4.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 08 Jul 2019 21:37:09 +0200
+
 kphotoalbum (5.4.2-1) unstable; urgency=medium
 
   * Team upload.

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2.0)
-project(kphotoalbum VERSION 5.5)
+project(kphotoalbum VERSION 5.6.1)
 
 if(POLICY CMP0063)
     cmake_policy(SET CMP0063 NEW)
@@ -27,10 +27,11 @@ add_definitions(
     -DQT_NO_URL_CAST_FROM_STRING
     -DQT_NO_CAST_FROM_BYTEARRAY
     -DQT_DEPRECATED_WARNINGS
+    -DQT_STRICT_ITERATORS
     )
 
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_REQUIRED TRUE)
 
 ########### dependencies  ###############
@@ -63,6 +64,13 @@ set_package_properties(KF5Kipi
     PURPOSE "Enables integration of KDE image plugin interface (shared functionality between KPhotoAlbum and other apps like gwenview or digikam)"
     )
 set(HASKIPI ${KF5Kipi_FOUND})
+
+find_package(KF5Purpose)
+set_package_properties(KF5Purpose
+    PROPERTIES
+    TYPE RECOMMENDED
+    PURPOSE "Enables integration with KDE Purpose plugins, which provide image sharing and similar functionality."
+    )
 
 find_package(KF5KDcraw)
 set_package_properties(KF5KDcraw
@@ -137,6 +145,7 @@ set(libxmldb_SRCS
 
 set(libThumbnailView_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/documentation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/FilterWidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailRequest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailToolTip.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/ThumbnailWidget.cpp
@@ -159,10 +168,12 @@ set(libThumbnailView_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/ThumbnailView/enums.cpp
     )
 
-set(libPlugins_SRCS)
+set(libPlugins_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/documentation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Logging.cpp
+    )
 if(KF5Kipi_FOUND)
-    set(libPlugins_SRCS
-        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/documentation.h
+    set(libPlugins_SRCS ${libPlugins_SRCS}
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Interface.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/ImageCollection.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/ImageInfo.cpp
@@ -171,7 +182,11 @@ if(KF5Kipi_FOUND)
         ${CMAKE_CURRENT_SOURCE_DIR}/Settings/PluginsPage.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadWidget.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/UploadImageCollection.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Logging.cpp
+        )
+endif()
+if(KF5Purpose_FOUND)
+    set(libPlugins_SRCS ${libPlugins_SRCS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/Plugins/PurposeMenu.cpp
         )
 endif()
 
@@ -414,17 +429,23 @@ set(libBackgroundJobs_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundJobs/ExtractOneThumbnailJob.cpp
     )
 
-set(libRemoteControl_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteCommand.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteConnection.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Server.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteInterface.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/SearchInfo.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteImageRequest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ImageNameStore.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ConnectionIndicator.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Logging.cpp
-    )
+option(KPA_ENABLE_REMOTECONTROL "Build with support for companion Android/QML app." OFF)
+set(libRemoteControl_SRCS)
+if(KPA_ENABLE_REMOTECONTROL)
+    # requires cmake 3.12
+    add_compile_definitions(KPA_ENABLE_REMOTECONTROL)
+    set(libRemoteControl_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteCommand.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteConnection.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Server.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteInterface.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/SearchInfo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteImageRequest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ImageNameStore.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ConnectionIndicator.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Logging.cpp
+        )
+endif()
 
 set(libMap_SRCS)
 if(KF5KGeoMap_FOUND)
@@ -505,6 +526,9 @@ target_link_libraries(kphotoalbum
 
 if(KF5Kipi_FOUND)
     target_link_libraries(kphotoalbum KF5::Kipi)
+endif()
+if(KF5Purpose_FOUND)
+    target_link_libraries(kphotoalbum KF5::Purpose KF5::PurposeWidgets)
 endif()
 
 if(KF5KDcraw_FOUND)

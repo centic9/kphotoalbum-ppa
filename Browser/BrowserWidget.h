@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,10 +18,12 @@
 
 #ifndef BROWSER_H
 #define BROWSER_H
-#include "CenteringIconView.h"
 #include "BreadcrumbList.h"
+#include "CenteringIconView.h"
+
+#include <Settings/SettingsData.h>
+
 #include <QListView>
-#include "Settings/SettingsData.h"
 
 class CenteringIconView;
 class QSortFilterProxyModel;
@@ -31,8 +33,8 @@ class QStackedWidget;
 
 namespace DB
 {
-    class ImageSearchInfo;
-    class FileName;
+class ImageSearchInfo;
+class FileName;
 }
 
 namespace Browser
@@ -45,21 +47,22 @@ class BrowserPage;
  *
  * See \ref Browser for a detailed description of how this fits in with the rest of the classes in this module
  */
-class BrowserWidget :public QWidget {
+class BrowserWidget : public QWidget
+{
     Q_OBJECT
     friend class ImageFolderAction;
 
 public:
-    explicit BrowserWidget( QWidget* parent );
-    void addSearch( DB::ImageSearchInfo& info );
-    void addImageView( const DB::FileName& context );
-    static BrowserWidget* instance();
-    void load( const QString& category, const QString& value );
+    explicit BrowserWidget(QWidget *parent);
+    void addSearch(DB::ImageSearchInfo &info);
+    void addImageView(const DB::FileName &context);
+    static BrowserWidget *instance();
+    void load(const QString &category, const QString &value);
     DB::ImageSearchInfo currentContext();
     void setFocus();
     QString currentCategory() const;
-    void addAction( Browser::BrowserPage* );
-    void setModel( QAbstractItemModel* );
+    void addAction(Browser::BrowserPage *);
+    void setModel(QAbstractItemModel *);
     static bool isResizing() { return s_isResizing; }
 
 public slots:
@@ -72,55 +75,55 @@ public slots:
     void slotLargeListView();
     void slotSmallIconView();
     void slotLargeIconView();
-    void slotLimitToMatch( const QString& );
+    void slotLimitToMatch(const QString &);
     void slotInvokeSeleted();
-    void scrollKeyPressed( QKeyEvent* );
-    void widenToBreadcrumb( const Browser::Breadcrumb& );
+    void scrollKeyPressed(QKeyEvent *);
+    void widenToBreadcrumb(const Browser::Breadcrumb &);
 
 signals:
-    void canGoBack( bool );
-    void canGoForward( bool );
+    void canGoBack(bool);
+    void canGoForward(bool);
     void showingOverview();
-    void pathChanged( const Browser::BreadcrumbList& );
-    void isSearchable( bool );
-    void isViewChangeable( bool );
-    void currentViewTypeChanged( DB::Category::ViewType );
+    void pathChanged(const Browser::BreadcrumbList &);
+    void isSearchable(bool);
+    void isFilterable(bool);
+    void isViewChangeable(bool);
+    void currentViewTypeChanged(DB::Category::ViewType);
     void viewChanged();
     void imageCount(uint);
 
 protected:
-    bool eventFilter( QObject*, QEvent* ) override;
+    bool eventFilter(QObject *, QEvent *) override;
     void activatePage(int pageIndex);
 
 private slots:
     void resetIconViewSearch();
-    void itemClicked( const QModelIndex& );
+    void itemClicked(const QModelIndex &);
     void adjustTreeViewColumnSize();
     void emitSignals();
 
 private:
-    void changeViewTypeForCurrentView( DB::Category::ViewType type );
-    Browser::BrowserPage* currentAction() const;
-    void switchToViewType( DB::Category::ViewType );
-    void setBranchOpen( const QModelIndex& parent, bool open );
+    void changeViewTypeForCurrentView(DB::Category::ViewType type);
+    Browser::BrowserPage *currentAction() const;
+    void switchToViewType(DB::Category::ViewType);
+    void setBranchOpen(const QModelIndex &parent, bool open);
     Browser::BreadcrumbList createPath() const;
     void createWidgets();
-    void handleResizeEvent( QMouseEvent* );
+    void handleResizeEvent(QMouseEvent *);
 
 private:
-    static BrowserWidget* s_instance;
-    QList<BrowserPage*> m_list;
+    static BrowserWidget *s_instance;
+    QList<BrowserPage *> m_list;
     int m_current;
-    QStackedWidget* m_stack;
-    CenteringIconView* m_listView;
-    QTreeView* m_treeView;
-    QAbstractItemView* m_curView;
-    TreeFilter* m_filterProxy;
+    QStackedWidget *m_stack;
+    CenteringIconView *m_listView;
+    QTreeView *m_treeView;
+    QAbstractItemView *m_curView;
+    TreeFilter *m_filterProxy;
     Browser::BreadcrumbList m_breadcrumbs;
     QPoint m_resizePressPos;
     static bool s_isResizing;
 };
-
 }
 
 #endif /* BROWSER_H */

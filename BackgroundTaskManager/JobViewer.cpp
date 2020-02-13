@@ -1,4 +1,4 @@
-/* Copyright 2012-2016 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2012-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -17,32 +17,34 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QLayout>
-#include <QTreeView>
-#include <QDialogButtonBox>
-#include <QPushButton>
+#include "JobViewer.h"
+
+#include "JobManager.h"
+#include "JobModel.h"
 
 #include <KLocalizedString>
+#include <QDialogButtonBox>
+#include <QLayout>
+#include <QPushButton>
+#include <QTreeView>
 
-#include "JobViewer.h"
-#include "JobModel.h"
-#include "JobManager.h"
-
-BackgroundTaskManager::JobViewer::JobViewer(QWidget *parent) : QDialog(parent), m_model(nullptr)
+BackgroundTaskManager::JobViewer::JobViewer(QWidget *parent)
+    : QDialog(parent)
+    , m_model(nullptr)
 {
     setWindowTitle(i18nc("@title:window", "Background Job Viewer"));
 
-    QVBoxLayout* mainLayout = new QVBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     setLayout(mainLayout);
 
     m_treeView = new QTreeView;
     mainLayout->addWidget(m_treeView);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox;
+    QDialogButtonBox *buttonBox = new QDialogButtonBox;
     m_pauseButton = buttonBox->addButton(i18n("Pause"), QDialogButtonBox::YesRole);
     buttonBox->addButton(QDialogButtonBox::Close);
 
-    connect(m_pauseButton, SIGNAL(clicked()), this, SLOT(togglePause()));
+    connect(m_pauseButton, &QPushButton::clicked, this, &JobViewer::togglePause);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::accept);
 
     mainLayout->addWidget(buttonBox);

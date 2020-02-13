@@ -19,28 +19,29 @@
 #ifndef CATEGORYIMAGECONFIG_H
 #define CATEGORYIMAGECONFIG_H
 
+#include <DB/ImageInfoPtr.h>
+
 #include <QDialog>
 #include <QImage>
 #include <QLabel>
-
-#include <DB/ImageInfoPtr.h>
 
 class QComboBox;
 class QLabel;
 
 namespace DB
 {
-    class ImageInfo;
+class ImageInfo;
 }
 
 namespace Viewer
 {
-class CategoryImageConfig :public QDialog {
+class CategoryImageConfig : public QDialog
+{
     Q_OBJECT
 
 public:
-    static CategoryImageConfig* instance();
-    void setCurrentImage( const QImage& image, const DB::ImageInfoPtr& info );
+    static CategoryImageConfig *instance();
+    void setCurrentImage(const QImage &image, const DB::ImageInfoPtr &info);
     void show();
 
 protected slots:
@@ -52,14 +53,14 @@ protected:
     QString currentGroup();
 
 private:
-    static CategoryImageConfig* s_instance;
+    static CategoryImageConfig *s_instance;
     CategoryImageConfig();
-    QComboBox* m_group;
+    QComboBox *m_group;
     QStringList m_categoryNames;
-    QComboBox* m_member;
-    QLabel* m_current;
+    QComboBox *m_member;
+    QLabel *m_current;
     QImage m_image;
-    QLabel* m_imageLabel;
+    QLabel *m_imageLabel;
     DB::ImageInfoPtr m_info;
 };
 }

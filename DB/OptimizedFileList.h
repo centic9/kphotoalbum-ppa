@@ -18,10 +18,11 @@
 
 #ifndef OPTIMIZEDFILELIST_H
 #define OPTIMIZEDFILELIST_H
-#include <QStringList>
-#include <QString>
+#include "FileNameList.h"
+
 #include <QSet>
-#include <DB/FileNameList.h>
+#include <QString>
+#include <QStringList>
 
 namespace DB
 {

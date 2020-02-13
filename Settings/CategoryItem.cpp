@@ -24,40 +24,42 @@
 // KDE includes
 
 // Local includes
+#include "SettingsData.h"
+
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <DB/MemberMap.h>
 #include <MainWindow/DirtyIndicator.h>
 #include <MainWindow/Window.h>
-#include <Settings/SettingsData.h>
 
 Settings::CategoryItem::CategoryItem(const QString &category,
                                      const QString &icon,
                                      DB::Category::ViewType type,
                                      int thumbnailSize,
                                      QListWidget *parent,
-                                     bool positionable) : QListWidgetItem(category, parent),
-    m_categoryOrig(category),
-    m_iconOrig(icon),
-    m_positionable(positionable),
-    m_positionableOrig(positionable),
-    m_category(category),
-    m_icon(icon),
-    m_type(type),
-    m_typeOrig(type),
-    m_thumbnailSize(thumbnailSize),
-    m_thumbnailSizeOrig(thumbnailSize)
+                                     bool positionable)
+    : QListWidgetItem(category, parent)
+    , m_categoryOrig(category)
+    , m_iconOrig(icon)
+    , m_positionable(positionable)
+    , m_positionableOrig(positionable)
+    , m_category(category)
+    , m_icon(icon)
+    , m_type(type)
+    , m_typeOrig(type)
+    , m_thumbnailSize(thumbnailSize)
+    , m_thumbnailSizeOrig(thumbnailSize)
 {
     setFlags(flags() | Qt::ItemIsEditable);
 }
 
-void Settings::CategoryItem::setLabel(const QString& label)
+void Settings::CategoryItem::setLabel(const QString &label)
 {
     setText(label);
     m_category = label;
 }
 
-void Settings::CategoryItem::submit(DB::MemberMap* memberMap)
+void Settings::CategoryItem::submit(DB::MemberMap *memberMap)
 {
     if (m_categoryOrig.isNull()) {
         // New Item
@@ -100,7 +102,7 @@ void Settings::CategoryItem::submit(DB::MemberMap* memberMap)
 
 void Settings::CategoryItem::removeFromDatabase()
 {
-    if (! m_categoryOrig.isNull()) {
+    if (!m_categoryOrig.isNull()) {
         // The database knows about the item.
         DB::ImageDB::instance()->categoryCollection()->removeCategory(m_categoryOrig);
     }
@@ -131,7 +133,7 @@ DB::Category::ViewType Settings::CategoryItem::viewType() const
     return m_type;
 }
 
-void Settings::CategoryItem::setIcon(const QString& icon)
+void Settings::CategoryItem::setIcon(const QString &icon)
 {
     m_icon = icon;
 }
@@ -146,10 +148,9 @@ void Settings::CategoryItem::setViewType(DB::Category::ViewType type)
     m_type = type;
 }
 
-void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
+void Settings::CategoryItem::renameCategory(DB::MemberMap *memberMap)
 {
-    QDir dir(QString::fromLatin1("%1/CategoryImages").arg(
-            Settings::SettingsData::instance()->imageDirectory()));
+    QDir dir(QString::fromLatin1("%1/CategoryImages").arg(Settings::SettingsData::instance()->imageDirectory()));
 
     const QStringList files = dir.entryList(QStringList()
                                             << QString::fromLatin1("%1*").arg(m_categoryOrig));
@@ -163,7 +164,7 @@ void Settings::CategoryItem::renameCategory(DB::MemberMap* memberMap)
     }
 
     // update category names for privacy-lock settings:
-    Settings::SettingsData* settings = Settings::SettingsData::instance();
+    Settings::SettingsData *settings = Settings::SettingsData::instance();
     DB::ImageSearchInfo info = settings->currentLock();
     const bool exclude = settings->lockExcludes();
 

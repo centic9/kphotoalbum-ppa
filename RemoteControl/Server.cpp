@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2014-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,16 +18,17 @@
 
 #include "Server.h"
 
-#include <QUdpSocket>
-#include <QTcpSocket>
-#include <QMessageBox>
 #include "RemoteCommand.h"
+
 #include <KLocalizedString>
+#include <QMessageBox>
+#include <QTcpSocket>
+#include <QUdpSocket>
 
 using namespace RemoteControl;
 
-Server::Server(QObject *parent) :
-    RemoteConnection(parent)
+Server::Server(QObject *parent)
+    : RemoteConnection(parent)
 {
 }
 
@@ -46,7 +47,7 @@ void Server::listen(QHostAddress address)
                                   i18n("Unable to listen for remote Android connections. "
                                        "This is likely because you have another KPhotoAlbum application running."));
         }
-        connect(m_socket, SIGNAL(readyRead()), this, SLOT(readIncommingUDP()));
+        connect(m_socket, &QUdpSocket::readyRead, this, &Server::readIncommingUDP);
     }
 }
 
@@ -59,7 +60,7 @@ void Server::stopListening()
     emit stoppedListening();
 }
 
-QTcpSocket*Server::socket()
+QTcpSocket *Server::socket()
 {
     return m_tcpSocket;
 }
@@ -70,7 +71,7 @@ void Server::readIncommingUDP()
     char data[1000];
 
     QHostAddress address;
-    qint64 len = m_socket->readDatagram(data,1000, &address);
+    qint64 len = m_socket->readDatagram(data, 1000, &address);
     QString string = QString::fromUtf8(data).left(len);
     QStringList list = string.split(QChar::fromLatin1(' '));
     if (list[0] != QString::fromUtf8("KPhotoAlbum")) {
@@ -81,8 +82,8 @@ void Server::readIncommingUDP()
                               i18n("Version mismatch between Remote Client and KPhotoAlbum on the desktop.\n"
                                    "Desktop protocol version: %1\n"
                                    "Remote Control protocol version: %2",
-											  RemoteControl::VERSION,
-											  list[1]));
+                                   RemoteControl::VERSION,
+                                   list[1]));
         stopListening();
         return;
     }
@@ -90,13 +91,13 @@ void Server::readIncommingUDP()
     connectToTcpServer(address);
 }
 
-void Server::connectToTcpServer(const QHostAddress& address)
+void Server::connectToTcpServer(const QHostAddress &address)
 {
     m_tcpSocket = new QTcpSocket;
-    connect(m_tcpSocket, SIGNAL(connected()), this, SLOT(gotConnected()));
-    connect(m_tcpSocket, SIGNAL(readyRead()), this, SLOT(dataReceived()));
+    connect(m_tcpSocket, &QTcpSocket::connected, this, &Server::gotConnected);
+    connect(m_tcpSocket, &QTcpSocket::readyRead, this, &Server::dataReceived);
     m_tcpSocket->connectToHost(address, TCPPORT);
-    connect(m_tcpSocket, SIGNAL(disconnected()), this, SLOT(lostConnection()));
+    connect(m_tcpSocket, &QTcpSocket::disconnected, this, &Server::lostConnection);
 }
 
 void Server::gotConnected()

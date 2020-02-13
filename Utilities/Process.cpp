@@ -1,4 +1,4 @@
-/* Copyright 2012-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2012-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -17,20 +17,20 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QTextStream>
-
 #include "Process.h"
+
+#include <QTextStream>
 
 /**
   \class Utilities::Process
   \brief QProcess subclass which collects stdout and print stderr
 */
 
-Utilities::Process::Process(QObject *parent) :
-    QProcess(parent)
+Utilities::Process::Process(QObject *parent)
+    : QProcess(parent)
 {
-    connect( this, SIGNAL(readyReadStandardError()), this, SLOT(readStandardError()));
-    connect( this, SIGNAL(readyReadStandardOutput()), this, SLOT(readStandardOutput()));
+    connect(this, &Process::readyReadStandardError, this, &Process::readStandardError);
+    connect(this, &Process::readyReadStandardOutput, this, &Process::readStandardOutput);
 }
 
 QString Utilities::Process::stdOut() const

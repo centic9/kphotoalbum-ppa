@@ -19,7 +19,8 @@
 #ifndef CATEGORYMATCHER_H
 #define CATEGORYMATCHER_H
 
-#include <DB/ImageInfoPtr.h>
+#include "ImageInfoPtr.h"
+
 #include <Utilities/StringSet.h>
 
 #include <QMap>
@@ -47,13 +48,13 @@ class CategoryMatcher
 public:
     CategoryMatcher();
     virtual ~CategoryMatcher() {}
-    virtual void debug( int level ) const = 0;
+    virtual void debug(int level) const = 0;
 
-    virtual bool eval(ImageInfoPtr, QMap<QString, StringSet>& alreadyMatched) = 0;
+    virtual bool eval(ImageInfoPtr, QMap<QString, StringSet> &alreadyMatched) = 0;
     virtual void setShouldCreateMatchedSet(bool);
 
 protected:
-    QString spaces(int level ) const;
+    QString spaces(int level) const;
 
     bool m_shouldPrepareMatchedSet;
 };

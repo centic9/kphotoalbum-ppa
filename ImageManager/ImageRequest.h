@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,11 +17,13 @@
 */
 #ifndef IMAGEREQUEST_H
 #define IMAGEREQUEST_H
-#include <qstring.h>
-#include <qsize.h>
-#include <QHash>
 #include "enums.h"
+
 #include <DB/FileName.h>
+
+#include <QHash>
+#include <qsize.h>
+#include <qstring.h>
 
 // WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 //
@@ -34,11 +36,12 @@ namespace ImageManager
 {
 class ImageClientInterface;
 
-class ImageRequest {
+class ImageRequest
+{
 public:
-    ImageRequest( const DB::FileName& fileName, const QSize& size, int angle, ImageClientInterface* client);
+    ImageRequest(const DB::FileName &fileName, const QSize &size, int angle, ImageClientInterface *client);
     virtual ~ImageRequest() {}
-    ImageRequest( bool requestExit );
+    ImageRequest(bool requestExit);
 
     bool isNull() const;
 
@@ -61,27 +64,35 @@ public:
     QSize size() const;
     int angle() const;
 
-    ImageClientInterface* client() const;
+    ImageClientInterface *client() const;
 
     QSize fullSize() const;
-    void setFullSize( const QSize& );
-    void setLoadedOK( bool ok );
+    void setFullSize(const QSize &);
+    void setLoadedOK(bool ok);
     bool loadedOK() const;
 
-    void setPriority( const Priority prio );
+    void setPriority(const Priority prio);
     Priority priority() const;
 
-    bool operator<( const ImageRequest& other ) const;
-    bool operator==( const ImageRequest& other ) const;
+    bool operator<(const ImageRequest &other) const;
+    bool operator==(const ImageRequest &other) const;
 
     virtual bool stillNeeded() const;
 
     bool doUpScale() const;
-    void setUpScale( bool b );
+    void setUpScale(bool b);
 
-    void setIsThumbnailRequest( bool );
+    void setIsThumbnailRequest(bool);
     bool isThumbnailRequest() const;
     bool isExitRequest() const;
+
+    /**
+     * @brief imageIsPreRotated is set when the loaded image is already rotated correctly.
+     * This is usually the case for decoded raw images.
+     * @return \c true, if the image is already rotated and does not need additional rotation, \c false otherwise
+     */
+    bool imageIsPreRotated() const;
+    void setImageIsPreRotated(bool imageIsPreRotated);
 
 private:
     bool m_null;
@@ -89,7 +100,7 @@ private:
 
     int m_width;
     int m_height;
-    ImageClientInterface* m_client;
+    ImageClientInterface *m_client;
     int m_angle;
     QSize m_fullSize;
     Priority m_priority;
@@ -97,9 +108,10 @@ private:
     bool m_dontUpScale;
     bool m_isThumbnailRequest;
     bool m_isExitRequest;
+    bool m_imageIsPreRotated;
 };
 
-inline uint qHash(const ImageRequest& ir)
+inline uint qHash(const ImageRequest &ir)
 {
     return DB::qHash(ir.databaseFileName()) ^ ::qHash(ir.width()) ^ ::qHash(ir.angle());
 }

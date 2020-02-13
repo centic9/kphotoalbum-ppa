@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -16,16 +16,21 @@
    Boston, MA 02110-1301, USA.
 */
 #include "TaggedArea.h"
-#include <KLocalizedString>
 
-Viewer::TaggedArea::TaggedArea(QWidget *parent) : QFrame(parent)
+#include <KLocalizedString>
+#include <QDebug>
+#include <QStyle>
+
+Viewer::TaggedArea::TaggedArea(QWidget *parent)
+    : QFrame(parent)
 {
     setFrameShape(QFrame::Box);
-    resetViewStyle();
-}
-
-Viewer::TaggedArea::~TaggedArea()
-{
+    setStyleSheet(QStringLiteral(
+        "Viewer--TaggedArea { border: none; background-color: none; }"
+        "Viewer--TaggedArea:hover, Viewer--TaggedArea[selected=\"true\"] {"
+        " border: 1px solid rgb(0,255,0,99); background-color: rgb(255,255,255,30);"
+        " }"
+        "Viewer--TaggedArea[highlighted=\"true\"]{ border: 1px solid rgb(255,128,0,99); background-color: rgb(255,255,255,30); }"));
 }
 
 void Viewer::TaggedArea::setTagInfo(QString category, QString localizedCategory, QString tag)
@@ -44,19 +49,43 @@ QRect Viewer::TaggedArea::actualGeometry() const
     return m_actualGeometry;
 }
 
-void Viewer::TaggedArea::resetViewStyle()
+void Viewer::TaggedArea::setSelected(bool selected)
 {
-    setStyleSheet(QString::fromLatin1(
-        "Viewer--TaggedArea { border: none; background-color: none; }"
-        "Viewer--TaggedArea:hover { border: 1px solid rgb(0,255,0,99); background-color: rgb(255,255,255,30); }"
-    ));
+    m_selected = selected;
+    repolish();
 }
 
-void Viewer::TaggedArea::checkShowArea(QPair<QString, QString> tagData)
+bool Viewer::TaggedArea::selected() const
 {
-    if (tagData == m_tagInfo) {
-        setStyleSheet(QString::fromLatin1("Viewer--TaggedArea { border: 1px solid rgb(0,255,0,99); background-color: rgb(255,255,255,30); }"));
-    }
+    return m_selected;
+}
+
+void Viewer::TaggedArea::deselect()
+{
+    setSelected(false);
+}
+
+void Viewer::TaggedArea::checkIsSelected(const QPair<QString, QString> &tagData)
+{
+    setSelected(tagData == m_tagInfo);
+}
+
+void Viewer::TaggedArea::repolish()
+{
+    style()->unpolish(this);
+    style()->polish(this);
+    update();
+}
+
+bool Viewer::TaggedArea::highlighted() const
+{
+    return m_highlighted;
+}
+
+void Viewer::TaggedArea::setHighlighted(bool highlighted)
+{
+    m_highlighted = highlighted;
+    repolish();
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

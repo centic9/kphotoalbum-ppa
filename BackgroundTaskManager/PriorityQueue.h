@@ -21,10 +21,12 @@
 #define BACKGROUNDTASKMANAGER_PRIORITYQUEUE_H
 
 #include "Priority.h"
-#include <QVector>
-#include <QQueue>
 
-namespace BackgroundTaskManager {
+#include <QQueue>
+#include <QVector>
+
+namespace BackgroundTaskManager
+{
 
 class JobInterface;
 
@@ -34,14 +36,14 @@ public:
     PriorityQueue();
     bool isEmpty() const;
     int count() const;
-    void enqueue( JobInterface* job, Priority priority);
-    JobInterface* dequeue();
-    JobInterface* peek(int index) const;
+    void enqueue(JobInterface *job, Priority priority);
+    JobInterface *dequeue();
+    JobInterface *peek(int index) const;
     bool hasForegroundTasks() const;
 
 private:
-    typedef QQueue<JobInterface*> QueueType;
-    QVector< QueueType > m_jobs;
+    typedef QQueue<JobInterface *> QueueType;
+    QVector<QueueType> m_jobs;
 };
 
 } // namespace BackgroundTaskManager

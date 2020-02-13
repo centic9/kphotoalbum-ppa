@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -43,13 +43,14 @@
 
 using namespace Settings;
 
-Viewer::InfoBox::InfoBox(Viewer::ViewerWidget* viewer) : QTextBrowser(viewer)
-    ,m_viewer(viewer)
-    ,m_hoveringOverLink(false)
-    ,m_infoBoxResizer(this)
-    ,m_menu(nullptr)
+Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
+    : QTextBrowser(viewer)
+    , m_viewer(viewer)
+    , m_hoveringOverLink(false)
+    , m_infoBoxResizer(this)
+    , m_menu(nullptr)
 #ifdef HAVE_KGEOMAP
-    ,m_map(nullptr)
+    , m_map(nullptr)
 #endif
 {
     setFrameStyle(Box | Plain);
@@ -58,16 +59,20 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget* viewer) : QTextBrowser(viewer)
     setAutoFillBackground(false);
 
     QPalette p = palette();
+    // we want a transparent background, not the default widget grey
     p.setColor(QPalette::Base, QColor(0, 0, 0, 170)); // r, g, b, A
+    // adapt other colors as necessary
     p.setColor(QPalette::Text, Qt::white);
-    p.setColor(QPalette::Link, QColor(Qt::blue).light());
+    p.setColor(QPalette::Link, p.color(QPalette::Link).lighter());
     setPalette(p);
 
     m_jumpToContext = new QToolButton(this);
     m_jumpToContext->setIcon(QIcon::fromTheme(QString::fromUtf8("kphotoalbum")));
     m_jumpToContext->setFixedSize(16, 16);
     connect(m_jumpToContext, &QToolButton::clicked, this, &InfoBox::jumpToContext);
-    connect(this, SIGNAL(highlighted(QString)), SLOT(linkHovered(QString)));
+    // overloaded signal requires explicit cast:
+    void (InfoBox::*highlighted)(const QString &) = &InfoBox::highlighted;
+    connect(this, highlighted, this, &InfoBox::linkHovered);
 
 #ifdef HAVE_KGEOMAP
     m_showOnMap = new QToolButton(this);
@@ -81,14 +86,14 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget* viewer) : QTextBrowser(viewer)
     connect(m_viewer, &ViewerWidget::soughtTo, this, &InfoBox::updateMapForCurrentImage);
 #endif
 
-    KRatingWidget* rating = new KRatingWidget( nullptr );
+    KRatingWidget *rating = new KRatingWidget;
 
     // Unfortunately, the KRatingWidget now thinks that it has some absurdly big
     // dimensions. This call will persuade it to stay reasonably small.
     rating->adjustSize();
 
     for (int i = 0; i <= 10; ++i) {
-        rating->setRating( i );
+        rating->setRating(i);
         // QWidget::grab() does not create an alpha channel
         // Therefore, we need to create a mask using heuristics (yes, this is slow, but we only do it once)
         QPixmap pixmap = rating->grab();
@@ -99,7 +104,7 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget* viewer) : QTextBrowser(viewer)
     delete rating;
 }
 
-QVariant Viewer::InfoBox::loadResource(int type, const QUrl& name)
+QVariant Viewer::InfoBox::loadResource(int type, const QUrl &name)
 {
     if (name.scheme() == QString::fromUtf8("kratingwidget")) {
         int rating = name.port();
@@ -109,22 +114,22 @@ QVariant Viewer::InfoBox::loadResource(int type, const QUrl& name)
     return QTextBrowser::loadResource(type, name);
 }
 
-void Viewer::InfoBox::setSource(const QUrl& source)
+void Viewer::InfoBox::setSource(const QUrl &source)
 {
     int index = source.path().toInt();
-    QPair<QString,QString> p = m_linkMap[index];
+    QPair<QString, QString> p = m_linkMap[index];
     QString category = p.first;
     QString value = p.second;
     Browser::BrowserWidget::instance()->load(category, value);
     showBrowser();
 }
 
-void Viewer::InfoBox::setInfo(const QString& text, const QMap<int, QPair<QString,QString>>& linkMap)
+void Viewer::InfoBox::setInfo(const QString &text, const QMap<int, QPair<QString, QString>> &linkMap)
 {
     m_linkMap = linkMap;
     setText(text);
 
-    hackLinkColorForQt44();
+    hackLinkColorForQt52();
 
 #ifdef HAVE_KGEOMAP
     if (m_viewer->currentInfo()->coordinates().hasCoordinates()) {
@@ -148,13 +153,13 @@ void Viewer::InfoBox::setSize()
     setVerticalScrollBarPolicy(showVerticalBar ? Qt::ScrollBarAlwaysOn : Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     const int realWidth = static_cast<int>(document()->idealWidth())
-                          + (showVerticalBar ? verticalScrollBar()->width() + frameWidth() : 0)
-                          + m_jumpToContext->width() + 10;
+        + (showVerticalBar ? verticalScrollBar()->width() + frameWidth() : 0)
+        + m_jumpToContext->width() + 10;
 
-    resize(realWidth, qMin((int) document()->size().height(), maxHeight));
+    resize(realWidth, qMin((int)document()->size().height(), maxHeight));
 }
 
-void Viewer::InfoBox::mousePressEvent(QMouseEvent* event)
+void Viewer::InfoBox::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         possiblyStartResize(event->pos());
@@ -162,7 +167,7 @@ void Viewer::InfoBox::mousePressEvent(QMouseEvent* event)
     QTextBrowser::mousePressEvent(event);
 }
 
-void Viewer::InfoBox::mouseReleaseEvent(QMouseEvent* event)
+void Viewer::InfoBox::mouseReleaseEvent(QMouseEvent *event)
 {
     if (m_infoBoxResizer.isActive()) {
         Settings::SettingsData::instance()->setInfoBoxWidth(width());
@@ -173,7 +178,7 @@ void Viewer::InfoBox::mouseReleaseEvent(QMouseEvent* event)
     QTextBrowser::mouseReleaseEvent(event);
 }
 
-void Viewer::InfoBox::mouseMoveEvent(QMouseEvent* event)
+void Viewer::InfoBox::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
         if (m_infoBoxResizer.isActive()) {
@@ -188,7 +193,7 @@ void Viewer::InfoBox::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-void Viewer::InfoBox::linkHovered(const QString& linkName)
+void Viewer::InfoBox::linkHovered(const QString &linkName)
 {
     if (linkName.isEmpty()) {
         emit noTagHovered();
@@ -196,7 +201,7 @@ void Viewer::InfoBox::linkHovered(const QString& linkName)
         emit tagHovered(m_linkMap[linkName.toInt()]);
     }
 
-    m_hoveringOverLink = ! linkName.isNull();
+    m_hoveringOverLink = !linkName.isNull();
 }
 
 void Viewer::InfoBox::jumpToContext()
@@ -207,7 +212,7 @@ void Viewer::InfoBox::jumpToContext()
 
 void Viewer::InfoBox::showBrowser()
 {
-    QDesktopWidget* desktop = qApp->desktop();
+    QDesktopWidget *desktop = qApp->desktop();
     if (desktop->screenNumber(Browser::BrowserWidget::instance()) == desktop->screenNumber(m_viewer)) {
         if (m_viewer->showingFullScreen()) {
             m_viewer->setShowFullScreen(false);
@@ -219,7 +224,7 @@ void Viewer::InfoBox::showBrowser()
 /**
  * Update the cursor based on the cursors position in the info box
  */
-void Viewer::InfoBox::updateCursor(const QPoint& pos)
+void Viewer::InfoBox::updateCursor(const QPoint &pos)
 {
     const int border = 25;
 
@@ -256,12 +261,12 @@ void Viewer::InfoBox::updateCursor(const QPoint& pos)
 bool Viewer::InfoBox::atBlackoutPos(bool left, bool right, bool top, bool bottom, Settings::Position pos) const
 {
     return (left && (pos == Left || pos == TopLeft || pos == BottomLeft))
-           || (right && (pos == Right || pos == TopRight || pos == BottomRight))
-           || (top && (pos == Top || pos == TopLeft || pos == TopRight))
-           || (bottom && (pos == Bottom || pos == BottomLeft || pos == BottomRight));
+        || (right && (pos == Right || pos == TopRight || pos == BottomRight))
+        || (top && (pos == Top || pos == TopLeft || pos == TopRight))
+        || (bottom && (pos == Bottom || pos == BottomLeft || pos == BottomRight));
 }
 
-void Viewer::InfoBox::possiblyStartResize(const QPoint& pos)
+void Viewer::InfoBox::possiblyStartResize(const QPoint &pos)
 {
     const int border = 25;
 
@@ -275,7 +280,7 @@ void Viewer::InfoBox::possiblyStartResize(const QPoint& pos)
     }
 }
 
-void Viewer::InfoBox::resizeEvent(QResizeEvent*)
+void Viewer::InfoBox::resizeEvent(QResizeEvent *)
 {
     QPoint pos = viewport()->rect().adjusted(0, 2, -m_jumpToContext->width() - 2, 0).topRight();
     m_jumpToContext->move(pos);
@@ -285,13 +290,22 @@ void Viewer::InfoBox::resizeEvent(QResizeEvent*)
 #endif
 }
 
-void Viewer::InfoBox::hackLinkColorForQt44()
+/**
+ * @brief override the color of links because the one in the palette isn't used.
+ * As can be seen in the referenced links, QTextBrowser uses the global palette for setting the link color.
+ * Until it uses the widget palette, we have to do this workaround.
+ * @see https://bugreports.qt.io/browse/QTBUG-28998
+ * @see https://codereview.qt-project.org/c/qt/qtbase/+/68874/2/src/gui/text/qtexthtmlparser.cpp
+ */
+void Viewer::InfoBox::hackLinkColorForQt52()
 {
     QTextCursor cursor(document());
-    Q_FOREVER {
+    QBrush linkColor = palette().link();
+    Q_FOREVER
+    {
         QTextCharFormat f = cursor.charFormat();
         if (f.isAnchor()) {
-            f.setForeground(QColor(Qt::blue).light());
+            f.setForeground(linkColor);
             QTextCursor c2 = cursor;
             c2.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
             c2.setCharFormat(f);
@@ -303,10 +317,10 @@ void Viewer::InfoBox::hackLinkColorForQt44()
     }
 }
 
-void Viewer::InfoBox::contextMenuEvent(QContextMenuEvent* event)
+void Viewer::InfoBox::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (! m_menu) {
-        m_menu = new VisibleOptionsMenu(m_viewer, new KActionCollection((QObject*) nullptr));
+    if (!m_menu) {
+        m_menu = new VisibleOptionsMenu(m_viewer, new KActionCollection((QObject *)nullptr));
         connect(m_menu, &VisibleOptionsMenu::visibleOptionsChanged, m_viewer, &ViewerWidget::updateInfoBox);
     }
     m_menu->exec(event->globalPos());
@@ -315,7 +329,7 @@ void Viewer::InfoBox::contextMenuEvent(QContextMenuEvent* event)
 #ifdef HAVE_KGEOMAP
 void Viewer::InfoBox::launchMapView()
 {
-    if (! m_map) {
+    if (!m_map) {
         m_map = new Map::MapView(m_viewer, Map::MapView::MapViewWindow);
     }
 
@@ -328,7 +342,7 @@ void Viewer::InfoBox::launchMapView()
 
 void Viewer::InfoBox::updateMapForCurrentImage(DB::FileName)
 {
-    if (! m_map) {
+    if (!m_map) {
         return;
     }
 
