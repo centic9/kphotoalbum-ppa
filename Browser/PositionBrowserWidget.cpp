@@ -1,4 +1,5 @@
-/* Copyright (C) 2016-2017 Matthias Füssel <matthias.fuessel@gmx.net>
+/* Copyright (C) 2016-2019 The KPhotoAlbum Development Team
+   Copyright (C) 2016-2017 Matthias Füssel <matthias.fuessel@gmx.net>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,19 +18,20 @@
 */
 #include "PositionBrowserWidget.h"
 
+#include <DB/ImageDB.h>
+#include <DB/ImageInfo.h>
+#include <MainWindow/Logging.h>
+
+#include <KLocalizedString>
+#include <QElapsedTimer>
 #include <QProgressBar>
 #include <QVBoxLayout>
 #include <qdom.h>
-#include <qurl.h>
 #include <qlabel.h>
+#include <qurl.h>
 
-#include <KLocalizedString>
-
-#include "DB/ImageInfo.h"
-#include "DB/ImageDB.h"
-
-Browser::PositionBrowserWidget::PositionBrowserWidget( QWidget* parent )
-    :QWidget(parent)
+Browser::PositionBrowserWidget::PositionBrowserWidget(QWidget *parent)
+    : QWidget(parent)
 {
     m_mapView = new Map::MapView(this);
     m_mapView->displayStatus(Map::MapView::MapStatus::Loading);
@@ -43,19 +45,24 @@ Browser::PositionBrowserWidget::~PositionBrowserWidget()
 {
 }
 
-void Browser::PositionBrowserWidget::showImages( const DB::ImageSearchInfo& searchInfo )
+void Browser::PositionBrowserWidget::showImages(const DB::ImageSearchInfo &searchInfo)
 {
+    QElapsedTimer timer;
+    timer.start();
     m_mapView->displayStatus(Map::MapView::MapStatus::Loading);
     m_mapView->clear();
     DB::FileNameList images = DB::ImageDB::instance()->search(searchInfo);
-    for (DB::FileNameList::const_iterator imageIter = images.begin(); imageIter < images.end(); ++imageIter) {
+    int count = 0;
+    for (DB::FileNameList::const_iterator imageIter = images.constBegin(); imageIter < images.constEnd(); ++imageIter) {
         DB::ImageInfoPtr image = imageIter->info();
         if (image->coordinates().hasCoordinates()) {
+            count++;
             m_mapView->addImage(image);
         }
     }
     m_mapView->displayStatus(Map::MapView::MapStatus::SearchCoordinates);
     m_mapView->zoomToMarkers();
+    qCDebug(TimingLog) << "Browser::PositionBrowserWidget::showImages(): added" << count << "images in" << timer.elapsed() << "ms.";
 }
 
 void Browser::PositionBrowserWidget::clearImages()

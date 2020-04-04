@@ -18,7 +18,8 @@
 #ifndef IMAGEROW_H
 #define IMAGEROW_H
 
-#include "DB/ImageInfoPtr.h"
+#include <DB/ImageInfoPtr.h>
+
 #include <QObject>
 
 class QCheckBox;
@@ -30,15 +31,15 @@ class KimFileReader;
 /**
  * This class represent a single row on the ImageDialog's "select widgets to import" page.
  */
-class ImageRow :public QObject
+class ImageRow : public QObject
 {
     Q_OBJECT
 public:
-    ImageRow( DB::ImageInfoPtr info, ImportDialog* import, KimFileReader* kimFileReader,QWidget* parent );
-    QCheckBox* m_checkbox;
+    ImageRow(DB::ImageInfoPtr info, ImportDialog *import, KimFileReader *kimFileReader, QWidget *parent);
+    QCheckBox *m_checkbox;
     DB::ImageInfoPtr m_info;
-    ImportDialog* m_import;
-    KimFileReader* m_kimFileReader;
+    ImportDialog *m_import;
+    KimFileReader *m_kimFileReader;
 
 public slots:
     void showImage();

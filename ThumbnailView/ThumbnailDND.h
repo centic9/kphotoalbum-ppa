@@ -18,9 +18,9 @@
 #ifndef THUMBNAILDND_H
 #define THUMBNAILDND_H
 
-#include <QObject>
-
 #include "ThumbnailComponent.h"
+
+#include <QObject>
 
 class QDragEnterEvent;
 class QDropEvent;
@@ -30,23 +30,22 @@ class QDragMoveEvent;
 namespace ThumbnailView
 {
 
-class ThumbnailDND :public QObject, private ThumbnailComponent
+class ThumbnailDND : public QObject, private ThumbnailComponent
 {
     Q_OBJECT
 
 public:
-    explicit ThumbnailDND( ThumbnailFactory* factory );
-    void contentsDragMoveEvent( QDragMoveEvent* event );
-    void contentsDragLeaveEvent( QDragLeaveEvent* );
-    void contentsDropEvent( QDropEvent *event );
-    void contentsDragEnterEvent( QDragEnterEvent * event );
+    explicit ThumbnailDND(ThumbnailFactory *factory);
+    void contentsDragMoveEvent(QDragMoveEvent *event);
+    void contentsDragLeaveEvent(QDragLeaveEvent *);
+    void contentsDropEvent(QDropEvent *event);
+    void contentsDragEnterEvent(QDragEnterEvent *event);
 
 private slots:
     void realDropEvent();
 
 private:
     void removeDropIndications();
-
 };
 }
 

@@ -20,16 +20,20 @@
 #ifndef IMAGEMANAGER_EXTRACTONEVIDEOFRAME_H
 #define IMAGEMANAGER_EXTRACTONEVIDEOFRAME_H
 
+#include <DB/FileName.h>
+
 #include <QObject>
 #include <QProcess>
 
-#include <DB/FileName.h>
-
 class QImage;
 
-namespace Utilities { class Process; }
+namespace Utilities
+{
+class Process;
+}
 
-namespace ImageManager {
+namespace ImageManager
+{
 
 /**
   \brief Extract a thumbnail given a filename and offset.
@@ -39,23 +43,23 @@ class ExtractOneVideoFrame : public QObject
 {
     Q_OBJECT
 public:
-    static void extract(const DB::FileName& filename, double offset, QObject* receiver, const char* slot);
+    static void extract(const DB::FileName &filename, double offset, QObject *receiver, const char *slot);
 
 private slots:
     void frameFetched();
     void handleError(QProcess::ProcessError);
 
 signals:
-    void result(const QImage&);
+    void result(const QImage &);
 
 private:
-    ExtractOneVideoFrame(const DB::FileName& filename, double offset, QObject* receiver, const char* slot);
+    ExtractOneVideoFrame(const DB::FileName &filename, double offset, QObject *receiver, const char *slot);
     void setupWorkingDirectory();
     void deleteWorkingDirectory();
-    void markShortVideo(const DB::FileName& fileName);
+    void markShortVideo(const DB::FileName &fileName);
 
     QString m_workingDirectory;
-    Utilities::Process* m_process;
+    Utilities::Process *m_process;
     DB::FileName m_fileName;
     static QString s_tokenForShortVideos;
 };

@@ -1,4 +1,4 @@
-/* Copyright (C) 2012 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2012-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -17,23 +17,26 @@
 */
 
 #include "ReadVideoLengthJob.h"
-#include "ImageManager/VideoLengthExtractor.h"
-#include <DB/ImageDB.h>
-#include <MainWindow/DirtyIndicator.h>
-#include <KLocalizedString>
-#include <BackgroundTaskManager/JobInfo.h>
 
-BackgroundJobs::ReadVideoLengthJob::ReadVideoLengthJob(const DB::FileName &fileName,BackgroundTaskManager::Priority priority)
-    : JobInterface(priority), m_fileName(fileName)
+#include <BackgroundTaskManager/JobInfo.h>
+#include <DB/ImageDB.h>
+#include <ImageManager/VideoLengthExtractor.h>
+#include <MainWindow/DirtyIndicator.h>
+
+#include <KLocalizedString>
+
+BackgroundJobs::ReadVideoLengthJob::ReadVideoLengthJob(const DB::FileName &fileName, BackgroundTaskManager::Priority priority)
+    : JobInterface(priority)
+    , m_fileName(fileName)
 {
 }
 
 void BackgroundJobs::ReadVideoLengthJob::execute()
 {
-    ImageManager::VideoLengthExtractor* extractor = new ImageManager::VideoLengthExtractor(this);
+    ImageManager::VideoLengthExtractor *extractor = new ImageManager::VideoLengthExtractor(this);
     extractor->extract(m_fileName);
-    connect(extractor, SIGNAL(lengthFound(int)), this, SLOT(lengthFound(int)));
-    connect(extractor, SIGNAL(unableToDetermineLength()), this, SLOT(unableToDetermineLength()));
+    connect(extractor, &ImageManager::VideoLengthExtractor::lengthFound, this, &ReadVideoLengthJob::lengthFound);
+    connect(extractor, &ImageManager::VideoLengthExtractor::unableToDetermineLength, this, &ReadVideoLengthJob::unableToDetermineLength);
 }
 
 QString BackgroundJobs::ReadVideoLengthJob::title() const

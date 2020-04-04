@@ -20,30 +20,32 @@
 #ifndef UTILITIES_DELETEFILES_H
 #define UTILITIES_DELETEFILES_H
 
-#include <QObject>
+#include <DB/FileNameList.h>
 
-#include "DB/FileNameList.h"
+#include <QObject>
 class KJob;
 
-namespace Utilities {
+namespace Utilities
+{
 
-enum DeleteMethod { DeleteFromDisk, MoveToTrash, BlockFromDatabase };
+enum DeleteMethod { DeleteFromDisk,
+                    MoveToTrash,
+                    BlockFromDatabase };
 
-class DeleteFiles :public QObject {
+class DeleteFiles : public QObject
+{
     Q_OBJECT
 
 public:
-    static bool deleteFiles( const DB::FileNameList& files, DeleteMethod method );
+    static bool deleteFiles(const DB::FileNameList &files, DeleteMethod method);
 
 private slots:
-    void slotKIOJobCompleted( KJob* );
+    void slotKIOJobCompleted(KJob *);
 
 private:
-    static DeleteFiles* s_instance;
-    bool deleteFilesPrivate( const DB::FileNameList& files, DeleteMethod method );
+    static DeleteFiles *s_instance;
+    bool deleteFilesPrivate(const DB::FileNameList &files, DeleteMethod method);
 };
-
-
 
 } // namespace Utilities
 

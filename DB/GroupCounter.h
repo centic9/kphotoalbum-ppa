@@ -19,7 +19,9 @@
 #ifndef GROUPCOUNTER_H
 #define GROUPCOUNTER_H
 #include "Category.h"
-#include "Settings/SettingsData.h"
+
+#include <Settings/SettingsData.h>
+
 #include <QHash>
 
 namespace DB
@@ -29,14 +31,13 @@ using Utilities::StringSet;
 class GroupCounter
 {
 public:
-    explicit GroupCounter( const QString& category );
-    void count(const StringSet& , const ImageDate &date);
-    QMap<QString,CountWithRange> result();
+    explicit GroupCounter(const QString &category);
+    void count(const StringSet &, const ImageDate &date);
+    QMap<QString, CountWithRange> result();
 
 private:
-    QHash<QString,QStringList> m_memberToGroup;
-    QHash<QString,CountWithRange> m_groupCount;
-
+    QHash<QString, QStringList> m_memberToGroup;
+    QHash<QString, CountWithRange> m_groupCount;
 };
 
 }

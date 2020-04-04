@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2014 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,9 +29,10 @@
 #include <QTextBrowser>
 
 // Local includes
-#include <Settings/SettingsData.h>
 #include "InfoBoxResizer.h"
 #include "ViewerWidget.h"
+
+#include <Settings/SettingsData.h>
 
 // Qt classes
 class QMenu;
@@ -51,54 +52,54 @@ namespace Viewer
 // Local classes
 class VisibleOptionsMenu;
 
-class InfoBox : public QTextBrowser {
+class InfoBox : public QTextBrowser
+{
     Q_OBJECT
 
 public:
-    explicit InfoBox(ViewerWidget* parent);
-    void setSource(const QUrl& source) override;
-    void setInfo(const QString& text, const QMap<int, QPair<QString,QString>>& linkMap);
+    explicit InfoBox(ViewerWidget *parent);
+    void setSource(const QUrl &source) override;
+    void setInfo(const QString &text, const QMap<int, QPair<QString, QString>> &linkMap);
     void setSize();
 
 protected:
-    QVariant loadResource(int type, const QUrl& name) override;
-    void mouseMoveEvent(QMouseEvent*) override;
-    void mousePressEvent(QMouseEvent*) override;
-    void mouseReleaseEvent(QMouseEvent*) override;
-    void resizeEvent(QResizeEvent*) override;
-    void contextMenuEvent(QContextMenuEvent* event) override;
-    void updateCursor(const QPoint& pos);
+    QVariant loadResource(int type, const QUrl &name) override;
+    void mouseMoveEvent(QMouseEvent *) override;
+    void mousePressEvent(QMouseEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
+    void resizeEvent(QResizeEvent *) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    void updateCursor(const QPoint &pos);
     bool atBlackoutPos(bool left, bool right, bool top, bool bottom, Settings::Position windowPos) const;
     void showBrowser();
-    void possiblyStartResize(const QPoint& pos);
-    void hackLinkColorForQt44();
+    void possiblyStartResize(const QPoint &pos);
+    void hackLinkColorForQt52();
 
 protected slots:
     void jumpToContext();
-    void linkHovered(const QString& linkName);
+    void linkHovered(const QString &linkName);
 #ifdef HAVE_KGEOMAP
     void launchMapView();
     void updateMapForCurrentImage(DB::FileName);
 #endif
 
 signals:
-    void tagHovered(QPair<QString, QString> tagData);
+    void tagHovered(const QPair<QString, QString> &tagData);
     void noTagHovered();
 
 private: // Variables
-    QMap<int, QPair<QString,QString>> m_linkMap;
-    ViewerWidget* m_viewer;
-    QToolButton* m_jumpToContext;
+    QMap<int, QPair<QString, QString>> m_linkMap;
+    ViewerWidget *m_viewer;
+    QToolButton *m_jumpToContext;
     bool m_hoveringOverLink;
     InfoBoxResizer m_infoBoxResizer;
-    VisibleOptionsMenu* m_menu;
+    VisibleOptionsMenu *m_menu;
     QList<QPixmap> m_ratingPixmap;
 #ifdef HAVE_KGEOMAP
-    QToolButton* m_showOnMap;
+    QToolButton *m_showOnMap;
     QPointer<Map::MapView> m_map;
 #endif
 };
-
 }
 
 #endif // INFOBOX_H

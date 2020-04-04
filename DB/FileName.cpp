@@ -18,11 +18,12 @@
 */
 
 #include "FileName.h"
-#include "ImageDB.h"
 
-#include <DB/ImageInfoList.h>
-#include <Utilities/FileNameUtil.h>
+#include "ImageDB.h"
+#include "ImageInfoList.h"
+
 #include <Settings/SettingsData.h>
+#include <Utilities/FileNameUtil.h>
 
 #include <QFile>
 
@@ -33,7 +34,7 @@ DB::FileName::FileName()
 
 DB::FileName DB::FileName::fromAbsolutePath(const QString &fileName)
 {
-    const QString imageRoot = Utilities::stripEndingForwardSlash( Settings::SettingsData::instance()->imageDirectory() ) + QLatin1String("/");
+    const QString imageRoot = Utilities::stripEndingForwardSlash(Settings::SettingsData::instance()->imageDirectory()) + QLatin1String("/");
     if (!fileName.startsWith(imageRoot))
         return FileName();
 
@@ -50,7 +51,7 @@ DB::FileName DB::FileName::fromRelativePath(const QString &fileName)
     FileName res;
     res.m_isNull = false;
     res.m_relativePath = fileName;
-    res.m_absoluteFilePath = Utilities::stripEndingForwardSlash( Settings::SettingsData::instance()->imageDirectory() ) + QLatin1String("/") + fileName;
+    res.m_absoluteFilePath = Utilities::stripEndingForwardSlash(Settings::SettingsData::instance()->imageDirectory()) + QLatin1String("/") + fileName;
     return res;
 }
 
@@ -71,17 +72,17 @@ bool DB::FileName::isNull() const
     return m_isNull;
 }
 
-bool DB::FileName::operator ==(const DB::FileName &other) const
+bool DB::FileName::operator==(const DB::FileName &other) const
 {
     return m_isNull == other.m_isNull && m_relativePath == other.m_relativePath;
 }
 
-bool DB::FileName::operator !=(const DB::FileName &other) const
+bool DB::FileName::operator!=(const DB::FileName &other) const
 {
     return !(*this == other);
 }
 
-bool DB::FileName::operator <(const DB::FileName &other) const
+bool DB::FileName::operator<(const DB::FileName &other) const
 {
     return relative() < other.relative();
 }
@@ -96,7 +97,12 @@ DB::ImageInfoPtr DB::FileName::info() const
     return ImageDB::instance()->info(*this);
 }
 
-uint DB::qHash( const DB::FileName& fileName )
+DB::FileName::operator QUrl() const
+{
+    return QUrl::fromLocalFile(absolute());
+}
+
+uint DB::qHash(const DB::FileName &fileName)
 {
     return qHash(fileName.relative());
 }

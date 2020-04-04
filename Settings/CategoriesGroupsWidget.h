@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 Tobias Leupold <tobias.leupold@web.de>
+/* Copyright (C) 2014-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -33,21 +33,22 @@ class CategoriesGroupsWidget : public QTreeWidget
     Q_OBJECT
 
 public:
-    explicit CategoriesGroupsWidget(QWidget* parent = 0);
+    explicit CategoriesGroupsWidget(QWidget *parent = 0);
     ~CategoriesGroupsWidget() override;
 
 private: // Functions
-    void mousePressEvent(QMouseEvent* event) override;
-    void dragMoveEvent(QDragMoveEvent* event) override;
-    void dropEvent(QDropEvent* event) override;
-    void updateHighlight(QTreeWidgetItem* target);
+    void mousePressEvent(QMouseEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void updateHighlight(QTreeWidgetItem *target);
 
 private: // Variables
-    TagGroupsPage* m_tagGroupsPage;
-    QTreeWidgetItem* m_draggedItem;
+    TagGroupsPage *m_tagGroupsPage;
+    QTreeWidgetItem *m_draggedItem;
     QString m_draggedItemCategory;
-    QTreeWidgetItem* m_oldTarget;
+    QTreeWidgetItem *m_oldTarget;
     QBrush m_backgroundNoTarget;
+    const QBrush m_backgroundHiglightTarget;
 };
 
 }

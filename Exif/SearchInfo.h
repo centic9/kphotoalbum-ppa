@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,15 +18,19 @@
 #ifndef EXIFSEARCHINFO_H
 #define EXIFSEARCHINFO_H
 
-#include <QList>
-#include <QStringList>
-#include <QPair>
-#include "Exif/Database.h"
+#include "Database.h"
+
 #include <DB/FileName.h>
 
-namespace Exif {
+#include <QList>
+#include <QPair>
+#include <QStringList>
 
-class SearchInfo  {
+namespace Exif
+{
+
+class SearchInfo
+{
 public:
     typedef Database::CameraList CameraList;
     typedef Database::Camera Camera;
@@ -38,19 +42,21 @@ public:
     {
     public:
         Range() {}
-        explicit Range( const QString& key );
+        explicit Range(const QString &key);
         bool isLowerMin, isLowerMax, isUpperMin, isUpperMax;
         double min, max;
         QString key;
     };
 
-    void addSearchKey( const QString& key, const IntList& values );
-    void addRangeKey( const Range& range );
-    void addCamera( const CameraList& list);
-    void addLens( const LensList& list);
+    void addSearchKey(const QString &key, const IntList &values);
+    void addRangeKey(const Range &range);
+    void addCamera(const CameraList &list);
+    void addLens(const LensList &list);
 
     void search() const;
-    bool matches( const DB::FileName& fileName ) const;
+    bool matches(const DB::FileName &fileName) const;
+
+    bool isNull() const;
 
 protected:
     QString buildQuery() const;
@@ -58,10 +64,10 @@ protected:
     QStringList buildRangeQuery() const;
     QString buildCameraSearchQuery() const;
     QString buildLensSearchQuery() const;
-    QString sqlForOneRangeItem( const Range& ) const;
+    QString sqlForOneRangeItem(const Range &) const;
 
 private:
-    typedef QList< QPair<QString, IntList> > IntKeyList;
+    typedef QList<QPair<QString, IntList>> IntKeyList;
     IntKeyList m_intKeys;
     QList<Range> m_rangeKeys;
     CameraList m_cameras;
@@ -71,7 +77,6 @@ private:
 };
 
 }
-
 
 #endif /* EXIFSEARCHINFO_H */
 

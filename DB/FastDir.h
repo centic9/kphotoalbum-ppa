@@ -19,10 +19,11 @@
 
 #ifndef FASTDIR_H
 #define FASTDIR_H
-#include <QStringList>
-#include <QString>
+#include "FileNameList.h"
+
 #include <QSet>
-#include <DB/FileNameList.h>
+#include <QString>
+#include <QStringList>
 
 namespace DB
 {
@@ -49,6 +50,7 @@ public:
     const QStringList entryList() const;
     QStringList sortFileList(const QStringList &files) const;
     QStringList sortFileList(const StringSet &files) const;
+
 private:
     FastDir();
     const QString m_path;

@@ -19,27 +19,31 @@
 
 #ifndef JOBINFO_H
 #define JOBINFO_H
-#include <QString>
-#include <QObject>
-#include <QElapsedTimer>
 #include "Priority.h"
 
-namespace BackgroundTaskManager {
+#include <QElapsedTimer>
+#include <QObject>
+#include <QString>
 
-class JobInfo :public QObject
+namespace BackgroundTaskManager
+{
+
+class JobInfo : public QObject
 {
     Q_OBJECT
 
 public:
     explicit JobInfo(BackgroundTaskManager::Priority priority);
-    explicit JobInfo( const JobInfo* other );
+    explicit JobInfo(const JobInfo *other);
     ~JobInfo() override;
 
     virtual QString title() const = 0;
     virtual QString details() const = 0;
     BackgroundTaskManager::Priority priority() const;
 
-    enum State { NotStarted, Running, Completed };
+    enum State { NotStarted,
+                 Running,
+                 Completed };
     State state;
 
     QString elapsed() const;
