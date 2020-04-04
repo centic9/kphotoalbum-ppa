@@ -1,0 +1,13 @@
+Index: git/CMakeLists.txt
+===================================================================
+--- git.orig/CMakeLists.txt	2015-05-25 21:26:59.928181670 +0200
++++ git/CMakeLists.txt	2015-05-25 21:26:59.928181670 +0200
+@@ -91,7 +91,7 @@
+ endif(Kface_FOUND)
+ 
+ if(EXIV2_FOUND)
+-    macro_optional_find_package(KGeoMap QUIET)
++    macro_optional_find_package(KGeoMap)
+ else()
+ 	message(STATUS "Not searching KGeoMap because of missing dependency Exiv2...")
+ endif()
