@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -60,10 +60,10 @@ GroupCounter::GroupCounter(const QString &category)
 
     // Populate the m_memberToGroup map
     for (QMap<QString, StringSet>::Iterator groupToMemberIt = groupToMemberMap.begin(); groupToMemberIt != groupToMemberMap.end(); ++groupToMemberIt) {
-        StringSet members = groupToMemberIt.value();
-        QString group = groupToMemberIt.key();
+        const StringSet members = groupToMemberIt.value();
+        const QString group = groupToMemberIt.key();
 
-        Q_FOREACH (const auto &member, members) {
+        for (const auto &member : members) {
             m_memberToGroup[member].append(group);
         }
         m_groupCount.insert(group, CountWithRange());

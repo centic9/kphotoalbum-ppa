@@ -1,4 +1,4 @@
-/* Copyright (C) 2009-2010 Wes Hardaker <kpa@capturedonearth.com>
+/* Copyright (C) 2009-2020 Wes Hardaker <kpa@capturedonearth.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,7 +27,13 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <krun.h>
+#include <kio_version.h>
+#if KIO_VERSION > QT_VERSION_CHECK(5, 69, 0)
+#include <KIO/CommandLauncherJob>
+#include <KIO/JobUiDelegate>
+#else
+#include <KRun>
+#endif
 #include <kshell.h>
 
 MainWindow::RunDialog::RunDialog(QWidget *parent)
@@ -81,7 +87,7 @@ void MainWindow::RunDialog::slotMarkGo()
 
     // Replace the %all argument first
     QStringList fileList;
-    Q_FOREACH (const DB::FileName &fileName, m_fileList)
+    for (const DB::FileName &fileName : qAsConst(m_fileList))
         fileList.append(fileName.absolute());
 
     cmdString.replace(replaceall, KShell::joinArgs(fileList));
@@ -89,13 +95,27 @@ void MainWindow::RunDialog::slotMarkGo()
     if (cmdString.contains(replaceeach)) {
         // cmdString should be run multiple times, once per "each"
         QString cmdOnce;
-        Q_FOREACH (const DB::FileName &filename, m_fileList) {
+        for (const DB::FileName &filename : qAsConst(m_fileList)) {
             cmdOnce = cmdString;
             cmdOnce.replace(replaceeach, filename.absolute());
-            KRun::runCommand(cmdOnce, MainWindow::Window::theMainWindow());
+            auto *uiParent = MainWindow::Window::theMainWindow();
+#if KIO_VERSION <= QT_VERSION_CHECK(5, 69, 0)
+            KRun::runCommand(cmdOnce, uiParent);
+#else
+            KIO::CommandLauncherJob *job = new KIO::CommandLauncherJob(cmdOnce);
+            job->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+            job->start();
+#endif
         }
     } else {
-        KRun::runCommand(cmdString, MainWindow::Window::theMainWindow());
+        auto *uiParent = MainWindow::Window::theMainWindow();
+#if KIO_VERSION <= QT_VERSION_CHECK(5, 69, 0)
+        KRun::runCommand(cmdString, uiParent);
+#else
+        KIO::CommandLauncherJob *job = new KIO::CommandLauncherJob(cmdString);
+        job->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+        job->start();
+#endif
     }
 }
 

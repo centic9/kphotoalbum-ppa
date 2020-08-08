@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
 Uploaders: Mark Purcell <msp@debian.org>,
-Build-Depends: debhelper-compat (= 12), cmake (>= 3.2), pkg-kde-tools (>= 0.15.16),
+Build-Depends: debhelper-compat (= 13), cmake (>= 3.3~), pkg-kde-tools (>= 0.15.16),
  extra-cmake-modules,
  qtbase5-dev (>= 5.9),
  libphonon4qt5-dev,
@@ -20,14 +20,13 @@ Build-Depends: debhelper-compat (= 12), cmake (>= 3.2), pkg-kde-tools (>= 0.15.1
  libkf5widgetsaddons-dev (>= 5.44.0),
  libkf5xmlgui-dev (>= 5.44.0),
  libkf5kdcraw-dev,
- libkf5kgeomap-dev, libqt5webkit5-dev (>= 5.9), libmarble-dev,
- libkf5kipi-dev,
+ libmarble-dev,
  libkf5purpose-dev,
  libexiv2-dev (>= 0.19), libjpeg-dev,
- x11proto-core-dev,
  pkg-config,
  gettext,
 Standards-Version: 4.5.0
+Rules-Requires-Root: no
 Homepage: https://kphotoalbum.org
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum
 Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum.git
@@ -36,7 +35,7 @@ Package: kphotoalbum
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends},
  libqt5sql5-sqlite,
-Recommends: khelpcenter, ffmpeg, kipi-plugins
+Recommends: khelpcenter, ffmpeg
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of

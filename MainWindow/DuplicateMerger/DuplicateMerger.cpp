@@ -1,4 +1,4 @@
-/* Copyright 2012-2019 The KPhotoAlbum Development Team
+/* Copyright 2012-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -91,7 +91,7 @@ DuplicateMerger::DuplicateMerger(QWidget *parent)
     m_okButton = buttonBox->addButton(QDialogButtonBox::Ok);
     m_cancelButton = buttonBox->addButton(QDialogButtonBox::Cancel);
 
-    connect(m_selectAllButton, &QPushButton::clicked, this, QOverload<bool>::of(&DuplicateMerger::selectAll));
+    connect(m_selectAllButton, &QPushButton::clicked, this, QOverload<>::of(&DuplicateMerger::selectAll));
     connect(m_selectNoneButton, &QPushButton::clicked, this, &DuplicateMerger::selectNone);
     connect(m_okButton, &QPushButton::clicked, this, &DuplicateMerger::go);
     connect(m_cancelButton, &QPushButton::clicked, this, &DuplicateMerger::reject);
@@ -126,7 +126,7 @@ void DuplicateMerger::go()
         method = Utilities::DeleteFromDisk;
     }
 
-    Q_FOREACH (DuplicateMatch *selector, m_selectors) {
+    for (DuplicateMatch *selector : qAsConst(m_selectors)) {
         selector->execute(method);
     }
 
@@ -138,7 +138,7 @@ void DuplicateMerger::updateSelectionCount()
     int total = 0;
     int selected = 0;
 
-    Q_FOREACH (DuplicateMatch *selector, m_selectors) {
+    for (const DuplicateMatch *selector : qAsConst(m_selectors)) {
         ++total;
         if (selector->selected())
             ++selected;
@@ -152,7 +152,8 @@ void DuplicateMerger::findDuplicates()
 {
     Utilities::ShowBusyCursor dummy;
 
-    Q_FOREACH (const DB::FileName &fileName, DB::ImageDB::instance()->images()) {
+    const auto images = DB::ImageDB::instance()->files();
+    for (const DB::FileName &fileName : images) {
         const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
         const DB::MD5 md5 = info->MD5Sum();
         m_matches[md5].append(fileName);
@@ -184,7 +185,7 @@ void DuplicateMerger::addRow(const DB::MD5 &md5)
 
 void DuplicateMerger::selectAll(bool b)
 {
-    Q_FOREACH (DuplicateMatch *selector, m_selectors) {
+    for (DuplicateMatch *selector : qAsConst(m_selectors)) {
         selector->setSelected(b);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -50,9 +50,9 @@ bool ThumbnailView::KeyboardEventHandler::keyPressEvent(QKeyEvent *event)
             bool hadHit = false;
 
             const DB::FileNameList selection = widget()->selection(event->modifiers() == Qt::NoModifier ? NoExpandCollapsedStacks : IncludeAllStacks);
-            DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
-            Q_FOREACH (const DB::FileName &fileName, selection) {
-                DB::ImageInfoPtr info = fileName.info();
+            const DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
+            for (const DB::FileName &fileName : selection) {
+                DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
                 if (!hadHit) {
                     mustRemoveToken = info->hasCategoryInfo(tokensCategory->name(), token);
                     hadHit = true;
@@ -86,8 +86,8 @@ bool ThumbnailView::KeyboardEventHandler::keyPressEvent(QKeyEvent *event)
             if (event->modifiers() == Qt::NoModifier || event->modifiers() == Qt::ShiftModifier) {
                 // set rating
                 const DB::FileNameList selection = widget()->selection(event->modifiers() == Qt::NoModifier ? NoExpandCollapsedStacks : IncludeAllStacks);
-                Q_FOREACH (const DB::FileName &fileName, selection) {
-                    DB::ImageInfoPtr info = fileName.info();
+                for (const DB::FileName &fileName : selection) {
+                    DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
                     info->setRating(rating);
                 }
                 MainWindow::DirtyIndicator::markDirty();

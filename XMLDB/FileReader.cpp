@@ -335,8 +335,8 @@ void XMLDB::FileReader::loadMemberGroups(ReaderPtr reader)
                 QString member = reader->attribute(memberString);
                 m_db->m_members.addMemberToGroup(category, group, member);
             } else {
-                QStringList members = reader->attribute(membersString).split(QString::fromLatin1(","), QString::SkipEmptyParts);
-                Q_FOREACH (const QString &memberItem, members) {
+                const QStringList members = reader->attribute(membersString).split(QString::fromLatin1(","), QString::SkipEmptyParts);
+                for (const QString &memberItem : members) {
                     DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName(category);
                     if (!catPtr) { // category was not declared in "Categories"
                         qCWarning(XMLDBLog) << "File corruption in index.xml. Inserting missing category: " << category;
@@ -345,8 +345,11 @@ void XMLDB::FileReader::loadMemberGroups(ReaderPtr reader)
                     }
                     XMLCategory *cat = static_cast<XMLCategory *>(catPtr.data());
                     QString member = cat->nameForId(memberItem.toInt());
-                    if (member.isNull())
+                    if (member.isNull()) {
+                        qCWarning(XMLDBLog) << "Tag group" << category << "references non-existing tag with id"
+                                            << memberItem << "!";
                         continue;
+                    }
                     m_db->m_members.addMemberToGroup(category, group, member);
                 }
 
@@ -392,7 +395,11 @@ void XMLDB::FileReader::checkIfImagesAreSorted()
     if (m_db->uiDelegate().isDialogDisabled(QString::fromLatin1("checkWhetherImagesAreSorted")))
         return;
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    QDateTime last = QDate(1900, 1, 1).startOfDay();
+#else
     QDateTime last(QDate(1900, 1, 1));
+#endif
     bool wrongOrder = false;
     for (DB::ImageInfoListIterator it = m_db->m_images.begin(); !wrongOrder && it != m_db->m_images.end(); ++it) {
         if (last > (*it)->date().start() && (*it)->date().start().isValid())
@@ -417,8 +424,6 @@ void XMLDB::FileReader::checkIfImagesAreSorted()
 
 void XMLDB::FileReader::checkIfAllImagesHaveSizeAttributes()
 {
-    QTime time;
-    time.start();
     if (m_db->uiDelegate().isDialogDisabled(QString::fromLatin1("checkWhetherAllImagesIncludesSize")))
         return;
 

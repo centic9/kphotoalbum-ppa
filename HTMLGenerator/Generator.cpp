@@ -37,6 +37,11 @@
 #include <KIO/CopyJob>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <kio_version.h>
+#if KIO_VERSION > QT_VERSION_CHECK(5, 69, 0)
+#include <KIO/CommandLauncherJob>
+#include <KIO/JobUiDelegate>
+#endif
 #include <KRun>
 #include <QApplication>
 #include <QDir>
@@ -255,7 +260,7 @@ bool HTMLGenerator::Generator::generateIndexPage(int width, int height)
 
     QDomElement row;
     for (const DB::FileName &fileName : m_setup.imageList()) {
-        const DB::ImageInfoPtr info = fileName.info();
+        const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
         if (wasCanceled())
             return false;
 
@@ -407,7 +412,8 @@ bool HTMLGenerator::Generator::generateContentPage(int width, int height,
     if (content.isEmpty())
         return false;
 
-    DB::ImageInfoPtr info = current.info();
+    const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(current);
+    // Note(jzarl): is there any reason why currentFile could be different from current?
     const DB::FileName currentFile = info->fileName();
 
     // Adding the copyright comment after DOCTYPE not before (HTML standard requires the DOCTYPE to be first within the document)
@@ -424,12 +430,21 @@ bool HTMLGenerator::Generator::generateContentPage(int width, int height,
     // TODO: Hardcoded non-standard category names is not good practice
     QString title = QString::fromLatin1("");
     QString name = QString::fromLatin1("Common Name");
-    if (!info->itemsOfCategory(name).empty()) {
-        title += QStringList(info->itemsOfCategory(name).toList()).join(QString::fromLatin1(" - "));
+    const auto itemsOfCategory = info->itemsOfCategory(name);
+    if (!itemsOfCategory.empty()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+        title += QStringList(itemsOfCategory.begin(), itemsOfCategory.end()).join(QLatin1String(" - "));
+#else
+        title += QStringList(itemsOfCategory.toList()).join(QString::fromLatin1(" - "));
+#endif
     } else {
         name = QString::fromLatin1("Latin Name");
-        if (!info->itemsOfCategory(name).empty()) {
-            title += QStringList(info->itemsOfCategory(name).toList()).join(QString::fromLatin1(" - "));
+        if (!itemsOfCategory.empty()) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+            title += QStringList(itemsOfCategory.begin(), itemsOfCategory.end()).join(QString::fromLatin1(" - "));
+#else
+            title += QStringList(itemsOfCategory.toList()).join(QString::fromLatin1(" - "));
+#endif
         } else {
             title = info->label();
         }
@@ -576,7 +591,7 @@ QString HTMLGenerator::Generator::nameImage(const DB::FileName &fileName, int si
 
 QString HTMLGenerator::Generator::createImage(const DB::FileName &fileName, int size)
 {
-    DB::ImageInfoPtr info = fileName.info();
+    const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
     if (m_generatedFiles.contains(qMakePair(fileName, size))) {
         m_waitCounter--;
     } else {
@@ -602,17 +617,27 @@ QString HTMLGenerator::Generator::createVideo(const DB::FileName &fileName)
             // TODO: shouldn't we use avconv library directly instead of KRun
             // TODO: should check that the avconv (ffmpeg takes the same parameters on older systems) and ffmpeg2theora exist
             // TODO: Figure out avconv parameters to get rid of ffmpeg2theora
-            KRun::runCommand(QString::fromLatin1("%1 -y -i %2  -vcodec libx264 -b 250k -bt 50k -acodec libfaac -ab 56k -ac 2 -s %3 %4")
-                                 .arg(m_avconv)
-                                 .arg(fileName.absolute())
-                                 .arg(QString::fromLatin1("320x240"))
-                                 .arg(destName.replace(QRegExp(QString::fromLatin1("\\..*")), QString::fromLatin1(".mp4"))),
-                             MainWindow::Window::theMainWindow());
-            KRun::runCommand(QString::fromLatin1("ffmpeg2theora -v 7 -o %1 -x %2 %3")
-                                 .arg(destName.replace(QRegExp(QString::fromLatin1("\\..*")), QString::fromLatin1(".ogg")))
-                                 .arg(QString::fromLatin1("320"))
-                                 .arg(fileName.absolute()),
-                             MainWindow::Window::theMainWindow());
+            auto *uiParent = MainWindow::Window::theMainWindow();
+            const auto avCmd = QString::fromLatin1("%1 -y -i %2  -vcodec libx264 -b 250k -bt 50k -acodec libfaac -ab 56k -ac 2 -s %3 %4")
+                                   .arg(m_avconv)
+                                   .arg(fileName.absolute())
+                                   .arg(QString::fromLatin1("320x240"))
+                                   .arg(destName.replace(QRegExp(QString::fromLatin1("\\..*")), QString::fromLatin1(".mp4")));
+            const auto f2tCmd = QString::fromLatin1("ffmpeg2theora -v 7 -o %1 -x %2 %3")
+                                    .arg(destName.replace(QRegExp(QString::fromLatin1("\\..*")), QString::fromLatin1(".ogg")))
+                                    .arg(QString::fromLatin1("320"))
+                                    .arg(fileName.absolute());
+#if KIO_VERSION <= QT_VERSION_CHECK(5, 69, 0)
+            KRun::runCommand(avCmd, uiParent);
+            KRun::runCommand(f2tCmd, uiParent);
+#else
+            KIO::CommandLauncherJob *avJob = new KIO::CommandLauncherJob(avCmd);
+            avJob->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+            avJob->start();
+            KIO::CommandLauncherJob *f2tJob = new KIO::CommandLauncherJob(f2tCmd);
+            f2tJob->setUiDelegate(new KDialogJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+            f2tJob->start();
+#endif
         } else
             Utilities::copyOrOverwrite(fileName.absolute(), destName);
         m_copiedVideos.insert(fileName);
@@ -650,7 +675,7 @@ QString HTMLGenerator::Generator::translateToHTML(const QString &str)
         if (str[i].unicode() < 128)
             res.append(str[i]);
         else {
-            res.append(QString().sprintf("&#%u;", (unsigned int)str[i].unicode()));
+            res.append(QStringLiteral("&#%1;").arg((unsigned int)str[i].unicode()));
         }
     }
     return res;
@@ -775,13 +800,19 @@ QString HTMLGenerator::Generator::populateDescription(QList<DB::CategoryPtr> cat
         description += QString::fromLatin1("<li> <b>%1</b> %2</li>").arg(i18n("Date")).arg(info->date().toString());
 
     for (QList<DB::CategoryPtr>::Iterator it = categories.begin(); it != categories.end(); ++it) {
-        if ((*it)->isSpecialCategory())
+        if ((*it)->isSpecialCategory()) {
             continue;
+        }
 
-        QString name = (*it)->name();
-        if (!info->itemsOfCategory(name).empty() && m_setup.includeCategory(name)) {
-            QString val = QStringList(info->itemsOfCategory(name).toList()).join(QString::fromLatin1(", "));
-            description += QString::fromLatin1("  <li> <b>%1:</b> %2</li>").arg(name).arg(val);
+        const auto name = (*it)->name();
+        const auto itemsOfCategory = info->itemsOfCategory(name);
+        if (!itemsOfCategory.empty() && m_setup.includeCategory(name)) {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+            const QStringList itemsList(itemsOfCategory.begin(), itemsOfCategory.end());
+#else
+            const QStringList itemsList = itemsOfCategory.toList();
+#endif
+            description += QStringLiteral("  <li> <b>%1:</b> %2</li>").arg(name, itemsList.join(QLatin1String(", ")));
         }
     }
 

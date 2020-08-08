@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -28,6 +28,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QMessageBox>
+#include <QDebug>
 
 Settings::UntaggedGroupBox::UntaggedGroupBox(QWidget *parent)
     : QGroupBox(i18n("Untagged Images"), parent)
@@ -63,9 +64,11 @@ void Settings::UntaggedGroupBox::populateCategoryComboBox()
 {
     m_category->clear();
     m_category->addItem(i18n("None Selected"));
-    Q_FOREACH (DB::CategoryPtr category, DB::ImageDB::instance()->categoryCollection()->categories()) {
-        if (!category->isSpecialCategory())
+    const auto categories = DB::ImageDB::instance()->categoryCollection()->categories();
+    for (DB::CategoryPtr category : categories) {
+        if (!category->isSpecialCategory()) {
             m_category->addItem(category->name(), category->name());
+        }
     }
 }
 
@@ -73,9 +76,10 @@ void Settings::UntaggedGroupBox::populateTagsCombo()
 {
     m_tag->clear();
     const QString currentCategory = m_category->itemData(m_category->currentIndex()).value<QString>();
-    if (currentCategory.isEmpty())
+
+    if (currentCategory.isEmpty()) {
         m_tag->setEnabled(false);
-    else {
+    } else {
         m_tag->setEnabled(true);
         const QStringList items = DB::ImageDB::instance()->categoryCollection()->categoryForName(currentCategory)->items();
         m_tag->addItems(items);
@@ -140,7 +144,12 @@ void Settings::UntaggedGroupBox::saveSettings(Settings::SettingsData *opt)
     opt->setUntaggedImagesTagVisible(m_showUntaggedImagesTag->isChecked());
 }
 
-void Settings::UntaggedGroupBox::categoryDeleted(QString categoryName)
+void Settings::UntaggedGroupBox::categoryAdded(const QString &categoryName)
+{
+    m_category->addItem(categoryName);
+}
+
+void Settings::UntaggedGroupBox::categoryDeleted(const QString &categoryName)
 {
     if (categoryName == m_category->itemData(m_category->currentIndex()).value<QString>()) {
         m_category->setCurrentIndex(0);
@@ -149,7 +158,7 @@ void Settings::UntaggedGroupBox::categoryDeleted(QString categoryName)
     m_category->removeItem(m_category->findText(categoryName));
 }
 
-void Settings::UntaggedGroupBox::categoryRenamed(QString oldCategoryName, QString newCategoryName)
+void Settings::UntaggedGroupBox::categoryRenamed(const QString &oldCategoryName, const QString &newCategoryName)
 {
     const int index = m_category->findText(oldCategoryName);
     m_category->setItemText(index, newCategoryName);

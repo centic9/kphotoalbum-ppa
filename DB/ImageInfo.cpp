@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -32,6 +32,7 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QImageReader>
 #include <QStringList>
 
 using namespace DB;
@@ -49,8 +50,7 @@ ImageInfo::ImageInfo()
 {
 }
 
-ImageInfo::ImageInfo(const DB::FileName &fileName, MediaType type, bool readExifInfo,
-                     bool storeExifInfo)
+ImageInfo::ImageInfo(const DB::FileName &fileName, MediaType type, FileInformation infoMode)
     : m_imageOnDisk(YesOnDisk)
     , m_null(false)
     , m_size(-1, -1)
@@ -70,9 +70,9 @@ ImageInfo::ImageInfo(const DB::FileName &fileName, MediaType type, bool readExif
     setFileName(fileName);
 
     // Read Exif information
-    if (readExifInfo) {
+    if (infoMode != FileInformation::Ignore) {
         ExifMode mode = EXIFMODE_INIT;
-        if (!storeExifInfo)
+        if (infoMode == FileInformation::ReadAndUpdateExifDB)
             mode &= ~EXIFMODE_DATABASE_UPDATE;
         readExif(fileName, mode);
     }
@@ -109,7 +109,7 @@ int ImageInfo::matchGeneration() const
 void ImageInfo::setLabel(const QString &desc)
 {
     if (desc != m_label)
-        m_dirty = true;
+        markDirty();
     m_label = desc;
 }
 
@@ -121,7 +121,7 @@ QString ImageInfo::label() const
 void ImageInfo::setDescription(const QString &desc)
 {
     if (desc != m_description)
-        m_dirty = true;
+        markDirty();
     m_description = desc.trimmed();
 }
 
@@ -133,7 +133,7 @@ QString ImageInfo::description() const
 void ImageInfo::setCategoryInfo(const QString &key, const StringSet &value)
 {
     // Don't check if really changed, because it's too slow.
-    m_dirty = true;
+    markDirty();
     m_categoryInfomation[key] = value;
 }
 
@@ -164,7 +164,7 @@ void ImageInfo::renameItem(const QString &category, const QString &oldValue, con
     StringSet &set = m_categoryInfomation[category];
     StringSet::iterator it = set.find(oldValue);
     if (it != set.end()) {
-        m_dirty = true;
+        markDirty();
         set.erase(it);
         set.insert(newValue);
     }
@@ -178,7 +178,7 @@ DB::FileName ImageInfo::fileName() const
 void ImageInfo::setFileName(const DB::FileName &fileName)
 {
     if (fileName != m_fileName)
-        m_dirty = true;
+        markDirty();
     m_fileName = fileName;
 
     m_imageOnDisk = Unchecked;
@@ -198,7 +198,7 @@ void ImageInfo::rotate(int degrees, RotationMode mode)
     if (degrees == 0)
         return;
 
-    m_dirty = true;
+    markDirty();
     m_angle = (m_angle + degrees) % 360;
 
     if (degrees == 90 || degrees == 270) {
@@ -257,7 +257,7 @@ int ImageInfo::angle() const
 void ImageInfo::setAngle(int angle)
 {
     if (angle != m_angle)
-        m_dirty = true;
+        markDirty();
     m_angle = angle;
 }
 
@@ -275,7 +275,7 @@ void ImageInfo::setRating(short rating)
     if (rating < -1)
         rating = -1;
     if (m_rating != rating)
-        m_dirty = true;
+        markDirty();
 
     m_rating = rating;
 }
@@ -288,7 +288,7 @@ DB::StackID ImageInfo::stackId() const
 void ImageInfo::setStackId(const DB::StackID stackId)
 {
     if (stackId != m_stackId)
-        m_dirty = true;
+        markDirty();
     m_stackId = stackId;
 }
 
@@ -300,14 +300,14 @@ unsigned int ImageInfo::stackOrder() const
 void ImageInfo::setStackOrder(const unsigned int stackOrder)
 {
     if (stackOrder != m_stackOrder)
-        m_dirty = true;
+        markDirty();
     m_stackOrder = stackOrder;
 }
 
 void ImageInfo::setVideoLength(int length)
 {
     if (m_videoLength != length)
-        m_dirty = true;
+        markDirty();
     m_videoLength = length;
 }
 
@@ -319,7 +319,7 @@ int ImageInfo::videoLength() const
 void ImageInfo::setDate(const ImageDate &date)
 {
     if (date != m_date)
-        m_dirty = true;
+        markDirty();
     m_date = date;
 }
 
@@ -352,7 +352,7 @@ bool ImageInfo::operator==(const ImageInfo &other) const
 
 void ImageInfo::renameCategory(const QString &oldName, const QString &newName)
 {
-    m_dirty = true;
+    markDirty();
 
     m_categoryInfomation[newName] = m_categoryInfomation[oldName];
     m_categoryInfomation.remove(oldName);
@@ -380,6 +380,16 @@ void ImageInfo::setMD5Sum(const MD5 &sum, bool storeEXIF)
         if (!storeEXIF)
             mode &= ~EXIFMODE_DATABASE_UPDATE;
         readExif(fileName(), mode);
+        if (storeEXIF) {
+            // Size isn't really EXIF, but this is the most obvious
+            // place to extract it
+            QImageReader reader(m_fileName.absolute());
+            if (reader.canRead()) {
+                m_size = reader.size();
+                if (m_angle == 90 || m_angle == 270)
+                    m_size.transpose();
+            }
+        }
 
         // FIXME (ZaJ): it *should* make sense to set the ImageDB::md5Map() from here, but I want
         //              to make sure I fully understand everything first...
@@ -387,7 +397,7 @@ void ImageInfo::setMD5Sum(const MD5 &sum, bool storeEXIF)
 
         // image size is invalidated by the thumbnail builder, if needed
 
-        m_dirty = true;
+        markDirty();
     }
     m_md5sum = sum;
 }
@@ -439,7 +449,7 @@ void ImageInfo::readExif(const DB::FileName &fullPath, DB::ExifMode mode)
     // Database update
     if (mode & EXIFMODE_DATABASE_UPDATE) {
         Exif::Database::instance()->add(exifInfo);
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
         // GPS coords might have changed...
         m_coordsIsSet = false;
 #endif
@@ -459,7 +469,7 @@ QSize ImageInfo::size() const
 void ImageInfo::setSize(const QSize &size)
 {
     if (size != m_size)
-        m_dirty = true;
+        markDirty();
     m_size = size;
 }
 
@@ -491,7 +501,7 @@ ImageInfo::ImageInfo(const DB::FileName &fileName,
     m_locked = false;
     m_null = false;
     m_type = type;
-    m_dirty = true;
+    markDirty();
 
     if (rating > 10)
         rating = 10;
@@ -623,8 +633,16 @@ void ImageInfo::merge(const ImageInfo &other)
     const bool isCompleted = !m_categoryInfomation[untaggedCategory].contains(untaggedTag) || !other.m_categoryInfomation[untaggedCategory].contains(untaggedTag);
 
     // Merge tags
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    const auto categoryInfomationKeys = m_categoryInfomation.keys();
+    QSet<QString> keys(categoryInfomationKeys.begin(), categoryInfomationKeys.end());
+    const auto otherCategoryInfomationKeys = other.m_categoryInfomation.keys();
+    const QSet<QString> otherCategoryInfomationKeysSet(otherCategoryInfomationKeys.begin(), otherCategoryInfomationKeys.end());
+#else
     QSet<QString> keys = QSet<QString>::fromList(m_categoryInfomation.keys());
-    keys.unite(QSet<QString>::fromList(other.m_categoryInfomation.keys()));
+    const auto otherCategoryInfomationKeysSet = QSet<QString>::fromList(other.m_categoryInfomation.keys());
+#endif
+    keys.unite(otherCategoryInfomationKeysSet);
     for (const QString &key : keys) {
         m_categoryInfomation[key].unite(other.m_categoryInfomation[key]);
     }
@@ -652,7 +670,7 @@ void DB::ImageInfo::addCategoryInfo(const QString &category, const StringSet &va
 {
     for (StringSet::const_iterator valueIt = values.constBegin(); valueIt != values.constEnd(); ++valueIt) {
         if (!m_categoryInfomation[category].contains(*valueIt)) {
-            m_dirty = true;
+            markDirty();
             m_categoryInfomation[category].insert(*valueIt);
         }
     }
@@ -668,7 +686,7 @@ void DB::ImageInfo::removeCategoryInfo(const QString &category, const StringSet 
 {
     for (StringSet::const_iterator valueIt = values.constBegin(); valueIt != values.constEnd(); ++valueIt) {
         if (m_categoryInfomation[category].contains(*valueIt)) {
-            m_dirty = true;
+            markDirty();
             m_categoryInfomation[category].remove(*valueIt);
             m_taggedAreas[category].remove(*valueIt);
         }
@@ -678,7 +696,7 @@ void DB::ImageInfo::removeCategoryInfo(const QString &category, const StringSet 
 void DB::ImageInfo::addCategoryInfo(const QString &category, const QString &value, const QRect &area)
 {
     if (!m_categoryInfomation[category].contains(value)) {
-        m_dirty = true;
+        markDirty();
         m_categoryInfomation[category].insert(value);
 
         if (area.isValid()) {
@@ -690,15 +708,15 @@ void DB::ImageInfo::addCategoryInfo(const QString &category, const QString &valu
 void DB::ImageInfo::removeCategoryInfo(const QString &category, const QString &value)
 {
     if (m_categoryInfomation[category].contains(value)) {
-        m_dirty = true;
+        markDirty();
         m_categoryInfomation[category].remove(value);
         m_taggedAreas[category].remove(value);
     }
 }
 
-void DB::ImageInfo::setPositionedTags(const QString &category, const QMap<QString, QRect> &positionedTags)
+void DB::ImageInfo::setPositionedTags(const QString &category, const PositionTags &positionedTags)
 {
-    m_dirty = true;
+    markDirty();
     m_taggedAreas[category] = positionedTags;
 }
 
@@ -713,7 +731,7 @@ bool DB::ImageInfo::updateDateInformation(int mode) const
     return true;
 }
 
-QMap<QString, QMap<QString, QRect>> DB::ImageInfo::taggedAreas() const
+TaggedAreas DB::ImageInfo::taggedAreas() const
 {
     return m_taggedAreas;
 }
@@ -724,8 +742,8 @@ QRect DB::ImageInfo::areaForTag(QString category, QString tag) const
     return m_taggedAreas.value(category).value(tag);
 }
 
-#ifdef HAVE_KGEOMAP
-KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
+#ifdef HAVE_MARBLE
+Map::GeoCoordinates DB::ImageInfo::coordinates() const
 {
     if (m_coordsIsSet) {
         return m_coordinates;
@@ -769,7 +787,7 @@ KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
         Q_ASSERT(!fields[EXIF_GPS_VERSIONID]->value().isNull());
     }
 
-    KGeoMap::GeoCoordinates coords;
+    Map::GeoCoordinates coords;
 
     // gps info set?
     // don't use the versionid field here, because some cameras use 0 as its value
@@ -797,5 +815,11 @@ KGeoMap::GeoCoordinates DB::ImageInfo::coordinates() const
 }
 
 #endif
+
+void ImageInfo::markDirty()
+{
+    m_dirty = true;
+    m_matchGeneration = -1;
+}
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

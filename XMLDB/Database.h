@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -47,14 +47,15 @@ class Database : public DB::ImageDB
 
 public:
     uint totalCount() const override;
-    DB::FileNameList search(
+    DB::ImageInfoList search(
         const DB::ImageSearchInfo &,
         bool requireOnDisk = false) const override;
     void renameCategory(const QString &oldName, const QString newName) override;
 
     QMap<QString, DB::CountWithRange> classify(const DB::ImageSearchInfo &info, const QString &category, DB::MediaType typemask, DB::ClassificationMode mode) override;
-    DB::FileNameList images() override;
-    void addImages(const DB::ImageInfoList &images, bool doUpdate) override;
+    DB::FileNameList files() const override;
+    DB::ImageInfoList images() const override;
+    void addImages(const DB::ImageInfoList &files, bool doUpdate) override;
     void commitDelayedImages() override;
     void clearDelayedImages() override;
     void renameImage(DB::ImageInfoPtr info, const DB::FileName &newName) override;
@@ -68,6 +69,7 @@ public:
     DB::MD5Map *md5Map() override;
     void sortAndMergeBackIn(const DB::FileNameList &idList) override;
     DB::CategoryCollection *categoryCollection() override;
+    const DB::CategoryCollection *categoryCollection() const override;
     QExplicitlySharedDataPointer<DB::ImageDateCollection> rangeCollection() override;
     void reorder(
         const DB::FileName &item,
@@ -77,14 +79,14 @@ public:
     static DB::ImageInfoPtr createImageInfo(const DB::FileName &fileName, ReaderPtr, Database *db = nullptr, const QMap<QString, QString> *newToOldCategory = nullptr);
     static void possibleLoadCompressedCategories(ReaderPtr reader, DB::ImageInfoPtr info, Database *db, const QMap<QString, QString> *newToOldCategory = nullptr);
     bool stack(const DB::FileNameList &items) override;
-    void unstack(const DB::FileNameList &images) override;
+    void unstack(const DB::FileNameList &files) override;
     DB::FileNameList getStackFor(const DB::FileName &referenceId) const override;
     void copyData(const DB::FileName &from, const DB::FileName &to) override;
 
     static int fileVersion();
 
 protected:
-    DB::FileNameList searchPrivate(
+    DB::ImageInfoList searchPrivate(
         const DB::ImageSearchInfo &,
         bool requireOnDisk,
         bool onlyItemsMatchingRange) const;

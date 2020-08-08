@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,17 +29,21 @@
 #include <Settings/SettingsData.h>
 
 ThumbnailView::ThumbnailFacade *ThumbnailView::ThumbnailFacade::s_instance = nullptr;
-ThumbnailView::ThumbnailFacade::ThumbnailFacade()
+ThumbnailView::ThumbnailFacade::ThumbnailFacade(ImageManager::ThumbnailCache *thumbnailCache)
     : m_cellGeometry(nullptr)
     , m_model(nullptr)
     , m_widget(nullptr)
     , m_toolTip(nullptr)
+    , m_thumbnailCache(thumbnailCache)
 {
     // To avoid one of the components references one of the other before it has been initialized, we first construct them all with null.
     m_cellGeometry = new CellGeometry(this);
-    m_model = new ThumbnailModel(this);
+    m_model = new ThumbnailModel(this, m_thumbnailCache);
     m_widget = new ThumbnailWidget(this);
-    m_toolTip = new ThumbnailToolTip(m_widget);
+    // I don't want to introduce a strong interdependency between ThumbnailWidget and ThumbnailToolTip,
+    // hence I don't want to push the tooltip construction into the thumbnail widget.
+    // Unfortunately, this causes a warning in lgtm:
+    m_toolTip = new ThumbnailToolTip(m_widget); // lgtm [cpp/resource-not-released-in-destructor]
 
     connect(m_widget, &ThumbnailWidget::showImage, this, &ThumbnailFacade::showImage);
     connect(m_widget, &ThumbnailWidget::showSelection, this, &ThumbnailFacade::showSelection);
@@ -107,14 +111,9 @@ QSlider *ThumbnailView::ThumbnailFacade::createResizeSlider()
     return new GridResizeSlider(this);
 }
 
-ThumbnailView::FilterWidget *ThumbnailView::ThumbnailFacade::filterWidget()
+ThumbnailView::FilterWidget *ThumbnailView::ThumbnailFacade::createFilterWidget(QWidget *parent)
 {
-    return model()->filterWidget();
-}
-
-KActionCollection *ThumbnailView::ThumbnailFacade::actions()
-{
-    return filterWidget()->actions();
+    return model()->createFilterWidget(parent);
 }
 
 void ThumbnailView::ThumbnailFacade::selectAll()
@@ -183,8 +182,9 @@ ThumbnailView::ThumbnailFacade *ThumbnailView::ThumbnailFacade::instance()
 
 void ThumbnailView::ThumbnailFacade::slotRecreateThumbnail()
 {
-    Q_FOREACH (const DB::FileName &fileName, widget()->selection(NoExpandCollapsedStacks)) {
-        ImageManager::ThumbnailCache::instance()->removeThumbnail(fileName);
+    const auto selection = widget()->selection(NoExpandCollapsedStacks);
+    for (const DB::FileName &fileName : selection) {
+        m_thumbnailCache->removeThumbnail(fileName);
         BackgroundJobs::HandleVideoThumbnailRequestJob::removeFullScaleFrame(fileName);
         m_model->updateCell(fileName);
     }

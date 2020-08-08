@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -70,7 +70,7 @@ QString ImageDB::NONE()
 
 DB::FileNameList ImageDB::currentScope(bool requireOnDisk) const
 {
-    return search(Browser::BrowserWidget::instance()->currentContext(), requireOnDisk);
+    return search(Browser::BrowserWidget::instance()->currentContext(), requireOnDisk).files();
 }
 
 void ImageDB::markDirty()
@@ -102,7 +102,7 @@ void ImageDB::slotRecalcCheckSums(const DB::FileNameList &inputList)
 {
     DB::FileNameList list = inputList;
     if (list.isEmpty()) {
-        list = images();
+        list = files();
         md5Map()->clear();
     }
 
@@ -117,7 +117,7 @@ DB::FileNameSet DB::ImageDB::imagesWithMD5Changed()
 {
     MD5Map map;
     bool wasCanceled;
-    NewImageFinder().calculateMD5sums(images(), &map, &wasCanceled);
+    NewImageFinder().calculateMD5sums(files(), &map, &wasCanceled);
     if (wasCanceled)
         return DB::FileNameSet();
 
@@ -138,8 +138,8 @@ DB::MediaCount ImageDB::count(const ImageSearchInfo &searchInfo)
 {
     uint images = 0;
     uint videos = 0;
-    for (const DB::FileName &fileName : search(searchInfo)) {
-        if (info(fileName)->mediaType() == Image)
+    for (const auto &imageInfo : search(searchInfo)) {
+        if (imageInfo->mediaType() == Image)
             ++images;
         else
             ++videos;
@@ -192,6 +192,14 @@ DB::FileName ImageDB::findFirstItemInRange(const DB::FileNameList &images,
         }
     }
     return candidate;
+}
+
+bool ImageDB::untaggedCategoryFeatureConfigured() const
+{
+    const auto untaggedCategory = Settings::SettingsData::instance()->untaggedCategory();
+    const auto untaggedTag = Settings::SettingsData::instance()->untaggedTag();
+    return categoryCollection()->categoryNames().contains(untaggedCategory)
+        && categoryCollection()->categoryForName(untaggedCategory)->items().contains(untaggedTag);
 }
 
 /** \fn void ImageDB::renameCategory( const QString& oldName, const QString newName )

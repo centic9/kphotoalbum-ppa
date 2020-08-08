@@ -119,7 +119,8 @@ Settings::CategoryPage::CategoryPage(QWidget *parent)
     // Positionable
     m_positionableLabel = new QLabel(i18n("Positionable tags:"));
     settingsLayout->addWidget(m_positionableLabel, row, 0);
-    m_positionable = new QCheckBox(i18n("Tags in this category can be associated with areas within images"));
+    m_positionable = new QCheckBox(i18n("Tags in this category can be\n"
+                                        "associated with areas within images"));
     settingsLayout->addWidget(m_positionable, row, 1);
     connect(m_positionable, &QCheckBox::clicked, this, &CategoryPage::positionableChanged);
     row++;
@@ -399,6 +400,7 @@ void Settings::CategoryPage::newCategory()
 
     editCategory(m_currentCategory);
     m_categoriesListWidget->editItem(m_currentCategory);
+    m_untaggedBox->categoryAdded(newCategory);
 }
 
 void Settings::CategoryPage::deleteCurrentCategory()
@@ -471,7 +473,7 @@ void Settings::CategoryPage::enableDisable(bool b)
 void Settings::CategoryPage::saveSettings(Settings::SettingsData *opt, DB::MemberMap *memberMap)
 {
     // Delete items
-    Q_FOREACH (CategoryItem *item, m_deletedCategories) {
+    for (CategoryItem *item : qAsConst(m_deletedCategories)) {
         item->removeFromDatabase();
     }
 
@@ -481,6 +483,7 @@ void Settings::CategoryPage::saveSettings(Settings::SettingsData *opt, DB::Membe
         item->submit(memberMap);
     }
 
+    // FIXME(jzarl): wtf? we need to fix this atrocity...
     DB::ImageDB::instance()->memberMap() = *memberMap;
     m_untaggedBox->saveSettings(opt);
 
@@ -497,8 +500,8 @@ void Settings::CategoryPage::loadSettings(Settings::SettingsData *opt)
     m_categoriesListWidget->blockSignals(true);
     m_categoriesListWidget->clear();
 
-    QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    Q_FOREACH (const DB::CategoryPtr category, categories) {
+    const QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
+    for (const DB::CategoryPtr &category : categories) {
         if (category->type() == DB::Category::PlainCategory
             || category->type() == DB::Category::TokensCategory) {
             Settings::CategoryItem *item = new CategoryItem(category->name(),
@@ -507,7 +510,7 @@ void Settings::CategoryPage::loadSettings(Settings::SettingsData *opt)
                                                             category->thumbnailSize(),
                                                             m_categoriesListWidget,
                                                             category->positionable());
-            Q_UNUSED(item);
+            Q_UNUSED(item)
         }
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -45,20 +45,12 @@ void XMLDB::XMLCategoryCollection::addCategory(DB::CategoryPtr category)
     emit categoryCollectionChanged();
 }
 
-QStringList XMLDB::XMLCategoryCollection::categoryNames() const
+QStringList XMLDB::XMLCategoryCollection::categoryNames(IncludeSpecialCategories include) const
 {
     QStringList res;
-    for (QList<DB::CategoryPtr>::ConstIterator it = m_categories.begin(); it != m_categories.end(); ++it) {
-        res.append((*it)->name());
-    }
-    return res;
-}
-
-QStringList XMLDB::XMLCategoryCollection::categoryTexts() const
-{
-    QStringList res;
-    for (QList<DB::CategoryPtr>::ConstIterator it = m_categories.begin(); it != m_categories.end(); ++it) {
-        res.append((*it)->name());
+    for (const auto &category : m_categories) {
+        if (include == IncludeSpecialCategories::Yes || !category->isSpecialCategory())
+            res.append(category->name());
     }
     return res;
 }
@@ -101,7 +93,7 @@ DB::CategoryPtr XMLDB::XMLCategoryCollection::categoryForSpecial(const DB::Categ
 
 void XMLDB::XMLCategoryCollection::initIdMap()
 {
-    Q_FOREACH (DB::CategoryPtr categoryPtr, m_categories) {
+    for (DB::CategoryPtr categoryPtr : qAsConst(m_categories)) {
         static_cast<XMLCategory *>(categoryPtr.data())->initIdMap();
     }
 }

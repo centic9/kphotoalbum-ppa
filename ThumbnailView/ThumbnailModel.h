@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,6 +30,11 @@
 #include <QAbstractListModel>
 #include <QPixmap>
 
+namespace ImageManager
+{
+class ThumbnailCache;
+}
+
 namespace ThumbnailView
 {
 class ThumbnailFactory;
@@ -40,7 +45,7 @@ class ThumbnailModel : public QAbstractListModel, public ImageManager::ImageClie
     Q_OBJECT
 
 public:
-    explicit ThumbnailModel(ThumbnailFactory *factory);
+    explicit ThumbnailModel(ThumbnailFactory *factory, const ImageManager::ThumbnailCache *thumbnailCache);
 
     // -------------------------------------------------- QAbstractListModel
     using QAbstractListModel::beginResetModel;
@@ -92,7 +97,7 @@ public:
      */
     bool isFiltered() const;
 
-    FilterWidget *filterWidget();
+    FilterWidget *createFilterWidget(QWidget *parent);
 
 public slots:
     void updateVisibleRowInfo();
@@ -199,7 +204,8 @@ private: // Instance variables.
 
     DB::ImageSearchInfo m_filter;
     DB::ImageSearchInfo m_previousFilter;
-    FilterWidget *m_filterWidget;
+
+    const ImageManager::ThumbnailCache *m_thumbnailCache;
 };
 
 }

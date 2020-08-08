@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -259,18 +259,20 @@ void ImportDialog::updateNextButtonState()
 void ImportDialog::createCategoryPages()
 {
     QStringList categories;
-    DB::ImageInfoList images = selectedImages();
+    const DB::ImageInfoList images = selectedImages();
     for (DB::ImageInfoListConstIterator it = images.constBegin(); it != images.constEnd(); ++it) {
-        DB::ImageInfoPtr info = *it;
-        QStringList categoriesForImage = info->availableCategories();
-        Q_FOREACH (const QString &category, categoriesForImage) {
-            if (!categories.contains(category) && category != i18n("Folder") && category != i18n("Tokens") && category != i18n("Media Type"))
+        const DB::ImageInfoPtr info = *it;
+        const QStringList categoriesForImage = info->availableCategories();
+        for (const QString &category : categoriesForImage) {
+            auto catPtr = DB::ImageDB::instance()->categoryCollection()->categoryForName(category);
+            if (!categories.contains(category) && !(catPtr && catPtr->isSpecialCategory())) {
                 categories.append(category);
+            }
         }
     }
 
     if (!categories.isEmpty()) {
-        m_categoryMatcher = new ImportMatcher(QString(), QString(), categories, DB::ImageDB::instance()->categoryCollection()->categoryNames(),
+        m_categoryMatcher = new ImportMatcher(QString(), QString(), categories, DB::ImageDB::instance()->categoryCollection()->categoryNames(DB::CategoryCollection::IncludeSpecialCategories::No),
                                               false, this);
         m_categoryMatcherPage = addPage(m_categoryMatcher, i18n("Match Categories"));
 
@@ -293,7 +295,12 @@ ImportMatcher *ImportDialog::createCategoryPage(const QString &myCategory, const
     QStringList myItems = DB::ImageDB::instance()->categoryCollection()->categoryForName(myCategory)->itemsInclCategories();
     myItems.sort();
 
-    ImportMatcher *matcher = new ImportMatcher(otherCategory, myCategory, otherItems.toList(), myItems, true, this);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    const QStringList otherItemsList(otherItems.begin(), otherItems.end());
+#else
+    const QStringList otherItemsList = otherItems.toList();
+#endif
+    ImportMatcher *matcher = new ImportMatcher(otherCategory, myCategory, otherItemsList, myItems, true, this);
     addPage(matcher, myCategory);
     return matcher;
 }
@@ -320,7 +327,8 @@ void ImportDialog::next()
         removePage(m_dummy);
 
         ImportMatcher *matcher = nullptr;
-        Q_FOREACH (const CategoryMatch *match, m_categoryMatcher->m_matchers) {
+        const auto matchers = m_categoryMatcher->m_matchers;
+        for (const CategoryMatch *match : matchers) {
             if (match->m_checkbox->isChecked()) {
                 matcher = createCategoryPage(match->m_combobox->currentText(), match->m_text);
                 m_matchers.append(matcher);
@@ -344,7 +352,7 @@ void ImportDialog::slotSelectNone()
 
 void ImportDialog::selectImage(bool on)
 {
-    Q_FOREACH (ImageRow *row, m_imagesSelect) {
+    for (ImageRow *row : qAsConst(m_imagesSelect)) {
         row->m_checkbox->setChecked(on);
     }
 }

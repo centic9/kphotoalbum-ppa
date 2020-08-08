@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -69,16 +69,21 @@ void Exif::TreeView::reload()
 {
     clear();
     setRootIsDecorated(true);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    const auto availableKeys = Exif::Info::instance()->availableKeys();
+    QStringList keys(availableKeys.begin(), availableKeys.end());
+#else
     QStringList keys = Exif::Info::instance()->availableKeys().toList();
+#endif
     keys.sort();
 
     QMap<QString, QTreeWidgetItem *> tree;
 
     for (QStringList::const_iterator keysIt = keys.constBegin(); keysIt != keys.constEnd(); ++keysIt) {
-        QStringList subKeys = (*keysIt).split(QLatin1String("."));
+        const QStringList subKeys = (*keysIt).split(QLatin1String("."));
         QTreeWidgetItem *parent = nullptr;
         QString path;
-        Q_FOREACH (const QString &subKey, subKeys) {
+        for (const QString &subKey : subKeys) {
             if (!path.isEmpty())
                 path += QString::fromLatin1(".");
             path += subKey;

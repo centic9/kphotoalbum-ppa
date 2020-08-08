@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,6 +20,7 @@
 #include "ThumbnailModel.h"
 #include "ThumbnailWidget.h"
 
+#include <DB/ImageDB.h>
 #include <Settings/SettingsData.h>
 
 #include <KLocalizedString>
@@ -68,20 +69,6 @@ QRect ThumbnailView::CellGeometry::iconGeometry(const QPixmap &pixmap) const
 }
 
 /**
- * return the number of categories with values in for the given image.
- */
-static int noOfCategoriesForImage(const DB::FileName &image)
-{
-    static const QString folder(i18n("Folder"));
-    DB::ImageInfoPtr info = image.info();
-    int grps = info->availableCategories().length();
-    if (info->itemsOfCategory(folder).empty())
-        return grps - 1;
-    else
-        return grps - 2; // Exclude folder and media type
-}
-
-/**
  * Return the height of the text under the thumbnails.
  */
 int ThumbnailView::CellGeometry::textHeight() const
@@ -116,6 +103,7 @@ void ThumbnailView::CellGeometry::flushCache()
 
 void ThumbnailView::CellGeometry::calculateTextHeight()
 {
+    static const QString folder(i18n("Folder"));
     m_textHeight = 0;
 
     const int charHeight = QFontMetrics(widget()->font()).height();
@@ -124,8 +112,15 @@ void ThumbnailView::CellGeometry::calculateTextHeight()
 
     if (Settings::SettingsData::instance()->displayCategories()) {
         int maxCatsInText = 0;
-        Q_FOREACH (const DB::FileName &fileName, model()->imageList(ViewOrder)) {
-            maxCatsInText = qMax(noOfCategoriesForImage(fileName), maxCatsInText);
+        const auto images = model()->imageList(ViewOrder);
+        for (const DB::FileName &fileName : images) {
+            const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
+            int grps = info->availableCategories().length();
+            if (grps > maxCatsInText - 2) {
+                grps -= info->itemsOfCategory(folder).empty() ? 1 : 2;
+                if (grps > maxCatsInText)
+                    maxCatsInText = grps;
+            }
         }
 
         m_textHeight += charHeight * maxCatsInText + 5;

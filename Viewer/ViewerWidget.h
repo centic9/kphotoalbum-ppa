@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,6 +20,7 @@
 #define VIEWER_H
 
 #include <DB/FileNameList.h>
+#include <DB/ImageInfo.h>
 #include <DB/ImageInfoPtr.h>
 
 #include <QImage>
@@ -88,10 +89,9 @@ public:
      * @brief addAdditionalTaggedAreas adds additional areas and marks them as highlighted.
      * @param taggedAreas
      */
-    void addAdditionalTaggedAreas(QMap<QString, QMap<QString, QRect>> taggedAreas);
+    void addAdditionalTaggedAreas(DB::TaggedAreas taggedAreas);
 
 public slots:
-    bool close(bool alsoDelete = false);
     void updateInfoBox();
     void test();
     void moveInfoBox(int);
@@ -104,6 +104,7 @@ signals:
     void imageRotated(const DB::FileName &id);
 
 protected:
+    void closeEvent(QCloseEvent *event) override;
     void contextMenuEvent(QContextMenuEvent *e) override;
     void resizeEvent(QResizeEvent *) override;
     void keyPressEvent(QKeyEvent *) override;
@@ -118,7 +119,7 @@ protected:
      * @param taggedAreas Map(category -> Map(tagname, area))
      * @param type AreaType::Standard is for areas that are part of the Image; AreaType::Highlight is for additional areas
      */
-    void addTaggedAreas(QMap<QString, QMap<QString, QRect>> taggedAreas, AreaType type);
+    void addTaggedAreas(DB::TaggedAreas taggedAreas, AreaType type);
     void load();
     void setupContextMenu();
     void createShowContextMenu();
@@ -135,6 +136,8 @@ protected:
     void inhibitScreenSaver(bool inhibit);
     DB::ImageInfoPtr currentInfo() const;
     friend class InfoBox;
+
+    void updatePalette();
 
 private:
     void showNextN(int);
@@ -188,6 +191,12 @@ protected slots:
 
     /** Set the current window title (filename) and add the given detail */
     void setCaptionWithDetail(const QString &detail);
+
+    /**
+     * @brief slotRemoveDeletedImages removes all deleted images from the viewer playback list.
+     * @param imageList
+     */
+    void slotRemoveDeletedImages(const DB::FileNameList &imageList);
 
 private:
     static ViewerWidget *s_latest;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -36,7 +36,7 @@
 #include <DB/ImageDB.h>
 #include <DB/ImageInfo.h>
 #include <MainWindow/Window.h>
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
 #include <Map/MapView.h>
 #endif
 #include "VisibleOptionsMenu.h"
@@ -49,7 +49,7 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
     , m_hoveringOverLink(false)
     , m_infoBoxResizer(this)
     , m_menu(nullptr)
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     , m_map(nullptr)
 #endif
 {
@@ -58,13 +58,7 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
     setMidLineWidth(0);
     setAutoFillBackground(false);
 
-    QPalette p = palette();
-    // we want a transparent background, not the default widget grey
-    p.setColor(QPalette::Base, QColor(0, 0, 0, 170)); // r, g, b, A
-    // adapt other colors as necessary
-    p.setColor(QPalette::Text, Qt::white);
-    p.setColor(QPalette::Link, p.color(QPalette::Link).lighter());
-    setPalette(p);
+    updatePalette();
 
     m_jumpToContext = new QToolButton(this);
     m_jumpToContext->setIcon(QIcon::fromTheme(QString::fromUtf8("kphotoalbum")));
@@ -74,7 +68,7 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
     void (InfoBox::*highlighted)(const QString &) = &InfoBox::highlighted;
     connect(this, highlighted, this, &InfoBox::linkHovered);
 
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     m_showOnMap = new QToolButton(this);
     m_showOnMap->setIcon(QIcon::fromTheme(QString::fromUtf8("atmosphere")));
     m_showOnMap->setFixedSize(16, 16);
@@ -131,7 +125,7 @@ void Viewer::InfoBox::setInfo(const QString &text, const QMap<int, QPair<QString
 
     hackLinkColorForQt52();
 
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     if (m_viewer->currentInfo()->coordinates().hasCoordinates()) {
         m_showOnMap->show();
     } else {
@@ -157,6 +151,13 @@ void Viewer::InfoBox::setSize()
         + m_jumpToContext->width() + 10;
 
     resize(realWidth, qMin((int)document()->size().height(), maxHeight));
+}
+
+bool Viewer::InfoBox::event(QEvent *e)
+{
+    if (e->type() == QEvent::PaletteChange)
+        updatePalette();
+    return QTextBrowser::event(e);
 }
 
 void Viewer::InfoBox::mousePressEvent(QMouseEvent *event)
@@ -284,7 +285,7 @@ void Viewer::InfoBox::resizeEvent(QResizeEvent *)
 {
     QPoint pos = viewport()->rect().adjusted(0, 2, -m_jumpToContext->width() - 2, 0).topRight();
     m_jumpToContext->move(pos);
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     pos.setY(pos.y() + 20);
     m_showOnMap->move(pos);
 #endif
@@ -317,6 +318,22 @@ void Viewer::InfoBox::hackLinkColorForQt52()
     }
 }
 
+void Viewer::InfoBox::updatePalette()
+{
+    QPalette p = palette();
+    // we want a transparent background, not the default widget grey
+    QColor bgColor = palette().shadow().color();
+    bgColor.setAlpha(170);
+    p.setColor(QPalette::Base, bgColor);
+    // adapt other colors as necessary
+    p.setColor(QPalette::WindowText, palette().brightText().color());
+    p.setColor(QPalette::Text, palette().brightText().color());
+    p.setColor(QPalette::Link, p.color(QPalette::Link).lighter());
+    setPalette(p);
+    // re-enable palette propagation:
+    setAttribute(Qt::WA_SetPalette);
+}
+
 void Viewer::InfoBox::contextMenuEvent(QContextMenuEvent *event)
 {
     if (!m_menu) {
@@ -326,14 +343,15 @@ void Viewer::InfoBox::contextMenuEvent(QContextMenuEvent *event)
     m_menu->exec(event->globalPos());
 }
 
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
 void Viewer::InfoBox::launchMapView()
 {
     if (!m_map) {
-        m_map = new Map::MapView(m_viewer, Map::MapView::MapViewWindow);
+        m_map = new Map::MapView(m_viewer, Map::UsageType::MapViewWindow);
     }
 
     m_map->addImage(m_viewer->currentInfo());
+    m_map->buildImageClusters();
     m_map->setShowThumbnails(false);
     m_map->zoomToMarkers();
     m_map->show();
@@ -347,12 +365,13 @@ void Viewer::InfoBox::updateMapForCurrentImage(DB::FileName)
     }
 
     if (m_viewer->currentInfo()->coordinates().hasCoordinates()) {
-        m_map->displayStatus(Map::MapView::MapStatus::ImageHasCoordinates);
+        m_map->displayStatus(Map::MapStatus::ImageHasCoordinates);
         m_map->clear();
         m_map->addImage(m_viewer->currentInfo());
+        m_map->buildImageClusters();
         m_map->setCenter(m_viewer->currentInfo());
     } else {
-        m_map->displayStatus(Map::MapView::MapStatus::ImageHasNoCoordinates);
+        m_map->displayStatus(Map::MapStatus::ImageHasNoCoordinates);
     }
 }
 #endif

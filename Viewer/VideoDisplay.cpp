@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -46,9 +46,7 @@ Viewer::VideoDisplay::VideoDisplay(QWidget *parent)
     , m_zoomType(FullZoom)
     , m_zoomFactor(1)
 {
-    QPalette pal = palette();
-    pal.setColor(QPalette::Window, Qt::black);
-    setPalette(pal);
+    setBackgroundRole(QPalette::Shadow);
     setAutoFillBackground(true);
 
     m_mediaObject = nullptr;

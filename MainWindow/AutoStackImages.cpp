@@ -1,4 +1,4 @@
-/* Copyright (C) 2010-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2010-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -132,8 +132,9 @@ void AutoStackImages::matchingMD5(DB::FileNameList &toBeShown)
 
     // Stacking all images that have the same MD5 sum
     // First make a map of MD5 sums with corresponding images
-    Q_FOREACH (const DB::FileName &fileName, m_list) {
-        DB::MD5 sum = fileName.info()->MD5Sum();
+    for (const DB::FileName &fileName : qAsConst(m_list)) {
+        const auto info = DB::ImageDB::instance()->info(fileName);
+        DB::MD5 sum = info->MD5Sum();
         if (DB::ImageDB::instance()->md5Map()->contains(sum)) {
             if (tostack[sum].isEmpty())
                 tostack.insert(sum, DB::FileNameList() << fileName);
@@ -159,11 +160,12 @@ void AutoStackImages::matchingMD5(DB::FileNameList &toBeShown)
             }
             if (stack.size() > 1) {
 
-                Q_FOREACH (const DB::FileName &a, showIfStacked) {
-                    if (!DB::ImageDB::instance()->getStackFor(a).isEmpty())
-                        Q_FOREACH (const DB::FileName &b, DB::ImageDB::instance()->getStackFor(a))
+                for (const DB::FileName &a : qAsConst(showIfStacked)) {
+                    if (!DB::ImageDB::instance()->getStackFor(a).isEmpty()) {
+                        const auto stackedImages = DB::ImageDB::instance()->getStackFor(a);
+                        for (const DB::FileName &b : stackedImages)
                             toBeShown.append(b);
-                    else
+                    } else
                         toBeShown.append(a);
                 }
                 DB::ImageDB::instance()->stack(stack);
@@ -194,7 +196,7 @@ void AutoStackImages::matchingFile(DB::FileNameList &toBeShown)
 
     // Stacking all images based on file version detection
     // First round prepares the stacking
-    Q_FOREACH (const DB::FileName &fileName, m_list) {
+    for (const DB::FileName &fileName : qAsConst(m_list)) {
         if (modifiedFileCompString.length() >= 0 && fileName.relative().contains(modifiedFileComponent)) {
 
             for (QStringList::const_iterator it = originalFileComponents.constBegin();
@@ -204,7 +206,8 @@ void AutoStackImages::matchingFile(DB::FileNameList &toBeShown)
                 DB::FileName originalFileName = DB::FileName::fromRelativePath(tmp);
 
                 if (originalFileName != fileName && m_list.contains(originalFileName)) {
-                    DB::MD5 sum = originalFileName.info()->MD5Sum();
+                    const auto info = DB::ImageDB::instance()->info(fileName);
+                    DB::MD5 sum = info->MD5Sum();
                     if (tostack[sum].isEmpty()) {
                         if (m_origTop->isChecked()) {
                             tostack.insert(sum, DB::FileNameList() << originalFileName);
@@ -238,11 +241,12 @@ void AutoStackImages::matchingFile(DB::FileNameList &toBeShown)
             }
             if (stack.size() > 1) {
 
-                Q_FOREACH (const DB::FileName &a, showIfStacked) {
-                    if (!DB::ImageDB::instance()->getStackFor(a).isEmpty())
-                        Q_FOREACH (const DB::FileName &b, DB::ImageDB::instance()->getStackFor(a))
+                for (const DB::FileName &a : qAsConst(showIfStacked)) {
+                    if (!DB::ImageDB::instance()->getStackFor(a).isEmpty()) {
+                        const auto stackedImages = DB::ImageDB::instance()->getStackFor(a);
+                        for (const DB::FileName &b : stackedImages)
                             toBeShown.append(b);
-                    else
+                    } else
                         toBeShown.append(a);
                 }
                 DB::ImageDB::instance()->stack(stack);
@@ -252,15 +256,14 @@ void AutoStackImages::matchingFile(DB::FileNameList &toBeShown)
     }
 }
 
-/*
+/**
  * This function searches for images that are shot within specified time frame
  */
-
 void AutoStackImages::continuousShooting(DB::FileNameList &toBeShown)
 {
     DB::ImageInfoPtr prev;
-    Q_FOREACH (const DB::FileName &fileName, m_list) {
-        DB::ImageInfoPtr info = fileName.info();
+    for (const DB::FileName &fileName : qAsConst(m_list)) {
+        const auto info = DB::ImageDB::instance()->info(fileName);
         // Skipping images that do not have exact time stamp
         if (info->date().start() != info->date().end())
             continue;
@@ -284,21 +287,23 @@ void AutoStackImages::continuousShooting(DB::FileNameList &toBeShown)
             stack.append(prev->fileName());
             stack.append(info->fileName());
             if (!toBeShown.isEmpty()) {
-                if (toBeShown.at(toBeShown.size() - 1).info()->fileName() != prev->fileName())
+                if (toBeShown.at(toBeShown.size() - 1) != prev->fileName())
                     toBeShown.append(prev->fileName());
             } else {
                 // if this is first insert, we have to include also the stacked images from previuous image
-                if (!DB::ImageDB::instance()->getStackFor(info->fileName()).isEmpty())
-                    Q_FOREACH (const DB::FileName &a, DB::ImageDB::instance()->getStackFor(prev->fileName()))
+                if (!DB::ImageDB::instance()->getStackFor(info->fileName()).isEmpty()) {
+                    const auto stackedImages = DB::ImageDB::instance()->getStackFor(prev->fileName());
+                    for (const DB::FileName &a : stackedImages)
                         toBeShown.append(a);
-                else
+                } else
                     toBeShown.append(prev->fileName());
             }
             // Inserting stacked images from the current image
-            if (!DB::ImageDB::instance()->getStackFor(info->fileName()).isEmpty())
-                Q_FOREACH (const DB::FileName &a, DB::ImageDB::instance()->getStackFor(fileName))
+            if (!DB::ImageDB::instance()->getStackFor(info->fileName()).isEmpty()) {
+                const auto stackedImages = DB::ImageDB::instance()->getStackFor(fileName);
+                for (const DB::FileName &a : stackedImages)
                     toBeShown.append(a);
-            else
+            } else
                 toBeShown.append(info->fileName());
             DB::ImageDB::instance()->stack(stack);
         }

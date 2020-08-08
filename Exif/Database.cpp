@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -110,7 +110,7 @@ void Database::showErrorAndFail(QSqlQuery &query) const
                              "<p>The error message obtained was:<br/>%2</p>",
                              query.lastQuery(), query.lastError().text());
 
-    const QString technicalInfo = QString::fromUtf8("Error running query: %s\n Error was: %s")
+    const QString technicalInfo = QString::fromUtf8("Error running query: %1\n Error was: %2")
                                       .arg(query.lastQuery(), query.lastError().text());
     showErrorAndFail(txt, technicalInfo);
 }
@@ -144,7 +144,7 @@ void Exif::Database::openDatabase()
                                  "<p>The error message obtained was:<br/>%1</p>",
                                  m_db.lastError().text());
         const QString logMsg = QString::fromUtf8("Could not open Exif search database! "
-                                                 "Error was: %s")
+                                                 "Error was: %1")
                                    .arg(m_db.lastError().text());
         showErrorAndFail(txt, logMsg);
         return;
@@ -173,7 +173,8 @@ void Exif::Database::populateDatabase()
 {
     createMetadataTable(SchemaAndDataChanged);
     QStringList attributes;
-    Q_FOREACH (DatabaseElement *element, elements()) {
+    const auto allElements = elements();
+    for (const DatabaseElement *element : allElements) {
         attributes.append(element->createString());
     }
 
@@ -267,14 +268,14 @@ bool Exif::Database::add(const DB::FileNameList &list)
 
     QList<DBExifInfo> map;
 
-    Q_FOREACH (const DB::FileName &fileName, list) {
+    for (const DB::FileName &fileName : list) {
         try {
             Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(fileName.absolute().toLocal8Bit().data());
             Q_ASSERT(image.get() != nullptr);
             image->readMetadata();
             map << DBExifInfo(fileName, image->exifData());
         } catch (...) {
-            qWarning("Error while reading exif information from %s", qPrintable(fileName.absolute()));
+            qCWarning(ExifLog, "Error while reading exif information from %s", qPrintable(fileName.absolute()));
         }
     }
     insert(map);
@@ -301,7 +302,7 @@ void Exif::Database::remove(const DB::FileNameList &list)
     m_db.transaction();
     QSqlQuery query(m_db);
     query.prepare(QString::fromLatin1("DELETE FROM exif WHERE fileName=?"));
-    Q_FOREACH (const DB::FileName &fileName, list) {
+    for (const DB::FileName &fileName : list) {
         query.bindValue(0, fileName.absolute());
         if (!query.exec()) {
             m_db.rollback();
@@ -389,14 +390,14 @@ bool Exif::Database::insert(const DB::FileName &filename, Exiv2::ExifData data)
     return status;
 }
 
-bool Exif::Database::insert(QList<DBExifInfo> map)
+bool Exif::Database::insert(const QList<DBExifInfo> map)
 {
     if (!isUsable())
         return false;
 
     QSqlQuery *query = getInsertQuery();
     // not a const reference because DatabaseElement::valueFromExif uses operator[] on the exif datum
-    Q_FOREACH (DBExifInfo elt, map) {
+    for (DBExifInfo elt : map) {
         query->bindValue(0, elt.first.absolute());
         int i = 1;
         for (const DatabaseElement *e : elements()) {
@@ -616,7 +617,7 @@ void Exif::Database::recreate()
     QDir().rename(exifDBFile(), origBackup);
     init();
 
-    const DB::FileNameList allImages = DB::ImageDB::instance()->images();
+    const auto allImages = DB::ImageDB::instance()->images();
     QProgressDialog dialog;
     dialog.setModal(true);
     dialog.setLabelText(i18n("Rereading Exif information from all images"));
@@ -624,11 +625,10 @@ void Exif::Database::recreate()
     // using a transaction here removes a *huge* overhead on the insert statements
     startInsertTransaction();
     int i = 0;
-    for (const DB::FileName &fileName : allImages) {
-        const DB::ImageInfoPtr info = fileName.info();
+    for (const auto &info : allImages) {
         dialog.setValue(i++);
         if (info->mediaType() == DB::Image) {
-            add(fileName);
+            add(info->fileName());
         }
         if (i % 10)
             qApp->processEvents();

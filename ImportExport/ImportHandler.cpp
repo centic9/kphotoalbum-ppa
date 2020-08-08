@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -39,6 +39,7 @@
 #include <QFile>
 #include <QProgressDialog>
 #include <kio/job.h>
+#include <kio_version.h>
 #include <kmessagebox.h>
 #include <memory>
 
@@ -47,7 +48,7 @@ using namespace ImportExport;
 ImportExport::ImportHandler::ImportHandler()
     : m_fileMapper(nullptr)
     , m_finishedPressed(false)
-    , m_progress(0)
+    , m_progress(nullptr)
     , m_reportUnreadableFiles(true)
     , m_eventLoop(new QEventLoop)
 
@@ -108,7 +109,7 @@ void ImportExport::ImportHandler::copyNextFromExternal()
 
     if (isImageAlreadyInDB(info)) {
         qCDebug(ImportExportLog) << info->fileName().relative() << "is already in database.";
-        aCopyJobCompleted(0);
+        aCopyJobCompleted(nullptr);
         return;
     }
 
@@ -119,14 +120,18 @@ void ImportExport::ImportHandler::copyNextFromExternal()
 
     // First search for images next to the .kim file
     // Second search for images base on the image root as specified in the .kim file
-    QList<QUrl> searchUrls {
+    const QList<QUrl> searchUrls {
         m_settings.kimFile().adjusted(QUrl::RemoveFilename), m_settings.baseURL().adjusted(QUrl::RemoveFilename)
     };
-    Q_FOREACH (const QUrl &url, searchUrls) {
+    for (const QUrl &url : searchUrls) {
         QUrl src(url);
         src.setPath(src.path() + fileName.relative());
 
+#if KIO_VERSION < QT_VERSION_CHECK(5, 69, 0)
         std::unique_ptr<KIO::StatJob> statJob { KIO::stat(src, KIO::StatJob::SourceSide, 0 /* just query for existence */) };
+#else
+        std::unique_ptr<KIO::StatJob> statJob { KIO::statDetails(src, KIO::StatJob::SourceSide, KIO::StatDetail::StatNoDetails) };
+#endif
         KJobWidgets::setWindow(statJob.get(), MainWindow::Window::theMainWindow());
         if (statJob->exec()) {
             QUrl dest = QUrl::fromLocalFile(m_fileMapper->uniqNameFor(fileName));
@@ -243,9 +248,9 @@ void ImportExport::ImportHandler::aCopyFailed(QStringList files)
 
     case KMessageBox::No:
         m_reportUnreadableFiles = false;
-        // fall through
+        Q_FALLTHROUGH();
     default:
-        aCopyJobCompleted(0);
+        aCopyJobCompleted(nullptr);
     }
 }
 
@@ -306,7 +311,7 @@ void ImportExport::ImportHandler::addNewRecord(DB::ImageInfoPtr info)
 {
     const DB::FileName importName = info->fileName();
 
-    DB::ImageInfoPtr updateInfo(new DB::ImageInfo(importName, info->mediaType(), false /*don't read exif */));
+    DB::ImageInfoPtr updateInfo(new DB::ImageInfo(importName, info->mediaType(), DB::FileInformation::Ignore));
     updateInfo->setLabel(info->label());
     updateInfo->setDescription(info->description());
     updateInfo->setDate(info->date());

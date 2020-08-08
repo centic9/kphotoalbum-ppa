@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -176,7 +176,7 @@ bool Viewer::ImageDisplay::setImage(DB::ImageInfoPtr info, bool forward)
 
     // Find the index of the current image
     m_curIndex = 0;
-    Q_FOREACH (const DB::FileName &filename, m_imageList) {
+    for (const DB::FileName &filename : qAsConst(m_imageList)) {
         if (filename == info->fileName())
             break;
         ++m_curIndex;
@@ -217,7 +217,8 @@ void Viewer::ImageDisplay::paintEvent(QPaintEvent *)
     int y = (height() - m_croppedAndScaledImg.height()) / 2;
 
     QPainter painter(this);
-    painter.fillRect(0, 0, width(), height(), Qt::black);
+    Q_ASSERT(painter.isActive());
+    painter.fillRect(0, 0, width(), height(), palette().base());
     painter.drawImage(x, y, m_croppedAndScaledImg);
 }
 
@@ -648,7 +649,7 @@ void Viewer::ImageDisplay::updatePreload()
 int Viewer::ImageDisplay::indexOf(const DB::FileName &fileName)
 {
     int i = 0;
-    Q_FOREACH (const DB::FileName &name, m_imageList) {
+    for (const DB::FileName &name : qAsConst(m_imageList)) {
         if (name == fileName)
             break;
         ++i;
