@@ -193,17 +193,23 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
     if (m_searchRAW && !ImageManager::RAWImageDecoder::isRAW(info->fileName()))
         return false;
 
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     // Search for GPS Position
-    if (m_usingRegionSelection) {
+    if (!m_regionSelection.isNull()) {
         if (!info->coordinates().hasCoordinates())
             return false;
-        float infoLat = info->coordinates().lat();
-        if (m_regionSelectionMinLat > infoLat || m_regionSelectionMaxLat < infoLat)
+        double infoLat = info->coordinates().lat();
+        if (infoLat < m_regionSelection.south || infoLat > m_regionSelection.north) {
             return false;
-        float infoLon = info->coordinates().lon();
-        if (m_regionSelectionMinLon > infoLon || m_regionSelectionMaxLon < infoLon)
+        }
+        double infoLon = info->coordinates().lon();
+        // copied from Marble::GeoDataLatLonBox:
+        if (((infoLon < m_regionSelection.west || infoLon > m_regionSelection.east)
+             && (m_regionSelection.west < m_regionSelection.east))
+            || ((infoLon < m_regionSelection.west && infoLon > m_regionSelection.east)
+                && (m_regionSelection.east > m_regionSelection.west))) {
             return false;
+        }
     }
 #endif
 
@@ -223,8 +229,8 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
     // -------------------------------------------------- Text
     if (!m_description.isEmpty()) {
         const QString &txt(info->description());
-        QStringList list = m_description.split(QChar::fromLatin1(' '), QString::SkipEmptyParts);
-        Q_FOREACH (const QString &word, list) {
+        const QStringList list = m_description.split(QChar::fromLatin1(' '), QString::SkipEmptyParts);
+        for (const QString &word : list) {
             if (txt.indexOf(word, 0, Qt::CaseInsensitive) == -1)
                 return false;
         }
@@ -349,68 +355,55 @@ void ImageSearchInfo::debug()
     }
 }
 
-// PENDING(blackie) move this into the Options class instead of having it here.
-void ImageSearchInfo::saveLock() const
+QVariantMap ImageSearchInfo::getLockData() const
 {
-    KConfigGroup config = KSharedConfig::openConfig()->group(Settings::SettingsData::instance()->groupForDatabase("Privacy Settings"));
-    config.writeEntry(QString::fromLatin1("label"), m_label);
-    config.writeEntry(QString::fromLatin1("description"), m_description);
-    config.writeEntry(QString::fromLatin1("categories"), m_categoryMatchText.keys());
+    QVariantMap pairs;
+    pairs[QString::fromLatin1("label")] = m_label;
+    pairs[QString::fromLatin1("description")] = m_description;
+    pairs[QString::fromLatin1("categories")] = QVariant(m_categoryMatchText.keys());
     for (QMap<QString, QString>::ConstIterator it = m_categoryMatchText.begin(); it != m_categoryMatchText.end(); ++it) {
-        config.writeEntry(it.key(), it.value());
+        pairs[it.key()] = it.value();
     }
-    config.sync();
+    return pairs;
 }
 
-ImageSearchInfo ImageSearchInfo::loadLock()
+ImageSearchInfo ImageSearchInfo::loadLock(const QMap<QString, QVariant> &keyValuePairs)
 {
-    KConfigGroup config = KSharedConfig::openConfig()->group(Settings::SettingsData::instance()->groupForDatabase("Privacy Settings"));
     ImageSearchInfo info;
-    info.m_label = config.readEntry("label");
-    info.m_description = config.readEntry("description");
-    QStringList categories = config.readEntry<QStringList>(QString::fromLatin1("categories"), QStringList());
+    info.m_label = keyValuePairs.value(QString::fromLatin1("label"), {}).toString();
+    info.m_description = keyValuePairs.value(QString::fromLatin1("description"), {}).toString();
+    QStringList categories = keyValuePairs.value(QString::fromLatin1("categories"), {}).toStringList();
     for (QStringList::ConstIterator it = categories.constBegin(); it != categories.constEnd(); ++it) {
-        info.setCategoryMatchText(*it, config.readEntry<QString>(*it, QString()));
+        info.setCategoryMatchText(*it, keyValuePairs.value(*it, {}).toString());
     }
     return info;
 }
 
 void ImageSearchInfo::compile() const
 {
+    qCDebug(DBCategoryMatcherLog) << "Compiling search info...";
     m_exifSearchInfo.search();
-#ifdef HAVE_KGEOMAP
-    // Prepare Search for GPS Position
-    m_usingRegionSelection = m_regionSelection.first.hasCoordinates() && m_regionSelection.second.hasCoordinates();
-    if (m_usingRegionSelection) {
-        using std::max;
-        using std::min;
-        m_regionSelectionMinLat = min(m_regionSelection.first.lat(), m_regionSelection.second.lat());
-        m_regionSelectionMaxLat = max(m_regionSelection.first.lat(), m_regionSelection.second.lat());
-        m_regionSelectionMinLon = min(m_regionSelection.first.lon(), m_regionSelection.second.lon());
-        m_regionSelectionMaxLon = max(m_regionSelection.first.lon(), m_regionSelection.second.lon());
-    }
-#endif
 
     CompiledDataPrivate compiledData;
 
     for (QMap<QString, QString>::ConstIterator it = m_categoryMatchText.begin(); it != m_categoryMatchText.end(); ++it) {
-        QString category = it.key();
-        QString matchText = it.value();
+        const QString category = it.key();
+        const QString matchText = it.value();
 
-        QStringList orParts = matchText.split(QString::fromLatin1("|"), QString::SkipEmptyParts);
+        const QStringList orParts = matchText.split(QString::fromLatin1("|"), QString::SkipEmptyParts);
         DB::ContainerCategoryMatcher *orMatcher = new DB::OrCategoryMatcher;
 
-        Q_FOREACH (QString orPart, orParts) {
+        for (QString orPart : orParts) {
             // Split by " & ", not only by "&", so that the doubled "&"s won't be used as a split point
-            QStringList andParts = orPart.split(QString::fromLatin1(" & "), QString::SkipEmptyParts);
+            const QStringList andParts = orPart.split(QString::fromLatin1(" & "), QString::SkipEmptyParts);
 
             DB::ContainerCategoryMatcher *andMatcher;
             bool exactMatch = false;
             bool negate = false;
             andMatcher = new DB::AndCategoryMatcher;
 
-            Q_FOREACH (QString str, andParts) {
-                static QRegExp regexp(QString::fromLatin1("^\\s*!\\s*(.*)$"));
+            for (QString str : andParts) {
+                static const QRegExp regexp(QString::fromLatin1("^\\s*!\\s*(.*)$"));
                 if (regexp.exactMatch(str)) { // str is preceded with NOT
                     negate = true;
                     str = regexp.cap(1);
@@ -422,8 +415,10 @@ void ImageSearchInfo::compile() const
                     continue;
                 } else {
                     valueMatcher = new DB::ValueCategoryMatcher(category, str);
-                    if (negate)
+                    if (negate) {
                         valueMatcher = new DB::NegationCategoryMatcher(valueMatcher);
+                        negate = false;
+                    }
                 }
                 andMatcher->addElement(valueMatcher);
             }
@@ -515,14 +510,14 @@ QList<QList<SimpleCategoryMatcher *>> ImageSearchInfo::query() const
 Utilities::StringSet ImageSearchInfo::findAlreadyMatched(const QString &group) const
 {
     Utilities::StringSet result;
-    QString str = categoryMatchText(group);
+    const QString str = categoryMatchText(group);
     if (str.contains(QString::fromLatin1("|"))) {
         return result;
     }
 
-    QStringList list = str.split(QString::fromLatin1("&"), QString::SkipEmptyParts);
-    Q_FOREACH (QString part, list) {
-        QString nm = part.trimmed();
+    const QStringList list = str.split(QString::fromLatin1("&"), QString::SkipEmptyParts);
+    for (const QString &part : list) {
+        const QString nm = part.trimmed();
         if (!nm.contains(QString::fromLatin1("!")))
             result.insert(nm);
     }
@@ -593,17 +588,17 @@ void DB::ImageSearchInfo::renameCategory(const QString &oldName, const QString &
     m_matchGeneration = nextGeneration();
 }
 
-#ifdef HAVE_KGEOMAP
-KGeoMap::GeoCoordinates::Pair ImageSearchInfo::regionSelection() const
+#ifdef HAVE_MARBLE
+Map::GeoCoordinates::LatLonBox ImageSearchInfo::regionSelection() const
 {
     return m_regionSelection;
 }
 
-void ImageSearchInfo::setRegionSelection(const KGeoMap::GeoCoordinates::Pair &actRegionSelection)
+void ImageSearchInfo::setRegionSelection(const Map::GeoCoordinates::LatLonBox &actRegionSelection)
 {
     m_regionSelection = actRegionSelection;
     m_compiled.valid = false;
-    if (m_regionSelection.first.hasCoordinates() && m_regionSelection.second.hasCoordinates()) {
+    if (!m_regionSelection.isNull()) {
         m_isNull = false;
     }
     m_matchGeneration = nextGeneration();

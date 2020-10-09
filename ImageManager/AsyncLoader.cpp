@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -28,6 +28,7 @@
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
 #include <BackgroundTaskManager/JobManager.h>
 #include <MainWindow/FeatureDialog.h>
+#include <Settings/SettingsData.h>
 #include <Utilities/VideoUtil.h>
 
 #include <QIcon>
@@ -63,14 +64,16 @@ void ImageManager::AsyncLoader::init()
     // as that'd mean that a dual-core box would only have one core decoding images, which would be
     // suboptimal.
     // In case of only one core in the computer, use one core for thumbnail generation
-    // TODO(isilmendil): It seems that many people have their images on NFS-mounts.
-    //                   Should we somehow detect this and allocate less threads there?
-    //                   rlk 20180515: IMO no; if anything, we need more threads to hide
-    //                   the latency of NFS.
-    const int cores = qMax(1, qMin(16, QThread::idealThreadCount() - 1));
+    // jzarl:  It seems that many people have their images on NFS-mounts.
+    //         Should we somehow detect this and allocate less threads there?
+    //         rlk 20180515: IMO no; if anything, we need more threads to hide the latency of NFS.
+    int desiredThreads = Settings::SettingsData::instance()->getThumbnailBuilderThreadCount();
+    if (desiredThreads == 0) {
+        desiredThreads = qMax(1, qMin(16, QThread::idealThreadCount() - 1));
+    }
     m_exitRequested = false;
 
-    for (int i = 0; i < cores; ++i) {
+    for (int i = 0; i < desiredThreads; ++i) {
         ImageLoaderThread *imageLoader = new ImageLoaderThread();
         // The thread is set to the lowest priority to ensure that it doesn't starve the GUI thread.
         m_threadList << imageLoader;
@@ -109,12 +112,15 @@ bool ImageManager::AsyncLoader::loadVideo(ImageRequest *request)
     if (!MainWindow::FeatureDialog::hasVideoThumbnailer())
         return false;
 
+    if (!request->fileSystemFileName().exists())
+        return false;
+
     BackgroundTaskManager::Priority priority = (request->priority() > ThumbnailInvisible)
         ? BackgroundTaskManager::ForegroundThumbnailRequest
         : BackgroundTaskManager::BackgroundVideoThumbnailRequest;
 
     BackgroundTaskManager::JobManager::instance()->addJob(
-        new BackgroundJobs::HandleVideoThumbnailRequestJob(request, priority));
+        new BackgroundJobs::HandleVideoThumbnailRequestJob(request, priority, MainWindow::Window::theMainWindow()->thumbnailCache()));
     return true;
 }
 
@@ -231,7 +237,7 @@ void ImageManager::AsyncLoader::customEvent(QEvent *ev)
         }
 
         if (request->isThumbnailRequest())
-            ImageManager::ThumbnailCache::instance()->insert(request->databaseFileName(), image);
+            MainWindow::Window::theMainWindow()->thumbnailCache()->insert(request->databaseFileName(), image);
 
         if (requestStillNeeded && request->client()) {
             request->client()->pixmapLoaded(request, image);

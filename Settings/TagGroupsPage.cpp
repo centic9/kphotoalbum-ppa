@@ -120,8 +120,8 @@ void Settings::TagGroupsPage::updateCategoryTree()
 
     // Create a tree view of all groups and their sub-groups
 
-    QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
-    Q_FOREACH (const DB::CategoryPtr category, categories) {
+    const QList<DB::CategoryPtr> categories = DB::ImageDB::instance()->categoryCollection()->categories();
+    for (const DB::CategoryPtr &category : categories) {
         if (category->isSpecialCategory()) {
             continue;
         }
@@ -138,7 +138,7 @@ void Settings::TagGroupsPage::updateCategoryTree()
         // Build a map with all members for each group
         QMap<QString, QStringList> membersForGroup;
         const QStringList allGroups = m_memberMap.groups(category->name());
-        foreach (const QString &group, allGroups) {
+        for (const QString &group : allGroups) {
             // FIXME: Why does the member map return an empty category?!
             if (group.isEmpty()) {
                 continue;
@@ -192,7 +192,7 @@ void Settings::TagGroupsPage::addSubCategories(QTreeWidgetItem *superCategory,
 
             // Search the member list for other groups
             QMap<QString, QStringList> subGroups;
-            foreach (const QString &groupName, allGroups) {
+            for (const QString &groupName : allGroups) {
                 if (membersForGroup[group].contains(groupName)) {
                     subGroups[groupName] = membersForGroup[groupName];
                 }
@@ -259,11 +259,10 @@ void Settings::TagGroupsPage::categoryChanged(const QString &name)
     m_membersListWidget->blockSignals(true);
     m_membersListWidget->clear();
 
-    QStringList list = getCategoryObject(name)->items();
-    list += m_memberMap.groups(name);
+    const QStringList list = getCategoryObject(name)->items() + m_memberMap.groups(name);
     QStringList alreadyAdded;
 
-    Q_FOREACH (const QString &member, list) {
+    for (const QString &member : list) {
         if (member.isEmpty()) {
             // This can happen if we add group that currently has no members.
             continue;
@@ -272,7 +271,7 @@ void Settings::TagGroupsPage::categoryChanged(const QString &name)
         if (!alreadyAdded.contains(member)) {
             alreadyAdded << member;
 
-            if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+            if (DB::ImageDB::instance()->untaggedCategoryFeatureConfigured()
                 && !Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
 
                 if (name == Settings::SettingsData::instance()->untaggedCategory()) {
@@ -567,7 +566,8 @@ void Settings::TagGroupsPage::saveOldGroup()
         }
     }
 
-    m_memberMap.setMembers(m_currentCategory, m_currentGroup, list);
+    if (!m_currentCategory.isEmpty() && !m_currentGroup.isEmpty())
+        m_memberMap.setMembers(m_currentCategory, m_currentGroup, list);
 }
 
 void Settings::TagGroupsPage::selectMembers(const QString &group)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -43,10 +43,10 @@ QStringList Exif::SearchInfo::buildIntKeyQuery() const
     QStringList andArgs;
     for (IntKeyList::ConstIterator intIt = m_intKeys.begin(); intIt != m_intKeys.end(); ++intIt) {
         QStringList orArgs;
-        QString key = (*intIt).first;
-        IntList values = (*intIt).second;
+        const QString key = (*intIt).first;
+        const IntList values = (*intIt).second;
 
-        Q_FOREACH (int value, values) {
+        for (int value : values) {
             orArgs << QString::fromLatin1("(%1 == %2)").arg(key).arg(value);
         }
         if (orArgs.count() != 0)

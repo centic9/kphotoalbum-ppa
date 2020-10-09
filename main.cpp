@@ -1,4 +1,4 @@
-/* Copyright (C) 2010-2019 The KPhotoAlbum development team
+/* Copyright (C) 2010-2020 The KPhotoAlbum development team
    Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
@@ -22,9 +22,13 @@
 #include <MainWindow/Options.h>
 #include <MainWindow/SplashScreen.h>
 #include <MainWindow/Window.h>
+#ifdef KPA_ENABLE_REMOTECONTROL
+#include <RemoteControl/RemoteInterface.h>
+#endif
 #include <Settings/SettingsData.h>
 
 #include <KAboutData>
+#include <KColorScheme>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -34,11 +38,25 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QLocale>
+#include <QLoggingCategory>
 #include <QTemporaryFile>
-#ifdef KPA_ENABLE_REMOTECONTROL
-#include <RemoteControl/RemoteInterface.h>
-#endif
 
+Q_DECLARE_LOGGING_CATEGORY(MainLog)
+Q_LOGGING_CATEGORY(MainLog, "kphotoalbum", QtWarningMsg)
+
+namespace
+{
+
+const auto STYLE = QStringLiteral(
+    "Viewer--TaggedArea { border: none; background-color: none; }"
+    "Viewer--TaggedArea:hover, Viewer--TaggedArea[selected=\"true\"] {"
+    " border: 1px solid rgb(0,255,0,99); background-color: rgb(255,255,255,30);"
+    " }"
+    "Viewer--TaggedArea[highlighted=\"true\"]{ border: 1px solid rgb(255,128,0,99); background-color: rgb(255,255,255,30); }"
+    "AnnotationDialog--ResizableFrame { color: rgb(255,0,0); }"
+    "AnnotationDialog--ResizableFrame:hover { background-color: rgb(255,255,255,30); }"
+    "AnnotationDialog--ResizableFrame[associated=true] { color: rgb(0,255,0); }");
+}
 void migrateKDE4Config()
 {
     Kdelibs4ConfigMigrator migrator(QStringLiteral("kphotoalbum")); // the same name defined in the aboutData
@@ -52,7 +70,7 @@ void migrateKDE4Config()
             generalConfig.writeEntry(QString::fromLatin1("imageDBFile"),
                                      unnamedConfig.readEntry(QString::fromLatin1("configfile")));
             unnamedConfig.deleteEntry(QString::fromLatin1("configfile"));
-            qWarning() << "Renamed config entry configfile to General.imageDBFile.";
+            qCWarning(MainLog) << "Renamed config entry configfile to General.imageDBFile.";
         }
     }
 }
@@ -69,7 +87,7 @@ int main(int argc, char **argv)
         QStringLiteral(KPA_VERSION),
         i18n("KDE Photo Album"), // short description
         KAboutLicense::GPL,
-        i18n("Copyright (C) 2003-2019 The KPhotoAlbum Development Team"), // copyright statement
+        i18n("Copyright (C) 2003-2020 The KPhotoAlbum Development Team"), // copyright statement
         QString(), // other text
         QStringLiteral("https://www.kphotoalbum.org") // homepage
     );
@@ -92,6 +110,7 @@ int main(int argc, char **argv)
     // sort alphabetically:
     aboutData.addCredit(i18n("Marco Caldarelli"), i18n("Patch for making it possible to reread Exif info using a nice dialog."), QStringLiteral("caldarel@yahoo.it"));
     aboutData.addCredit(i18n("Jean-Michel FAYARD"), i18n("(.) Patch with directory info made available through the browser. (.) Patch for adding a check box for \"and/or\" searches in the search page."), QStringLiteral("jmfayard@gmail.com"));
+    aboutData.addCredit(i18n("Matthias Füssel"), i18n("Geo Position page in browser and various bug fixes"), QStringLiteral("matthias.fuessel@gmx.net"));
     aboutData.addCredit(i18n("Wes Hardaker"), i18n("Some very useful features to improve workflow"), QStringLiteral("kpa@capturedonearth.com"));
     aboutData.addCredit(i18n("Reimar Imhof"), i18n("Patch to sort items in option listboxes"), QStringLiteral("Reimar.Imhof@netCologne.de"));
     aboutData.addCredit(i18n("Christoph Moseler"), i18n("Numerous patches for lots of bugs plus patches for a few new features"), QStringLiteral("forums@moseler.net"));
@@ -110,6 +129,13 @@ int main(int argc, char **argv)
 
     parser->process(app);
     aboutData.processCommandLine(parser);
+
+    const QString schemePath = KSharedConfig::openConfig()->group("General").readEntry(QString::fromLatin1("colorScheme"), QString());
+    qCDebug(MainLog) << "Loading color scheme from " << (schemePath.isEmpty() ? QString::fromLatin1("system default") : schemePath);
+    app.setPalette(KColorScheme::createApplicationPalette(KSharedConfig::openConfig(schemePath)));
+    if (app.styleSheet().isEmpty())
+        app.setStyleSheet(STYLE);
+    app.setAttribute(Qt::AA_UseStyleSheetPropagationInWidgetStyles);
 
     new MainWindow::SplashScreen();
 

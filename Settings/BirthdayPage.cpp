@@ -1,4 +1,4 @@
-/* Copyright (C) 2014-2015 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2014-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,6 +30,7 @@
 #include <QVBoxLayout>
 
 // KDE includes
+#include <KColorScheme>
 #include <KLocalizedString>
 #include <KPageWidgetModel>
 
@@ -263,11 +264,16 @@ QDate Settings::BirthdayPage::parseDate(QString date)
 void Settings::BirthdayPage::checkDateInput(QString date)
 {
     QDate parsedDate = parseDate(date);
-    if (parsedDate.isValid()) {
+    if (parsedDate.isValid() || date.isEmpty()) {
         m_calendar->setSelectedDate(parsedDate);
-        m_dateInput->setStyleSheet(QString());
+        m_dateInput->setPalette(palette());
+        // re-enable palette propagation:
+        m_dateInput->setAttribute(Qt::WA_SetPalette);
     } else {
-        m_dateInput->setStyleSheet(QString::fromUtf8("color:red;"));
+        auto errorPalette = m_dateInput->palette();
+        KColorScheme::adjustForeground(errorPalette, KColorScheme::ForegroundRole::NegativeText, QPalette::Text);
+        KColorScheme::adjustBackground(errorPalette, KColorScheme::BackgroundRole::NegativeBackground, QPalette::Base);
+        m_dateInput->setPalette(errorPalette);
     }
 }
 

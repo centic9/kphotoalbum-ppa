@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2015 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -24,6 +24,8 @@
 // Local includes
 #include "ListSelect.h"
 #include "ListViewItemHider.h"
+
+#include <DB/ImageDB.h>
 
 using namespace Utilities;
 
@@ -71,7 +73,7 @@ AnnotationDialog::ListViewTextMatchHider::ListViewTextMatchHider(const QString &
 bool AnnotationDialog::ListViewTextMatchHider::shouldItemBeShown(QTreeWidgetItem *item)
 {
     // Be sure not to display the "untagged image" tag if configured
-    if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+    if (DB::ImageDB::instance()->untaggedCategoryFeatureConfigured()
         && !Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
         if (Settings::SettingsData::instance()->untaggedCategory()
             == dynamic_cast<ListSelect *>(item->treeWidget()->parent())->category()) {
@@ -85,16 +87,16 @@ bool AnnotationDialog::ListViewTextMatchHider::shouldItemBeShown(QTreeWidgetItem
     case AnnotationDialog::MatchFromBeginning:
         return item->text(0).toLower().startsWith(m_text.toLower());
     case AnnotationDialog::MatchFromWordStart: {
-        QStringList itemWords = item->text(0).toLower().split(QRegExp(QString::fromUtf8("\\W+")),
-                                                              QString::SkipEmptyParts);
-        QStringList searchWords = m_text.toLower().split(QRegExp(QString::fromUtf8("\\W+")),
-                                                         QString::SkipEmptyParts);
+        const QStringList itemWords = item->text(0).toLower().split(QRegExp(QString::fromUtf8("\\W+")),
+                                                                    QString::SkipEmptyParts);
+        const QStringList searchWords = m_text.toLower().split(QRegExp(QString::fromUtf8("\\W+")),
+                                                               QString::SkipEmptyParts);
 
         // all search words ...
-        Q_FOREACH (const auto searchWord, searchWords) {
+        for (const auto &searchWord : searchWords) {
             bool found = false;
             // ... must match at least one word of the item
-            Q_FOREACH (const auto itemWord, itemWords) {
+            for (const auto &itemWord : itemWords) {
                 if (itemWord.startsWith(searchWord)) {
                     found = true;
                     break;

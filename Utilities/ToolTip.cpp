@@ -1,4 +1,4 @@
-/* Copyright 2012 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright 2012-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -26,6 +26,7 @@
 #include <ImageManager/ImageRequest.h>
 #include <Settings/SettingsData.h>
 
+#include <QEvent>
 #include <QTemporaryFile>
 
 namespace Utilities
@@ -41,10 +42,19 @@ ToolTip::ToolTip(QWidget *parent, Qt::WindowFlags f)
 
     setWindowOpacity(0.8);
     setAutoFillBackground(true);
+    updatePalette();
+}
+
+void ToolTip::updatePalette()
+{
     QPalette p = palette();
-    p.setColor(QPalette::Background, QColor(0, 0, 0, 170)); // r,g,b,A
-    p.setColor(QPalette::WindowText, Qt::white);
+    QColor bgColor = palette().shadow().color();
+    bgColor.setAlpha(170);
+    p.setColor(QPalette::Background, bgColor);
+    p.setColor(QPalette::WindowText, palette().brightText().color());
     setPalette(p);
+    // re-enable palette-propagation:
+    setAttribute(Qt::WA_SetPalette);
 }
 
 void ToolTip::requestImage(const DB::FileName &fileName)
@@ -78,6 +88,13 @@ void ToolTip::requestToolTip(const DB::FileName &fileName)
         return;
     m_currentFileName = fileName;
     requestImage(fileName);
+}
+
+bool ToolTip::event(QEvent *e)
+{
+    if (e->type() == QEvent::PaletteChange)
+        updatePalette();
+    return QLabel::event(e);
 }
 
 void ToolTip::renderToolTip()

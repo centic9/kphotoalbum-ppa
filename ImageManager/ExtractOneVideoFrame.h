@@ -1,4 +1,4 @@
-/* Copyright 2012 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright 2012-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -26,6 +26,7 @@
 #include <QProcess>
 
 class QImage;
+class QTemporaryDir;
 
 namespace Utilities
 {
@@ -46,19 +47,23 @@ public:
     static void extract(const DB::FileName &filename, double offset, QObject *receiver, const char *slot);
 
 private slots:
-    void frameFetched();
-    void handleError(QProcess::ProcessError);
+    /**
+     * @brief processFinished call the appropriate handler function based on exit status.
+     * @param exitCode
+     * @param status
+     */
+    void processFinished(int exitCode, QProcess::ExitStatus status);
 
 signals:
     void result(const QImage &);
 
 private:
+    void frameFetched();
+    void handleError(QProcess::ProcessError);
     ExtractOneVideoFrame(const DB::FileName &filename, double offset, QObject *receiver, const char *slot);
-    void setupWorkingDirectory();
-    void deleteWorkingDirectory();
     void markShortVideo(const DB::FileName &fileName);
 
-    QString m_workingDirectory;
+    QTemporaryDir *m_workingDirectory;
     Utilities::Process *m_process;
     DB::FileName m_fileName;
     static QString s_tokenForShortVideos;

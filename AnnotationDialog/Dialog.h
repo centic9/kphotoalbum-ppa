@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,7 +19,7 @@
 #ifndef ANNOTATIONDIALOG_DIALOG_H
 #define ANNOTATIONDIALOG_DIALOG_H
 
-#include "config-kpa-kgeomap.h"
+#include "config-kpa-marble.h"
 
 #include "ImagePreviewWidget.h"
 #include "ListSelect.h"
@@ -103,7 +103,7 @@ public:
      * does not include newly added (or deleted) areas.
      * @return a map of currently tagged areas
      */
-    QMap<QString, QMap<QString, QRect>> taggedAreas() const;
+    DB::TaggedAreas taggedAreas() const;
     ListSelect *listSelectForCategory(const QString &category);
 
 protected slots:
@@ -131,7 +131,7 @@ protected slots:
     void positionableTagSelected(QString category, QString tag);
     void positionableTagDeselected(QString category, QString tag);
     void positionableTagRenamed(QString category, QString oldTag, QString newTag);
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     void setCancelMapLoading();
     void annotationMapVisibilityChanged(bool visible);
     void populateMap();
@@ -154,8 +154,8 @@ protected:
     void closeEvent(QCloseEvent *) override;
     void showTornOfWindows();
     void hideTornOfWindows();
-    bool hasChanges(bool checkOptions = true);
-    StringSet changedOptions(ListSelect *);
+    bool hasChanges();
+    StringSet changedOptions(const ListSelect *);
     void showHelpDialog(UsageMode);
     void resizeEvent(QResizeEvent *) override;
     void moveEvent(QMoveEvent *) override;
@@ -164,7 +164,7 @@ protected:
     void loadWindowLayout();
     void setupActions();
     void setUpCategoryListBoxForMultiImageSelection(ListSelect *, const DB::ImageInfoList &images);
-    std::tuple<Utilities::StringSet, Utilities::StringSet, Utilities::StringSet> selectionForMultiSelect(ListSelect *, const DB::ImageInfoList &images);
+    std::tuple<Utilities::StringSet, Utilities::StringSet, Utilities::StringSet> selectionForMultiSelect(const ListSelect *, const DB::ImageInfoList &images);
     void saveAndClose();
     void ShowHideSearch(bool show);
 
@@ -229,7 +229,7 @@ private:
     bool m_positionableCategories;
     bool m_areasChanged;
 
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     QDockWidget *m_mapDock;
     QWidget *m_annotationMapContainer;
     Map::MapView *m_annotationMap;

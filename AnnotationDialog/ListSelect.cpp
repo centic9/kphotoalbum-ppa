@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -68,7 +68,6 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
     m_lineEdit->setProperty("WantsFocus", true);
     layout->addWidget(m_lineEdit);
 
-    // PENDING(blackie) rename instance variable to something better than _listView
     m_treeWidget = new CategoryListView::DragableTreeWidget(m_category, this);
     m_treeWidget->setHeaderLabel(QString::fromLatin1("items"));
     m_treeWidget->header()->hide();
@@ -83,6 +82,15 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
     // Merge CheckBox
     QHBoxLayout *lay2 = new QHBoxLayout;
     layout->addLayout(lay2);
+
+    m_roIndicator = new QLabel;
+    m_roIndicator->setPixmap(smallIcon(QString::fromLatin1("emblem-readonly")));
+    m_roIndicator->setVisible(m_editMode == ListSelectEditMode::ReadOnly);
+    lay2->addWidget(m_roIndicator);
+    m_selectableIndicator = new QLabel;
+    m_selectableIndicator->setPixmap(smallIcon(QString::fromLatin1("emblem-checked")));
+    m_selectableIndicator->setVisible(m_editMode == ListSelectEditMode::Selectable);
+    lay2->addWidget(m_selectableIndicator);
 
     m_or = new QRadioButton(i18n("or"), this);
     m_and = new QRadioButton(i18n("and"), this);
@@ -124,7 +132,7 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
     connect(m_dateSort, &QToolButton::clicked, this, &ListSelect::slotSortDate);
     connect(m_alphaTreeSort, &QToolButton::clicked, this, &ListSelect::slotSortAlphaTree);
     connect(m_alphaFlatSort, &QToolButton::clicked, this, &ListSelect::slotSortAlphaFlat);
-    connect(m_showSelectedOnly, SIGNAL(clicked()), &ShowSelectionOnlyManager::instance(), SLOT(toggle()));
+    connect(m_showSelectedOnly, &QToolButton::clicked, &ShowSelectionOnlyManager::instance(), &ShowSelectionOnlyManager::toggle);
 
     lay2->addWidget(m_alphaTreeSort);
     lay2->addWidget(m_alphaFlatSort);
@@ -135,18 +143,26 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
 
     populate();
 
-    connect(Settings::SettingsData::instance(), SIGNAL(viewSortTypeChanged(Settings::ViewSortType)),
-            this, SLOT(setViewSortType(Settings::ViewSortType)));
-    connect(Settings::SettingsData::instance(), SIGNAL(matchTypeChanged(AnnotationDialog::MatchType)),
-            this, SLOT(updateListview()));
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::viewSortTypeChanged,
+            this, &ListSelect::setViewSortType);
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::matchTypeChanged,
+            this, &ListSelect::updateListview);
 
-    connect(&ShowSelectionOnlyManager::instance(), SIGNAL(limitToSelected()), this, SLOT(limitToSelection()));
-    connect(&ShowSelectionOnlyManager::instance(), SIGNAL(broaden()), this, SLOT(showAllChildren()));
+    connect(&ShowSelectionOnlyManager::instance(), &ShowSelectionOnlyManager::limitToSelected, this, &ListSelect::limitToSelection);
+    connect(&ShowSelectionOnlyManager::instance(), &ShowSelectionOnlyManager::broaden, this, &ListSelect::showAllChildren);
+
+    if (category->isSpecialCategory()) {
+        if (category->type() == DB::Category::TokensCategory)
+            setEditMode(ListSelectEditMode::Selectable);
+        else
+            setEditMode(ListSelectEditMode::ReadOnly);
+    }
+    updateLineEditMode();
 }
 
 void AnnotationDialog::ListSelect::slotReturn()
 {
-    if (isInputMode()) {
+    if (computedEditMode() == ListSelectEditMode::Editable) {
         QString enteredText = m_lineEdit->text().trimmed();
         if (enteredText.isEmpty()) {
             return;
@@ -215,7 +231,7 @@ bool AnnotationDialog::ListSelect::isAND() const
 void AnnotationDialog::ListSelect::setMode(UsageMode mode)
 {
     m_mode = mode;
-    m_lineEdit->setMode(mode);
+    updateLineEditMode();
     if (mode == SearchMode) {
         // "0" below is sorting key which ensures that None is always at top.
         CheckDropItem *item = new CheckDropItem(m_treeWidget, DB::ImageDB::NONE(), QString::fromLatin1("0"));
@@ -234,6 +250,12 @@ void AnnotationDialog::ListSelect::setMode(UsageMode mode)
 
     // ensure that the selection count indicator matches the current mode:
     updateSelectionCount();
+}
+
+void ListSelect::setEditMode(ListSelectEditMode mode)
+{
+    m_editMode = mode;
+    updateLineEditMode();
 }
 
 void AnnotationDialog::ListSelect::setViewSortType(Settings::ViewSortType tp)
@@ -398,11 +420,14 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
     alphaTreeAction->setCheckable(true);
     alphaTreeAction->setChecked(Settings::SettingsData::instance()->viewSortType() == Settings::SortAlphaTree);
 
-    if (!item) {
+    if (!item || computedEditMode() != Editable) {
         deleteAction->setEnabled(false);
         renameAction->setEnabled(false);
         members->setEnabled(false);
+        newCategoryAction->setEnabled(false);
         newSubcategoryAction->setEnabled(false);
+        if (takeAction)
+            takeAction->setEnabled(false);
     }
     // -------------------------------------------------- exec
     QAction *which = menu->exec(m_treeWidget->mapToGlobal(pos));
@@ -410,6 +435,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
         return;
     else if (which == deleteAction) {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         int code = KMessageBox::warningContinueCancel(this, i18n("<p>Do you really want to delete \"%1\"?<br/>"
                                                                  "Deleting the item will remove any information "
                                                                  "about it from any image containing the item.</p>",
@@ -428,6 +454,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
         }
     } else if (which == renameAction) {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         bool ok;
         QString newStr = QInputDialog::getText(this,
                                                i18n("Rename Item"), i18n("Enter new name:"),
@@ -467,17 +494,20 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
         Settings::SettingsData::instance()->setViewSortType(Settings::SortAlphaFlat);
     } else if (which == newCategoryAction) {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         QString superCategory = QInputDialog::getText(this,
                                                       i18n("New tag group"),
                                                       i18n("Name for the new tag group the tag will be added to:"));
         if (superCategory.isEmpty())
             return;
+        m_category->addItem(superCategory);
         memberMap.addGroup(m_category->name(), superCategory);
         memberMap.addMemberToGroup(m_category->name(), superCategory, item->text(0));
         //DB::ImageDB::instance()->setMemberMap( memberMap );
         rePopulate();
     } else if (which == newSubcategoryAction) {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         QString subCategory = QInputDialog::getText(this,
                                                     i18n("Add a tag"),
                                                     i18n("Name for the tag to be added to this tag group:"));
@@ -488,18 +518,18 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
         memberMap.addGroup(m_category->name(), item->text(0));
         memberMap.addMemberToGroup(m_category->name(), item->text(0), subCategory);
         //DB::ImageDB::instance()->setMemberMap( memberMap );
-        if (isInputMode())
-            m_category->addItem(subCategory);
+        m_category->addItem(subCategory);
 
         rePopulate();
-        if (isInputMode())
-            checkItem(subCategory, true);
+        checkItem(subCategory, true);
     } else if (which == takeAction) {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         memberMap.removeMemberFromGroup(m_category->name(), parent->text(0), item->text(0));
         rePopulate();
     } else {
         Q_ASSERT(item);
+        Q_ASSERT(computedEditMode() == Editable);
         QString checkedItem = which->data().value<QString>();
         if (which->isChecked()) // choosing the item doesn't check it, so this is the value before.
             memberMap.addMemberToGroup(m_category->name(), checkedItem, item->text(0));
@@ -513,6 +543,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
 
 void AnnotationDialog::ListSelect::addItems(DB::CategoryItem *item, QTreeWidgetItem *parent)
 {
+    const bool isReadOnly = computedEditMode() == ListSelectEditMode::ReadOnly;
     for (QList<DB::CategoryItem *>::ConstIterator subcategoryIt = item->mp_subcategories.constBegin(); subcategoryIt != item->mp_subcategories.constEnd(); ++subcategoryIt) {
         CheckDropItem *newItem = nullptr;
 
@@ -523,6 +554,9 @@ void AnnotationDialog::ListSelect::addItems(DB::CategoryItem *item, QTreeWidgetI
 
         newItem->setExpanded(true);
         configureItem(newItem);
+        if (isReadOnly) {
+            newItem->setFlags(newItem->flags() ^ Qt::ItemIsUserCheckable);
+        }
 
         addItems(*subcategoryIt, newItem);
     }
@@ -544,7 +578,7 @@ void AnnotationDialog::ListSelect::populate()
 
 bool AnnotationDialog::ListSelect::searchForUntaggedImagesTagNeeded()
 {
-    if (!Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()
+    if (!DB::ImageDB::instance()->untaggedCategoryFeatureConfigured()
         || Settings::SettingsData::instance()->untaggedImagesTagVisible()) {
         return false;
     }
@@ -658,7 +692,7 @@ void AnnotationDialog::ListSelect::updateListview()
 
 void AnnotationDialog::ListSelect::limitToSelection()
 {
-    if (!isInputMode())
+    if (computedEditMode() != Editable)
         return;
 
     m_showSelectedOnly->setChecked(true);
@@ -686,6 +720,19 @@ QTreeWidgetItem *AnnotationDialog::ListSelect::getUntaggedImagesTag()
     } else {
         return matchingTags.at(0);
     }
+}
+
+void ListSelect::updateLineEditMode()
+{
+    if (m_editMode == Selectable)
+        m_lineEdit->setMode(SearchMode);
+    else
+        m_lineEdit->setMode(m_mode);
+
+    const bool isReadOnly = computedEditMode() == ListSelectEditMode::ReadOnly;
+    m_roIndicator->setVisible(isReadOnly);
+    const bool isSelectable = computedEditMode() == ListSelectEditMode::Selectable;
+    m_selectableIndicator->setVisible(isSelectable);
 }
 
 void AnnotationDialog::ListSelect::updateSelectionCount()
@@ -721,7 +768,7 @@ void AnnotationDialog::ListSelect::updateSelectionCount()
                 itemsOnCount + itemsUnchanged().size()));
             break;
         } // else fall through and only show one number:
-        /* FALLTHROUGH */
+        Q_FALLTHROUGH();
     case InputSingleImageConfigMode:
         if (itemsOnCount > 0) {
             // if any tags have been selected
@@ -732,7 +779,7 @@ void AnnotationDialog::ListSelect::updateSelectionCount()
                       m_baseTitle, itemsOnCount));
             break;
         } // else fall through and only show category
-        /* FALLTHROUGH */
+        Q_FALLTHROUGH();
     case SearchMode:
         // no indicator while searching
         parentWidget()->setWindowTitle(m_baseTitle);
@@ -746,9 +793,11 @@ void AnnotationDialog::ListSelect::configureItem(CategoryListView::CheckDropItem
     item->setDNDEnabled(isDNDAllowed && !m_category->isSpecialCategory());
 }
 
-bool AnnotationDialog::ListSelect::isInputMode() const
+ListSelectEditMode ListSelect::computedEditMode() const
 {
-    return m_mode != SearchMode;
+    if (m_mode == SearchMode)
+        return ListSelectEditMode::Selectable;
+    return m_editMode;
 }
 
 StringSet AnnotationDialog::ListSelect::itemsOn() const

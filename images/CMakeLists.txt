@@ -5,7 +5,8 @@ install(
     splash.png
     splash-large.png
     movie-clip.png
-    DESTINATION ${KDE_INSTALL_DATADIR}/kphotoalbum/pics
+    pin.png
+    DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum/pics"
     )
 
 # vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -372,10 +372,6 @@ using namespace DB;
 
 namespace
 {
-// Number of scout threads for preloading images. More than one scout thread
-// yields about 10% less performance with higher IO/sec but lower I/O throughput,
-// most probably due to thrashing.
-constexpr int IMAGE_SCOUT_THREAD_COUNT = 1;
 
 bool canReadImage(const DB::FileName &fileName)
 {
@@ -397,11 +393,11 @@ bool NewImageFinder::findImages()
     QElapsedTimer timer;
 
     timer.start();
-    // TODO: maybe the databas interface should allow to query if it
+    // TODO: maybe the database interface should allow to query if it
     // knows about an image ? Here we've to iterate through all of them and it
     // might be more efficient do do this in the database without fetching the
     // whole info.
-    for (const DB::FileName &fileName : DB::ImageDB::instance()->images()) {
+    for (const DB::FileName &fileName : DB::ImageDB::instance()->files()) {
         loadedFiles.insert(fileName);
     }
 
@@ -430,6 +426,7 @@ void NewImageFinder::searchForNewFiles(const DB::FileNameSet &loadedFiles, QStri
 
     const QString imageDir = Utilities::stripEndingForwardSlash(Settings::SettingsData::instance()->imageDirectory());
 
+    qCDebug(DBFileOpsLog) << "searching for new files in" << directory;
     FastDir dir(directory);
     const QStringList dirList = dir.entryList();
     ImageManager::RAWImageDecoder rawDec;
@@ -460,10 +457,13 @@ void NewImageFinder::searchForNewFiles(const DB::FileNameSet &loadedFiles, QStri
 
         if (fi.isFile()) {
             if (!DB::ImageDB::instance()->isBlocking(file)) {
-                if (canReadImage(file))
+                if (canReadImage(file)) {
+                    qCDebug(DBFileOpsLog) << "Found new image:" << file.relative();
                     m_pendingLoad.append(qMakePair(file, DB::Image));
-                else if (Utilities::isVideo(file))
+                } else if (Utilities::isVideo(file)) {
+                    qCDebug(DBFileOpsLog) << "Found new video:" << file.relative();
                     m_pendingLoad.append(qMakePair(file, DB::Video));
+                }
             }
         } else if (fi.isDir()) {
             subdirList.append(file.absolute());
@@ -492,12 +492,15 @@ void NewImageFinder::loadExtraFiles()
 
     int count = 0;
 
+    MD5::resetMD5Cache();
     ImageScoutQueue asyncPreloadQueue;
     for (LoadList::Iterator it = m_pendingLoad.begin(); it != m_pendingLoad.end(); ++it) {
         asyncPreloadQueue.enqueue((*it).first);
     }
 
-    ImageScout scout(asyncPreloadQueue, loadedCount, IMAGE_SCOUT_THREAD_COUNT);
+    ImageScout scout(asyncPreloadQueue, loadedCount, Settings::SettingsData::instance()->getPreloadThreadCount());
+    if (Settings::SettingsData::instance()->getOverlapLoadMD5())
+        scout.setPreloadFunc(DB::PreloadMD5Sum);
     scout.start();
 
     Exif::Database::instance()->startInsertTransaction();
@@ -541,13 +544,14 @@ void NewImageFinder::setupFileVersionDetection()
 
 void NewImageFinder::loadExtraFile(const DB::FileName &newFileName, DB::MediaType type)
 {
+    qCDebug(DBFileOpsLog) << "loadExtraFile(" << newFileName.relative() << ")";
     MD5 sum = MD5Sum(newFileName);
     if (handleIfImageHasBeenMoved(newFileName, sum))
         return;
 
     // check to see if this is a new version of a previous image
     // We'll get the Exif data later, when we get the MD5 checksum.
-    ImageInfoPtr info = ImageInfoPtr(new ImageInfo(newFileName, type, false, false));
+    ImageInfoPtr info = ImageInfoPtr(new ImageInfo(newFileName, type, DB::FileInformation::Ignore));
     ImageInfoPtr originalInfo;
     DB::FileName originalFileName;
 
@@ -722,7 +726,7 @@ bool NewImageFinder::calculateMD5sums(
         if (info->MD5Sum() != md5) {
             info->setMD5Sum(md5);
             dirty = true;
-            ImageManager::ThumbnailCache::instance()->removeThumbnail(fileName);
+            MainWindow::Window::theMainWindow()->thumbnailCache()->removeThumbnail(fileName);
         }
 
         md5Map->insert(md5, fileName);
@@ -740,7 +744,7 @@ bool NewImageFinder::calculateMD5sums(
 
 void DB::NewImageFinder::markUnTagged(ImageInfoPtr info)
 {
-    if (Settings::SettingsData::instance()->hasUntaggedCategoryFeatureConfigured()) {
+    if (DB::ImageDB::instance()->untaggedCategoryFeatureConfigured()) {
         info->addCategoryInfo(Settings::SettingsData::instance()->untaggedCategory(),
                               Settings::SettingsData::instance()->untaggedTag());
     }

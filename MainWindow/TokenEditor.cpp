@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -84,7 +84,7 @@ void TokenEditor::show()
 {
     QStringList tokens = tokensInUse();
 
-    Q_FOREACH (QCheckBox *box, m_checkBoxes) {
+    for (QCheckBox *box : qAsConst(m_checkBoxes)) {
         box->setChecked(false);
         QString txt = box->text().remove(QString::fromLatin1("&"));
         box->setEnabled(tokens.contains(txt));
@@ -94,14 +94,14 @@ void TokenEditor::show()
 
 void TokenEditor::selectAll()
 {
-    Q_FOREACH (QCheckBox *box, m_checkBoxes) {
+    for (QCheckBox *box : qAsConst(m_checkBoxes)) {
         box->setChecked(true);
     }
 }
 
 void TokenEditor::selectNone()
 {
-    Q_FOREACH (QCheckBox *box, m_checkBoxes) {
+    for (QCheckBox *box : qAsConst(m_checkBoxes)) {
         box->setChecked(false);
     }
 }
@@ -126,10 +126,12 @@ QStringList TokenEditor::tokensInUse()
 void TokenEditor::accept()
 {
     DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
-    Q_FOREACH (const QCheckBox *box, m_checkBoxes) {
+    for (const QCheckBox *box : qAsConst(m_checkBoxes)) {
         if (box->isChecked() && box->isEnabled()) {
             QString txt = box->text().remove(QString::fromLatin1("&"));
             tokensCategory->removeItem(txt);
+            // re-add the token so that it is still available e.g. in the annotation dialog list select:
+            tokensCategory->addItem(txt);
         }
     }
     QDialog::accept();

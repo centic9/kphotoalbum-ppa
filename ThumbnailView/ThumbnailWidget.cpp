@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -31,15 +31,17 @@
 #include <DB/ImageInfoPtr.h>
 #include <Settings/SettingsData.h>
 
+#include <KColorScheme>
 #include <KLocalizedString>
-#include <QScrollBar>
-#include <QTimer>
+#include <QCursor>
+#include <QDebug>
+#include <QFontMetrics>
 #include <QItemSelection>
 #include <QItemSelectionRange>
+#include <QPainter>
+#include <QScrollBar>
+#include <QTimer>
 #include <math.h>
-#include <qcursor.h>
-#include <qfontmetrics.h>
-#include <qpainter.h>
 
 /**
  * \class ThumbnailView::ThumbnailWidget
@@ -75,7 +77,7 @@ ThumbnailView::ThumbnailWidget::ThumbnailWidget(ThumbnailFactory *factory)
     viewport()->setMouseTracking(true);
     setMouseTracking(true);
 
-    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(scheduleDateChangeSignal()));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged, this, &ThumbnailWidget::scheduleDateChangeSignal);
     viewport()->setAcceptDrops(true);
 
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -85,13 +87,14 @@ ThumbnailView::ThumbnailWidget::ThumbnailWidget(ThumbnailFactory *factory)
     connect(m_keyboardHandler, &KeyboardEventHandler::showSelection, this, &ThumbnailWidget::showSelection);
 
     updatePalette();
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::colorSchemeChanged, this, &ThumbnailWidget::updatePalette);
     setItemDelegate(new Delegate(factory, this));
 
-    connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(emitSelectionChangedSignal()));
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, &ThumbnailWidget::emitSelectionChangedSignal);
 
     setDragEnabled(false); // We run our own dragging, so disable QListView's version.
 
-    connect(verticalScrollBar(), SIGNAL(valueChanged(int)), model(), SLOT(updateVisibleRowInfo()));
+    connect(verticalScrollBar(), &QScrollBar::valueChanged, model(), &ThumbnailModel::updateVisibleRowInfo);
     setupDateChangeTimer();
 }
 
@@ -116,7 +119,7 @@ void ThumbnailView::ThumbnailWidget::keyReleaseEvent(QKeyEvent *event)
 bool ThumbnailView::ThumbnailWidget::isMouseOverStackIndicator(const QPoint &point)
 {
     // first check if image is stack, if not return.
-    DB::ImageInfoPtr imageInfo = mediaIdUnderCursor().info();
+    const DB::ImageInfoPtr imageInfo = DB::ImageDB::instance()->info(mediaIdUnderCursor());
     if (!imageInfo)
         return false;
     if (!imageInfo->isStacked())
@@ -202,16 +205,17 @@ void ThumbnailView::ThumbnailWidget::wheelEvent(QWheelEvent *event)
         m_wheelResizing = true;
 
         model()->beginResetModel();
-        const int delta = -event->delta() / 20;
+        const int delta = -event->angleDelta().y() / 20;
         static int _minimum_ = Settings::SettingsData::instance()->minimumThumbnailSize();
         Settings::SettingsData::instance()->setActualThumbnailSize(qMax(_minimum_, Settings::SettingsData::instance()->actualThumbnailSize() + delta));
         cellGeometryInfo()->calculateCellSize();
         model()->endResetModel();
     } else {
-        int delta = event->delta() / 5;
-        QWheelEvent newevent = QWheelEvent(event->pos(), delta, event->buttons(), nullptr);
+        const auto angleDelta = event->angleDelta() / 5;
+        QWheelEvent newevent = QWheelEvent(event->pos(), event->globalPos(), event->pixelDelta(), angleDelta, event->buttons(), event->modifiers(), event->phase(), event->inverted());
 
         QListView::wheelEvent(&newevent);
+        event->setAccepted(newevent.isAccepted());
     }
 }
 
@@ -229,7 +233,7 @@ void ThumbnailView::ThumbnailWidget::emitDateChange()
         return;
 
     static QDateTime lastDate;
-    QDateTime date = fileName.info()->date().start();
+    const QDateTime date = DB::ImageDB::instance()->info(fileName)->date().start();
     if (date != lastDate) {
         lastDate = date;
         if (date.date().year() != 1900)
@@ -323,8 +327,11 @@ DB::FileName ThumbnailView::ThumbnailWidget::currentItem() const
 void ThumbnailView::ThumbnailWidget::updatePalette()
 {
     QPalette pal = palette();
-    pal.setBrush(QPalette::Base, QColor(Settings::SettingsData::instance()->backgroundColor()));
-    pal.setBrush(QPalette::Text, contrastColor(QColor(Settings::SettingsData::instance()->backgroundColor())));
+    // if the scheme was set at startup from the scheme path (and not afterwards through KColorSchemeManager),
+    // then KColorScheme would use the standard system scheme if we don't explicitly give a config:
+    const auto schemeCfg = KSharedConfig::openConfig(Settings::SettingsData::instance()->colorScheme());
+    KColorScheme::adjustBackground(pal, KColorScheme::NormalBackground, QPalette::Base, KColorScheme::Complementary, schemeCfg);
+    KColorScheme::adjustForeground(pal, KColorScheme::NormalText, QPalette::Text, KColorScheme::Complementary, schemeCfg);
     setPalette(pal);
 }
 
@@ -365,8 +372,9 @@ void ThumbnailView::ThumbnailWidget::showEvent(QShowEvent *event)
 DB::FileNameList ThumbnailView::ThumbnailWidget::selection(ThumbnailView::SelectionMode mode) const
 {
     DB::FileNameList res;
-    Q_FOREACH (const QModelIndex &index, selectedIndexes()) {
-        DB::FileName currFileName = model()->imageAt(index.row());
+    const auto indexSelection = selectedIndexes();
+    for (const QModelIndex &index : indexSelection) {
+        const DB::FileName currFileName = model()->imageAt(index.row());
         bool includeAllStacks = false;
         switch (mode) {
         case IncludeAllStacks:
@@ -375,7 +383,7 @@ DB::FileNameList ThumbnailView::ThumbnailWidget::selection(ThumbnailView::Select
         case ExpandCollapsedStacks: {
             // if the selected image belongs to a collapsed thread,
             // imply that all images in the stack are selected:
-            DB::ImageInfoPtr imageInfo = currFileName.info();
+            const DB::ImageInfoPtr imageInfo = DB::ImageDB::instance()->info(currFileName);
             if (imageInfo && imageInfo->isStacked()
                 && (includeAllStacks || !model()->isItemInExpandedStack(imageInfo->stackId()))) {
                 // add all images in the same stack
@@ -416,7 +424,7 @@ void ThumbnailView::ThumbnailWidget::select(const DB::FileNameList &items)
     QModelIndex start;
     QModelIndex end;
     int count = 0;
-    Q_FOREACH (const DB::FileName &fileName, items) {
+    for (const DB::FileName &fileName : items) {
         QModelIndex index = model()->fileNameToIndex(fileName);
         if (count == 0) {
             start = index;
@@ -439,14 +447,6 @@ void ThumbnailView::ThumbnailWidget::select(const DB::FileNameList &items)
 bool ThumbnailView::ThumbnailWidget::isItemUnderCursorSelected() const
 {
     return widget()->selection(ExpandCollapsedStacks).contains(mediaIdUnderCursor());
-}
-
-QColor ThumbnailView::contrastColor(const QColor &color)
-{
-    if (color.red() < 127 && color.green() < 127 && color.blue() < 127)
-        return Qt::white;
-    else
-        return Qt::black;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

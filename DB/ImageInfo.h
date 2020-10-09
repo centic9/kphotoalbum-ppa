@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,24 +19,25 @@
 #ifndef IMAGEINFO_H
 #define IMAGEINFO_H
 
-#include "config-kpa-kgeomap.h"
+#include "config-kpa-marble.h"
 
 #include "CategoryPtr.h"
 #include "ExifMode.h"
 #include "FileName.h"
 #include "ImageDate.h"
 #include "MD5.h"
+#include "Utilities/StringSet.h"
 
+#ifdef HAVE_MARBLE
+#include <Map/GeoCoordinates.h>
+#endif
 #include <Utilities/StringSet.h>
 
+#include <QHash>
 #include <QRect>
 #include <QSize>
-#include <qmap.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#ifdef HAVE_KGEOMAP
-#include <KGeoMap/GeoCoordinates>
-#endif
+#include <QString>
+#include <QStringList>
 
 namespace Plugins
 {
@@ -50,10 +51,6 @@ class Database;
 
 namespace DB
 {
-enum PathType {
-    RelativeToImageRoot,
-    AbsolutePath
-};
 enum RotationMode {
     RotateImageInfoAndAreas,
     RotateImageInfoOnly
@@ -62,17 +59,59 @@ enum RotationMode {
 using Utilities::StringSet;
 class MemberMap;
 
+/**
+ * @brief The FileInformation enum controls the behaviour of the ImageInfo constructor.
+ * Depending on the value, metadata is read from the image file and optionally the Exif database is updated.
+ */
+enum class FileInformation {
+    Ignore, ///< Do not read additional information from the image file.
+    Read, ///< Read metadata from the image file, but do not update metadata in the Exif database.
+    ReadAndUpdateExifDB ///< Read metadata from the image file and update the Exif database.
+};
+
 enum MediaType { Image = 0x01,
                  Video = 0x02 };
 const MediaType anyMediaType = MediaType(Image | Video);
 typedef unsigned int StackID;
 
+typedef QHash<QString, QRect> PositionTags;
+typedef QHashIterator<QString, QRect> PositionTagsIterator;
+typedef QHash<QString, PositionTags> TaggedAreas;
+typedef QHashIterator<QString, PositionTags> TaggedAreasIterator;
+typedef QHash<QString, StringSet> CategoryInformation;
+
 class ImageInfo : public QSharedData
 {
 
 public:
+    /**
+     * @brief ImageInfo constructs an empty ImageInfo.
+     * An empty imageInfo can be detected by calling \c isNull().
+     */
     ImageInfo();
-    explicit ImageInfo(const DB::FileName &fileName, MediaType type = Image, bool readExifInfo = true, bool storeExifInfo = true);
+    /**
+     * @brief ImageInfo constructor to create an ImageInfo for a file.
+     * This constructor is typically called by the new image finder.
+     * @param fileName
+     * @param type
+     * @param infoMode
+     */
+    explicit ImageInfo(const DB::FileName &fileName, MediaType type = Image, FileInformation infoMode = FileInformation::ReadAndUpdateExifDB);
+    /**
+     * @brief ImageInfo constructor including all fields.
+     * This constructor is typically called when reading ImageInfos from the database file, or when doing an import.
+     * @param fileName
+     * @param label
+     * @param description
+     * @param date
+     * @param angle
+     * @param md5sum
+     * @param size
+     * @param type
+     * @param rating
+     * @param stackId
+     * @param stackOrder
+     */
     ImageInfo(const DB::FileName &fileName,
               const QString &label,
               const QString &description,
@@ -137,7 +176,7 @@ public:
      * @param category the category name.
      * @param positionedTags a mapping of tag names to image areas.
      */
-    void setPositionedTags(const QString &category, const QMap<QString, QRect> &positionedTags);
+    void setPositionedTags(const QString &category, const PositionTags &positionedTags);
 
     bool hasCategoryInfo(const QString &key, const QString &value) const;
     bool hasCategoryInfo(const QString &key, const StringSet &values) const;
@@ -182,7 +221,7 @@ public:
      */
     void merge(const ImageInfo &other);
 
-    QMap<QString, QMap<QString, QRect>> taggedAreas() const;
+    TaggedAreas taggedAreas() const;
     /**
      * Return the area associated with a tag.
      * @param category the category name
@@ -194,14 +233,14 @@ public:
     bool isMatched() const;
     void setMatchGeneration(int matchGeneration);
     int matchGeneration() const;
-#ifdef HAVE_KGEOMAP
-    KGeoMap::GeoCoordinates coordinates() const;
+#ifdef HAVE_MARBLE
+    Map::GeoCoordinates coordinates() const;
 #endif
 
 protected:
     void setIsNull(bool b) { m_null = b; }
     bool isDirty() const { return m_dirty; }
-    void setIsDirty(bool b) { m_dirty = b; }
+    void markDirty();
     bool updateDateInformation(int mode) const;
 
     void setStackId(const StackID stackId);
@@ -212,8 +251,8 @@ private:
     QString m_label;
     QString m_description;
     ImageDate m_date;
-    QMap<QString, StringSet> m_categoryInfomation;
-    QMap<QString, QMap<QString, QRect>> m_taggedAreas;
+    CategoryInformation m_categoryInfomation;
+    TaggedAreas m_taggedAreas;
     int m_angle;
     enum OnDisk { YesOnDisk,
                   NoNotOnDisk,
@@ -229,8 +268,8 @@ private:
     int m_videoLength;
     bool m_isMatched;
     int m_matchGeneration;
-#ifdef HAVE_KGEOMAP
-    mutable KGeoMap::GeoCoordinates m_coordinates;
+#ifdef HAVE_MARBLE
+    mutable Map::GeoCoordinates m_coordinates;
     mutable bool m_coordsIsSet = false;
 #endif
 

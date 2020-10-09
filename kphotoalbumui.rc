@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kphotoalbum" version="46">
+<kpartgui name="kphotoalbum" version="49">
   <MenuBar>
     <Menu name="file">
       <Action name="exportHTML"/>
@@ -44,7 +44,6 @@
         <text>Privacy</text>
         <Action name="lockToDefaultScope"/>
         <Action name="unlockFromDefaultScope"/>
-        <Action name="changeScopePasswd" />
         <Separator/>
         <Action name="setDefaultScopeNegative" />
         <Action name="setDefaultScopePositive" />
@@ -74,17 +73,12 @@
     </Menu>
     <Menu name="plugins">
       <text>Plugins</text>
-      <Menu name="kipiplugins">
-        <text>Legacy Plugins (KIPI)</text>
-        <ActionList name="kipi_actions"/>
-      </Menu>
    </Menu>
    <Menu name="settings">
      <Action name="readdAllMessages"/>
      <Action name="showToolTipOnImages"/>
      <Action name="configureView"/>
-     <Action name="toggleFilterToolbar"/>
-     <Action name="toggleSearchBar"/>
+     <Action name="colorScheme"/>
    </Menu>
    <Menu name="help">
      <Action name="runDemo"/>

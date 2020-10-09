@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -53,6 +53,7 @@ void MemberMap::markDirty(const QString &category)
 
 void MemberMap::deleteGroup(const QString &category, const QString &name)
 {
+    Q_ASSERT(m_members.contains(category));
     m_members[category].remove(name);
     m_dirty = true;
     markDirty(category);
@@ -63,17 +64,38 @@ void MemberMap::deleteGroup(const QString &category, const QString &name)
 */
 QStringList MemberMap::members(const QString &category, const QString &memberGroup, bool closure) const
 {
+    if (!m_members.contains(category)) {
+        return {};
+    }
     if (closure) {
-        if (m_dirty)
+        if (m_dirty) {
             calculate();
+        }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+        const auto &members = m_closureMembers[category][memberGroup];
+        return QStringList(members.begin(), members.end());
+#else
         return m_closureMembers[category][memberGroup].toList();
-    } else
+#endif
+    } else {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+        const auto &members = m_members[category][memberGroup];
+        return QStringList(members.begin(), members.end());
+#else
         return m_members[category][memberGroup].toList();
+#endif
+    }
 }
 
 void MemberMap::setMembers(const QString &category, const QString &memberGroup, const QStringList &members)
 {
+    Q_ASSERT(!category.isEmpty());
+    Q_ASSERT(!memberGroup.isEmpty());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    StringSet allowedMembers(members.begin(), members.end());
+#else
     StringSet allowedMembers = members.toSet();
+#endif
 
     for (QStringList::const_iterator i = members.begin(); i != members.end(); ++i)
         if (!canAddMemberToGroup(category, memberGroup, *i))
@@ -103,6 +125,9 @@ bool MemberMap::isGroup(const QString &category, const QString &item) const
 */
 QMap<QString, StringSet> MemberMap::groupMap(const QString &category) const
 {
+    if (!m_members.contains(category))
+        return {};
+
     if (m_dirty)
         calculate();
 
@@ -117,19 +142,29 @@ QMap<QString, StringSet> MemberMap::groupMap(const QString &category) const
 */
 QStringList MemberMap::calculateClosure(QMap<QString, StringSet> &resultSoFar, const QString &category, const QString &group) const
 {
-    resultSoFar[group] = StringSet(); // Prevent against cykles.
+    resultSoFar[group] = StringSet(); // Prevent against cycles.
     StringSet members = m_members[category][group];
     StringSet result = members;
     for (StringSet::const_iterator it = members.begin(); it != members.end(); ++it) {
         if (resultSoFar.contains(*it)) {
             result += resultSoFar[*it];
         } else if (isGroup(category, *it)) {
-            result += calculateClosure(resultSoFar, category, *it).toSet();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+            const auto closure = calculateClosure(resultSoFar, category, *it);
+            const StringSet closureSet(closure.begin(), closure.end());
+#else
+            const StringSet closureSet = calculateClosure(resultSoFar, category, *it).toSet();
+#endif
+            result += closureSet;
         }
     }
 
     resultSoFar[group] = result;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return QStringList(result.begin(), result.end());
+#else
     return result.toList();
+#endif
 }
 
 /**
@@ -159,6 +194,7 @@ void MemberMap::calculate() const
 
 void MemberMap::renameGroup(const QString &category, const QString &oldName, const QString &newName)
 {
+    Q_ASSERT(m_members.contains(category));
     // Don't allow overwriting to avoid creating cycles
     if (m_members[category].contains(newName))
         return;
@@ -186,6 +222,7 @@ MemberMap::MemberMap(const MemberMap &other)
 
 void MemberMap::deleteItem(DB::Category *category, const QString &name)
 {
+    Q_ASSERT(category != nullptr);
     QMap<QString, StringSet> &groupMap = m_members[category->name()];
     for (StringSet &items : groupMap) {
         items.remove(name);
@@ -197,6 +234,7 @@ void MemberMap::deleteItem(DB::Category *category, const QString &name)
 
 void MemberMap::renameItem(DB::Category *category, const QString &oldName, const QString &newName)
 {
+    Q_ASSERT(category != nullptr);
     if (oldName == newName)
         return;
 
@@ -226,6 +264,7 @@ MemberMap &MemberMap::operator=(const MemberMap &other)
 
 void MemberMap::regenerateFlatList(const QString &category)
 {
+    Q_ASSERT(m_members.contains(category));
     m_flatMembers[category].clear();
     for (QMap<QString, StringSet>::const_iterator i = m_members[category].constBegin();
          i != m_members[category].constEnd(); i++) {
@@ -297,6 +336,7 @@ void MemberMap::removeMemberFromGroup(const QString &category, const QString &gr
 
 void MemberMap::addGroup(const QString &category, const QString &group)
 {
+    Q_ASSERT(!group.isEmpty());
     if (!m_members[category].contains(group)) {
         m_members[category].insert(group, StringSet());
     }
@@ -305,6 +345,7 @@ void MemberMap::addGroup(const QString &category, const QString &group)
 
 void MemberMap::renameCategory(const QString &oldName, const QString &newName)
 {
+    Q_ASSERT(m_members.contains(oldName));
     if (oldName == newName)
         return;
     m_members[newName] = m_members[oldName];
@@ -317,6 +358,7 @@ void MemberMap::renameCategory(const QString &oldName, const QString &newName)
 
 void MemberMap::deleteCategory(const QString &category)
 {
+    Q_ASSERT(m_members.contains(category));
     m_members.remove(category);
     m_closureMembers.remove(category);
     markDirty(category);

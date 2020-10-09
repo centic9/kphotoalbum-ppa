@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -30,16 +30,6 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QLoggingCategory>
-
-extern "C" {
-#include <limits.h>
-#include <setjmp.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-}
 
 #include "ImageEvent.h"
 
@@ -129,7 +119,7 @@ int ImageManager::ImageLoaderThread::calcLoadSize(ImageRequest *request)
 QImage ImageManager::ImageLoaderThread::scaleAndRotate(ImageRequest *request, QImage img)
 {
     if (request->angle() != 0 && !request->imageIsPreRotated()) {
-        QMatrix matrix;
+        QTransform matrix;
         matrix.rotate(request->angle());
         img = img.transformed(matrix);
         int angle = (request->angle() + 360) % 360;

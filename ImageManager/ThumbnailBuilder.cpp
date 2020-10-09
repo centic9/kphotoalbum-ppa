@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -27,6 +27,7 @@
 #include <DB/ImageInfoPtr.h>
 #include <DB/OptimizedFileList.h>
 #include <MainWindow/StatusBar.h>
+#include <Settings/SettingsData.h>
 #include <ThumbnailView/CellGeometry.h>
 
 #include <KLocalizedString>
@@ -34,11 +35,26 @@
 #include <QMessageBox>
 #include <QTimer>
 
+namespace
+{
+/**
+ * @brief Thumbnail size for storage.
+ * @see ThumbnailView::CellGeometry::preferredIconSize()
+ * @return
+ */
+QSize preferredThumbnailSize()
+{
+    int width = Settings::SettingsData::instance()->thumbnailSize();
+    return QSize(width, width);
+}
+}
+
 ImageManager::ThumbnailBuilder *ImageManager::ThumbnailBuilder::s_instance = nullptr;
 
-ImageManager::ThumbnailBuilder::ThumbnailBuilder(MainWindow::StatusBar *statusBar, QObject *parent)
+ImageManager::ThumbnailBuilder::ThumbnailBuilder(MainWindow::StatusBar *statusBar, QObject *parent, ThumbnailCache *thumbnailCache)
     : QObject(parent)
     , m_statusBar(statusBar)
+    , m_thumbnailCache(thumbnailCache)
     , m_count(0)
     , m_isBuilding(false)
     , m_loadedCount(0)
@@ -48,9 +64,6 @@ ImageManager::ThumbnailBuilder::ThumbnailBuilder(MainWindow::StatusBar *statusBa
     connect(m_statusBar, &MainWindow::StatusBar::cancelRequest, this, &ThumbnailBuilder::cancelRequests);
     s_instance = this;
 
-    // Make sure that this is created early, in the main thread, so it
-    // can receive signals.
-    ThumbnailCache::instance();
     m_startBuildTimer = new QTimer(this);
     m_startBuildTimer->setSingleShot(true);
     connect(m_startBuildTimer, &QTimer::timeout, this, &ThumbnailBuilder::doThumbnailBuild);
@@ -80,9 +93,13 @@ void ImageManager::ThumbnailBuilder::pixmapLoaded(ImageManager::ImageRequest *re
 {
     const DB::FileName fileName = request->databaseFileName();
     const QSize fullSize = request->fullSize();
+    DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
 
-    if (fullSize.width() != -1) {
-        DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
+    // We probably shouldn't do this at all, since the "full size"
+    // of the request could be the size of the embedded thumbnail
+    // or even a scaled-down such.  But if this hasn't been
+    // set orrectly earlier, we have nothing else to go on.
+    if (fullSize.width() != -1 && info->size().width() == -1) {
         info->setSize(fullSize);
     }
     m_loadedCount++;
@@ -101,8 +118,8 @@ void ImageManager::ThumbnailBuilder::buildAll(ThumbnailBuildStart when)
     msgBox.setDefaultButton(QMessageBox::No);
     int ret = msgBox.exec();
     if (ret == QMessageBox::Yes) {
-        ImageManager::ThumbnailCache::instance()->flush();
-        scheduleThumbnailBuild(DB::ImageDB::instance()->images(), when);
+        m_thumbnailCache->flush();
+        scheduleThumbnailBuild(DB::ImageDB::instance()->files(), when);
     }
 }
 
@@ -119,10 +136,10 @@ ImageManager::ThumbnailBuilder::~ThumbnailBuilder()
 
 void ImageManager::ThumbnailBuilder::buildMissing()
 {
-    const DB::FileNameList images = DB::ImageDB::instance()->images();
+    const DB::FileNameList images = DB::ImageDB::instance()->files();
     DB::FileNameList needed;
     for (const DB::FileName &fileName : images) {
-        if (!ImageManager::ThumbnailCache::instance()->contains(fileName))
+        if (!m_thumbnailCache->contains(fileName))
             needed.append(fileName);
     }
     scheduleThumbnailBuild(needed, StartDelayed);
@@ -145,8 +162,8 @@ void ImageManager::ThumbnailBuilder::buildOneThumbnail(const DB::ImageInfoPtr &i
 {
     ImageManager::ImageRequest *request
         = new ImageManager::PreloadRequest(info->fileName(),
-                                           ThumbnailView::CellGeometry::preferredIconSize(), info->angle(),
-                                           this);
+                                           preferredThumbnailSize(), info->angle(),
+                                           this, m_thumbnailCache);
     request->setIsThumbnailRequest(true);
     request->setPriority(ImageManager::BuildThumbnails);
     ImageManager::AsyncLoader::instance()->load(request);
@@ -166,7 +183,7 @@ void ImageManager::ThumbnailBuilder::doThumbnailBuild()
         m_preloadQueue->enqueue(fileName);
     }
     qCDebug(ImageManagerLog) << "thumbnail builder starting scout";
-    m_scout = new DB::ImageScout(*m_preloadQueue, m_loadedCount, 1);
+    m_scout = new DB::ImageScout(*m_preloadQueue, m_loadedCount, Settings::SettingsData::instance()->getThumbnailPreloadThreadCount());
     m_scout->setMaxSeekAhead(10);
     m_scout->setReadLimit(10 * 1048576);
     m_scout->start();
@@ -176,7 +193,7 @@ void ImageManager::ThumbnailBuilder::doThumbnailBuild()
     // is less than (i. e. zero) the number of thumbnails actually built.
     m_expectedThumbnails = m_thumbnailsToBuild.size();
     for (const DB::FileName &fileName : m_thumbnailsToBuild) {
-        DB::ImageInfoPtr info = fileName.info();
+        const auto info = DB::ImageDB::instance()->info(fileName);
         if (ImageManager::AsyncLoader::instance()->isExiting()) {
             cancelRequests();
             break;
@@ -189,8 +206,8 @@ void ImageManager::ThumbnailBuilder::doThumbnailBuild()
 
         ImageManager::ImageRequest *request
             = new ImageManager::PreloadRequest(fileName,
-                                               ThumbnailView::CellGeometry::preferredIconSize(), info->angle(),
-                                               this);
+                                               preferredThumbnailSize(), info->angle(),
+                                               this, m_thumbnailCache);
         request->setIsThumbnailRequest(true);
         request->setPriority(ImageManager::BuildThumbnails);
         if (ImageManager::AsyncLoader::instance()->load(request))
@@ -205,7 +222,7 @@ void ImageManager::ThumbnailBuilder::doThumbnailBuild()
 
 void ImageManager::ThumbnailBuilder::save()
 {
-    ImageManager::ThumbnailCache::instance()->save();
+    m_thumbnailCache->save();
 }
 
 void ImageManager::ThumbnailBuilder::requestCanceled()

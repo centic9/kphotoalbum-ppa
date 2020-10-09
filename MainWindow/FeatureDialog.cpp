@@ -17,6 +17,8 @@
 */
 
 #include "FeatureDialog.h"
+#include <config-kpa-marble.h>
+#include <config-kpa-plugins.h>
 
 #include <Exif/Database.h>
 
@@ -29,8 +31,6 @@
 #include <QStandardPaths>
 #include <QTextBrowser>
 #include <QVBoxLayout>
-#include <config-kpa-kgeomap.h>
-#include <config-kpa-kipi.h>
 #include <phonon/backendcapabilities.h>
 
 using namespace MainWindow;
@@ -60,19 +60,8 @@ FeatureDialog::FeatureDialog(QWidget *parent)
                  "the KPhotoAlbum home page</a>. If you have never compiled a KDE application, then please ensure that "
                  "you have the developer packages installed, in most distributions they go under names like kdelibs<i>-devel</i></p>");
 
-    text += i18n("<h1><a name=\"kipi\">Plug-ins support</a></h1>"
-                 "<p>KPhotoAlbum has a plug-in system with lots of extensions. You may among other things find plug-ins for:"
-                 "<ul>"
-                 "<li>Writing images to cds or dvd's</li>"
-                 "<li>Adjusting timestamps on your images</li>"
-                 "<li>Making a calendar featuring your images</li>"
-                 "<li>Uploading your images to flickr</li>"
-                 "<li>Upload your images to facebook</li>"
-                 "</ul></p>"
-
-                 "<p>The plug-in library is called KIPI, and may be downloaded from the "
-                 "<a href=\"https://userbase.kde.org/KIPI\">KDE Userbase Wiki</a></p>");
-    // FIXME(jzarl): put purpose here!
+    text += i18n("<h1><a name=\"purpose\">Plugin support</a></h1>"
+                 "<p>KPhotoAlbum supports the <em>Purpose</em> plugin system.</p>");
 
     text += i18n("<h1><a name=\"database\">SQLite database support</a></h1>"
                  "<p>KPhotoAlbum allows you to search using a certain number of Exif tags. For this KPhotoAlbum "
@@ -80,14 +69,12 @@ FeatureDialog::FeatureDialog(QWidget *parent)
                  "In addition the Qt package for SQLite (e.g. qt-sql-sqlite) must be installed.</p>");
 
     text += i18n("<h1><a name=\"geomap\">Map view for geotagged images</a></h1>"
-                 "<p>If KPhotoAlbum has been built with support for libkgeomap, "
+                 "<p>If KPhotoAlbum has been built with support for Marble, "
                  "KPhotoAlbum can show images with GPS information on a map."
                  "</p>");
 
     text += i18n("<h1><a name=\"video\">Video support</a></h1>"
-                 "<p>KPhotoAlbum relies on Qt's Phonon architecture for displaying videos; this in turn relies on GStreamer. "
-                 "If this feature is not enabled for you, have a look at the "
-                 "<a href=\"https://userbase.kde.org/KPhotoAlbum#Video_Support\">KPhotoAlbum wiki article on video support</a>.</p>");
+                 "<p>KPhotoAlbum relies on Qt's Phonon architecture for displaying videos; this in turn relies on GStreamer.</p>");
 
     QStringList mimeTypes = supportedVideoMimeTypes();
     mimeTypes.sort();
@@ -123,9 +110,9 @@ QSize FeatureDialog::sizeHint() const
     return QSize(800, 600);
 }
 
-bool MainWindow::FeatureDialog::hasKIPISupport()
+bool MainWindow::FeatureDialog::hasPurposeSupport()
 {
-#ifdef HASKIPI
+#ifdef KF5Purpose_FOUND
     return true;
 #else
     return false;
@@ -139,7 +126,7 @@ bool MainWindow::FeatureDialog::hasEXIV2DBSupport()
 
 bool MainWindow::FeatureDialog::hasGeoMapSupport()
 {
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     return true;
 #else
     return false;
@@ -171,7 +158,7 @@ bool FeatureDialog::hasVideoProber()
 bool MainWindow::FeatureDialog::hasAllFeaturesAvailable()
 {
     // Only answer those that are compile time tests, otherwise we will pay a penalty each time we start up.
-    return hasKIPISupport() && hasEXIV2DBSupport() && hasGeoMapSupport() && hasVideoThumbnailer() && hasVideoProber();
+    return hasPurposeSupport() && hasEXIV2DBSupport() && hasGeoMapSupport() && hasVideoThumbnailer() && hasVideoProber();
 }
 
 struct Data {
@@ -190,7 +177,7 @@ struct Data {
 QString MainWindow::FeatureDialog::featureString()
 {
     QList<Data> features;
-    features << Data(i18n("Plug-ins available"), QString::fromLatin1("#kipi"), hasKIPISupport());
+    features << Data(i18n("Plug-ins available"), QString::fromLatin1("#purpose"), hasPurposeSupport());
     features << Data(i18n("SQLite database support (used for Exif searches)"), QString::fromLatin1("#database"), hasEXIV2DBSupport());
     features << Data(i18n("Map view for geotagged images."), QString::fromLatin1("#geomap"), hasGeoMapSupport());
     features << Data(i18n("Video support"), QString::fromLatin1("#video"), !supportedVideoMimeTypes().isEmpty());

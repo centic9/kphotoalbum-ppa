@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -20,10 +20,9 @@
 #define SETTINGS_SETTINGSDATA_H
 
 #include <AnnotationDialog/enums.h>
-#include <DB/Category.h>
-#include <DB/ImageSearchInfo.h>
-#include <Exif/Info.h>
+#include <DB/UIDelegate.h>
 #include <Utilities/StringSet.h>
+#include <QObject>
 
 #define property(GET_TYPE, GET_FUNC, SET_FUNC, SET_TYPE) \
     GET_TYPE GET_FUNC() const;                           \
@@ -65,6 +64,12 @@ enum ThumbnailAspectRatio { Aspect_1_1,
                             Aspect_3_4,
                             Aspect_2_3,
                             Aspect_9_16 };
+enum LoadOptimizationPreset { LoadOptimizationHardDisk,
+                              LoadOptimizationNetwork,
+                              LoadOptimizationSataSSD,
+                              LoadOptimizationSlowNVME,
+                              LoadOptimizationFastNVME,
+                              LoadOptimizationManual };
 
 typedef const char *WindowType;
 extern const WindowType MainWindow, AnnotationDialog;
@@ -76,7 +81,7 @@ class SettingsData : public QObject
 public:
     static SettingsData *instance();
     static bool ready();
-    static void setup(const QString &imageDirectory);
+    static void setup(const QString &imageDirectory, DB::UIDelegate &delegate);
 
     /////////////////
     //// General ////
@@ -120,6 +125,11 @@ public:
     property_copy(autoStackNewFiles, setAutoStackNewFiles, bool);
     property_copy(copyFileComponent, setCopyFileComponent, QString);
     property_copy(copyFileReplacementComponent, setCopyFileReplacementComponent, QString);
+    property_copy(loadOptimizationPreset, setLoadOptimizationPreset, int);
+    property_copy(overlapLoadMD5, setOverlapLoadMD5, bool);
+    property_copy(preloadThreadCount, setPreloadThreadCount, int);
+    property_copy(thumbnailPreloadThreadCount, setThumbnailPreloadThreadCount, int);
+    property_copy(thumbnailBuilderThreadCount, setThumbnailBuilderThreadCount, int);
 
     bool trustTimeStamps();
 
@@ -133,7 +143,7 @@ public:
     property_copy(showNewestThumbnailFirst, setShowNewestFirst, bool);
     property_copy(thumbnailDisplayGrid, setThumbnailDisplayGrid, bool);
     property_copy(previewSize, setPreviewSize, int);
-    property_ref(backgroundColor, setBackgroundColor, QString);
+    property_ref(colorScheme, setColorScheme, QString);
     property_copy(incrementalThumbnails, setIncrementalThumbnails, bool);
 
     // Border space around thumbnails.
@@ -173,10 +183,8 @@ public:
     //// Categories ////
     ////////////////////
 
-    property_ref(albumCategory, setAlbumCategory, QString);
     property_ref(untaggedCategory, setUntaggedCategory, QString);
     property_ref(untaggedTag, setUntaggedTag, QString);
-    bool hasUntaggedCategoryFeatureConfigured() const;
     property_copy(untaggedImagesTagVisible, setUntaggedImagesTagVisible, bool);
 
     //////////////
@@ -201,10 +209,6 @@ public:
     //// Miscellaneous ////
     ///////////////////////
 
-    property_copy(delayLoadingPlugins, setDelayLoadingPlugins, bool);
-
-    property_ref(password, setPassword, QString);
-
     property_ref(HTMLBaseDir, setHTMLBaseDir, QString);
     property_ref(HTMLBaseURL, setHTMLBaseURL, QString);
     property_ref(HTMLDestURL, setHTMLDestURL, QString);
@@ -227,8 +231,8 @@ public:
 
     QString groupForDatabase(const char *setting) const;
 
-    DB::ImageSearchInfo currentLock() const;
-    void setCurrentLock(const DB::ImageSearchInfo &, bool exclude);
+    QVariantMap currentLock() const;
+    void setCurrentLock(const QVariantMap &pairs, bool exclude);
     bool lockExcludes() const;
 
     bool locked() const;
@@ -242,6 +246,11 @@ public:
     QStringList EXIFCommentsToStrip();
     void setEXIFCommentsToStrip(QStringList EXIFCommentsToStrip);
 
+    bool getOverlapLoadMD5() const;
+    int getPreloadThreadCount() const;
+    int getThumbnailPreloadThreadCount() const;
+    int getThumbnailBuilderThreadCount() const;
+
 signals:
     void locked(bool lock, bool exclude);
     void viewSortTypeChanged(Settings::ViewSortType);
@@ -250,9 +259,11 @@ signals:
     void thumbnailSizeChanged(int);
     void actualThumbnailSizeChanged(int);
     void histogramScaleChanged();
+    void colorSchemeChanged();
 
 private:
-    SettingsData(const QString &imageDirectory);
+    SettingsData(const QString &imageDirectory, DB::UIDelegate &delegate);
+    DB::UIDelegate &uiDelegate() const;
 
     bool m_trustTimeStamps;
     bool m_hasAskedAboutTimeStamps;
@@ -262,6 +273,7 @@ private:
     friend class DB::CategoryCollection;
 
     QStringList m_EXIFCommentsToStrip;
+    DB::UIDelegate &m_UI;
 };
 } // end of namespace
 

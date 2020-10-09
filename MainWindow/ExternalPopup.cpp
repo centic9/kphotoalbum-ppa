@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,7 +29,15 @@
 #include <KFileItem>
 #include <KLocalizedString>
 #include <KMimeTypeTrader>
+#include <kio_version.h>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 70, 0)
+#include <KIO/ApplicationLauncherJob>
+#include <KIO/JobUiDelegate>
+#endif
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+// KRun::displayOpenWithDialog() was both replaced and deprecated in 5.71
 #include <KRun>
+#endif
 #include <KService>
 #include <KShell>
 #include <QFile>
@@ -47,7 +55,7 @@ void MainWindow::ExternalPopup::populate(DB::ImageInfoPtr current, const DB::Fil
     clear();
     QAction *action;
 
-    QStringList list = QStringList() << i18n("Current Item") << i18n("All Selected Items") << i18n("Copy and Open");
+    const QStringList list = QStringList() << i18n("Current Item") << i18n("All Selected Items") << i18n("Copy and Open");
     for (int which = 0; which < 3; ++which) {
         if (which == 0 && !current)
             continue;
@@ -99,14 +107,18 @@ void MainWindow::ExternalPopup::slotExecuteService(QAction *action)
     // get the list of arguments
     QList<QUrl> lst;
 
-    if (action->data() == -1) {
-        return; //user clicked the title entry. (i.e: "All Selected Items")
+    // for action->data() see the QStringList in populate()
+    if (action->data() == 0) {
+        // "current item"
+        lst.append(QUrl(m_currentInfo->fileName().absolute()));
     } else if (action->data() == 1) {
-        Q_FOREACH (const DB::FileName &file, m_list) {
+        // "all selected"
+        for (const DB::FileName &file : qAsConst(m_list)) {
             if (m_appToMimeTypeMap[name].contains(mimeType(file)))
                 lst.append(QUrl(file.absolute()));
         }
     } else if (action->data() == 2) {
+        // "copy and open"
         QString origFile = m_currentInfo->fileName().absolute();
         QString newFile = origFile;
 
@@ -122,9 +134,8 @@ void MainWindow::ExternalPopup::slotExecuteService(QAction *action)
             qCWarning(MainWindowLog, "No settings were appropriate for modifying the file name (you must fill in the regexp field; Opening the original instead");
             lst.append(QUrl::fromLocalFile(origFile));
         }
-
     } else {
-        lst.append(QUrl(m_currentInfo->fileName().absolute()));
+        return; //user clicked the title entry. (i.e: "All Selected Items")
     }
 
     // get the program to run
@@ -139,17 +150,32 @@ void MainWindow::ExternalPopup::slotExecuteService(QAction *action)
         return;
     }
 
+    auto *uiParent = MainWindow::Window::theMainWindow();
     // check for the special entry for self-defined
     if (name == i18n("Open With...")) {
-        KRun::displayOpenWithDialog(lst, MainWindow::Window::theMainWindow());
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+        KRun::displayOpenWithDialog(lst, uiParent);
+#else
+        auto job = new KIO::ApplicationLauncherJob();
+        job->setUrls(lst);
+        job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+        job->start();
+#endif
         return;
     }
 
     KService::List offers = KMimeTypeTrader::self()->query(*(apps.begin()), QString::fromLatin1("Application"),
                                                            QString::fromLatin1("Name == '%1'").arg(name));
     Q_ASSERT(offers.count() >= 1);
-    KService::Ptr ptr = offers.first();
-    KRun::runService(*ptr, lst, MainWindow::Window::theMainWindow());
+    KService::Ptr service = offers.first();
+#if KIO_VERSION < QT_VERSION_CHECK(5, 70, 0)
+    KRun::runService(*service, lst, uiParent);
+#else
+    auto job = new KIO::ApplicationLauncherJob(service);
+    job->setUrls(lst);
+    job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+    job->start();
+#endif
 }
 
 MainWindow::ExternalPopup::ExternalPopup(QWidget *parent)
@@ -169,7 +195,7 @@ Utilities::StringSet MainWindow::ExternalPopup::mimeTypes(const DB::FileNameList
 {
     StringSet res;
     StringSet extensions;
-    Q_FOREACH (const DB::FileName &file, files) {
+    for (const DB::FileName &file : files) {
         const DB::FileName baseFileName = file;
         const int extStart = baseFileName.relative().lastIndexOf(QChar::fromLatin1('.'));
         const QString ext = baseFileName.relative().mid(extStart);
@@ -183,11 +209,11 @@ Utilities::StringSet MainWindow::ExternalPopup::mimeTypes(const DB::FileNameList
 
 MainWindow::OfferType MainWindow::ExternalPopup::appInfos(const DB::FileNameList &files)
 {
-    StringSet types = mimeTypes(files);
+    const StringSet types = mimeTypes(files);
     OfferType res;
-    Q_FOREACH (const QString &type, types) {
-        KService::List offers = KMimeTypeTrader::self()->query(type, QLatin1String("Application"));
-        Q_FOREACH (const KService::Ptr offer, offers) {
+    for (const QString &type : types) {
+        const KService::List offers = KMimeTypeTrader::self()->query(type, QLatin1String("Application"));
+        for (const KService::Ptr &offer : offers) {
             res.insert(qMakePair(offer->name(), offer->icon()));
             m_appToMimeTypeMap[offer->name()].insert(type);
         }

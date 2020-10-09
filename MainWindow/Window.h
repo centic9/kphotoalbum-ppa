@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -23,15 +23,13 @@
 #include <DB/ImageSearchInfo.h>
 #include <DB/UIDelegate.h>
 #include <ThumbnailView/enums.h>
+#include <config-kpa-marble.h>
 
 #include <KXmlGuiWindow>
 #include <QList>
 #include <QPointer>
 #include <QUrl>
-#include <config-kpa-kipi.h>
-#ifdef HAVE_KGEOMAP
-#include <Browser/PositionBrowserWidget.h>
-#endif
+#include <config-kpa-plugins.h>
 
 class QAction;
 class QCloseEvent;
@@ -47,10 +45,10 @@ class KActionMenu;
 class KTipDialog;
 class KToggleAction;
 
-#ifdef HASKIPI
-namespace KIPI
+#ifdef HAVE_MARBLE
+namespace Map
 {
-class PluginLoader;
+class MapView;
 }
 #endif
 
@@ -75,9 +73,9 @@ namespace HTMLGenerator
 {
 class HTMLDialog;
 }
-namespace Plugins
+namespace ImageManager
 {
-class Interface;
+class ThumbnailCache;
 }
 namespace Settings
 {
@@ -86,6 +84,7 @@ class SettingsDialog;
 namespace ThumbnailView
 {
 class ThumbnailFacade;
+class FilterWidget;
 }
 
 class BreadcrumbViewer;
@@ -105,15 +104,18 @@ public:
     ~Window() override;
     static void configureImages(const DB::ImageInfoList &list, bool oneAtATime);
     static Window *theMainWindow();
+
+    ImageManager::ThumbnailCache *thumbnailCache() const;
+
     DB::FileNameList selected(ThumbnailView::SelectionMode mode = ThumbnailView::ExpandCollapsedStacks) const;
     DB::ImageSearchInfo currentContext();
     QString currentBrowseCategory() const;
     void setStackHead(const DB::FileName &image);
     void setHistogramVisibilty(bool visible) const;
     bool dbIsDirty() const;
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     void showPositionBrowser();
-    Browser::PositionBrowserWidget *positionBrowserWidget();
+    Map::MapView *positionBrowserWidget();
 #endif
 
     // implement UI delegate interface
@@ -130,7 +132,6 @@ public:
 
 public slots:
     void showThumbNails(const DB::FileNameList &items);
-    void loadKipiPlugins();
     void reloadThumbnails(ThumbnailView::SelectionUpdateMethod method = ThumbnailView::MaintainSelection);
     void runDemo();
     void slotImageRotated(const DB::FileName &fileName);
@@ -167,8 +168,7 @@ protected slots:
     void setDefaultScopePositive();
     void setDefaultScopeNegative();
     void unlockFromDefaultScope();
-    void changePassword();
-    void slotConfigureKeyBindings();
+    void configureShortcuts();
     void slotSetFileName(const DB::FileName &);
     void updateContextMenuFromSelectionSize(int selectionSize);
     void slotUpdateViewMenu(DB::Category::ViewType);
@@ -177,15 +177,11 @@ protected slots:
     void slotBuildThumbnailsIfWanted();
     void slotRunSlideShow();
     void slotRunRandomizedSlideShow();
-    void slotConfigureToolbars();
-    void slotNewToolbarConfig();
     void slotImport();
     void slotExport();
     void delayedInit();
     void slotReenableMessages();
     void slotImagesChanged(const QList<QUrl> &);
-    void slotSelectionChanged(int count);
-    void plug();
     void slotRemoveTokens();
     void slotShowListOfFiles();
     void updateDateBar(const Browser::BreadcrumbList &);
@@ -218,6 +214,7 @@ protected slots:
 protected:
     void configureImages(bool oneAtATime);
     QString welcome();
+    bool event(QEvent *event) override;
     void closeEvent(QCloseEvent *e) override;
     void resizeEvent(QResizeEvent *) override;
     void moveEvent(QMoveEvent *) override;
@@ -237,13 +234,11 @@ protected:
     void executeStartupActions();
     void checkIfVideoThumbnailerIsInstalled();
     bool anyVideosSelected() const;
-#ifdef HAVE_KGEOMAP
-    Browser::PositionBrowserWidget *createPositionBrowser();
-#endif
 
 private:
     static Window *s_instance;
 
+    ImageManager::ThumbnailCache *m_thumbnailCache;
     ThumbnailView::ThumbnailFacade *m_thumbnailView;
     Settings::SettingsDialog *m_settingsDialog;
     QPointer<AnnotationDialog::Dialog> m_annotationDialog;
@@ -273,6 +268,7 @@ private:
     KToggleAction *m_smallListView;
     KToggleAction *m_largeListView;
     KToggleAction *m_largeIconView;
+    KActionMenu *m_colorSchemeMenu;
     QAction *m_generateHtml;
     QAction *m_copy;
     QAction *m_paste;
@@ -282,11 +278,7 @@ private:
     QAction *m_clearSelection;
     QAction *m_runSlideShow;
     QAction *m_runRandomSlideShow;
-    Plugins::Interface *m_pluginInterface;
     QAction *m_showExifDialog;
-#ifdef HASKIPI
-    KIPI::PluginLoader *m_pluginLoader;
-#endif
     QAction *m_recreateThumbnails;
     QAction *m_useNextVideoThumbnail;
     QAction *m_usePreviousVideoThumbnail;
@@ -294,13 +286,13 @@ private:
     TokenEditor *m_tokenEditor;
     DateBar::DateBarWidget *m_dateBar;
     QFrame *m_dateBarLine;
-    bool m_hasLoadedKipiPlugins;
     QMap<Qt::Key, QPair<QString, QString>> m_viewerInputMacros;
     MainWindow::StatusBar *m_statusBar;
     QString m_lastTarget;
-#ifdef HAVE_KGEOMAP
-    Browser::PositionBrowserWidget *m_positionBrowser;
+#ifdef HAVE_MARBLE
+    Map::MapView *m_positionBrowser;
 #endif
+    ThumbnailView::FilterWidget *m_filterWidget;
 };
 
 }

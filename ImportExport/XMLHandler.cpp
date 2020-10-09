@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -18,6 +18,7 @@
 #include "XMLHandler.h"
 
 #include <DB/FileName.h>
+#include <DB/ImageDB.h>
 #include <Utilities/FileUtil.h>
 
 using Utilities::StringSet;
@@ -52,9 +53,10 @@ QByteArray ImportExport::XMLHandler::createIndexXML(
         top.setAttribute(QString::fromLatin1("baseurl"), baseUrl);
     doc.appendChild(top);
 
-    Q_FOREACH (const DB::FileName &fileName, images) {
+    for (const DB::FileName &fileName : images) {
         const QString mappedFile = nameMap->uniqNameFor(fileName);
-        QDomElement elm = save(doc, fileName.info());
+        const auto info = DB::ImageDB::instance()->info(fileName);
+        QDomElement elm = save(doc, info);
         elm.setAttribute(QString::fromLatin1("file"), mappedFile);
         top.appendChild(elm);
     }
@@ -97,14 +99,14 @@ void ImportExport::XMLHandler::writeCategories(QDomDocument doc, QDomElement roo
     QDomElement elm = doc.createElement(QString::fromLatin1("options"));
 
     bool anyAtAll = false;
-    QStringList grps = info->availableCategories();
-    Q_FOREACH (const QString &name, grps) {
+    const QStringList grps = info->availableCategories();
+    for (const QString &name : grps) {
         QDomElement opt = doc.createElement(QString::fromLatin1("option"));
         opt.setAttribute(QString::fromLatin1("name"), name);
 
-        StringSet items = info->itemsOfCategory(name);
+        const StringSet items = info->itemsOfCategory(name);
         bool any = false;
-        Q_FOREACH (const QString &item, items) {
+        for (const QString &item : items) {
             QDomElement val = doc.createElement(QString::fromLatin1("value"));
             val.setAttribute(QString::fromLatin1("value"), item);
             opt.appendChild(val);

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -60,7 +60,8 @@ void ThumbnailView::SelectionInteraction::startDrag()
 {
     m_dragInProgress = true;
     QList<QUrl> urls;
-    Q_FOREACH (const DB::FileName &fileName, widget()->selection(NoExpandCollapsedStacks)) {
+    const auto selection = widget()->selection(NoExpandCollapsedStacks);
+    for (const DB::FileName &fileName : selection) {
         urls.append(QUrl::fromLocalFile(fileName.absolute()));
     }
     QDrag *drag = new QDrag(MainWindow::Window::theMainWindow());

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -56,8 +56,8 @@ void ThumbnailView::ThumbnailDND::contentsDragMoveEvent(QDragMoveEvent *event)
         widget()->scrollTo(widget()->indexUnderCursor(), QAbstractItemView::PositionAtCenter);
     if ((event->pos().y() > widget()->viewport()->visibleRegion().cbegin()->height() - 10))
         widget()->scrollTo(widget()->indexUnderCursor(), QAbstractItemView::PositionAtCenter);
-    bool left = (event->pos().x() - rect.x() < rect.width() / 2);
-    if (left) {
+    const bool isLeftHalfOfItem = (event->pos().x() - rect.x() < rect.width() / 2);
+    if (isLeftHalfOfItem) {
         model()->setLeftDropItem(fileName);
         const int index = model()->indexOf(fileName) - 1;
         if (index != -1)
@@ -132,10 +132,8 @@ void ThumbnailView::ThumbnailDND::removeDropIndications()
     model()->setLeftDropItem(DB::FileName());
     model()->setRightDropItem(DB::FileName());
 
-    if (!left.isNull())
-        model()->updateCell(left);
-    if (!right.isNull())
-        model()->updateCell(right);
+    model()->updateCell(left);
+    model()->updateCell(right);
 }
 
 void ThumbnailView::ThumbnailDND::contentsDragEnterEvent(QDragEnterEvent *event)

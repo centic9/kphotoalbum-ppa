@@ -1,4 +1,4 @@
-/* Copyright 2012 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright 2012-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -29,16 +29,22 @@ class QTemporaryFile;
 namespace Utilities
 {
 
+/**
+ * @brief The ToolTip class acts as a base class for tooltips that can show image thumbnails or image info text.
+ * The subclasses only customize the window behaviour, such as placement and window flags.
+ */
 class ToolTip : public QLabel, public ImageManager::ImageClientInterface
 {
     Q_OBJECT
 public:
-    explicit ToolTip(QWidget *parent = nullptr, Qt::WindowFlags f = 0);
     void pixmapLoaded(ImageManager::ImageRequest *request, const QImage &image) override;
     void requestToolTip(const DB::FileName &fileName);
 
 protected:
+    bool event(QEvent *e) override;
+    explicit ToolTip(QWidget *parent, Qt::WindowFlags f);
     virtual void placeWindow() = 0;
+    void updatePalette();
 
 private:
     void renderToolTip();

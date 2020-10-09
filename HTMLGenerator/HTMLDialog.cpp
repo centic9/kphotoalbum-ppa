@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public
@@ -27,6 +27,7 @@
 #include <MainWindow/Window.h>
 #include <Settings/SettingsData.h>
 
+#include <KColorScheme>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KFileItem>
@@ -52,6 +53,7 @@
 #include <QStandardPaths>
 #include <QStringMatcher>
 #include <QVBoxLayout>
+#include <kio_version.h>
 
 using namespace HTMLGenerator;
 
@@ -425,7 +427,11 @@ bool HTMLDialog::checkVars()
     }
 
     // ensure base dir exists
+#if KIO_VERSION < QT_VERSION_CHECK(5, 69, 0)
     QScopedPointer<KIO::StatJob> statJob(KIO::stat(QUrl::fromUserInput(baseDir), KIO::StatJob::DestinationSide, 1 /*only basic info*/));
+#else
+    QScopedPointer<KIO::StatJob> statJob(KIO::statDetails(QUrl::fromUserInput(baseDir), KIO::StatJob::DestinationSide, KIO::StatDetail::StatNoDetails));
+#endif
     KJobWidgets::setWindow(statJob.data(), MainWindow::Window::theMainWindow());
     if (!statJob->exec()) {
         KMessageBox::error(this, i18n("<p>Error while reading information about %1. "
@@ -444,7 +450,11 @@ bool HTMLDialog::checkVars()
     }
 
     // test if destination directory exists.
+#if KIO_VERSION < QT_VERSION_CHECK(5, 69, 0)
     QScopedPointer<KIO::StatJob> existsJob(KIO::stat(QUrl::fromUserInput(outputDir), KIO::StatJob::DestinationSide, 0 /*only minimal info*/));
+#else
+    QScopedPointer<KIO::StatJob> existsJob(KIO::statDetails(QUrl::fromUserInput(outputDir), KIO::StatJob::DestinationSide, KIO::StatDetail::StatNoDetails));
+#endif
     KJobWidgets::setWindow(existsJob.data(), MainWindow::Window::theMainWindow());
     if (existsJob->exec()) {
         int answer = KMessageBox::warningYesNo(this,
@@ -526,6 +536,9 @@ void HTMLDialog::populateThemesCombo()
             KConfig themeconfig(QString::fromLatin1("%1/kphotoalbum.theme").arg(themePath), KConfig::SimpleConfig);
             KConfigGroup config = themeconfig.group("theme");
             QString themeName = config.readEntry("Name");
+            // without the name, we can't show anything useful for the user to choose
+            if (themeName.trimmed().isEmpty())
+                continue;
             QString themeAuthor = config.readEntry("Author");
             m_themeAuthors << themeAuthor; // save author to display later
             QString themeDefault = config.readEntry("Default");
@@ -570,16 +583,20 @@ void HTMLDialog::displayThemeDescription(int themenr)
 void HTMLDialog::slotUpdateOutputLabel()
 {
     QString outputDir = QDir(m_baseDir->text()).filePath(m_outputDir->text());
+    auto labelPalette = m_outputLabel->palette();
     // feedback on validity:
     if (outputDir == m_baseDir->text()) {
-        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : darkred; }"));
+        KColorScheme::adjustForeground(labelPalette, KColorScheme::ForegroundRole::NegativeText, QPalette::WindowText);
+        KColorScheme::adjustBackground(labelPalette, KColorScheme::BackgroundRole::NegativeBackground, QPalette::Window);
         outputDir.append(i18n("<p>Gallery directory cannot be empty.</p>"));
     } else if (QDir(outputDir).exists()) {
-        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : darkorange; }"));
+        KColorScheme::adjustForeground(labelPalette, KColorScheme::ForegroundRole::NegativeText, QPalette::WindowText);
+        KColorScheme::adjustBackground(labelPalette, KColorScheme::BackgroundRole::NegativeBackground, QPalette::Window);
         outputDir.append(i18n("<p>The output directory already exists.</p>"));
     } else {
-        m_outputLabel->setStyleSheet(QString::fromLatin1("QLabel { color : black; }"));
+        labelPalette = palette();
     }
+    m_outputLabel->setPalette(labelPalette);
     m_outputLabel->setText(outputDir);
 }
 
@@ -589,6 +606,13 @@ void HTMLDialog::slotSuggestOutputDir()
         // the title is often an adequate directory name:
         m_outputDir->setText(m_title->text());
     }
+}
+
+bool HTMLDialog::event(QEvent *event)
+{
+    if (event->type() == QEvent::PaletteChange)
+        slotUpdateOutputLabel();
+    return KPageDialog::event(event);
 }
 
 int HTMLDialog::exec(const DB::FileNameList &list)

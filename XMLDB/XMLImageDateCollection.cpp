@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -29,7 +29,11 @@ void XMLDB::XMLImageDateCollection::add(const DB::ImageDate &date)
 void XMLDB::XMLImageDateCollection::buildIndex()
 {
     StartIndexMap::ConstIterator startSearch = m_startIndex.constBegin();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    QDateTime biggestEnd = QDate(1900, 1, 1).startOfDay();
+#else
     QDateTime biggestEnd = QDateTime(QDate(1900, 1, 1));
+#endif
     for (StartIndexMap::ConstIterator it = m_startIndex.constBegin();
          it != m_startIndex.constEnd();
          ++it) {
@@ -117,7 +121,11 @@ QDateTime XMLDB::XMLImageDateCollection::lowerLimit() const
                 return it.key();
         }
     }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return QDate(1900, 1, 1).startOfDay();
+#else
     return QDateTime(QDate(1900, 1, 1));
+#endif
 }
 
 QDateTime XMLDB::XMLImageDateCollection::upperLimit() const
@@ -127,13 +135,17 @@ QDateTime XMLDB::XMLImageDateCollection::upperLimit() const
         --highest;
         return highest.key();
     }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    return QDate(2100, 1, 1).startOfDay();
+#else
     return QDateTime(QDate(2100, 1, 1));
+#endif
 }
 
-XMLDB::XMLImageDateCollection::XMLImageDateCollection(const DB::FileNameList &list)
+XMLDB::XMLImageDateCollection::XMLImageDateCollection(const DB::ImageInfoList &list)
 {
-    Q_FOREACH (const DB::FileName &fileName, list) {
-        add(fileName.info()->date());
+    for (const auto &image : list) {
+        add(image->date());
     }
     buildIndex();
 }

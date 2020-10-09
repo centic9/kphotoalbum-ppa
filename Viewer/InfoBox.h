@@ -1,4 +1,4 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public
@@ -19,7 +19,7 @@
 #ifndef INFOBOX_H
 #define INFOBOX_H
 
-#include "config-kpa-kgeomap.h"
+#include "config-kpa-marble.h"
 
 // Qt includes
 #include <QMouseEvent>
@@ -63,6 +63,7 @@ public:
     void setSize();
 
 protected:
+    bool event(QEvent *e) override;
     QVariant loadResource(int type, const QUrl &name) override;
     void mouseMoveEvent(QMouseEvent *) override;
     void mousePressEvent(QMouseEvent *) override;
@@ -74,11 +75,12 @@ protected:
     void showBrowser();
     void possiblyStartResize(const QPoint &pos);
     void hackLinkColorForQt52();
+    void updatePalette();
 
 protected slots:
     void jumpToContext();
     void linkHovered(const QString &linkName);
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     void launchMapView();
     void updateMapForCurrentImage(DB::FileName);
 #endif
@@ -95,7 +97,7 @@ private: // Variables
     InfoBoxResizer m_infoBoxResizer;
     VisibleOptionsMenu *m_menu;
     QList<QPixmap> m_ratingPixmap;
-#ifdef HAVE_KGEOMAP
+#ifdef HAVE_MARBLE
     QToolButton *m_showOnMap;
     QPointer<Map::MapView> m_map;
 #endif
