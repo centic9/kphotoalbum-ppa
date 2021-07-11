@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2019-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+# SPDX-License-Identifier: BSD-2-Clause
+
 ###
 # Check all added or modified files that have a copyright line
 # for an up-to-date copyright year.
@@ -16,30 +19,47 @@ then
 	exit 0
 fi
 
+declare -a affected_files
+
 year=$(date +%Y)
 IFS=$'\n'
-for line in $(git status -s)
+for line in $(git status --short)
 do
 	# if the file is added or modified
 	if [[ $line == A* || $line == M* ]]
 	then
-		if head -n5 "${line:3}" | grep -q -i copyright
+		filename="${line:3}"
+		if grep -q SPDX-FileCopyrightText "${filename}"
 		then
-			if ! head -n5 "${line:3}" | grep -q -i "copyright.*[ -]$year"
+			if ! grep -q "SPDX-FileCopyrightText:.*$year" "${filename}"
 			then
-				missing_year="$missing_year\n${line:3}"
+				if ! grep -q "SPDX-FileCopyrightText: *none" "${filename}"
+				then
+					affected_files+=("${filename}")
+				fi
 			fi
 		fi
 	fi
 done
 
-if [ -n "$missing_year" ]
+if [[ ${#affected_files[@]} -gt 0 ]]
 then
-	printf "Please update copyright year for the following files:$missing_year\n"
+	printf "** Please update copyright year for the following files:\n\n${affected_files[*]}\n"
 	# also check if the Copyright statement in main.cpp is ok:
 	if ! grep -q -i "i18n(\"Copyright (C) 2003-$year " main.cpp
 	then
 		printf "...and also update the copyright statement in main.cpp!\n"
+	fi
+	copyright="$(git config --get user.name) <$(git config --get user.email)>"
+	printf "\n"
+	printf "** If you have the reuse tool installed and are the author (not just the committer),\n"
+	printf "** you may use the following command as a starting point:\n"
+	# whitespace in filenames is not handled
+	fnames="${affected_files[@]}"
+	printf "**   reuse addheader --year $year --copyright '$copyright' ${fnames}\n"
+	if ! which reuse >/dev/null
+	then
+		printf "** You can usually install the reuse tool by running 'pip install --user reuse' or by following the instructions on https://reuse.software/\n"
 	fi
 	printf "** You can suppress this check by setting 'git config kpa.checkCopyrightHeader false'\n"
 	printf "** or by setting the environment variable CHECK_COPYRIGHT_HEADER=false\n"

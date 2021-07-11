@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ImageSearchInfo.h"
 
@@ -23,20 +10,22 @@
 #include "ContainerCategoryMatcher.h"
 #include "ExactCategoryMatcher.h"
 #include "ImageDB.h"
-#include "Logging.h"
 #include "NegationCategoryMatcher.h"
 #include "NoTagCategoryMatcher.h"
 #include "OrCategoryMatcher.h"
 #include "ValueCategoryMatcher.h"
+#include "WildcardCategoryMatcher.h"
 
 #include <ImageManager/RawImageDecoder.h>
-#include <Settings/SettingsData.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <QApplication>
 #include <QRegExp>
+#include <QRegularExpression>
 
 using namespace DB;
 
@@ -93,8 +82,9 @@ void ImageSearchInfo::checkIfNull()
     if (m_compiled.valid || isNull())
         return;
     if (m_date.isNull() && m_label.isEmpty() && m_description.isEmpty()
-        && m_rating == -1 && m_megapixel == 0 && m_exifSearchInfo.isNull()
+        && m_rating == -1 && m_megapixel == 0 && m_exifSearchInfo.isEmpty()
         && m_categoryMatchText.isEmpty()
+        && freeformMatchText().isEmpty()
 #ifdef HAVE_KGEOMAP
         && !m_regionSelection.first.hasCoordinates() && !m_regionSelection.second.hasCoordinates()
 #endif
@@ -175,8 +165,8 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
         return false;
 
     // -------------------------------------------------- Date
-    QDateTime actualStart = info->date().start();
-    QDateTime actualEnd = info->date().end();
+    Utilities::FastDateTime actualStart = info->date().start();
+    Utilities::FastDateTime actualEnd = info->date().end();
 
     if (m_date.start().isValid()) {
         if (actualEnd < m_date.start() || (m_date.end().isValid() && actualStart > m_date.end()))
@@ -186,7 +176,7 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
     }
 
     // -------------------------------------------------- Label
-    if (m_label.isEmpty() && info->label().indexOf(m_label) == -1)
+    if (!m_label.isEmpty() && info->label().indexOf(m_label) == -1)
         return false;
 
     // -------------------------------------------------- RAW
@@ -198,18 +188,9 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
     if (!m_regionSelection.isNull()) {
         if (!info->coordinates().hasCoordinates())
             return false;
-        double infoLat = info->coordinates().lat();
-        if (infoLat < m_regionSelection.south || infoLat > m_regionSelection.north) {
+
+        if (!m_regionSelection.contains(info->coordinates()))
             return false;
-        }
-        double infoLon = info->coordinates().lon();
-        // copied from Marble::GeoDataLatLonBox:
-        if (((infoLon < m_regionSelection.west || infoLon > m_regionSelection.east)
-             && (m_regionSelection.west < m_regionSelection.east))
-            || ((infoLon < m_regionSelection.west && infoLon > m_regionSelection.east)
-                && (m_regionSelection.east > m_regionSelection.west))) {
-            return false;
-        }
     }
 #endif
 
@@ -239,6 +220,17 @@ bool ImageSearchInfo::doMatch(ImageInfoPtr info) const
     // -------------------------------------------------- EXIF
     if (!m_exifSearchInfo.matches(info->fileName()))
         return false;
+
+    // -------------------------------------------------- Freeform
+    if (!freeformMatchText().isEmpty()) {
+        const auto re = m_freeformMatcher.regularExpression();
+        if (!re.match(info->label()).hasMatch()
+            && !re.match(info->fileName().relative()).hasMatch()
+            && !re.match(info->description()).hasMatch()
+            && !m_freeformMatcher.eval(info)) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -282,8 +274,8 @@ void ImageSearchInfo::setRating(short rating)
 {
     m_rating = rating;
     m_isNull = false;
-    m_compiled.valid = false;
     m_matchGeneration = nextGeneration();
+    // compiled data is not affected
 }
 
 void ImageSearchInfo::setMegaPixel(short megapixel)
@@ -552,15 +544,28 @@ QList<SimpleCategoryMatcher *> ImageSearchInfo::extractAndMatcher(CategoryMatche
 QList<QList<SimpleCategoryMatcher *>> ImageSearchInfo::convertMatcher(CategoryMatcher *item) const
 {
     QList<QList<SimpleCategoryMatcher *>> result;
-    OrCategoryMatcher *orMacther;
+    OrCategoryMatcher *orMatcher;
 
-    if ((orMacther = dynamic_cast<OrCategoryMatcher *>(item))) {
-        for (CategoryMatcher *child : orMacther->mp_elements) {
+    if ((orMatcher = dynamic_cast<OrCategoryMatcher *>(item))) {
+        for (CategoryMatcher *child : orMatcher->mp_elements) {
             result.append(extractAndMatcher(child));
         }
     } else
         result.append(extractAndMatcher(item));
     return result;
+}
+
+QString ImageSearchInfo::freeformMatchText() const
+{
+    return m_freeformMatcher.regularExpression().pattern();
+}
+
+void ImageSearchInfo::setFreeformMatchText(const QString &freeformMatchText)
+{
+    setCacheable(false);
+    QRegularExpression re { freeformMatchText, QRegularExpression::CaseInsensitiveOption };
+    m_freeformMatcher.setRegularExpression(re);
+    m_isNull = m_isNull && freeformMatchText.isEmpty();
 }
 
 short ImageSearchInfo::rating() const
@@ -597,11 +602,11 @@ Map::GeoCoordinates::LatLonBox ImageSearchInfo::regionSelection() const
 void ImageSearchInfo::setRegionSelection(const Map::GeoCoordinates::LatLonBox &actRegionSelection)
 {
     m_regionSelection = actRegionSelection;
-    m_compiled.valid = false;
     if (!m_regionSelection.isNull()) {
         m_isNull = false;
     }
     m_matchGeneration = nextGeneration();
+    // compiled data is not affected
 }
 #endif
 

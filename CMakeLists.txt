@@ -1,5 +1,30 @@
+# SPDX-FileCopyrightText: 2007 Gustavo P. Boiko <gustavo.boiko@kdemail.net>
+# SPDX-FileCopyrightText: 2007-2008 Laurent Montel <montel@kde.org>
+# SPDX-FileCopyrightText: 2007-2010 Tuomas Suutari <tuomas@nepnep.net>
+# SPDX-FileCopyrightText: 2007-2014 Jesper K. Pedersen <blackie@kde.org>
+# SPDX-FileCopyrightText: 2008, 2013-2014, 2016 Pino Toscano <pino@kde.org>
+# SPDX-FileCopyrightText: 2008-2009 Henner Zeller <h.zeller@acm.org>
+# SPDX-FileCopyrightText: 2008-2009 Jan Kundrát <jkt@flaska.net>
+# SPDX-FileCopyrightText: 2009 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+# SPDX-FileCopyrightText: 2010, 2012 Miika Turkia <miika.turkia@gmail.com>
+# SPDX-FileCopyrightText: 2010, 2015, 2019 David Faure <faure@kde.org>
+# SPDX-FileCopyrightText: 2012 Albert Astals Cid <tsdgeos@terra.es>
+# SPDX-FileCopyrightText: 2012-2013 Andreas Neustifter <andreas.neustifter@gmail.com>
+# SPDX-FileCopyrightText: 2012-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+# SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
+# SPDX-FileCopyrightText: 2014-2021 Tobias Leupold <tobias.leupold@gmx.de>
+# SPDX-FileCopyrightText: 2016 Christoph Feck <cfeck@kde.org>
+# SPDX-FileCopyrightText: 2016 Luigi Toscano <luigi.toscano@tiscali.it>
+# SPDX-FileCopyrightText: 2016 Michael Palimaka <kensington@gentoo.org>
+# SPDX-FileCopyrightText: 2017 Ben Cooksley <bcooksley@kde.org>
+# SPDX-FileCopyrightText: 2018, 2020 Robert Krawitz <rlk@alum.mit.edu>
+# SPDX-FileCopyrightText: 2020 Wes Hardaker <kpa@capturedonearth.com>
+# SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 cmake_minimum_required(VERSION 3.3.0)
-project(kphotoalbum LANGUAGES CXX VERSION 5.7.0)
+project(kphotoalbum LANGUAGES CXX VERSION 5.8.1)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,25 +58,13 @@ add_definitions(
 
 ########### dependencies  ###############
 
-find_package(Qt5 5.9 REQUIRED COMPONENTS Core Sql Xml Widgets)
+find_package(Qt5 5.9 REQUIRED COMPONENTS Core Sql Xml Widgets Test)
 find_package(Phonon4Qt5 REQUIRED)
 find_package(KF5 5.44 REQUIRED COMPONENTS Archive Completion Config CoreAddons DocTools I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
     include_directories("${JPEG_INCLUDE_DIR}")
-endif()
-
-### 2018-12-30 jzarl
-# When Exiv2 0.26 can be deprecated, FindExiv2.cmake should be removed
-# and only find_package(exiv2) should be used
-find_package(exiv2 CONFIG QUIET)
-if(exiv2_FOUND)
-    # search againg with REQUIRED, so that the feature summary correctly shows exiv as required dependency
-    find_package(exiv2 CONFIG REQUIRED)
-    set(EXIV2_LIBRARIES exiv2lib)
-else()
-    find_package(Exiv2 REQUIRED)
 endif()
 
 find_package(KF5Purpose)
@@ -80,18 +93,6 @@ if(Marble_FOUND)
     include(MarbleChecks)
 endif()
 
-add_custom_target(
-    UpdateVersion ALL
-    COMMAND "${CMAKE_COMMAND}"
-    "-DBASE_DIR=${CMAKE_CURRENT_SOURCE_DIR}" -DPROJECT_NAME=KPA -DPROJECT_VERSION="${PROJECT_VERSION}"
-    -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/UpdateVersion.cmake"
-    COMMENT "Updating version header."
-    BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/version.h"
-    )
-
-# For config-kpa-*.h
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-
 set(libdatebar_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DateBar/documentation.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/DateBar/DateBarWidget.cpp"
@@ -102,7 +103,6 @@ set(libdatebar_SRCS
 
 set(libSettings_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/documentation.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Settings/SettingsData.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/SettingsDialog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/ViewerSizeConfig.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/CategoryItem.cpp"
@@ -217,15 +217,13 @@ set(libUtilities_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DeleteFiles.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ToolTip.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Logging.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/JpeglibWithFix.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/StringSet.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastJpeg.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DemoUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DescriptionUtil.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FileNameUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/VideoUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ImageUtil.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastDateTime.cpp"
     )
 
 set(libMainWindow_SRCS
@@ -251,7 +249,7 @@ set(libMainWindow_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMerger.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/DuplicateMatch.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/DuplicateMerger/MergeToolTip.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CopyPopup.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/CopyLinkEngine.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/Options.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/MainWindow/Logging.cpp"
     )
@@ -265,7 +263,6 @@ set(libImageManager_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageDecoder.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RawImageDecoder.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/RequestQueue.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailCache.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ImageEvent.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ThumbnailBuilder.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/PreloadRequest.cpp"
@@ -274,8 +271,6 @@ set(libImageManager_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoThumbnails.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/VideoLengthExtractor.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/ExtractOneVideoFrame.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/Logging.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/CacheFileInfo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ImageManager/enums.cpp"
     )
 
@@ -301,13 +296,11 @@ set(libDB_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryItem.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ContainerCategoryMatcher.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ValueCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/WildcardCategoryMatcher.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/OrCategoryMatcher.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/AndCategoryMatcher.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/OptimizedFileList.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FileName.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FileNameList.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/Logging.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryPtr.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ExifMode.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDateCollection.cpp"
@@ -316,7 +309,6 @@ set(libDB_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/MediaCount.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/RawId.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/SimpleCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/UIDelegate.cpp"
     )
 
 set(libImportExport_SRCS
@@ -350,7 +342,6 @@ set(libAnnotationDialog_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/DescriptionEdit.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/AreaTagSelectDialog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/Logging.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/AnnotationDialog/enums.cpp"
     )
 
 set(libBrowser_SRCS
@@ -373,17 +364,12 @@ set(libBrowser_SRCS
 
 set(libExif_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/documentation.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/Database.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/InfoDialog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/SearchDialog.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/SearchInfo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/TreeView.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/Info.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/RangeWidget.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/DatabaseElement.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/Grid.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/Logging.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/SearchDialogSettings.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp"
     )
@@ -434,6 +420,7 @@ set(libMap_SRCS)
 if(Marble_FOUND)
     set(libMap_SRCS
         "${CMAKE_CURRENT_SOURCE_DIR}/Browser/GeoPositionPage.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Map/enums.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/Map/GeoCluster.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/Map/MapView.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/Map/Logging.cpp"
@@ -441,6 +428,7 @@ if(Marble_FOUND)
         )
 endif()
 
+add_subdirectory(lib)
 add_subdirectory(images)
 add_subdirectory(icons)
 add_subdirectory(demo)
@@ -478,12 +466,15 @@ set(kphotoalbum_SRCS
 
 add_executable(kphotoalbum ${kphotoalbum_SRCS})
 add_dependencies(kphotoalbum UpdateVersion)
+target_include_directories(kphotoalbum PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 # External components
 target_link_libraries(kphotoalbum
     PRIVATE
+    KPA::Base
+    KPA::Thumbnails
+    KPA::Exif
     ${JPEG_LIBRARY}
-    ${EXIV2_LIBRARIES}
     KF5::Archive
     KF5::Completion
     KF5::ConfigCore
@@ -499,7 +490,6 @@ target_link_libraries(kphotoalbum
     KF5::WidgetsAddons
     Phonon::phonon4qt5
     ${libRemoteControl_LIBS}
-    Qt5::Sql
     )
 
 if(KF5Purpose_FOUND)
@@ -516,53 +506,6 @@ endif()
 
 install(TARGETS kphotoalbum ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_library(kpabase
-    AnnotationDialog/enums.cpp
-    AnnotationDialog/enums.h
-    DB/FileName.cpp
-    DB/FileName.h
-    DB/FileNameList.cpp
-    DB/FileNameList.h
-    DB/Logging.cpp
-    DB/Logging.h
-    DB/UIDelegate.cpp
-    DB/UIDelegate.h
-    ImageManager/Logging.cpp
-    ImageManager/Logging.h
-    MainWindow/Logging.cpp
-    MainWindow/Logging.h
-    Settings/SettingsData.cpp
-    Settings/SettingsData.h
-    Utilities/FileNameUtil.cpp
-    Utilities/FileNameUtil.h
-    Utilities/StringSet.cpp
-    Utilities/StringSet.h
-    )
-add_library(KPA::Base ALIAS kpabase)
-target_link_libraries(kpabase
-    PUBLIC
-    KF5::ConfigCore
-    KF5::I18n
-    Qt5::Core
-    )
-# FIXME(jzarl): once KPhotoAlbum uses internal libs, export public symbols instead:
-set_target_properties(kpabase PROPERTIES CXX_VISIBILITY_PRESET default)
-add_library(kpathumbnails
-    ImageManager/Logging.cpp
-    ImageManager/Logging.h
-    ImageManager/ThumbnailCache.cpp
-    ImageManager/ThumbnailCache.h
-    )
-add_library(KPA::Thumbnails ALIAS kpathumbnails)
-# FIXME(jzarl): once KPhotoAlbum uses internal libs, export public symbols instead:
-set_target_properties(kpathumbnails PROPERTIES CXX_VISIBILITY_PRESET default)
-target_link_libraries(kpathumbnails
-    PUBLIC
-    KPA::Base
-    Qt5::Gui
-    )
-install(TARGETS kpabase kpathumbnails ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-
 add_subdirectory(kpa-thumbnailtool)
 
 ########### install files ###############
@@ -572,10 +515,6 @@ install(FILES kphotoalbumrc DESTINATION ${KDE_INSTALL_CONFDIR})
 install(FILES tips default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
 install(FILES kphotoalbumui.rc DESTINATION "${KDE_INSTALL_KXMLGUI5DIR}/kphotoalbum")
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-
-configure_file(config-kpa-kdcraw.h.cmake "${CMAKE_CURRENT_BINARY_DIR}/config-kpa-kdcraw.h")
-configure_file(config-kpa-plugins.h.cmake "${CMAKE_CURRENT_BINARY_DIR}/config-kpa-plugins.h")
-configure_file(config-kpa-marble.h.cmake "${CMAKE_CURRENT_BINARY_DIR}/config-kpa-marble.h")
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 

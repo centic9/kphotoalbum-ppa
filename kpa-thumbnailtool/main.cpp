@@ -1,27 +1,14 @@
-/* Copyright (C) 2020 The KPhotoAlbum development team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2020 The KPhotoAlbum development team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Logging.h"
 #include "ThumbnailCacheConverter.h"
-#include "version.h"
 
-#include <ImageManager/ThumbnailCache.h>
-#include <Settings/SettingsData.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/version.h>
+#include <kpathumbnails/ThumbnailCache.h>
 
 #include <KAboutData>
 #include <KConfigGroup>
@@ -42,7 +29,7 @@ using namespace KPAThumbnailTool;
 void checkConflictingOptions(const QCommandLineParser &parser, const QCommandLineOption &opt1, const QCommandLineOption &opt2, QTextStream &err)
 {
     if (parser.isSet(opt1) && parser.isSet(opt2)) {
-        err << i18nc("@info:shell", "Conflicting commandline options: %1 and %2!\n", opt1.names().first(), opt2.names().first());
+        err << i18nc("@info:shell", "Conflicting commandline options: %1 and %2!\n", opt1.names().constFirst(), opt2.names().constFirst());
         exit(1);
     }
 }
@@ -89,6 +76,8 @@ int main(int argc, char **argv)
     parser.addOption(verifyOption);
     QCommandLineOption fixOption { QString::fromUtf8("remove-broken"), i18nc("@info:shell", "Fix inconsistent thumbnails by removing them from the cache (requires --check-thumbnail-dimensions).") };
     parser.addOption(fixOption);
+    QCommandLineOption vacuumOption { QString::fromUtf8("vacuum"), i18nc("@info:shell", "Remove unreferenced thumbnails from the thumbnail data files.") };
+    parser.addOption(vacuumOption);
     QCommandLineOption quietOption { QString::fromUtf8("quiet"), i18nc("@info:shell", "Be less verbose.") };
     parser.addOption(quietOption);
 
@@ -156,9 +145,12 @@ int main(int argc, char **argv)
         }
         console.flush();
     }
+    if (parser.isSet(vacuumOption)) {
+        cache.vacuum();
+    }
 
     // immediately quit the event loop:
-    QTimer::singleShot(0, [&app, returnValue]() { app.exit(returnValue); });
+    QTimer::singleShot(0, &app, [&app, returnValue]() { app.exit(returnValue); });
     return QCoreApplication::exec();
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

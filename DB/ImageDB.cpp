@@ -1,35 +1,23 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "ImageDB.h"
 
 #include "CategoryCollection.h"
-#include "FileName.h"
 #include "MediaCount.h"
 #include "NewImageFinder.h"
-#include "UIDelegate.h"
 
-#include <Browser/BrowserWidget.h>
 #include <XMLDB/Database.h>
+#include <kpabase/FileName.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/UIDelegate.h>
 
 #include <KLocalizedString>
+#include <QApplication>
+#include <QFileInfo>
 #include <QProgressDialog>
-#include <qapplication.h>
-#include <qfileinfo.h>
 
 using namespace DB;
 
@@ -70,7 +58,7 @@ QString ImageDB::NONE()
 
 DB::FileNameList ImageDB::currentScope(bool requireOnDisk) const
 {
-    return search(Browser::BrowserWidget::instance()->currentContext(), requireOnDisk).files();
+    return search(m_currentScope, requireOnDisk).files();
 }
 
 void ImageDB::markDirty()
@@ -131,6 +119,7 @@ UIDelegate &DB::ImageDB::uiDelegate() const
 
 ImageDB::ImageDB(UIDelegate &delegate)
     : m_UI(delegate)
+    , m_exifDB(std::make_unique<Exif::Database>(::Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("/exif-info.db"), delegate))
 {
 }
 
@@ -171,12 +160,17 @@ void ImageDB::slotReread(const DB::FileNameList &list, DB::ExifMode mode)
     }
 }
 
+void ImageDB::setCurrentScope(const ImageSearchInfo &info)
+{
+    m_currentScope = info;
+}
+
 DB::FileName ImageDB::findFirstItemInRange(const DB::FileNameList &images,
                                            const ImageDate &range,
                                            bool includeRanges) const
 {
     DB::FileName candidate;
-    QDateTime candidateDateStart;
+    Utilities::FastDateTime candidateDateStart;
     for (const DB::FileName &fileName : images) {
         ImageInfoPtr iInfo = info(fileName);
 
@@ -200,6 +194,11 @@ bool ImageDB::untaggedCategoryFeatureConfigured() const
     const auto untaggedTag = Settings::SettingsData::instance()->untaggedTag();
     return categoryCollection()->categoryNames().contains(untaggedCategory)
         && categoryCollection()->categoryForName(untaggedCategory)->items().contains(untaggedTag);
+}
+
+Exif::Database *ImageDB::exifDB() const
+{
+    return m_exifDB.get();
 }
 
 /** \fn void ImageDB::renameCategory( const QString& oldName, const QString newName )

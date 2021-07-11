@@ -1,23 +1,12 @@
-/* Copyright (C) 2013-2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2013-2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "XmlReader.h"
+#include "Logging.h"
 
-#include <DB/UIDelegate.h>
+#include <kpabase/UIDelegate.h>
 
 #include <KLocalizedString>
 
@@ -99,10 +88,7 @@ void XmlReader::reportError(const QString &text)
         message += i18n("<p>Additional error information:<nl/><message>%1</message></p>", errorString());
     message += xi18n("<p>Database path: <filename>%1</filename></p>", m_streamName);
 
-    m_ui.error(QString::fromUtf8("XmlReader: error in line %1, column %2 (%3)")
-                   .arg(lineNumber())
-                   .arg(columnNumber())
-                   .arg(errorString()),
+    m_ui.error(DB::LogMessage { XMLDBLog(), QStringLiteral("XmlReader: error in line %1, column %2 (%3)").arg(lineNumber()).arg(columnNumber()).arg(errorString()) },
                message, i18n("Error while reading database file"));
     exit(-1);
 }

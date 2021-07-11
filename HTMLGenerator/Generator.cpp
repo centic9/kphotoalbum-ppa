@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Generator.h"
 
@@ -25,12 +12,12 @@
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <DB/ImageInfo.h>
-#include <Exif/Info.h>
 #include <ImageManager/AsyncLoader.h>
 #include <ImportExport/Export.h>
 #include <MainWindow/Window.h>
 #include <Utilities/FileUtil.h>
 #include <Utilities/VideoUtil.h>
+#include <kpaexif/Info.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -729,7 +716,8 @@ void HTMLGenerator::Generator::pixmapLoaded(ImageManager::ImageRequest *request,
 
     if (!Utilities::isVideo(fileName)) {
         try {
-            Exif::Info::instance()->writeInfoToFile(fileName, file);
+            auto imageInfo = DB::ImageDB::instance()->info(fileName);
+            Exif::writeExifInfoToFile(fileName, file, imageInfo->description());
         } catch (...) {
         }
     }

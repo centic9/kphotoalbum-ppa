@@ -1,28 +1,16 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #ifndef MD5MAP_H
 #define MD5MAP_H
-#include "FileName.h"
 #include "MD5.h"
 
-#include <qhash.h>
-#include <qstring.h>
+#include <kpabase/FileName.h>
+
+#include <QHash>
+#include <QString>
 
 namespace DB
 {
@@ -36,7 +24,7 @@ typedef QHash<DB::FileName, MD5> FileMD5Map;
 class MD5Map
 {
 public:
-    virtual ~MD5Map() {}
+    virtual ~MD5Map() { }
     virtual void insert(const MD5 &md5sum, const DB::FileName &fileName);
     virtual DB::FileName lookup(const MD5 &md5sum) const;
     virtual MD5 lookupFile(const DB::FileName &fileName) const;

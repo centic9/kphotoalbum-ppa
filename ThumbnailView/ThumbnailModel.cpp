@@ -1,19 +1,6 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "ThumbnailModel.h"
 
@@ -24,14 +11,16 @@
 #include "ThumbnailRequest.h"
 #include "ThumbnailWidget.h"
 
-#include <DB/FileName.h>
 #include <DB/ImageDB.h>
 #include <ImageManager/AsyncLoader.h>
-#include <ImageManager/ThumbnailCache.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/FileUtil.h>
+#include <kpabase/FileName.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpathumbnails/ThumbnailCache.h>
 
 #include <KLocalizedString>
+#include <QElapsedTimer>
 #include <QIcon>
 #include <QLoggingCategory>
 
@@ -57,6 +46,8 @@ static bool stackOrderComparator(const DB::FileName &a, const DB::FileName &b)
 
 void ThumbnailView::ThumbnailModel::updateDisplayModel()
 {
+    QElapsedTimer timer;
+    timer.start();
     beginResetModel();
     ImageManager::AsyncLoader::instance()->stop(model(), ImageManager::StopOnlyNonPriorityLoads);
 
@@ -125,6 +116,7 @@ void ThumbnailView::ThumbnailModel::updateDisplayModel()
     emit collapseAllStacksEnabled(m_expandedStacks.size() > 0);
     emit expandAllStacksEnabled(m_allStacks.size() != model()->m_expandedStacks.size());
     endResetModel();
+    qCInfo(TimingLog) << "ThumbnailModel::updateDisplayModel(): " << timer.restart() << "ms.";
 }
 
 void ThumbnailView::ThumbnailModel::toggleStackExpansion(const DB::FileName &fileName)
@@ -532,6 +524,13 @@ void ThumbnailView::ThumbnailModel::toggleCategoryFilter(const QString &category
         }
     }
     filterByCategory(category, tag);
+}
+
+void ThumbnailView::ThumbnailModel::filterByFreeformText(const QString &text)
+{
+    qCDebug(ThumbnailViewLog) << "Filter added: freeform_match(" << text << ")";
+    m_filter.setFreeformMatchText(text);
+    emit filterChanged(m_filter);
 }
 
 void ThumbnailView::ThumbnailModel::preloadThumbnails()

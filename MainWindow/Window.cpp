@@ -1,24 +1,77 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Window.h"
 
-#include <config-kpa-plugins.h>
+#include "AutoStackImages.h"
+#include "BreadcrumbViewer.h"
+#include "DeleteDialog.h"
+#include "DirtyIndicator.h"
+#include "DuplicateMerger/DuplicateMerger.h"
+#include "ExternalPopup.h"
+#include "FeatureDialog.h"
+#include "ImageCounter.h"
+#include "InvalidDateFinder.h"
+#include "Logging.h"
+#include "Options.h"
+#include "SearchBar.h"
+#include "SplashScreen.h"
+#include "StatisticsDialog.h"
+#include "StatusBar.h"
+#include "TokenEditor.h"
+#include "UpdateVideoThumbnail.h"
+#include "WelcomeDialog.h"
+
+#include <AnnotationDialog/Dialog.h>
+#include <BackgroundJobs/SearchForVideosWithoutLengthInfo.h>
+#include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
+#include <BackgroundTaskManager/JobManager.h>
+#include <Browser/BrowserWidget.h>
+#include <DB/CategoryCollection.h>
+#include <DB/ImageDB.h>
+#include <DB/ImageDateCollection.h>
+#include <DB/ImageInfo.h>
+#include <DB/MD5.h>
+#include <DB/MD5Map.h>
+#include <DateBar/DateBarWidget.h>
+#include <Exif/InfoDialog.h>
+#include <Exif/ReReadDialog.h>
+#include <HTMLGenerator/HTMLDialog.h>
+#include <ImageManager/AsyncLoader.h>
+#include <ImageManager/ThumbnailBuilder.h>
+#include <ImportExport/Export.h>
+#include <ImportExport/Import.h>
+#include <Settings/SettingsDialog.h>
+#include <ThumbnailView/FilterWidget.h>
+#include <ThumbnailView/ThumbnailFacade.h>
+#include <ThumbnailView/enums.h>
+#include <Utilities/DemoUtil.h>
+#include <Utilities/List.h>
+#include <Utilities/ShowBusyCursor.h>
+#include <Utilities/VideoUtil.h>
+#include <Viewer/ViewerWidget.h>
+#include <kpabase/FileNameUtil.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/UIDelegate.h>
+#include <kpabase/config-kpa-marble.h>
+#include <kpabase/config-kpa-plugins.h>
+#include <kpaexif/Database.h>
+#include <kpaexif/Info.h>
+#include <kpathumbnails/ThumbnailCache.h>
+
+#ifdef KF5Purpose_FOUND
+#include <Plugins/PurposeMenu.h>
+#endif
+#ifdef HAVE_MARBLE
+#include <Map/MapView.h>
+#endif
+#ifdef KPA_ENABLE_REMOTECONTROL
+#include <RemoteControl/RemoteInterface.h>
+#endif
+
 #include <stdexcept>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
@@ -56,76 +109,15 @@
 #include <QMoveEvent>
 #include <QObject>
 #include <QPixmapCache>
+#include <QProgressDialog>
 #include <QResizeEvent>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <kio_version.h> // for #if KIO_VERSION...
 #include <ktip.h>
-
-#include <AnnotationDialog/Dialog.h>
-#include <BackgroundJobs/SearchForVideosWithoutLengthInfo.h>
-#include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
-#include <BackgroundTaskManager/JobManager.h>
-#include <Browser/BrowserWidget.h>
-#include <DB/CategoryCollection.h>
-#include <DB/ImageDB.h>
-#include <DB/ImageDateCollection.h>
-#include <DB/ImageInfo.h>
-#include <DB/MD5.h>
-#include <DB/MD5Map.h>
-#include <DB/UIDelegate.h>
-#include <DateBar/DateBarWidget.h>
-#include <Exif/Database.h>
-#include <Exif/Info.h>
-#include <Exif/InfoDialog.h>
-#include <Exif/ReReadDialog.h>
-#include <HTMLGenerator/HTMLDialog.h>
-#include <ImageManager/AsyncLoader.h>
-#include <ImageManager/ThumbnailBuilder.h>
-#include <ImageManager/ThumbnailCache.h>
-#include <ImportExport/Export.h>
-#include <ImportExport/Import.h>
-#ifdef KF5Purpose_FOUND
-#include <Plugins/PurposeMenu.h>
-#endif
-#include "AutoStackImages.h"
-#include "BreadcrumbViewer.h"
-#include "CopyPopup.h"
-#include "DeleteDialog.h"
-#include "DirtyIndicator.h"
-#include "DuplicateMerger/DuplicateMerger.h"
-#include "ExternalPopup.h"
-#include "FeatureDialog.h"
-#include "ImageCounter.h"
-#include "InvalidDateFinder.h"
-#include "Logging.h"
-#include "Options.h"
-#include "SearchBar.h"
-#include "SplashScreen.h"
-#include "StatisticsDialog.h"
-#include "StatusBar.h"
-#include "TokenEditor.h"
-#include "UpdateVideoThumbnail.h"
-#include "WelcomeDialog.h"
-
-#ifdef HAVE_MARBLE
-#include <Map/MapView.h>
-#endif
-#ifdef KPA_ENABLE_REMOTECONTROL
-#include <RemoteControl/RemoteInterface.h>
-#endif
-#include <Settings/SettingsData.h>
-#include <Settings/SettingsDialog.h>
-#include <ThumbnailView/FilterWidget.h>
-#include <ThumbnailView/ThumbnailFacade.h>
-#include <ThumbnailView/enums.h>
-#include <Utilities/DemoUtil.h>
-#include <Utilities/FileNameUtil.h>
-#include <Utilities/List.h>
-#include <Utilities/ShowBusyCursor.h>
-#include <Utilities/VideoUtil.h>
-#include <Viewer/ViewerWidget.h>
+#include <kwidgetsaddons_version.h>
+#include <functional>
 
 using namespace DB;
 
@@ -194,6 +186,9 @@ MainWindow::Window::Window(QWidget *parent)
     setupStatusBar();
     qCInfo(TimingLog) << "MainWindow: setupStatusBar: " << timer.restart() << "ms.";
 
+    setTabOrder(m_searchBar, m_thumbnailView->gui());
+    setTabOrder(m_thumbnailView->gui(), m_dateBar);
+
     // Misc
     m_autoSaveTimer = new QTimer(this);
     connect(m_autoSaveTimer, &QTimer::timeout, this, &Window::slotAutoSave);
@@ -207,6 +202,7 @@ MainWindow::Window::Window(QWidget *parent)
             m_browser, &Browser::BrowserWidget::widenToBreadcrumb);
     connect(m_browser, &Browser::BrowserWidget::pathChanged,
             this, QOverload<const Browser::BreadcrumbList &>::of(&Window::updateDateBar));
+    connect(m_browser, &Browser::BrowserWidget::showSearch, m_searchBar, QOverload<>::of(&QWidget::setFocus));
 
     connect(m_dateBar, &DateBar::DateBarWidget::dateSelected,
             m_thumbnailView, &ThumbnailView::ThumbnailFacade::gotoDate);
@@ -223,12 +219,14 @@ MainWindow::Window::Window(QWidget *parent)
 
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::showImage, this, &Window::showImage);
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::showSelection, this, QOverload<>::of(&Window::slotView));
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::showSearch, m_searchBar, QOverload<>::of(&QWidget::setFocus));
 
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::fileIdUnderCursorChanged, this, &Window::slotSetFileName);
     connect(DB::ImageDB::instance(), &DB::ImageDB::totalChanged, this, QOverload<>::of(&Window::updateDateBar));
     connect(DB::ImageDB::instance()->categoryCollection(), &DB::CategoryCollection::categoryCollectionChanged,
             this, &Window::slotOptionGroupChanged);
     connect(m_browser, &Browser::BrowserWidget::imageCount, m_statusBar->mp_partial, &ImageCounter::showBrowserMatches);
+    connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::filterChanged, this, &Window::slotFilterChanged);
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged, this, &Window::updateContextMenuFromSelectionSize);
 
     checkIfVideoThumbnailerIsInstalled();
@@ -241,6 +239,8 @@ MainWindow::Window::Window(QWidget *parent)
     // Automatically save toolbar settings
     setAutoSaveSettings();
 
+    m_copyLinkEngine = new CopyLinkEngine(this);
+
     qCInfo(TimingLog) << "MainWindow: misc setup time: " << timer.restart() << "ms.";
 }
 
@@ -248,7 +248,6 @@ MainWindow::Window::~Window()
 {
     DB::ImageDB::deleteInstance();
     delete m_thumbnailCache;
-    Exif::Database::deleteInstance();
 }
 
 void MainWindow::Window::delayedInit()
@@ -281,7 +280,6 @@ void MainWindow::Window::delayedInit()
         KTipDialog::showTip(this);
     }
 
-    Exif::Database::instance(); // Load the database
     qCInfo(TimingLog) << "MainWindow: Loading Exif DB:" << timer.restart() << "ms.";
 
 #ifdef KPA_ENABLE_REMOTECONTROL
@@ -658,9 +656,12 @@ void MainWindow::Window::launchViewer(const DB::FileNameList &inputMediaList, bo
         viewer = Viewer::ViewerWidget::latest();
         viewer->raise();
         viewer->activateWindow();
-    } else
+    } else {
         viewer = new Viewer::ViewerWidget(Viewer::ViewerWidget::ViewerWindow,
                                           &m_viewerInputMacros);
+        viewer->setCopyLinkEngine(m_copyLinkEngine);
+    }
+
     connect(viewer, &Viewer::ViewerWidget::soughtTo, m_thumbnailView, &ThumbnailView::ThumbnailFacade::changeSingleSelection);
     connect(viewer, &Viewer::ViewerWidget::imageRotated, this, &Window::slotImageRotated);
 
@@ -924,7 +925,11 @@ void MainWindow::Window::setupMenuBar()
     m_viewMenu = actionCollection()->add<KActionMenu>(QString::fromLatin1("configureView"));
     m_viewMenu->setText(i18n("Configure Current View"));
     m_viewMenu->setIcon(QIcon::fromTheme(QString::fromLatin1("view-list-details")));
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 77, 0)
+    m_viewMenu->setPopupMode(QToolButton::InstantPopup);
+#else
     m_viewMenu->setDelayed(false);
+#endif
 
     QActionGroup *viewGrp = new QActionGroup(this);
     viewGrp->setExclusive(true);
@@ -959,7 +964,11 @@ void MainWindow::Window::setupMenuBar()
     m_colorSchemeMenu = schemes->createSchemeSelectionMenu(activeSchemeName, this);
     m_colorSchemeMenu->setText(i18n("Choose Color Scheme"));
     m_colorSchemeMenu->setIcon(QIcon::fromTheme(QString::fromLatin1("color")));
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 77, 0)
+    m_colorSchemeMenu->setPopupMode(QToolButton::InstantPopup);
+#else
     m_colorSchemeMenu->setDelayed(false);
+#endif
     actionCollection()->addAction(QString::fromLatin1("colorScheme"), m_colorSchemeMenu);
 
     // The help menu
@@ -988,6 +997,14 @@ void MainWindow::Window::setupMenuBar()
     m_usePreviousVideoThumbnail = actionCollection()->addAction(QString::fromLatin1("usePreviousVideoThumbnail"), this, &Window::usePreviousVideoThumbnail);
     m_usePreviousVideoThumbnail->setText(i18n("Use previous video thumbnail"));
     actionCollection()->setDefaultShortcut(m_usePreviousVideoThumbnail, Qt::CTRL + Qt::Key_Minus);
+
+    m_copyAction = actionCollection()->addAction(QStringLiteral("copyImagesTo"), this, std::bind(&Window::triggerCopyLinkAction, this, CopyLinkEngine::Copy));
+    m_copyAction->setText(i18ncp("@action:inmenu", "Copy image to ...", "Copy images to ...", 1));
+    actionCollection()->setDefaultShortcut(m_copyAction, Qt::Key_F7);
+
+    m_linkAction = actionCollection()->addAction(QStringLiteral("linkImagesTo"), this, std::bind(&Window::triggerCopyLinkAction, this, CopyLinkEngine::Link));
+    m_linkAction->setText(i18ncp("@action:inmenu", "Link image to ...", "Link images to ...", 1));
+    actionCollection()->setDefaultShortcut(m_linkAction, Qt::SHIFT + Qt::Key_F7);
 
     setupGUI(KXmlGuiWindow::ToolBar | Create | Save);
 }
@@ -1050,6 +1067,11 @@ void MainWindow::Window::slotOptionGroupChanged()
     delete m_annotationDialog;
     m_annotationDialog = nullptr;
     DirtyIndicator::markDirty();
+}
+
+void MainWindow::Window::slotFilterChanged()
+{
+    m_statusBar->mp_partial->showBrowserMatches(m_thumbnailView->imageList(ThumbnailView::ViewOrder).size());
 }
 
 void MainWindow::Window::showTipOfDay()
@@ -1178,36 +1200,51 @@ void MainWindow::Window::contextMenuEvent(QContextMenuEvent *e)
         ExternalPopup externalCommands { &menu };
         const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(m_thumbnailView->mediaIdUnderCursor());
 
-        externalCommands.populate(info, selected());
-        QAction *action = menu.addMenu(&externalCommands);
-        if (!info && selected().isEmpty())
-            action->setEnabled(false);
+        const auto selection = selected();
+        const auto selectionCount = selected().count();
 
-        QUrl selectedFile;
-        if (info)
-            selectedFile = QUrl::fromLocalFile(info->fileName().absolute());
-        QList<QUrl> allSelectedFiles;
-        for (const QString &selectedPath : selected().toStringList(DB::AbsolutePath)) {
-            allSelectedFiles << QUrl::fromLocalFile(selectedPath);
+        externalCommands.populate(info, selection);
+        auto *externalCommandsAction = menu.addMenu(&externalCommands);
+        if (!info && selectionCount == 0) {
+            externalCommandsAction->setEnabled(false);
         }
 
-        // "Copy image(s) to ..."
-        CopyPopup copyMenu(&menu, selectedFile, allSelectedFiles, m_lastTarget, CopyPopup::Copy);
-        QAction *copyAction = menu.addMenu(&copyMenu);
-        if (!info && selected().isEmpty()) {
-            copyAction->setEnabled(false);
-        }
+        // "Copy to ..." / "Link to ..."
 
-        // "Link image(s) to ..."
-        CopyPopup linkMenu(&menu, selectedFile, allSelectedFiles, m_lastTarget, CopyPopup::Link);
-        QAction *linkAction = menu.addMenu(&linkMenu);
-        if (!info && selected().isEmpty()) {
-            linkAction->setEnabled(false);
-        }
+        menu.addSeparator();
+
+        m_copyAction->setText(i18ncp("@action:inmenu", "Copy image to ...", "Copy images to ...", selectionCount));
+        menu.addAction(m_copyAction);
+        m_copyAction->setEnabled(selectionCount > 0);
+
+        m_linkAction->setText(i18ncp("@action:inmenu", "Link image to ...", "Link images to ...", selectionCount));
+        menu.addAction(m_linkAction);
+        m_linkAction->setEnabled(selectionCount > 0);
 
         menu.exec(QCursor::pos());
     }
     e->setAccepted(true);
+}
+
+void MainWindow::Window::triggerCopyLinkAction(CopyLinkEngine::Action action)
+{
+    QStringList selection;
+
+    if (m_thumbnailView->gui() == m_stack->currentWidget()) {
+        selection = selected().toStringList(DB::AbsolutePath);
+    }
+
+    if (selection.isEmpty()) {
+        KMessageBox::sorry(this, i18n("No item is selected."), i18n("No Selection"));
+        return;
+    }
+
+    QList<QUrl> selectedFiles;
+    for (const QString &path : selection) {
+        selectedFiles.append(QUrl::fromLocalFile(path));
+    }
+
+    m_copyLinkEngine->selectTarget(this, selectedFiles, action);
 }
 
 void MainWindow::Window::setDefaultScopePositive()
@@ -1497,10 +1534,7 @@ void MainWindow::Window::slotShowListOfFiles()
 
     DB::FileNameList out;
     for (QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        QString fileNameStr = Utilities::imageFileNameToAbsolute(*it);
-        if (fileNameStr.isNull())
-            continue;
-        const DB::FileName fileName = DB::FileName::fromAbsolutePath(fileNameStr);
+        const DB::FileName fileName = Utilities::fileNameFromUserData(*it);
         if (!fileName.isNull())
             out.append(fileName);
     }
@@ -1660,7 +1694,12 @@ void MainWindow::Window::setupStatusBar()
 
 void MainWindow::Window::slotRecreateExifDB()
 {
-    Exif::Database::instance()->recreate();
+    const auto allImageFiles = DB::ImageDB::instance()->files(DB::MediaType::Image);
+    DB::ProgressDialog<QProgressDialog> dialog;
+    dialog.setModal(true);
+    dialog.setLabelText(i18n("Rereading Exif information from all images"));
+
+    DB::ImageDB::instance()->exifDB()->recreate(allImageFiles, dialog);
 }
 
 void MainWindow::Window::useNextVideoThumbnail()
@@ -1694,21 +1733,23 @@ void MainWindow::Window::slotThumbnailSizeChanged()
 void MainWindow::Window::createSearchBar()
 {
     // Set up the search tool bar
-    SearchBar *searchBar = new SearchBar(this);
-    searchBar->setLineEditEnabled(false);
-    searchBar->setObjectName(QString::fromUtf8("searchBar"));
+    m_searchBar = new SearchBar(this);
+    m_searchBar->setLineEditEnabled(false);
+    m_searchBar->setObjectName(QString::fromUtf8("searchBar"));
 
-    connect(searchBar, &SearchBar::textChanged, m_browser, &Browser::BrowserWidget::slotLimitToMatch);
-    connect(searchBar, &SearchBar::returnPressed, m_browser, &Browser::BrowserWidget::slotInvokeSeleted);
-    connect(searchBar, &SearchBar::keyPressed, m_browser, &Browser::BrowserWidget::scrollKeyPressed);
-    connect(m_browser, &Browser::BrowserWidget::viewChanged, searchBar, &SearchBar::reset);
-    connect(m_browser, &Browser::BrowserWidget::isSearchable, searchBar, &SearchBar::setLineEditEnabled);
+    connect(m_searchBar, &SearchBar::textChanged, m_browser, &Browser::BrowserWidget::slotLimitToMatch);
+    connect(m_searchBar, &SearchBar::returnPressed, m_browser, &Browser::BrowserWidget::slotInvokeSeleted);
+    connect(m_searchBar, &SearchBar::movementKeyPressed, m_browser, &Browser::BrowserWidget::scrollKeyPressed);
+    connect(m_browser, &Browser::BrowserWidget::viewChanged, m_searchBar, &SearchBar::clear);
+    connect(m_browser, &Browser::BrowserWidget::isSearchable, m_searchBar, &SearchBar::setLineEditEnabled);
 
     m_filterWidget = m_thumbnailView->createFilterWidget(this);
     addToolBar(m_filterWidget);
     m_filterWidget->setObjectName(QString::fromUtf8("filterBar"));
     connect(m_browser, &Browser::BrowserWidget::viewChanged, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::clearFilter);
     connect(m_browser, &Browser::BrowserWidget::isFilterable, m_filterWidget, &ThumbnailView::FilterWidget::setEnabled);
+    connect(m_searchBar, &SearchBar::textChanged, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::setFreeformFilter);
+    connect(m_searchBar, &SearchBar::cleared, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::clearFilter);
 }
 
 void MainWindow::Window::executeStartupActions()

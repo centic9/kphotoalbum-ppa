@@ -1,23 +1,11 @@
-/* Copyright (C) 2018-2019 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License or (at your option) version 3 or any later version
-   accepted by the membership of KDE e.V. (or its successor approved
-   by the membership of KDE e.V.), which shall act as a proxy
-   defined in Section 14 of version 3 of the license.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// SPDX-FileCopyrightText: 2018-2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #include "GeoCoordinates.h"
+
+#include <marble/GeoDataLatLonAltBox.h>
 
 bool Map::GeoCoordinates::hasCoordinates() const
 {
@@ -70,9 +58,36 @@ Map::GeoCoordinates::LatLonBox::LatLonBox(double north, double south, double eas
 {
 }
 
+Map::GeoCoordinates::LatLonBox::LatLonBox(const Marble::GeoDataLatLonBox &box)
+    : north(box.north(Marble::GeoDataCoordinates::Degree))
+    , south(box.south(Marble::GeoDataCoordinates::Degree))
+    , east(box.east(Marble::GeoDataCoordinates::Degree))
+    , west(box.west(Marble::GeoDataCoordinates::Degree))
+{
+}
+
 bool Map::GeoCoordinates::LatLonBox::isNull() const
 {
     return north == 0 && south == 0 && east == 0 && west == 0;
+}
+
+bool Map::GeoCoordinates::LatLonBox::contains(const Map::GeoCoordinates &point) const
+{
+    // increase size by delta in all directions for the check
+    // this fixes numerical issues with those images that lie directly on the border
+    const double delta = 0.000001;
+    const double lat = point.lat();
+    if (lat < south - delta || lat > north + delta) {
+        return false;
+    }
+    const double lon = point.lon();
+    if (((lon < west - delta || lon > east + delta)
+         && (west < east))
+        || ((lon < west - delta && lon > east + delta)
+            && (east < west))) {
+        return false;
+    }
+    return true;
 }
 Map::GeoCoordinates::LatLonBox::operator QString() const
 {

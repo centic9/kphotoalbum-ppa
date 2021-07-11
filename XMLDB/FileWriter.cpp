@@ -1,20 +1,8 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "FileWriter.h"
 
 #include "CompressFileInfo.h"
@@ -24,15 +12,16 @@
 #include "NumberedBackup.h"
 #include "XMLCategory.h"
 
-#include <DB/UIDelegate.h>
-#include <MainWindow/Logging.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/List.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/UIDelegate.h>
 
 #include <KLocalizedString>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QFileInfo>
+#include <QMutexLocker>
 #include <QXmlStreamWriter>
 
 //
@@ -65,12 +54,12 @@ void XMLDB::FileWriter::save(const QString &fileName, bool isAutoSave)
 
     // prepare XML document for saving:
     m_db->m_categoryCollection.initIdMap();
-    QFile out(fileName + QString::fromLatin1(".tmp"));
+    QFile out(fileName + QStringLiteral(".tmp"));
     if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) {
         m_db->uiDelegate().sorry(
-            QString::fromUtf8("Error saving to file '%1': %2").arg(out.fileName()).arg(out.errorString()), i18n("<p>Could not save the image database to XML.</p>"
-                                                                                                                "File %1 could not be opened because of the following error: %2",
-                                                                                                                out.fileName(), out.errorString()),
+            DB::LogMessage { XMLDBLog(), QStringLiteral("Error saving to file '%1': %2").arg(out.fileName()).arg(out.errorString()) }, i18n("<p>Could not save the image database to XML.</p>"
+                                                                                                                                            "File %1 could not be opened because of the following error: %2",
+                                                                                                                                            out.fileName(), out.errorString()),
             i18n("Error while saving..."));
         return;
     }
@@ -82,9 +71,9 @@ void XMLDB::FileWriter::save(const QString &fileName, bool isAutoSave)
     writer.writeStartDocument();
 
     {
-        ElementWriter dummy(writer, QString::fromLatin1("KPhotoAlbum"));
-        writer.writeAttribute(QString::fromLatin1("version"), QString::number(Database::fileVersion()));
-        writer.writeAttribute(QString::fromLatin1("compressed"), QString::number(useCompressedFileFormat()));
+        ElementWriter dummy(writer, QStringLiteral("KPhotoAlbum"));
+        writer.writeAttribute(QStringLiteral("version"), QString::number(Database::fileVersion()));
+        writer.writeAttribute(QStringLiteral("compressed"), QString::number(useCompressedFileFormat()));
 
         saveCategories(writer);
         saveImages(writer);
@@ -100,18 +89,18 @@ void XMLDB::FileWriter::save(const QString &fileName, bool isAutoSave)
     // original file can be safely deleted
     if ((!QFile::remove(fileName)) && QFile::exists(fileName)) {
         m_db->uiDelegate().sorry(
-            QString::fromUtf8("Removal of file '%1' failed.").arg(fileName), i18n("<p>Failed to remove old version of image database.</p>"
-                                                                                  "<p>Please try again or replace the file %1 with file %2 manually!</p>",
-                                                                                  fileName, out.fileName()),
+            DB::LogMessage { XMLDBLog(), QStringLiteral("Removal of file '%1' failed.").arg(fileName) }, i18n("<p>Failed to remove old version of image database.</p>"
+                                                                                                              "<p>Please try again or replace the file %1 with file %2 manually!</p>",
+                                                                                                              fileName, out.fileName()),
             i18n("Error while saving..."));
         return;
     }
     // State: index.xml doesn't exist, index.xml.tmp has the current version.
     if (!out.rename(fileName)) {
         m_db->uiDelegate().sorry(
-            QString::fromUtf8("Renaming index.xml to '%1' failed.").arg(out.fileName()), i18n("<p>Failed to move temporary XML file to permanent location.</p>"
-                                                                                              "<p>Please try again or rename file %1 to %2 manually!</p>",
-                                                                                              out.fileName(), fileName),
+            DB::LogMessage { XMLDBLog(), QStringLiteral("Renaming index.xml to '%1' failed.").arg(out.fileName()) }, i18n("<p>Failed to move temporary XML file to permanent location.</p>"
+                                                                                                                          "<p>Please try again or rename file %1 to %2 manually!</p>",
+                                                                                                                          out.fileName(), fileName),
             i18n("Error while saving..."));
         // State: index.xml.tmp has the current version.
         return;
@@ -122,7 +111,7 @@ void XMLDB::FileWriter::save(const QString &fileName, bool isAutoSave)
 void XMLDB::FileWriter::saveCategories(QXmlStreamWriter &writer)
 {
     QStringList categories = DB::ImageDB::instance()->categoryCollection()->categoryNames();
-    ElementWriter dummy(writer, QString::fromLatin1("Categories"));
+    ElementWriter dummy(writer, QStringLiteral("Categories"));
 
     DB::CategoryPtr tokensCategory = DB::ImageDB::instance()->categoryCollection()->categoryForSpecial(DB::Category::TokensCategory);
     for (QString name : categories) {
@@ -132,15 +121,15 @@ void XMLDB::FileWriter::saveCategories(QXmlStreamWriter &writer)
             continue;
         }
 
-        ElementWriter dummy(writer, QString::fromUtf8("Category"));
-        writer.writeAttribute(QString::fromUtf8("name"), name);
-        writer.writeAttribute(QString::fromUtf8("icon"), category->iconName());
-        writer.writeAttribute(QString::fromUtf8("show"), QString::number(category->doShow()));
-        writer.writeAttribute(QString::fromUtf8("viewtype"), QString::number(category->viewType()));
-        writer.writeAttribute(QString::fromUtf8("thumbnailsize"), QString::number(category->thumbnailSize()));
-        writer.writeAttribute(QString::fromUtf8("positionable"), QString::number(category->positionable()));
+        ElementWriter dummy(writer, QStringLiteral("Category"));
+        writer.writeAttribute(QStringLiteral("name"), name);
+        writer.writeAttribute(QStringLiteral("icon"), category->iconName());
+        writer.writeAttribute(QStringLiteral("show"), QString::number(category->doShow()));
+        writer.writeAttribute(QStringLiteral("viewtype"), QString::number(category->viewType()));
+        writer.writeAttribute(QStringLiteral("thumbnailsize"), QString::number(category->thumbnailSize()));
+        writer.writeAttribute(QStringLiteral("positionable"), QString::number(category->positionable()));
         if (category == tokensCategory) {
-            writer.writeAttribute(QString::fromUtf8("meta"), QString::fromUtf8("tokens"));
+            writer.writeAttribute(QStringLiteral("meta"), QStringLiteral("tokens"));
         }
 
         // As bug 423334 shows, it is easy to forget to add a group to the respective category
@@ -148,13 +137,13 @@ void XMLDB::FileWriter::saveCategories(QXmlStreamWriter &writer)
         // but we can prevent incorrect data from entering index.xml.
         const auto categoryItems = Utilities::mergeListsUniqly(category->items(), m_db->memberMap().groups(name));
         for (const QString &tagName : categoryItems) {
-            ElementWriter dummy(writer, QString::fromLatin1("value"));
-            writer.writeAttribute(QString::fromLatin1("value"), tagName);
-            writer.writeAttribute(QString::fromLatin1("id"),
+            ElementWriter dummy(writer, QStringLiteral("value"));
+            writer.writeAttribute(QStringLiteral("value"), tagName);
+            writer.writeAttribute(QStringLiteral("id"),
                                   QString::number(static_cast<XMLCategory *>(category.data())->idForName(tagName)));
             QDate birthDate = category->birthDate(tagName);
             if (!birthDate.isNull())
-                writer.writeAttribute(QString::fromUtf8("birthDate"), birthDate.toString(Qt::ISODate));
+                writer.writeAttribute(QStringLiteral("birthDate"), birthDate.toString(Qt::ISODate));
         }
     }
 }
@@ -170,7 +159,7 @@ void XMLDB::FileWriter::saveImages(QXmlStreamWriter &writer)
     }
 
     {
-        ElementWriter dummy(writer, QString::fromLatin1("images"));
+        ElementWriter dummy(writer, QStringLiteral("images"));
 
         for (const DB::ImageInfoPtr &infoPtr : qAsConst(list)) {
             save(writer, infoPtr);
@@ -180,7 +169,7 @@ void XMLDB::FileWriter::saveImages(QXmlStreamWriter &writer)
 
 void XMLDB::FileWriter::saveBlockList(QXmlStreamWriter &writer)
 {
-    ElementWriter dummy(writer, QString::fromLatin1("blocklist"));
+    ElementWriter dummy(writer, QStringLiteral("blocklist"));
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QList<DB::FileName> blockList(m_db->m_blockList.begin(), m_db->m_blockList.end());
 #else
@@ -189,8 +178,8 @@ void XMLDB::FileWriter::saveBlockList(QXmlStreamWriter &writer)
     // sort blocklist to get diffable files
     std::sort(blockList.begin(), blockList.end());
     for (const DB::FileName &block : qAsConst(blockList)) {
-        ElementWriter dummy(writer, QString::fromLatin1("block"));
-        writer.writeAttribute(QString::fromLatin1("file"), block.relative());
+        ElementWriter dummy(writer, QStringLiteral("block"));
+        writer.writeAttribute(QStringLiteral("file"), block.relative());
     }
 }
 
@@ -199,7 +188,7 @@ void XMLDB::FileWriter::saveMemberGroups(QXmlStreamWriter &writer)
     if (m_db->m_members.isEmpty())
         return;
 
-    ElementWriter dummy(writer, QString::fromLatin1("member-groups"));
+    ElementWriter dummy(writer, QStringLiteral("member-groups"));
     for (QMap<QString, QMap<QString, StringSet>>::ConstIterator memberMapIt = m_db->m_members.memberMap().constBegin();
          memberMapIt != m_db->m_members.memberMap().constEnd(); ++memberMapIt) {
         const QString categoryName = memberMapIt.key();
@@ -224,9 +213,9 @@ void XMLDB::FileWriter::saveMemberGroups(QXmlStreamWriter &writer)
 
             if (useCompressedFileFormat()) {
                 const StringSet members = groupMapIt.value();
-                ElementWriter dummy(writer, QString::fromLatin1("member"));
-                writer.writeAttribute(QString::fromLatin1("category"), categoryName);
-                writer.writeAttribute(QString::fromLatin1("group-name"), groupMapIt.key());
+                ElementWriter dummy(writer, QStringLiteral("member"));
+                writer.writeAttribute(QStringLiteral("category"), categoryName);
+                writer.writeAttribute(QStringLiteral("group-name"), groupMapIt.key());
                 QStringList idList;
                 for (const QString &member : members) {
                     DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName(categoryName);
@@ -236,7 +225,7 @@ void XMLDB::FileWriter::saveMemberGroups(QXmlStreamWriter &writer)
                     idList.append(QString::number(category->idForName(member)));
                 }
                 std::sort(idList.begin(), idList.end());
-                writer.writeAttribute(QString::fromLatin1("members"), idList.join(QString::fromLatin1(",")));
+                writer.writeAttribute(QStringLiteral("members"), idList.join(QStringLiteral(",")));
             } else {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
                 const auto groupMapItValue = groupMapIt.value();
@@ -246,18 +235,18 @@ void XMLDB::FileWriter::saveMemberGroups(QXmlStreamWriter &writer)
 #endif
                 std::sort(members.begin(), members.end());
                 for (const QString &member : qAsConst(members)) {
-                    ElementWriter dummy(writer, QString::fromLatin1("member"));
-                    writer.writeAttribute(QString::fromLatin1("category"), memberMapIt.key());
-                    writer.writeAttribute(QString::fromLatin1("group-name"), groupMapIt.key());
-                    writer.writeAttribute(QString::fromLatin1("member"), member);
+                    ElementWriter dummy(writer, QStringLiteral("member"));
+                    writer.writeAttribute(QStringLiteral("category"), memberMapIt.key());
+                    writer.writeAttribute(QStringLiteral("group-name"), groupMapIt.key());
+                    writer.writeAttribute(QStringLiteral("member"), member);
                 }
 
                 // Add an entry even if the group is empty
                 // (this is not necessary for the compressed format)
                 if (members.size() == 0) {
-                    ElementWriter dummy(writer, QString::fromLatin1("member"));
-                    writer.writeAttribute(QString::fromLatin1("category"), memberMapIt.key());
-                    writer.writeAttribute(QString::fromLatin1("group-name"), groupMapIt.key());
+                    ElementWriter dummy(writer, QStringLiteral("member"));
+                    writer.writeAttribute(QStringLiteral("category"), memberMapIt.key());
+                    writer.writeAttribute(QStringLiteral("group-name"), groupMapIt.key());
                 }
             }
         }
@@ -269,63 +258,71 @@ Perhaps, we may need this later ;-)
 
 void XMLDB::FileWriter::saveSettings(QXmlStreamWriter& writer)
 {
-    static QString settingsString = QString::fromUtf8("settings");
-    static QString settingString = QString::fromUtf8("setting");
-    static QString keyString = QString::fromUtf8("key");
-    static QString valueString = QString::fromUtf8("value");
-
     ElementWriter dummy(writer, settingsString);
 
     QMap<QString, QString> settings;
     // For testing
-    settings.insert(QString::fromUtf8("tokensCategory"), QString::fromUtf8("Tokens"));
-    settings.insert(QString::fromUtf8("untaggedCategory"), QString::fromUtf8("Events"));
-    settings.insert(QString::fromUtf8("untaggedTag"), QString::fromUtf8("untagged"));
+    settings.insert(QStringLiteral("tokensCategory"), QStringLiteral("Tokens"));
+    settings.insert(QStringLiteral("untaggedCategory"), QStringLiteral("Events"));
+    settings.insert(QStringLiteral("untaggedTag"), QStringLiteral("untagged"));
 
     QMapIterator<QString, QString> settingsIterator(settings);
     while (settingsIterator.hasNext()) {
         ElementWriter dummy(writer, settingString);
         settingsIterator.next();
-        writer.writeAttribute(keyString, escape(settingsIterator.key()));
-        writer.writeAttribute(valueString, escape(settingsIterator.value()));
+        writer.writeAttribute(QStringLiteral("key"), escape(settingsIterator.key()));
+        writer.writeAttribute(QStringLiteral("value"), escape(settingsIterator.value()));
     }
 }
 */
 
+static const QString &stdDateTimeToString(const Utilities::FastDateTime &date)
+{
+    static QString s_lastDateTimeString;
+    static Utilities::FastDateTime s_lastDateTime;
+    static QMutex s_lastDateTimeLocker;
+    QMutexLocker dummy(&s_lastDateTimeLocker);
+    if (date.isValid() && date != s_lastDateTime) {
+        s_lastDateTime = date;
+        s_lastDateTimeString = date.toString(Qt::ISODate);
+    }
+    return s_lastDateTimeString;
+}
+
 void XMLDB::FileWriter::save(QXmlStreamWriter &writer, const DB::ImageInfoPtr &info)
 {
-    ElementWriter dummy(writer, QString::fromLatin1("image"));
-    writer.writeAttribute(QString::fromLatin1("file"), info->fileName().relative());
+    ElementWriter dummy(writer, QStringLiteral("image"));
+    writer.writeAttribute(QStringLiteral("file"), info->fileName().relative());
     if (info->label() != QFileInfo(info->fileName().relative()).completeBaseName())
-        writer.writeAttribute(QString::fromLatin1("label"), info->label());
+        writer.writeAttribute(QStringLiteral("label"), info->label());
     if (!info->description().isEmpty())
-        writer.writeAttribute(QString::fromLatin1("description"), info->description());
+        writer.writeAttribute(QStringLiteral("description"), info->description());
 
     DB::ImageDate date = info->date();
-    QDateTime start = date.start();
-    QDateTime end = date.end();
+    Utilities::FastDateTime start = date.start();
+    Utilities::FastDateTime end = date.end();
 
-    writer.writeAttribute(QString::fromLatin1("startDate"), start.toString(Qt::ISODate));
+    writer.writeAttribute(QStringLiteral("startDate"), stdDateTimeToString(start));
     if (start != end)
-        writer.writeAttribute(QString::fromLatin1("endDate"), end.toString(Qt::ISODate));
+        writer.writeAttribute(QStringLiteral("endDate"), stdDateTimeToString(end));
 
     if (info->angle() != 0)
-        writer.writeAttribute(QString::fromLatin1("angle"), QString::number(info->angle()));
-    writer.writeAttribute(QString::fromLatin1("md5sum"), info->MD5Sum().toHexString());
-    writer.writeAttribute(QString::fromLatin1("width"), QString::number(info->size().width()));
-    writer.writeAttribute(QString::fromLatin1("height"), QString::number(info->size().height()));
+        writer.writeAttribute(QStringLiteral("angle"), QString::number(info->angle()));
+    writer.writeAttribute(QStringLiteral("md5sum"), info->MD5Sum().toHexString());
+    writer.writeAttribute(QStringLiteral("width"), QString::number(info->size().width()));
+    writer.writeAttribute(QStringLiteral("height"), QString::number(info->size().height()));
 
     if (info->rating() != -1) {
-        writer.writeAttribute(QString::fromLatin1("rating"), QString::number(info->rating()));
+        writer.writeAttribute(QStringLiteral("rating"), QString::number(info->rating()));
     }
 
     if (info->stackId()) {
-        writer.writeAttribute(QString::fromLatin1("stackId"), QString::number(info->stackId()));
-        writer.writeAttribute(QString::fromLatin1("stackOrder"), QString::number(info->stackOrder()));
+        writer.writeAttribute(QStringLiteral("stackId"), QString::number(info->stackId()));
+        writer.writeAttribute(QStringLiteral("stackOrder"), QString::number(info->stackOrder()));
     }
 
     if (info->isVideo())
-        writer.writeAttribute(QLatin1String("videoLength"), QString::number(info->videoLength()));
+        writer.writeAttribute(QStringLiteral("videoLength"), QString::number(info->videoLength()));
 
     if (useCompressedFileFormat())
         writeCategoriesCompressed(writer, info);
@@ -340,12 +337,12 @@ QString XMLDB::FileWriter::areaToString(QRect area) const
     areaString.append(QString::number(area.y()));
     areaString.append(QString::number(area.width()));
     areaString.append(QString::number(area.height()));
-    return areaString.join(QString::fromLatin1(" "));
+    return areaString.join(QStringLiteral(" "));
 }
 
 void XMLDB::FileWriter::writeCategories(QXmlStreamWriter &writer, const DB::ImageInfoPtr &info)
 {
-    ElementWriter topElm(writer, QString::fromLatin1("options"), false);
+    ElementWriter topElm(writer, QStringLiteral("options"), false);
 
     QStringList grps = info->availableCategories();
     // in contrast to CategoryCollection::categories, availableCategories is randomly sorted (since it is now a QHash)
@@ -354,7 +351,7 @@ void XMLDB::FileWriter::writeCategories(QXmlStreamWriter &writer, const DB::Imag
         if (!shouldSaveCategory(name))
             continue;
 
-        ElementWriter categoryElm(writer, QString::fromLatin1("option"), false);
+        ElementWriter categoryElm(writer, QStringLiteral("option"), false);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         const auto itemsOfCategory = info->itemsOfCategory(name);
@@ -366,16 +363,16 @@ void XMLDB::FileWriter::writeCategories(QXmlStreamWriter &writer, const DB::Imag
         if (!items.isEmpty()) {
             topElm.writeStartElement();
             categoryElm.writeStartElement();
-            writer.writeAttribute(QString::fromLatin1("name"), name);
+            writer.writeAttribute(QStringLiteral("name"), name);
         }
 
         for (const QString &itemValue : qAsConst(items)) {
-            ElementWriter dummy(writer, QString::fromLatin1("value"));
-            writer.writeAttribute(QString::fromLatin1("value"), itemValue);
+            ElementWriter dummy(writer, QStringLiteral("value"));
+            writer.writeAttribute(QStringLiteral("value"), itemValue);
 
             QRect area = info->areaForTag(name, itemValue);
             if (!area.isNull()) {
-                writer.writeAttribute(QString::fromLatin1("area"), areaToString(area));
+                writer.writeAttribute(QStringLiteral("area"), areaToString(area));
             }
         }
     }
@@ -413,7 +410,7 @@ void XMLDB::FileWriter::writeCategoriesCompressed(QXmlStreamWriter &writer, cons
             // write the category attribute if there are actually ids to write
             if (!idList.isEmpty()) {
                 std::sort(idList.begin(), idList.end());
-                writer.writeAttribute(escape(categoryName), idList.join(QString::fromLatin1(",")));
+                writer.writeAttribute(escape(categoryName), idList.join(QStringLiteral(",")));
             }
         }
     }
@@ -421,24 +418,24 @@ void XMLDB::FileWriter::writeCategoriesCompressed(QXmlStreamWriter &writer, cons
     // Add a "readable" sub-element for the positioned tags
     // FIXME: can this be merged with the code in writeCategories()?
     if (!positionedTags.isEmpty()) {
-        ElementWriter topElm(writer, QString::fromLatin1("options"), false);
+        ElementWriter topElm(writer, QStringLiteral("options"), false);
         topElm.writeStartElement();
 
         QMapIterator<QString, QList<QPair<QString, QRect>>> categoryWithAreas(positionedTags);
         while (categoryWithAreas.hasNext()) {
             categoryWithAreas.next();
 
-            ElementWriter categoryElm(writer, QString::fromLatin1("option"), false);
+            ElementWriter categoryElm(writer, QStringLiteral("option"), false);
             categoryElm.writeStartElement();
-            writer.writeAttribute(QString::fromLatin1("name"), categoryWithAreas.key());
+            writer.writeAttribute(QStringLiteral("name"), categoryWithAreas.key());
 
             QList<QPair<QString, QRect>> areas = categoryWithAreas.value();
             std::sort(areas.begin(), areas.end(),
                       [](QPair<QString, QRect> a, QPair<QString, QRect> b) { return a.first < b.first; });
             for (const auto &positionedTag : qAsConst(areas)) {
-                ElementWriter dummy(writer, QString::fromLatin1("value"));
-                writer.writeAttribute(QString::fromLatin1("value"), positionedTag.first);
-                writer.writeAttribute(QString::fromLatin1("area"), areaToString(positionedTag.second));
+                ElementWriter dummy(writer, QStringLiteral("value"));
+                writer.writeAttribute(QStringLiteral("value"), positionedTag.first);
+                writer.writeAttribute(QStringLiteral("area"), areaToString(positionedTag.second));
             }
         }
     }
@@ -484,7 +481,7 @@ QString XMLDB::FileWriter::escape(const QString &str)
 
     QString tmp(str);
     // Regex to match characters that are not allowed to start XML attribute names
-    const QRegExp rx(QString::fromLatin1("([^a-zA-Z0-9:_])"));
+    static const QRegExp rx(QStringLiteral("([^a-zA-Z0-9:_])"));
     int pos = 0;
 
     // Encoding special characters if compressed XML is selected
@@ -496,7 +493,7 @@ QString XMLDB::FileWriter::escape(const QString &str)
             pos += after.length();
         }
     } else
-        tmp.replace(QString::fromLatin1(" "), QString::fromLatin1("_"));
+        tmp.replace(QStringLiteral(" "), QStringLiteral("_"));
     s_cache.insert(str, tmp);
     return tmp;
 }

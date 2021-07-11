@@ -1,36 +1,24 @@
-/* Copyright (C) 2014 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2014 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "ScreenInfo.h"
 #include "Settings.h"
 #include <QScreen>
-#include <cmath>
 #include <QTimer>
+#include <cmath>
 
-namespace RemoteControl {
+namespace RemoteControl
+{
 
-ScreenInfo& ScreenInfo::instance()
+ScreenInfo &ScreenInfo::instance()
 {
     static ScreenInfo instance;
     return instance;
 }
 
-void ScreenInfo::setScreen(QScreen* screen)
+void ScreenInfo::setScreen(QScreen *screen)
 {
     m_screen = screen;
     QSize size = pixelForSizeInMM(100);
@@ -41,8 +29,8 @@ QSize ScreenInfo::pixelForSizeInMM(int size) const
 {
     const QSizeF mm = m_screen->physicalSize();
     const QSize pixels = screenSize();
-    return QSize( (size / mm.width() ) * pixels.width(),
-                  (size / mm.height()) * pixels.height());
+    return QSize((size / mm.width()) * pixels.width(),
+                 (size / mm.height()) * pixels.height());
 }
 
 void ScreenInfo::setCategoryCount(int count)
@@ -72,7 +60,7 @@ ScreenInfo::ScreenInfo()
     connect(&Settings::instance(), &Settings::overviewIconSizeChanged, this, &ScreenInfo::overviewIconSizeChanged);
     connect(&Settings::instance(), &Settings::overviewIconSizeChanged, this, &ScreenInfo::overviewSpacingChanged);
     connect(this, &ScreenInfo::viewWidthChanged, this,
-            [this] () { QTimer::singleShot(0, this, SLOT(updateLayout())); });
+            [this]() { QTimer::singleShot(0, this, SLOT(updateLayout())); });
 }
 
 int ScreenInfo::possibleColumns()
@@ -106,9 +94,9 @@ void ScreenInfo::updateLayout()
     const int preferredCols = ceil(sqrt(iconCount));
 
     int columns;
-    for (columns = qMin(possibleColumns(), preferredCols); columns < possibleColumns(); ++columns ) {
+    for (columns = qMin(possibleColumns(), preferredCols); columns < possibleColumns(); ++columns) {
         const int rows = ceil(1.0 * iconCount / columns);
-        const int height = (rows + 2*0.25 + (rows-1)/2) * iconHeight();
+        const int height = (rows + 2 * 0.25 + (rows - 1) / 2) * iconHeight();
         if (height < m_viewHeight)
             break;
     }
@@ -120,7 +108,7 @@ void ScreenInfo::updateLayout()
 
 int ScreenInfo::overviewSpacing() const
 {
-    return overviewIconSize()/2;
+    return overviewIconSize() / 2;
 }
 
 } // namespace RemoteControl

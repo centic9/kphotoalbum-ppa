@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Database.h"
 
@@ -26,20 +13,21 @@
 
 #include <Browser/BrowserWidget.h>
 #include <DB/CategoryCollection.h>
-#include <DB/FileName.h>
 #include <DB/GroupCounter.h>
 #include <DB/ImageInfo.h>
 #include <DB/ImageInfoPtr.h>
-#include <DB/UIDelegate.h>
-#include <Exif/Database.h>
-#include <MainWindow/Logging.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/VideoUtil.h>
+#include <kpabase/FileName.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/UIDelegate.h>
+#include <kpaexif/Database.h>
 
 #include <KLocalizedString>
 #include <QElapsedTimer>
 #include <QExplicitlySharedDataPointer>
 #include <QFileInfo>
+#include <QMutexLocker>
 
 using Utilities::StringSet;
 
@@ -56,9 +44,10 @@ void checkForBackupFile(const QString &fileName, DB::UIDelegate &ui)
 
     const long backupSizeKB = backUpFile.size() >> 10;
     const DB::UserFeedback choice = ui.questionYesNo(
-        QString::fromUtf8("Autosave file found: '%1', %2KB.").arg(backupName).arg(backupSizeKB), i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
-                                                                                                      "Should the autosave file be used?",
-                                                                                                      backupName, fileName, backupSizeKB),
+        DB::LogMessage { XMLDBLog(), QString::fromUtf8("Autosave file found: '%1', %2KB.").arg(backupName).arg(backupSizeKB) },
+        i18n("Autosave file '%1' exists (size %3 KB) and is newer than '%2'. "
+             "Should the autosave file be used?",
+             backupName, fileName, backupSizeKB),
         i18n("Found Autosave File"));
 
     if (choice == DB::UserFeedback::Confirm) {
@@ -206,7 +195,7 @@ void XMLDB::Database::deleteList(const DB::FileNameList &list)
         m_imageCache.remove(imageInfo->fileName().absolute());
         m_images.remove(imageInfo);
     }
-    Exif::Database::instance()->remove(list);
+    exifDB()->remove(list);
     emit totalChanged(m_images.count());
     emit imagesDeleted(list);
     emit dirty();
@@ -368,9 +357,9 @@ bool XMLDB::Database::isBlocking(const DB::FileName &fileName)
     return m_blockList.contains(fileName);
 }
 
-DB::FileNameList XMLDB::Database::files() const
+DB::FileNameList XMLDB::Database::files(DB::MediaType type) const
 {
-    return m_images.files();
+    return m_images.files(type);
 }
 
 DB::ImageInfoList XMLDB::Database::images() const
@@ -602,18 +591,26 @@ int XMLDB::Database::fileVersion()
     return 8;
 }
 
-// During profiling of loading, I found that a significant amount of time was spent in QDateTime::fromString.
+// During profiling of loading, I found that a significant amount of time was spent in Utilities::FastDateTime::fromString.
 // Reviewing the code, I fount that it did a lot of extra checks we don't need (like checking if the string have
 // timezone information (which they won't in KPA), this function is a replacement that is faster than the original.
-QDateTime dateTimeFromString(const QString &str)
+static Utilities::FastDateTime dateTimeFromString(const QString &str)
 {
-    static QChar T = QChar::fromLatin1('T');
-
-    if (str[10] == T)
-        return QDateTime(QDate::fromString(str.left(10), Qt::ISODate), QTime::fromString(str.mid(11), Qt::ISODate));
-
-    else
-        return QDateTime::fromString(str, Qt::ISODate);
+    // Caching the last used date/time string will help for photographers
+    // who frequently take bursts.
+    static QString s_lastDateTimeString;
+    static Utilities::FastDateTime s_lastDateTime;
+    static QMutex s_lastDateTimeLocker;
+    QMutexLocker dummy(&s_lastDateTimeLocker);
+    static const QChar T = QChar::fromLatin1('T');
+    if (str != s_lastDateTimeString) {
+        if (str[10] == T)
+            s_lastDateTime = QDateTime(QDate::fromString(str.left(10), Qt::ISODate), QTime::fromString(str.mid(11), Qt::ISODate));
+        else
+            s_lastDateTime = QDateTime::fromString(str, Qt::ISODate);
+        s_lastDateTimeString = str;
+    }
+    return s_lastDateTime;
 }
 
 DB::ImageInfoPtr XMLDB::Database::createImageInfo(const DB::FileName &fileName, ReaderPtr reader, Database *db, const QMap<QString, QString> *newToOldCategory)
@@ -657,7 +654,7 @@ DB::ImageInfoPtr XMLDB::Database::createImageInfo(const DB::FileName &fileName, 
 
     DB::ImageDate date;
     if (reader->hasAttribute(_startDate_)) {
-        QDateTime start;
+        Utilities::FastDateTime start;
 
         QString str = reader->attribute(_startDate_);
         if (!str.isEmpty())

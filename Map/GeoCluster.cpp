@@ -1,28 +1,13 @@
-/* Copyright (C) 2019-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License or (at your option) version 3 or any later version
-   accepted by the membership of KDE e.V. (or its successor approved
-   by the membership of KDE e.V.), which shall act as a proxy
-   defined in Section 14 of version 3 of the license.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// SPDX-FileCopyrightText: 2019-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #include "GeoCluster.h"
 #include "GeoCoordinates.h"
 #include "Logging.h"
 
 #include <DB/ImageInfo.h>
-#include <ImageManager/ThumbnailCache.h>
+#include <kpathumbnails/ThumbnailCache.h>
 
 #include <KLocalizedString>
 #include <QPen>
@@ -35,8 +20,6 @@ namespace
 {
 // when the angular resolution is smaller than fineResolution, all details should be shown
 constexpr qreal FINE_RESOLUTION = 0.000001;
-// size of the markers in screen coordinates (pixel)
-constexpr int MARKER_SIZE_PX = 40;
 // the scale factor of the bounding box compared to the bounding box as drawn on the map
 constexpr qreal BOUNDING_BOX_SCALEFACTOR = 1.2;
 
@@ -73,14 +56,15 @@ QSizeF screenSize(const Marble::ViewportParams &viewPortParams, const Marble::Ge
  * The region has the size of what is actually drawn, not the size of the bounding region itself.
  * @param viewPortParams
  * @param region
- * @return
+ * @param minSizePx
+ * @return the region in screen coordinates
  */
-QRectF screenRegion(const Marble::ViewportParams &viewPortParams, const Marble::GeoDataLatLonBox region)
+QRectF screenRegion(const Marble::ViewportParams &viewPortParams, const Marble::GeoDataLatLonBox region, int minSizePx)
 {
     const QSizeF areaSizePx = screenSize(viewPortParams, region);
     // drawing a larger area gets nicer results on average:
-    const qreal heightPx = qMax(BOUNDING_BOX_SCALEFACTOR * areaSizePx.height(), (qreal)MARKER_SIZE_PX);
-    const qreal widthPx = qMax(BOUNDING_BOX_SCALEFACTOR * areaSizePx.width(), (qreal)MARKER_SIZE_PX);
+    const qreal heightPx = qMax(BOUNDING_BOX_SCALEFACTOR * areaSizePx.height(), (qreal)minSizePx);
+    const qreal widthPx = qMax(BOUNDING_BOX_SCALEFACTOR * areaSizePx.width(), (qreal)minSizePx);
     qreal left;
     qreal top;
     viewPortParams.screenCoordinates(region.west(Marble::GeoDataCoordinates::Radian),
@@ -105,43 +89,52 @@ Marble::GeoDataCoordinates Map::GeoCluster::center() const
     return boundingRegion().center();
 }
 
-Marble::GeoDataLatLonBox Map::GeoCluster::regionForPoint(QPoint pos, const Marble::ViewportParams &viewPortParams) const
+const Map::GeoCluster *Map::GeoCluster::regionForPoint(QPoint pos) const
 {
-    const QRectF screenRect = screenRegion(viewPortParams, boundingRegion());
-    if (!screenRect.contains(pos))
-        return {};
-
-    if (m_subItemsView) {
-        qCDebug(MapLog) << "GeoCluster matches point, but delegating to subClusters first.";
+    // only check child items if the cluster was not drawn on the map:
+    if (m_renderedRegion.isEmpty()) {
         for (const auto &subCluster : m_subClusters) {
-            const Marble::GeoDataLatLonBox box = subCluster->regionForPoint(pos, viewPortParams);
-            if (!box.isEmpty())
-                return box;
+            auto cluster = subCluster->regionForPoint(pos);
+            if (cluster && !cluster->isEmpty())
+                return cluster;
         }
+    } else if (m_renderedRegion.contains(pos)) {
+        qCDebug(MapLog) << "GeoCluster containing" << size() << "images matches point.";
+        return this;
     }
-    qCDebug(MapLog) << "GeoCluster containing" << size() << "images matches point.";
-    return boundingRegion();
+    return nullptr;
 }
 
 void Map::GeoCluster::render(Marble::GeoPainter *painter, const Marble::ViewportParams &viewPortParams, const ThumbnailParams &thumbs, Map::MapStyle style) const
 {
-    if (viewPortParams.resolves(boundingRegion(), 2 * MARKER_SIZE_PX) || size() == 1
+    if (style == MapStyle::ForceShowThumbnails || size() == 1
+        || viewPortParams.resolves(boundingRegion(), thumbs.thumbnailSizePx)
         || (viewPortParams.angularResolution() < FINE_RESOLUTION)) {
-        m_subItemsView = true;
+        m_renderedRegion = {};
         // if the region takes up enough screen space, we should display the subclusters individually.
         // if all images have the same coordinates (null bounding region), this will never happen
         // -> in this case, show the images when we're zoomed in enough
         renderSubItems(painter, viewPortParams, thumbs, style);
     } else {
-        m_subItemsView = false;
         qCDebug(MapLog) << "GeoCluster has" << size() << "images.";
-        painter->setOpacity(0.5);
-        const QRectF screenRect = screenRegion(viewPortParams, boundingRegion());
-        painter->drawRect(center(), screenRect.width(), screenRect.height());
-        painter->setOpacity(1);
         QPen pen = painter->pen();
+        const auto opacity = painter->opacity();
+        painter->setOpacity(0.5);
+        const QRectF screenRect = screenRegion(viewPortParams, boundingRegion(), thumbs.thumbnailSizePx);
+        painter->drawRect(center(), screenRect.width(), screenRect.height(), false);
+        m_renderedRegion = painter->regionFromRect(center(), screenRect.width(), screenRect.height(), false);
+#if MARBLE_VERSION < QT_VERSION_CHECK(21, 04, 0)
+        // adjust region to match up with drawn region (see Marble bug https://bugs.kde.org/show_bug.cgi?id=431466):
+        m_renderedRegion.translate(static_cast<int>(-0.5 * screenRect.width()), static_cast<int>(-0.5 * screenRect.height()));
+#endif
+#ifdef MARBLE_DEBUG_GEOPAINTER
+        // draw clickable region for visual inspection:
+        painter->setPen(Qt::green);
+        painter->drawRect(*m_renderedRegion.begin());
+#endif
+        painter->setOpacity(opacity);
         painter->setPen(QPen(Qt::black));
-        painter->drawText(center(), i18nc("The number of images in an area of the map", "%1", size()), -0.5 * MARKER_SIZE_PX, 0.5 * MARKER_SIZE_PX, MARKER_SIZE_PX, MARKER_SIZE_PX, QTextOption(Qt::AlignCenter));
+        painter->drawText(center(), i18nc("The number of images in an area of the map", "%1", size()), -0.5 * thumbs.thumbnailSizePx, 0.5 * thumbs.thumbnailSizePx, thumbs.thumbnailSizePx, thumbs.thumbnailSizePx, QTextOption(Qt::AlignCenter));
         painter->setPen(pen);
     }
 }
@@ -154,6 +147,11 @@ int Map::GeoCluster::size() const
         }
     }
     return m_size;
+}
+
+bool Map::GeoCluster::isEmpty() const
+{
+    return (size() == 0);
 }
 
 void Map::GeoCluster::renderSubItems(Marble::GeoPainter *painter, const Marble::ViewportParams &viewPortParams, const ThumbnailParams &thumbs, Map::MapStyle style) const
@@ -175,6 +173,7 @@ void Map::GeoCluster::addSubCluster(const Map::GeoCluster *subCluster)
 
 Map::GeoBin::GeoBin()
     : GeoCluster(0)
+    , m_thumbnailSizePx(0)
 {
 }
 
@@ -197,7 +196,7 @@ int Map::GeoBin::size() const
 void Map::GeoBin::renderSubItems(Marble::GeoPainter *painter, const Marble::ViewportParams &viewPortParams, const ThumbnailParams &thumbs, Map::MapStyle style) const
 {
     const auto viewPort = viewPortParams.viewLatLonAltBox();
-    qCDebug(MapLog) << "GeoBin: drawing individual images";
+    qCDebug(MapLog) << "GeoBin: drawing" << m_images.count() << "individual images";
     for (const DB::ImageInfoPtr &image : m_images) {
         const Marble::GeoDataCoordinates pos(image->coordinates().lon(), image->coordinates().lat(),
                                              image->coordinates().alt(),
@@ -206,8 +205,15 @@ void Map::GeoBin::renderSubItems(Marble::GeoPainter *painter, const Marble::View
             if (style == MapStyle::ShowPins) {
                 painter->drawPixmap(pos, thumbs.alternatePixmap);
             } else {
-                // FIXME(l3u) Maybe we should cache the scaled thumbnails?
-                painter->drawPixmap(pos, thumbs.cache->lookup(image->fileName()).scaled(QSize(MARKER_SIZE_PX, MARKER_SIZE_PX), Qt::KeepAspectRatio));
+                if (thumbs.thumbnailSizePx != m_thumbnailSizePx) {
+                    m_scaledThumbnailCache.clear();
+                    m_thumbnailSizePx = thumbs.thumbnailSizePx;
+                }
+                if (!m_scaledThumbnailCache.contains(image)) {
+                    QPixmap thumb = thumbs.cache->lookup(image->fileName()).scaled(QSize(thumbs.thumbnailSizePx, thumbs.thumbnailSizePx), Qt::KeepAspectRatio);
+                    m_scaledThumbnailCache.insert(image, thumb);
+                }
+                painter->drawPixmap(pos, m_scaledThumbnailCache.value(image));
             }
         }
     }

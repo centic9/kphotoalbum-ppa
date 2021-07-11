@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ListSelect.h"
 
@@ -28,7 +15,7 @@
 #include <DB/CategoryItem.h>
 #include <DB/ImageDB.h>
 #include <DB/MemberMap.h>
-#include <Utilities/StringSet.h>
+#include <kpabase/StringSet.h>
 
 #include <KIO/CopyJob>
 #include <KLocalizedString>
@@ -66,6 +53,7 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
     m_lineEdit = new CompletableLineEdit(this);
     m_lineEdit->setProperty("FocusCandidate", true);
     m_lineEdit->setProperty("WantsFocus", true);
+    m_lineEdit->setPlaceholderText(i18nc("@label:textbox", "Enter a tag ..."));
     layout->addWidget(m_lineEdit);
 
     m_treeWidget = new CategoryListView::DragableTreeWidget(m_category, this);
@@ -85,11 +73,9 @@ AnnotationDialog::ListSelect::ListSelect(const DB::CategoryPtr &category, QWidge
 
     m_roIndicator = new QLabel;
     m_roIndicator->setPixmap(smallIcon(QString::fromLatin1("emblem-readonly")));
-    m_roIndicator->setVisible(m_editMode == ListSelectEditMode::ReadOnly);
     lay2->addWidget(m_roIndicator);
     m_selectableIndicator = new QLabel;
     m_selectableIndicator->setPixmap(smallIcon(QString::fromLatin1("emblem-checked")));
-    m_selectableIndicator->setVisible(m_editMode == ListSelectEditMode::Selectable);
     lay2->addWidget(m_selectableIndicator);
 
     m_or = new QRadioButton(i18n("or"), this);
@@ -731,6 +717,8 @@ void ListSelect::updateLineEditMode()
 
     const bool isReadOnly = computedEditMode() == ListSelectEditMode::ReadOnly;
     m_roIndicator->setVisible(isReadOnly);
+    // deactivate read-only fields when editing:
+    m_lineEdit->setEnabled((m_mode == UsageMode::SearchMode) || !isReadOnly);
     const bool isSelectable = computedEditMode() == ListSelectEditMode::Selectable;
     m_selectableIndicator->setVisible(isSelectable);
 }

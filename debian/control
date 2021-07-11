@@ -2,29 +2,32 @@ Source: kphotoalbum
 Section: graphics
 Priority: optional
 Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
-Uploaders: Mark Purcell <msp@debian.org>,
-Build-Depends: debhelper-compat (= 13), cmake (>= 3.3~), pkg-kde-tools (>= 0.15.16),
- extra-cmake-modules,
- qtbase5-dev (>= 5.9),
- libphonon4qt5-dev,
- libkf5archive-dev (>= 5.44.0),
- libkf5completion-dev (>= 5.44.0),
- libkf5config-dev (>= 5.44.0),
- libkf5coreaddons-dev (>= 5.44.0),
- libkf5doctools-dev (>= 5.44.0),
- libkf5i18n-dev (>= 5.44.0),
- libkf5iconthemes-dev (>= 5.44.0),
- libkf5jobwidgets-dev (>= 5.44.0),
- libkf5kio-dev (>= 5.44.0),
- libkf5textwidgets-dev (>= 5.44.0),
- libkf5widgetsaddons-dev (>= 5.44.0),
- libkf5xmlgui-dev (>= 5.44.0),
- libkf5kdcraw-dev,
- libmarble-dev,
- libkf5purpose-dev,
- libexiv2-dev (>= 0.19), libjpeg-dev,
- pkg-config,
- gettext,
+Uploaders: Norbert Preining <norbert@preining.info>,
+Build-Depends: cmake (>= 3.3.0~),
+               debhelper-compat (= 13),
+               extra-cmake-modules,
+               gettext,
+               libexiv2-dev (>= 0.19),
+               libjpeg-dev,
+               libkf5archive-dev (>= 5.44.0),
+               libkf5completion-dev (>= 5.44.0),
+               libkf5config-dev (>= 5.44.0),
+               libkf5coreaddons-dev (>= 5.44.0),
+               libkf5doctools-dev (>= 5.44.0),
+               libkf5i18n-dev (>= 5.44.0),
+               libkf5iconthemes-dev (>= 5.44.0),
+               libkf5jobwidgets-dev (>= 5.44.0),
+               libkf5kdcraw-dev,
+               libkf5kio-dev (>= 5.44.0),
+               libkf5purpose-dev,
+               libkf5textwidgets-dev (>= 5.44.0),
+               libkf5widgetsaddons-dev (>= 5.44.0),
+               libkf5xmlgui-dev (>= 5.44.0),
+               libmarble-dev,
+               libphonon4qt5-dev,
+               pkg-config,
+               pkg-kde-tools (>= 0.15.16),
+               qtbase5-dev (>= 5.9),
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://kphotoalbum.org
@@ -33,9 +36,8 @@ Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum.git
 
 Package: kphotoalbum
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends},
- libqt5sql5-sqlite,
-Recommends: khelpcenter, ffmpeg
+Depends: libqt5sql5-sqlite, ${misc:Depends}, ${perl:Depends}, ${shlibs:Depends}
+Recommends: ffmpeg, khelpcenter
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of

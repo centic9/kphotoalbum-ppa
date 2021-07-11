@@ -1,32 +1,22 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef IMAGEDB_H
 #define IMAGEDB_H
 
 #include "Category.h"
-#include "FileNameList.h"
 #include "ImageDateCollection.h"
 #include "ImageInfoList.h"
 #include "ImageInfoPtr.h"
+#include "ImageSearchInfo.h"
 #include "MediaCount.h"
 
+#include <kpabase/FileNameList.h>
+
 #include <QObject>
+#include <memory>
 
 class QProgressBar;
 
@@ -37,7 +27,6 @@ class CategoryCollection;
 class Category;
 class MD5Map;
 class MemberMap;
-class ImageSearchInfo;
 class FileName;
 class UIDelegate;
 
@@ -63,33 +52,10 @@ public:
     static ImageDB *instance();
     static void setupXMLDB(const QString &configFile, UIDelegate &delegate);
     static void deleteInstance();
+    static QString NONE();
 
     DB::FileNameSet imagesWithMD5Changed();
     UIDelegate &uiDelegate() const;
-
-public slots:
-    void setDateRange(const ImageDate &, bool includeFuzzyCounts);
-    void clearDateRange();
-    virtual void slotRescan();
-    void slotRecalcCheckSums(const DB::FileNameList &selection);
-    virtual MediaCount count(const ImageSearchInfo &info);
-    virtual void slotReread(const DB::FileNameList &list, DB::ExifMode mode);
-
-protected:
-    ImageDate m_selectionRange;
-    bool m_includeFuzzyCounts;
-    ImageInfoList m_clipboard;
-    UIDelegate &m_UI;
-
-private:
-    static void connectSlots();
-    static ImageDB *s_instance;
-
-protected:
-    ImageDB(UIDelegate &delegate);
-
-public:
-    static QString NONE();
     DB::FileNameList currentScope(bool requireOnDisk) const;
 
     virtual DB::FileName findFirstItemInRange(
@@ -99,7 +65,6 @@ public:
 
     bool untaggedCategoryFeatureConfigured() const;
 
-public: // Methods that must be overridden
     virtual uint totalCount() const = 0;
     virtual DB::ImageInfoList search(const ImageSearchInfo &, bool requireOnDisk = false) const = 0;
 
@@ -117,14 +82,14 @@ public: // Methods that must be overridden
      * @return a mapping of sub-category (tags/tag-groups) to the number of images (and the associated date range)
      */
     virtual QMap<QString, CountWithRange> classify(const ImageSearchInfo &info, const QString &category, MediaType typemask, ClassificationMode mode = ClassificationMode::FullCount) = 0;
-    virtual FileNameList files() const = 0;
+    virtual FileNameList files(MediaType type = anyMediaType) const = 0;
     virtual ImageInfoList images() const = 0;
     /**
      * @brief addImages to the database.
      * The parameter \p doUpdate decides whether all bookkeeping should be done right away
      * (\c true; the "normal" use-case), or if it should be deferred until later(\c false).
      * If doUpdate is deferred, either commitDelayedImages() or clearDelayedImages() needs to be called afterwards.
-     * @param images
+     * @param files
      * @param doUpdate
      */
     virtual void addImages(const ImageInfoList &files, bool doUpdate = true) = 0;
@@ -189,14 +154,39 @@ public: // Methods that must be overridden
     virtual DB::FileNameList getStackFor(const DB::FileName &referenceId) const = 0;
 
     virtual void copyData(const DB::FileName &from, const DB::FileName &to) = 0;
-protected slots:
-    virtual void lockDB(bool lock, bool exclude) = 0;
-    void markDirty();
+
+    Exif::Database *exifDB() const;
+
+public slots:
+    void setDateRange(const ImageDate &, bool includeFuzzyCounts);
+    void clearDateRange();
+    virtual void slotRescan();
+    void slotRecalcCheckSums(const DB::FileNameList &selection);
+    virtual MediaCount count(const ImageSearchInfo &info);
+    virtual void slotReread(const DB::FileNameList &list, DB::ExifMode mode);
+    void setCurrentScope(const DB::ImageSearchInfo &info);
 
 signals:
     void totalChanged(uint);
     void dirty();
     void imagesDeleted(const DB::FileNameList &);
+
+protected:
+    ImageDB(UIDelegate &delegate);
+    ImageDate m_selectionRange;
+    bool m_includeFuzzyCounts;
+    ImageInfoList m_clipboard;
+    UIDelegate &m_UI;
+    std::unique_ptr<Exif::Database> m_exifDB;
+
+protected slots:
+    virtual void lockDB(bool lock, bool exclude) = 0;
+    void markDirty();
+
+private:
+    static void connectSlots();
+    static ImageDB *s_instance;
+    DB::ImageSearchInfo m_currentScope;
 };
 }
 #endif /* IMAGEDB_H */

@@ -1,21 +1,8 @@
-/* Copyright (C) 2014-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License or (at your option) version 3 or any later version
-   accepted by the membership of KDE e.V. (or its successor approved
-   by the membership of KDE e.V.), which shall act as a proxy
-   defined in Section 14 of version 3 of the license.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// SPDX-FileCopyrightText: 2014-2015 Tobias Leupold <tobias.leupold@gmx.de>
+// SPDX-FileCopyrightText: 2015-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 // Local includes
 #include "MapView.h"
@@ -24,8 +11,8 @@
 
 #include <DB/ImageDB.h>
 #include <DB/ImageSearchInfo.h>
-#include <MainWindow/Logging.h>
 #include <MainWindow/Window.h>
+#include <kpabase/Logging.h>
 
 #include <KConfigGroup>
 #include <KIconLoader>
@@ -35,6 +22,7 @@
 #include <QAction>
 #include <QDebug>
 #include <QElapsedTimer>
+#include <QGuiApplication>
 #include <QLabel>
 #include <QLoggingCategory>
 #include <QMouseEvent>
@@ -48,12 +36,17 @@
 
 namespace
 {
+// size of the markers in screen coordinates (pixel)
+constexpr int MARKER_SIZE_DEFAULT_PX = 40;
+constexpr int MARKER_SIZE_MIN_PX = 20;
+constexpr int MARKER_SIZE_MAX_PX = 400;
+constexpr int MARKER_SIZE_STEP_PX = 10;
 const QString MAPVIEW_FLOATER_VISIBLE_CONFIG_PREFIX = QStringLiteral("MarbleFloaterVisible ");
 const QStringList MAPVIEW_RENDER_POSITION({ QStringLiteral("HOVERS_ABOVE_SURFACE") });
-const QVector<QString> WANTED_FLOATERS { QStringLiteral("Compass"),
-                                         QStringLiteral("Scale Bar"),
-                                         QStringLiteral("Navigation"),
-                                         QStringLiteral("Overview Map") };
+const QVector<QString> WANTED_FLOATERS { QStringLiteral("compass"),
+                                         QStringLiteral("scalebar"),
+                                         QStringLiteral("navigation"),
+                                         QStringLiteral("overviewmap") };
 
 // levels of clustering for geo coordinates
 constexpr int MAP_CLUSTER_LEVELS = 10;
@@ -130,11 +123,13 @@ inline QPixmap smallIcon(const QString &iconName)
 
 Map::MapView::MapView(QWidget *parent, UsageType type)
     : QWidget(parent)
+    , m_markerSize(MARKER_SIZE_DEFAULT_PX)
 {
     if (type == UsageType::MapViewWindow) {
         setWindowFlags(Qt::Window);
         setAttribute(Qt::WA_DeleteOnClose);
     }
+    setMouseTracking(true);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -192,6 +187,32 @@ Map::MapView::MapView(QWidget *parent, UsageType type)
     showThumbnails->setChecked(m_showThumbnails);
     connect(showThumbnails, &QPushButton::clicked, this, &MapView::setShowThumbnails);
 
+    QPushButton *groupThumbnails = new QPushButton;
+    groupThumbnails->setFlat(true);
+    groupThumbnails->setIcon(QPixmap(smallIcon(QStringLiteral("view-group"))));
+    groupThumbnails->setToolTip(i18nc("@action to group, as in aggregate thumbnails into clusters", "Group adjacent thumbnails into clickable clusters"));
+    kpaButtonsLayout->addWidget(groupThumbnails);
+    groupThumbnails->setCheckable(true);
+    groupThumbnails->setChecked(m_groupThumbnails);
+    connect(groupThumbnails, &QPushButton::clicked, this, &MapView::setGroupThumbnails);
+    // groupThumbnails interacts with showThumbnails:
+    showThumbnails->setEnabled(m_groupThumbnails);
+    connect(groupThumbnails, &QPushButton::clicked, showThumbnails, &QPushButton::setEnabled);
+
+    QPushButton *decreaseMarkerSize = new QPushButton;
+    decreaseMarkerSize->setFlat(true);
+    decreaseMarkerSize->setIcon(QPixmap(smallIcon(QStringLiteral("view-zoom-out-symbolic"))));
+    decreaseMarkerSize->setToolTip(i18nc("@action Decrease size of the markers (i.e. thumbnails) drawn on the map", "Decrease marker size"));
+    kpaButtonsLayout->addWidget(decreaseMarkerSize);
+    connect(decreaseMarkerSize, &QPushButton::clicked, this, &MapView::decreaseMarkerSize);
+
+    QPushButton *increaseMarkerSize = new QPushButton;
+    increaseMarkerSize->setFlat(true);
+    increaseMarkerSize->setIcon(QPixmap(smallIcon(QStringLiteral("view-zoom-in-symbolic"))));
+    increaseMarkerSize->setToolTip(i18nc("@action Increase size of the markers (i.e. thumbnails) drawn on the map", "Increase marker size"));
+    kpaButtonsLayout->addWidget(increaseMarkerSize);
+    connect(increaseMarkerSize, &QPushButton::clicked, this, &MapView::increaseMarkerSize);
+
     // Marble floater control buttons
 
     m_floaters = new QWidget;
@@ -202,12 +223,13 @@ Map::MapView::MapView(QWidget *parent, UsageType type)
     KSharedConfigPtr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QStringLiteral("MapView"));
 
-    for (const Marble::RenderPlugin *plugin : m_mapWidget->renderPlugins()) {
+    const auto renderPlugins = m_mapWidget->renderPlugins();
+    for (const Marble::RenderPlugin *plugin : renderPlugins) {
         if (plugin->renderType() != Marble::RenderPlugin::PanelRenderType) {
             continue;
         }
 
-        const QString name = plugin->name();
+        const QString name = plugin->nameId();
         if (!WANTED_FLOATERS.contains(name)) {
             continue;
         }
@@ -297,7 +319,7 @@ void Map::MapView::buildImageClusters()
     //    remove aggregated clusters from set of eligible clusters
     // 4. with remaining clusters, continue at 2.
 
-    Q_ASSERT(clusters[MAP_CLUSTER_LEVELS - 1].size() > 0);
+    Q_ASSERT(clusters[MAP_CLUSTER_LEVELS - 1].size() > 0 || clusters[0].size() == 0);
     for (int lvl = 0; lvl < MAP_CLUSTER_LEVELS; lvl++) {
         qCInfo(MapLog) << "MapView:" << clusters[lvl].size() << "clusters on level" << lvl;
     }
@@ -316,11 +338,22 @@ void Map::MapView::setCenter(const DB::ImageInfoPtr image)
     setLastCenter();
 }
 
+void Map::MapView::increaseMarkerSize()
+{
+    setMarkerSize(markerSize() + MARKER_SIZE_STEP_PX);
+}
+
+void Map::MapView::decreaseMarkerSize()
+{
+    setMarkerSize(markerSize() - MARKER_SIZE_STEP_PX);
+}
+
 void Map::MapView::saveSettings()
 {
     KSharedConfigPtr config = KSharedConfig::openConfig();
     KConfigGroup group = config->group(QStringLiteral("MapView"));
-    for (const QPushButton *button : m_floaters->findChildren<QPushButton *>()) {
+    const auto buttons = m_floaters->findChildren<QPushButton *>();
+    for (const QPushButton *button : buttons) {
         group.writeEntry(MAPVIEW_FLOATER_VISIBLE_CONFIG_PREFIX
                              + button->property("floater").toString(),
                          button->isChecked());
@@ -332,7 +365,21 @@ void Map::MapView::saveSettings()
 void Map::MapView::setShowThumbnails(bool state)
 {
     m_showThumbnails = state;
-    m_mapWidget->reloadMap();
+    m_mapWidget->update();
+}
+
+void Map::MapView::setGroupThumbnails(bool state)
+{
+    m_groupThumbnails = state;
+    m_mapWidget->update();
+}
+
+Map::MapStyle Map::MapView::mapStyle() const
+{
+    if (m_groupThumbnails)
+        return m_showThumbnails ? MapStyle::ShowThumbnails : MapStyle::ShowPins;
+    else
+        return MapStyle::ForceShowThumbnails;
 }
 
 void Map::MapView::displayStatus(MapStatus status)
@@ -405,6 +452,18 @@ void Map::MapView::updateRegionSelection(const Marble::GeoDataLatLonBox &selecti
     emit newRegionSelected(getRegionSelection());
 }
 
+int Map::MapView::markerSize() const
+{
+    return m_markerSize;
+}
+
+void Map::MapView::setMarkerSize(int markerSizePx)
+{
+    m_markerSize = qBound(MARKER_SIZE_MIN_PX, markerSizePx, MARKER_SIZE_MAX_PX);
+    qCDebug(MapLog) << "Set map marker size to" << m_markerSize;
+    m_mapWidget->update();
+}
+
 #ifndef MARBLE_HAS_regionSelected_NEW
 void Map::MapView::updateRegionSelectionOld(const QList<double> &selection)
 {
@@ -417,11 +476,7 @@ void Map::MapView::updateRegionSelectionOld(const QList<double> &selection)
 
 Map::GeoCoordinates::LatLonBox Map::MapView::getRegionSelection() const
 {
-    return GeoCoordinates::LatLonBox(
-        m_regionSelection.north(Marble::GeoDataCoordinates::Degree),
-        m_regionSelection.south(Marble::GeoDataCoordinates::Degree),
-        m_regionSelection.east(Marble::GeoDataCoordinates::Degree),
-        m_regionSelection.west(Marble::GeoDataCoordinates::Degree));
+    return GeoCoordinates::LatLonBox(m_regionSelection);
 }
 
 bool Map::MapView::regionSelected() const
@@ -431,21 +486,70 @@ bool Map::MapView::regionSelected() const
 
 void Map::MapView::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() != Qt::LeftButton)
+    if (m_preselectedCluster && event->button() == Qt::RightButton) {
+        // cancel geocluster selection if RMB is clicked
+        m_preselectedCluster = nullptr;
+        event->accept();
         return;
+    }
+    if (event->button() == Qt::LeftButton && event->modifiers() == Qt::NoModifier) {
+        if (m_mapWidget->geometry().contains(event->pos())) {
+            qCDebug(MapLog) << "Map clicked.";
+            const auto mapPos = event->pos() - m_mapWidget->pos();
 
-    qCDebug(MapLog) << "Map clicked.";
-    const Marble::ViewportParams *viewPortParams = m_mapWidget->viewport();
-    Q_ASSERT(viewPortParams);
-
-    for (const auto *cluster : m_geoClusters) {
-        const Marble::GeoDataLatLonBox region = cluster->regionForPoint(event->pos(), *viewPortParams);
-        if (!region.isEmpty()) {
-            qCDebug(MapLog) << "Cluster selected by mouse click.";
-            updateRegionSelection(region);
-            event->accept();
-            return;
+            for (const auto *topLevelCluster : qAsConst(m_geoClusters)) {
+                const auto subCluster = topLevelCluster->regionForPoint(mapPos);
+                if (subCluster && !subCluster->isEmpty()) {
+                    qCDebug(MapLog) << "Cluster preselected/clicked.";
+                    m_preselectedCluster = subCluster;
+                    event->accept();
+                    return;
+                }
+            }
         }
+    }
+    event->ignore();
+    QWidget::mousePressEvent(event);
+}
+
+void Map::MapView::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (m_preselectedCluster) {
+        qCDebug(MapLog) << "Cluster selection accepted.";
+        updateRegionSelection(m_preselectedCluster->boundingRegion());
+        m_preselectedCluster = nullptr;
+        event->accept();
+    } else {
+        QWidget::mouseReleaseEvent(event);
+    }
+}
+
+void Map::MapView::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::NoButton) {
+        if (m_mapWidget->geometry().contains(event->pos())) {
+            const auto mapPos = event->pos() - m_mapWidget->pos();
+            for (const auto *topLevelCluster : qAsConst(m_geoClusters)) {
+                const auto subCluster = topLevelCluster->regionForPoint(mapPos);
+                // Note(jzarl) unfortunately we cannot use QWidget::setCursor here
+                if (subCluster) {
+                    QGuiApplication::setOverrideCursor(Qt::ArrowCursor);
+                } else {
+                    QGuiApplication::restoreOverrideCursor();
+                }
+            }
+        }
+    }
+    QWidget::mouseMoveEvent(event);
+}
+
+void Map::MapView::keyPressEvent(QKeyEvent *event)
+{
+    if (m_preselectedCluster && event->matches(QKeySequence::Cancel)) {
+        // cancel geocluster selection if Escape key is pressed
+        m_preselectedCluster = nullptr;
+    } else {
+        QWidget::keyPressEvent(event);
     }
 }
 
@@ -458,16 +562,26 @@ QStringList Map::MapView::renderPosition() const
 bool Map::MapView::render(Marble::GeoPainter *painter, Marble::ViewportParams *viewPortParams,
                           const QString &renderPos, Marble::GeoSceneLayer *)
 {
-    Q_ASSERT(renderPos == renderPosition().first());
+    Q_ASSERT(renderPos == renderPosition().constFirst());
     Q_ASSERT(viewPortParams != nullptr);
     QElapsedTimer timer;
     timer.start();
 
-    painter->setBrush(QBrush(QColor(Qt::red).lighter()));
-    painter->setPen(QColor(Qt::red));
-    ThumbnailParams thumbs { m_pin, MainWindow::Window::theMainWindow()->thumbnailCache() };
-    for (const auto *bin : m_geoClusters) {
-        bin->render(painter, *viewPortParams, thumbs, m_showThumbnails ? MapStyle::ShowThumbnails : MapStyle::ShowPins);
+    painter->setBrush(Qt::transparent);
+    painter->setPen(palette().color(QPalette::Highlight));
+    constexpr qreal BOUNDING_BOX_SCALEFACTOR = 1.2;
+    painter->drawRect(m_markersBox.center(), m_markersBox.width(Marble::GeoDataCoordinates::Degree) * BOUNDING_BOX_SCALEFACTOR, m_markersBox.height(Marble::GeoDataCoordinates::Degree) * BOUNDING_BOX_SCALEFACTOR, true);
+
+    painter->setBrush(palette().brush(QPalette::Dark));
+    painter->setPen(palette().color(QPalette::Text));
+    ThumbnailParams thumbs { m_pin, MainWindow::Window::theMainWindow()->thumbnailCache(), m_markerSize };
+    for (const auto *bin : qAsConst(m_geoClusters)) {
+        bin->render(painter, *viewPortParams, thumbs, mapStyle());
+    }
+    if (m_preselectedCluster) {
+        painter->setBrush(palette().brush(QPalette::Highlight));
+        painter->setPen(palette().color(QPalette::HighlightedText));
+        m_preselectedCluster->render(painter, *viewPortParams, thumbs, mapStyle());
     }
 
     qCDebug(TimingLog) << "Map rendered in" << timer.elapsed() << "ms.";

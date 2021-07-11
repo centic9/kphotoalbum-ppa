@@ -1,42 +1,29 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "NewImageFinder.h"
 
 #include "FastDir.h"
 #include "ImageDB.h"
 #include "ImageScout.h"
-#include "Logging.h"
 #include "MD5Map.h"
 
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
 #include <BackgroundTaskManager/JobManager.h>
-#include <Exif/Database.h>
 #include <ImageManager/RawImageDecoder.h>
 #include <ImageManager/ThumbnailBuilder.h>
-#include <ImageManager/ThumbnailCache.h>
 #include <MainWindow/FeatureDialog.h>
-#include <MainWindow/Logging.h>
 #include <MainWindow/Window.h>
-#include <Settings/SettingsData.h>
-#include <Utilities/FileNameUtil.h>
 #include <Utilities/FileUtil.h>
 #include <Utilities/VideoUtil.h>
+#include <kpabase/FileNameUtil.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpaexif/Database.h>
+#include <kpathumbnails/ThumbnailCache.h>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -424,8 +411,6 @@ void NewImageFinder::searchForNewFiles(const DB::FileNameSet &loadedFiles, QStri
     qApp->processEvents(QEventLoop::AllEvents);
     directory = Utilities::stripEndingForwardSlash(directory);
 
-    const QString imageDir = Utilities::stripEndingForwardSlash(Settings::SettingsData::instance()->imageDirectory());
-
     qCDebug(DBFileOpsLog) << "searching for new files in" << directory;
     FastDir dir(directory);
     const QStringList dirList = dir.entryList();
@@ -503,7 +488,7 @@ void NewImageFinder::loadExtraFiles()
         scout.setPreloadFunc(DB::PreloadMD5Sum);
     scout.start();
 
-    Exif::Database::instance()->startInsertTransaction();
+    DB::ImageDB::instance()->exifDB()->startInsertTransaction();
     dialog.setValue(count); // ensure to call setProgress(0)
     timeSinceProgressUpdate.start();
     for (LoadList::Iterator it = m_pendingLoad.begin(); it != m_pendingLoad.end(); ++it, ++count) {
@@ -511,7 +496,7 @@ void NewImageFinder::loadExtraFiles()
 
         if (dialog.wasCanceled()) {
             m_pendingLoad.clear();
-            Exif::Database::instance()->abortInsertTransaction();
+            DB::ImageDB::instance()->exifDB()->abortInsertTransaction();
             return;
         }
         // (*it).first: DB::FileName
@@ -527,7 +512,7 @@ void NewImageFinder::loadExtraFiles()
     // loadExtraFile() has already inserted all images into the
     // database, but without committing the changes
     DB::ImageDB::instance()->commitDelayedImages();
-    Exif::Database::instance()->commitInsertTransaction();
+    DB::ImageDB::instance()->exifDB()->commitInsertTransaction();
 
     ImageManager::ThumbnailBuilder::instance()->save();
 }
@@ -675,8 +660,8 @@ bool NewImageFinder::handleIfImageHasBeenMoved(const FileName &newFileName, cons
 
                 DB::ImageDB::instance()->md5Map()->insert(sum, info->fileName());
 
-                Exif::Database::instance()->remove(matchedFileName);
-                Exif::Database::instance()->add(newFileName);
+                DB::ImageDB::instance()->exifDB()->remove(matchedFileName);
+                DB::ImageDB::instance()->exifDB()->add(newFileName);
                 ImageManager::ThumbnailBuilder::instance()->buildOneThumbnail(info);
                 return true;
             }

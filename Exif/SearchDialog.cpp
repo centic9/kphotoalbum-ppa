@@ -1,24 +1,11 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "SearchDialog.h"
 
-#include "Database.h"
+#include <kpaexif/Database.h>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -36,8 +23,9 @@
 
 using namespace Exif;
 
-Exif::SearchDialog::SearchDialog(QWidget *parent)
+Exif::SearchDialog::SearchDialog(const Database *exifDB, QWidget *parent)
     : KPageDialog(parent)
+    , m_exifDB(exifDB)
 {
     setWindowTitle(i18nc("@title:window", "Exif Search"));
     setFaceType(Tabbed);
@@ -331,7 +319,7 @@ QWidget *Exif::SearchDialog::makeSaturation(QWidget *parent)
 
 Exif::SearchInfo Exif::SearchDialog::info()
 {
-    Exif::SearchInfo result;
+    Exif::SearchInfo result(m_exifDB);
     result.addSearchKey(QString::fromLatin1("Exif_Photo_MeteringMode"), m_meteringMode.selected());
     result.addSearchKey(QString::fromLatin1("Exif_Photo_ExposureProgram"), m_exposureProgram.selected());
     result.addSearchKey(QString::fromLatin1("Exif_Image_Orientation"), m_orientation.selected());
@@ -361,7 +349,7 @@ QWidget *Exif::SearchDialog::makeCamera()
     view->setWidget(w);
     QVBoxLayout *layout = new QVBoxLayout(w);
 
-    QList<QPair<QString, QString>> cameras = Exif::Database::instance()->cameras();
+    QList<QPair<QString, QString>> cameras = m_exifDB->cameras();
     std::sort(cameras.begin(), cameras.end());
 
     for (QList<QPair<QString, QString>>::ConstIterator cameraIt = cameras.constBegin(); cameraIt != cameras.constEnd(); ++cameraIt) {
@@ -387,7 +375,7 @@ QWidget *Exif::SearchDialog::makeLens()
     view->setWidget(w);
     QVBoxLayout *layout = new QVBoxLayout(w);
 
-    QList<QString> lenses = Exif::Database::instance()->lenses();
+    QList<QString> lenses = m_exifDB->lenses();
     std::sort(lenses.begin(), lenses.end());
 
     if (lenses.isEmpty()) {
@@ -404,7 +392,7 @@ QWidget *Exif::SearchDialog::makeLens()
         }
     }
 
-    if (Exif::Database::instance()->DBFileVersionGuaranteed() < 3) {
+    if (m_exifDB->DBFileVersionGuaranteed() < 3) {
         QLabel *label = new QLabel(
             i18n("Not all images in the database have lens information. "
                  "<note>Recreate the Exif search database to ensure lens data for all images.</note>"));

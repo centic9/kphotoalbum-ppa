@@ -1,20 +1,8 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #ifndef SEARCHBAR_H
 #define SEARCHBAR_H
 #include <QEvent>
@@ -25,6 +13,19 @@ class KMainWindow;
 namespace MainWindow
 {
 
+/**
+ * @brief The SearchBar class is a thin wrapper around a search box (that is a QLineEdit).
+ * It makes the search box usable as a toolbar.
+ *
+ * It also installs an event filter for the search box that clears the search text when the escape key is pressed,
+ * and exposes movement keys via signal.
+ *
+ * ## Signals:
+ *
+ * The textChanged() and returnPressed() signals are what you would expect from a QLineEdit.
+ * Additionally, there is cleared() signal that is emitted when the SearchBar is reset,
+ * and keyPressed() that is emitted for a a few special keys.
+ */
 class SearchBar : public KToolBar
 {
     Q_OBJECT
@@ -36,13 +37,38 @@ protected:
     bool eventFilter(QObject *watched, QEvent *e) override;
 
 public slots:
-    void reset();
-    void setLineEditEnabled(bool b);
+    /**
+     * @brief Clears the content of the search box.
+     */
+    void clear();
+    /**
+     * @brief setLineEditEnabled calls setEnabled() on the search box.
+     * @param enabled
+     */
+    void setLineEditEnabled(bool enabled);
 
 signals:
+    /**
+     * @see QLineEdit::textChanged
+     */
     void textChanged(const QString &);
+    /**
+     * @see QLineEdit::returnPressed
+     */
     void returnPressed();
-    void keyPressed(QKeyEvent *);
+    /**
+     * @brief cleared is emitted whenever the search box contents are cleared.
+     * This can happen either via key press (Escape key) or programatically.
+     */
+    void cleared();
+    /**
+     * @brief movementKeyPressed is emitted when a movement key is pressed.
+     * QKeyEvents that are signalled this way are:
+     *  - arrow keys
+     *  - Page up and Page down keys
+     *  - Home and End keys
+     */
+    void movementKeyPressed(QKeyEvent *);
 
 private:
     QLineEdit *m_edit;

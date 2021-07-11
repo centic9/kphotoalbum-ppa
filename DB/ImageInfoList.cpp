@@ -1,28 +1,17 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "ImageInfoList.h"
 
-#include "FileNameList.h"
 #include "ImageInfo.h"
-#include "Logging.h"
+
+#include <Utilities/FastDateTime.h>
+#include <kpabase/FileNameList.h>
+#include <kpabase/Logging.h>
 
 #include <KLocalizedString>
-#include <QDateTime>
 #include <QVector>
 #include <QtAlgorithms>
 using namespace DB;
@@ -30,14 +19,14 @@ using namespace DB;
 class SortableImageInfo
 {
 public:
-    SortableImageInfo(const QDateTime &datetime, const QString &string, const ImageInfoPtr &info)
+    SortableImageInfo(const Utilities::FastDateTime &datetime, const QString &string, const ImageInfoPtr &info)
         : m_dt(datetime)
         , m_st(string)
         , m_in(info)
     {
     }
     SortableImageInfo() = default;
-    const QDateTime &DateTime(void) const { return m_dt; }
+    const Utilities::FastDateTime &DateTime(void) const { return m_dt; }
     const QString &String(void) const { return m_st; }
     const ImageInfoPtr &ImageInfo(void) const { return m_in; }
     bool operator==(const SortableImageInfo &other) const { return m_dt == other.m_dt && m_st == other.m_st; }
@@ -62,7 +51,7 @@ public:
     bool operator<=(const SortableImageInfo &other) const { return *this == other || *this < other; }
 
 private:
-    QDateTime m_dt;
+    Utilities::FastDateTime m_dt;
     QString m_st;
     ImageInfoPtr m_in;
 };
@@ -122,10 +111,10 @@ bool ImageInfoList::isSorted()
     if (count() == 0)
         return true;
 
-    QDateTime prev = first()->date().start();
+    Utilities::FastDateTime prev = first()->date().start();
     QString prevFile = first()->fileName().absolute();
     for (ImageInfoListConstIterator it = constBegin(); it != constEnd(); ++it) {
-        QDateTime cur = (*it)->date().start();
+        Utilities::FastDateTime cur = (*it)->date().start();
         QString curFile = (*it)->fileName().absolute();
         if (prev > cur || (prev == cur && prevFile > curFile))
             return false;
@@ -140,10 +129,10 @@ void ImageInfoList::mergeIn(ImageInfoList other)
     ImageInfoList tmp;
 
     for (ImageInfoListConstIterator it = constBegin(); it != constEnd(); ++it) {
-        QDateTime thisDate = (*it)->date().start();
+        Utilities::FastDateTime thisDate = (*it)->date().start();
         QString thisFileName = (*it)->fileName().absolute();
         while (other.count() != 0) {
-            QDateTime otherDate = other.first()->date().start();
+            Utilities::FastDateTime otherDate = other.first()->date().start();
             QString otherFileName = other.first()->fileName().absolute();
             if (otherDate < thisDate || (otherDate == thisDate && otherFileName < thisFileName)) {
                 tmp.append(other[0]);
@@ -167,11 +156,14 @@ void ImageInfoList::remove(const ImageInfoPtr &info)
     }
 }
 
-DB::FileNameList ImageInfoList::files() const
+DB::FileNameList ImageInfoList::files(DB::MediaType type) const
 {
     DB::FileNameList res;
-    for (const ImageInfoPtr &info : *this)
-        res.append(info->fileName());
+    for (const ImageInfoPtr &info : *this) {
+        if (info->mediaType() & type) {
+            res.append(info->fileName());
+        }
+    }
     return res;
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:

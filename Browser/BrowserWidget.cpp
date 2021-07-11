@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "BrowserWidget.h"
 
@@ -28,9 +15,9 @@
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <DB/ImageSearchInfo.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/FileUtil.h>
 #include <Utilities/ShowBusyCursor.h>
+#include <kpabase/SettingsData.h>
 
 #include <KLocalizedString>
 #include <QApplication>
@@ -57,6 +44,7 @@ Browser::BrowserWidget::BrowserWidget(QWidget *parent)
     connect(DB::ImageDB::instance()->categoryCollection(), &DB::CategoryCollection::categoryCollectionChanged,
             this, &BrowserWidget::reload);
     connect(this, &BrowserWidget::viewChanged, this, &BrowserWidget::resetIconViewSearch);
+    connect(this, &BrowserWidget::viewChanged, DB::ImageDB::instance(), &DB::ImageDB::setCurrentScope);
 
     m_filterProxy = new TreeFilter(this);
     m_filterProxy->setFilterKeyColumn(0);
@@ -94,7 +82,7 @@ void Browser::BrowserWidget::back()
 void Browser::BrowserWidget::activatePage(int pageIndex)
 {
     if (pageIndex != m_current) {
-        if (currentAction() != 0) {
+        if (currentAction() != nullptr) {
             currentAction()->deactivate();
         }
         m_current = pageIndex;
@@ -124,7 +112,7 @@ void Browser::BrowserWidget::addImageView(const DB::FileName &context)
 void Browser::BrowserWidget::addAction(Browser::BrowserPage *action)
 {
     // remove actions which would go forward in the breadcrumbs
-    while ((int)m_list.count() > m_current + 1) {
+    while (m_list.count() > m_current + 1) {
         BrowserPage *m = m_list.back();
         m_list.pop_back();
         delete m;
@@ -137,7 +125,7 @@ void Browser::BrowserWidget::addAction(Browser::BrowserPage *action)
 void Browser::BrowserWidget::emitSignals()
 {
     emit canGoBack(m_current > 0);
-    emit canGoForward(m_current < (int)m_list.count() - 1);
+    emit canGoForward(m_current < m_list.count() - 1);
     if (currentAction()->viewer() == ShowBrowser)
         emit showingOverview();
 
@@ -145,7 +133,7 @@ void Browser::BrowserWidget::emitSignals()
     emit isFilterable(currentAction()->viewer() == ShowImageViewer);
     emit isViewChangeable(currentAction()->isViewChangeable());
 
-    bool isCategoryAction = (dynamic_cast<CategoryPage *>(currentAction()) != 0);
+    bool isCategoryAction = (dynamic_cast<CategoryPage *>(currentAction()) != nullptr);
 
     if (isCategoryAction) {
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName(currentCategory());
@@ -155,7 +143,7 @@ void Browser::BrowserWidget::emitSignals()
     }
 
     emit pathChanged(createPath());
-    emit viewChanged();
+    emit viewChanged(currentAction()->searchInfo());
     emit imageCount(DB::ImageDB::instance()->count(currentAction()->searchInfo()).total());
 }
 
@@ -251,6 +239,14 @@ void Browser::BrowserWidget::slotLimitToMatch(const QString &str)
     m_filterProxy->setFilterFixedString(str);
     setBranchOpen(QModelIndex(), true);
     adjustTreeViewColumnSize();
+
+    // if nothing is selected, select the first item to make the UI consistent with the behaviour of slotInvokeSelected:
+    if (!m_curView->currentIndex().isValid()) {
+        if (m_filterProxy->rowCount(QModelIndex()) > 0) {
+            // Use the first item
+            m_curView->selectionModel()->select(m_filterProxy->index(0, 0, QModelIndex()), QItemSelectionModel::Select);
+        }
+    }
 }
 
 void Browser::BrowserWidget::resetIconViewSearch()
@@ -284,7 +280,7 @@ void Browser::BrowserWidget::itemClicked(const QModelIndex &index)
 
 Browser::BrowserPage *Browser::BrowserWidget::currentAction() const
 {
-    return m_current >= 0 ? m_list[m_current] : 0;
+    return m_current >= 0 ? m_list[m_current] : nullptr;
 }
 
 void Browser::BrowserWidget::setModel(QAbstractItemModel *model)
@@ -293,19 +289,17 @@ void Browser::BrowserWidget::setModel(QAbstractItemModel *model)
     // make sure the view knows about the source model change:
     m_curView->setModel(m_filterProxy);
 
-    if (qobject_cast<TreeCategoryModel *>(model)) {
-        // FIXME: The new-style connect here does not work, reload() is not triggered
-        //connect(model, &QAbstractItemModel::dataChanged, this, &BrowserWidget::reload);
-        // The old-style one triggers reload() correctly
-        connect(model, SIGNAL(dataChanged()), this, SLOT(reload()));
+    const auto *treeModel = qobject_cast<TreeCategoryModel *>(model);
+    if (treeModel) {
+        connect(treeModel, &TreeCategoryModel::dataChanged, this, &BrowserWidget::reload);
     }
 }
 
 void Browser::BrowserWidget::switchToViewType(DB::Category::ViewType type)
 {
     if (m_curView) {
-        m_curView->setModel(0);
-        disconnect(m_curView, &QAbstractItemView::clicked, this, &BrowserWidget::itemClicked);
+        m_curView->setModel(nullptr);
+        disconnect(m_curView, &QAbstractItemView::activated, this, &BrowserWidget::itemClicked);
     }
 
     if (type == DB::Category::TreeView || type == DB::Category::ThumbedTreeView) {
@@ -315,7 +309,7 @@ void Browser::BrowserWidget::switchToViewType(DB::Category::ViewType type)
         m_filterProxy->invalidate();
         m_filterProxy->sort(0, Qt::AscendingOrder);
 
-        m_listView->setViewMode(dynamic_cast<OverviewPage *>(currentAction()) == 0 ? CenteringIconView::NormalIconView : CenteringIconView::CenterView);
+        m_listView->setViewMode(dynamic_cast<OverviewPage *>(currentAction()) == nullptr ? CenteringIconView::NormalIconView : CenteringIconView::CenterView);
     }
 
     if (CategoryPage *action = dynamic_cast<CategoryPage *>(currentAction())) {
@@ -326,7 +320,7 @@ void Browser::BrowserWidget::switchToViewType(DB::Category::ViewType type)
 
     // Hook up the new view
     m_curView->setModel(m_filterProxy);
-    connect(m_curView, &QAbstractItemView::clicked, this, &BrowserWidget::itemClicked);
+    connect(m_curView, &QAbstractItemView::activated, this, &BrowserWidget::itemClicked);
 
     m_stack->setCurrentWidget(m_curView);
     adjustTreeViewColumnSize();
@@ -415,9 +409,17 @@ bool Browser::BrowserWidget::eventFilter(QObject * /* obj */, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent *me = static_cast<QMouseEvent *>(event);
+        Q_ASSERT(me != nullptr);
         if (me->buttons() & Qt::MidButton || me->button() & Qt::MidButton) {
             handleResizeEvent(me);
             return true;
+        }
+    }
+    if (event->type() == QEvent::KeyPress) {
+        const auto *keyEvent = static_cast<QKeyEvent *>(event);
+        Q_ASSERT(keyEvent != nullptr);
+        if (keyEvent->key() == Qt::Key_Slash) {
+            emit showSearch();
         }
     }
 

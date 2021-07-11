@@ -1,23 +1,22 @@
-/* Copyright (C) 2010-2020 The KPhotoAlbum development team
-   Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
-
-#include "version.h"
+// SPDX-FileCopyrightText: 2003 Lukáš Tinkl <lukas@kde.org>
+// SPDX-FileCopyrightText: 2003 Simon Hausmann <hausmann@kde.org>
+// SPDX-FileCopyrightText: 2003 Stephan Binner <binner@kde.org>
+// SPDX-FileCopyrightText: 2003-2007, 2009-2014 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2005, 2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2006-2008 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2007 Chusslove Illich <caslav.ilic@gmx.net>
+// SPDX-FileCopyrightText: 2007, 2011 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2009 Andrew Coles <andrew.i.coles@googlemail.com>
+// SPDX-FileCopyrightText: 2009 Christoph Feck <cfeck@kde.org>
+// SPDX-FileCopyrightText: 2010, 2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2012-2014, 2016, 2018-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
+// SPDX-FileCopyrightText: 2018, 2020 Tobias Leupold <tobias.leupold@gmx.de>
+// SPDX-FileCopyrightText: 2019 Alexander Potashev <aspotashev@gmail.com>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <MainWindow/Options.h>
 #include <MainWindow/SplashScreen.h>
@@ -25,7 +24,8 @@
 #ifdef KPA_ENABLE_REMOTECONTROL
 #include <RemoteControl/RemoteInterface.h>
 #endif
-#include <Settings/SettingsData.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/version.h>
 
 #include <KAboutData>
 #include <KColorScheme>
@@ -64,12 +64,12 @@ void migrateKDE4Config()
     migrator.setUiFiles(QStringList() << QStringLiteral("kphotoalbumui.rc"));
     if (migrator.migrate()) {
         KConfigGroup unnamedConfig = KSharedConfig::openConfig()->group(QString());
-        if (unnamedConfig.hasKey(QString::fromLatin1("configfile"))) {
+        if (unnamedConfig.hasKey(QStringLiteral("configfile"))) {
             // rename config file entry on update
-            KConfigGroup generalConfig = KSharedConfig::openConfig()->group(QString::fromUtf8("General"));
-            generalConfig.writeEntry(QString::fromLatin1("imageDBFile"),
-                                     unnamedConfig.readEntry(QString::fromLatin1("configfile")));
-            unnamedConfig.deleteEntry(QString::fromLatin1("configfile"));
+            KConfigGroup generalConfig = KSharedConfig::openConfig()->group(QStringLiteral("General"));
+            generalConfig.writeEntry(QStringLiteral("imageDBFile"),
+                                     unnamedConfig.readEntry(QStringLiteral("configfile")));
+            unnamedConfig.deleteEntry(QStringLiteral("configfile"));
             qCWarning(MainLog) << "Renamed config entry configfile to General.imageDBFile.";
         }
     }
@@ -86,8 +86,8 @@ int main(int argc, char **argv)
         i18n("KPhotoAlbum"), // display name
         QStringLiteral(KPA_VERSION),
         i18n("KDE Photo Album"), // short description
-        KAboutLicense::GPL,
-        i18n("Copyright (C) 2003-2020 The KPhotoAlbum Development Team"), // copyright statement
+        KAboutLicense::GPL_V3,
+        i18n("Copyright (C) 2003-2021 The KPhotoAlbum Development Team"), // copyright statement
         QString(), // other text
         QStringLiteral("https://www.kphotoalbum.org") // homepage
     );
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
     parser->process(app);
     aboutData.processCommandLine(parser);
 
-    const QString schemePath = KSharedConfig::openConfig()->group("General").readEntry(QString::fromLatin1("colorScheme"), QString());
-    qCDebug(MainLog) << "Loading color scheme from " << (schemePath.isEmpty() ? QString::fromLatin1("system default") : schemePath);
+    const QString schemePath = KSharedConfig::openConfig()->group("General").readEntry(QStringLiteral("colorScheme"), QString());
+    qCDebug(MainLog) << "Loading color scheme from " << (schemePath.isEmpty() ? QStringLiteral("system default") : schemePath);
     app.setPalette(KColorScheme::createApplicationPalette(KSharedConfig::openConfig(schemePath)));
     if (app.styleSheet().isEmpty())
         app.setStyleSheet(STYLE);
@@ -149,7 +149,11 @@ int main(int argc, char **argv)
         return retVal;
     }
 
-    view->setGeometry(Settings::SettingsData::instance()->windowGeometry(Settings::MainWindow));
+    const auto mainWindowGeometry = Settings::SettingsData::instance()->windowGeometry(Settings::MainWindow);
+    if (mainWindowGeometry.isValid())
+        view->setGeometry(mainWindowGeometry);
+    else
+        view->showMaximized();
 
 #ifdef KPA_ENABLE_REMOTECONTROL
     (void)RemoteControl::RemoteInterface::instance();
