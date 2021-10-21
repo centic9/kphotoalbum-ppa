@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef XMLDB_DATABASE_H
 #define XMLDB_DATABASE_H
@@ -24,12 +11,12 @@
 
 #include <DB/Category.h>
 #include <DB/CategoryCollection.h>
-#include <DB/FileNameList.h>
 #include <DB/ImageDB.h>
 #include <DB/ImageInfoList.h>
 #include <DB/ImageSearchInfo.h>
 #include <DB/MD5Map.h>
 #include <DB/MemberMap.h>
+#include <kpabase/FileNameList.h>
 
 #include <qdom.h>
 #include <qstringlist.h>
@@ -53,7 +40,7 @@ public:
     void renameCategory(const QString &oldName, const QString newName) override;
 
     QMap<QString, DB::CountWithRange> classify(const DB::ImageSearchInfo &info, const QString &category, DB::MediaType typemask, DB::ClassificationMode mode) override;
-    DB::FileNameList files() const override;
+    DB::FileNameList files(DB::MediaType type) const override;
     DB::ImageInfoList images() const override;
     void addImages(const DB::ImageInfoList &files, bool doUpdate) override;
     void commitDelayedImages() override;

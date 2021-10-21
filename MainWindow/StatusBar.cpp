@@ -1,20 +1,8 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "StatusBar.h"
 
 #include "DirtyIndicator.h"
@@ -25,8 +13,8 @@
 #ifdef KPA_ENABLE_REMOTECONTROL
 #include <RemoteControl/ConnectionIndicator.h>
 #endif
-#include <Settings/SettingsData.h>
 #include <ThumbnailView/ThumbnailFacade.h>
+#include <kpabase/SettingsData.h>
 
 #include <KIconLoader>
 #include <KLocalizedString>
@@ -108,12 +96,14 @@ void MainWindow::StatusBar::setupGUI()
     m_thumbnailSizeSlider->setMaximumSize(m_thumbnailSizeSlider->size());
     m_thumbnailSizeSlider->setMinimumSize(m_thumbnailSizeSlider->size());
     m_thumbnailSizeSlider->hide();
+    m_thumbnailSizeSlider->setFocusPolicy(Qt::ClickFocus);
 
     m_thumbnailSettings = new QToolButton;
     m_thumbnailSettings->setIcon(QIcon::fromTheme(QString::fromUtf8("settings-configure")));
     m_thumbnailSettings->setToolTip(i18n("Thumbnail settings..."));
     addPermanentWidget(m_thumbnailSettings, 0);
     m_thumbnailSettings->hide();
+    m_thumbnailSettings->setFocusPolicy(Qt::NoFocus);
     connect(m_thumbnailSettings, &QToolButton::clicked, this, &StatusBar::thumbnailSettingsRequested);
 }
 

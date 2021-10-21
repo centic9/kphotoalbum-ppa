@@ -1,29 +1,18 @@
-/* Copyright (C) 2019-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License or (at your option) version 3 or any later version
-   accepted by the membership of KDE e.V. (or its successor approved
-   by the membership of KDE e.V.), which shall act as a proxy
-   defined in Section 14 of version 3 of the license.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// SPDX-FileCopyrightText: 2019-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #ifndef MAP_GEOCLUSTER_H
 #define MAP_GEOCLUSTER_H
+
+#include "enums.h"
 
 #include <DB/ImageInfoPtr.h>
 
 #include <marble/GeoDataCoordinates.h>
 #include <marble/GeoDataLatLonAltBox.h>
+
+#include <QRegion>
 
 namespace Marble
 {
@@ -42,14 +31,10 @@ namespace Map
 
 class GeoCoordinates;
 
-enum class MapStyle {
-    ShowPins,
-    ShowThumbnails
-};
-
 struct ThumbnailParams {
     const QPixmap &alternatePixmap;
     const ImageManager::ThumbnailCache *cache;
+    const int thumbnailSizePx;
 };
 
 class GeoCluster
@@ -77,10 +62,9 @@ public:
      * The corresponding bounding box is computed the same way as in the render method,
      * matching against the GeoClusters own bounding box or against its sub-clusters as appropriate.
      * @param pos
-     * @param viewPortParams
-     * @return The matching GeoDataLatLonBox if the position matches, or an empty box otherwise.
+     * @return The matching GeoCluster if the position matches, or a \c nullptr otherwise.
      */
-    virtual Marble::GeoDataLatLonBox regionForPoint(QPoint pos, const Marble::ViewportParams &viewPortParams) const;
+    virtual const GeoCluster *regionForPoint(QPoint pos) const;
 
     void render(Marble::GeoPainter *painter, const Marble::ViewportParams &viewPortParams, const ThumbnailParams &thumbs, MapStyle style) const;
     /**
@@ -90,10 +74,16 @@ public:
      */
     virtual int size() const;
 
+    /**
+     * @brief isEmpty
+     * @return \c true, if size is 0, \c false otherwise.
+     */
+    bool isEmpty() const;
+
 private:
     mutable int m_size = 0;
-    mutable bool m_subItemsView = false;
-    QList<const GeoCluster *> m_subClusters;
+    mutable QRegion m_renderedRegion = {}; ///< If currently drawn, contains the rendered region. Otherwise the region is empty.
+    QList<const GeoCluster *> m_subClusters = {};
 
 protected:
     mutable Marble::GeoDataLatLonAltBox m_boundingRegion;
@@ -102,7 +92,7 @@ protected:
      * @brief renderSubItems renders the sub-items of this GeoCluster.
      * @param painter
      * @param viewPortParams
-     * @param ThumbnailParams
+     * @param thumbs handle for the thumbnail cache and an alternate pixmap
      * @param style
      */
     virtual void renderSubItems(Marble::GeoPainter *painter, const Marble::ViewportParams &viewPortParams, const ThumbnailParams &thumbs, MapStyle style) const;
@@ -121,6 +111,8 @@ public:
     int size() const override;
 
 private:
+    mutable QHash<DB::ImageInfoPtr, QPixmap> m_scaledThumbnailCache; ///< local cache for scaled thumbnails
+    mutable int m_thumbnailSizePx; ///< pixel size of thumbnails in the cache
     QList<DB::ImageInfoPtr> m_images;
 
 protected:

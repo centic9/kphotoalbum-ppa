@@ -1,25 +1,12 @@
-/* Copyright (C) 2018 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-   Copyright (C) 2007-2010 Tuomas Suutari <thsuut@utu.fi>
+/* SPDX-FileCopyrightText: 2018 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+   SPDX-FileCopyrightText: 2007-2010 Tuomas Suutari <thsuut@utu.fi>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "MD5.h"
 
-#include "FileName.h"
+#include <kpabase/FileName.h>
 
 #include <QCryptographicHash>
 #include <QFile>
@@ -39,8 +26,8 @@ DB::MD5::MD5()
 
 DB::MD5::MD5(const QString &md5str)
     : m_isNull(md5str.isEmpty())
-    , m_v0(md5str.left(16).toULongLong(0, 16))
-    , m_v1(md5str.mid(16, 16).toULongLong(0, 16))
+    , m_v0(md5str.leftRef(16).toULongLong(0, 16))
+    , m_v1(md5str.midRef(16, 16).toULongLong(0, 16))
 {
 }
 
@@ -55,8 +42,8 @@ DB::MD5 &DB::MD5::operator=(const QString &md5str)
         m_isNull = true;
     } else {
         m_isNull = false;
-        m_v0 = md5str.left(16).toULongLong(0, 16);
-        m_v1 = md5str.mid(16, 16).toULongLong(0, 16);
+        m_v0 = md5str.leftRef(16).toULongLong(0, 16);
+        m_v1 = md5str.midRef(16, 16).toULongLong(0, 16);
     }
     return *this;
 }

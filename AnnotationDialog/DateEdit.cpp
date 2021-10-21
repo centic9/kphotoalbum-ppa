@@ -1,20 +1,7 @@
-/* Copyright (C) 2003-2018 Jesper K. Pedersen <blackie@kde.org>
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2018 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 /**
  * A date editing widget that consists of an editable combo box.
@@ -55,7 +42,6 @@ AnnotationDialog::DateEdit::DateEdit(bool isStartEdit, QWidget *parent)
     setEditable(true);
     setMaxCount(1); // need at least one entry for popup to work
     m_value = m_defaultValue;
-    QString today = QDate::currentDate().toString(QString::fromLatin1("dd. MMM yyyy"));
     addItem(QString::fromLatin1(""));
     setCurrentIndex(0);
     setItemText(0, QString::fromLatin1(""));
@@ -202,7 +188,7 @@ void AnnotationDialog::DateEdit::dateSelected(QDate newDate)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         emit dateChanged(DB::ImageDate(newDate.startOfDay(), newDate.startOfDay()));
 #else
-        emit dateChanged(DB::ImageDate(QDateTime(newDate), QDateTime(newDate)));
+        emit dateChanged(DB::ImageDate(Utilities::FastDateTime(newDate), Utilities::FastDateTime(newDate)));
 #endif
         m_DateFrame->hide();
     }
@@ -216,7 +202,7 @@ void AnnotationDialog::DateEdit::dateEntered(QDate newDate)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         emit dateChanged(DB::ImageDate(newDate.startOfDay(), newDate.startOfDay()));
 #else
-        emit dateChanged(DB::ImageDate(QDateTime(newDate), QDateTime(newDate)));
+        emit dateChanged(DB::ImageDate(Utilities::FastDateTime(newDate), Utilities::FastDateTime(newDate)));
 #endif
     }
 }
@@ -236,7 +222,7 @@ void AnnotationDialog::DateEdit::lineEnterPressed()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         emit dateChanged(DB::ImageDate(date.startOfDay(), end.startOfDay()));
 #else
-        emit dateChanged(DB::ImageDate(QDateTime(date), QDateTime(end)));
+        emit dateChanged(DB::ImageDate(Utilities::FastDateTime(date), Utilities::FastDateTime(end)));
 #endif
     } else {
         // Invalid or unacceptable date - revert to previous value

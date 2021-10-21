@@ -1,31 +1,19 @@
-/* Copyright (C) 2014 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2014 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #ifndef REMOTECONTROL_IMAGESTORE_H
 #define REMOTECONTROL_IMAGESTORE_H
 
-#include <QObject>
+#include "Types.h"
 #include <QImage>
 #include <QMap>
-#include "Types.h"
 #include <QMutex>
+#include <QObject>
 
-namespace RemoteControl {
+namespace RemoteControl
+{
 class RemoteImage;
 
 class ImageStore : public QObject
@@ -33,9 +21,9 @@ class ImageStore : public QObject
     Q_OBJECT
 
 public:
-    static ImageStore& instance();
-    void updateImage(ImageId imageId, const QImage& requestImage, const QString& label, ViewType type);
-    void requestImage(RemoteImage* client, ImageId imageId, const QSize& size, ViewType type);
+    static ImageStore &instance();
+    void updateImage(ImageId imageId, const QImage &requestImage, const QString &label, ViewType type);
+    void requestImage(RemoteImage *client, ImageId imageId, const QSize &size, ViewType type);
 
 private slots:
     void reset();
@@ -44,9 +32,9 @@ private slots:
 private:
     explicit ImageStore();
 
-    using RequestType = QPair<ImageId,ViewType>;
-    QMap<RequestType,RemoteImage*> m_requestMap;
-    QMap<RemoteImage*,RequestType> m_reverseRequestMap;
+    using RequestType = QPair<ImageId, ViewType>;
+    QMap<RequestType, RemoteImage *> m_requestMap;
+    QMap<RemoteImage *, RequestType> m_reverseRequestMap;
     QMutex m_mutex;
 };
 

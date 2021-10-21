@@ -1,20 +1,8 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "ThumbnailFacade.h"
 
 #include "CellGeometry.h"
@@ -25,8 +13,8 @@
 #include "ThumbnailWidget.h"
 
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
-#include <ImageManager/ThumbnailCache.h>
-#include <Settings/SettingsData.h>
+#include <kpabase/SettingsData.h>
+#include <kpathumbnails/ThumbnailCache.h>
 
 ThumbnailView::ThumbnailFacade *ThumbnailView::ThumbnailFacade::s_instance = nullptr;
 ThumbnailView::ThumbnailFacade::ThumbnailFacade(ImageManager::ThumbnailCache *thumbnailCache)
@@ -47,11 +35,13 @@ ThumbnailView::ThumbnailFacade::ThumbnailFacade(ImageManager::ThumbnailCache *th
 
     connect(m_widget, &ThumbnailWidget::showImage, this, &ThumbnailFacade::showImage);
     connect(m_widget, &ThumbnailWidget::showSelection, this, &ThumbnailFacade::showSelection);
+    connect(m_widget, &ThumbnailWidget::showSearch, this, &ThumbnailFacade::showSearch);
     connect(m_widget, &ThumbnailWidget::fileIdUnderCursorChanged, this, &ThumbnailFacade::fileIdUnderCursorChanged);
     connect(m_widget, &ThumbnailWidget::currentDateChanged, this, &ThumbnailFacade::currentDateChanged);
     connect(m_widget, &ThumbnailWidget::selectionCountChanged, this, &ThumbnailFacade::selectionChanged);
     connect(m_model, &ThumbnailModel::collapseAllStacksEnabled, this, &ThumbnailFacade::collapseAllStacksEnabled);
     connect(m_model, &ThumbnailModel::expandAllStacksEnabled, this, &ThumbnailFacade::expandAllStacksEnabled);
+    connect(m_model, &ThumbnailModel::filterChanged, this, &ThumbnailFacade::filterChanged);
 
     s_instance = this;
 }
@@ -194,6 +184,11 @@ void ThumbnailView::ThumbnailFacade::clearFilter()
 {
     Q_ASSERT(m_model);
     m_model->clearFilter();
+}
+
+void ThumbnailView::ThumbnailFacade::setFreeformFilter(const QString &text)
+{
+    model()->filterByFreeformText(text);
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

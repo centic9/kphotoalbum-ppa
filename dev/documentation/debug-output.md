@@ -1,3 +1,8 @@
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+SPDX-FileCopyrightText: 2018-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+-->
+
 # Getting KPhotoAlbum to print debug output {#debug-output}
 
 KPhotoAlbum uses categorized logging.  By default, only warning messages but no

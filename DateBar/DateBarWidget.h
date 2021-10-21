@@ -1,26 +1,13 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #ifndef DATEBAR_H
 #define DATEBAR_H
 #include "ViewHandler.h"
 
-#include <QDateTime>
+#include <Utilities/FastDateTime.h>
 #include <QExplicitlySharedDataPointer>
 #include <QPixmap>
 #include <QWidget>
@@ -88,7 +75,7 @@ public:
 public slots:
     void clearSelection();
     void setViewType(ViewType tp, bool redrawNow = true);
-    void setDate(const QDateTime &date);
+    void setDate(const Utilities::FastDateTime &date);
     void setImageDateCollection(const QExplicitlySharedDataPointer<DB::ImageDateCollection> &);
     void scrollLeft();
     void scrollRight();
@@ -173,13 +160,13 @@ protected:
      * @return a unit index between 0 and numberOfUnits
      */
     int unitAtPos(int x) const;
-    QDateTime dateForUnit(int unit, const QDateTime &offset = QDateTime()) const;
+    Utilities::FastDateTime dateForUnit(int unit, const Utilities::FastDateTime &offset = Utilities::FastDateTime()) const;
     /**
      * @brief unitForDate return the unit index corresponding to the date/time.
-     * @param date a valid QDateTime.
+     * @param date a valid Utilities::FastDateTime.
      * @return An integer greater or equal to 0 if \p date is in view, -1 otherwise.
      */
-    int unitForDate(const QDateTime &date) const;
+    int unitForDate(const Utilities::FastDateTime &date) const;
     bool isUnitSelected(int unit) const;
     bool hasSelection() const;
     DB::ImageDate currentSelection() const;
@@ -220,8 +207,8 @@ private:
     QToolButton *m_cancelSelection;
 
     int m_currentUnit;
-    QDateTime m_currentDate;
-    int m_barWidth;
+    Utilities::FastDateTime m_currentDate;
+    int m_barWidth; ///< width of a single unit in pixel
     int m_barHeight;
     bool m_includeFuzzyCounts;
     QMenu *m_contextMenu;

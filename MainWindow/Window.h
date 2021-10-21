@@ -1,35 +1,23 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef MAINWINDOW_WINDOW_H
 #define MAINWINDOW_WINDOW_H
 #include <DB/Category.h>
-#include <DB/FileNameList.h>
 #include <DB/ImageSearchInfo.h>
-#include <DB/UIDelegate.h>
 #include <ThumbnailView/enums.h>
-#include <config-kpa-marble.h>
+#include <kpabase/FileNameList.h>
+#include <kpabase/UIDelegate.h>
+#include <kpabase/config-kpa-marble.h>
+#include <kpabase/config-kpa-plugins.h>
+#include <MainWindow/CopyLinkEngine.h>
 
 #include <KXmlGuiWindow>
 #include <QList>
 #include <QPointer>
 #include <QUrl>
-#include <config-kpa-plugins.h>
 
 class QAction;
 class QCloseEvent;
@@ -91,9 +79,12 @@ class BreadcrumbViewer;
 
 namespace MainWindow
 {
+
+class SearchBar;
 class DeleteDialog;
 class StatusBar;
 class TokenEditor;
+class CopyLinkEngine;
 
 class Window : public KXmlGuiWindow, public DB::UIDelegate
 {
@@ -163,6 +154,7 @@ protected slots:
     void slotAutoSave();
     void showBrowser();
     void slotOptionGroupChanged();
+    void slotFilterChanged();
     void showTipOfDay();
     void lockToDefaultScope();
     void setDefaultScopePositive();
@@ -210,6 +202,7 @@ protected slots:
     void mergeDuplicates();
     void slotThumbnailSizeChanged();
     void slotMarkUntagged();
+    void triggerCopyLinkAction(CopyLinkEngine::Action action);
 
 protected:
     void configureImages(bool oneAtATime);
@@ -245,6 +238,7 @@ private:
     QStackedWidget *m_stack;
     QTimer *m_autoSaveTimer;
     Browser::BrowserWidget *m_browser;
+    SearchBar *m_searchBar;
     DeleteDialog *m_deleteDialog;
     QAction *m_lock;
     QAction *m_unlock;
@@ -264,6 +258,8 @@ private:
     QAction *m_sortAllByDateAndTime;
     QAction *m_AutoStackImages;
     QAction *m_viewInNewWindow;
+    QAction *m_copyAction;
+    QAction *m_linkAction;
     KActionMenu *m_viewMenu;
     KToggleAction *m_smallListView;
     KToggleAction *m_largeListView;
@@ -293,6 +289,8 @@ private:
     Map::MapView *m_positionBrowser;
 #endif
     ThumbnailView::FilterWidget *m_filterWidget;
+    CopyLinkEngine *m_copyLinkEngine;
+
 };
 
 }

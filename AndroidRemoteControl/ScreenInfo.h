@@ -1,19 +1,6 @@
-/* Copyright (C) 2014 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2014 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #ifndef REMOTECONTROL_SCREENINFO_H
@@ -23,9 +10,10 @@
 #include <QSize>
 class QScreen;
 
-namespace RemoteControl {
+namespace RemoteControl
+{
 
-class ScreenInfo :public QObject
+class ScreenInfo : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(double dotsPerMM MEMBER m_dotsPerMM CONSTANT)
@@ -37,8 +25,8 @@ class ScreenInfo :public QObject
     Q_PROPERTY(int textHeight MEMBER m_textHeight NOTIFY textHeightChanged)
 
 public:
-    static ScreenInfo& instance();
-    void setScreen(QScreen*);
+    static ScreenInfo &instance();
+    void setScreen(QScreen *);
     QSize pixelForSizeInMM(int size) const;
     void setCategoryCount(int count);
     QSize screenSize() const;
@@ -63,7 +51,7 @@ private:
     int possibleColumns();
     int iconHeight();
 
-    QScreen* m_screen;
+    QScreen *m_screen;
     double m_dotsPerMM;
     int m_categoryCount = 0;
     int m_overviewColumnCount = 0;

@@ -1,32 +1,19 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "DateBarWidget.h"
 
 #include "MouseHandler.h"
 
 #include <DB/ImageDateCollection.h>
-#include <Settings/SettingsData.h>
+#include <kpabase/SettingsData.h>
 
+#include <Utilities/FastDateTime.h>
 #include <KLocalizedString>
 #include <QAction>
 #include <QContextMenuEvent>
-#include <QDateTime>
 #include <QFontMetrics>
 #include <QGuiApplication>
 #include <QIcon>
@@ -61,7 +48,7 @@ DateBar::DateBarWidget::DateBarWidget(QWidget *parent)
     , m_tp(YearView)
     , m_currentMouseHandler(nullptr)
     , m_currentUnit(0)
-    , m_currentDate(QDateTime::currentDateTime())
+    , m_currentDate(Utilities::FastDateTime::currentDateTime())
     , m_includeFuzzyCounts(true)
     , m_contextMenu(nullptr)
     , m_showResolutionIndicator(true)
@@ -85,12 +72,14 @@ DateBar::DateBarWidget::DateBarWidget(QWidget *parent)
     m_zoomIn = new QToolButton(this);
     m_zoomIn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in")));
     m_zoomIn->setToolTip(i18n("Zoom in"));
+    m_zoomIn->setFocusPolicy(Qt::ClickFocus);
     connect(m_zoomIn, &QToolButton::clicked, this, &DateBarWidget::zoomIn);
     connect(this, &DateBarWidget::canZoomIn, m_zoomIn, &QToolButton::setEnabled);
 
     m_zoomOut = new QToolButton(this);
     m_zoomOut->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out")));
     m_zoomOut->setToolTip(i18n("Zoom out"));
+    m_zoomOut->setFocusPolicy(Qt::ClickFocus);
     connect(m_zoomOut, &QToolButton::clicked, this, &DateBarWidget::zoomOut);
     connect(this, &DateBarWidget::canZoomOut, m_zoomOut, &QToolButton::setEnabled);
 
@@ -218,7 +207,7 @@ void DateBar::DateBarWidget::drawTickMarks(QPainter &p, const QRect &textRect)
         p.save();
         p.setPen(Qt::NoPen);
         p.setBrush(palette().brush(QPalette::Highlight));
-        QDateTime date = dateForUnit(unit);
+        Utilities::FastDateTime date = dateForUnit(unit);
         if (isUnitSelected(unit))
             p.drawRect(QRect(x, rect.top(), m_barWidth, rect.height()));
         p.restore();
@@ -280,7 +269,7 @@ void DateBar::DateBarWidget::setViewHandlerForType(ViewType tp)
     }
 }
 
-void DateBar::DateBarWidget::setDate(const QDateTime &date)
+void DateBar::DateBarWidget::setDate(const Utilities::FastDateTime &date)
 {
     m_currentDate = date;
     if (hasSelection()) {
@@ -300,10 +289,10 @@ void DateBar::DateBarWidget::setImageDateCollection(const QExplicitlySharedDataP
 {
     m_dates = dates;
     if (m_doAutomaticRangeAdjustment && m_dates && !m_dates->lowerLimit().isNull()) {
-        QDateTime start = m_dates->lowerLimit();
-        QDateTime end = m_dates->upperLimit();
+        Utilities::FastDateTime start = m_dates->lowerLimit();
+        Utilities::FastDateTime end = m_dates->upperLimit();
         if (end.isNull())
-            end = QDateTime::currentDateTime();
+            end = Utilities::FastDateTime::currentDateTime();
 
         m_currentDate = start;
         m_currentUnit = 0;
@@ -595,11 +584,7 @@ DB::ImageDate DateBar::DateBarWidget::rangeAt(const QPoint &p)
 
 DB::ImageDate DateBar::DateBarWidget::rangeForUnit(int unit)
 {
-    // Note on the use of setTimeSpec.
-    // It came to my attention that addSec would create a QDateTime with internal type LocalStandard, while all the others would have type LocalUnknown,
-    // this resulted in that QDateTime::operator<() would call getUTC(), which took 90% of the time for populating the datebar.
-    QDateTime toUnit = dateForUnit(unit + 1).addSecs(-1);
-    toUnit.setTimeSpec(Qt::LocalTime);
+    Utilities::FastDateTime toUnit = dateForUnit(unit + 1).addSecs(-1);
     return DB::ImageDate(dateForUnit(unit), toUnit);
 }
 
@@ -803,7 +788,7 @@ void DateBar::DateBarWidget::keyPressEvent(QKeyEvent *event)
     else
         return;
 
-    QDateTime newDate = dateForUnit(offset, m_currentDate);
+    Utilities::FastDateTime newDate = dateForUnit(offset, m_currentDate);
     if ((offset < 0 && newDate >= m_dates->lowerLimit()) || (offset > 0 && newDate <= m_dates->upperLimit())) {
         m_currentDate = newDate;
         m_currentUnit += offset;
@@ -832,20 +817,20 @@ void DateBar::DateBarWidget::focusOutEvent(QFocusEvent *)
 int DateBar::DateBarWidget::unitAtPos(int x) const
 {
     Q_ASSERT_X(x - barAreaGeometry().left() >= 0, "DateBarWidget::unitAtPos", "horizontal offset cannot be negative!");
-    Q_ASSERT_X(x - barAreaGeometry().left() <= m_barWidth, "DateBarWidget::unitAtPos", "horizontal offset larger than m_barWidth!");
+    Q_ASSERT_X(x - barAreaGeometry().left() <= barAreaGeometry().width(), "DateBarWidget::unitAtPos", "horizontal offset larger than total width!");
     return (x - barAreaGeometry().left()) / m_barWidth;
 }
 
-QDateTime DateBar::DateBarWidget::dateForUnit(int unit, const QDateTime &offset) const
+Utilities::FastDateTime DateBar::DateBarWidget::dateForUnit(int unit, const Utilities::FastDateTime &offset) const
 {
     return m_currentHandler->date(unit, offset);
 }
 
 bool DateBar::DateBarWidget::isUnitSelected(int unit) const
 {
-    QDateTime minDate = m_selectionHandler->min();
-    QDateTime maxDate = m_selectionHandler->max();
-    QDateTime date = dateForUnit(unit);
+    Utilities::FastDateTime minDate = m_selectionHandler->min();
+    Utilities::FastDateTime maxDate = m_selectionHandler->max();
+    Utilities::FastDateTime date = dateForUnit(unit);
     return (minDate <= date && date < maxDate && !minDate.isNull());
 }
 
@@ -874,7 +859,7 @@ void DateBar::DateBarWidget::emitRangeSelection(const DB::ImageDate &range)
     emit dateRangeChange(range);
 }
 
-int DateBar::DateBarWidget::unitForDate(const QDateTime &date) const
+int DateBar::DateBarWidget::unitForDate(const Utilities::FastDateTime &date) const
 {
     for (int unit = 0; unit < numberOfUnits(); ++unit) {
         if (m_currentHandler->date(unit) <= date && date < m_currentHandler->date(unit + 1))

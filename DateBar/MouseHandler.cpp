@@ -1,19 +1,6 @@
-/* Copyright (C) 2003-2019 The KPhotoAlbum Development Team
+/* SPDX-FileCopyrightText: 2003-2019 The KPhotoAlbum Development Team
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "MouseHandler.h"
@@ -89,7 +76,7 @@ void DateBar::SelectionHandler::mousePressEvent(int x)
 void DateBar::SelectionHandler::mouseMoveEvent(int x)
 {
     int unit = m_dateBar->unitAtPos(x);
-    QDateTime date = m_dateBar->dateForUnit(unit);
+    Utilities::FastDateTime date = m_dateBar->dateForUnit(unit);
     if (m_start < date)
         m_end = m_dateBar->dateForUnit(unit + 1);
     else
@@ -175,7 +162,7 @@ void DateBar::BarDragHandler::mouseMoveEvent(int x)
     m_dateBar->emitDateSelected();
 }
 
-QDateTime DateBar::SelectionHandler::min() const
+Utilities::FastDateTime DateBar::SelectionHandler::min() const
 {
     if (m_start < m_end)
         return m_start;
@@ -183,7 +170,7 @@ QDateTime DateBar::SelectionHandler::min() const
         return m_end;
 }
 
-QDateTime DateBar::SelectionHandler::max() const
+Utilities::FastDateTime DateBar::SelectionHandler::max() const
 {
     if (m_start >= m_end)
         return m_dateBar->dateForUnit(1, m_start);
@@ -193,8 +180,8 @@ QDateTime DateBar::SelectionHandler::max() const
 
 void DateBar::SelectionHandler::clearSelection()
 {
-    m_start = QDateTime();
-    m_end = QDateTime();
+    m_start = Utilities::FastDateTime();
+    m_end = Utilities::FastDateTime();
 }
 
 void DateBar::SelectionHandler::mouseReleaseEvent()

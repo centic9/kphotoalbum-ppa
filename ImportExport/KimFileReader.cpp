@@ -1,24 +1,12 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "KimFileReader.h"
 
-#include <Utilities/FileNameUtil.h>
 #include <Utilities/VideoUtil.h>
+#include <kpabase/FileNameUtil.h>
 
 #include <KLocalizedString>
 #include <QFileInfo>
@@ -82,8 +70,9 @@ QPixmap ImportExport::KimFileReader::loadThumbnail(QString fileName)
 
     const KArchiveDirectory *thumbnailDir = static_cast<const KArchiveDirectory *>(thumbnails);
 
-    const QString ext = Utilities::isVideo(DB::FileName::fromRelativePath(fileName)) ? QString::fromLatin1("jpg") : QFileInfo(fileName).completeSuffix();
-    fileName = QString::fromLatin1("%1.%2").arg(Utilities::stripEndingForwardSlash(QFileInfo(fileName).baseName())).arg(ext);
+    const auto fileInfo = QFileInfo(fileName);
+    const QString ext = Utilities::isVideo(DB::FileName::fromRelativePath(fileName)) ? QString::fromLatin1("jpg") : fileInfo.completeSuffix();
+    fileName = QString::fromLatin1("%1.%2").arg(fileInfo.baseName()).arg(ext);
     const KArchiveEntry *fileEntry = thumbnailDir->entry(fileName);
     if (fileEntry == nullptr || !fileEntry->isFile()) {
         KMessageBox::error(nullptr, i18n("No thumbnail existed in export file for %1", fileName));
@@ -91,7 +80,7 @@ QPixmap ImportExport::KimFileReader::loadThumbnail(QString fileName)
     }
 
     const KArchiveFile *file = static_cast<const KArchiveFile *>(fileEntry);
-    QByteArray data = file->data();
+    const QByteArray data = file->data();
     QPixmap pixmap;
     pixmap.loadFromData(data);
     return pixmap;

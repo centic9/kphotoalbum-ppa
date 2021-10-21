@@ -1,25 +1,15 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
 #include "NumberedBackup.h"
 
-#include <DB/UIDelegate.h>
-#include <Settings/SettingsData.h>
+#include "Logging.h"
+
 #include <Utilities/FileUtil.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/UIDelegate.h>
 
 #include <KLocalizedString>
 #include <KZip>
@@ -45,12 +35,12 @@ void XMLDB::NumberedBackup::makeNumberedBackup()
         const QString fileAndDir = QStringLiteral("%1/%2").arg(Settings::SettingsData::instance()->imageDirectory()).arg(fileNameWithExt);
         KZip zip(fileAndDir);
         if (!zip.open(QIODevice::WriteOnly)) {
-            m_ui.error(QStringLiteral("Error creating zip file %1").arg(fileAndDir), i18n("Error creating zip file %1", fileAndDir), i18n("Error Making Numbered Backup"));
+            m_ui.error(DB::LogMessage { XMLDBLog(), QStringLiteral("Error creating zip file %1").arg(fileAndDir) }, i18n("Error creating zip file %1", fileAndDir), i18n("Error Making Numbered Backup"));
             return;
         }
 
         if (!zip.addLocalFile(QStringLiteral("%1/index.xml").arg(Settings::SettingsData::instance()->imageDirectory()), fileName)) {
-            m_ui.error(QStringLiteral("Error writing file %1 to zip file %2").arg(fileName).arg(fileAndDir), i18n("Error writing file %1 to zip file %2", fileName, fileAndDir), i18n("Error Making Numbered Backup"));
+            m_ui.error(DB::LogMessage { XMLDBLog(), QStringLiteral("Error writing file %1 to zip file %2").arg(fileName).arg(fileAndDir) }, i18n("Error writing file %1 to zip file %2", fileName, fileAndDir), i18n("Error Making Numbered Backup"));
         }
         zip.close();
     } else {

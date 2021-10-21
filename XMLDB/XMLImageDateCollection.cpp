@@ -1,25 +1,12 @@
-/* Copyright (C) 2003-2020 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "XMLImageDateCollection.h"
 
-#include <DB/FileNameList.h>
 #include <DB/ImageDB.h>
+#include <kpabase/FileNameList.h>
 
 void XMLDB::XMLImageDateCollection::add(const DB::ImageDate &date)
 {
@@ -30,9 +17,9 @@ void XMLDB::XMLImageDateCollection::buildIndex()
 {
     StartIndexMap::ConstIterator startSearch = m_startIndex.constBegin();
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    QDateTime biggestEnd = QDate(1900, 1, 1).startOfDay();
+    Utilities::FastDateTime biggestEnd = QDate(1900, 1, 1).startOfDay();
 #else
-    QDateTime biggestEnd = QDateTime(QDate(1900, 1, 1));
+    Utilities::FastDateTime biggestEnd = Utilities::FastDateTime(QDate(1900, 1, 1));
 #endif
     for (StartIndexMap::ConstIterator it = m_startIndex.constBegin();
          it != m_startIndex.constEnd();
@@ -112,7 +99,7 @@ DB::ImageCount XMLDB::XMLImageDateCollection::count(const DB::ImageDate &range)
     return res;
 }
 
-QDateTime XMLDB::XMLImageDateCollection::lowerLimit() const
+Utilities::FastDateTime XMLDB::XMLImageDateCollection::lowerLimit() const
 {
     if (!m_startIndex.empty()) {
         // skip null dates:
@@ -124,11 +111,11 @@ QDateTime XMLDB::XMLImageDateCollection::lowerLimit() const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     return QDate(1900, 1, 1).startOfDay();
 #else
-    return QDateTime(QDate(1900, 1, 1));
+    return Utilities::FastDateTime(QDate(1900, 1, 1));
 #endif
 }
 
-QDateTime XMLDB::XMLImageDateCollection::upperLimit() const
+Utilities::FastDateTime XMLDB::XMLImageDateCollection::upperLimit() const
 {
     if (!m_endIndex.empty()) {
         EndIndexMap::ConstIterator highest = m_endIndex.constEnd();
@@ -138,7 +125,7 @@ QDateTime XMLDB::XMLImageDateCollection::upperLimit() const
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     return QDate(2100, 1, 1).startOfDay();
 #else
-    return QDateTime(QDate(2100, 1, 1));
+    return Utilities::FastDateTime(QDate(2100, 1, 1));
 #endif
 }
 

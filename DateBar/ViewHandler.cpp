@@ -1,19 +1,6 @@
-/* Copyright (C) 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+/* SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "ViewHandler.h"
@@ -34,7 +21,7 @@ using namespace DateBar;
 /**
  * Indicate that the first unit in the bar represent the date given as parameter
  */
-void ViewHandler::init(const QDateTime &startDate)
+void ViewHandler::init(const Utilities::FastDateTime &startDate)
 {
     m_startDate = startDate;
 }
@@ -80,15 +67,15 @@ QString DateBar::ViewHandler::unitText() const
  * Return the date for the beginning of the unit given as the first argument. If the second optional argument is
  * given, then this is used as the date for the first unit, otherwise the date given to \ref init will be used as offset.
  */
-QDateTime DateBar::ViewHandler::date(int, QDateTime)
+Utilities::FastDateTime DateBar::ViewHandler::date(int, Utilities::FastDateTime)
 {
     // Included for documentation.
-    return QDateTime();
+    return Utilities::FastDateTime();
 }
 
-void DecadeViewHandler::init(const QDateTime &startDate)
+void DecadeViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    QDateTime date = QDateTime(QDate(startDate.date().year(), 1, 1), QTime(0, 0, 0));
+    Utilities::FastDateTime date = Utilities::FastDateTime(QDate(startDate.date().year(), 1, 1), QTime(0, 0, 0));
     ViewHandler::init(date);
 }
 
@@ -107,7 +94,7 @@ QString DecadeViewHandler::text(int unit)
     return QString::number(date(unit).date().year());
 }
 
-QDateTime DecadeViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime DecadeViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -119,9 +106,9 @@ QString DecadeViewHandler::unitText() const
     return i18n("1 Year");
 }
 
-void YearViewHandler::init(const QDateTime &startDate)
+void YearViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    QDateTime date = QDateTime(QDate(startDate.date().year(), startDate.date().month(), 1), QTime(0, 0, 0));
+    Utilities::FastDateTime date = Utilities::FastDateTime(QDate(startDate.date().year(), startDate.date().month(), 1), QTime(0, 0, 0));
     ViewHandler::init(date);
 }
 
@@ -140,7 +127,7 @@ QString YearViewHandler::text(int unit)
     return QString::number(date(unit).date().year());
 }
 
-QDateTime YearViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime YearViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -152,10 +139,10 @@ QString YearViewHandler::unitText() const
     return i18n("1 Month");
 }
 
-void MonthViewHandler::init(const QDateTime &startDate)
+void MonthViewHandler::init(const Utilities::FastDateTime &startDate)
 {
     QDate date = startDate.date().addDays(-startDate.date().dayOfWeek() + 1); // Wind to monday
-    ViewHandler::init(QDateTime(date, QTime(0, 0, 0)));
+    ViewHandler::init(Utilities::FastDateTime(date, QTime(0, 0, 0)));
 }
 
 bool MonthViewHandler::isMajorUnit(int unit)
@@ -177,7 +164,7 @@ QString MonthViewHandler::text(int unit)
     return str;
 }
 
-QDateTime MonthViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime MonthViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -189,9 +176,9 @@ QString MonthViewHandler::unitText() const
     return i18n("1 Week");
 }
 
-void WeekViewHandler::init(const QDateTime &startDate)
+void WeekViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    ViewHandler::init(QDateTime(startDate.date(), QTime(0, 0, 0)));
+    ViewHandler::init(Utilities::FastDateTime(startDate.date(), QTime(0, 0, 0)));
 }
 
 bool WeekViewHandler::isMajorUnit(int unit)
@@ -204,7 +191,7 @@ QString WeekViewHandler::text(int unit)
     return QLocale().toString(date(unit).date(), QLocale::ShortFormat);
 }
 
-QDateTime WeekViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime WeekViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -216,13 +203,13 @@ QString WeekViewHandler::unitText() const
     return i18n("1 Day");
 }
 
-void DayViewHandler::init(const QDateTime &startDate)
+void DayViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    QDateTime date = startDate;
+    Utilities::FastDateTime date = startDate;
     if (date.time().hour() % 2)
         date = date.addSecs(60 * 60);
 
-    ViewHandler::init(QDateTime(date.date(), QTime(date.time().hour(), 0, 0)));
+    ViewHandler::init(Utilities::FastDateTime(date.date(), QTime(date.time().hour(), 0, 0)));
 }
 
 bool DayViewHandler::isMajorUnit(int unit)
@@ -245,7 +232,7 @@ QString DayViewHandler::text(int unit)
         return date(unit).toString(QString::fromLatin1("h:00"));
 }
 
-QDateTime DayViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime DayViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -257,10 +244,10 @@ QString DayViewHandler::unitText() const
     return i18n("2 Hours");
 }
 
-void HourViewHandler::init(const QDateTime &startDate)
+void HourViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    ViewHandler::init(QDateTime(startDate.date(),
-                                QTime(startDate.time().hour(), 10 * (int)floor(startDate.time().minute() / 10.0), 0)));
+    ViewHandler::init(Utilities::FastDateTime(startDate.date(),
+                                              QTime(startDate.time().hour(), 10 * (int)floor(startDate.time().minute() / 10.0), 0)));
 }
 
 bool HourViewHandler::isMajorUnit(int unit)
@@ -279,7 +266,7 @@ QString HourViewHandler::text(int unit)
     return date(unit).toString(QString::fromLatin1("h:00"));
 }
 
-QDateTime HourViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime HourViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -291,10 +278,10 @@ QString HourViewHandler::unitText() const
     return i18n("10 Minutes");
 }
 
-void TenMinuteViewHandler::init(const QDateTime &startDate)
+void TenMinuteViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    ViewHandler::init(QDateTime(startDate.date(),
-                                QTime(startDate.time().hour(), 10 * (int)floor(startDate.time().minute() / 10.0), 0)));
+    ViewHandler::init(Utilities::FastDateTime(startDate.date(),
+                                              QTime(startDate.time().hour(), 10 * (int)floor(startDate.time().minute() / 10.0), 0)));
 }
 
 bool TenMinuteViewHandler::isMajorUnit(int unit)
@@ -313,7 +300,7 @@ QString TenMinuteViewHandler::text(int unit)
     return date(unit).toString(QString::fromLatin1("h:mm"));
 }
 
-QDateTime TenMinuteViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime TenMinuteViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;
@@ -325,11 +312,11 @@ QString TenMinuteViewHandler::unitText() const
     return i18n("1 Minute");
 }
 
-void MinuteViewHandler::init(const QDateTime &startDate)
+void MinuteViewHandler::init(const Utilities::FastDateTime &startDate)
 {
-    ViewHandler::init(QDateTime(startDate.date(),
-                                QTime(startDate.time().hour(),
-                                      startDate.time().minute(), 0)));
+    ViewHandler::init(Utilities::FastDateTime(startDate.date(),
+                                              QTime(startDate.time().hour(),
+                                                    startDate.time().minute(), 0)));
 }
 
 bool MinuteViewHandler::isMajorUnit(int unit)
@@ -348,7 +335,7 @@ QString MinuteViewHandler::text(int unit)
     return date(unit).toString(QString::fromLatin1("h:mm"));
 }
 
-QDateTime MinuteViewHandler::date(int unit, QDateTime reference)
+Utilities::FastDateTime MinuteViewHandler::date(int unit, Utilities::FastDateTime reference)
 {
     if (reference.isNull())
         reference = m_startDate;

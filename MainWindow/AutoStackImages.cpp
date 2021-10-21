@@ -1,19 +1,6 @@
-/* Copyright (C) 2010-2020 The KPhotoAlbum Development Team
+/* SPDX-FileCopyrightText: 2010-2020 The KPhotoAlbum Development Team
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "AutoStackImages.h"
@@ -25,9 +12,9 @@
 #include <DB/ImageDate.h>
 #include <DB/ImageInfo.h>
 #include <DB/MD5Map.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/FileUtil.h>
 #include <Utilities/ShowBusyCursor.h>
+#include <kpabase/SettingsData.h>
 
 #include <KLocalizedString>
 #include <QApplication>
@@ -78,11 +65,10 @@ AutoStackImages::AutoStackImages(QWidget *parent, const DB::FileNameList &list)
     lay1->addWidget(containerContinuous);
     QHBoxLayout *hlayContinuous = new QHBoxLayout(containerContinuous);
 
-    //FIXME: This is hard to translate because of the split sentence. It is better
-    //to use a single sentence here like "Stack images that are (were?) shot
-    //within this time:" and use the spin method setSuffix() to set the "seconds".
-    //Also: Would minutes not be a more sane time unit here? (schwarzer)
-    m_continuousShooting = new QCheckBox(i18nc("The whole sentence should read: *Stack images that are shot within x seconds of each other*. So images that are shot in one burst are automatically stacked together. (This sentence is before the x.)", "Stack images that are shot within"));
+    // Would minutes not be a more sane time unit here? (schwarzer)
+    // jzarl: this feature is used to group "burst" images - usually they are taken within a few seconds.
+    // a typical value would be somewhere between 2 and 20 seconds
+    m_continuousShooting = new QCheckBox(i18nc("Label for a QSpinbox that selects a number of seconds.", "Stack images created within the following time-frame:"));
     m_continuousShooting->setChecked(false);
     hlayContinuous->addWidget(m_continuousShooting);
 
@@ -90,10 +76,8 @@ AutoStackImages::AutoStackImages(QWidget *parent, const DB::FileNameList &list)
     m_continuousThreshold->setRange(1, 999);
     m_continuousThreshold->setSingleStep(1);
     m_continuousThreshold->setValue(2);
+    m_continuousThreshold->setSuffix(i18nc("Unit suffix on a QSpinBox; note the space at the beginning.", " seconds"));
     hlayContinuous->addWidget(m_continuousThreshold);
-
-    QLabel *sec = new QLabel(i18nc("The whole sentence should read: *Stack images that are shot within x seconds of each other*. (This being the text after x.)", "seconds"), containerContinuous);
-    hlayContinuous->addWidget(sec);
 
     QGroupBox *grpOptions = new QGroupBox(i18n("AutoStacking Options"));
     QVBoxLayout *grpLayOptions = new QVBoxLayout(grpOptions);

@@ -1,19 +1,6 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
+/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "Dialog.h"
@@ -26,15 +13,15 @@
 #include "ResizableFrame.h"
 #include "ShortCutManager.h"
 #include "ShowSelectionOnlyManager.h"
-#include "enums.h"
 
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <DB/ImageInfo.h>
 #include <MainWindow/DirtyIndicator.h>
-#include <Settings/SettingsData.h>
 #include <Utilities/ShowBusyCursor.h>
 #include <Viewer/ViewerWidget.h>
+#include <kpabase/SettingsData.h>
+#include <kpabase/enums.h>
 
 #include <KAcceleratorManager>
 #include <KActionCollection>
@@ -291,6 +278,7 @@ QDockWidget *AnnotationDialog::Dialog::createDock(const QString &title, const QS
                                                   Qt::DockWidgetArea location, QWidget *widget)
 {
     QDockWidget *dock = new QDockWidget(title);
+    // make sure that no accelerator is set up now - this is done by ShortCutManager instead:
     KAcceleratorManager::setNoAccel(dock);
     dock->setObjectName(name);
     dock->setAllowedAreas(Qt::AllDockWidgetAreas);
@@ -630,13 +618,13 @@ void AnnotationDialog::Dialog::writeToInfo()
 
     if (m_time->isHidden()) {
         if (m_endDate->date().isValid())
-            info.setDate(DB::ImageDate(QDateTime(m_startDate->date(), QTime(0, 0, 0)),
-                                       QDateTime(m_endDate->date(), QTime(23, 59, 59))));
+            info.setDate(DB::ImageDate(Utilities::FastDateTime(m_startDate->date(), QTime(0, 0, 0)),
+                                       Utilities::FastDateTime(m_endDate->date(), QTime(23, 59, 59))));
         else
-            info.setDate(DB::ImageDate(QDateTime(m_startDate->date(), QTime(0, 0, 0)),
-                                       QDateTime(m_startDate->date(), QTime(23, 59, 59))));
+            info.setDate(DB::ImageDate(Utilities::FastDateTime(m_startDate->date(), QTime(0, 0, 0)),
+                                       Utilities::FastDateTime(m_startDate->date(), QTime(23, 59, 59))));
     } else
-        info.setDate(DB::ImageDate(QDateTime(m_startDate->date(), m_time->time())));
+        info.setDate(DB::ImageDate(Utilities::FastDateTime(m_startDate->date(), m_time->time())));
 
     // Generate a list of all tagged areas
 
@@ -1716,7 +1704,7 @@ void AnnotationDialog::Dialog::populateMap()
     int imagesWithCoordinates = 0;
 
     // we can use the coordinates of the original images here, because the are never changed by the annotation dialog
-    for (const DB::ImageInfoPtr info : qAsConst(m_origList)) {
+    for (const DB::ImageInfoPtr &info : qAsConst(m_origList)) {
         processedImages++;
         m_mapLoadingProgress->setValue(processedImages);
         // keep things responsive by processing events manually:

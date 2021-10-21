@@ -1,30 +1,18 @@
-/* Copyright (C) 2014-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public License as
-   published by the Free Software Foundation; either version 2 of
-   the License or (at your option) version 3 or any later version
-   accepted by the membership of KDE e.V. (or its successor approved
-   by the membership of KDE e.V.), which shall act as a proxy
-   defined in Section 14 of version 3 of the license.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+// SPDX-FileCopyrightText: 2014-2015 Tobias Leupold <tobias.leupold@gmx.de>
+// SPDX-FileCopyrightText: 2016-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #ifndef MAPVIEW_H
 #define MAPVIEW_H
 
-#include "config-kpa-marble.h"
 #include "GeoCoordinates.h"
+#include "enums.h"
 
 #include <DB/ImageInfo.h>
 #include <DB/ImageInfoPtr.h>
+#include <kpabase/config-kpa-marble.h>
 
 #include <QList>
 #include <QPixmap>
@@ -123,6 +111,16 @@ public:
      * Sets the state of the "Show Thumbnails" button on the map's control widget.
      */
     void setShowThumbnails(bool state);
+    /**
+     * @brief Sets the state of the "Group Thumbnails" button on lthe map's control widget.
+     */
+    void setGroupThumbnails(bool state);
+
+    /**
+     * @brief Returns the appropriate map style depending on the state of the "Show Thumbnails" and "Group Thumbnails" buttons.
+     * @return the currently active MapStyle
+     */
+    MapStyle mapStyle() const;
 
     /**
      * This sets the status label text and it's visibility, as well as the visibilty of the map
@@ -134,6 +132,9 @@ public:
     bool regionSelected() const;
 
     void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
     // LayerInterface:
     /**
@@ -148,11 +149,21 @@ public:
      * @param painter the painter used by the LayerManager
      * @param viewPortParams information about the region being in view
      * @param renderPos the layer name
-     * @param layer always \c nullptr
      * @return \c true (return value is discarded by LayerManager::renderLayers())
      */
     bool render(Marble::GeoPainter *painter, Marble::ViewportParams *viewPortParams,
-                const QString &renderPos, Marble::GeoSceneLayer *) override;
+                const QString &renderPos, Marble::GeoSceneLayer * /*nullptr*/) override;
+
+    /**
+     * @return The size of the rendered thumbnails/markers in pixels.
+     */
+    int markerSize() const;
+    /**
+     * @brief Set the markerSize for rendering on the map
+     * Note: Apart from thumbnails, this also affects the size of clusters and therefore the clustering.
+     * @param markerSizePx a size in pixels
+     */
+    void setMarkerSize(int markerSizePx);
 
 Q_SIGNALS:
     void newRegionSelected(Map::GeoCoordinates::LatLonBox coordinates);
@@ -163,6 +174,9 @@ public slots:
      * Centers the map on the coordinates of the given image.
      */
     void setCenter(const DB::ImageInfoPtr image);
+
+    void increaseMarkerSize();
+    void decreaseMarkerSize();
 
 private slots:
     void saveSettings();
@@ -180,6 +194,13 @@ private: // Variables
     GeoCoordinates m_lastCenter;
     QWidget *m_kpaButtons;
     QWidget *m_floaters;
+    /**
+     * If the user clicks a cluster on the map, it gets preselected (and highlighted) before the mouse release event finalizes the selection.
+     * @see mousePressEvent
+     * @see mouseReleaseEvent
+     * @see render
+     */
+    const GeoCluster *m_preselectedCluster = nullptr;
 
     // filled by addImage()
     QHash<GeoBinAddress, GeoBin *> m_baseBins;
@@ -187,9 +208,11 @@ private: // Variables
 
     Marble::GeoDataLatLonBox m_markersBox;
     bool m_showThumbnails = true;
+    bool m_groupThumbnails = true;
     QPixmap m_pin;
     Marble::GeoDataLatLonBox m_regionSelection;
     bool m_regionSelected = false;
+    int m_markerSize;
 };
 
 }

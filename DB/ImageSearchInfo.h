@@ -1,32 +1,20 @@
-/* Copyright (C) 2003-2020 The KPhotoAlbum Development Team
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
+// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef IMAGESEARCHINFO_H
 #define IMAGESEARCHINFO_H
 #include "ImageDate.h"
 #include "ImageInfoPtr.h"
-#include <config-kpa-marble.h>
+#include "WildcardCategoryMatcher.h"
+#include <kpabase/config-kpa-marble.h>
 
-#include <Exif/SearchInfo.h>
 #ifdef HAVE_MARBLE
 #include <Map/GeoCoordinates.h>
 #endif
-#include <Utilities/StringSet.h>
+#include <kpabase/StringSet.h>
+#include <kpaexif/SearchInfo.h>
 
 #include <QList>
 #include <QMap>
@@ -105,6 +93,21 @@ public:
     void setRegionSelection(const Map::GeoCoordinates::LatLonBox &actRegionSelection);
 #endif
 
+    QString freeformMatchText() const;
+    /**
+     * @brief setFreeformMatchText sets a freeform string to match on.
+     * The idea is to provide a way to quickly drill down by entering unstructured text,
+     * e.g. in the thumbnail view.
+     *
+     * Currently, this matches against:
+     *  - description
+     *  - label
+     *  - relative filename
+     *  - tag names
+     * @param freeformMatchText a pattern suitable for a QRegularExpression match
+     */
+    void setFreeformMatchText(const QString &freeformMatchText);
+
 protected:
     void compile() const;
 
@@ -114,6 +117,7 @@ protected:
 private:
     /**
      * @brief The CompiledDataPrivate struct encapsulates the non-copyable data members of the ImageSearchInfo.
+     * It covers all category related search data (as covered by compile()), but not any other search fields.
      * Its copy constructor and copy operator invalidate the object,
      * This allows the ImageSearchInfo to just use the default copy/move constructors/operators.
      */
@@ -132,6 +136,7 @@ private:
     QMap<QString, QString> m_categoryMatchText;
     QString m_label;
     QString m_description;
+    WildcardCategoryMatcher m_freeformMatcher;
     QRegExp m_fnPattern;
     short m_rating = -1;
     short m_megapixel = 0;
@@ -139,12 +144,21 @@ private:
     int m_ratingSearchMode = 0;
     bool m_searchRAW = false;
     bool m_isNull = true;
+    /**
+     * @brief If a search is cacheable, its match result is stored in the ImageInfo.
+     * Only one match result can be cached.
+     * The matchGeneration is increased whenever the search info is changed, preventing stale results.
+     */
     bool m_isCacheable = true;
+    /**
+     * @brief m_matchGeneration is used to determine whether a cached match result is still valid.
+     * Remember to set it to nextGeneration() whenever the search info was changed and is cacheable!
+     */
+    int m_matchGeneration;
     mutable CompiledDataPrivate m_compiled;
 
     Exif::SearchInfo m_exifSearchInfo;
 
-    int m_matchGeneration;
     bool doMatch(ImageInfoPtr) const;
 
 #ifdef HAVE_MARBLE
