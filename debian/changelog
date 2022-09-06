@@ -1,3 +1,21 @@
+kphotoalbum (5.9.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bump Standards-Version to 4.6.1, no changes required.
+  * Remove inactive Uploaders, adding myself as one to avoid leaving the source
+    with no human maintainers.
+  * Fix day-of-week for changelog entry 2.1-1.
+  * Rename docs to kphotoalbum.docs to make it clear to which package it refers.
+  * Add a simple upstream/metadata file.
+  * Remove the explicit as-needed linking, as it is done by binutils now.
+  * Use execute_before_dh_auto_build to avoid invoking dh_auto_build manually.
+  * Update the build dependencies according to the upstream build system:
+    - bump cmake to 3.16.0
+    - bump Qt packages to 5.10
+  * Update lintian overrides.
+
+ -- Pino Toscano <pino@debian.org>  Tue, 06 Sep 2022 21:01:29 +0200
+
 kphotoalbum (5.8.1-2) unstable; urgency=medium
 
   * Team upload.
@@ -519,7 +537,7 @@ kimdaba (2.1-1) unstable; urgency=low
   * Package description extended to inform of the new plugin capability.
   * First version after C++ ABI change.
 
- -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Wed,  3 Sep 2005 23:23:55 +0200
+ -- David L. Moreno <david.lopez.moreno@hispalinux.es>  Sat, 03 Sep 2005 23:23:55 +0200
 
 kimdaba (2.0-4) unstable; urgency=low
 

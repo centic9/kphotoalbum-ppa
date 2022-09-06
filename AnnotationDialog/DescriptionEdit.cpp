@@ -1,7 +1,6 @@
-/* SPDX-FileCopyrightText: 2014-2018 Tobias Leupold <tobias.leupold@gmx.de>
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2014-2018 Tobias Leupold <tl at stonemx dot de>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #include "DescriptionEdit.h"
 
@@ -26,3 +25,5 @@ void AnnotationDialog::DescriptionEdit::keyPressEvent(QKeyEvent *event)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_DescriptionEdit.cpp"

@@ -10,11 +10,11 @@
 // SPDX-FileCopyrightText: 2009 Andrew Coles <andrew.i.coles@googlemail.com>
 // SPDX-FileCopyrightText: 2009 Christoph Feck <cfeck@kde.org>
 // SPDX-FileCopyrightText: 2010, 2012 Miika Turkia <miika.turkia@gmail.com>
-// SPDX-FileCopyrightText: 2012-2014, 2016, 2018-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012-2014, 2016, 2018-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
-// SPDX-FileCopyrightText: 2018, 2020 Tobias Leupold <tobias.leupold@gmx.de>
+// SPDX-FileCopyrightText: 2018, 2020 Tobias Leupold <tl at stonemx dot de>
 // SPDX-FileCopyrightText: 2019 Alexander Potashev <aspotashev@gmail.com>
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     migrateKDE4Config();
 
     KAboutData aboutData(
-        QStringLiteral("kphotoalbum"), //component name
+        QStringLiteral("kphotoalbum"), // component name
         i18n("KPhotoAlbum"), // display name
         QStringLiteral(KPA_VERSION),
         i18n("KDE Photo Album"), // short description
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
     //       Jesper gets ranked with the active authors for obvious reasons
     aboutData.addAuthor(i18n("Johannes Zarl-Zierl"), i18n("Development, Maintainer"), QStringLiteral("johannes@zarl-zierl.at"));
     aboutData.addAuthor(i18n("Robert Krawitz"), i18n("Development, Optimization"), QStringLiteral("rlk@alum.mit.edu"));
-    aboutData.addAuthor(i18n("Tobias Leupold"), i18n("Development, Releases, Website"), QStringLiteral("tobias.leupold@gmx.de"));
+    aboutData.addAuthor(i18n("Tobias Leupold"), i18n("Development, Releases, Website"), QStringLiteral("tl@stonemx.de"));
     aboutData.addAuthor(i18n("Jesper K. Pedersen"), i18n("Former Maintainer, Project Creator"), QStringLiteral("blackie@kde.org"));
     // not currently active:
     aboutData.addAuthor(i18n("Hassan Ibraheem"), QString(), QStringLiteral("hasan.ibraheem@gmail.com"));
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 
     // sort alphabetically:
     aboutData.addCredit(i18n("Marco Caldarelli"), i18n("Patch for making it possible to reread Exif info using a nice dialog."), QStringLiteral("caldarel@yahoo.it"));
-    aboutData.addCredit(i18n("Jean-Michel FAYARD"), i18n("(.) Patch with directory info made available through the browser. (.) Patch for adding a check box for \"and/or\" searches in the search page."), QStringLiteral("jmfayard@gmail.com"));
+    aboutData.addCredit(i18n("Jean-Michel FAYARD"), i18n("(.) Patch with folder info made available through the browser. (.) Patch for adding a check box for \"and/or\" searches in the search page."), QStringLiteral("jmfayard@gmail.com"));
     aboutData.addCredit(i18n("Matthias Füssel"), i18n("Geo Position page in browser and various bug fixes"), QStringLiteral("matthias.fuessel@gmx.net"));
     aboutData.addCredit(i18n("Wes Hardaker"), i18n("Some very useful features to improve workflow"), QStringLiteral("kpa@capturedonearth.com"));
     aboutData.addCredit(i18n("Reimar Imhof"), i18n("Patch to sort items in option listboxes"), QStringLiteral("Reimar.Imhof@netCologne.de"));

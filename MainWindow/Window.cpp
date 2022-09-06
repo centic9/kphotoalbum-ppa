@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -114,10 +115,11 @@
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <functional>
+#include <kconfigwidgets_version.h>
 #include <kio_version.h> // for #if KIO_VERSION...
 #include <ktip.h>
 #include <kwidgetsaddons_version.h>
-#include <functional>
 
 using namespace DB;
 
@@ -276,8 +278,10 @@ void MainWindow::Window::delayedInit()
         ImportExport::Import::imageImport(importUrl);
         qCInfo(TimingLog) << "MainWindow: imageImport:" << timer.restart() << "ms.";
     } else {
+#if KCONFIGWIDGETS_VERSION < QT_VERSION_CHECK(5, 83, 0)
         // I need to postpone this otherwise the tip dialog will not get focus on start up
         KTipDialog::showTip(this);
+#endif
     }
 
     qCInfo(TimingLog) << "MainWindow: Loading Exif DB:" << timer.restart() << "ms.";
@@ -363,7 +367,7 @@ void MainWindow::Window::slotCreateImageStack()
             == KMessageBox::Yes) {
             DB::ImageDB::instance()->unstack(list);
             if (!DB::ImageDB::instance()->stack(list)) {
-                KMessageBox::sorry(this,
+                KMessageBox::error(this,
                                    i18n("Unknown error, stack creation failed."),
                                    i18n("Stacking Error"));
                 return;
@@ -444,7 +448,7 @@ void MainWindow::Window::configureImages(bool oneAtATime)
 {
     const DB::FileNameList &list = selected();
     if (list.isEmpty()) {
-        KMessageBox::sorry(this, i18n("No item is selected."), i18n("No Selection"));
+        KMessageBox::error(this, i18n("No item is selected."), i18n("No Selection"));
     } else {
         DB::ImageInfoList images;
         for (const DB::FileName &fileName : list) {
@@ -570,7 +574,7 @@ void MainWindow::Window::slotAutoStackImages()
 {
     const DB::FileNameList list = selected();
     if (list.isEmpty()) {
-        KMessageBox::sorry(this, i18n("No item is selected."), i18n("No Selection"));
+        KMessageBox::error(this, i18n("No item is selected."), i18n("No Selection"));
         return;
     }
     QPointer<MainWindow::AutoStackImages> stacker = new AutoStackImages(this, list);
@@ -643,7 +647,7 @@ void MainWindow::Window::launchViewer(const DB::FileNameList &inputMediaList, bo
         mediaList = DB::ImageDB::instance()->currentScope(false);
 
     if (mediaList.isEmpty()) {
-        KMessageBox::sorry(this, i18n("There are no images to be shown."));
+        KMessageBox::error(this, i18n("There are no images to be shown."));
         return;
     }
 
@@ -879,7 +883,7 @@ void MainWindow::Window::setupMenuBar()
 #ifdef DOES_STILL_NOT_WORK_IN_KPA4
     a = actionCollection()->addAction(QString::fromLatin1("findImagesWithChangedMD5Sum"), this, SLOT(slotShowImagesWithChangedMD5Sum()));
     a->setText(i18n("Display Images and Videos with Changed MD5 Sum"));
-#endif //DOES_STILL_NOT_WORK_IN_KPA4
+#endif // DOES_STILL_NOT_WORK_IN_KPA4
 
     a = actionCollection()->addAction(QLatin1String("mergeDuplicates"), this, &Window::mergeDuplicates);
     a->setText(i18n("Merge duplicates"));
@@ -972,7 +976,9 @@ void MainWindow::Window::setupMenuBar()
     actionCollection()->addAction(QString::fromLatin1("colorScheme"), m_colorSchemeMenu);
 
     // The help menu
+#if KCONFIGWIDGETS_VERSION < QT_VERSION_CHECK(5, 83, 0)
     KStandardAction::tipOfDay(this, &Window::showTipOfDay, actionCollection());
+#endif
 
     a = actionCollection()->addAction(QString::fromLatin1("runDemo"), this, &Window::runDemo);
     a->setText(i18n("Run KPhotoAlbum Demo"));
@@ -985,7 +991,7 @@ void MainWindow::Window::setupMenuBar()
 
     // Context menu actions
     m_showExifDialog = actionCollection()->addAction(QString::fromLatin1("showExifInfo"), this, &Window::slotShowExifInfo);
-    m_showExifDialog->setText(i18n("Show Exif Info"));
+    m_showExifDialog->setText(i18n("Show Exif Info and file metadata"));
 
     m_recreateThumbnails = actionCollection()->addAction(QString::fromLatin1("recreateThumbnails"), m_thumbnailView, &ThumbnailView::ThumbnailFacade::slotRecreateThumbnail);
     m_recreateThumbnails->setText(i18n("Recreate Selected Thumbnails"));
@@ -999,11 +1005,11 @@ void MainWindow::Window::setupMenuBar()
     actionCollection()->setDefaultShortcut(m_usePreviousVideoThumbnail, Qt::CTRL + Qt::Key_Minus);
 
     m_copyAction = actionCollection()->addAction(QStringLiteral("copyImagesTo"), this, std::bind(&Window::triggerCopyLinkAction, this, CopyLinkEngine::Copy));
-    m_copyAction->setText(i18ncp("@action:inmenu", "Copy image to ...", "Copy images to ...", 1));
+    m_copyAction->setText(i18np("Copy image to ...", "Copy images to ...", 1));
     actionCollection()->setDefaultShortcut(m_copyAction, Qt::Key_F7);
 
     m_linkAction = actionCollection()->addAction(QStringLiteral("linkImagesTo"), this, std::bind(&Window::triggerCopyLinkAction, this, CopyLinkEngine::Link));
-    m_linkAction->setText(i18ncp("@action:inmenu", "Link image to ...", "Link images to ...", 1));
+    m_linkAction->setText(i18np("Link image to ...", "Link images to ...", 1));
     actionCollection()->setDefaultShortcut(m_linkAction, Qt::SHIFT + Qt::Key_F7);
 
     setupGUI(KXmlGuiWindow::ToolBar | Create | Save);
@@ -1076,7 +1082,10 @@ void MainWindow::Window::slotFilterChanged()
 
 void MainWindow::Window::showTipOfDay()
 {
+    // deprecated without in-program replacement
+#if KCONFIGWIDGETS_VERSION < QT_VERSION_CHECK(5, 83, 0)
     KTipDialog::showTip(this, QString(), true);
+#endif
 }
 
 void MainWindow::Window::runDemo()
@@ -1131,7 +1140,7 @@ bool MainWindow::Window::load()
         QFileInfo fi(configFile);
 
         if (!fi.dir().exists()) {
-            KMessageBox::error(this, i18n("<p>Could not open given index.xml as provided directory does not exist.<br />%1</p>", fi.absolutePath()));
+            KMessageBox::error(this, i18n("<p>Could not open given index.xml, as the provided folder does not exist.<br />%1</p>", fi.absolutePath()));
             return false;
         }
 
@@ -1213,11 +1222,11 @@ void MainWindow::Window::contextMenuEvent(QContextMenuEvent *e)
 
         menu.addSeparator();
 
-        m_copyAction->setText(i18ncp("@action:inmenu", "Copy image to ...", "Copy images to ...", selectionCount));
+        m_copyAction->setText(i18np("Copy image to ...", "Copy images to ...", selectionCount));
         menu.addAction(m_copyAction);
         m_copyAction->setEnabled(selectionCount > 0);
 
-        m_linkAction->setText(i18ncp("@action:inmenu", "Link image to ...", "Link images to ...", selectionCount));
+        m_linkAction->setText(i18np("Link image to ...", "Link images to ...", selectionCount));
         menu.addAction(m_linkAction);
         m_linkAction->setEnabled(selectionCount > 0);
 
@@ -1235,7 +1244,7 @@ void MainWindow::Window::triggerCopyLinkAction(CopyLinkEngine::Action action)
     }
 
     if (selection.isEmpty()) {
-        KMessageBox::sorry(this, i18n("No item is selected."), i18n("No Selection"));
+        KMessageBox::error(this, i18n("No item is selected."), i18n("No Selection"));
         return;
     }
 
@@ -1331,7 +1340,7 @@ void MainWindow::Window::rotateSelected(int angle)
 {
     const DB::FileNameList list = selected();
     if (list.isEmpty()) {
-        KMessageBox::sorry(this, i18n("No item is selected."),
+        KMessageBox::error(this, i18n("No item is selected."),
                            i18n("No Selection"));
     } else {
         for (const DB::FileName &fileName : list) {
@@ -1540,7 +1549,7 @@ void MainWindow::Window::slotShowListOfFiles()
     }
 
     if (out.isEmpty())
-        KMessageBox::sorry(this, i18n("No images matching your input were found."), i18n("No Matches"));
+        KMessageBox::information(this, i18n("No images matching your input were found."), i18n("No Matches"));
     else
         showThumbNails(out);
 }
@@ -1723,7 +1732,7 @@ void MainWindow::Window::slotThumbnailSizeChanged()
     QPixmapCache::clear();
 
     QString thumbnailSizeMsg = i18nc("@info:status",
-                                     //xgettext:no-c-format
+                                     // xgettext:no-c-format
                                      "Thumbnail width: %1px (storage size: %2px)",
                                      Settings::SettingsData::instance()->actualThumbnailSize(),
                                      Settings::SettingsData::instance()->thumbnailSize());
@@ -1852,11 +1861,6 @@ void MainWindow::Window::showInformation(const QString &msg, const QString &titl
     KMessageBox::information(this, msg, title, dialogId);
 }
 
-void MainWindow::Window::showSorry(const QString &msg, const QString &title, const QString &)
-{
-    KMessageBox::sorry(this, msg, title);
-}
-
 void MainWindow::Window::showError(const QString &msg, const QString &title, const QString &)
 {
     KMessageBox::error(this, msg, title);
@@ -1871,3 +1875,5 @@ bool MainWindow::Window::isDialogDisabled(const QString &dialogId)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_Window.cpp"

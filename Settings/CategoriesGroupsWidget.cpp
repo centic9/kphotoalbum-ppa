@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2014-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2014-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "CategoriesGroupsWidget.h"
 
@@ -21,7 +21,6 @@ Settings::CategoriesGroupsWidget::CategoriesGroupsWidget(QWidget *parent)
     setAcceptDrops(true);
 
     m_tagGroupsPage = dynamic_cast<TagGroupsPage *>(parentWidget());
-    m_oldTarget = nullptr;
 }
 
 Settings::CategoriesGroupsWidget::~CategoriesGroupsWidget()
@@ -100,3 +99,5 @@ void Settings::CategoriesGroupsWidget::dropEvent(QDropEvent *event)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_CategoriesGroupsWidget.cpp"

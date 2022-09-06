@@ -1,16 +1,33 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ViewerWidget.h"
+#include <config-kpa-videobackends.h>
 
 #include "CategoryImageConfig.h"
 #include "ImageDisplay.h"
 #include "InfoBox.h"
+#include "Logging.h"
+
+#if Phonon4Qt5_FOUND
+#include "PhononDisplay.h"
+#endif
+
+#if QtAV_FOUND
+#include "QtAVDisplay.h"
+#endif
+
 #include "SpeedDisplay.h"
 #include "TaggedArea.h"
 #include "TextDisplay.h"
+
+#if LIBVLC_FOUND
+#include "VLCDisplay.h"
+#endif
+
 #include "VideoDisplay.h"
 #include "VideoShooter.h"
 #include "VisibleOptionsMenu.h"
@@ -23,8 +40,10 @@
 #include <MainWindow/DirtyIndicator.h>
 #include <MainWindow/ExternalPopup.h>
 #include <MainWindow/Window.h>
+#include <Settings/VideoPlayerSelectorDialog.h>
 #include <Utilities/DescriptionUtil.h>
 #include <Utilities/VideoUtil.h>
+#include <kpabase/SettingsData.h>
 #include <kpathumbnails/ThumbnailCache.h>
 
 #include <KActionCollection>
@@ -32,11 +51,13 @@
 #include <KIO/CopyJob>
 #include <KIconLoader>
 #include <KLocalizedString>
+#include <KMessageBox>
 #include <QAction>
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QElapsedTimer>
 #include <QEventLoop>
@@ -52,6 +73,7 @@
 #include <QWheelEvent>
 #include <qglobal.h>
 
+#include <QMetaEnum>
 #include <functional>
 
 Viewer::ViewerWidget *Viewer::ViewerWidget::s_latest = nullptr;
@@ -64,6 +86,7 @@ Viewer::ViewerWidget *Viewer::ViewerWidget::latest()
 // Notice the parent is zero to allow other windows to come on top of it.
 Viewer::ViewerWidget::ViewerWidget(UsageType type, QMap<Qt::Key, QPair<QString, QString>> *macroStore)
     : QStackedWidget(nullptr)
+    , m_crashSentinel(QString::fromUtf8("videoBackend"))
     , m_current(0)
     , m_popup(nullptr)
     , m_showingFullScreen(false)
@@ -151,7 +174,7 @@ void Viewer::ViewerWidget::setupContextMenu()
     m_popup->addAction(m_setStackHead);
 
     m_showExifViewer = m_actions->addAction(QString::fromLatin1("viewer-show-exif-viewer"), this, &ViewerWidget::showExifViewer);
-    m_showExifViewer->setText(i18nc("@action:inmenu", "Show Exif Viewer"));
+    m_showExifViewer->setText(i18n("Show Exif Info and file metadata"));
     m_popup->addAction(m_showExifViewer);
 
     m_popup->addSeparator();
@@ -228,25 +251,18 @@ void Viewer::ViewerWidget::createRotateMenu()
     m_rotateMenu = new QMenu(m_popup);
     m_rotateMenu->setTitle(i18nc("@title:inmenu", "Rotate"));
 
-    QAction *action = m_actions->addAction(QString::fromLatin1("viewer-rotate90"), this, &ViewerWidget::rotate90);
-    action->setText(i18nc("@action:inmenu", "Rotate clockwise"));
-    action->setShortcut(Qt::Key_9);
-    m_actions->setShortcutsConfigurable(action, false);
-    m_rotateMenu->addAction(action);
+    auto addRotateAction = [this](const QString &title, int angle, const QKeySequence &shortcut, const QString &actionName) {
+        auto *action = new QAction(title);
+        connect(action, &QAction::triggered, [this, angle] { rotate(angle); });
+        action->setShortcut(shortcut);
+        m_actions->setShortcutsConfigurable(action, false);
+        m_actions->addAction(actionName, action);
+        m_rotateMenu->addAction(action);
+    };
 
-    action = m_actions->addAction(QString::fromLatin1("viewer-rotate180"), this, &ViewerWidget::rotate180);
-    action->setText(i18nc("@action:inmenu", "Flip Over"));
-    action->setShortcut(Qt::Key_8);
-    m_actions->setShortcutsConfigurable(action, false);
-    m_rotateMenu->addAction(action);
-
-    action = m_actions->addAction(QString::fromLatin1("viewer-rotare270"), this, &ViewerWidget::rotate270);
-    //                                                            ^ this is a typo, isn't it?!
-    action->setText(i18nc("@action:inmenu", "Rotate counterclockwise"));
-    action->setShortcut(Qt::Key_7);
-    m_actions->setShortcutsConfigurable(action, false);
-    m_rotateMenu->addAction(action);
-
+    addRotateAction(i18nc("@action:inmenu", "Rotate clockwise"), 90, Qt::Key_9, QString::fromLatin1("viewer-rotate90"));
+    addRotateAction(i18nc("@action:inmenu", "Flip Over"), 180, Qt::Key_8, QString::fromLatin1("viewer-rotate180"));
+    addRotateAction(i18nc("@action:inmenu", "Rotate counterclockwise"), 270, Qt::Key_7, QString::fromLatin1("viewer-rotate270"));
     m_popup->addMenu(m_rotateMenu);
 }
 
@@ -407,12 +423,15 @@ void Viewer::ViewerWidget::load(const DB::FileNameList &list, int index)
 
 void Viewer::ViewerWidget::load()
 {
+    m_display->stop();
     const bool isReadable = QFileInfo(m_list[m_current].absolute()).isReadable();
     const bool isVideo = isReadable && Utilities::isVideo(m_list[m_current]);
 
+    m_crashSentinel.suspend();
     if (isReadable) {
         if (isVideo) {
             m_display = m_videoDisplay;
+            m_crashSentinel.activate();
         } else
             m_display = m_imageDisplay;
     } else {
@@ -424,7 +443,6 @@ void Viewer::ViewerWidget::load()
     setCurrentWidget(m_display);
     m_infoBox->raise();
 
-    m_rotateMenu->setEnabled(!isVideo);
     m_categoryImagePopup->setEnabled(!isVideo);
     m_filterMenu->setEnabled(!isVideo);
     m_showExifViewer->setEnabled(!isVideo);
@@ -482,7 +500,7 @@ void Viewer::ViewerWidget::slotRemoveDeletedImages(const DB::FileNameList &image
 
 void Viewer::ViewerWidget::contextMenuEvent(QContextMenuEvent *e)
 {
-    if (m_videoDisplay) {
+    if (m_display == m_videoDisplay) {
         if (m_videoDisplay->isPaused())
             m_playPause->setText(i18nc("@action:inmenu Start video playback", "Play"));
         else
@@ -591,28 +609,10 @@ void Viewer::ViewerWidget::showPrev1000()
     showPrevN(1000);
 }
 
-void Viewer::ViewerWidget::rotate90()
+void Viewer::ViewerWidget::rotate(int angle)
 {
-    currentInfo()->rotate(90);
-    load();
-    invalidateThumbnail();
-    MainWindow::DirtyIndicator::markDirty();
-    emit imageRotated(m_list[m_current]);
-}
-
-void Viewer::ViewerWidget::rotate180()
-{
-    currentInfo()->rotate(180);
-    load();
-    invalidateThumbnail();
-    MainWindow::DirtyIndicator::markDirty();
-    emit imageRotated(m_list[m_current]);
-}
-
-void Viewer::ViewerWidget::rotate270()
-{
-    currentInfo()->rotate(270);
-    load();
+    currentInfo()->rotate(angle);
+    m_display->rotate(currentInfo());
     invalidateThumbnail();
     MainWindow::DirtyIndicator::markDirty();
     emit imageRotated(m_list[m_current]);
@@ -1186,55 +1186,40 @@ void Viewer::ViewerWidget::makeThumbnailImage()
     VideoShooter::go(currentInfo(), this);
 }
 
-struct SeekInfo {
-    SeekInfo(const QString &title, const char *name, int value, const QKeySequence &key)
-        : title(title)
-        , name(name)
-        , value(value)
-        , key(key)
-    {
-    }
-
-    QString title;
-    const char *name;
-    int value;
-    QKeySequence key;
-};
-
 void Viewer::ViewerWidget::createVideoMenu()
 {
     QMenu *menu = new QMenu(m_popup);
     menu->setTitle(i18nc("@title:inmenu", "Seek"));
     m_videoActions.append(m_popup->addMenu(menu));
 
-    const QList<SeekInfo> list = {
-        SeekInfo(i18nc("@action:inmenu", "10 minutes backward"), "seek-10-minute", -600000, QKeySequence(QString::fromLatin1("Ctrl+Left"))),
-        SeekInfo(i18nc("@action:inmenu", "1 minute backward"), "seek-1-minute", -60000, QKeySequence(QString::fromLatin1("Shift+Left"))),
-        SeekInfo(i18nc("@action:inmenu", "10 seconds backward"), "seek-10-second", -10000, QKeySequence(QString::fromLatin1("Left"))),
-        SeekInfo(i18nc("@action:inmenu", "1 seconds backward"), "seek-1-second", -1000, QKeySequence(QString::fromLatin1("Up"))),
-        SeekInfo(i18nc("@action:inmenu", "100 milliseconds backward"), "seek-100-millisecond", -100, QKeySequence(QString::fromLatin1("Shift+Up"))),
-        SeekInfo(i18nc("@action:inmenu", "100 milliseconds forward"), "seek+100-millisecond", 100, QKeySequence(QString::fromLatin1("Shift+Down"))),
-        SeekInfo(i18nc("@action:inmenu", "1 seconds forward"), "seek+1-second", 1000, QKeySequence(QString::fromLatin1("Down"))),
-        SeekInfo(i18nc("@action:inmenu", "10 seconds forward"), "seek+10-second", 10000, QKeySequence(QString::fromLatin1("Right"))),
-        SeekInfo(i18nc("@action:inmenu", "1 minute forward"), "seek+1-minute", 60000, QKeySequence(QString::fromLatin1("Shift+Right"))),
-        SeekInfo(i18nc("@action:inmenu", "10 minutes forward"), "seek+10-minute", 600000, QKeySequence(QString::fromLatin1("Ctrl+Right")))
-    };
-
     int count = 0;
-    for (const SeekInfo &info : list) {
+    auto add = [&](const QString &title, const char *name, int value, const QKeySequence &key) {
         if (count++ == 5) {
             QAction *sep = new QAction(menu);
             sep->setSeparator(true);
             menu->addAction(sep);
         }
 
-        QAction *seek = m_actions->addAction(QString::fromLatin1(info.name), m_videoDisplay, &VideoDisplay::seek);
-        seek->setText(info.title);
-        seek->setData(info.value);
-        seek->setShortcut(info.key);
+        QAction *seek = m_actions->addAction(QString::fromLatin1(name));
+        seek->setText(title);
+        seek->setShortcut(key);
         m_actions->setShortcutsConfigurable(seek, false);
+        connect(seek, &QAction::triggered, m_videoDisplay, [this, value] {
+            m_videoDisplay->relativeSeek(value);
+        });
         menu->addAction(seek);
-    }
+    };
+
+    add(i18nc("@action:inmenu", "10 minutes backward"), "seek-10-minute", -600000, QKeySequence(QString::fromLatin1("Ctrl+Left")));
+    add(i18nc("@action:inmenu", "1 minute backward"), "seek-1-minute", -60000, QKeySequence(QString::fromLatin1("Shift+Left")));
+    add(i18nc("@action:inmenu", "10 seconds backward"), "seek-10-second", -10000, QKeySequence(QString::fromLatin1("Left")));
+    add(i18nc("@action:inmenu", "1 seconds backward"), "seek-1-second", -1000, QKeySequence(QString::fromLatin1("Up")));
+    add(i18nc("@action:inmenu", "100 milliseconds backward"), "seek-100-millisecond", -100, QKeySequence(QString::fromLatin1("Shift+Up")));
+    add(i18nc("@action:inmenu", "100 milliseconds forward"), "seek+100-millisecond", 100, QKeySequence(QString::fromLatin1("Shift+Down")));
+    add(i18nc("@action:inmenu", "1 seconds forward"), "seek+1-second", 1000, QKeySequence(QString::fromLatin1("Down")));
+    add(i18nc("@action:inmenu", "10 seconds forward"), "seek+10-second", 10000, QKeySequence(QString::fromLatin1("Right")));
+    add(i18nc("@action:inmenu", "1 minute forward"), "seek+1-minute", 60000, QKeySequence(QString::fromLatin1("Shift+Right")));
+    add(i18nc("@action:inmenu", "10 minutes forward"), "seek+10-minute", 600000, QKeySequence(QString::fromLatin1("Ctrl+Right")));
 
     QAction *sep = new QAction(m_popup);
     sep->setSeparator(true);
@@ -1260,6 +1245,7 @@ void Viewer::ViewerWidget::createVideoMenu()
     m_videoActions.append(m_makeThumbnailImage);
 
     QAction *restart = m_actions->addAction(QString::fromLatin1("viewer-video-restart"), m_videoDisplay, &VideoDisplay::restart);
+    m_actions->setDefaultShortcut(restart, Qt::Key_Home);
     restart->setText(i18nc("@action:inmenu Restart video playback.", "Restart"));
     m_popup->addAction(restart);
     m_videoActions.append(restart);
@@ -1320,9 +1306,109 @@ void Viewer::ViewerWidget::moveInfoBox(int y)
     m_infoBox->move(m_infoBox->x(), y);
 }
 
+namespace Viewer
+{
+static VideoDisplay *instantiateVideoDisplay(QWidget *parent, KPABase::CrashSentinel &sentinel)
+{
+    auto backend = Settings::SettingsData::instance()->videoBackend();
+    if (backend == Settings::VideoBackend::NotConfigured) {
+        // just select a backend for the user if they didn't choose one
+        backend = Settings::preferredVideoBackend(backend);
+    }
+    if (sentinel.hasCrashInfo()) {
+        // KPA crashed during video playback - time to select a different backend based on crash data:
+        const auto badBackends = sentinel.crashHistory();
+        const auto backendEnum = QMetaEnum::fromType<Settings::VideoBackend>();
+        Settings::VideoBackends exclusions;
+        for (const auto &badBackend : badBackends) {
+            bool ok = false;
+            const auto be = static_cast<Settings::VideoBackend>(backendEnum.keyToValue(badBackend.constData(), &ok));
+            if (ok) {
+                exclusions |= be;
+            } else {
+                qCWarning(ViewerLog) << "Could not parse crash data:" << badBackend << "is an unknown video backend value! Ignoring...";
+            }
+        }
+        auto preferredBackend = Settings::preferredVideoBackend(backend, exclusions);
+        if (preferredBackend != backend) {
+            qCWarning(ViewerLog) << "A crash was registered during usage of the " << backend << "video backend - preferred new backend:" << preferredBackend;
+            const bool foundViableBackend = (preferredBackend != Settings::VideoBackend::NotConfigured);
+            if (foundViableBackend) {
+                const auto message = i18n(
+                    "<p>It seems that KPhotoAlbum previously crashed during video playback. "
+                    "On some platforms, this is a common problem with some video players.</p>"
+                    "<p>Press <i>Continue</i> to let KPhotoAlbum try a different backend...</p>");
+                const auto messageDetails = i18n(
+                    "<p>Video backend that was interrupted: <tt>%1</tt></p>"
+                    "<p>Video backend that will be used instead: <tt>%2</tt></p>",
+                    Settings::localizedEnumName(backend), Settings::localizedEnumName(preferredBackend));
+                const auto choice = KMessageBox::warningContinueCancelDetailed(parent, message, QString(), KStandardGuiItem::cont(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify, messageDetails);
+                if (choice == KMessageBox::Continue) {
+                    Settings::SettingsData::instance()->setVideoBackend(preferredBackend);
+                    backend = preferredBackend;
+                }
+            } else {
+                // if no viable backend was found, that means that all available backends crashed at some point
+                // i.e. there's no point in bugging the user again - just disable the crash detection completely
+                sentinel.disablePermanently();
+                const auto message = i18n(
+                    "<p>KPhotoAlbum has tried out all available video backends, but every one crashed at some point.</p>"
+                    "<p>Crash detection is now turned off.</p>");
+                KMessageBox::error(parent, message);
+            }
+        }
+    }
+    bool showSelectorDialog = backend == Settings::VideoBackend::NotConfigured;
+
+    if (showSelectorDialog) {
+        // no viable backend found yet -> we need the user to choose
+        Settings::VideoPlayerSelectorDialog dialog;
+        dialog.exec();
+        Settings::SettingsData::instance()->setVideoBackend(dialog.backend());
+        backend = Settings::SettingsData::instance()->videoBackend();
+        sentinel.clearCrashHistory();
+    }
+
+    switch (backend) {
+    case Settings::VideoBackend::VLC:
+#if LIBVLC_FOUND
+        return new VLCDisplay(parent);
+#else
+        qCWarning(ViewerLog) << "Video backend VLC not available. Selecting first available backend...";
+#endif
+        break;
+    case Settings::VideoBackend::QtAV:
+#if QtAV_FOUND
+        return new QtAVDisplay(parent);
+#else
+        qCWarning(ViewerLog) << "Video backend QtAV not available. Selecting first available backend...";
+#endif
+        break;
+    case Settings::VideoBackend::Phonon:
+#if Phonon4Qt5_FOUND
+        return new PhononDisplay(parent);
+#else
+        qCWarning(ViewerLog) << "Video backend Phonon not available. Selecting first available backend...";
+#endif
+        break;
+    case Settings::VideoBackend::NotConfigured:
+        qCCritical(ViewerLog) << "No viable video backend!";
+    }
+
+    static_assert(LIBVLC_FOUND || QtAV_FOUND || Phonon4Qt5_FOUND, "A video backend must be provided. The build system should bail out if none is available.");
+    Q_UNREACHABLE();
+    return nullptr;
+}
+}
+
 void Viewer::ViewerWidget::createVideoViewer()
 {
-    m_videoDisplay = new VideoDisplay(this);
+
+    m_videoDisplay = instantiateVideoDisplay(this, m_crashSentinel);
+    const auto backendEnum = QMetaEnum::fromType<Settings::VideoBackend>();
+    const auto backendName = backendEnum.valueToKey(static_cast<int>(Settings::SettingsData::instance()->videoBackend()));
+    m_crashSentinel.setCrashInfo(backendName);
+
     addWidget(m_videoDisplay);
     connect(m_videoDisplay, &VideoDisplay::stopped, this, &ViewerWidget::videoStopped);
 }
@@ -1330,6 +1416,7 @@ void Viewer::ViewerWidget::createVideoViewer()
 void Viewer::ViewerWidget::stopPlayback()
 {
     m_videoDisplay->stop();
+    m_crashSentinel.suspend();
 }
 
 void Viewer::ViewerWidget::invalidateThumbnail() const
@@ -1452,3 +1539,5 @@ void Viewer::ViewerWidget::triggerCopyLinkAction(MainWindow::CopyLinkEngine::Act
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ViewerWidget.cpp"

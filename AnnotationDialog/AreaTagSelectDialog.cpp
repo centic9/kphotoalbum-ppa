@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2016-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
-*/
+// SPDX-FileCopyrightText: 2016 Tobias Leupold <tl at stonemx dot de>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 // Local includes
 #include "AreaTagSelectDialog.h"
@@ -13,6 +13,7 @@
 
 // KDE includes
 #include <KLocalizedString>
+#include <kcompletion_version.h>
 
 // Qt includes
 #include <QGridLayout>
@@ -49,6 +50,7 @@ AnnotationDialog::AreaTagSelectDialog::AreaTagSelectDialog(AnnotationDialog::Res
     mainLayout->addWidget(tagSelect, 0, 1);
 
     m_messageLabel = new QLabel();
+    m_messageLabel->setWordWrap(true);
     mainLayout->addWidget(m_messageLabel, 1, 1);
     m_messageLabel->hide();
 
@@ -57,7 +59,11 @@ AnnotationDialog::AreaTagSelectDialog::AreaTagSelectDialog(AnnotationDialog::Res
     mainLayout->addWidget(tagMenu, 2, 0, 1, 2);
     connect(tagMenu, &QMenu::triggered, this, &QDialog::accept);
 
+#if KCOMPLETION_VERSION >= QT_VERSION_CHECK(5, 81, 0)
+    connect(tagSelect, &KLineEdit::returnKeyPressed, this, &AreaTagSelectDialog::slotSetTag);
+#else
     connect(tagSelect, &KLineEdit::returnPressed, this, &AreaTagSelectDialog::slotSetTag);
+#endif
     connect(tagSelect, &QLineEdit::textChanged, this, &AreaTagSelectDialog::slotValidateTag);
     connect(this, &QDialog::finished, this, &AreaTagSelectDialog::slotFinished);
 }
@@ -110,3 +116,5 @@ void AnnotationDialog::AreaTagSelectDialog::moveToArea(QPoint areaTopLeft)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_AreaTagSelectDialog.cpp"

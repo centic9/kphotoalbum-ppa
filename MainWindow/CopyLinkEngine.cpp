@@ -1,7 +1,6 @@
-/* SPDX-FileCopyrightText: 2021 Tobias Leupold <tobias.leupold@gmx.de>
-
-   SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-KDE-Accepted-GPL
-*/
+// SPDX-FileCopyrightText: 2021 Tobias Leupold <tl at stonemx dot de>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 // Local includes
 #include "CopyLinkEngine.h"
@@ -16,7 +15,8 @@
 namespace MainWindow
 {
 
-CopyLinkEngine::CopyLinkEngine(QObject *parent) : QObject(parent)
+CopyLinkEngine::CopyLinkEngine(QObject *parent)
+    : QObject(parent)
 {
 }
 
@@ -63,3 +63,5 @@ void CopyLinkEngine::selectTarget(QWidget *parent, QList<QUrl> &files, Action ac
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_CopyLinkEngine.cpp"

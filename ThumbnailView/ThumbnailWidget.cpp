@@ -145,7 +145,7 @@ void ThumbnailView::ThumbnailWidget::mousePressEvent(QMouseEvent *event)
     if (!m_mouseHandler->mousePressEvent(event))
         QListView::mousePressEvent(event);
 
-    if (event->button() & Qt::RightButton) //get out of selection mode if this is a right click
+    if (event->button() & Qt::RightButton) // get out of selection mode if this is a right click
         m_mouseHandler = &m_mouseTrackingHandler;
 }
 
@@ -443,3 +443,5 @@ bool ThumbnailView::ThumbnailWidget::isItemUnderCursorSelected() const
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ThumbnailWidget.cpp"

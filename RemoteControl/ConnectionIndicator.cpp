@@ -82,7 +82,7 @@ namespace
             return Acceptable;
         }
     };
-} //namespace
+} // namespace
 
 void ConnectionIndicator::contextMenuEvent(QContextMenuEvent *)
 {
@@ -146,3 +146,5 @@ void ConnectionIndicator::waitingAnimation()
 }
 
 } // namespace RemoteControl
+
+#include "moc_ConnectionIndicator.cpp"

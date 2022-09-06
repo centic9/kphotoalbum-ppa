@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2014-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2014-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 // The basic resizable QFrame has been shamelessly stolen from
 // http://qt-project.org/forums/viewthread/24104
@@ -11,7 +11,6 @@
 
 // Local includes
 #include "AreaTagSelectDialog.h"
-#include "CompletableLineEdit.h"
 #include "ImagePreview.h"
 #include "ImagePreviewWidget.h"
 #include "Logging.h"
@@ -40,9 +39,12 @@ constexpr int MOVE = 0b10000000;
 
 AnnotationDialog::ResizableFrame::ResizableFrame(QWidget *parent)
     : QFrame(parent)
+    , m_dialog(nullptr)
 {
     m_preview = dynamic_cast<ImagePreview *>(parent);
+    Q_ASSERT(m_preview);
     m_previewWidget = dynamic_cast<ImagePreviewWidget *>(m_preview->parentWidget());
+    Q_ASSERT(m_previewWidget);
 
     setFrameShape(QFrame::Box);
     setMouseTracking(true);
@@ -525,3 +527,5 @@ bool AnnotationDialog::ResizableFrame::isTidied() const
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ResizableFrame.cpp"
