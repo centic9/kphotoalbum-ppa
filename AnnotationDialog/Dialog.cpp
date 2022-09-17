@@ -1,7 +1,27 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2003 David Faure <faure@kde.org>
+// SPDX-FileCopyrightText: 2003 Lukáš Tinkl <lukas@kde.org>
+// SPDX-FileCopyrightText: 2003-2005 Stephan Binner <binner@kde.org>
+// SPDX-FileCopyrightText: 2003-2013, 2019, 2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2004 Andrew Coles <andrew.i.coles@googlemail.com>
+// SPDX-FileCopyrightText: 2005, 2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2006-2008, 2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2007, 2009 Laurent Montel <montel@kde.org>
+// SPDX-FileCopyrightText: 2007-2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2009-2010 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+// SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2012 Andreas Neustifter <andreas.neustifter@gmail.com>
+// SPDX-FileCopyrightText: 2012-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
+// SPDX-FileCopyrightText: 2014-2020 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2017 Raymond Wooninck <tittiatcoke@gmail.com>
+// SPDX-FileCopyrightText: 2017, 2019-2020 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "Dialog.h"
 
@@ -377,7 +397,8 @@ QWidget *AnnotationDialog::Dialog::createDateWidget(ShortCutManager &shortCutMan
     m_rating = new KRatingWidget;
     m_rating->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     lay9->addWidget(m_rating, 0, Qt::AlignCenter);
-    connect(m_rating, static_cast<void (KRatingWidget::*)(uint)>(&KRatingWidget::ratingChanged), this, &Dialog::slotRatingChanged);
+    // cast for versions of KRatingWidget where ratingChanged(uint) is still a thing:
+    connect(m_rating, static_cast<void (KRatingWidget::*)(int)>(&KRatingWidget::ratingChanged), this, &Dialog::slotRatingChanged);
 
     m_ratingSearchLabel = new QLabel(i18n("Rating search mode:"));
     lay9->addWidget(m_ratingSearchLabel);
@@ -775,8 +796,8 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search(DB::ImageSearchInfo *search
         for (const ListSelect *ls : qAsConst(m_optionList)) {
             m_oldSearch.setCategoryMatchText(ls->category(), ls->text());
         }
-        //FIXME: for the user to search for 0-rated images, he must first change the rating to anything > 0
-        //then change back to 0 .
+        // FIXME: for the user to search for 0-rated images, he must first change the rating to anything > 0
+        // then change back to 0 .
         if (m_ratingChanged)
             m_oldSearch.setRating(m_rating->rating());
 
@@ -944,12 +965,12 @@ void AnnotationDialog::Dialog::slotSaveWindowSetup()
 
     QFile file(QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory()));
     if (!file.open(QIODevice::WriteOnly)) {
-        KMessageBox::sorry(this,
+        KMessageBox::error(this,
                            i18n("<p>Could not save the window layout.</p>"
                                 "File %1 could not be opened because of the following error: %2",
                                 file.fileName(), file.errorString()));
     } else if (!(file.write(data) && file.flush())) {
-        KMessageBox::sorry(this,
+        KMessageBox::error(this,
                            i18n("<p>Could not save the window layout.</p>"
                                 "File %1 could not be written because of the following error: %2",
                                 file.fileName(), file.errorString()));
@@ -1224,7 +1245,20 @@ void AnnotationDialog::Dialog::slotStartDateChanged(const DB::ImageDate &date)
 void AnnotationDialog::Dialog::loadWindowLayout()
 {
     QString fileName = QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
-    if (!QFileInfo(fileName).exists()) {
+    bool layoutLoaded = false;
+
+    if (QFileInfo::exists(fileName)) {
+        QFile file(fileName);
+        if (file.open(QIODevice::ReadOnly)) {
+            QByteArray data = file.readAll();
+            m_dockWindow->restoreState(data);
+            layoutLoaded = true;
+        } else {
+            qCWarning(AnnotationDialogLog) << "Window layout file" << fileName << "exists but could not be opened!";
+        }
+    }
+
+    if (!layoutLoaded) {
         // create default layout
         // label/date/rating in a visual block with description:
         m_dockWindow->splitDockWidget(m_generalDock, m_descriptionDock, Qt::Vertical);
@@ -1241,11 +1275,6 @@ void AnnotationDialog::Dialog::loadWindowLayout()
 #endif
         return;
     }
-
-    QFile file(fileName);
-    file.open(QIODevice::ReadOnly);
-    QByteArray data = file.readAll();
-    m_dockWindow->restoreState(data);
 }
 
 void AnnotationDialog::Dialog::setupActions()
@@ -1356,7 +1385,7 @@ std::tuple<StringSet, StringSet, StringSet> AnnotationDialog::Dialog::selectionF
     return std::make_tuple(itemsOnAllImages, itemsOnSomeImages, itemsOnNoImages);
 }
 
-void AnnotationDialog::Dialog::slotRatingChanged(unsigned int)
+void AnnotationDialog::Dialog::slotRatingChanged(int)
 {
     m_ratingChanged = true;
 }
@@ -1762,3 +1791,5 @@ void AnnotationDialog::Dialog::mapLoadingFinished(bool mapHasImages, bool allIma
 #endif
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_Dialog.cpp"

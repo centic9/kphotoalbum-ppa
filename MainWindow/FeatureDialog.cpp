@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "FeatureDialog.h"
+#include <config-kpa-videobackends.h>
 
 #include <kpabase/config-kpa-marble.h>
 #include <kpabase/config-kpa-plugins.h>
@@ -18,7 +20,6 @@
 #include <QStandardPaths>
 #include <QTextBrowser>
 #include <QVBoxLayout>
-#include <phonon/backendcapabilities.h>
 
 using namespace MainWindow;
 
@@ -41,7 +42,7 @@ FeatureDialog::FeatureDialog(QWidget *parent)
 
                  "<p>In case you are missing a feature and you did not compile KPhotoAlbum yourself, please do consider doing so. "
                  "It really is not that hard. If you need help compiling KPhotoAlbum, feel free to ask on the "
-                 "<a href=\"https://mail.kdab.com/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></p>"
+                 "<a href=\"https://mail.kde.org/cgi-bin/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing list</a></p>"
 
                  "<p>The steps to compile KPhotoAlbum can be seen on <a href=\"https://community.kde.org/KPhotoAlbum/build_instructions\">"
                  "the KPhotoAlbum home page</a>. If you have never compiled a KDE application, then please ensure that "
@@ -61,14 +62,7 @@ FeatureDialog::FeatureDialog(QWidget *parent)
                  "</p>");
 
     text += i18n("<h1><a name=\"video\">Video support</a></h1>"
-                 "<p>KPhotoAlbum relies on Qt's Phonon architecture for displaying videos; this in turn relies on GStreamer.</p>");
-
-    QStringList mimeTypes = supportedVideoMimeTypes();
-    mimeTypes.sort();
-    if (mimeTypes.isEmpty())
-        text += i18n("<p>No video mime types found, which indicates that either Qt was compiled without phonon support, or there were missing codecs</p>");
-    else
-        text += i18n("<p>Phonon is capable of playing movies of these mime types:<ul><li>%1</li></ul></p>", mimeTypes.join(QString::fromLatin1("</li><li>")));
+                 "<p>KPhotoAlbum relies on QtAv for displaying videos; this in turn relies on ffmpeg</p>");
 
     text += i18n("<h1><a name=\"videoPreview\">Video thumbnail support</a></h1>"
                  "<p>KPhotoAlbum can use <tt>ffmpeg</tt> to extract thumbnails from videos. These thumbnails are used to preview "
@@ -150,7 +144,7 @@ bool MainWindow::FeatureDialog::hasAllFeaturesAvailable()
 
 struct Data {
     Data() { }
-    Data(const QString &title, const QString tag, bool featureFound)
+    Data(const QString &title, const QString &tag, bool featureFound)
         : title(title)
         , tag(tag)
         , featureFound(featureFound)
@@ -158,7 +152,7 @@ struct Data {
     }
     QString title;
     QString tag;
-    bool featureFound;
+    bool featureFound = false;
 };
 
 QString MainWindow::FeatureDialog::featureString()
@@ -167,7 +161,6 @@ QString MainWindow::FeatureDialog::featureString()
     features << Data(i18n("Plug-ins available"), QString::fromLatin1("#purpose"), hasPurposeSupport());
     features << Data(i18n("SQLite database support (used for Exif searches)"), QString::fromLatin1("#database"), hasEXIV2DBSupport());
     features << Data(i18n("Map view for geotagged images."), QString::fromLatin1("#geomap"), hasGeoMapSupport());
-    features << Data(i18n("Video support"), QString::fromLatin1("#video"), !supportedVideoMimeTypes().isEmpty());
     features << Data(i18n("Video thumbnail support"), QString::fromLatin1("#videoPreview"), hasVideoThumbnailer());
     features << Data(i18n("Video metadata support"), QString::fromLatin1("#videoInfo"), hasVideoProber());
 
@@ -187,9 +180,6 @@ QString MainWindow::FeatureDialog::featureString()
     return result;
 }
 
-QStringList MainWindow::FeatureDialog::supportedVideoMimeTypes()
-{
-    return Phonon::BackendCapabilities::availableMimeTypes();
-}
-
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_FeatureDialog.cpp"

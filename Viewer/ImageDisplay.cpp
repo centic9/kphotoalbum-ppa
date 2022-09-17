@@ -155,10 +155,9 @@ void Viewer::ImageDisplay::mouseReleaseEvent(QMouseEvent *event)
     update();
 }
 
-bool Viewer::ImageDisplay::setImage(DB::ImageInfoPtr info, bool forward)
+bool Viewer::ImageDisplay::setImageImpl(DB::ImageInfoPtr info, bool forward)
 {
     qCDebug(ViewerLog) << "setImage(" << info->fileName().relative() << "," << forward << ")";
-    m_info = info;
     m_loadedImage = QImage();
 
     // Find the index of the current image
@@ -273,7 +272,7 @@ void Viewer::ImageDisplay::zoomOut()
     qCDebug(ViewerLog, "zoomOut()");
     QPoint size = (m_zEnd - m_zStart);
 
-    //Bug 150971, Qt tries to render bigger and bigger images (10000x10000), hence running out of memory.
+    // Bug 150971, Qt tries to render bigger and bigger images (10000x10000), hence running out of memory.
     if ((size.x() * size.y() > 25 * 1024 * 1024))
         return;
 
@@ -683,6 +682,11 @@ void Viewer::ImageDisplay::zoomPixelForPixel()
     potentiallyLoadFullSize();
 }
 
+void Viewer::ImageDisplay::rotate(const DB::ImageInfoPtr &info)
+{
+    setImage(info, m_forward);
+}
+
 void Viewer::ImageDisplay::updateZoomPoints(const Settings::StandardViewSize type, const QSize &imgSize)
 {
     const int iw = imgSize.width();
@@ -743,3 +747,5 @@ void Viewer::ImageDisplay::hideEvent(QHideEvent *)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ImageDisplay.cpp"

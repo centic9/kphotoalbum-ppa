@@ -10,21 +10,20 @@
 # SPDX-FileCopyrightText: 2010, 2015, 2019 David Faure <faure@kde.org>
 # SPDX-FileCopyrightText: 2012 Albert Astals Cid <tsdgeos@terra.es>
 # SPDX-FileCopyrightText: 2012-2013 Andreas Neustifter <andreas.neustifter@gmail.com>
-# SPDX-FileCopyrightText: 2012-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+# SPDX-FileCopyrightText: 2012-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 # SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
-# SPDX-FileCopyrightText: 2014-2021 Tobias Leupold <tobias.leupold@gmx.de>
+# SPDX-FileCopyrightText: 2014-2022 Tobias Leupold <tl at stonemx dot de>
 # SPDX-FileCopyrightText: 2016 Christoph Feck <cfeck@kde.org>
 # SPDX-FileCopyrightText: 2016 Luigi Toscano <luigi.toscano@tiscali.it>
 # SPDX-FileCopyrightText: 2016 Michael Palimaka <kensington@gentoo.org>
 # SPDX-FileCopyrightText: 2017 Ben Cooksley <bcooksley@kde.org>
 # SPDX-FileCopyrightText: 2018, 2020 Robert Krawitz <rlk@alum.mit.edu>
 # SPDX-FileCopyrightText: 2020 Wes Hardaker <kpa@capturedonearth.com>
-# SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-cmake_minimum_required(VERSION 3.3.0)
-project(kphotoalbum LANGUAGES CXX VERSION 5.8.1)
+cmake_minimum_required(VERSION 3.16.0)
+project(kphotoalbum LANGUAGES CXX VERSION 5.9.1)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -52,15 +51,17 @@ add_definitions(
     -DQT_NO_CAST_FROM_BYTEARRAY
     -DQT_DEPRECATED_WARNINGS
     -DQT_STRICT_ITERATORS
-    -DQT_DISABLE_DEPRECATED_BEFORE=0x050900
+    -DQT_DISABLE_DEPRECATED_BEFORE=0x050A00
     -DQT_DISABLE_Q_FOREACH
     )
 
 ########### dependencies  ###############
 
-find_package(Qt5 5.9 REQUIRED COMPONENTS Core Sql Xml Widgets Test)
-find_package(Phonon4Qt5 REQUIRED)
-find_package(KF5 5.44 REQUIRED COMPONENTS Archive Completion Config CoreAddons DocTools I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
+find_package(Qt5 5.10 REQUIRED COMPONENTS Core Sql Xml Widgets Test)
+find_package(Phonon4Qt5)
+find_package(QtAV)
+find_package(LIBVLC)
+find_package(KF5 5.44 REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
@@ -93,6 +94,10 @@ if(Marble_FOUND)
     include(MarbleChecks)
 endif()
 
+if(NOT Phonon4Qt5_FOUND AND NOT QtAV_FOUND AND NOT LIBVLC_FOUND)
+    message(FATAL_ERROR "A video backend must be provided. CMake failed to find any of Phonon, QtAV, and VLC")
+endif()
+
 set(libdatebar_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DateBar/documentation.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/DateBar/DateBarWidget.cpp"
@@ -118,6 +123,7 @@ set(libSettings_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/BirthdayPage.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/DateTableWidgetItem.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/Logging.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Settings/VideoPlayerSelectorDialog.cpp"
     )
 
 set(libxmldb_SRCS
@@ -186,6 +192,8 @@ set(libViewer_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VideoShooter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/TaggedArea.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/Logging.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VideoToolBar.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/Slider.cpp"
     )
 
 set(libCategoryListView_SRCS
@@ -371,6 +379,7 @@ set(libExif_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/ReReadDialog.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/Grid.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Exif/SearchDialogSettings.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Exif/MetaDataDisplay.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/ExifPage.cpp"
     )
 
@@ -434,6 +443,7 @@ add_subdirectory(icons)
 add_subdirectory(demo)
 add_subdirectory(themes)
 add_subdirectory(scripts)
+
 add_subdirectory(doc)
 
 
@@ -488,7 +498,6 @@ target_link_libraries(kphotoalbum
     KF5::TextWidgets
     KF5::XmlGui
     KF5::WidgetsAddons
-    Phonon::phonon4qt5
     ${libRemoteControl_LIBS}
     )
 
@@ -504,15 +513,43 @@ if(Marble_FOUND)
     target_link_libraries(kphotoalbum PRIVATE Marble)
 endif()
 
+if(QtAV_FOUND)
+  include_directories(${QTAV_CORE_INCLUDE_DIR})
+  target_sources(kphotoalbum PRIVATE
+      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVDisplay.cpp"
+      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVVideoToolBar.cpp"
+  )
+  target_link_libraries(kphotoalbum PRIVATE ${QTAV_LIBRARIES})
+endif()
+
+if(LIBVLC_FOUND)
+  include_directories(${LIBVLC_INCLUDE_DIR})
+  target_sources(kphotoalbum PRIVATE
+      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/VLCDisplay.cpp"
+  )
+  target_link_libraries(kphotoalbum PRIVATE ${LIBVLC_LIBRARY})
+endif()
+
+if (Phonon4Qt5_FOUND)
+  target_sources(kphotoalbum PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/PhononDisplay.cpp"
+  )
+  target_link_libraries(kphotoalbum PRIVATE Phonon::phonon4qt5)
+endif()
 install(TARGETS kphotoalbum ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kpa-thumbnailtool)
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config-kpa-videobackends.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-videobackends.h
+)
 
 ########### install files ###############
 
 install(PROGRAMS org.kde.kphotoalbum.desktop org.kde.kphotoalbum-import.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES kphotoalbumrc DESTINATION ${KDE_INSTALL_CONFDIR})
-install(FILES tips default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
+install(FILES default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
 install(FILES kphotoalbumui.rc DESTINATION "${KDE_INSTALL_KXMLGUI5DIR}/kphotoalbum")
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 

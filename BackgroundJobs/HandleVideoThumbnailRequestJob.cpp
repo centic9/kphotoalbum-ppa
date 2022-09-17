@@ -82,7 +82,7 @@ void HandleVideoThumbnailRequestJob::removeFullScaleFrame(const DB::FileName &fi
 
 void HandleVideoThumbnailRequestJob::sendResult(QImage image)
 {
-    //if ( m_request->isRequestStillValid(m_request) ) {
+    // if ( m_request->isRequestStillValid(m_request) ) {
     image = image.scaled(QSize(m_request->width(), m_request->height()), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     if (m_request->isThumbnailRequest()) {
         m_thumbnailCache->insert(m_request->databaseFileName(), image);
@@ -99,3 +99,5 @@ QImage HandleVideoThumbnailRequestJob::brokenImage() const
 
 } // namespace BackgroundJobs
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_HandleVideoThumbnailRequestJob.cpp"

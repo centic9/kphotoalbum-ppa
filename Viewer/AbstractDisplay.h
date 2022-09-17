@@ -6,8 +6,8 @@
 #ifndef ABSTRACTDISPLAY_H
 #define ABSTRACTDISPLAY_H
 
+#include <DB/ImageInfo.h>
 #include <DB/ImageInfoPtr.h>
-
 #include <qwidget.h>
 
 namespace Viewer
@@ -18,15 +18,18 @@ class AbstractDisplay : public QWidget
 
 public:
     explicit AbstractDisplay(QWidget *parent);
-    virtual bool setImage(DB::ImageInfoPtr info, bool forward) = 0;
+    bool setImage(DB::ImageInfoPtr info, bool forward);
 
 public slots:
-    virtual void zoomIn() = 0;
-    virtual void zoomOut() = 0;
-    virtual void zoomFull() = 0;
-    virtual void zoomPixelForPixel() = 0;
+    virtual void zoomIn() {};
+    virtual void zoomOut() {};
+    virtual void zoomFull() {};
+    virtual void zoomPixelForPixel() {};
+    virtual void stop() = 0;
+    virtual void rotate(const DB::ImageInfoPtr &info) = 0;
 
 protected:
+    virtual bool setImageImpl(DB::ImageInfoPtr info, bool forward) = 0;
     DB::ImageInfoPtr m_info;
 };
 

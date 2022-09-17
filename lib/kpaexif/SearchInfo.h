@@ -1,5 +1,9 @@
-// SPDX-FileCopyrightText: 2003-2019 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2005-2007, 2010, 2012 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2007 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2013 Dominik Broj <broj.dominik@gmail.com>
+// SPDX-FileCopyrightText: 2013, 2015, 2019-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -39,8 +43,12 @@ public:
     public:
         Range() { }
         explicit Range(const QString &key);
-        bool isLowerMin, isLowerMax, isUpperMin, isUpperMax;
-        double min, max;
+        bool isLowerMin = false;
+        bool isLowerMax = false;
+        bool isUpperMin = false;
+        bool isUpperMax = false;
+        double min = 0;
+        double max = 0;
         QString key;
     };
 
@@ -79,7 +87,7 @@ private:
     CameraList m_cameras;
     LensList m_lenses;
     mutable DB::FileNameSet m_matches;
-    mutable bool m_emptyQuery;
+    mutable bool m_emptyQuery = false;
 };
 
 }

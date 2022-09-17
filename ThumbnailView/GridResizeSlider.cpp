@@ -81,7 +81,7 @@ void ThumbnailView::GridResizeSlider::wheelEvent(QWheelEvent *event)
 void ThumbnailView::GridResizeSlider::enterGridResizingMode()
 {
     if (m_resizing)
-        return; //already resizing
+        return; // already resizing
     m_resizing = true;
 
     qCDebug(ThumbnailViewLog) << "Entering grid resizing mode";
@@ -92,7 +92,7 @@ void ThumbnailView::GridResizeSlider::enterGridResizingMode()
 void ThumbnailView::GridResizeSlider::leaveGridResizingMode()
 {
     if (!m_resizing)
-        return; //not resizing
+        return; // not resizing
     m_resizing = false;
     qCDebug(ThumbnailViewLog) << "Leaving grid resizing mode";
 
@@ -121,3 +121,5 @@ void ThumbnailView::GridResizeSlider::setMaximum(int size)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_GridResizeSlider.cpp"

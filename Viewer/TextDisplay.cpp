@@ -27,7 +27,7 @@ Viewer::TextDisplay::TextDisplay(QWidget *parent)
     m_text->setAlignment(Qt::AlignCenter);
 }
 
-bool Viewer::TextDisplay::setImage(DB::ImageInfoPtr info, bool forward)
+bool Viewer::TextDisplay::setImageImpl(DB::ImageInfoPtr info, bool forward)
 {
     Q_UNUSED(info)
     Q_UNUSED(forward)
@@ -40,3 +40,5 @@ void Viewer::TextDisplay::setText(const QString text)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_TextDisplay.cpp"

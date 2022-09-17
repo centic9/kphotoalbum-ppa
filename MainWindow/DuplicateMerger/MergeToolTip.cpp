@@ -1,5 +1,5 @@
 /* SPDX-FileCopyrightText: 2012-2018 Jesper K. Pedersen <blackie@kde.org>
-  
+
    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
@@ -36,3 +36,5 @@ void MergeToolTip::placeWindow()
 } // namespace MainWindow
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_MergeToolTip.cpp"

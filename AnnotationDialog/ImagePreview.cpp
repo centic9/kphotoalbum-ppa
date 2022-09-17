@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ImagePreview.h"
 
@@ -25,10 +25,7 @@ using namespace AnnotationDialog;
 
 ImagePreview::ImagePreview(QWidget *parent)
     : QLabel(parent)
-    , m_selectionRect(0)
-    , m_aspectRatio(1)
     , m_reloadTimer(new QTimer(this))
-    , m_areaCreationEnabled(false)
 {
     setAlignment(Qt::AlignCenter);
     setMinimumSize(64, 64);
@@ -112,8 +109,8 @@ void ImagePreview::reload()
             setCurrentImage(m_preloader.getImage());
         } else if (m_lastImage.has(m_info.fileName(), m_info.angle())) {
             qCDebug(AnnotationDialogLog) << "reload(): set last image";
-            //don't pass by reference, the additional constructor is needed here
-            //see setCurrentImage for the reason (where m_lastImage is changed...)
+            // don't pass by reference, the additional constructor is needed here
+            // see setCurrentImage for the reason (where m_lastImage is changed...)
             setCurrentImage(QImage(m_lastImage.getImage()));
         } else {
             if (!m_currentImage.has(m_info.fileName(), m_info.angle())) {
@@ -182,9 +179,9 @@ void ImagePreview::pixmapLoaded(ImageManager::ImageRequest *request, const QImag
 
 void ImagePreview::anticipate(DB::ImageInfo &info1)
 {
-    //We cannot call m_preloader.preloadImage right here:
-    //this function is called before reload(), so if we preload here,
-    //the preloader will always be loading the image after the next image.
+    // We cannot call m_preloader.preloadImage right here:
+    // this function is called before reload(), so if we preload here,
+    // the preloader will always be loading the image after the next image.
     m_anticipated.set(info1.fileName(), info1.angle());
 }
 
@@ -244,7 +241,7 @@ void ImagePreview::PreviewLoader::pixmapLoaded(ImageManager::ImageRequest *reque
 
 void ImagePreview::PreviewLoader::preloadImage(const DB::FileName &fileName, int width, int height, int angle)
 {
-    //no need to worry about concurrent access: everything happens in the event loop thread
+    // no need to worry about concurrent access: everything happens in the event loop thread
     reset();
     ImageManager::AsyncLoader::instance()->stop(this);
     ImageManager::ImageRequest *request = new ImageManager::ImageRequest(fileName, QSize(width, height), angle, this);
@@ -509,7 +506,7 @@ void ImagePreview::acceptProposedTag(QPair<QString, QString> tagData, ResizableF
          categoryIt != categories.constEnd(); ++categoryIt) {
         if ((*categoryIt)->name() == tagData.first) {
             if (!(*categoryIt)->positionable()) {
-                KMessageBox::sorry(this, i18n("<p><b>Can't associate tag \"%2\"</b></p>"
+                KMessageBox::error(this, i18n("<p><b>Can't associate tag \"%2\"</b></p>"
                                               "<p>The category \"%1\" the tag \"%2\" belongs to is not positionable.</p>"
                                               "<p>If you want to use this tag, change this in the settings dialog. "
                                               "If this tag shouldn't be in the recognition database anymore, it can "
@@ -523,7 +520,7 @@ void ImagePreview::acceptProposedTag(QPair<QString, QString> tagData, ResizableF
     }
 
     if (!categoryFound) {
-        KMessageBox::sorry(this, i18n("<p><b>Can't associate tag \"%2\"</b></p>"
+        KMessageBox::error(this, i18n("<p><b>Can't associate tag \"%2\"</b></p>"
                                       "<p>The category \"%1\" the tag \"%2\" belongs to does not exist.</p>"
                                       "<p>If you want to use this tag, add this category and mark it as positionable. "
                                       "If this tag shouldn't be in the recognition database anymore, it can "
@@ -562,3 +559,5 @@ float ImagePreview::distance(QPoint point1, QPoint point2)
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ImagePreview.cpp"

@@ -320,19 +320,19 @@ void Settings::TagGroupsPage::slotAddGroup()
     }
 
     //// reject existing group names:
-    //KStringListValidator validator(groups);
-    //QString newSubCategory = KInputDialog::getText(i18nc("@title:window","New Group"),
-    //                                               i18nc("@label:textbox","Group name:"),
-    //                                               QString() /*value*/,
-    //                                               &ok,
-    //                                               this /*parent*/,
-    //                                               &validator,
-    //                                               QString() /*mask*/,
-    //                                               QString() /*WhatsThis*/,
-    //                                               tags /*completion*/
-    //                                               );
-    // FIXME: KF5-port: QInputDialog does not accept a validator,
-    // and KInputDialog was removed in KF5. -> Reimplement input validation using other stuff
+    // KStringListValidator validator(groups);
+    // QString newSubCategory = KInputDialog::getText(i18nc("@title:window","New Group"),
+    //                                                i18nc("@label:textbox","Group name:"),
+    //                                                QString() /*value*/,
+    //                                                &ok,
+    //                                                this /*parent*/,
+    //                                                &validator,
+    //                                                QString() /*mask*/,
+    //                                                QString() /*WhatsThis*/,
+    //                                                tags /*completion*/
+    //                                                );
+    //  FIXME: KF5-port: QInputDialog does not accept a validator,
+    //  and KInputDialog was removed in KF5. -> Reimplement input validation using other stuff
     QString newSubCategory = QInputDialog::getText(this,
                                                    i18nc("@title:window", "New Group"),
                                                    i18nc("@label:textbox", "Group name:"),
@@ -348,7 +348,7 @@ void Settings::TagGroupsPage::slotAddGroup()
     // Let's see if we already have this group
     if (groups.contains(newSubCategory)) {
         // (with the validator working correctly, we should not get to this point)
-        KMessageBox::sorry(this,
+        KMessageBox::error(this,
                            i18nc("@info", "<p>The group \"%1\" already exists.</p>", newSubCategory),
                            i18nc("@title:window", "Cannot add group"));
         return;
@@ -439,7 +439,7 @@ void Settings::TagGroupsPage::slotRenameGroup()
 
     if (groups.contains(newSubCategoryName)) {
         // (with the validator working correctly, we should not get to this point)
-        KMessageBox::sorry(this,
+        KMessageBox::error(this,
                            xi18nc("@info", "<para>Cannot rename group \"%1\" to \"%2\": "
                                            "\"%2\" already exists in category \"%3\"</para>",
                                   m_currentSubCategory,
@@ -776,3 +776,5 @@ DB::CategoryPtr Settings::TagGroupsPage::getCategoryObject(QString category) con
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_TagGroupsPage.cpp"

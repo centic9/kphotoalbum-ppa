@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -31,6 +32,7 @@
 #endif
 #include <KRun>
 #include <QApplication>
+#include <QDebug>
 #include <QDir>
 #include <QDomDocument>
 #include <QFile>
@@ -51,7 +53,7 @@ QString readFile(const QString &fileName)
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
-        //KMessageBox::error( nullptr, i18n("Could not open file %1").arg( fileName ) );
+        // KMessageBox::error( nullptr, i18n("Could not open file %1").arg( fileName ) );
         return QString();
     }
 
@@ -61,10 +63,12 @@ QString readFile(const QString &fileName)
 
     return content;
 }
-} //namespace
+} // namespace
 
 HTMLGenerator::Generator::Generator(const Setup &setup, QWidget *parent)
     : QProgressDialog(parent)
+    , m_waitCounter(0)
+    , m_total(0)
     , m_tempDirHandle()
     , m_tempDir(m_tempDirHandle.path())
     , m_hasEnteredLoop(false)
@@ -649,23 +653,10 @@ bool HTMLGenerator::Generator::writeToFile(const QString &fileName, const QStrin
         return false;
     }
 
-    QByteArray data = translateToHTML(str).toUtf8();
+    QByteArray data = str.toUtf8();
     file.write(data);
     file.close();
     return true;
-}
-
-QString HTMLGenerator::Generator::translateToHTML(const QString &str)
-{
-    QString res;
-    for (int i = 0; i < str.length(); ++i) {
-        if (str[i].unicode() < 128)
-            res.append(str[i]);
-        else {
-            res.append(QStringLiteral("&#%1;").arg((unsigned int)str[i].unicode()));
-        }
-    }
-    return res;
 }
 
 bool HTMLGenerator::Generator::linkIndexFile()
@@ -812,3 +803,5 @@ QString HTMLGenerator::Generator::populateDescription(QList<DB::CategoryPtr> cat
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_Generator.cpp"

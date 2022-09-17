@@ -1,7 +1,9 @@
-/* SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
 #include "ImportHandler.h"
 
 #include "ImportSettings.h"
@@ -36,8 +38,12 @@ ImportExport::ImportHandler::ImportHandler()
     : m_fileMapper(nullptr)
     , m_finishedPressed(false)
     , m_progress(nullptr)
+    , m_totalCopied(0)
+    , m_job(nullptr)
     , m_reportUnreadableFiles(true)
     , m_eventLoop(new QEventLoop)
+    , m_settings()
+    , m_kimFileReader(nullptr)
 
 {
 }
@@ -87,11 +93,18 @@ void ImportExport::ImportHandler::copyFromExternal()
     m_progress->setMaximum(2 * m_pendingCopies.count());
     m_progress->show();
     connect(m_progress, &QProgressDialog::canceled, this, &ImportHandler::stopCopyingImages);
+    if (m_pendingCopies.isEmpty()) {
+        qCDebug(ImportExportLog) << "No images selected for import!";
+        m_eventLoop->exit(false);
+        return;
+    }
     copyNextFromExternal();
 }
 
 void ImportExport::ImportHandler::copyNextFromExternal()
 {
+    // this function must not be called without a next image
+    Q_ASSERT(!m_pendingCopies.isEmpty());
     DB::ImageInfoPtr info = m_pendingCopies[0];
 
     if (isImageAlreadyInDB(info)) {
@@ -339,3 +352,5 @@ void ImportExport::ImportHandler::updateCategories(DB::ImageInfoPtr XMLInfo, DB:
     }
 }
 // vi:expandtab:tabstop=4 shiftwidth=4:
+
+#include "moc_ImportHandler.cpp"
