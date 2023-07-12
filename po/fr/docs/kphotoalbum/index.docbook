@@ -1,10 +1,23 @@
 <?xml version="1.0" ?>
+
+<!--
+SPDX-FileCopyrightText: 2003-2006 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+SPDX-FileCopyrightText: 2010, 2012 Yuri Chornoivan <yurchor@ukr.net>
+SPDX-FileCopyrightText: 2010, 2013, 2016 Luigi Toscano <luigi.toscano@tiscali.it>
+SPDX-FileCopyrightText: 2012 Burkhard Lück <lueck@hube-lueck.de>
+SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
+SPDX-FileCopyrightText: 2012 T.C. Hollingsworth <tchollingsworth@gmail.com>
+SPDX-FileCopyrightText: 2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+
+SPDX-License-Identifier: GFDL-1.2-only
+-->
+
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
   <!ENTITY kphotoalbum "<application
 >KPhotoAlbum</application
 >">
   <!ENTITY kappname "&kphotoalbum;">
-  <!ENTITY package "kdeextragear-2">
+  <!ENTITY package "extragear-graphics">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % French "INCLUDE"
 > 
@@ -16,12 +29,12 @@
   <!ENTITY viewer SYSTEM "viewer.docbook">
   <!ENTITY datebar SYSTEM "datebar.docbook">
   <!ENTITY options SYSTEM "options.docbook">
+  <!ENTITY workflows SYSTEM "workflows.docbook">
   <!ENTITY generating-html SYSTEM "generating-html.docbook">
   <!ENTITY importexport SYSTEM "importexport.docbook">
-  <!ENTITY plugins SYSTEM "plugins.docbook">
 ]>
 
-<book lang="&language;">
+<book id="kphotoalbum" lang="&language;">
   
   <bookinfo>
     <title
@@ -34,8 +47,28 @@
 > <surname
 >Pedersen</surname
 > </author>
+      <author
+><firstname
+>Miika</firstname
+> <surname
+>Turkia</surname
+> </author>
       
-      &traducteurXavierBesnard; 
+      <othercredit role="translator"
+><firstname
+>Xavier</firstname
+><surname
+>Besnard</surname
+><affiliation
+><address
+><email
+>ktranslator31@yahoo.fr</email
+></address
+></affiliation
+><contrib
+>Traduction française&nbsp;</contrib
+></othercredit
+> 
     </authorgroup>
     
     <copyright>
@@ -45,15 +78,32 @@
 >Jesper K. Pedersen</holder>
       
     </copyright>
+    <copyright>
+      <year
+>2012</year>
+      <holder
+>Miika Turkia</holder>
+    </copyright>
     
     <date
->06/08/2004</date>
+>23-02-2012</date>
     <releaseinfo
->2.0</releaseinfo>
+>4.2</releaseinfo>
     
-    <abstract
-><para
->Ceci est le manuel d'utilisation de &kphotoalbum;. Si vous n'êtes pas du genre à lire les documentations mais plutôt du genre à essayer les choses, il y a les quelques alternatives suivantes :  <itemizedlist>
+    <abstract>
+    <para
+><inlinemediaobject>
+    <imageobject
+><imagedata fileref="splash-large.png" format="PNG" scalefit="1"/></imageobject>
+    <textobject
+><phrase
+>Le logo de &kphotoalbum; </phrase
+></textobject>
+    </inlinemediaobject
+></para>
+    
+    <para
+>Ceci est le manuel d'utilisation de &kphotoalbum;, un logiciel d'organisation pour les photos numériques. Celui-ci propose l'annotation, la navigation, la recherche et l'affichage des photos ou des vidéos numériques. Si vous n'êtes pas du genre à lire les documentations mais plutôt du genre à essayer les choses, il y a les quelques alternatives suivantes :  <itemizedlist>
           <listitem
 ><para
 >Allez à <ulink url="http://www.kphotoalbum.org/"
@@ -65,22 +115,24 @@
 >Lancez &kphotoalbum; et acceptez de le démarrer pour une démonstration (si c'est la première fois que vous le lancez) ou alors allez dans le menu <guimenu
 >Aide</guimenu
 > et sélectionnez <guimenuitem
->Lancer la démo &kphotoalbum;</guimenuitem
+>Lancer la démonstration de &kphotoalbum;</guimenuitem
 >. Cela lancera &kphotoalbum; avec un certain nombre d'images dans lesquelles vous pourrez naviguer.</para
 ></listitem>
         </itemizedlist
 ></para>
 
    <para
->Si vous préférez imprimer ce document, alors vous le trouvez sous la forme d'un long document HTML sur la page d'accueil <ulink url="http://www.kphotoalbum.org/"
->&kphotoalbum;</ulink
+>Si vous préférez imprimer ce document, alors vous le trouvez sous la forme d'un long document PDF à l'adresse <ulink url="http://docs.kde.org/"
+> documentations de &kde;</ulink
+>. Un lien direct est disponible sur la <ulink url="http://www.kphotoalbum.org/"
+>page d'accueil de &kphotoalbum;</ulink
 >.</para>
 </abstract>
     <keywordset>
       <keyword
 >KDE</keyword>
       <keyword
->kdeextragear-2</keyword>
+>extragear-graphics</keyword>
       <keyword
 >KPhotoAlbum</keyword>
       <keyword
@@ -96,8 +148,8 @@
   &datebar;
   &generating-html;
   &importexport;
-  &plugins;
   &options;
+  &workflows;
 
 
   <!-- ====================================================================== -->
@@ -113,6 +165,14 @@
 ></para>
   </chapter>
 
+  <chapter id="credits-and-license">
+    <title
+>Remerciements et licence</title>
+    <para
+>Traduction française par Xavier Besnard <email
+>ktranslator31@yahoo.fr</email
+>.</para
+> &underFDL; &underGPL; </chapter>
 
 </book>
 

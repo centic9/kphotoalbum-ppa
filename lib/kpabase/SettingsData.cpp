@@ -1,6 +1,21 @@
-// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2003 Lukáš Tinkl <lukas@kde.org>
+// SPDX-FileCopyrightText: 2003-2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2003-2005 Stephan Binner <binner@kde.org>
+// SPDX-FileCopyrightText: 2003-2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2006-2008 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2007 Rafael Fernández López <ereslibre@kde.org>
+// SPDX-FileCopyrightText: 2007-2009 Laurent Montel <montel@kde.org>
+// SPDX-FileCopyrightText: 2007-2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2008 David Faure <faure@kde.org>
+// SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2009-2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2010 Pino Toscano <pino@kde.org>
+// SPDX-FileCopyrightText: 2010 Wes Hardaker <kpa@capturedonearth.com>
+// SPDX-FileCopyrightText: 2011 Andreas Neustifter <andreas.neustifter@gmail.com>
+// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2014-2022 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
+// SPDX-FileCopyrightText: 2019 Robert Krawitz <rlk@alum.mit.edu>
 //
 // SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
@@ -14,6 +29,7 @@
 #include <KSharedConfig>
 #include <QStringList>
 #include <QThread>
+#include <type_traits>
 
 namespace
 {
@@ -78,13 +94,8 @@ const QString configFile = QString::fromLatin1("kphotoalbumrc");
 #define property_enum(GET_FUNC, SET_FUNC, TYPE, GROUP, GET_DEFAULT) \
     property(TYPE, GET_FUNC, SET_FUNC, TYPE, static_cast<int>(v), #GROUP, #GET_FUNC, static_cast<int>(GET_DEFAULT))
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #define property_sset(GET_FUNC, SET_FUNC, GROUP, GET_DEFAULT) \
     property_(StringSet, GET_FUNC, (StringSet { v.begin(), v.end() }), SET_FUNC, StringSet &, (QStringList { v.begin(), v.end() }), #GROUP, #GET_FUNC, GET_DEFAULT, QStringList(), QStringList)
-#else
-#define property_sset(GET_FUNC, SET_FUNC, GROUP, GET_DEFAULT) \
-    property_(StringSet, GET_FUNC, v.toSet(), SET_FUNC, StringSet &, v.toList(), #GROUP, #GET_FUNC, GET_DEFAULT, QStringList(), QStringList)
-#endif
 
 /**
  * smoothScale() is called from the image loading thread, therefore we need
@@ -132,7 +143,7 @@ SettingsData::SettingsData(const QString &imageDirectory, DB::UIDelegate &delega
 
     // Split the list of Exif comments that should be stripped automatically to a list
 
-    QStringList commentsToStrip = cfgValue("General", "commentsToStrip", QString::fromLatin1("Exif_JPEG_PICTURE-,-OLYMPUS DIGITAL CAMERA-,-JENOPTIK DIGITAL CAMERA-,-")).split(QString::fromLatin1("-,-"), QString::SkipEmptyParts);
+    QStringList commentsToStrip = cfgValue("General", "commentsToStrip", QString::fromLatin1("Exif_JPEG_PICTURE-,-OLYMPUS DIGITAL CAMERA-,-JENOPTIK DIGITAL CAMERA-,-")).split(QString::fromLatin1("-,-"), Qt::SkipEmptyParts);
     for (QString &comment : commentsToStrip)
         comment.replace(QString::fromLatin1(",,"), QString::fromLatin1(","));
 
@@ -171,7 +182,7 @@ void SettingsData::setColorScheme(const QString &path) {
     if (path != colorScheme())
     {
         setValue("General", "colorScheme", path);
-        emit colorSchemeChanged();
+        Q_EMIT colorSchemeChanged();
     }
 }
 
@@ -187,7 +198,7 @@ getValueFunc(bool, histogramUseLinearScale, General, false)
         return;
 
     setValue("General", "histogramUseLinearScale", useLinearScale);
-    emit histogramScaleChanged();
+    Q_EMIT histogramScaleChanged();
 }
 
 void SettingsData::setHistogramSize(const QSize &size)
@@ -196,7 +207,7 @@ void SettingsData::setHistogramSize(const QSize &size)
         return;
 
     setValue("General", "histogramSize", size);
-    emit histogramSizeChanged(size);
+    Q_EMIT histogramSizeChanged(size);
 }
 
 void SettingsData::setViewSortType(const ViewSortType tp)
@@ -205,7 +216,7 @@ void SettingsData::setViewSortType(const ViewSortType tp)
         return;
 
     setValue("General", "viewSortType", static_cast<int>(tp));
-    emit viewSortTypeChanged(tp);
+    Q_EMIT viewSortTypeChanged(tp);
 }
 void SettingsData::setMatchType(const AnnotationDialog::MatchType mt)
 {
@@ -213,7 +224,7 @@ void SettingsData::setMatchType(const AnnotationDialog::MatchType mt)
         return;
 
     setValue("General", "matchType", static_cast<int>(mt));
-    emit matchTypeChanged(mt);
+    Q_EMIT matchTypeChanged(mt);
 }
 
 bool SettingsData::trustTimeStamps()
@@ -266,8 +277,29 @@ property_copy(thumbnailBuilderThreadCount, setThumbnailBuilderThreadCount, int, 
     ////////////////////
 
     // clang-format off
-property_copy(displayLabels, setDisplayLabels, bool, Thumbnails, true)
-property_copy(displayCategories, setDisplayCategories, bool, Thumbnails, false)
+//property_copy(displayLabels, setDisplayLabels, bool, Thumbnails, true)
+getValueFunc_(bool, displayLabels, groupForDatabase("Thumbnails"), "displayLabels", true)
+//property_copy(displayCategories, setDisplayCategories, bool, Thumbnails, false)
+getValueFunc_(bool, displayCategories, groupForDatabase("Thumbnails"), "displayCategories", false)
+
+    // clang-format on
+
+    void SettingsData::setDisplayLabels(bool value)
+{
+    const bool changed = value != displayLabels();
+    setValue(groupForDatabase("Thumbnails"), "displayLabels", value);
+    if (changed)
+        Q_EMIT displayLabelsChanged(value);
+}
+
+void SettingsData::setDisplayCategories(bool value)
+{
+    const bool changed = value != displayCategories();
+    setValue(groupForDatabase("Thumbnails"), "displayCategories", value);
+    if (changed)
+        Q_EMIT displayCategoriesChanged(value);
+}
+// clang-format off
 property_copy(autoShowThumbnailView, setAutoShowThumbnailView, int, Thumbnails, 20)
 property_copy(showNewestThumbnailFirst, setShowNewestFirst, bool, Thumbnails, false)
 property_copy(thumbnailDisplayGrid, setThumbnailDisplayGrid, bool, Thumbnails, false)
@@ -289,7 +321,7 @@ getValueFunc_(int, thumbnailSize, groupForDatabase("Thumbnails"), "thumbSize", 2
     value = qBound(minimumThumbnailSize(), value, maximumThumbnailSize());
 
     if (value != thumbnailSize())
-        emit thumbnailSizeChanged(value);
+        Q_EMIT thumbnailSizeChanged(value);
     setValue(groupForDatabase("Thumbnails"), "thumbSize", value);
 }
 
@@ -310,7 +342,7 @@ void SettingsData::setActualThumbnailSize(int value)
 
     if (value != actualThumbnailSize()) {
         setValue(groupForDatabase("Thumbnails"), "actualThumbSize", value);
-        emit actualThumbnailSizeChanged(value);
+        Q_EMIT actualThumbnailSizeChanged(value);
     }
 }
 
@@ -375,8 +407,26 @@ void SettingsData::setSmoothScale(bool b)
 ////////////////////
 
 // clang-format off
-property_ref(untaggedCategory, setUntaggedCategory, QString, General, i18n("Events"))
-property_ref(untaggedTag, setUntaggedTag, QString, General, i18n("untagged"))
+//property_ref(untaggedCategory, setUntaggedCategory, QString, General, i18n("Events"))
+getValueFunc_(QString, untaggedCategory, "General", "untaggedCategory", i18n("Events"))
+    void SettingsData::setUntaggedCategory(const QString &value)
+{
+    const bool changed = value != untaggedCategory();
+    setValue("General", "untaggedCategory", value);
+    if (changed)
+        Q_EMIT untaggedTagChanged(value, untaggedTag());
+}
+
+//property_ref(untaggedTag, setUntaggedTag, QString, General, i18n("untagged"))
+getValueFunc_(QString, untaggedTag, "General", "untaggedTag", i18n("untagged"))
+    void SettingsData::setUntaggedTag(const QString &value)
+{
+    const bool changed = value != untaggedTag();
+    setValue("General", "untaggedTag", value);
+    if (changed)
+        Q_EMIT untaggedTagChanged(untaggedCategory(), value);
+}
+
 property_copy(untaggedImagesTagVisible, setUntaggedImagesTagVisible, bool, General, false)
     // clang-format on
 
@@ -454,7 +504,7 @@ QString SettingsData::imageDirectory() const
 
 QString SettingsData::groupForDatabase(const char *setting) const
 {
-    return STR("%1 - %2").arg(STR(setting)).arg(imageDirectory());
+    return STR("%1 - %2").arg(STR(setting), imageDirectory());
 }
 
 QVariantMap SettingsData::currentLock() const
@@ -496,7 +546,7 @@ getValueFunc_(bool, locked, groupForDatabase("Privacy Settings"), "locked", fals
         return;
 
     setValue(groupForDatabase("Privacy Settings"), "locked", lock);
-    emit locked(lock, lockExcludes());
+    Q_EMIT locked(lock, lockExcludes());
 }
 
 void SettingsData::setWindowGeometry(WindowType win, const QRect &geometry)

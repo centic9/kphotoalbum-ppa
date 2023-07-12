@@ -1,7 +1,13 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2009-2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2015 Andreas Neustifter <andreas.neustifter@gmail.com>
+// SPDX-FileCopyrightText: 2015-2022 Tobias Leupold <tl@stonemx.de>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
 #include "ThumbnailModel.h"
 
 #include "CellGeometry.h"
@@ -37,6 +43,7 @@ ThumbnailView::ThumbnailModel::ThumbnailModel(ThumbnailFactory *factory, const I
 
     m_filter.setSearchMode(0);
     connect(this, &ThumbnailModel::filterChanged, this, &ThumbnailModel::updateDisplayModel);
+    connect(m_thumbnailCache, &ImageManager::ThumbnailCache::thumbnailUpdated, this, qOverload<const DB::FileName &>(&ThumbnailModel::updateCell));
 }
 
 static bool stackOrderComparator(const DB::FileName &a, const DB::FileName &b)
@@ -59,6 +66,7 @@ void ThumbnailView::ThumbnailModel::updateDisplayModel()
      * intermingled in the result so we need to know this ahead before
      * creating the display list.
      */
+    m_allStacks.clear();
     typedef QList<DB::FileName> StackList;
     typedef QMap<DB::StackID, StackList> StackMap;
     StackMap stackContents;
@@ -66,6 +74,7 @@ void ThumbnailView::ThumbnailModel::updateDisplayModel()
         const DB::ImageInfoPtr imageInfo = DB::ImageDB::instance()->info(fileName);
         if (imageInfo && imageInfo->isStacked()) {
             DB::StackID stackid = imageInfo->stackId();
+            m_allStacks << stackid;
             stackContents[stackid].append(fileName);
         }
     }
@@ -113,8 +122,8 @@ void ThumbnailView::ThumbnailModel::updateDisplayModel()
 
     updateIndexCache();
 
-    emit collapseAllStacksEnabled(m_expandedStacks.size() > 0);
-    emit expandAllStacksEnabled(m_allStacks.size() != model()->m_expandedStacks.size());
+    Q_EMIT collapseAllStacksEnabled(m_expandedStacks.size() > 0);
+    Q_EMIT expandAllStacksEnabled(m_allStacks.size() != m_expandedStacks.size());
     endResetModel();
     qCInfo(TimingLog) << "ThumbnailModel::updateDisplayModel(): " << timer.restart() << "ms.";
 }
@@ -124,13 +133,13 @@ void ThumbnailView::ThumbnailModel::toggleStackExpansion(const DB::FileName &fil
     const DB::ImageInfoPtr imageInfo = DB::ImageDB::instance()->info(fileName);
     if (imageInfo) {
         DB::StackID stackid = imageInfo->stackId();
-        model()->beginResetModel();
+        beginResetModel();
         if (m_expandedStacks.contains(stackid))
             m_expandedStacks.remove(stackid);
         else
             m_expandedStacks.insert(stackid);
+        endResetModel();
         updateDisplayModel();
-        model()->endResetModel();
     }
 }
 
@@ -149,12 +158,6 @@ void ThumbnailView::ThumbnailModel::expandAllStacks()
 void ThumbnailView::ThumbnailModel::setImageList(const DB::FileNameList &items)
 {
     m_imageList = items;
-    m_allStacks.clear();
-    for (const DB::FileName &fileName : items) {
-        const DB::ImageInfoPtr info = DB::ImageDB::instance()->info(fileName);
-        if (info && info->isStacked())
-            m_allStacks << info->stackId();
-    }
     updateDisplayModel();
     preloadThumbnails();
 }
@@ -256,7 +259,7 @@ void ThumbnailView::ThumbnailModel::setOverrideImage(const DB::FileName &fileNam
         m_overrideFileName = fileName;
         m_overrideImage = pixmap;
     }
-    emit dataChanged(fileNameToIndex(fileName), fileNameToIndex(fileName));
+    Q_EMIT dataChanged(fileNameToIndex(fileName), fileNameToIndex(fileName));
 }
 
 DB::FileName ThumbnailView::ThumbnailModel::imageAt(int index) const
@@ -306,7 +309,7 @@ void ThumbnailView::ThumbnailModel::pixmapLoaded(ImageManager::ImageRequest *req
     const DB::FileName fileName = request->databaseFileName();
     const QSize fullSize = request->fullSize();
 
-    // As a result of the image being loaded, we emit the dataChanged signal, which in turn asks the delegate to paint the cell
+    // As a result of the image being loaded, we Q_EMIT the dataChanged signal, which in turn asks the delegate to paint the cell
     // The delegate now fetches the newly loaded image from the cache.
 
     DB::ImageInfoPtr imageInfo = DB::ImageDB::instance()->info(fileName);
@@ -318,7 +321,7 @@ void ThumbnailView::ThumbnailModel::pixmapLoaded(ImageManager::ImageRequest *req
         imageInfo->setSize(fullSize);
     }
 
-    emit dataChanged(fileNameToIndex(fileName), fileNameToIndex(fileName));
+    Q_EMIT dataChanged(fileNameToIndex(fileName), fileNameToIndex(fileName));
 }
 
 QString ThumbnailView::ThumbnailModel::thumbnailText(const QModelIndex &index) const
@@ -335,7 +338,7 @@ QString ThumbnailView::ThumbnailModel::thumbnailText(const QModelIndex &index) c
 
     if (Settings::SettingsData::instance()->displayLabels()) {
         QString line = info->label();
-        if (stringWidth(line) > thumbnailWidth) {
+        if (widget()->fontMetrics().horizontalAdvance(line) > thumbnailWidth) {
             line = line.left(maxCharacters);
             line += QLatin1String(" ...");
         }
@@ -362,7 +365,7 @@ QString ThumbnailView::ThumbnailModel::thumbnailText(const QModelIndex &index) c
                 if (!items.empty()) {
                     QString line;
                     bool first = true;
-                    for (Utilities::StringSet::const_iterator it2 = items.begin(); it2 != items.end(); ++it2) {
+                    for (Utilities::StringSet::const_iterator it2 = items.cbegin(); it2 != items.cend(); ++it2) {
                         QString item = *it2;
                         if (first)
                             first = false;
@@ -370,7 +373,7 @@ QString ThumbnailView::ThumbnailModel::thumbnailText(const QModelIndex &index) c
                             line += QLatin1String(", ");
                         line += item;
                     }
-                    if (stringWidth(line) > thumbnailWidth) {
+                    if (widget()->fontMetrics().horizontalAdvance(line) > thumbnailWidth) {
                         line = line.left(maxCharacters);
                         line += QLatin1String(" ...");
                     }
@@ -390,7 +393,7 @@ void ThumbnailView::ThumbnailModel::updateCell(int row)
 
 void ThumbnailView::ThumbnailModel::updateCell(const QModelIndex &index)
 {
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
 }
 
 void ThumbnailView::ThumbnailModel::updateCell(const DB::FileName &fileName)
@@ -467,7 +470,7 @@ void ThumbnailView::ThumbnailModel::toggleFilter(bool enable)
         clearFilter();
     else if (m_filter.isNull()) {
         std::swap(m_filter, m_previousFilter);
-        emit filterChanged(m_filter);
+        Q_EMIT filterChanged(m_filter);
     }
 }
 
@@ -477,7 +480,7 @@ void ThumbnailView::ThumbnailModel::clearFilter()
         qCDebug(ThumbnailViewLog) << "Filter cleared.";
         m_previousFilter = m_filter;
         m_filter = DB::ImageSearchInfo();
-        emit filterChanged(m_filter);
+        Q_EMIT filterChanged(m_filter);
     }
 }
 
@@ -486,7 +489,7 @@ void ThumbnailView::ThumbnailModel::filterByRating(short rating)
     Q_ASSERT(-1 <= rating && rating <= 10);
     qCDebug(ThumbnailViewLog) << "Filter set: rating(" << rating << ")";
     m_filter.setRating(rating);
-    emit filterChanged(m_filter);
+    Q_EMIT filterChanged(m_filter);
 }
 
 void ThumbnailView::ThumbnailModel::toggleRatingFilter(short rating)
@@ -498,7 +501,7 @@ void ThumbnailView::ThumbnailModel::toggleRatingFilter(short rating)
         qCDebug(ThumbnailViewLog) << "Filter removed: rating";
         m_filter.setRating(-1);
         m_filter.checkIfNull();
-        emit filterChanged(m_filter);
+        Q_EMIT filterChanged(m_filter);
     }
 }
 
@@ -507,19 +510,19 @@ void ThumbnailView::ThumbnailModel::filterByCategory(const QString &category, co
     qCDebug(ThumbnailViewLog) << "Filter added: category(" << category << "," << tag << ")";
 
     m_filter.addAnd(category, tag);
-    emit filterChanged(m_filter);
+    Q_EMIT filterChanged(m_filter);
 }
 
 void ThumbnailView::ThumbnailModel::toggleCategoryFilter(const QString &category, const QString &tag)
 {
-    auto tags = m_filter.categoryMatchText(category).split(QLatin1String("&"), QString::SkipEmptyParts);
-    for (const auto &existingTag : tags) {
+    auto tags = m_filter.categoryMatchText(category).split(QLatin1String("&"), Qt::SkipEmptyParts);
+    for (const auto &existingTag : qAsConst(tags)) {
         if (tag == existingTag.trimmed()) {
             qCDebug(ThumbnailViewLog) << "Filter removed: category(" << category << "," << tag << ")";
             tags.removeAll(existingTag);
             m_filter.setCategoryMatchText(category, tags.join(QLatin1String(" & ")));
             m_filter.checkIfNull();
-            emit filterChanged(m_filter);
+            Q_EMIT filterChanged(m_filter);
             return;
         }
     }
@@ -530,7 +533,7 @@ void ThumbnailView::ThumbnailModel::filterByFreeformText(const QString &text)
 {
     qCDebug(ThumbnailViewLog) << "Filter added: freeform_match(" << text << ")";
     m_filter.setFreeformMatchText(text);
-    emit filterChanged(m_filter);
+    Q_EMIT filterChanged(m_filter);
 }
 
 void ThumbnailView::ThumbnailModel::preloadThumbnails()
@@ -545,19 +548,6 @@ void ThumbnailView::ThumbnailModel::preloadThumbnails()
             continue;
         const_cast<ThumbnailView::ThumbnailModel *>(this)->requestThumbnail(fileName, ImageManager::ThumbnailInvisible);
     }
-}
-
-int ThumbnailView::ThumbnailModel::stringWidth(const QString &text) const
-{
-    // This is a workaround for the deprecation warnings emerged with Qt 5.13.
-    // QFontMetrics::horizontalAdvance wasn't introduced until Qt 5.11. As soon as we drop support
-    // for Qt versions before 5.11, this can be removed in favor of calling horizontalAdvance
-    // directly.
-#if (QT_VERSION < QT_VERSION_CHECK(5, 11, 0))
-    return QFontMetrics(widget()->font()).width(text);
-#else
-    return QFontMetrics(widget()->font()).horizontalAdvance(text);
-#endif
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

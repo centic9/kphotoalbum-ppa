@@ -11,15 +11,13 @@
 // SPDX-FileCopyrightText: 2009-2010 Hassan Ibraheem <hasan.ibraheem@gmail.com>
 // SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
 // SPDX-FileCopyrightText: 2012 Andreas Neustifter <andreas.neustifter@gmail.com>
-// SPDX-FileCopyrightText: 2012-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
 // SPDX-FileCopyrightText: 2014-2020 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2017 Raymond Wooninck <tittiatcoke@gmail.com>
 // SPDX-FileCopyrightText: 2017, 2019-2020 Robert Krawitz <rlk@alum.mit.edu>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -46,6 +44,7 @@
 #include <KAcceleratorManager>
 #include <KActionCollection>
 #include <KComboBox>
+#include <KConfigGroup>
 #include <KGuiItem>
 #include <KLineEdit>
 #include <KLocalizedString>
@@ -56,6 +55,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QCursor>
+#include <QDialogButtonBox>
 #include <QDir>
 #include <QDockWidget>
 #include <QFile>
@@ -72,6 +72,10 @@
 #include <QStandardPaths>
 #include <QTimeEdit>
 #include <QVBoxLayout>
+#include <QtGlobal>
+#include <algorithm>
+#include <kwidgetsaddons_version.h>
+#include <tuple>
 
 #ifdef HAVE_MARBLE
 #include "Map/GeoCoordinates.h"
@@ -79,12 +83,6 @@
 #include <QProgressBar>
 #include <QTimer>
 #endif
-
-#include <KConfigGroup>
-#include <QDialogButtonBox>
-#include <QtGlobal>
-#include <algorithm>
-#include <tuple>
 
 namespace
 {
@@ -705,10 +703,6 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
 {
     ShowHideSearch(false);
 
-    if (DB::ImageDB::instance()->untaggedCategoryFeatureConfigured()) {
-        DB::ImageDB::instance()->categoryCollection()->categoryForName(Settings::SettingsData::instance()->untaggedCategory())->addItem(Settings::SettingsData::instance()->untaggedTag());
-    }
-
     if (oneAtATime) {
         m_setup = InputSingleImageConfigMode;
     } else {
@@ -1039,9 +1033,21 @@ void AnnotationDialog::Dialog::reject()
 
     m_fullScreenPreview->stopPlayback();
     if (hasChanges()) {
-        int code = KMessageBox::questionYesNo(this, i18n("<p>Some changes are made to annotations. Do you really want to cancel all recent changes for each affected file?</p>"));
+        const QString question = i18n("<p>Some changes are made to annotations. Do you really want to discard all recent changes for each affected file?</p>");
+        const QString title = i18nc("@title", "Discard changes?");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        const auto answer = KMessageBox::questionTwoActions(this,
+                                                            question,
+                                                            title,
+                                                            KStandardGuiItem::discard(),
+                                                            KStandardGuiItem::cancel());
+        if (answer != KMessageBox::ButtonCode::PrimaryAction)
+            return;
+#else
+        int code = KMessageBox::questionYesNo(this, question, title);
         if (code == KMessageBox::No)
             return;
+#endif
     }
     closeDialog();
 }
@@ -1092,7 +1098,7 @@ void AnnotationDialog::Dialog::rotate(int angle)
     } else {
         DB::ImageInfo &info = m_editList[m_current];
         info.rotate(angle, DB::RotateImageInfoOnly);
-        emit imageRotated(info.fileName());
+        Q_EMIT imageRotated(info.fileName());
     }
 }
 
@@ -1356,12 +1362,8 @@ void AnnotationDialog::Dialog::setUpCategoryListBoxForMultiImageSelection(ListSe
 std::tuple<StringSet, StringSet, StringSet> AnnotationDialog::Dialog::selectionForMultiSelect(const ListSelect *listSel, const DB::ImageInfoList &images)
 {
     const QString category = listSel->category();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     const auto itemsInclCategories = DB::ImageDB::instance()->categoryCollection()->categoryForName(category)->itemsInclCategories();
     const StringSet allItems(itemsInclCategories.begin(), itemsInclCategories.end());
-#else
-    const StringSet allItems = DB::ImageDB::instance()->categoryCollection()->categoryForName(category)->itemsInclCategories().toSet();
-#endif
     StringSet itemsOnSomeImages;
     StringSet itemsOnAllImages;
     bool firstImage = true;

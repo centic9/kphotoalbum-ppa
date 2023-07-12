@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -32,10 +31,10 @@
 #include <Browser/BrowserWidget.h>
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
-#include <DB/ImageDateCollection.h>
 #include <DB/ImageInfo.h>
 #include <DB/MD5.h>
 #include <DB/MD5Map.h>
+#include <DB/NewImageFinder.h>
 #include <DateBar/DateBarWidget.h>
 #include <Exif/InfoDialog.h>
 #include <Exif/ReReadDialog.h>
@@ -51,8 +50,8 @@
 #include <Utilities/DemoUtil.h>
 #include <Utilities/List.h>
 #include <Utilities/ShowBusyCursor.h>
-#include <Utilities/VideoUtil.h>
 #include <Viewer/ViewerWidget.h>
+#include <kpabase/FileExtensions.h>
 #include <kpabase/FileNameUtil.h>
 #include <kpabase/Logging.h>
 #include <kpabase/SettingsData.h>
@@ -78,9 +77,16 @@
 #include <stdlib.h>
 #endif
 
+#include <kconfigwidgets_version.h>
+#include <kio_version.h> // for #if KIO_VERSION...
+#include <kwidgetsaddons_version.h>
+
 #include <KActionCollection>
 #include <KActionMenu>
 #include <KColorSchemeManager>
+#if KCONFIGWIDGETS_VERSION >= QT_VERSION_CHECK(5, 107, 0)
+#include <KColorSchemeMenu>
+#endif
 #include <KConfigGroup>
 #include <KEditToolBar>
 #include <KIconLoader>
@@ -116,10 +122,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <functional>
-#include <kconfigwidgets_version.h>
-#include <kio_version.h> // for #if KIO_VERSION...
 #include <ktip.h>
-#include <kwidgetsaddons_version.h>
 
 using namespace DB;
 
@@ -263,7 +266,7 @@ void MainWindow::Window::delayedInit()
     if (Settings::SettingsData::instance()->searchForImagesOnStart() || Options::the()->searchForImagesOnStart()) {
         splash->message(i18n("Searching for New Files"));
         qApp->processEvents();
-        DB::ImageDB::instance()->slotRescan();
+        DB::NewImageFinder().findImages();
         qCInfo(TimingLog) << "MainWindow: Search for New Files: " << timer.restart() << "ms.";
     }
 
@@ -297,41 +300,39 @@ void MainWindow::Window::delayedInit()
 bool MainWindow::Window::slotExit()
 {
     if (Options::the()->demoMode()) {
-        QString txt = i18n("<p><b>Delete Your Temporary Demo Database</b></p>"
-                           "<p>I hope you enjoyed the KPhotoAlbum demo. The demo database was copied to "
-                           "/tmp, should it be deleted now? If you do not delete it, it will waste disk space; "
-                           "on the other hand, if you want to come back and try the demo again, you "
-                           "might want to keep it around with the changes you made through this session.</p>");
-        int ret = KMessageBox::questionYesNoCancel(this, txt, i18n("Delete Demo Database"),
-                                                   KStandardGuiItem::yes(), KStandardGuiItem::no(), KStandardGuiItem::cancel(),
-                                                   QString::fromLatin1("deleteDemoDatabase"));
-        if (ret == KMessageBox::Cancel)
+        const QString question = i18n("<p><b>Delete Your Temporary Demo Database</b></p>"
+                                      "<p>I hope you enjoyed the KPhotoAlbum demo. The demo database was created in the "
+                                      "folder <tt>/tmp</tt>, should it be deleted now? If you do not delete it, it will waste disk space; "
+                                      "on the other hand, if you want to come back and try the demo again, you "
+                                      "might want to keep it around with the changes you made through this session.</p>");
+        const QString title = i18nc("@title", "Delete Demo Database");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        const auto answer = KMessageBox::questionTwoActionsCancel(widget(),
+                                                                  question,
+                                                                  title,
+                                                                  KStandardGuiItem::del(),
+                                                                  KStandardGuiItem::save(),
+                                                                  KStandardGuiItem::cancel(),
+                                                                  QString::fromLatin1("deleteDemoDatabase2"));
+        if (answer == KMessageBox::Cancel)
             return false;
-        else if (ret == KMessageBox::Yes) {
+        else if (answer == KMessageBox::PrimaryAction) {
+#else
+        const auto answer = KMessageBox::questionYesNoCancel(this, question, title,
+                                                             KStandardGuiItem::yes(), KStandardGuiItem::no(), KStandardGuiItem::cancel(),
+                                                             QString::fromLatin1("deleteDemoDatabase"));
+        if (answer == KMessageBox::Cancel)
+            return false;
+        else if (answer == KMessageBox::Yes) {
+#endif
             Utilities::deleteDemo();
-            goto doQuit;
         } else {
-            // pass through to the check for dirtyness.
-        }
-    }
-
-    if (m_statusBar->mp_dirtyIndicator->isSaveDirty()) {
-        int ret = KMessageBox::warningYesNoCancel(this, i18n("Do you want to save the changes?"),
-                                                  i18n("Save Changes?"));
-        if (ret == KMessageBox::Cancel) {
-            return false;
-        }
-        if (ret == KMessageBox::Yes) {
             slotSave();
-        }
-        if (ret == KMessageBox::No) {
-            QDir().remove(Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1(".#index.xml"));
+            // Flush any remaining thumbnails
+            thumbnailCache()->save();
         }
     }
-    // Flush any remaining thumbnails
-    thumbnailCache()->save();
 
-doQuit:
     ImageManager::AsyncLoader::instance()->requestExit();
     qApp->quit();
     return true;
@@ -359,12 +360,21 @@ void MainWindow::Window::slotCreateImageStack()
 
     bool ok = DB::ImageDB::instance()->stack(list);
     if (!ok) {
-        if (KMessageBox::questionYesNo(this,
-                                       i18n("Some of the selected images already belong to a stack. "
-                                            "Do you want to remove them from their stacks and create a "
-                                            "completely new one?"),
-                                       i18n("Stacking Error"))
-            == KMessageBox::Yes) {
+        const QString question = i18n("Some of the selected images already belong to a stack. "
+                                      "Do you want to remove them from their stacks and create a "
+                                      "completely new one?");
+        const QString title = i18nc("@title", "Stacking problem");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        const auto answer = KMessageBox::questionTwoActions(widget(),
+                                                            question,
+                                                            title,
+                                                            KStandardGuiItem::ok(),
+                                                            KStandardGuiItem::cancel());
+        if (answer == KMessageBox::ButtonCode::PrimaryAction) {
+#else
+        const auto answer = KMessageBox::questionYesNo(this, question, title);
+        if (answer == KMessageBox::Yes) {
+#endif
             DB::ImageDB::instance()->unstack(list);
             if (!DB::ImageDB::instance()->stack(list)) {
                 KMessageBox::error(this,
@@ -538,7 +548,7 @@ void MainWindow::Window::slotPasteInformation()
     if (!mimeData->hasUrls() || mimeData->urls().length() != 1)
         return;
 
-    const QUrl url = mimeData->urls().first();
+    const QUrl url = mimeData->urls().constFirst();
     if (!url.isLocalFile())
         return;
 
@@ -808,10 +818,9 @@ void MainWindow::Window::setupMenuBar()
     m_rotRight->setText(i18n("Rotate clockwise"));
     actionCollection()->setDefaultShortcut(m_rotRight, Qt::Key_9);
 
-    // The Images menu
+    // The View menu
     m_view = actionCollection()->addAction(QString::fromLatin1("viewImages"), this, qOverload<>(&Window::slotView));
     m_view->setText(i18n("View"));
-    actionCollection()->setDefaultShortcut(m_view, Qt::CTRL + Qt::Key_I);
 
     m_viewInNewWindow = actionCollection()->addAction(QString::fromLatin1("viewImagesNewWindow"), this, &Window::slotViewNewWindow);
     m_viewInNewWindow->setText(i18n("View (In New Window)"));
@@ -873,59 +882,6 @@ void MainWindow::Window::setupMenuBar()
     m_setDefaultNeg = actionCollection()->addAction(QString::fromLatin1("setDefaultScopeNegative"), this, &Window::setDefaultScopeNegative);
     m_setDefaultNeg->setText(i18n("Lock Away Current Set of Items"));
 
-    // Maintenance
-    a = actionCollection()->addAction(QString::fromLatin1("findUnavailableImages"), this, &Window::slotShowNotOnDisk);
-    a->setText(i18n("Display Images and Videos Not on Disk"));
-
-    a = actionCollection()->addAction(QString::fromLatin1("findImagesWithInvalidDate"), this, &Window::slotShowImagesWithInvalidDate);
-    a->setText(i18n("Display Images and Videos with Incomplete Dates..."));
-
-#ifdef DOES_STILL_NOT_WORK_IN_KPA4
-    a = actionCollection()->addAction(QString::fromLatin1("findImagesWithChangedMD5Sum"), this, SLOT(slotShowImagesWithChangedMD5Sum()));
-    a->setText(i18n("Display Images and Videos with Changed MD5 Sum"));
-#endif // DOES_STILL_NOT_WORK_IN_KPA4
-
-    a = actionCollection()->addAction(QLatin1String("mergeDuplicates"), this, &Window::mergeDuplicates);
-    a->setText(i18n("Merge duplicates"));
-    a = actionCollection()->addAction(QString::fromLatin1("rebuildMD5s"), this, &Window::slotRecalcCheckSums);
-    a->setText(i18n("Recalculate Checksum"));
-
-    a = actionCollection()->addAction(QString::fromLatin1("rescan"), DB::ImageDB::instance(), &DB::ImageDB::slotRescan);
-    a->setIcon(QIcon::fromTheme(QString::fromLatin1("document-import")));
-    a->setText(i18n("Rescan for Images and Videos"));
-
-    QAction *recreateExif = actionCollection()->addAction(QString::fromLatin1("recreateExifDB"), this, &Window::slotRecreateExifDB);
-    recreateExif->setText(i18n("Recreate Exif Search Database"));
-
-    QAction *rereadExif = actionCollection()->addAction(QString::fromLatin1("reReadExifInfo"), this, &Window::slotReReadExifInfo);
-    rereadExif->setText(i18n("Read Exif Info from Files..."));
-
-    m_sortAllByDateAndTime = actionCollection()->addAction(QString::fromLatin1("sortAllImages"), this, &Window::slotSortAllByDateAndTime);
-    m_sortAllByDateAndTime->setText(i18n("Sort All by Date && Time"));
-    m_sortAllByDateAndTime->setEnabled(true);
-
-    m_AutoStackImages = actionCollection()->addAction(QString::fromLatin1("autoStack"), this, &Window::slotAutoStackImages);
-    m_AutoStackImages->setText(i18n("Automatically Stack Selected Images..."));
-
-    a = actionCollection()->addAction(QString::fromLatin1("buildThumbs"), this, &Window::slotBuildThumbnails);
-    a->setText(i18n("Build Thumbnails"));
-
-    a = actionCollection()->addAction(QString::fromLatin1("statistics"), this, &Window::slotStatistics);
-    a->setText(i18n("Statistics..."));
-
-    m_markUntagged = actionCollection()->addAction(QString::fromUtf8("markUntagged"),
-                                                   this, &Window::slotMarkUntagged);
-    m_markUntagged->setText(i18n("Mark As Untagged"));
-
-    // The Settings menu
-    KStandardAction::preferences(this, &Window::slotOptions, actionCollection());
-    // the default configureShortcuts impl in XMLGuiFactory that is available via setupGUI
-    // does not work for us because we need to add our own (non-XMLGui) actionCollections:
-    KStandardAction::keyBindings(this, &Window::configureShortcuts, actionCollection());
-
-    a = actionCollection()->addAction(QString::fromLatin1("readdAllMessages"), this, &Window::slotReenableMessages);
-    a->setText(i18n("Enable All Messages"));
-
     m_viewMenu = actionCollection()->add<KActionMenu>(QString::fromLatin1("configureView"));
     m_viewMenu->setText(i18n("Configure Current View"));
     m_viewMenu->setIcon(QIcon::fromTheme(QString::fromLatin1("view-list-details")));
@@ -961,11 +917,38 @@ void MainWindow::Window::setupMenuBar()
     actionCollection()->setDefaultShortcut(a, Qt::CTRL + Qt::Key_T);
     connect(a, &QAction::toggled, m_thumbnailView, &ThumbnailView::ThumbnailFacade::showToolTipsOnImages);
 
+    a = actionCollection()->add<KToggleAction>(QString::fromLatin1("showLabelBelowThumbnail"));
+    a->setText(i18n("Show Labels in Thumbnails Window"));
+    a->setIcon(QIcon::fromTheme(QString::fromLatin1("label")));
+    a->setChecked(Settings::SettingsData::instance()->displayLabels());
+    connect(a, &QAction::toggled, this, [this](bool doShow) {
+        Settings::SettingsData::instance()->setDisplayLabels(doShow);
+        reloadThumbnails();
+    });
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::displayLabelsChanged, a, &QAction::setChecked);
+
+    a = actionCollection()->add<KToggleAction>(QString::fromLatin1("showCategoryBelowThumbnail"));
+    a->setText(i18n("Show Categories in Thumbnails Window"));
+    a->setIcon(QIcon::fromTheme(QString::fromLatin1("category")));
+    a->setChecked(Settings::SettingsData::instance()->displayCategories());
+    connect(a, &QAction::toggled, this, [this](bool doShow) {
+        Settings::SettingsData::instance()->setDisplayCategories(doShow);
+        reloadThumbnails();
+    });
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::displayCategoriesChanged, a, &QAction::setChecked);
+
     KColorSchemeManager *schemes = new KColorSchemeManager(this);
     const QString schemePath = Settings::SettingsData::instance()->colorScheme();
     const auto schemeCfg = KSharedConfig::openConfig(schemePath);
     const QString activeSchemeName = schemeCfg->group("General").readEntry("Name", QFileInfo(schemePath).baseName());
+#if KCONFIGWIDGETS_VERSION >= QT_VERSION_CHECK(5, 107, 0)
+    const auto activeSchemeIndex = schemes->indexForScheme(activeSchemeName);
+    if (activeSchemeIndex.isValid())
+        schemes->activateScheme(activeSchemeIndex);
+    m_colorSchemeMenu = KColorSchemeMenu::createMenu(schemes, this);
+#else
     m_colorSchemeMenu = schemes->createSchemeSelectionMenu(activeSchemeName, this);
+#endif
     m_colorSchemeMenu->setText(i18n("Choose Color Scheme"));
     m_colorSchemeMenu->setIcon(QIcon::fromTheme(QString::fromLatin1("color")));
 #if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 77, 0)
@@ -974,6 +957,54 @@ void MainWindow::Window::setupMenuBar()
     m_colorSchemeMenu->setDelayed(false);
 #endif
     actionCollection()->addAction(QString::fromLatin1("colorScheme"), m_colorSchemeMenu);
+
+    // Maintenance
+    a = actionCollection()->addAction(QString::fromLatin1("findUnavailableImages"), this, &Window::slotShowNotOnDisk);
+    a->setText(i18n("Display Images and Videos Not on Disk"));
+
+    a = actionCollection()->addAction(QString::fromLatin1("findImagesWithInvalidDate"), this, &Window::slotShowImagesWithInvalidDate);
+    a->setText(i18n("Display Images and Videos with Incomplete Dates..."));
+
+    a = actionCollection()->addAction(QLatin1String("mergeDuplicates"), this, &Window::mergeDuplicates);
+    a->setText(i18n("Merge duplicates"));
+    a = actionCollection()->addAction(QString::fromLatin1("rebuildMD5s"), this, &Window::slotRecalcCheckSums);
+    a->setText(i18n("Refresh Selected Thumbnails and Checksums"));
+
+    a = actionCollection()->addAction(QString::fromLatin1("rescan"), this, &Window::slotRescan);
+    a->setIcon(QIcon::fromTheme(QString::fromLatin1("document-import")));
+    a->setText(i18n("Rescan for Images and Videos"));
+
+    QAction *recreateExif = actionCollection()->addAction(QString::fromLatin1("recreateExifDB"), this, &Window::slotRecreateExifDB);
+    recreateExif->setText(i18n("Recreate Exif Search Database"));
+
+    QAction *rereadExif = actionCollection()->addAction(QString::fromLatin1("reReadExifInfo"), this, &Window::slotReReadExifInfo);
+    rereadExif->setText(i18n("Read Exif Info from Files..."));
+
+    m_sortAllByDateAndTime = actionCollection()->addAction(QString::fromLatin1("sortAllImages"), this, &Window::slotSortAllByDateAndTime);
+    m_sortAllByDateAndTime->setText(i18n("Sort All by Date && Time"));
+    m_sortAllByDateAndTime->setEnabled(true);
+
+    m_AutoStackImages = actionCollection()->addAction(QString::fromLatin1("autoStack"), this, &Window::slotAutoStackImages);
+    m_AutoStackImages->setText(i18n("Automatically Stack Selected Images..."));
+
+    a = actionCollection()->addAction(QString::fromLatin1("buildThumbs"), this, &Window::slotBuildThumbnails);
+    a->setText(i18n("Build Thumbnails"));
+
+    a = actionCollection()->addAction(QString::fromLatin1("statistics"), this, &Window::slotStatistics);
+    a->setText(i18n("Statistics..."));
+
+    m_markUntagged = actionCollection()->addAction(QString::fromUtf8("markUntagged"),
+                                                   this, &Window::slotMarkUntagged);
+    m_markUntagged->setText(i18n("Mark As Untagged"));
+
+    // The Settings menu
+    KStandardAction::preferences(this, &Window::slotOptions, actionCollection());
+    // the default configureShortcuts impl in XMLGuiFactory that is available via setupGUI
+    // does not work for us because we need to add our own (non-XMLGui) actionCollections:
+    KStandardAction::keyBindings(this, &Window::configureShortcuts, actionCollection());
+
+    a = actionCollection()->addAction(QString::fromLatin1("readdAllMessages"), this, &Window::slotReenableMessages);
+    a->setText(i18n("Enable All Messages"));
 
     // The help menu
 #if KCONFIGWIDGETS_VERSION < QT_VERSION_CHECK(5, 83, 0)
@@ -993,8 +1024,8 @@ void MainWindow::Window::setupMenuBar()
     m_showExifDialog = actionCollection()->addAction(QString::fromLatin1("showExifInfo"), this, &Window::slotShowExifInfo);
     m_showExifDialog->setText(i18n("Show Exif Info and file metadata"));
 
-    m_recreateThumbnails = actionCollection()->addAction(QString::fromLatin1("recreateThumbnails"), m_thumbnailView, &ThumbnailView::ThumbnailFacade::slotRecreateThumbnail);
-    m_recreateThumbnails->setText(i18n("Recreate Selected Thumbnails"));
+    m_recreateThumbnails = actionCollection()->addAction(QString::fromLatin1("recreateThumbnails"), this, &Window::slotRecalcCheckSums);
+    m_recreateThumbnails->setText(i18n("Refresh Selected Thumbnails and Checksums"));
 
     m_useNextVideoThumbnail = actionCollection()->addAction(QString::fromLatin1("useNextVideoThumbnail"), this, &Window::useNextVideoThumbnail);
     m_useNextVideoThumbnail->setText(i18n("Use next video thumbnail"));
@@ -1110,7 +1141,7 @@ bool MainWindow::Window::load()
         KConfigGroup config = KSharedConfig::openConfig()->group(QString::fromUtf8("General"));
         if (config.hasKey(QString::fromLatin1("imageDBFile"))) {
             configFile = config.readEntry<QString>(QString::fromLatin1("imageDBFile"), QString());
-            if (!QFileInfo(configFile).exists())
+            if (!QFileInfo::exists(configFile))
                 showWelcome = true;
         } else
             showWelcome = true;
@@ -1147,11 +1178,22 @@ bool MainWindow::Window::load()
         // We use index.xml as the XML backend, thus we want to test for exactly it
         fi.setFile(QString::fromLatin1("%1/index.xml").arg(fi.dir().absolutePath()));
         if (!fi.exists()) {
-            int answer = KMessageBox::questionYesNo(this, i18n("<p>Given index file does not exist, do you want to create following?"
-                                                               "<br />%1/index.xml</p>",
-                                                               fi.absolutePath()));
-            if (answer != KMessageBox::Yes)
+            const QString question = i18n("<p>Given index file does not exist, do you want to create following?"
+                                          "<br />%1/index.xml</p>",
+                                          fi.absolutePath());
+            const QString title = i18nc("@title", "Create database");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+            const auto answer = KMessageBox::questionTwoActions(this, question,
+                                                                title,
+                                                                KGuiItem(i18nc("@action:button", "Create")),
+                                                                KStandardGuiItem::cancel());
+            if (answer != KMessageBox::ButtonCode::PrimaryAction) {
+#else
+            const auto answer = KMessageBox::questionYesNo(this, question);
+            if (answer != KMessageBox::Yes) {
+#endif
                 return false;
+            }
         }
         configFile = fi.absoluteFilePath();
     }
@@ -1249,7 +1291,7 @@ void MainWindow::Window::triggerCopyLinkAction(CopyLinkEngine::Action action)
     }
 
     QList<QUrl> selectedFiles;
-    for (const QString &path : selection) {
+    for (const QString &path : qAsConst(selection)) {
         selectedFiles.append(QUrl::fromLocalFile(path));
     }
 
@@ -1295,6 +1337,7 @@ void MainWindow::Window::configureShortcuts()
     KShortcutsDialog *dialog = new KShortcutsDialog();
     dialog->addCollection(actionCollection(), i18n("General"));
     dialog->addCollection(viewer->actions(), i18n("Viewer"));
+    dialog->addCollection(m_dateBar->actions(), i18nc("I.e. the timeline histogram widget", "Date Bar"));
 
     createAnnotationDialog();
     dialog->addCollection(m_annotationDialog->actions(), i18n("Annotation Dialog"));
@@ -1443,10 +1486,21 @@ void MainWindow::Window::slotExport()
 
 void MainWindow::Window::slotReenableMessages()
 {
-    int ret = KMessageBox::questionYesNo(this, i18n("<p>Really enable all message boxes where you previously "
-                                                    "checked the do-not-show-again check box?</p>"));
-    if (ret == KMessageBox::Yes)
+    const QString question = i18n("<p>Really enable all message boxes where you previously "
+                                  "checked the do-not-show-again check box?</p>");
+    const QString title = i18nc("@title", "Reset hidden dialogs");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const auto answer = KMessageBox::questionTwoActions(this, question,
+                                                        title,
+                                                        KStandardGuiItem::reset(),
+                                                        KStandardGuiItem::cancel());
+    if (answer == KMessageBox::ButtonCode::PrimaryAction) {
+#else
+    const auto answer = KMessageBox::questionYesNo(this, question);
+    if (answer == KMessageBox::Yes) {
+#endif
         KMessageBox::enableAllMessages();
+    }
 }
 
 void MainWindow::Window::setupPluginMenu()
@@ -1461,7 +1515,7 @@ void MainWindow::Window::setupPluginMenu()
     Plugins::PurposeMenu *purposeMenu = new Plugins::PurposeMenu(menu);
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged,
             purposeMenu, &Plugins::PurposeMenu::slotSelectionChanged);
-    connect(purposeMenu, &Plugins::PurposeMenu::imageShared, [this](QUrl shareLocation) {
+    connect(purposeMenu, &Plugins::PurposeMenu::imageShared, this, [this](QUrl shareLocation) {
         QString message;
         if (shareLocation.isValid()) {
             message = i18n("Successfully shared image(s). Copying location to clipboard...");
@@ -1471,7 +1525,7 @@ void MainWindow::Window::setupPluginMenu()
         }
         m_statusBar->showMessage(message);
     });
-    connect(purposeMenu, &Plugins::PurposeMenu::imageSharingFailed, [this](QString errorMessage) {
+    connect(purposeMenu, &Plugins::PurposeMenu::imageSharingFailed, this, [this](QString errorMessage) {
         QString message = i18n("Image sharing failed with message: %1", errorMessage);
         m_statusBar->showMessage(message);
     });
@@ -1537,7 +1591,7 @@ void MainWindow::Window::slotShowListOfFiles()
     QStringList list = QInputDialog::getMultiLineText(this,
                                                       i18n("Open List of Files"),
                                                       i18n("You can open a set of files from KPhotoAlbum's image root by listing the files here."))
-                           .split(QChar::fromLatin1('\n'), QString::SkipEmptyParts);
+                           .split(QChar::fromLatin1('\n'), Qt::SkipEmptyParts);
     if (list.isEmpty())
         return;
 
@@ -1564,7 +1618,8 @@ void MainWindow::Window::updateDateBar(const Browser::BreadcrumbList &path)
 
 void MainWindow::Window::updateDateBar()
 {
-    m_dateBar->setImageDateCollection(DB::ImageDB::instance()->rangeCollection());
+    const auto imageList = DB::ImageDB::instance()->search(Browser::BrowserWidget::instance()->currentContext(), DB::SearchOption::AllowRangeMatch);
+    m_dateBar->setImageCollection(imageList);
 }
 
 void MainWindow::Window::slotShowImagesWithInvalidDate()
@@ -1612,7 +1667,21 @@ void MainWindow::Window::showThumbNails(const FileNameList &items)
 
 void MainWindow::Window::slotRecalcCheckSums()
 {
-    DB::ImageDB::instance()->slotRecalcCheckSums(selected());
+    auto images = selected();
+
+    const auto db = DB::ImageDB::instance();
+    if (images.isEmpty()) {
+        images = db->files();
+        // avoid lookups
+        db->md5Map()->clear();
+    }
+
+    DB::NewImageFinder().calculateMD5sums(images, db->md5Map());
+}
+
+void MainWindow::Window::slotRescan()
+{
+    NewImageFinder().findImages();
 }
 
 void MainWindow::Window::slotShowExifInfo()
@@ -1698,7 +1767,7 @@ void MainWindow::Window::setupStatusBar()
     m_statusBar = new MainWindow::StatusBar;
     setStatusBar(m_statusBar);
     setLocked(Settings::SettingsData::instance()->locked(), true, false);
-    connect(m_statusBar, &StatusBar::thumbnailSettingsRequested, [this]() { this->slotOptions(); m_settingsDialog->activatePage(Settings::SettingsPage::ThumbnailsPage); });
+    connect(m_statusBar, &StatusBar::thumbnailSettingsRequested, this, [this]() { this->slotOptions(); m_settingsDialog->activatePage(Settings::SettingsPage::ThumbnailsPage); });
 }
 
 void MainWindow::Window::slotRecreateExifDB()
@@ -1797,7 +1866,7 @@ bool MainWindow::Window::anyVideosSelected() const
 {
     const auto selectedFiles = selected();
     for (const DB::FileName &fileName : selectedFiles) {
-        if (Utilities::isVideo(fileName))
+        if (KPABase::isVideo(fileName))
             return true;
     }
     return false;
@@ -1852,8 +1921,18 @@ UserFeedback MainWindow::Window::askWarningContinueCancel(const QString &msg, co
 
 UserFeedback MainWindow::Window::askQuestionYesNo(const QString &msg, const QString &title, const QString &dialogId)
 {
-    auto answer = KMessageBox::questionYesNo(this, msg, title, KStandardGuiItem::yes(), KStandardGuiItem::no(), dialogId);
-    return (answer == KMessageBox::Yes) ? UserFeedback::Confirm : UserFeedback::Deny;
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const auto answer = KMessageBox::questionTwoActions(this, msg,
+                                                        title,
+                                                        KStandardGuiItem::ok(),
+                                                        KStandardGuiItem::cancel(),
+                                                        dialogId);
+    const UserFeedback value = (answer == KMessageBox::ButtonCode::PrimaryAction) ? UserFeedback::Confirm : UserFeedback::Deny;
+#else
+    const auto answer = KMessageBox::questionYesNo(this, msg, title, KStandardGuiItem::yes(), KStandardGuiItem::no(), dialogId);
+    const UserFeedback value = (answer == KMessageBox::Yes) ? UserFeedback::Confirm : UserFeedback::Deny;
+#endif
+    return value;
 }
 
 void MainWindow::Window::showInformation(const QString &msg, const QString &title, const QString &dialogId)

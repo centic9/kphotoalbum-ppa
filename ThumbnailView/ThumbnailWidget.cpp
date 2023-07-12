@@ -1,5 +1,16 @@
-// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2006-2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2006-2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2006-2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2007 Laurent Montel <montel@kde.org>
+// SPDX-FileCopyrightText: 2007-2009 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2008-2009 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2009-2010 Hassan Ibraheem <hasan.ibraheem@gmail.com>
+// SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2011 Andreas Neustifter <andreas.neustifter@gmail.com>
+// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2018-2022 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2020 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2020 Wolfgang Bauer <wbauer@tmo.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -79,6 +90,8 @@ ThumbnailView::ThumbnailWidget::ThumbnailWidget(ThumbnailFactory *factory)
     setItemDelegate(new Delegate(factory, this));
 
     connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, &ThumbnailWidget::emitSelectionChangedSignal);
+    // a reset of the item model invalidates the internal state, thus also the selection
+    connect(model(), &QAbstractItemModel::modelReset, this, &ThumbnailWidget::emitSelectionChangedSignal);
 
     setDragEnabled(false); // We run our own dragging, so disable QListView's version.
 
@@ -126,7 +139,7 @@ bool ThumbnailView::ThumbnailWidget::isMouseOverStackIndicator(const QPoint &poi
 
 static bool isMouseResizeGesture(QMouseEvent *event)
 {
-    return (event->button() & Qt::MidButton) || ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier));
+    return (event->button() & Qt::MiddleButton) || ((event->modifiers() & Qt::ControlModifier) && (event->modifiers() & Qt::AltModifier));
 }
 
 void ThumbnailView::ThumbnailWidget::mousePressEvent(QMouseEvent *event)
@@ -179,7 +192,7 @@ void ThumbnailView::ThumbnailWidget::mouseDoubleClickEvent(QMouseEvent *event)
     } else if (!(event->modifiers() & Qt::ControlModifier)) {
         DB::FileName id = mediaIdUnderCursor();
         if (!id.isNull())
-            emit showImage(id);
+            Q_EMIT showImage(id);
     }
 }
 
@@ -199,13 +212,8 @@ void ThumbnailView::ThumbnailWidget::wheelEvent(QWheelEvent *event)
         cellGeometryInfo()->calculateCellSize();
         model()->endResetModel();
     } else {
-#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
-        const int delta = event->delta() / 5;
-        QWheelEvent newevent = QWheelEvent(event->pos(), delta, event->buttons(), event->modifiers());
-#else
         const auto angleDelta = event->angleDelta() / 5;
-        QWheelEvent newevent = QWheelEvent(event->pos(), event->globalPos(), event->pixelDelta(), angleDelta, event->buttons(), event->modifiers(), event->phase(), event->inverted());
-#endif
+        QWheelEvent newevent = QWheelEvent(event->position(), event->globalPosition(), event->pixelDelta(), angleDelta, event->buttons(), event->modifiers(), event->phase(), event->inverted());
 
         QListView::wheelEvent(&newevent);
         event->setAccepted(newevent.isAccepted());
@@ -230,7 +238,7 @@ void ThumbnailView::ThumbnailWidget::emitDateChange()
     if (date != lastDate) {
         lastDate = date;
         if (date.date().year() != 1900)
-            emit currentDateChanged(date);
+            Q_EMIT currentDateChanged(date);
     }
 }
 
@@ -335,7 +343,7 @@ int ThumbnailView::ThumbnailWidget::cellWidth() const
 
 void ThumbnailView::ThumbnailWidget::emitSelectionChangedSignal()
 {
-    emit selectionCountChanged(selection(ExpandCollapsedStacks).size());
+    Q_EMIT selectionCountChanged(selection(ExpandCollapsedStacks).size());
 }
 
 void ThumbnailView::ThumbnailWidget::scheduleDateChangeSignal()
@@ -365,7 +373,9 @@ void ThumbnailView::ThumbnailWidget::showEvent(QShowEvent *event)
 DB::FileNameList ThumbnailView::ThumbnailWidget::selection(ThumbnailView::SelectionMode mode) const
 {
     DB::FileNameList res;
-    const auto indexSelection = selectedIndexes();
+    auto indexSelection = selectedIndexes();
+    // selectedIndexes() is not sorted:
+    std::sort(indexSelection.begin(), indexSelection.end());
     for (const QModelIndex &index : indexSelection) {
         const DB::FileName currFileName = model()->imageAt(index.row());
         bool includeAllStacks = false;

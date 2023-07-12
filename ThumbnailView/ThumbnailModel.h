@@ -1,7 +1,13 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2009-2014 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2013 Dominik Broj <broj.dominik@gmail.com>
+// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2019-2022 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2020 Robert Krawitz <rlk@alum.mit.edu>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
 #ifndef THUMBNAILMODEL_H
 #define THUMBNAILMODEL_H
 
@@ -9,7 +15,7 @@
 #include "enums.h"
 
 #include <DB/ImageInfo.h>
-#include <DB/ImageSearchInfo.h>
+#include <DB/search/ImageSearchInfo.h>
 #include <ImageManager/ImageClientInterface.h>
 #include <ImageManager/enums.h>
 #include <kpabase/FileNameList.h>
@@ -86,7 +92,7 @@ public:
 
     FilterWidget *createFilterWidget(QWidget *parent);
 
-public slots:
+public Q_SLOTS:
     void updateVisibleRowInfo();
 
     void toggleFilter(bool enable);
@@ -130,7 +136,7 @@ public slots:
      */
     void filterByFreeformText(const QString &text);
 
-signals:
+Q_SIGNALS:
     void collapseAllStacksEnabled(bool enabled);
     void expandAllStacksEnabled(bool enabled);
     void selectionChanged(int numberOfItemsSelected);
@@ -140,7 +146,7 @@ private: // Methods
     void requestThumbnail(const DB::FileName &mediaId, const ImageManager::Priority priority);
     void preloadThumbnails();
 
-private slots:
+private Q_SLOTS:
     void imagesDeletedFromDB(const DB::FileNameList &);
 
 private: // Instance variables.

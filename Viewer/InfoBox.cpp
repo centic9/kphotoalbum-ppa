@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -49,9 +49,8 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
     m_jumpToContext->setIcon(QIcon::fromTheme(QString::fromUtf8("kphotoalbum")));
     m_jumpToContext->setFixedSize(16, 16);
     connect(m_jumpToContext, &QToolButton::clicked, this, &InfoBox::jumpToContext);
-    // overloaded signal requires explicit cast:
-    void (InfoBox::*highlighted)(const QString &) = &InfoBox::highlighted;
-    connect(this, highlighted, this, &InfoBox::linkHovered);
+    // TODO(jzarl): remove QOverload once we don't care about Debian 11 anymore:
+    connect(this, QOverload<const QUrl &>::of(&QTextBrowser::highlighted), this, &InfoBox::linkHovered);
 
 #ifdef HAVE_MARBLE
     m_showOnMap = new QToolButton(this);
@@ -179,15 +178,15 @@ void Viewer::InfoBox::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void Viewer::InfoBox::linkHovered(const QString &linkName)
+void Viewer::InfoBox::linkHovered(const QUrl &link)
 {
-    if (linkName.isEmpty()) {
-        emit noTagHovered();
+    if (link.isEmpty()) {
+        Q_EMIT noTagHovered();
     } else {
-        emit tagHovered(m_linkMap[linkName.toInt()]);
+        Q_EMIT tagHovered(m_linkMap[link.path().toInt()]);
     }
 
-    m_hoveringOverLink = !linkName.isNull();
+    m_hoveringOverLink = !link.isEmpty();
 }
 
 void Viewer::InfoBox::jumpToContext()

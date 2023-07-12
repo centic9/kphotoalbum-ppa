@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2020 the KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2020 the KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2022 - 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "FastDateTime.h"
 
@@ -27,15 +27,8 @@ Utilities::FastDateTime::FastDateTime(const QDate &d, const QTime &t,
 }
 
 Utilities::FastDateTime::FastDateTime(const QDate &d)
-    :
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    m_dateTime(d.startOfDay())
-    ,
-#else
-    m_dateTime(d)
-    ,
-#endif
-    m_msecsSinceEpoch(toValidatedMSecs(m_dateTime))
+    : m_dateTime(d.startOfDay())
+    , m_msecsSinceEpoch(toValidatedMSecs(m_dateTime))
 {
 }
 
@@ -93,4 +86,15 @@ Utilities::FastDateTime::fromString(const QString &s, Qt::DateFormat f)
 {
     QDateTime answer(QDateTime::fromString(s, f));
     return FastDateTime(answer);
+}
+
+QDebug operator<<(QDebug debug, const Utilities::FastDateTime &d)
+{
+    QDebugStateSaver saveState(debug);
+    if (d.isNull()) {
+        debug.nospace() << "Utilities::FastDateTime()";
+    } else {
+        debug.nospace() << "Utilities::FastDateTime(" << d.toString(Qt::ISODate) << ")";
+    }
+    return debug;
 }

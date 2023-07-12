@@ -22,7 +22,7 @@ public:
     void setRange(int min, int max);
     int maximum() const;
 
-    void setPosition(int value);
+    void setPosition(qint64 value);
 
     /**
      * @brief volume
@@ -43,7 +43,7 @@ protected:
     virtual void onTimeSliderHover(const QPoint &pos, int value);
     void setSeekSliderEnabled(bool b);
 
-signals:
+Q_SIGNALS:
     void positionChanged(int value);
     void volumeChanged(int volume);
     void muted(bool muted);

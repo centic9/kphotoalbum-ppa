@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
 // SPDX-FileCopyrightText: 2020-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2020-2021 Nicolas Fella <nicolas.fella@gmx.de>
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -21,6 +22,7 @@
 #if KIO_VERSION >= QT_VERSION_CHECK(5, 70, 0)
 #include <KIO/ApplicationLauncherJob>
 #include <KIO/JobUiDelegate>
+#include <KIO/JobUiDelegateFactory>
 #endif
 #if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
 // KRun::displayOpenWithDialog() was both replaced and deprecated in 5.71
@@ -100,7 +102,11 @@ void MainWindow::ExternalPopup::populate(DB::ImageInfoPtr current, const DB::Fil
 #else
                 auto job = new KIO::ApplicationLauncherJob();
                 job->setUrls(urls);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
                 job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+#else
+                job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+#endif
                 job->start();
 #endif
         });
@@ -167,7 +173,11 @@ void MainWindow::ExternalPopup::runService(KService::Ptr service, QList<QUrl> ur
 #else
     auto job = new KIO::ApplicationLauncherJob(service);
     job->setUrls(urls);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
     job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+#else
+    job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, uiParent));
+#endif
     job->start();
 #endif
 }

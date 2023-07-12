@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2003-2022 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "CategoryPage.h"
 
@@ -21,6 +21,7 @@
 #include <KIconButton>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <kwidgetsaddons_version.h>
 
 // Local includes
 #include "CategoryItem.h"
@@ -298,7 +299,7 @@ void Settings::CategoryPage::categoryNameChanged(QListWidgetItem *item)
     item->setText(newCategoryName);
     m_categoriesListWidget->blockSignals(false);
 
-    emit categoryChangesPending();
+    Q_EMIT categoryChangesPending();
     m_untaggedBox->categoryRenamed(m_categoryNameBeforeEdit, newCategoryName);
     m_currentCategory->setLabel(newCategoryName);
     editCategory(m_currentCategory);
@@ -320,16 +321,29 @@ void Settings::CategoryPage::positionableChanged(bool positionable)
     }
 
     if (!positionable) {
-        int answer = KMessageBox::questionYesNo(this,
-                                                i18n("<p>Do you really want to make \"%1\" "
-                                                     "non-positionable?</p>"
-                                                     "<p>All areas linked against this category "
-                                                     "will be deleted!</p>",
-                                                     m_currentCategory->text()));
+        const QString question = i18n("<p>Do you really want to make \"%1\" "
+                                      "non-positionable?</p>"
+                                      "<p>All areas linked against this category "
+                                      "will be discarded!</p>",
+                                      m_currentCategory->text());
+
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        const auto answer = KMessageBox::questionTwoActions(this,
+                                                            question,
+                                                            i18nc("@title", "Confirm Action"),
+                                                            KStandardGuiItem::discard(),
+                                                            KStandardGuiItem::cancel());
+        if (answer == KMessageBox::ButtonCode::SecondaryAction) {
+            m_positionable->setCheckState(Qt::Checked);
+            return;
+        }
+#else
+        int answer = KMessageBox::questionYesNo(this, question);
         if (answer == KMessageBox::No) {
             m_positionable->setCheckState(Qt::Checked);
             return;
         }
+#endif
     }
 
     m_currentCategory->setPositionable(positionable);
@@ -375,7 +389,7 @@ void Settings::CategoryPage::newCategory()
                                                    64,
                                                    m_categoriesListWidget);
     m_currentCategory->markAsNewCategory();
-    emit categoryChangesPending();
+    Q_EMIT categoryChangesPending();
     m_currentCategory->setLabel(checkedCategory);
     m_currentCategory->setSelected(true);
     m_categoriesListWidget->blockSignals(false);
@@ -392,12 +406,23 @@ void Settings::CategoryPage::newCategory()
 
 void Settings::CategoryPage::deleteCurrentCategory()
 {
-    int answer = KMessageBox::questionYesNo(this,
-                                            i18n("<p>Really delete category \"%1\"?</p>",
-                                                 m_currentCategory->text()));
+    const QString question = i18n("<p>Really delete category \"%1\"?</p>",
+                                  m_currentCategory->text());
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+    const auto answer = KMessageBox::questionTwoActions(this,
+                                                        question,
+                                                        i18n("Confirm Action"),
+                                                        KStandardGuiItem::del(),
+                                                        KStandardGuiItem::cancel());
+    if (answer == KMessageBox::ButtonCode::SecondaryAction) {
+        return;
+    }
+#else
+    const auto answer = KMessageBox::questionYesNo(this, question);
     if (answer == KMessageBox::No) {
         return;
     }
+#endif
 
     m_untaggedBox->categoryDeleted(m_currentCategory->text());
     m_deletedCategories.append(m_currentCategory);
@@ -410,7 +435,7 @@ void Settings::CategoryPage::deleteCurrentCategory()
     resetCategoryLabel();
 
     editCategory(m_categoriesListWidget->currentItem());
-    emit categoryChangesPending();
+    Q_EMIT categoryChangesPending();
 }
 
 void Settings::CategoryPage::renameCurrentCategory()

@@ -1,14 +1,13 @@
-// SPDX-FileCopyrightText: 2003-2010, 2012, 2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2003-2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
 // SPDX-FileCopyrightText: 2005, 2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2006 Tuomas Suutari <tuomas@nepnep.net>
 // SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
 // SPDX-FileCopyrightText: 2008-2009 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2011 Andreas Neustifter <andreas.neustifter@gmail.com>
 // SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
-// SPDX-FileCopyrightText: 2013, 2015-2016, 2018-2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2015, 2017-2018 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2015-2018 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2016 Matthias Füssel <matthias.fuessel@gmx.net>
-// SPDX-FileCopyrightText: 2021-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -23,7 +22,7 @@
 
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
-#include <DB/ImageSearchInfo.h>
+#include <DB/search/ImageSearchInfo.h>
 #include <Utilities/FileUtil.h>
 #include <Utilities/ShowBusyCursor.h>
 #include <kpabase/SettingsData.h>
@@ -133,14 +132,14 @@ void Browser::BrowserWidget::addAction(Browser::BrowserPage *action)
 
 void Browser::BrowserWidget::emitSignals()
 {
-    emit canGoBack(m_current > 0);
-    emit canGoForward(m_current < m_list.count() - 1);
+    Q_EMIT canGoBack(m_current > 0);
+    Q_EMIT canGoForward(m_current < m_list.count() - 1);
     if (currentAction()->viewer() == ShowBrowser)
-        emit showingOverview();
+        Q_EMIT showingOverview();
 
-    emit isSearchable(currentAction()->isSearchable());
-    emit isFilterable(currentAction()->viewer() == ShowImageViewer);
-    emit isViewChangeable(currentAction()->isViewChangeable());
+    Q_EMIT isSearchable(currentAction()->isSearchable());
+    Q_EMIT isFilterable(currentAction()->viewer() == ShowImageViewer);
+    Q_EMIT isViewChangeable(currentAction()->isViewChangeable());
 
     bool isCategoryAction = (dynamic_cast<CategoryPage *>(currentAction()) != nullptr);
 
@@ -148,12 +147,12 @@ void Browser::BrowserWidget::emitSignals()
         DB::CategoryPtr category = DB::ImageDB::instance()->categoryCollection()->categoryForName(currentCategory());
         Q_ASSERT(category.data());
 
-        emit currentViewTypeChanged(category->viewType());
+        Q_EMIT currentViewTypeChanged(category->viewType());
     }
 
-    emit pathChanged(createPath());
-    emit viewChanged(currentAction()->searchInfo());
-    emit imageCount(DB::ImageDB::instance()->count(currentAction()->searchInfo()).total());
+    Q_EMIT pathChanged(createPath());
+    Q_EMIT viewChanged(currentAction()->searchInfo());
+    Q_EMIT imageCount(DB::ImageDB::instance()->count(currentAction()->searchInfo()).total());
 }
 
 void Browser::BrowserWidget::home()
@@ -392,7 +391,7 @@ void Browser::BrowserWidget::createWidgets()
     m_treeView->setAcceptDrops(true);
     m_treeView->setDropIndicatorShown(true);
     m_treeView->setDefaultDropAction(Qt::MoveAction);
-    m_treeView->setBackgroundRole(QPalette::Background);
+    m_treeView->setBackgroundRole(QPalette::Window);
 
     m_treeView->header()->setStretchLastSection(false);
     m_treeView->header()->setSortIndicatorShown(true);
@@ -419,7 +418,7 @@ bool Browser::BrowserWidget::eventFilter(QObject * /* obj */, QEvent *event)
     if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseMove || event->type() == QEvent::MouseButtonRelease) {
         QMouseEvent *me = static_cast<QMouseEvent *>(event);
         Q_ASSERT(me != nullptr);
-        if (me->buttons() & Qt::MidButton || me->button() & Qt::MidButton) {
+        if (me->buttons() & Qt::MiddleButton || me->button() & Qt::MiddleButton) {
             handleResizeEvent(me);
             return true;
         }
@@ -428,7 +427,7 @@ bool Browser::BrowserWidget::eventFilter(QObject * /* obj */, QEvent *event)
         const auto *keyEvent = static_cast<QKeyEvent *>(event);
         Q_ASSERT(keyEvent != nullptr);
         if (keyEvent->key() == Qt::Key_Slash) {
-            emit showSearch();
+            Q_EMIT showSearch();
         }
     }
 

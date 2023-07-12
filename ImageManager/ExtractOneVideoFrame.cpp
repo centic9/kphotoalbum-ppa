@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2012-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
-*/
+// SPDX-FileCopyrightText: 2012-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #include "ExtractOneVideoFrame.h"
 
@@ -80,7 +80,7 @@ void ExtractOneVideoFrame::frameFetched()
     }
 
     QImage image(name);
-    emit result(image);
+    Q_EMIT result(image);
     delete m_workingDirectory;
     deleteLater();
 }
@@ -112,19 +112,15 @@ void ExtractOneVideoFrame::handleError(QProcess::ProcessError error)
     KMessageBox::information(MainWindow::Window::theMainWindow(),
                              i18n("<p>Error when extracting video thumbnails.<br/>Error was: %1</p>", message),
                              QString(), QLatin1String("errorWhenRunningQProcessFromExtractOneVideoFrame"));
-    emit result(QImage());
+    Q_EMIT result(QImage());
     deleteLater();
 }
 
 void ExtractOneVideoFrame::markShortVideo(const DB::FileName &fileName)
 {
     if (s_tokenForShortVideos.isNull()) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         const auto tokensInUse = MainWindow::TokenEditor::tokensInUse();
         Utilities::StringSet usedTokens(tokensInUse.begin(), tokensInUse.end());
-#else
-        Utilities::StringSet usedTokens = MainWindow::TokenEditor::tokensInUse().toSet();
-#endif
         for (int ch = 'A'; ch <= 'Z'; ++ch) {
             QString token = QChar::fromLatin1((char)ch);
             if (!usedTokens.contains(token)) {

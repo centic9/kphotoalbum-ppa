@@ -10,20 +10,29 @@
 # SPDX-FileCopyrightText: 2010, 2015, 2019 David Faure <faure@kde.org>
 # SPDX-FileCopyrightText: 2012 Albert Astals Cid <tsdgeos@terra.es>
 # SPDX-FileCopyrightText: 2012-2013 Andreas Neustifter <andreas.neustifter@gmail.com>
-# SPDX-FileCopyrightText: 2012-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 # SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
-# SPDX-FileCopyrightText: 2014-2022 Tobias Leupold <tl at stonemx dot de>
+# SPDX-FileCopyrightText: 2014-2023 Tobias Leupold <tl at stonemx dot de>
 # SPDX-FileCopyrightText: 2016 Christoph Feck <cfeck@kde.org>
 # SPDX-FileCopyrightText: 2016 Luigi Toscano <luigi.toscano@tiscali.it>
 # SPDX-FileCopyrightText: 2016 Michael Palimaka <kensington@gentoo.org>
 # SPDX-FileCopyrightText: 2017 Ben Cooksley <bcooksley@kde.org>
 # SPDX-FileCopyrightText: 2018, 2020 Robert Krawitz <rlk@alum.mit.edu>
 # SPDX-FileCopyrightText: 2020 Wes Hardaker <kpa@capturedonearth.com>
+# SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-cmake_minimum_required(VERSION 3.16.0)
-project(kphotoalbum LANGUAGES CXX VERSION 5.9.1)
+cmake_minimum_required(VERSION 3.18.0)
+project(kphotoalbum LANGUAGES CXX VERSION 5.11.0)
+
+# set minimum versions here:
+set(MINIMUM_ECM_VERSION 5.78)
+set(MINIMUM_KF5_VERSION 5.78)
+set(MINIMUM_Qt5_VERSION_MAJOR 5)
+set(MINIMUM_Qt5_VERSION_MINOR 15)
+set(MINIMUM_Qt5_VERSION_PATCH 0)
+set(MINIMUM_Qt5_VERSION "${MINIMUM_Qt5_VERSION_MAJOR}.${MINIMUM_Qt5_VERSION_MINOR}.${MINIMUM_Qt5_VERSION_PATCH}")
+math(EXPR MINIMUM_Qt5_VERSION_HEX "${MINIMUM_Qt5_VERSION_MAJOR} << 24 | ${MINIMUM_Qt5_VERSION_MINOR} << 16 | ${MINIMUM_Qt5_VERSION_PATCH}" OUTPUT_FORMAT HEXADECIMAL)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,7 +42,7 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";Debug;Release;RelWithDebI
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-find_package(ECM REQUIRED NO_MODULE)
+find_package(ECM ${MINIMUM_ECM_VERSION} REQUIRED NO_MODULE)
 list(APPEND CMAKE_MODULE_PATH "${ECM_MODULE_PATH}" )
 
 include(KDEInstallDirs)
@@ -44,24 +53,27 @@ include(FeatureSummary)
 # enable exceptions:
 kde_enable_exceptions()
 
+
 add_definitions(
     -DQT_NO_CAST_FROM_ASCII
     -DQT_NO_CAST_TO_ASCII
     -DQT_NO_URL_CAST_FROM_STRING
     -DQT_NO_CAST_FROM_BYTEARRAY
-    -DQT_DEPRECATED_WARNINGS
+    -DQT_USE_STRINGBUILDER
+    -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
+    -DQT_NO_KEYWORDS
+    -DQT_NO_FOREACH
     -DQT_STRICT_ITERATORS
-    -DQT_DISABLE_DEPRECATED_BEFORE=0x050A00
-    -DQT_DISABLE_Q_FOREACH
+    -DQT_DISABLE_DEPRECATED_BEFORE=${MINIMUM_Qt5_VERSION_HEX}
     )
 
 ########### dependencies  ###############
 
-find_package(Qt5 5.10 REQUIRED COMPONENTS Core Sql Xml Widgets Test)
+find_package(Qt5 ${MINIMUM_Qt5_VERSION} REQUIRED COMPONENTS Core Sql Xml Widgets Test)
 find_package(Phonon4Qt5)
 find_package(QtAV)
 find_package(LIBVLC)
-find_package(KF5 5.44 REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
+find_package(KF5 ${MINIMUM_KF5_VERSION} REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
@@ -92,6 +104,10 @@ set_package_properties(Marble
 set(HAVE_MARBLE ${Marble_FOUND})
 if(Marble_FOUND)
     include(MarbleChecks)
+    if(NOT ${Marble_VERSION} VERSION_GREATER 0.28)
+        # Debian 11 (bullseye) ships with a version of Marble that is not compatible with these deprecations:
+        remove_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=${MINIMUM_Qt5_VERSION_HEX})
+    endif()
 endif()
 
 if(NOT Phonon4Qt5_FOUND AND NOT QtAV_FOUND AND NOT LIBVLC_FOUND)
@@ -124,21 +140,6 @@ set(libSettings_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/DateTableWidgetItem.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/Logging.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Settings/VideoPlayerSelectorDialog.cpp"
-    )
-
-set(libxmldb_SRCS
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/documentation.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/Database.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XMLCategoryCollection.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XMLCategory.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XMLImageDateCollection.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/NumberedBackup.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileReader.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/FileWriter.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/ElementWriter.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/XmlReader.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/CompressFileInfo.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/XMLDB/Logging.cpp"
     )
 
 set(libThumbnailView_SRCS
@@ -229,7 +230,6 @@ set(libUtilities_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastJpeg.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DemoUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DescriptionUtil.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/VideoUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ImageUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastDateTime.cpp"
     )
@@ -284,39 +284,46 @@ set(libImageManager_SRCS
 
 set(libDB_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/documentation.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfo.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/Category.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryCollection.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ExactCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDate.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/MD5Map.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/MemberMap.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfoList.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDB.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FileInfo.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/NegationCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/NewImageFinder.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageScout.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/NoTagCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/GroupCounter.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageSearchInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/Category.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryItem.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ContainerCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ValueCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/WildcardCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/OrCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/AndCategoryMatcher.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/OptimizedFileList.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/CategoryPtr.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ExifMode.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FastDir.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/FileInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/GroupCounter.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDateCollection.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDate.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageDB.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfoList.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageInfoPtr.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/ImageScout.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/MD5.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/MD5Map.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/MediaCount.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/MemberMap.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/NewImageFinder.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/OptimizedFileList.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/RawId.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/DB/SimpleCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/TagInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/AndCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/CategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/ContainerCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/ExactCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/ImageSearchInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/NegationCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/NoTagCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/OrCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/SimpleCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/ValueCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/WildcardCategoryMatcher.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/CompressFileInfo.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/ElementWriter.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/FileReader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/FileWriter.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/NumberedBackup.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/XmlReader.cpp"
     )
 
 set(libImportExport_SRCS
@@ -552,15 +559,12 @@ install(FILES kphotoalbumrc DESTINATION ${KDE_INSTALL_CONFDIR})
 install(FILES default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
 install(FILES kphotoalbumui.rc DESTINATION "${KDE_INSTALL_KXMLGUI5DIR}/kphotoalbum")
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+ki18n_install(po)
+
+if(KF5DocTools_FOUND)
+    kdoctools_install(po)
+endif()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 # vi:expandtab:tabstop=4 shiftwidth=4:
-
-find_package(KF5I18n CONFIG REQUIRED)
-ki18n_install(po)
-
-  find_package(KF5DocTools CONFIG)
-  if(KF5DocTools_FOUND)
-    kdoctools_install(po)
-  endif()

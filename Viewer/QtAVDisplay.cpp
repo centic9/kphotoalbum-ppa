@@ -3,6 +3,9 @@
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+// QtAVWidgets/WidgetRenderer 1.13 is incompativle witch QT_DISABLE_DEPRECATED_BEFORE 5.15:
+#undef QT_DISABLE_DEPRECATED_BEFORE
+
 #include "QtAVDisplay.h"
 #include "QtAVVideoToolBar.h"
 
@@ -23,7 +26,7 @@
 Viewer::QtAVDisplay::QtAVDisplay(QWidget *parent)
     : Viewer::VideoDisplay(parent)
 {
-    m_renderer = new QtAV::WidgetRenderer(this);
+    m_renderer = new QtAV::WidgetRenderer(this, Qt::Widget);
     if (!m_renderer) {
         QMessageBox::critical(this, i18n("Failed to set up video playback"), i18n("Failed to set up video playback (renderer wasn't created)"));
         return;
@@ -146,7 +149,7 @@ bool Viewer::QtAVDisplay::isPlaying() const
     return m_player->isPlaying();
 }
 
-void Viewer::QtAVDisplay::displayPosition(quint64 pos)
+void Viewer::QtAVDisplay::displayPosition(qint64 pos)
 {
     if (m_player->isSeekable())
         m_toolBar->setPosition(pos);

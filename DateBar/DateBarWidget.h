@@ -1,7 +1,12 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2004 - 2010 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2005, 2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2013 Dominik Broj <broj.dominik@gmail.com>
+// SPDX-FileCopyrightText: 2018 - 2020 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2019, 2022 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2013 - 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef DATEBAR_H
 #define DATEBAR_H
@@ -12,6 +17,7 @@
 #include <QPixmap>
 #include <QWidget>
 
+class KActionCollection;
 class QMenu;
 class QKeyEvent;
 class QMouseEvent;
@@ -25,6 +31,8 @@ class QFontMetrics;
 
 namespace DB
 {
+
+class ImageInfoList;
 class ImageDateCollection;
 class ImageDate;
 }
@@ -50,6 +58,14 @@ class SelectionHandler;
  *
  * The time resulution is represented by the \c ViewHandler, and the offset is stored in \c m_currentDate.
  *
+ * ## UI Description
+ *
+ * The area below the histogram bars can be used to select a date range using mouse click or drag.
+ * Clicking outside the selected range clears the selection (as does pressing the "Clear date selection" button).
+ *
+ * Clicking within the histogram bar area changes the focus item. The focus item of the DateBar can be used by other
+ * components (e.g. the ThumbnailViewer) to jump to an item at or close to the date unit represented by the focus item.
+ *
  */
 class DateBarWidget : public QWidget
 {
@@ -71,12 +87,35 @@ public:
      * @see setIncludeFuzzyCounts
      */
     bool includeFuzzyCounts() const;
+    KActionCollection *actions();
 
-public slots:
+    bool canZoomIn() const;
+    bool canZoomOut() const;
+
+public Q_SLOTS:
+    /**
+     * @brief centerDateRange centers the view on the given range.
+     * If the date range does not fit withing the current view range,
+     * the view is instead anchored to the \c range.start() date.
+     * @param range
+     */
+    void centerDateRange(const DB::ImageDate &range);
+    /**
+     * @brief centerDateRange centers the view on the given range.
+     * If the date range does not fit withing the current view range,
+     * the view is instead anchored to the \c min date.
+     * @param min
+     * @param max
+     */
+    void centerDateRange(const Utilities::FastDateTime &min, const Utilities::FastDateTime &max);
     void clearSelection();
     void setViewType(ViewType tp, bool redrawNow = true);
     void setDate(const Utilities::FastDateTime &date);
-    void setImageDateCollection(const QExplicitlySharedDataPointer<DB::ImageDateCollection> &);
+    /**
+     * @brief setImageCollection sets the list of images that are counted for the histogram graph.
+     * @param images
+     */
+    void setImageCollection(const DB::ImageInfoList &images);
     void scrollLeft();
     void scrollRight();
     void scroll(int units);
@@ -98,13 +137,14 @@ public slots:
      */
     void setAutomaticRangeAdjustment(bool);
 
-signals:
-    void canZoomIn(bool);
-    void canZoomOut(bool);
+Q_SIGNALS:
+    void zoomInEnabled(bool);
+    void zoomOutEnabled(bool);
     void dateSelected(const DB::ImageDate &, bool includeRanges);
     void toolTipInfo(const QString &);
     void dateRangeChange(const DB::ImageDate &);
     void dateRangeCleared();
+    void dateRangeSelected(bool);
 
 public:
     // Overridden methods for internal purpose
@@ -172,6 +212,7 @@ protected:
     DB::ImageDate currentSelection() const;
     void emitDateSelected();
     void emitRangeSelection(const DB::ImageDate &);
+    void setImageDateCollection(const QExplicitlySharedDataPointer<DB::ImageDateCollection> &);
 
 private:
     void setViewHandlerForType(ViewType tp);
@@ -206,14 +247,15 @@ private:
     QToolButton *m_zoomOut;
     QToolButton *m_cancelSelection;
 
-    int m_currentUnit;
-    Utilities::FastDateTime m_currentDate;
+    int m_currentUnit; ///< focus unit; also offset for drawing.
+    Utilities::FastDateTime m_currentDate; ///< reference frame for date bar. Equals unit 0.
     int m_barWidth; ///< width of a single unit in pixel
     int m_barHeight;
     bool m_includeFuzzyCounts;
     QMenu *m_contextMenu;
     bool m_showResolutionIndicator;
     bool m_doAutomaticRangeAdjustment;
+    KActionCollection *m_actionCollection;
 };
 }
 

@@ -1,12 +1,11 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ListSelect.h"
 
 #include "CompletableLineEdit.h"
-#include "Dialog.h"
 #include "ListViewItemHider.h"
 #include "ShowSelectionOnlyManager.h"
 
@@ -32,6 +31,7 @@
 #include <QToolButton>
 #include <QWidgetAction>
 #include <kcompletion_version.h>
+#include <kwidgetsaddons_version.h>
 
 using namespace AnnotationDialog;
 using CategoryListView::CheckDropItem;
@@ -175,7 +175,7 @@ void AnnotationDialog::ListSelect::slotReturn()
         if (!items.isEmpty()) {
             items.at(0)->setCheckState(0, Qt::Checked);
             if (m_positionable) {
-                emit positionableTagSelected(m_category->name(), items.at(0)->text(0));
+                Q_EMIT positionableTagSelected(m_category->name(), items.at(0)->text(0));
             }
         } else {
             Q_ASSERT(false);
@@ -323,9 +323,9 @@ void AnnotationDialog::ListSelect::itemSelected(QTreeWidgetItem *item)
     else {
         if (m_positionable) {
             if (item->checkState(0) == Qt::Checked) {
-                emit positionableTagSelected(m_category->name(), item->text(0));
+                Q_EMIT positionableTagSelected(m_category->name(), item->text(0));
             } else {
-                emit positionableTagDeselected(m_category->name(), item->text(0));
+                Q_EMIT positionableTagDeselected(m_category->name(), item->text(0));
             }
         }
 
@@ -428,12 +428,12 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
                                                                  "about it from any image containing the item.</p>",
                                                                  title),
                                                       i18n("Really Delete %1?", item->text(0)),
-                                                      KGuiItem(i18n("&Delete"), QString::fromLatin1("editdelete")));
+                                                      KStandardGuiItem::del());
         if (code == KMessageBox::Continue) {
             if (item->checkState(0) == Qt::Checked && m_positionable) {
                 // An area could be linked against this. We can use positionableTagDeselected
                 // here, as the procedure is the same as if the tag had been deselected.
-                emit positionableTagDeselected(m_category->name(), item->text(0));
+                Q_EMIT positionableTagDeselected(m_category->name(), item->text(0));
             }
 
             m_category->removeItem(item->text(0));
@@ -444,17 +444,27 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
         Q_ASSERT(computedEditMode() == Editable);
         bool ok;
         QString newStr = QInputDialog::getText(this,
-                                               i18n("Rename Item"), i18n("Enter new name:"),
+                                               i18nc("@title", "Rename Item"), i18n("Enter new name:"),
                                                QLineEdit::Normal,
                                                item->text(0), &ok);
 
         if (ok && !newStr.isEmpty() && newStr != item->text(0)) {
-            int code = KMessageBox::questionYesNo(this, i18n("<p>Do you really want to rename \"%1\" to \"%2\"?<br/>"
-                                                             "Doing so will rename \"%3\" "
-                                                             "on any image containing it.</p>",
-                                                             item->text(0), newStr, item->text(0)),
-                                                  i18n("Really Rename %1?", item->text(0)));
-            if (code == KMessageBox::Yes) {
+            const QString question = i18n("<p>Do you really want to rename \"%1\" to \"%2\"?<br/>"
+                                          "Doing so will rename \"%3\" "
+                                          "on any image containing it.</p>",
+                                          item->text(0), newStr, item->text(0));
+            const QString questionTitle = i18nc("@title", "Rename %1?", item->text(0));
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+            const auto answer = KMessageBox::questionTwoActions(this,
+                                                                question,
+                                                                questionTitle,
+                                                                KGuiItem(i18nc("@action:button", "Rename")),
+                                                                KStandardGuiItem::cancel());
+            if (answer == KMessageBox::ButtonCode::PrimaryAction) {
+#else
+            const auto answer = KMessageBox::questionYesNo(this, question, questionTitle);
+            if (answer == KMessageBox::Yes) {
+#endif
                 QString oldStr = item->text(0);
                 m_category->renameItem(oldStr, newStr);
                 bool checked = item->checkState(0) == Qt::Checked;
@@ -469,7 +479,7 @@ void AnnotationDialog::ListSelect::showContextMenu(const QPoint &pos)
 
                 if (m_positionable) {
                     // Also take care of areas that could be linked against this
-                    emit positionableTagRenamed(m_category->name(), oldStr, newStr);
+                    Q_EMIT positionableTagRenamed(m_category->name(), oldStr, newStr);
                 }
             }
         }
