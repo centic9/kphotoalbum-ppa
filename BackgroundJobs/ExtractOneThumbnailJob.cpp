@@ -16,6 +16,11 @@
 #include <QImage>
 #include <QPainter>
 
+namespace
+{
+constexpr QFileDevice::Permissions FILE_PERMISSIONS { QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther };
+}
+
 namespace BackgroundJobs
 {
 
@@ -31,7 +36,7 @@ ExtractOneThumbnailJob::ExtractOneThumbnailJob(const DB::FileName &fileName, int
 void ExtractOneThumbnailJob::execute()
 {
     if (m_wasCanceled || frameName().exists())
-        emit completed();
+        Q_EMIT completed();
     else {
         DB::ImageInfoPtr info = DB::ImageDB::instance()->info(m_fileName);
         const int length = info->videoLength();
@@ -76,10 +81,12 @@ void ExtractOneThumbnailJob::frameLoaded(const QImage &image)
     } else {
         // Create empty file to avoid that we recheck at next start up.
         QFile file(frameName().absolute());
-        if (file.open(QFile::WriteOnly))
+        if (file.open(QFile::WriteOnly)) {
+            file.setPermissions(FILE_PERMISSIONS);
             file.close();
+        }
     }
-    emit completed();
+    Q_EMIT completed();
 }
 
 DB::FileName ExtractOneThumbnailJob::frameName() const

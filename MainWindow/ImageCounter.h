@@ -1,7 +1,6 @@
-/* SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2003-2022 Jesper K. Pedersen <blackie@kde.org>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef IMAGECOUNTER_H
 #define IMAGECOUNTER_H
@@ -17,11 +16,11 @@ class ImageCounter : public QLabel
 public:
     explicit ImageCounter(QWidget *parent);
 
-public slots:
-    void setMatchCount(uint matches);
-    void setSelectionCount(uint selected);
-    void setTotal(uint);
-    void showBrowserMatches(uint matches);
+public Q_SLOTS:
+    void setMatchCount(int matches);
+    void setSelectionCount(int selected);
+    void setTotal(int);
+    void showBrowserMatches(int matches);
 };
 }
 

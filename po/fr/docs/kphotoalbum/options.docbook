@@ -1,3 +1,12 @@
+<!--
+SPDX-FileCopyrightText: 2003-2006 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
+SPDX-FileCopyrightText: 2012 Yuri Chornoivan <yurchor@ukr.net>
+SPDX-FileCopyrightText: 2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+
+SPDX-License-Identifier: GFDL-1.2-only
+-->
+
 <chapter id="chp-options">
   <title
 >Configuration de &kphotoalbum;</title>
@@ -31,7 +40,7 @@
 </figure>
 
 <para
->L'utilisation de l'information EXIF d'orientation fera tourner automatiquement les images comme un cliché. La plupart des appareils photo propose un aperçu des fichiers au format RAW et très souvent, cet aperçu est vraiment de taille suffisante et peut être même mis en plein écran. Choisir cet aperçu accélérera les opérations sur les photos parce que le décodage des fichiers RAW est très consommateur en temps et le traitement d'un aperçu est beaucoup plus rapide. Vous pouvez aussi définir la taille minimale pour l'aperçu, ainsi l'image au format RAW n'est décodée que si la taille de l'aperçu est inexploitable.</para>
+>L'utilisation de l'information « EXIF » d'orientation fera tourner automatiquement les images comme un cliché. La plupart des appareils photo propose une vignette de fichiers au format « RAW » et très souvent, cette vignette est vraiment de taille suffisante et peut être même mis en plein écran. Choisir cette vignette accélérera les opérations sur les photos parce que le décodage des fichiers « RAW » est très consommateur en temps et le traitement d'une vignette est beaucoup plus rapide. Vous pouvez aussi définir la taille minimale pour le vignette, ainsi l'image au format « RAW » n'est décodée que si la taille de la vignette est inexploitable.</para>
 </sect1>
 
 <sect1 id="opt-search-new">
@@ -74,28 +83,28 @@
 ></listitem>
     </orderedlist>
     </listitem>
-</itemizedlist>
-Veuillez noter que le texte de remplacement pour le fichier « Original » peuvent avoir de multiples suffixes séparés par des points virgule et les correspondances de référence à l'expression rationnelle peut être utilisé dans le format de \1. Le fichier « Original » sera recherché à partir du même dossier que celui du nouveau fichier. Oh, l'expression rationnelle « exemple » donnera par exemple les correspondances suivantes de fichiers : exemple_v1.jpg, exemple_12.tif, exemple.PNG. </para>
+</itemizedlist
+>Veuillez noter que le texte de remplacement pour le fichier « Original » peuvent avoir de multiples suffixes séparés par des points virgule et les correspondances de référence à l'expression rationnelle peut être utilisé dans le format de \1. Le fichier « Original » sera recherché à partir du même dossier que celui du nouveau fichier. Oh, l'expression rationnelle « exemple » donnera par exemple les correspondances suivantes de fichiers : exemple_v1.jpg, exemple_12.tif, exemple.PNG. </para>
 </sect1>
 
 <sect1 id="opt-thumbnails">
   <title
->Paramètres d'affichage des aperçus</title>
+>Paramètres d'affichage des vignettes</title>
   <para
->Il n'y a que peu de choses que vous ayez à configurer pour l'afficheur d'aperçus. Principalement, la taille de l'aperçu et la taille de l'astuce (si vous prévoyez d'utiliser cette fonctionnalité, qui peut être activée à partir du menu <menuchoice
+>Il n'y a que peu de choses que vous ayez à configurer pour l'afficheur de vignettes. Principalement, la taille de la vignette et la taille de l'astuce (si vous prévoyez d'utiliser cette fonctionnalité, qui peut être activée à partir du menu <menuchoice
 ><guimenu
 >Paramètres</guimenu
 ><guimenuitem
->Afficher les astuces dans la fenêtre d'aperçus</guimenuitem
+>Afficher les astuces dans la fenêtre de vignettes</guimenuitem
 ></menuchoice
 > ou <keycombo
 >&Ctrl; <keycap
 >T</keycap
 ></keycombo
->). Vous pouvez aussi sélectionner l'affichage d'informations additionnelles comme les étiquettes ou les catégories avec les aperçus. </para>
+>). Vous pouvez aussi sélectionner l'affichage d'informations additionnelles comme les étiquettes ou les catégories avec les vignettes. </para>
 <figure>
 <title
->Options pour l'affichage par icônes</title>
+>Options pour l'affichage par vignettes</title>
 <mediaobject>
 <imageobject>
 <imagedata fileref="options-thumbnailview.png" format="PNG"/>
@@ -108,7 +117,11 @@ Veuillez noter que le texte de remplacement pour le fichier « Original » peu
   <title
 >Paramètres d'affichage</title>
   <para
->Une autre configuration plutôt simple.  </para>
+>Une autre configuration plutôt simple. De façon majoritaire, vous pouvez sélectionner la taille préférée pour la fenêtre de l'afficheur ou du diaporama, ou réaliser un affichage en mode « Plein écran ». L'algorithme de mise à l'échelle peut être choisi selon le <emphasis
+>Meilleur</emphasis
+> ou le <emphasis
+>Plus rapide</emphasis
+>. Si votre ordinateur est suffisamment rapide, le choix « Meilleur » se justifie, sinon, préférez le choix de la vitesse. </para>
 <figure>
 <title
 >Options pour l'afficheur</title>

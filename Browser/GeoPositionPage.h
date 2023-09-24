@@ -1,7 +1,8 @@
-/* SPDX-FileCopyrightText: 2003-2019 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2009-2013 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2018-2022 Tobias Leupold <tl@stonemx.de>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #ifndef GEOPOSITIONPAGE_H
 #define GEOPOSITIONPAGE_H
@@ -9,7 +10,7 @@
 
 #include <DB/Category.h>
 #include <DB/CategoryPtr.h>
-#include <DB/ImageSearchInfo.h>
+#include <DB/search/ImageSearchInfo.h>
 
 class QAbstractItemModel;
 class FlatCategoryModel;
@@ -35,7 +36,7 @@ public:
     bool isSearchable() const override;
     bool showDuringMovement() const override;
 
-public slots:
+public Q_SLOTS:
     void slotNewRegionSelected(Map::GeoCoordinates::LatLonBox coordinates);
 
 private:

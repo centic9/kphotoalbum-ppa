@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -10,8 +10,8 @@
 #include "KimFileReader.h"
 #include "MD5CheckPage.h"
 
+#include <DB/ImageDB.h>
 #include <DB/ImageInfo.h>
-#include <XMLDB/Database.h>
 #include <kpabase/SettingsData.h>
 
 #include <KHelpClient>
@@ -28,6 +28,7 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QScrollArea>
+#include <kwidgetsaddons_version.h>
 
 using Utilities::StringSet;
 
@@ -69,11 +70,11 @@ bool ImportDialog::exec(KimFileReader *kimFileReader, const QUrl &kimFileURL)
 
 bool ImportDialog::readFile(const QByteArray &data)
 {
-    XMLDB::ReaderPtr reader = XMLDB::ReaderPtr(new XMLDB::XmlReader(DB::ImageDB::instance()->uiDelegate(),
-                                                                    m_kimFile.toDisplayString()));
+    DB::ReaderPtr reader = DB::ReaderPtr(new DB::XmlReader(DB::ImageDB::instance()->uiDelegate(),
+                                                           m_kimFile.toDisplayString()));
     reader->addData(data);
 
-    XMLDB::ElementInfo info = reader->readNextStartOrStopElement(QString::fromUtf8("KimDaBa-export"));
+    DB::ElementInfo info = reader->readNextStartOrStopElement(QString::fromUtf8("KimDaBa-export"));
     if (!info.isStartToken)
         reader->complainStartElementExpected(QString::fromUtf8("KimDaBa-export"));
 
@@ -92,7 +93,7 @@ bool ImportDialog::readFile(const QByteArray &data)
 
     while (reader->readNextStartOrStopElement(QString::fromUtf8("image")).isStartToken) {
         const DB::FileName fileName = DB::FileName::fromRelativePath(reader->attribute(QString::fromUtf8("file")));
-        DB::ImageInfoPtr info = XMLDB::Database::createImageInfo(fileName, reader);
+        DB::ImageInfoPtr info = DB::ImageDB::createImageInfo(fileName, reader);
         m_images.append(info);
     }
     // the while loop already read the end element, so we tell readEndElement to not read the next token:
@@ -282,11 +283,7 @@ ImportMatcher *ImportDialog::createCategoryPage(const QString &myCategory, const
     QStringList myItems = DB::ImageDB::instance()->categoryCollection()->categoryForName(myCategory)->itemsInclCategories();
     myItems.sort();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     const QStringList otherItemsList(otherItems.begin(), otherItems.end());
-#else
-    const QStringList otherItemsList = otherItems.toList();
-#endif
     ImportMatcher *matcher = new ImportMatcher(otherCategory, myCategory, otherItemsList, myItems, true, this);
     addPage(matcher, myCategory);
     return matcher;
@@ -297,15 +294,26 @@ void ImportDialog::next()
     if (currentPage() == m_destinationPage) {
         QString dir = m_destinationEdit->text();
         if (!QFileInfo(dir).exists()) {
-            int answer = KMessageBox::questionYesNo(this, i18n("Folder %1 does not exist. Should it be created?", dir));
-            if (answer == KMessageBox::Yes) {
-                bool ok = QDir().mkpath(dir);
-                if (!ok) {
-                    KMessageBox::error(this, i18n("Error creating folder %1", dir));
-                    return;
-                }
-            } else
+            const QString question = i18n("Folder %1 does not exist. Should it be created?", dir);
+            const QString title = i18nc("@title", "Create folder?");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+            const auto answer = KMessageBox::questionTwoActions(this,
+                                                                question,
+                                                                title,
+                                                                KGuiItem(i18nc("@action:button", "Create")),
+                                                                KStandardGuiItem::cancel());
+            if (answer != KMessageBox::ButtonCode::PrimaryAction)
                 return;
+#else
+            const auto answer = KMessageBox::questionYesNo(this, question, title);
+            if (answer != KMessageBox::Yes)
+                return;
+#endif
+            bool ok = QDir().mkpath(dir);
+            if (!ok) {
+                KMessageBox::error(this, i18n("Error creating folder %1", dir));
+                return;
+            }
         }
     }
     if (!m_hasFilled && currentPage() == m_categoryMatcherPage) {

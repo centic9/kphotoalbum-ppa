@@ -1,6 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -59,7 +58,7 @@ public:
      */
     FilterWidget *createFilterWidget(QWidget *parent);
 
-public slots:
+public Q_SLOTS:
     void gotoDate(const DB::ImageDate &date, bool includeRanges);
     void selectAll();
     void clearSelection();
@@ -69,12 +68,11 @@ public slots:
     void expandAllStacks();
     void updateDisplayModel();
     void changeSingleSelection(const DB::FileName &fileName);
-    void slotRecreateThumbnail();
 
     void clearFilter();
     void setFreeformFilter(const QString &text);
 
-signals:
+Q_SIGNALS:
     void showImage(const DB::FileName &id);
     void showSelection();
     void showSearch();

@@ -62,7 +62,7 @@ void VideoToolBar::setRange(int min, int max)
     m_totalTime->setText(QTime(0, 0, 0).addMSecs(max).toString(format()));
 }
 
-void VideoToolBar::setPosition(int value)
+void VideoToolBar::setPosition(qint64 value)
 {
     m_offsetSlider->setValue(value);
     m_currentOffset->setText(QTime(0, 0, 0).addMSecs(value).toString(format()));
@@ -92,7 +92,7 @@ void VideoToolBar::setMuted(bool b)
     m_volumeSlider->setEnabled(!b);
     if (b != m_isMuted) {
         m_isMuted = b;
-        emit muted(b);
+        Q_EMIT muted(b);
     }
 }
 

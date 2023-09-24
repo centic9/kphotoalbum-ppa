@@ -1,17 +1,20 @@
 // SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2023 Tobias Leupold <tl at stonemx dot de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "FileInfo.h"
 
-#include <Utilities/VideoUtil.h>
+#include <kpabase/FileExtensions.h>
 #include <kpabase/SettingsData.h>
 #include <kpaexif/Info.h>
 
 #include <Utilities/FastDateTime.h>
 #include <QFileInfo>
 #include <QRegularExpression>
+
+#include <exiv2/version.hpp>
 
 using namespace DB;
 
@@ -55,7 +58,7 @@ bool DB::FileInfo::updateDataFromFileTimeStamp(const DB::FileName &fileName, DB:
         return true;
 
     // Always trust for videos (this is a way to say that we should not trust for scaned in images - which makes no sense for videos)
-    if (Utilities::isVideo(fileName))
+    if (KPABase::isVideo(fileName))
         return true;
 
     // Finally use the info from the settings dialog
@@ -79,8 +82,14 @@ void DB::FileInfo::parseEXIV2(const DB::FileName &fileName)
         const Exiv2::Exifdatum &datum = m_exifMap["Exif.Image.Orientation"];
 
         int orientation = 0;
-        if (datum.count() > 0)
+        if (datum.count() > 0) {
+#if EXIV2_TEST_VERSION(0, 28, 0)
+            orientation = datum.toInt64();
+#else
             orientation = datum.toLong();
+#endif
+        }
+
         m_angle = orientationToAngle(orientation);
     }
 
