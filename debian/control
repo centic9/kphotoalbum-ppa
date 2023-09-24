@@ -25,9 +25,11 @@ Build-Depends: cmake (>= 3.18.0~),
                libkf5xmlgui-dev (>= 5.78.0~),
                libmarble-dev,
                libphonon4qt5-dev,
+               libphonon4qt5experimental-dev,
                pkg-config,
                pkg-kde-tools (>= 0.15.16),
                qtbase5-dev (>= 5.15.0~),
+               libqt5webkit5-dev (>= 5.44)
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Homepage: https://kphotoalbum.org
@@ -47,8 +49,3 @@ Description: tool for indexing, searching and viewing images by keywords for KDE
  with its keywords, KPhotoAlbum stores each picture's MD5 sum, so it will
  recognize them even if you move them to another directory. KPhotoAlbum can
  also create HTML galleries with the images you select.
- .
- KPhotoAlbum can also make use of the KIPI image handling plugins to extend its
- capabilities. The kipi-plugins package contains many useful extensions. Among
- others, it contains extensions for photo manipulation, importing, exporting
- and batch processing.
