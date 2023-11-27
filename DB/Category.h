@@ -42,10 +42,10 @@ class Category : public QObject, public QSharedData
     Q_OBJECT
 
 public:
-    enum ViewType { TreeView,
-                    ThumbedTreeView,
-                    IconView,
-                    ThumbedIconView };
+    enum ViewType { TreeView, ///< TreeView with generic items
+                    ThumbedTreeView, ///< TreeView with user thumbnails
+                    IconView, ///< IconView with generic items
+                    ThumbedIconView }; ///< IconView with user thumbnails
     enum CategoryType { PlainCategory,
                         FolderCategory,
                         MediaTypeCategory,
@@ -69,6 +69,10 @@ public:
     int thumbnailSize() const;
     void setThumbnailSize(int size);
 
+    /**
+     * @brief doShow tells if the Category should be shown as part of the info text.
+     * @return
+     */
     bool doShow() const;
     void setDoShow(bool b);
 
@@ -94,8 +98,8 @@ public:
      */
     DB::TagInfo *itemForName(const QString &tag);
 
-    QPixmap categoryImage(const QString &category, QString, int width, int height) const;
-    void setCategoryImage(const QString &category, QString, const QImage &image);
+    QPixmap categoryImage(const QString &category, const QString &, int width, int height) const;
+    void setCategoryImage(const QString &category, const QString &, const QImage &image);
     QString fileForCategoryImage(const QString &category, QString member) const;
 
     QDate birthDate(const QString &item) const;
@@ -139,8 +143,6 @@ public:
     void setShouldSave(bool b);
 
 private:
-    QString defaultIconName() const;
-
     QString m_name;
     QString m_icon;
     bool m_show;

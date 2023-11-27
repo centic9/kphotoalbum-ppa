@@ -72,6 +72,7 @@ void DB::FileReader::read(const QString &configFile)
     loadBlockList(reader);
     loadMemberGroups(reader);
     // loadSettings(reader);
+    loadGlobalSortOrder(reader);
 
     repairDB();
 
@@ -132,7 +133,7 @@ void DB::FileReader::createSpecialCategories()
 
     // Setup the "Media Type" category
     DB::CategoryPtr mediaCat;
-    mediaCat = new DB::Category(i18n("Media Type"), QString::fromLatin1("view-categories"),
+    mediaCat = new DB::Category(i18n("Media Type"), QString::fromLatin1("video"),
                                 DB::Category::TreeView, 32, false);
     mediaCat->addItem(i18n("Image"));
     mediaCat->addItem(i18n("Video"));
@@ -373,6 +374,22 @@ void DB::FileReader::loadMemberGroups(ReaderPtr reader)
     }
 }
 
+void DB::FileReader::loadGlobalSortOrder(ReaderPtr reader)
+{
+    ElementInfo info = reader->peekNext();
+    auto &list = m_db->categoryCollection()->globalSortOrder()->m_sortOrder;
+
+    if (info.isStartToken && info.tokenName == QStringLiteral("global-sort-order")) {
+        reader->readNextStartOrStopElement(QStringLiteral("item"));
+        while (reader->readNextStartOrStopElement(QStringLiteral("item")).isStartToken) {
+            const QString category = reader->attribute(QStringLiteral("category"));
+            const QString item = reader->attribute(QStringLiteral("item"));
+            list.append({ category, item });
+            reader->readEndElement();
+        }
+    }
+}
+
 /*
 void DB::FileReader::loadSettings(ReaderPtr reader)
 {
@@ -462,7 +479,7 @@ void DB::FileReader::repairDB()
         QString logSummary = QString::fromLatin1("List of tags where manual inspection is required:\n");
         bool manualRepairNeeded = false;
         for (auto category : m_db->categoryCollection()->categories()) {
-            QStringList tags = category->namesForIdZero();
+            const QStringList tags = category->namesForIdZero();
             if (tags.size() > 1) {
                 manualRepairNeeded = true;
                 message += i18nc("repair merged tags", "<li>%1:<br/>", category->name());

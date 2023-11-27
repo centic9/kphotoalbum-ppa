@@ -7,4 +7,5 @@ execute_before_dh_auto_build:
 	# force generation of version.h, to avoid races later on
 	dh_auto_build --no-parallel -- UpdateVersion
 
-.PHONY: override_dh_auto_test
+override_dh_auto_test:
+	xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test

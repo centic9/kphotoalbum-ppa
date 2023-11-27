@@ -276,6 +276,7 @@ private:
     KToggleAction *m_smallListView;
     KToggleAction *m_largeListView;
     KToggleAction *m_largeIconView;
+    KToggleAction *m_sortViewNaturally;
     KActionMenu *m_colorSchemeMenu;
     QAction *m_generateHtml;
     QAction *m_copy;
@@ -294,7 +295,6 @@ private:
     TokenEditor *m_tokenEditor;
     DateBar::DateBarWidget *m_dateBar;
     QFrame *m_dateBarLine;
-    QMap<Qt::Key, QPair<QString, QString>> m_viewerInputMacros;
     MainWindow::StatusBar *m_statusBar;
     QString m_lastTarget;
 #ifdef HAVE_MARBLE

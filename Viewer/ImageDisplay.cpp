@@ -1,4 +1,5 @@
-// SPDX-FileCopyrightText: 2003-2022 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003 - 2022 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -64,58 +65,14 @@ Viewer::ImageDisplay::ImageDisplay(QWidget *parent)
     , m_forward(true)
     , m_curIndex(0)
     , m_busy(false)
-    , m_cursorHiding(true)
 {
     m_viewHandler = new ViewHandler(this);
 
     setMouseTracking(true);
-    m_cursorTimer = new QTimer(this);
-    m_cursorTimer->setSingleShot(true);
-    connect(m_cursorTimer, &QTimer::timeout, this, &ImageDisplay::hideCursor);
-    showCursor();
-}
-
-/**
- * If mouse cursor hiding is enabled, hide the cursor right now
- */
-void Viewer::ImageDisplay::hideCursor()
-{
-    if (m_cursorHiding)
-        setCursor(Qt::BlankCursor);
-}
-
-/**
- * If mouse cursor hiding is enabled, show normal cursor and start a timer that will hide it later
- */
-void Viewer::ImageDisplay::showCursor()
-{
-    if (m_cursorHiding) {
-        unsetCursor();
-        m_cursorTimer->start(1500);
-    }
-}
-
-/**
- * Prevent hideCursor() and showCursor() from altering cursor state
- */
-void Viewer::ImageDisplay::disableCursorHiding()
-{
-    m_cursorHiding = false;
-}
-
-/**
- * Enable automatic mouse cursor hiding
- */
-void Viewer::ImageDisplay::enableCursorHiding()
-{
-    m_cursorHiding = true;
 }
 
 void Viewer::ImageDisplay::mousePressEvent(QMouseEvent *event)
 {
-    // disable cursor hiding till button release
-    disableCursorHiding();
-
     QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
     bool block = m_viewHandler->mousePressEvent(&e, event->pos(), ratio);
@@ -126,9 +83,6 @@ void Viewer::ImageDisplay::mousePressEvent(QMouseEvent *event)
 
 void Viewer::ImageDisplay::mouseMoveEvent(QMouseEvent *event)
 {
-    // just reset the timer
-    showCursor();
-
     QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
     bool block = m_viewHandler->mouseMoveEvent(&e, event->pos(), ratio);
@@ -139,10 +93,6 @@ void Viewer::ImageDisplay::mouseMoveEvent(QMouseEvent *event)
 
 void Viewer::ImageDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
-    // enable cursor hiding and reset timer
-    enableCursorHiding();
-    showCursor();
-
     m_cache.remove(m_curIndex);
     QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
@@ -221,6 +171,11 @@ QPoint Viewer::ImageDisplay::offset(int logicalWidth, int logicalHeight, int phy
 void Viewer::ImageDisplay::zoom(QPoint p1, QPoint p2)
 {
     qCDebug(ViewerLog, "zoom(%d,%d, %d,%d)", p1.x(), p1.y(), p2.x(), p2.y());
+    if (!m_info) {
+        // should not happen because the user can't click fast enough, but who knows...
+        qCWarning(ViewerLog, "Trying to zoom without an image");
+        return;
+    }
     m_cache.remove(m_curIndex);
     normalize(p1, p2);
 
@@ -241,7 +196,7 @@ void Viewer::ImageDisplay::zoom(QPoint p1, QPoint p2)
 
 QPoint Viewer::ImageDisplay::mapPos(QPoint p)
 {
-    QPoint off = offset(qAbs(m_zEnd.x() - m_zStart.x()), qAbs(m_zEnd.y() - m_zStart.y()), width(), height(), 0);
+    QPoint off = offset(qAbs(m_zEnd.x() - m_zStart.x()), qAbs(m_zEnd.y() - m_zStart.y()), width(), height(), nullptr);
     p -= off;
     int x = (int)(m_zStart.x() + (m_zEnd.x() - m_zStart.x()) * ((double)p.x() / (width() - 2 * off.x())));
     int y = (int)(m_zStart.y() + (m_zEnd.y() - m_zStart.y()) * ((double)p.y() / (height() - 2 * off.y())));
@@ -251,7 +206,7 @@ QPoint Viewer::ImageDisplay::mapPos(QPoint p)
 
 void Viewer::ImageDisplay::xformPainter(QPainter *p)
 {
-    QPoint off = offset(qAbs(m_zEnd.x() - m_zStart.x()), qAbs(m_zEnd.y() - m_zStart.y()), width(), height(), 0);
+    QPoint off = offset(qAbs(m_zEnd.x() - m_zStart.x()), qAbs(m_zEnd.y() - m_zStart.y()), width(), height(), nullptr);
     double s = (width() - 2 * off.x()) / qAbs((double)m_zEnd.x() - m_zStart.x());
     p->scale(s, s);
     p->translate(-m_zStart.x(), -m_zStart.y());
@@ -494,9 +449,9 @@ void Viewer::ImageDisplay::updateZoomCaption()
         ratio = ((double)imgSize.height()) / (m_zEnd.y() - m_zStart.y());
     }
 
-    Q_EMIT setCaptionInfo((ratio > 1.05)
-                            ? ki18n("[ zoom x%1 ]").subs(ratio, 0, 'f', 1).toString()
-                            : QString());
+    Q_EMIT imageZoomCaptionChanged((ratio > 1.05)
+                                       ? ki18n("[ zoom x%1 ]").subs(ratio, 0, 'f', 1).toString()
+                                       : QString());
 }
 
 QImage Viewer::ImageDisplay::currentViewAsThumbnail() const
@@ -526,7 +481,8 @@ void Viewer::ImageDisplay::pixmapLoaded(ImageManager::ImageRequest *request, con
     const int angle = request->angle();
     const bool loadedOK = request->loadedOK();
 
-    if (loadedOK && fileName == m_info->fileName()) {
+    // the image might have changed (even to a null value) while the pixmap was loaded
+    if (loadedOK && m_info && fileName == m_info->fileName()) {
         if (fullSize.isValid() && !m_info->size().isValid())
             m_info->setSize(fullSize);
 
@@ -659,6 +615,11 @@ void Viewer::ImageDisplay::unbusy()
 void Viewer::ImageDisplay::zoomPixelForPixel()
 {
     qCDebug(ViewerLog, "zoomPixelForPixel()");
+    if (!m_info) {
+        // should not happen because the user can't click fast enough, but who knows...
+        qCWarning(ViewerLog, "Trying to zoom without an image");
+        return;
+    }
     // This is rather tricky.
     // We want to zoom to a pixel level for the real image, which we might
     // or might not have loaded yet.
@@ -704,7 +665,7 @@ void Viewer::ImageDisplay::updateZoomPoints(const Settings::StandardViewSize typ
 
 void Viewer::ImageDisplay::potentiallyLoadFullSize()
 {
-    if (m_info->size() != m_loadedImage.size()) {
+    if (m_info && m_info->size() != m_loadedImage.size()) {
         qCDebug(ViewerLog) << "Loading full size image for " << m_info->fileName().relative();
         ImageManager::ImageRequest *request = new ImageManager::ImageRequest(m_info->fileName(), QSize(-1, -1), m_info->angle(), this);
         request->setPriority(ImageManager::Viewer);

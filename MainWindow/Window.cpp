@@ -299,6 +299,7 @@ void MainWindow::Window::delayedInit()
 
 bool MainWindow::Window::slotExit()
 {
+    bool deleteDemoDB = false;
     if (Options::the()->demoMode()) {
         const QString question = i18n("<p><b>Delete Your Temporary Demo Database</b></p>"
                                       "<p>I hope you enjoyed the KPhotoAlbum demo. The demo database was created in the "
@@ -325,15 +326,43 @@ bool MainWindow::Window::slotExit()
             return false;
         else if (answer == KMessageBox::Yes) {
 #endif
-            Utilities::deleteDemo();
+            deleteDemoDB = true;
         } else {
             slotSave();
-            // Flush any remaining thumbnails
-            thumbnailCache()->save();
+        }
+    } else if (m_statusBar->mp_dirtyIndicator->isSaveDirty()) {
+        const QString question = i18n("Do you want to save the changes?");
+        const QString title = i18nc("@title", "Save Changes?");
+#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
+        const auto answer = KMessageBox::questionTwoActionsCancel(widget(),
+                                                                  question,
+                                                                  title,
+                                                                  KStandardGuiItem::save(),
+                                                                  KStandardGuiItem::dontSave(),
+                                                                  KStandardGuiItem::cancel());
+        constexpr auto REPLY_SAVE = KMessageBox::PrimaryAction;
+        constexpr auto REPLY_DONTSAVE = KMessageBox::SecondaryAction;
+#else
+        const auto answer = KMessageBox::questionYesNoCancel(this, question, title);
+        constexpr auto REPLY_SAVE = KMessageBox::Yes;
+        constexpr auto REPLY_DONTSAVE = KMessageBox::No;
+#endif
+        if (answer == KMessageBox::Cancel) {
+            return false;
+        }
+        if (answer == REPLY_SAVE) {
+            slotSave();
+        }
+        if (answer == REPLY_DONTSAVE) {
+            QDir().remove(Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1(".#index.xml"));
         }
     }
 
     ImageManager::AsyncLoader::instance()->requestExit();
+    // Always flush any remaining thumbnails
+    thumbnailCache()->save();
+    if (deleteDemoDB)
+        Utilities::deleteDemo();
     qApp->quit();
     return true;
 }
@@ -665,14 +694,14 @@ void MainWindow::Window::launchViewer(const DB::FileNameList &inputMediaList, bo
         mediaList = DB::FileNameList(Utilities::shuffleList(mediaList));
     }
 
-    Viewer::ViewerWidget *viewer;
-    if (reuse && Viewer::ViewerWidget::latest()) {
-        viewer = Viewer::ViewerWidget::latest();
+    using Viewer::ViewerWidget;
+    ViewerWidget *viewer;
+    if (reuse && ViewerWidget::latest()) {
+        viewer = ViewerWidget::latest();
         viewer->raise();
         viewer->activateWindow();
     } else {
-        viewer = new Viewer::ViewerWidget(Viewer::ViewerWidget::ViewerWindow,
-                                          &m_viewerInputMacros);
+        viewer = new ViewerWidget(ViewerWidget::UsageType::FullFeaturedViewer);
         viewer->setCopyLinkEngine(m_copyLinkEngine);
     }
 
@@ -736,8 +765,14 @@ void MainWindow::Window::closeEvent(QCloseEvent *e)
 
 void MainWindow::Window::slotLimitToSelected()
 {
+    const auto selectedList = selected();
+    if (selectedList.isEmpty()) {
+        QMessageBox::information(this, i18n("Limit View to Selection"),
+                                 i18n("No images are selected!"));
+        return;
+    }
     Utilities::ShowBusyCursor dummy;
-    showThumbNails(selected());
+    showThumbNails(selectedList);
 }
 
 void MainWindow::Window::setupMenuBar()
@@ -908,6 +943,15 @@ void MainWindow::Window::setupMenuBar()
     m_largeIconView->setText(i18n("Icons"));
     m_viewMenu->addAction(m_largeIconView);
     m_largeIconView->setActionGroup(viewGrp);
+
+    m_viewMenu->addSeparator();
+
+    m_sortViewNaturally = actionCollection()->add<KToggleAction>(QString::fromLatin1("sortViewNaturally"), m_browser, &Browser::BrowserWidget::slotSortViewNaturally);
+    m_sortViewNaturally->setText(i18n("Use natural sort order"));
+    m_sortViewNaturally->setChecked(Settings::SettingsData::instance()->browserUseNaturalSortOrder());
+    m_browser->slotSortViewNaturally(m_sortViewNaturally->isChecked());
+    connect(m_sortViewNaturally, &QAction::toggled, Settings::SettingsData::instance(), &Settings::SettingsData::setBrowserUseNaturalSortOrder);
+    m_viewMenu->addAction(m_sortViewNaturally);
 
     connect(m_browser, &Browser::BrowserWidget::isViewChangeable, viewGrp, &QActionGroup::setEnabled);
     connect(m_browser, &Browser::BrowserWidget::currentViewTypeChanged, this, &Window::slotUpdateViewMenu);
@@ -1099,9 +1143,9 @@ void MainWindow::Window::slotOptionGroupChanged()
     // depend on this behaviour lest we want it to crash:
     if (m_annotationDialog) {
         m_annotationDialog->close();
+        m_annotationDialog->deleteLater();
     }
 
-    delete m_annotationDialog;
     m_annotationDialog = nullptr;
     DirtyIndicator::markDirty();
 }
@@ -1414,6 +1458,7 @@ void MainWindow::Window::reloadThumbnails(ThumbnailView::SelectionUpdateMethod m
 
 void MainWindow::Window::slotUpdateViewMenu(DB::Category::ViewType type)
 {
+    // the view group takes care of deselecting the other items
     if (type == DB::Category::TreeView)
         m_smallListView->setChecked(true);
     else if (type == DB::Category::ThumbedTreeView)
@@ -1590,7 +1635,7 @@ void MainWindow::Window::slotShowListOfFiles()
 {
     QStringList list = QInputDialog::getMultiLineText(this,
                                                       i18n("Open List of Files"),
-                                                      i18n("You can open a set of files from KPhotoAlbum's image root by listing the files here."))
+                                                      i18n("You can open a set of files in KPhotoAlbum's database by listing the files here."))
                            .split(QChar::fromLatin1('\n'), Qt::SkipEmptyParts);
     if (list.isEmpty())
         return;
@@ -1598,7 +1643,8 @@ void MainWindow::Window::slotShowListOfFiles()
     DB::FileNameList out;
     for (QStringList::const_iterator it = list.constBegin(); it != list.constEnd(); ++it) {
         const DB::FileName fileName = Utilities::fileNameFromUserData(*it);
-        if (!fileName.isNull())
+        // the file has to already be part of the database
+        if (DB::ImageDB::instance()->info(fileName))
             out.append(fileName);
     }
 

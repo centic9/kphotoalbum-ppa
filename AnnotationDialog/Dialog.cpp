@@ -118,7 +118,7 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
     layout->addWidget(m_stack);
 
     // The Viewer
-    m_fullScreenPreview = new Viewer::ViewerWidget(Viewer::ViewerWidget::InlineViewer);
+    m_fullScreenPreview = new Viewer::ViewerWidget(Viewer::ViewerWidget::UsageType::FullsizePreview);
     m_stack->addWidget(m_fullScreenPreview);
 
     // The dock widget
@@ -132,10 +132,6 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
     m_previewDock = createDock(i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget());
 
     m_description = new DescriptionEdit(this);
-    m_description->setProperty("WantsFocus", true);
-    m_description->setObjectName(i18n("Description"));
-    m_description->setCheckSpellingEnabled(true);
-    m_description->setTabChangesFocus(true); // this allows tabbing to the next item in the tab order.
     m_description->setWhatsThis(i18nc("@info:whatsthis",
                                       "<para>A descriptive text of the image.</para>"
                                       "<para>If <emphasis>Use Exif description</emphasis> is enabled under "
@@ -260,12 +256,11 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
     connect(m_okBut, &QPushButton::clicked, this, &Dialog::doneTagging);
     connect(m_continueLaterBut, &QPushButton::clicked, this, &Dialog::continueLater);
     connect(cancelBut, &QPushButton::clicked, this, &Dialog::reject);
-    connect(m_clearBut, &QPushButton::clicked, this, &Dialog::slotClear);
+    connect(m_clearBut, &QPushButton::clicked, this, &Dialog::slotClearSearchForm);
     connect(optionsBut, &QPushButton::clicked, this, &Dialog::slotOptions);
 
     connect(m_preview, &ImagePreviewWidget::imageRotated, this, &Dialog::rotate);
     connect(m_preview, &ImagePreviewWidget::indexChanged, this, &Dialog::slotIndexChanged);
-    connect(m_preview, &ImagePreviewWidget::imageDeleted, this, &Dialog::slotDeleteImage);
     connect(m_preview, &ImagePreviewWidget::copyPrevClicked, this, &Dialog::slotCopyPrevious);
     connect(m_preview, &ImagePreviewWidget::areaVisibilityChanged, this, &Dialog::slotShowAreas);
     connect(m_preview->preview(), &ImagePreview::areaCreated, this, &Dialog::slotNewArea);
@@ -290,11 +285,14 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
     shortCutManager.setupShortCuts();
 
     layout->addWidget(buttonBox);
+
+    connect(DB::ImageDB::instance(), &DB::ImageDB::imagesDeleted, this, &Dialog::slotDiscardFiles);
 }
 
 QDockWidget *AnnotationDialog::Dialog::createDock(const QString &title, const QString &name,
                                                   Qt::DockWidgetArea location, QWidget *widget)
 {
+    qCDebug(AnnotationDialogLog) << "Creating dock widget. Title:" << title << ", name:" << name << ", location:" << location;
     QDockWidget *dock = new QDockWidget(title);
     // make sure that no accelerator is set up now - this is done by ShortCutManager instead:
     KAcceleratorManager::setNoAccel(dock);
@@ -516,11 +514,11 @@ void AnnotationDialog::Dialog::slotCopyPrevious()
 
 void AnnotationDialog::Dialog::load()
 {
+    if (m_current < 0)
+        return;
+
     // Remove all areas
     tidyAreas();
-
-    // No areas have been changed
-    m_areasChanged = false;
 
     // Empty the positionable tag candidate list and the last selected positionable tag
     m_positionableTagCandidates.clear();
@@ -544,7 +542,7 @@ void AnnotationDialog::Dialog::load()
         m_endDate->setDate(info.date().end().date());
 
     m_imageLabel->setText(info.label());
-    m_description->setPlainText(info.description());
+    m_description->setDescription(info.description());
 
     if (m_setup == InputSingleImageConfigMode)
         m_rating->setRating(qMax(static_cast<short int>(0), info.rating()));
@@ -623,6 +621,9 @@ void AnnotationDialog::Dialog::load()
 
 void AnnotationDialog::Dialog::writeToInfo()
 {
+    if (m_current + 1 > m_editList.size())
+        return;
+
     for (ListSelect *ls : qAsConst(m_optionList)) {
         ls->slotReturn();
     }
@@ -650,7 +651,7 @@ void AnnotationDialog::Dialog::writeToInfo()
     DB::TaggedAreas areas = taggedAreas();
 
     info.setLabel(m_imageLabel->text());
-    info.setDescription(m_description->toPlainText());
+    info.setDescription(m_description->description());
 
     for (const ListSelect *ls : qAsConst(m_optionList)) {
         info.setCategoryInfo(ls->category(), ls->itemsOn());
@@ -681,6 +682,14 @@ void AnnotationDialog::Dialog::ShowHideSearch(bool show)
     m_ratingSearchLabel->setVisible(show);
 }
 
+#ifdef HAVE_MARBLE
+void AnnotationDialog::Dialog::clearMapData()
+{
+    m_annotationMap->clear();
+    m_mapIsPopulated = false;
+}
+#endif
+
 QList<AnnotationDialog::ResizableFrame *> AnnotationDialog::Dialog::areas() const
 {
     return m_preview->preview()->findChildren<ResizableFrame *>();
@@ -701,6 +710,7 @@ DB::TaggedAreas AnnotationDialog::Dialog::taggedAreas() const
 
 int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
 {
+    Q_ASSERT(!list.isEmpty());
     ShowHideSearch(false);
 
     if (oneAtATime) {
@@ -712,8 +722,7 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
     }
 
 #ifdef HAVE_MARBLE
-    m_mapIsPopulated = false;
-    m_annotationMap->clear();
+    clearMapData();
 #endif
     m_origList = list;
     m_editList.clear();
@@ -744,16 +753,17 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
 
         m_imageLabel->setText(QString());
         m_imageFilePattern->setText(QString());
-        m_firstDescription = m_editList[0].description();
+        const QString &firstDescription = m_editList[0].description();
 
         const bool allTextEqual = std::all_of(m_editList.begin(), m_editList.end(),
                                               [=](const DB::ImageInfo &item) -> bool {
-                                                  return item.description() == m_firstDescription;
+                                                  return item.description() == firstDescription;
                                               });
 
         if (!allTextEqual)
-            m_firstDescription = m_conflictText;
-        m_description->setPlainText(m_firstDescription);
+            m_description->setConflictWarning(m_conflictText);
+        else
+            m_description->setDescription(firstDescription);
     }
 
     showHelpDialog(oneAtATime ? InputSingleImageConfigMode : InputMultiImageConfigMode);
@@ -766,8 +776,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search(DB::ImageSearchInfo *search
     ShowHideSearch(true);
 
 #ifdef HAVE_MARBLE
-    m_mapIsPopulated = false;
-    m_annotationMap->clear();
+    clearMapData();
 #endif
     m_setup = SearchMode;
     if (search)
@@ -784,7 +793,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search(DB::ImageSearchInfo *search
         const QDate start = m_startDate->date();
         const QDate end = m_endDate->date();
         m_oldSearch = DB::ImageSearchInfo(DB::ImageDate(start, end),
-                                          m_imageLabel->text(), m_description->toPlainText(),
+                                          m_imageLabel->text(), m_description->description(),
                                           m_imageFilePattern->text());
 
         for (const ListSelect *ls : qAsConst(m_optionList)) {
@@ -841,7 +850,7 @@ void AnnotationDialog::Dialog::setup()
     }
 }
 
-void AnnotationDialog::Dialog::slotClear()
+void AnnotationDialog::Dialog::slotClearSearchForm()
 {
     loadInfo(DB::ImageSearchInfo());
 }
@@ -856,7 +865,7 @@ void AnnotationDialog::Dialog::loadInfo(const DB::ImageSearchInfo &info)
     }
 
     m_imageLabel->setText(info.label());
-    m_description->setText(info.description());
+    m_description->setDescription(info.description());
 }
 
 void AnnotationDialog::Dialog::slotOptions()
@@ -943,13 +952,12 @@ void AnnotationDialog::Dialog::slotOptions()
 int AnnotationDialog::Dialog::exec()
 {
     m_stack->setCurrentWidget(m_dockWindow);
-    showTornOfWindows();
     this->setFocus(); // Set temporary focus before show() is called so that extra cursor is not shown on any "random" input widget
     show(); // We need to call show before we call setupFocus() otherwise the widget will not yet all have been moved in place.
     setupFocus();
 
     const int ret = QDialog::exec();
-    hideTornOfWindows();
+    // don't do cleanup here! the dialog may even be deleted already at this point!
     return ret;
 }
 
@@ -957,7 +965,10 @@ void AnnotationDialog::Dialog::slotSaveWindowSetup()
 {
     const QByteArray data = m_dockWindow->saveState();
 
-    QFile file(QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory()));
+    const auto fileName = QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
+    qCDebug(AnnotationDialogLog) << "Saving window layout to file:" << fileName;
+
+    QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly)) {
         KMessageBox::error(this,
                            i18n("<p>Could not save the window layout.</p>"
@@ -978,9 +989,9 @@ void AnnotationDialog::Dialog::closeEvent(QCloseEvent *e)
     reject();
 }
 
-void AnnotationDialog::Dialog::hideTornOfWindows()
+void AnnotationDialog::Dialog::hideFloatingWindows()
 {
-    for (QDockWidget *dock : m_dockWidgets) {
+    for (QDockWidget *dock : qAsConst(m_dockWidgets)) {
         if (dock->isFloating()) {
             qCDebug(AnnotationDialogLog) << "Hiding dock: " << dock->objectName();
             dock->hide();
@@ -988,9 +999,9 @@ void AnnotationDialog::Dialog::hideTornOfWindows()
     }
 }
 
-void AnnotationDialog::Dialog::showTornOfWindows()
+void AnnotationDialog::Dialog::showFloatingWindows()
 {
-    for (QDockWidget *dock : m_dockWidgets) {
+    for (QDockWidget *dock : qAsConst(m_dockWidgets)) {
         if (dock->isFloating()) {
             qCDebug(AnnotationDialogLog) << "Showing dock: " << dock->objectName();
             dock->show();
@@ -1028,10 +1039,10 @@ void AnnotationDialog::Dialog::reject()
 {
     if (m_stack->currentWidget() == m_fullScreenPreview) {
         togglePreview();
-        return;
+        if (!m_origList.empty())
+            return;
     }
 
-    m_fullScreenPreview->stopPlayback();
     if (hasChanges()) {
         const QString question = i18n("<p>Some changes are made to annotations. Do you really want to discard all recent changes for each affected file?</p>");
         const QString title = i18nc("@title", "Discard changes?");
@@ -1054,7 +1065,16 @@ void AnnotationDialog::Dialog::reject()
 
 void AnnotationDialog::Dialog::closeDialog()
 {
+    // the dialog is usually reused, so clear residual data upon closing it...
+    loadInfo({});
+#ifdef HAVE_MARBLE
+    clearMapData();
+#endif
+    m_origList.clear();
+    m_editList.clear();
+    m_current = -1;
     tidyAreas();
+
     m_accept = QDialog::Rejected;
     QDialog::reject();
 }
@@ -1072,6 +1092,9 @@ StringSet AnnotationDialog::Dialog::changedOptions(const ListSelect *ls)
 
 bool AnnotationDialog::Dialog::hasChanges()
 {
+    if (m_current < 0)
+        return false;
+
     if (m_setup == InputSingleImageConfigMode) {
         writeToInfo();
         if (m_areasChanged)
@@ -1081,7 +1104,7 @@ bool AnnotationDialog::Dialog::hasChanges()
                 return true;
         }
     } else if (m_setup == InputMultiImageConfigMode) {
-        if ((!m_startDate->date().isNull()) || (!m_endDate->date().isNull()) || (!m_imageLabel->text().isEmpty()) || (m_description->toPlainText() != m_firstDescription) || m_ratingChanged)
+        if ((!m_startDate->date().isNull()) || (!m_endDate->date().isNull()) || (!m_imageLabel->text().isEmpty()) || m_description->changed() || m_ratingChanged)
             return true;
         for (const ListSelect *ls : qAsConst(m_optionList)) {
             if (!(changedOptions(ls).isEmpty()))
@@ -1115,34 +1138,6 @@ void AnnotationDialog::Dialog::slotSetFuzzyDate()
         m_endDate->hide();
         m_endDateLabel->hide();
     }
-}
-
-void AnnotationDialog::Dialog::slotDeleteImage()
-{
-    // CTRL+Del is a common key combination when editing text
-    // TODO: The word right of cursor should be deleted as expected also in date and category fields
-    if (m_setup == SearchMode)
-        return;
-
-    // should delete mean "remove from selection" or "delete"?
-    // is the user even aware that the dialog is in multi image mode?
-    // IMO (jzarl) this is too ambiguous to do anything other than bail out:
-    if (m_setup == InputMultiImageConfigMode)
-        return;
-
-    DB::ImageInfoPtr info = m_origList[m_current];
-
-    m_origList.remove(info);
-    m_editList.removeAll(m_editList.at(m_current));
-    MainWindow::DirtyIndicator::markDirty();
-    if (m_origList.count() == 0) {
-        doneTagging();
-        return;
-    }
-    if (m_current == (int)m_origList.count()) // we deleted the last image
-        m_current--;
-
-    load();
 }
 
 void AnnotationDialog::Dialog::showHelpDialog(UsageMode type)
@@ -1251,14 +1246,14 @@ void AnnotationDialog::Dialog::slotStartDateChanged(const DB::ImageDate &date)
 void AnnotationDialog::Dialog::loadWindowLayout()
 {
     QString fileName = QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
+    qCDebug(AnnotationDialogLog) << "Loading window layout from file:" << fileName;
     bool layoutLoaded = false;
 
     if (QFileInfo::exists(fileName)) {
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
             QByteArray data = file.readAll();
-            m_dockWindow->restoreState(data);
-            layoutLoaded = true;
+            layoutLoaded = m_dockWindow->restoreState(data);
         } else {
             qCWarning(AnnotationDialogLog) << "Window layout file" << fileName << "exists but could not be opened!";
         }
@@ -1316,10 +1311,6 @@ void AnnotationDialog::Dialog::setupActions()
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-OK-dialog"), this, &Dialog::doneTagging);
     action->setText(i18n("OK dialog"));
     m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_Return);
-
-    action = m_actions->addAction(QString::fromLatin1("annotationdialog-delete-image"), this, &Dialog::slotDeleteImage);
-    action->setText(i18n("Delete"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_Delete);
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-copy-previous"), this, &Dialog::slotCopyPrevious);
     action->setText(i18n("Copy tags from previous image"));
@@ -1446,8 +1437,8 @@ void AnnotationDialog::Dialog::saveAndClose()
                 info->setLabel(m_imageLabel->text());
             }
 
-            if (!m_description->toPlainText().isEmpty() && m_description->toPlainText().compare(m_conflictText)) {
-                info->setDescription(m_description->toPlainText());
+            if (!m_description->isEmpty()) {
+                info->setDescription(m_description->description());
             }
 
             if (m_ratingChanged) {
@@ -1512,9 +1503,12 @@ void AnnotationDialog::Dialog::tidyAreas()
         area->markTidied();
         area->deleteLater();
     }
+
+    // No areas have been changed
+    m_areasChanged = false;
 }
 
-void AnnotationDialog::Dialog::slotNewArea(ResizableFrame *area)
+void AnnotationDialog::Dialog::slotNewArea(AnnotationDialog::ResizableFrame *area)
 {
     area->setDialog(this);
 }
@@ -1690,6 +1684,51 @@ AnnotationDialog::ListSelect *AnnotationDialog::Dialog::listSelectForCategory(co
     return m_listSelectList.value(category, nullptr);
 }
 
+void AnnotationDialog::Dialog::showEvent(QShowEvent *event)
+{
+    showFloatingWindows();
+    event->accept();
+}
+
+void AnnotationDialog::Dialog::hideEvent(QHideEvent *event)
+{
+    hideFloatingWindows();
+    event->accept();
+}
+
+void AnnotationDialog::Dialog::slotDiscardFiles(const DB::FileNameList &files)
+{
+#ifdef HAVE_MARBLE
+    clearMapData();
+#endif
+    // we can't directly compare ImageInfos with the ones in the database, so we work on filenames:
+    auto origFilenames = m_origList.files();
+    for (const auto &filename : files) {
+        const int index = origFilenames.indexOf(filename);
+        if (index >= 0) {
+            qCDebug(AnnotationDialogLog) << "Discarding file" << filename.relative() << "from annotation dialog";
+            origFilenames.removeAt(index);
+            m_origList.removeAt(index);
+            m_editList.removeAt(index);
+            if (0 < index && index <= m_current)
+                m_current--;
+        }
+    }
+    if (m_origList.count() == 0) {
+        m_current = -1;
+        reject();
+        return;
+    }
+
+    m_preview->configure(&m_editList, (m_setup == InputSingleImageConfigMode));
+    load();
+#ifdef HAVE_MARBLE
+    // trigger repopulating the map
+    if (m_annotationMap->isVisible())
+        annotationMapVisibilityChanged(true);
+#endif
+}
+
 #ifdef HAVE_MARBLE
 void AnnotationDialog::Dialog::updateMapForCurrentImage()
 {
@@ -1705,7 +1744,8 @@ void AnnotationDialog::Dialog::updateMapForCurrentImage()
         m_annotationMap->displayStatus(Map::MapStatus::ImageHasNoCoordinates);
     }
 }
-
+#endif
+#ifdef HAVE_MARBLE
 void AnnotationDialog::Dialog::annotationMapVisibilityChanged(bool visible)
 {
     // This populates the map if it's added when the dialog is already open
@@ -1718,7 +1758,8 @@ void AnnotationDialog::Dialog::annotationMapVisibilityChanged(bool visible)
         m_cancelMapLoading = true;
     }
 }
-
+#endif
+#ifdef HAVE_MARBLE
 void AnnotationDialog::Dialog::populateMap()
 {
     // populateMap is called every time the map widget gets visible
@@ -1756,12 +1797,14 @@ void AnnotationDialog::Dialog::populateMap()
     m_mapIsPopulated = !m_cancelMapLoading;
     mapLoadingFinished(imagesWithCoordinates > 0, imagesWithCoordinates == processedImages);
 }
-
+#endif
+#ifdef HAVE_MARBLE
 void AnnotationDialog::Dialog::setCancelMapLoading()
 {
     m_cancelMapLoading = true;
 }
-
+#endif
+#ifdef HAVE_MARBLE
 void AnnotationDialog::Dialog::mapLoadingFinished(bool mapHasImages, bool allImagesHaveCoordinates)
 {
     m_mapLoadingProgress->hide();

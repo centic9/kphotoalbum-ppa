@@ -1,3 +1,17 @@
+kphotoalbum (5.12.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update the build dependencies according to the upstream build system:
+    - bump extra-cmake-modules to 5.92.0
+    - bump libexiv2-dev to 0.27
+  * Manually clean lib/kpabase/version.h, as it is generated in the source
+    directory. (Closes: #1047117)
+  * Run the unit tests:
+    - add the libqt5sql5-sqlite, xvfb, and xauth test build dependencies
+    - run dh_auto_test via xvfb-run, dropping the override for it
+
+ -- Pino Toscano <pino@debian.org>  Mon, 27 Nov 2023 08:28:16 +0100
+
 kphotoalbum (5.11.0-1) unstable; urgency=medium
 
   * New upstream release.

@@ -1,5 +1,7 @@
-// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2018-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2020 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2023 Alexander Lohnau <alexander.lohnau@gmx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -28,7 +30,7 @@ void copyList(const QStringList &from, const QString &directoryTo)
 {
     for (QStringList::ConstIterator it = from.constBegin(); it != from.constEnd(); ++it) {
         const QString destFile = directoryTo + QString::fromLatin1("/") + QFileInfo(*it).fileName();
-        if (!QFileInfo(destFile).exists()) {
+        if (!QFileInfo::exists(destFile)) {
             const bool ok = Utilities::copyOrOverwrite(*it, destFile);
             if (!ok) {
                 KMessageBox::error(nullptr, i18n("Unable to copy '%1' to '%2'.", *it, destFile), i18n("Error Running Demo"));
@@ -39,11 +41,9 @@ void copyList(const QStringList &from, const QString &directoryTo)
 }
 }
 
-// vi:expandtab:tabstop=4 shiftwidth=4:
-
 QString Utilities::setupDemo()
 {
-    const QString demoDir = QString::fromLatin1("%1/kphotoalbum-demo-%2").arg(QDir::tempPath()).arg(QString::fromLocal8Bit(qgetenv("LOGNAME")));
+    const QString demoDir = QString::fromLatin1("%1/kphotoalbum-demo-%2").arg(QDir::tempPath(), QString::fromLocal8Bit(qgetenv("LOGNAME")));
     QFileInfo fi(demoDir);
     if (!fi.exists()) {
         bool ok = QDir().mkdir(demoDir);
@@ -60,6 +60,9 @@ QString Utilities::setupDemo()
         exit(-1);
     }
     const QString configFile = demoDir + QString::fromLatin1("/index.xml");
+    if (QFile::exists(configFile))
+        return configFile;
+
     copyOrOverwrite(demoDB, configFile);
 
     // Images
@@ -105,9 +108,11 @@ QString Utilities::setupDemo()
 
 void Utilities::deleteDemo()
 {
-    QString dir = QString::fromLatin1("%1/kphotoalbum-demo-%2").arg(QDir::tempPath()).arg(QString::fromLocal8Bit(qgetenv("LOGNAME")));
+    QString dir = QString::fromLatin1("%1/kphotoalbum-demo-%2").arg(QDir::tempPath(), QString::fromLocal8Bit(qgetenv("LOGNAME")));
     QUrl demoUrl = QUrl::fromLocalFile(dir);
     KJob *delDemoJob = KIO::del(demoUrl);
     KJobWidgets::setWindow(delDemoJob, MainWindow::Window::theMainWindow());
     delDemoJob->exec();
 }
+
+// vi:expandtab:tabstop=4 shiftwidth=4:

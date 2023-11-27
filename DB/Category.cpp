@@ -60,10 +60,11 @@ bool DB::Category::positionable() const
 
 void DB::Category::setPositionable(bool positionable)
 {
-    if (positionable != m_positionable) {
-        m_positionable = positionable;
-        Q_EMIT changed();
-    }
+    if (positionable == m_positionable)
+        return;
+
+    m_positionable = positionable;
+    Q_EMIT changed();
 }
 
 QString DB::Category::iconName() const
@@ -73,20 +74,16 @@ QString DB::Category::iconName() const
 
 void DB::Category::setIconName(const QString &name)
 {
+    if (m_icon == name)
+        return;
+
     m_icon = name;
     Q_EMIT changed();
 }
 
 QPixmap DB::Category::icon(int size, KIconLoader::States state) const
 {
-    QPixmap pixmap = KIconLoader::global()->loadIcon(iconName(), KIconLoader::Desktop, size, state, QStringList(), 0L, true);
-    DB::Category *This = const_cast<DB::Category *>(this);
-    if (pixmap.isNull()) {
-        This->blockSignals(true);
-        This->setIconName(defaultIconName());
-        This->blockSignals(false);
-        pixmap = QIcon::fromTheme(iconName()).pixmap(size);
-    }
+    QPixmap pixmap = KIconLoader::global()->loadIcon(iconName(), KIconLoader::Desktop, size, state, QStringList(), nullptr, true);
     return pixmap;
 }
 
@@ -97,6 +94,9 @@ DB::Category::ViewType DB::Category::viewType() const
 
 void DB::Category::setViewType(ViewType type)
 {
+    if (m_type == type)
+        return;
+
     m_type = type;
     Q_EMIT changed();
 }
@@ -108,6 +108,9 @@ int DB::Category::thumbnailSize() const
 
 void DB::Category::setThumbnailSize(int size)
 {
+    if (m_thumbnailSize == size)
+        return;
+
     m_thumbnailSize = size;
     Q_EMIT changed();
 }
@@ -119,6 +122,9 @@ bool DB::Category::doShow() const
 
 void DB::Category::setDoShow(bool b)
 {
+    if (b == m_show)
+        return;
+
     m_show = b;
     Q_EMIT changed();
 }
@@ -264,7 +270,7 @@ DB::TagInfo *DB::Category::itemForName(const QString &tag)
     }
 }
 
-QPixmap DB::Category::categoryImage(const QString &category, QString member, int width, int height) const
+QPixmap DB::Category::categoryImage(const QString &category, const QString &member, int width, int height) const
 {
     QString fileName = fileForCategoryImage(category, member);
     QString key = QString::fromLatin1("%1-%2").arg(width).arg(fileName);
@@ -286,7 +292,7 @@ QPixmap DB::Category::categoryImage(const QString &category, QString member, int
     return res;
 }
 
-void DB::Category::setCategoryImage(const QString &category, QString member, const QImage &image)
+void DB::Category::setCategoryImage(const QString &category, const QString &member, const QImage &image)
 {
     QString dir = Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("CategoryImages");
     QFileInfo fi(dir);
@@ -317,7 +323,7 @@ QString DB::Category::fileForCategoryImage(const QString &category, QString memb
     QString dir = Settings::SettingsData::instance()->imageDirectory() + QString::fromLatin1("CategoryImages");
     member.replace(QChar::fromLatin1(' '), QChar::fromLatin1('_'));
     member.replace(QChar::fromLatin1('/'), QChar::fromLatin1('_'));
-    QString fileName = dir + QString::fromLatin1("/%1-%2.jpg").arg(category).arg(member);
+    QString fileName = dir + QString::fromLatin1("/%1-%2.jpg").arg(category, member);
     return fileName;
 }
 
@@ -399,24 +405,6 @@ bool DB::Category::shouldSave()
 void DB::Category::setShouldSave(bool b)
 {
     m_shouldSave = b;
-}
-
-QString DB::Category::defaultIconName() const
-{
-    const QString nm = name().toLower();
-    if (nm == QString::fromLatin1("people"))
-        return QString::fromLatin1("system-users");
-    if (nm == QString::fromLatin1("places") || nm == QString::fromLatin1("locations"))
-        return QString::fromLatin1("network-workgroup");
-    if (nm == QString::fromLatin1("events") || nm == QString::fromLatin1("keywords"))
-        return QString::fromLatin1("dialog-password");
-    if (nm == QString::fromLatin1("tokens"))
-        return QString::fromLatin1("preferences-other");
-    if (nm == QString::fromLatin1("folder"))
-        return QString::fromLatin1("folder");
-    if (nm == QString::fromLatin1("media type"))
-        return QString::fromLatin1("video");
-    return QString();
 }
 
 #include "moc_Category.cpp"

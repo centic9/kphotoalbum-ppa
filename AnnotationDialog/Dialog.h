@@ -110,7 +110,7 @@ protected Q_SLOTS:
     void slotIndexChanged(int index);
     void doneTagging();
     void continueLater();
-    void slotClear();
+    void slotClearSearchForm();
     void slotOptions();
     void slotSaveWindowSetup();
     void slotDeleteOption(DB::Category *, const QString &);
@@ -118,7 +118,6 @@ protected Q_SLOTS:
     void reject() override;
     void rotate(int angle);
     void slotSetFuzzyDate();
-    void slotDeleteImage();
     void slotResetLayout();
     void slotStartDateChanged(const DB::ImageDate &);
     void slotCopyPrevious();
@@ -126,7 +125,7 @@ protected Q_SLOTS:
     void slotRatingChanged(int);
     void togglePreview();
     void descriptionPageUpDownPressed(QKeyEvent *event);
-    void slotNewArea(ResizableFrame *area);
+    void slotNewArea(AnnotationDialog::ResizableFrame *area);
     void positionableTagSelected(QString category, QString tag);
     void positionableTagDeselected(QString category, QString tag);
     void positionableTagRenamed(QString category, QString oldTag, QString newTag);
@@ -135,6 +134,16 @@ protected Q_SLOTS:
     void annotationMapVisibilityChanged(bool visible);
     void populateMap();
 #endif
+    void showEvent(QShowEvent *event) override;
+    void hideEvent(QHideEvent *event) override;
+    /**
+     * @brief slotDiscardFiles removes a list of files from the annotation dialog as if they were discarded.
+     * The main usage is to remove files from the dialog if they are deleted, avoiding stale image data from showing up.
+     *
+     * Files that are not currently in the list of annotated files are silently ignored.
+     * @param files
+     */
+    void slotDiscardFiles(const DB::FileNameList &files);
 
 Q_SIGNALS:
     void imageRotated(const DB::FileName &id);
@@ -151,8 +160,8 @@ protected:
     void loadInfo(const DB::ImageSearchInfo &);
     int exec() override;
     void closeEvent(QCloseEvent *) override;
-    void showTornOfWindows();
-    void hideTornOfWindows();
+    void showFloatingWindows();
+    void hideFloatingWindows();
     bool hasChanges();
     StringSet changedOptions(const ListSelect *);
     void showHelpDialog(UsageMode);
@@ -166,6 +175,9 @@ protected:
     std::tuple<Utilities::StringSet, Utilities::StringSet, Utilities::StringSet> selectionForMultiSelect(const ListSelect *, const DB::ImageInfoList &images);
     void saveAndClose();
     void ShowHideSearch(bool show);
+#ifdef HAVE_MARBLE
+    void clearMapData();
+#endif
 
 private:
     QStackedWidget *m_stack;
