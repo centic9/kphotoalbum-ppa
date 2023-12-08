@@ -1,12 +1,15 @@
 // SPDX-FileCopyrightText: 2021 Henner Zeller <h.zeller@acm.org>
 // SPDX-FileCopyrightText: 2021 Jesper K. Pedersen <blackie@kde.org>
-// SPDX-FileCopyrightText: 2021-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "VLCDisplay.h"
+#include "Logging.h"
 #include "VideoToolBar.h"
+
 #include <DB/ImageInfo.h>
+
 #include <QDebug>
 #include <QGuiApplication>
 #include <QLabel>
@@ -42,6 +45,9 @@ Viewer::VLCDisplay::VLCDisplay(QWidget *parent)
 
 Viewer::VLCDisplay::~VLCDisplay()
 {
+    if (VLCDisplay::isPlaying()) {
+        qCWarning(ViewerLog) << "VLCDisplay is deleted while video is still playing! Please file a bug with KPhotoAlbum!";
+    }
     releaseVLC();
 }
 
@@ -55,7 +61,7 @@ void Viewer::VLCDisplay::setPosition(int newPosition)
     // It's possible that the vlc doesn't play anything
     // so check before
     libvlc_media_t *curMedia = libvlc_media_player_get_media(m_player);
-    if (curMedia == NULL)
+    if (curMedia == nullptr)
         return;
 
     float pos = (float)(newPosition) / (float)m_videoToolBar->maximum();
@@ -91,6 +97,9 @@ void Viewer::VLCDisplay::updateInterface()
 
 bool Viewer::VLCDisplay::setImageImpl(DB::ImageInfoPtr info, bool /*forward*/)
 {
+    if (m_media) {
+        libvlc_media_release(m_media);
+    }
     m_media = libvlc_media_new_path(m_vlcInstance, info->fileName().absolute().toUtf8().data());
 
     libvlc_media_player_set_media(m_player, m_media);
@@ -141,6 +150,10 @@ void Viewer::VLCDisplay::releaseVLC()
         return;
 
     stop();
+    if (m_media) {
+        libvlc_media_release(m_media);
+        m_media = nullptr;
+    }
     libvlc_media_player_release(m_player);
     libvlc_release(m_vlcInstance);
 }
@@ -163,7 +176,7 @@ void Viewer::VLCDisplay::setupVLC()
 
 bool Viewer::VLCDisplay::isPlaying() const
 {
-    return libvlc_media_get_state(m_media) == libvlc_Playing;
+    return m_media && libvlc_media_get_state(m_media) == libvlc_Playing;
 }
 
 QImage Viewer::VLCDisplay::screenShoot()

@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -69,15 +69,11 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     bool setImageImpl(DB::ImageInfoPtr info, bool forward) override;
-    void hideCursor();
-    void showCursor();
-    void disableCursorHiding();
-    void enableCursorHiding();
 
 Q_SIGNALS:
     void possibleChange();
     void imageReady();
-    void setCaptionInfo(const QString &info);
+    void imageZoomCaptionChanged(const QString &info);
     void viewGeometryChanged(QSize viewSize, QRect zoomWindow, double sizeRatio);
 
 protected:
@@ -127,9 +123,6 @@ private:
     int m_curIndex;
     bool m_busy;
     ViewerWidget *m_viewer;
-
-    QTimer *m_cursorTimer;
-    bool m_cursorHiding;
 };
 }
 

@@ -1,5 +1,13 @@
-// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2003-2013 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2009 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2011-2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2012 Frederik Schwarzer <schwarzer@kde.org>
+// SPDX-FileCopyrightText: 2012 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2015-2019 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2016 Luigi Toscano <luigi.toscano@tiscali.it>
+// SPDX-FileCopyrightText: 2017 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -51,9 +59,6 @@ int Browser::OverviewPage::rowCount(const QModelIndex &parent) const
 
 QVariant Browser::OverviewPage::data(const QModelIndex &index, int role) const
 {
-    if (role == ValueRole)
-        return index.row();
-
     const int row = index.row();
     if (isCategoryIndex(row))
         return categoryInfo(row, role);
@@ -118,57 +123,71 @@ QList<DB::CategoryPtr> Browser::OverviewPage::categories() const
 
 QVariant Browser::OverviewPage::categoryInfo(int row, int role) const
 {
-    if (role == Qt::DisplayRole)
-        return categories()[row]->name();
+    const auto category = categories()[row];
+    if (role == Qt::DisplayRole || role == ValueRole)
+        return category->name();
     else if (role == Qt::DecorationRole)
-        return categories()[row]->icon(THUMBNAILSIZE);
+        return category->icon(THUMBNAILSIZE);
+    else if (role == SortPriorityRole) {
+        if (category->isSpecialCategory()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     return QVariant();
 }
 
 QVariant Browser::OverviewPage::geoPositionInfo(int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == ValueRole)
         return i18n("Geo Position");
     else if (role == Qt::DecorationRole) {
         return QIcon::fromTheme(QString::fromLatin1("globe")).pixmap(THUMBNAILSIZE);
-    }
+    } else if (role == SortPriorityRole)
+        return 2;
 
     return QVariant();
 }
 
 QVariant Browser::OverviewPage::exivInfo(int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == ValueRole)
         return i18n("Exif Info");
     else if (role == Qt::DecorationRole) {
         return QIcon::fromTheme(QString::fromLatin1("document-properties")).pixmap(THUMBNAILSIZE);
-    }
+    } else if (role == SortPriorityRole)
+        return 2;
 
     return QVariant();
 }
 
 QVariant Browser::OverviewPage::searchInfo(int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == ValueRole)
         return i18nc("@action Search button in the browser view.", "Search");
     else if (role == Qt::DecorationRole)
         return QIcon::fromTheme(QString::fromLatin1("system-search")).pixmap(THUMBNAILSIZE);
+    else if (role == SortPriorityRole)
+        return 2;
     return QVariant();
 }
 
 QVariant Browser::OverviewPage::untaggedImagesInfo(int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == ValueRole)
         return i18n("Untagged Images");
     else if (role == Qt::DecorationRole)
         return QIcon::fromTheme(QString::fromUtf8("archive-insert")).pixmap(THUMBNAILSIZE);
+    else if (role == SortPriorityRole)
+        return 3;
     return QVariant();
 }
 
 QVariant Browser::OverviewPage::imageInfo(int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == ValueRole)
         return i18n("Show Thumbnails");
     else if (role == Qt::DecorationRole) {
         QIcon icon = QIcon::fromTheme(QString::fromUtf8("view-preview"));
@@ -183,7 +202,8 @@ QVariant Browser::OverviewPage::imageInfo(int role) const
             pixmap.fill(Qt::transparent);
         }
         return pixmap;
-    }
+    } else if (role == SortPriorityRole)
+        return 4;
     return QVariant();
 }
 
