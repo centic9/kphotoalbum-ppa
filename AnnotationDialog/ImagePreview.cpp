@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2020 Jesper K. Pedersen <blackie@kde.org>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -11,7 +11,7 @@
 #include <DB/CategoryCollection.h>
 #include <DB/ImageDB.h>
 #include <ImageManager/AsyncLoader.h>
-#include <Utilities/ImageUtil.h>
+#include <kpabase/ImageUtil.h>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -177,7 +177,7 @@ void ImagePreview::pixmapLoaded(ImageManager::ImageRequest *request, const QImag
     }
 }
 
-void ImagePreview::anticipate(DB::ImageInfo &info1)
+void ImagePreview::anticipate(const DB::ImageInfo &info1)
 {
     // We cannot call m_preloader.preloadImage right here:
     // this function is called before reload(), so if we preload here,
@@ -561,6 +561,11 @@ float ImagePreview::distance(QPoint point1, QPoint point2)
 {
     QPoint difference = point1 - point2;
     return sqrt(pow(difference.x(), 2) + pow(difference.y(), 2));
+}
+
+const DB::ImageInfo &ImagePreview::currentInfo() const
+{
+    return m_info;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021-2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -21,7 +22,6 @@
 #include <QApplication>
 #include <QBitmap>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QToolButton>
@@ -80,6 +80,9 @@ Viewer::InfoBox::InfoBox(Viewer::ViewerWidget *viewer)
     }
 
     delete rating;
+
+    setOpenLinks(false);
+    connect(this, &QTextBrowser::anchorClicked, this, &InfoBox::browseTag);
 }
 
 QVariant Viewer::InfoBox::loadResource(int type, const QUrl &name)
@@ -92,13 +95,10 @@ QVariant Viewer::InfoBox::loadResource(int type, const QUrl &name)
     return QTextBrowser::loadResource(type, name);
 }
 
-void Viewer::InfoBox::setSource(const QUrl &source)
+void Viewer::InfoBox::browseTag(const QUrl &link)
 {
-    int index = source.path().toInt();
-    QPair<QString, QString> p = m_linkMap[index];
-    QString category = p.first;
-    QString value = p.second;
-    Browser::BrowserWidget::instance()->load(category, value);
+    const auto &tagData = m_linkMap[link.path().toInt()];
+    Browser::BrowserWidget::instance()->load(tagData.first, tagData.second);
     showBrowser();
 }
 
@@ -197,8 +197,7 @@ void Viewer::InfoBox::jumpToContext()
 
 void Viewer::InfoBox::showBrowser()
 {
-    QDesktopWidget *desktop = qApp->desktop();
-    if (desktop->screenNumber(Browser::BrowserWidget::instance()) == desktop->screenNumber(m_viewer)) {
+    if (Browser::BrowserWidget::instance()->screen() == m_viewer->screen()) {
         if (m_viewer->showingFullScreen()) {
             m_viewer->setShowFullScreen(false);
         }

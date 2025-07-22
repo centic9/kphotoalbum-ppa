@@ -1,17 +1,17 @@
 // SPDX-FileCopyrightText: 2005-2013 Jesper K. Pedersen <jesper.pedersen@kdab.com>
 // SPDX-FileCopyrightText: 2006-2010 Tuomas Suutari <tuomas@nepnep.net>
-// SPDX-FileCopyrightText: 2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2007-2008 Laurent Montel <montel@kde.org>
 // SPDX-FileCopyrightText: 2007-2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2008-2009 Henner Zeller <h.zeller@acm.org>
-// SPDX-FileCopyrightText: 2010 Wes Hardaker <kpa@capturedonearth.com>
 // SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2010 Wes Hardaker <kpa@capturedonearth.com>
 // SPDX-FileCopyrightText: 2011 Andreas Neustifter <andreas.neustifter@gmail.com>
+// SPDX-FileCopyrightText: 2012-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2012 Yuri Chornoivan <yurchor@ukr.net>
-// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2015 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2017-2019 Robert Krawitz <rlk@alum.mit.edu>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
+// SPDX-FileCopyrightText: 2015-2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -21,7 +21,6 @@
 #include "ImageDB.h"
 #include "ImageScout.h"
 #include "MD5Map.h"
-
 #include <BackgroundJobs/HandleVideoThumbnailRequestJob.h>
 #include <BackgroundJobs/ReadVideoLengthJob.h>
 #include <BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.h>
@@ -30,14 +29,6 @@
 #include <ImageManager/ThumbnailBuilder.h>
 #include <MainWindow/FeatureDialog.h>
 #include <MainWindow/Window.h>
-#include <Utilities/FileUtil.h>
-#include <kpabase/FileExtensions.h>
-#include <kpabase/FileNameUtil.h>
-#include <kpabase/Logging.h>
-#include <kpabase/SettingsData.h>
-#include <kpaexif/Database.h>
-#include <kpathumbnails/ThumbnailCache.h>
-
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <QApplication>
@@ -52,6 +43,14 @@
 #include <QProgressBar>
 #include <QProgressDialog>
 #include <QStringList>
+#include <kpabase/FileExtensions.h>
+#include <kpabase/FileNameUtil.h>
+#include <kpabase/FileUtil.h>
+#include <kpabase/Logging.h>
+#include <kpabase/SettingsData.h>
+#include <kpaexif/Database.h>
+#include <kpathumbnails/ThumbnailCache.h>
+#include <kpathumbnails/VideoThumbnailCache.h>
 
 using namespace DB;
 
@@ -543,7 +542,7 @@ void NewImageFinder::setupFileVersionDetection()
 {
     // should be cached because loading once per image is expensive
     m_modifiedFileCompString = Settings::SettingsData::instance()->modifiedFileComponent();
-    m_modifiedFileComponent = QRegExp(m_modifiedFileCompString);
+    m_modifiedFileComponent = QRegularExpression(m_modifiedFileCompString);
 
     m_originalFileComponents << Settings::SettingsData::instance()->originalFileComponent();
     m_originalFileComponents = m_originalFileComponents.at(0).split(QString::fromLatin1(";"));
@@ -734,7 +733,7 @@ bool NewImageFinder::calculateMD5sums(
             info->setMD5Sum(md5);
             dirty = true;
             MainWindow::Window::theMainWindow()->thumbnailCache()->removeThumbnail(fileName);
-            BackgroundJobs::HandleVideoThumbnailRequestJob::removeFullScaleFrame(fileName);
+            MainWindow::Window::theMainWindow()->videoThumbnailCache()->removeThumbnail(fileName);
         }
 
         md5Map->insert(md5, fileName);

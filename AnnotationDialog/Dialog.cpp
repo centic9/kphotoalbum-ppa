@@ -11,13 +11,13 @@
 // SPDX-FileCopyrightText: 2009-2010 Hassan Ibraheem <hasan.ibraheem@gmail.com>
 // SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
 // SPDX-FileCopyrightText: 2012 Andreas Neustifter <andreas.neustifter@gmail.com>
-// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2014 David Edmundson <kde@davidedmundson.co.uk>
-// SPDX-FileCopyrightText: 2014-2020 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2017 Raymond Wooninck <tittiatcoke@gmail.com>
 // SPDX-FileCopyrightText: 2017, 2019-2020 Robert Krawitz <rlk@alum.mit.edu>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
 // SPDX-FileCopyrightText: 2022 Friedrich W. H. Kossebau <kossebau@kde.org>
+// SPDX-FileCopyrightText: 2014-2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -52,6 +52,7 @@
 #include <KRatingWidget>
 #include <KTextEdit>
 #include <QAction>
+#include <QActionGroup>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QCursor>
@@ -73,6 +74,7 @@
 #include <QTimeEdit>
 #include <QVBoxLayout>
 #include <QtGlobal>
+
 #include <algorithm>
 #include <kwidgetsaddons_version.h>
 #include <tuple>
@@ -83,6 +85,8 @@
 #include <QProgressBar>
 #include <QTimer>
 #endif
+
+#include <utility>
 
 namespace
 {
@@ -129,7 +133,10 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
     // -------------------------------------------------- Dock widgets
     m_generalDock = createDock(i18n("Label and Dates"), QString::fromLatin1("Label and Dates"), Qt::TopDockWidgetArea, createDateWidget(shortCutManager));
 
-    m_previewDock = createDock(i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, createPreviewWidget());
+    m_preview = new ImagePreviewWidget(m_actions, &m_editList);
+    connect(m_preview, &ImagePreviewWidget::togglePreview, this, &Dialog::togglePreview);
+
+    m_previewDock = createDock(i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, m_preview);
 
     m_description = new DescriptionEdit(this);
     m_description->setWhatsThis(i18nc("@info:whatsthis",
@@ -279,14 +286,17 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
 
     m_current = -1;
 
-    setGeometry(Settings::SettingsData::instance()->windowGeometry(Settings::AnnotationDialog));
-
     setupActions();
     shortCutManager.setupShortCuts();
 
     layout->addWidget(buttonBox);
 
     connect(DB::ImageDB::instance(), &DB::ImageDB::imagesDeleted, this, &Dialog::slotDiscardFiles);
+
+    // Restore the last position and size
+    QTimer::singleShot(0, this, [this] {
+        Settings::SettingsData::instance()->restoreWindowGeometry(Settings::AnnotationDialog, windowHandle());
+    });
 }
 
 QDockWidget *AnnotationDialog::Dialog::createDock(const QString &title, const QString &name,
@@ -360,7 +370,7 @@ QWidget *AnnotationDialog::Dialog::createDateWidget(ShortCutManager &shortCutMan
     m_isFuzzyDate->setToolTip(m_isFuzzyDate->whatsThis());
     lay4->addWidget(m_isFuzzyDate);
     lay4->addStretch(1);
-    connect(m_isFuzzyDate, &QCheckBox::stateChanged, this, &Dialog::slotSetFuzzyDate);
+    connect(m_isFuzzyDate, &QCheckBox::toggled, this, &Dialog::slotSetFuzzyDate);
 
     QHBoxLayout *lay8 = new QHBoxLayout;
     lay2->addLayout(lay8);
@@ -425,13 +435,6 @@ QWidget *AnnotationDialog::Dialog::createDateWidget(ShortCutManager &shortCutMan
     return top;
 }
 
-QWidget *AnnotationDialog::Dialog::createPreviewWidget()
-{
-    m_preview = new ImagePreviewWidget(m_actions);
-    connect(m_preview, &ImagePreviewWidget::togglePreview, this, &Dialog::togglePreview);
-    return m_preview;
-}
-
 void AnnotationDialog::Dialog::slotRevert()
 {
     if (m_setup == InputSingleImageConfigMode)
@@ -479,7 +482,7 @@ void AnnotationDialog::Dialog::slotCopyPrevious()
     m_lastSelectedPositionableTag.first = QString();
     m_lastSelectedPositionableTag.second = QString();
 
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->setSelection(old_info.itemsOfCategory(ls->category()));
 
         // Also set all positionable tag candidates
@@ -554,7 +557,7 @@ void AnnotationDialog::Dialog::load()
 
     QList<QString> positionableCategories;
 
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->setSelection(info.itemsOfCategory(ls->category()));
         ls->rePopulate();
 
@@ -624,7 +627,7 @@ void AnnotationDialog::Dialog::writeToInfo()
     if (m_current + 1 > m_editList.size())
         return;
 
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->slotReturn();
     }
 
@@ -653,7 +656,7 @@ void AnnotationDialog::Dialog::writeToInfo()
     info.setLabel(m_imageLabel->text());
     info.setDescription(m_description->description());
 
-    for (const ListSelect *ls : qAsConst(m_optionList)) {
+    for (const ListSelect *ls : std::as_const(m_optionList)) {
         info.setCategoryInfo(ls->category(), ls->itemsOn());
         if (ls->positionable()) {
             info.setPositionedTags(ls->category(), areas[ls->category()]);
@@ -677,7 +680,7 @@ void AnnotationDialog::Dialog::ShowHideSearch(bool show)
     m_imageFilePattern->setVisible(show);
     m_isFuzzyDate->setChecked(show);
     m_isFuzzyDate->setVisible(!show);
-    slotSetFuzzyDate();
+    slotSetFuzzyDate(m_isFuzzyDate->isChecked());
     m_ratingSearchMode->setVisible(show);
     m_ratingSearchLabel->setVisible(show);
 }
@@ -735,10 +738,10 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
 
     if (oneAtATime) {
         m_current = 0;
-        m_preview->configure(&m_editList, true);
+        m_preview->configure(true);
         load();
     } else {
-        m_preview->configure(&m_editList, false);
+        m_preview->configure(false);
         m_preview->canCreateAreas(false);
         m_startDate->setDate(QDate());
         m_endDate->setDate(QDate());
@@ -747,7 +750,7 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
         m_ratingChanged = false;
         m_areasChanged = false;
 
-        for (ListSelect *ls : qAsConst(m_optionList)) {
+        for (ListSelect *ls : std::as_const(m_optionList)) {
             setUpCategoryListBoxForMultiImageSelection(ls, list);
         }
 
@@ -784,7 +787,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search(DB::ImageSearchInfo *search
 
     setup();
 
-    m_preview->setImage(QStandardPaths::locate(QStandardPaths::DataLocation, QString::fromLatin1("pics/search.jpg")));
+    m_preview->setImage(QStandardPaths::locate(QStandardPaths::AppLocalDataLocation, QString::fromLatin1("pics/search.jpg")));
 
     m_ratingChanged = false;
     showHelpDialog(SearchMode);
@@ -796,7 +799,7 @@ DB::ImageSearchInfo AnnotationDialog::Dialog::search(DB::ImageSearchInfo *search
                                           m_imageLabel->text(), m_description->description(),
                                           m_imageFilePattern->text());
 
-        for (const ListSelect *ls : qAsConst(m_optionList)) {
+        for (const ListSelect *ls : std::as_const(m_optionList)) {
             m_oldSearch.setCategoryMatchText(ls->category(), ls->text());
         }
         // FIXME: for the user to search for 0-rated images, he must first change the rating to anything > 0
@@ -822,7 +825,7 @@ void AnnotationDialog::Dialog::setup()
 {
     // Repopulate the listboxes in case data has changed
     // An group might for example have been renamed.
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->populate();
     }
 
@@ -845,7 +848,7 @@ void AnnotationDialog::Dialog::setup()
         setWindowTitle(i18nc("@title:window", "Annotations"));
     }
 
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->setMode(m_setup);
     }
 }
@@ -860,7 +863,7 @@ void AnnotationDialog::Dialog::loadInfo(const DB::ImageSearchInfo &info)
     m_startDate->setDate(info.date().start().date());
     m_endDate->setDate(info.date().end().date());
 
-    for (ListSelect *ls : qAsConst(m_optionList)) {
+    for (ListSelect *ls : std::as_const(m_optionList)) {
         ls->setText(info.categoryMatchText(ls->category()));
     }
 
@@ -963,24 +966,8 @@ int AnnotationDialog::Dialog::exec()
 
 void AnnotationDialog::Dialog::slotSaveWindowSetup()
 {
-    const QByteArray data = m_dockWindow->saveState();
-
-    const auto fileName = QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
-    qCDebug(AnnotationDialogLog) << "Saving window layout to file:" << fileName;
-
-    QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) {
-        KMessageBox::error(this,
-                           i18n("<p>Could not save the window layout.</p>"
-                                "File %1 could not be opened because of the following error: %2",
-                                file.fileName(), file.errorString()));
-    } else if (!(file.write(data) && file.flush())) {
-        KMessageBox::error(this,
-                           i18n("<p>Could not save the window layout.</p>"
-                                "File %1 could not be written because of the following error: %2",
-                                file.fileName(), file.errorString()));
-    }
-    file.close();
+    Settings::SettingsData::instance()->saveWindowState(Settings::AnnotationDialog, m_dockWindow->saveState());
+    QMessageBox::information(this, i18n("Save current window setup"), i18n("Settings saved!"));
 }
 
 void AnnotationDialog::Dialog::closeEvent(QCloseEvent *e)
@@ -991,7 +978,7 @@ void AnnotationDialog::Dialog::closeEvent(QCloseEvent *e)
 
 void AnnotationDialog::Dialog::hideFloatingWindows()
 {
-    for (QDockWidget *dock : qAsConst(m_dockWidgets)) {
+    for (QDockWidget *dock : std::as_const(m_dockWidgets)) {
         if (dock->isFloating()) {
             qCDebug(AnnotationDialogLog) << "Hiding dock: " << dock->objectName();
             dock->hide();
@@ -1001,7 +988,7 @@ void AnnotationDialog::Dialog::hideFloatingWindows()
 
 void AnnotationDialog::Dialog::showFloatingWindows()
 {
-    for (QDockWidget *dock : qAsConst(m_dockWidgets)) {
+    for (QDockWidget *dock : std::as_const(m_dockWidgets)) {
         if (dock->isFloating()) {
             qCDebug(AnnotationDialogLog) << "Showing dock: " << dock->objectName();
             dock->show();
@@ -1035,36 +1022,42 @@ void AnnotationDialog::Dialog::slotRenameOption(DB::Category *category, const QS
     }
 }
 
-void AnnotationDialog::Dialog::reject()
+bool AnnotationDialog::Dialog::requestClose()
 {
     if (m_stack->currentWidget() == m_fullScreenPreview) {
         togglePreview();
-        if (!m_origList.empty())
-            return;
+        if (!m_origList.empty()) {
+            return false;
+        }
     }
 
     if (hasChanges()) {
         const QString question = i18n("<p>Some changes are made to annotations. Do you really want to discard all recent changes for each affected file?</p>");
         const QString title = i18nc("@title", "Discard changes?");
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
         const auto answer = KMessageBox::questionTwoActions(this,
                                                             question,
                                                             title,
                                                             KStandardGuiItem::discard(),
                                                             KStandardGuiItem::cancel());
-        if (answer != KMessageBox::ButtonCode::PrimaryAction)
-            return;
-#else
-        int code = KMessageBox::questionYesNo(this, question, title);
-        if (code == KMessageBox::No)
-            return;
-#endif
+        if (answer != KMessageBox::ButtonCode::PrimaryAction) {
+            return false;
+        }
     }
-    closeDialog();
+
+    QTimer::singleShot(0, this, &Dialog::closeDialog);
+    return true;
+}
+
+void AnnotationDialog::Dialog::reject()
+{
+    requestClose();
 }
 
 void AnnotationDialog::Dialog::closeDialog()
 {
+    // Save the window position and size
+    Settings::SettingsData::instance()->saveWindowGeometry(Settings::AnnotationDialog, windowHandle());
+
     // the dialog is usually reused, so clear residual data upon closing it...
     loadInfo({});
 #ifdef HAVE_MARBLE
@@ -1106,7 +1099,7 @@ bool AnnotationDialog::Dialog::hasChanges()
     } else if (m_setup == InputMultiImageConfigMode) {
         if ((!m_startDate->date().isNull()) || (!m_endDate->date().isNull()) || (!m_imageLabel->text().isEmpty()) || m_description->changed() || m_ratingChanged)
             return true;
-        for (const ListSelect *ls : qAsConst(m_optionList)) {
+        for (const ListSelect *ls : std::as_const(m_optionList)) {
             if (!(changedOptions(ls).isEmpty()))
                 return true;
         }
@@ -1125,19 +1118,12 @@ void AnnotationDialog::Dialog::rotate(int angle)
     }
 }
 
-void AnnotationDialog::Dialog::slotSetFuzzyDate()
+void AnnotationDialog::Dialog::slotSetFuzzyDate(bool checked)
 {
-    if (m_isFuzzyDate->isChecked()) {
-        m_time->hide();
-        m_timeLabel->hide();
-        m_endDate->show();
-        m_endDateLabel->show();
-    } else {
-        m_time->show();
-        m_timeLabel->show();
-        m_endDate->hide();
-        m_endDateLabel->hide();
-    }
+    m_time->setVisible(!checked);
+    m_timeLabel->setVisible(!checked);
+    m_endDate->setVisible(checked);
+    m_endDateLabel->setVisible(checked);
 }
 
 void AnnotationDialog::Dialog::showHelpDialog(UsageMode type)
@@ -1162,16 +1148,6 @@ void AnnotationDialog::Dialog::showHelpDialog(UsageMode type)
     }
 
     KMessageBox::information(this, txt, QString(), doNotShowKey, KMessageBox::AllowLink);
-}
-
-void AnnotationDialog::Dialog::resizeEvent(QResizeEvent *)
-{
-    Settings::SettingsData::instance()->setWindowGeometry(Settings::AnnotationDialog, geometry());
-}
-
-void AnnotationDialog::Dialog::moveEvent(QMoveEvent *)
-{
-    Settings::SettingsData::instance()->setWindowGeometry(Settings::AnnotationDialog, geometry());
 }
 
 void AnnotationDialog::Dialog::setupFocus()
@@ -1208,7 +1184,7 @@ void AnnotationDialog::Dialog::setupFocus()
     // now setup tab order.
     QWidget *prev = nullptr;
     QWidget *first = nullptr;
-    for (QWidget *widget : qAsConst(orderedList)) {
+    for (QWidget *widget : std::as_const(orderedList)) {
         if (prev) {
             setTabOrder(prev, widget);
         } else {
@@ -1222,7 +1198,7 @@ void AnnotationDialog::Dialog::setupFocus()
     }
 
     // Finally set focus on the first list select
-    for (QWidget *widget : qAsConst(orderedList)) {
+    for (QWidget *widget : std::as_const(orderedList)) {
         if (widget->property("FocusCandidate").isValid() && widget->isVisible()) {
             widget->setFocus();
             break;
@@ -1245,21 +1221,28 @@ void AnnotationDialog::Dialog::slotStartDateChanged(const DB::ImageDate &date)
 
 void AnnotationDialog::Dialog::loadWindowLayout()
 {
-    QString fileName = QString::fromLatin1("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
-    qCDebug(AnnotationDialogLog) << "Loading window layout from file:" << fileName;
-    bool layoutLoaded = false;
+    auto state = Settings::SettingsData::instance()->windowState(Settings::AnnotationDialog);
 
-    if (QFileInfo::exists(fileName)) {
-        QFile file(fileName);
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray data = file.readAll();
-            layoutLoaded = m_dockWindow->restoreState(data);
+    if (state.isEmpty()) {
+        // Check if we have an old-style layout.dat file
+        qCWarning(AnnotationDialogLog) << "No annotation dialog layout data found."
+                                       << "Checking for a KPA 5 layout.dat file ...";
+        const auto layoutDat = QStringLiteral("%1/layout.dat").arg(Settings::SettingsData::instance()->imageDirectory());
+        if (!QFileInfo::exists(layoutDat)) {
+            qCWarning(AnnotationDialogLog) << "Could not find a KPA 5 layout.dat file";
         } else {
-            qCWarning(AnnotationDialogLog) << "Window layout file" << fileName << "exists but could not be opened!";
+            QFile file(layoutDat);
+            if (file.open(QIODevice::ReadOnly)) {
+                state = file.readAll();
+                Settings::SettingsData::instance()->saveWindowState(Settings::AnnotationDialog, state);
+                qCWarning(AnnotationDialogLog) << "Migrated the KPA 5 layout.dat data";
+            } else {
+                qCWarning(AnnotationDialogLog) << "Could not read the layout.dat file!";
+            }
         }
     }
 
-    if (!layoutLoaded) {
+    if (!m_dockWindow->restoreState(state)) {
         // create default layout
         // label/date/rating in a visual block with description:
         m_dockWindow->splitDockWidget(m_generalDock, m_descriptionDock, Qt::Vertical);
@@ -1283,7 +1266,7 @@ void AnnotationDialog::Dialog::setupActions()
     QAction *action = nullptr;
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-sort-alphatree"), m_optionList.at(0), &ListSelect::slotSortAlphaTree);
     action->setText(i18n("Sort Alphabetically (Tree)"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_F4);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::CTRL | Qt::Key_F4));
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-sort-alphaflat"), m_optionList.at(0), &ListSelect::slotSortAlphaFlat);
     action->setText(i18n("Sort Alphabetically (Flat)"));
@@ -1293,12 +1276,12 @@ void AnnotationDialog::Dialog::setupActions()
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-toggle-sort"), m_optionList.at(0), &ListSelect::toggleSortType);
     action->setText(i18n("Toggle Sorting"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_T);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::CTRL | Qt::Key_T));
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-toggle-showing-selected-only"),
                                   &ShowSelectionOnlyManager::instance(), &ShowSelectionOnlyManager::toggle);
     action->setText(i18n("Toggle Showing Selected Items Only"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_S);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::CTRL | Qt::Key_S));
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-next-image"), m_preview, &ImagePreviewWidget::slotNext);
     action->setText(i18n("Annotate Next"));
@@ -1310,11 +1293,11 @@ void AnnotationDialog::Dialog::setupActions()
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-OK-dialog"), this, &Dialog::doneTagging);
     action->setText(i18n("OK dialog"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_Return);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::CTRL | Qt::Key_Return));
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-copy-previous"), this, &Dialog::slotCopyPrevious);
     action->setText(i18n("Copy tags from previous image"));
-    m_actions->setDefaultShortcut(action, Qt::ALT + Qt::Key_Insert);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::ALT | Qt::Key_Insert));
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-rotate-left"), m_preview, &ImagePreviewWidget::rotateLeft);
     action->setText(i18n("Rotate counterclockwise"));
@@ -1324,7 +1307,7 @@ void AnnotationDialog::Dialog::setupActions()
 
     action = m_actions->addAction(QString::fromLatin1("annotationdialog-toggle-viewer"), this, &Dialog::togglePreview);
     action->setText(i18n("Toggle fullscreen preview"));
-    m_actions->setDefaultShortcut(action, Qt::CTRL + Qt::Key_Space);
+    m_actions->setDefaultShortcut(action, QKeySequence(Qt::CTRL | Qt::Key_Space));
 
     const auto allActions = m_actions->actions();
     for (QAction *action : allActions) {
@@ -1411,11 +1394,11 @@ void AnnotationDialog::Dialog::saveAndClose()
             *(m_origList[i]) = m_editList[i];
         }
     } else if (m_setup == InputMultiImageConfigMode) {
-        for (ListSelect *ls : qAsConst(m_optionList)) {
+        for (ListSelect *ls : std::as_const(m_optionList)) {
             ls->slotReturn();
         }
 
-        for (const ListSelect *ls : qAsConst(m_optionList)) {
+        for (const ListSelect *ls : std::as_const(m_optionList)) {
             StringSet changes = changedOptions(ls);
             if (!(changes.isEmpty())) {
                 anyChanges = true;
@@ -1720,7 +1703,7 @@ void AnnotationDialog::Dialog::slotDiscardFiles(const DB::FileNameList &files)
         return;
     }
 
-    m_preview->configure(&m_editList, (m_setup == InputSingleImageConfigMode));
+    m_preview->updateAfterDiscard(m_current, origFilenames);
     load();
 #ifdef HAVE_MARBLE
     // trigger repopulating the map
@@ -1776,7 +1759,7 @@ void AnnotationDialog::Dialog::populateMap()
     int imagesWithCoordinates = 0;
 
     // we can use the coordinates of the original images here, because the are never changed by the annotation dialog
-    for (const DB::ImageInfoPtr &info : qAsConst(m_origList)) {
+    for (const DB::ImageInfoPtr &info : std::as_const(m_origList)) {
         processedImages++;
         m_mapLoadingProgress->setValue(processedImages);
         // keep things responsive by processing events manually:

@@ -18,25 +18,23 @@
 # SPDX-FileCopyrightText: 2018, 2020 Robert Krawitz <rlk@alum.mit.edu>
 # SPDX-FileCopyrightText: 2020 Wes Hardaker <kpa@capturedonearth.com>
 # SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-# SPDX-FileCopyrightText: 2014-2023 Tobias Leupold <tl at stonemx dot de>
+# SPDX-FileCopyrightText: 2014-2025 Tobias Leupold <tl@stonemx.de>
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
 cmake_minimum_required(VERSION 3.18.0)
-project(kphotoalbum LANGUAGES CXX VERSION 5.12.0)
+project(kphotoalbum LANGUAGES CXX VERSION 6.0.1)
 
 # set minimum versions here:
-set(MINIMUM_ECM_VERSION 5.92)
-set(MINIMUM_KF5_VERSION 5.78)
-set(MINIMUM_Qt5_VERSION_MAJOR 5)
-set(MINIMUM_Qt5_VERSION_MINOR 15)
-set(MINIMUM_Qt5_VERSION_PATCH 0)
-set(MINIMUM_Qt5_VERSION "${MINIMUM_Qt5_VERSION_MAJOR}.${MINIMUM_Qt5_VERSION_MINOR}.${MINIMUM_Qt5_VERSION_PATCH}")
-math(EXPR MINIMUM_Qt5_VERSION_HEX "${MINIMUM_Qt5_VERSION_MAJOR} << 24 | ${MINIMUM_Qt5_VERSION_MINOR} << 16 | ${MINIMUM_Qt5_VERSION_PATCH}" OUTPUT_FORMAT HEXADECIMAL)
+set(MINIMUM_KF6_VERSION 6.0.0)
+set(MINIMUM_QT6_VERSION_MAJOR 6)
+set(MINIMUM_QT6_VERSION_MINOR 0)
+set(MINIMUM_QT6_VERSION_PATCH 0)
+set(MINIMUM_QT6_VERSION "${MINIMUM_QT6_VERSION_MAJOR}.${MINIMUM_QT6_VERSION_MINOR}.${MINIMUM_QT6_VERSION_PATCH}")
+math(EXPR MINIMUM_QT6_VERSION_HEX "${MINIMUM_QT6_VERSION_MAJOR} << 24 | ${MINIMUM_QT6_VERSION_MINOR} << 16 | ${MINIMUM_QT6_VERSION_PATCH}" OUTPUT_FORMAT HEXADECIMAL)
+set(KDE_COMPILERSETTINGS_LEVEL 6.0)
 
-set(KDE_COMPILERSETTINGS_LEVEL 5.85)
-
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOUIC ON)
 
@@ -45,83 +43,61 @@ set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ";Debug;Release;RelWithDebI
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-find_package(ECM ${MINIMUM_ECM_VERSION} REQUIRED NO_MODULE)
+find_package(ECM ${MINIMUM_KF6_VERSION} REQUIRED NO_MODULE)
 list(APPEND CMAKE_MODULE_PATH "${ECM_MODULE_PATH}")
 
 include(KDEInstallDirs)
-include(KDECompilerSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
 include(KDECMakeSettings)
 include(KDEGitCommitHooks)
 
 # enable exceptions:
 kde_enable_exceptions()
 
-if(${ECM_VERSION} VERSION_LESS 5.109)
-    # pre ECM 5.109 you need to do some work yourself as described in dev/README-dev.txt
-    kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
-else()
-    file(GLOB_RECURSE PRE_COMMIT_HOOKS ${CMAKE_SOURCE_DIR}/dev/githooks/pre-commit.d/*)
-    kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT CUSTOM_SCRIPTS ${PRE_COMMIT_HOOKS})
-endif()
+file(GLOB_RECURSE PRE_COMMIT_HOOKS ${CMAKE_SOURCE_DIR}/dev/githooks/pre-commit.d/*)
+kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT CUSTOM_SCRIPTS ${PRE_COMMIT_HOOKS})
 
 add_definitions(
-    -DQT_NO_CAST_FROM_ASCII
-    -DQT_NO_CAST_TO_ASCII
-    -DQT_NO_URL_CAST_FROM_STRING
-    -DQT_NO_CAST_FROM_BYTEARRAY
-    -DQT_USE_STRINGBUILDER
-    -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
-    -DQT_NO_KEYWORDS
-    -DQT_NO_FOREACH
-    -DQT_STRICT_ITERATORS
-    -DQT_DISABLE_DEPRECATED_BEFORE=${MINIMUM_Qt5_VERSION_HEX}
+    -DQT_DISABLE_DEPRECATED_BEFORE=${MINIMUM_QT6_VERSION_HEX}
     )
 
 ########### dependencies  ###############
 
-find_package(Qt5 ${MINIMUM_Qt5_VERSION} REQUIRED COMPONENTS Core Sql Xml Widgets Test)
-find_package(Phonon4Qt5)
-find_package(QtAV)
+find_package(Qt6 ${MINIMUM_QT6_VERSION} REQUIRED COMPONENTS Core Sql Xml Widgets DBus Test)
+find_package(Phonon4Qt6)
 find_package(LIBVLC)
-find_package(KF5 ${MINIMUM_KF5_VERSION} REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
+find_package(KF6 ${MINIMUM_KF6_VERSION} REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
     include_directories("${JPEG_INCLUDE_DIR}")
 endif()
 
-find_package(KF5Purpose)
-set_package_properties(KF5Purpose
+find_package(KF6Purpose)
+set_package_properties(KF6Purpose
     PROPERTIES
     TYPE RECOMMENDED
     PURPOSE "Enables integration with KDE Purpose plugins, which provide image sharing and similar functionality."
     )
 
-find_package(KF5KDcraw)
-set_package_properties(KF5KDcraw
+find_package(KDcrawQt6)
+set_package_properties(KDcrawQt6
     PROPERTIES
     TYPE OPTIONAL
     PURPOSE "Enables RAW image support"
     )
-set(HAVE_KDCRAW ${KF5KDcraw_FOUND})
+set(HAVE_KDCRAW ${KDcrawQt6_FOUND})
 
-find_package(Marble)
+find_package(Marble 24.11.70)
 set_package_properties(Marble
     PROPERTIES
     TYPE OPTIONAL
     PURPOSE "Enables support for geographic map location using embedded GPS information."
     )
 set(HAVE_MARBLE ${Marble_FOUND})
-if(Marble_FOUND)
-    include(MarbleChecks)
-    if(NOT ${Marble_VERSION} VERSION_GREATER 0.28)
-        # Debian 11 (bullseye) ships with a version of Marble that is not compatible with these deprecations:
-        remove_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=${MINIMUM_Qt5_VERSION_HEX})
-    endif()
-endif()
 
-if(NOT Phonon4Qt5_FOUND AND NOT QtAV_FOUND AND NOT LIBVLC_FOUND)
-    message(FATAL_ERROR "A video backend must be provided. CMake failed to find any of Phonon, QtAV, and VLC")
+if(NOT Phonon4Qt6_FOUND AND NOT LIBVLC_FOUND)
+    message(FATAL_ERROR "A video backend must be provided. CMake failed to find any of Phonon and VLC")
 endif()
 
 set(libdatebar_SRCS
@@ -315,8 +291,6 @@ set(libUtilities_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/List.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/UniqFilenameMapper.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/UniqFilenameMapper.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FileUtil.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FileUtil.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/BooleanGuard.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Process.cpp"
@@ -333,10 +307,10 @@ set(libUtilities_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DemoUtil.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DescriptionUtil.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/DescriptionUtil.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ImageUtil.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/ImageUtil.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastDateTime.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/FastDateTime.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Timespan.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/Utilities/Timespan.h"
     )
 
 set(libMainWindow_SRCS
@@ -665,10 +639,10 @@ option(KPA_ENABLE_REMOTECONTROL "Build with support for companion Android/QML ap
 set(libRemoteControl_SRCS)
 set(libRemoteControl_LIBS)
 if(KPA_ENABLE_REMOTECONTROL)
-    find_package(Qt5 5.9 REQUIRED COMPONENTS Network)
+    find_package(Qt6 ${MINIMUM_QT6_VERSION} REQUIRED COMPONENTS Network)
     # requires cmake 3.12
     add_compile_definitions(KPA_ENABLE_REMOTECONTROL)
-    set(libRemoteControl_LIBS Qt5::Network)
+    set(libRemoteControl_LIBS Qt6::Network)
     set(libRemoteControl_SRCS
         "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteCommand.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/RemoteCommand.h"
@@ -753,47 +727,42 @@ target_include_directories(kphotoalbum PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 # External components
 target_link_libraries(kphotoalbum
     PRIVATE
+    Qt6::Core
+    Qt6::Sql
+    Qt6::Xml
+    Qt6::Widgets
+    Qt6::DBus
     KPA::Base
     KPA::Thumbnails
     KPA::Exif
     ${JPEG_LIBRARY}
-    KF5::Archive
-    KF5::Completion
-    KF5::ConfigCore
-    KF5::ConfigGui
-    KF5::CoreAddons
-    KF5::I18n
-    KF5::IconThemes
-    KF5::JobWidgets
-    KF5::KIOCore
-    KF5::KIOWidgets
-    KF5::TextWidgets
-    KF5::XmlGui
-    KF5::WidgetsAddons
+    KF6::Archive
+    KF6::Completion
+    KF6::ConfigCore
+    KF6::ConfigGui
+    KF6::CoreAddons
+    KF6::I18n
+    KF6::IconThemes
+    KF6::IconWidgets
+    KF6::JobWidgets
+    KF6::KIOCore
+    KF6::KIOWidgets
+    KF6::TextWidgets
+    KF6::XmlGui
+    KF6::WidgetsAddons
     ${libRemoteControl_LIBS}
     )
 
-if(KF5Purpose_FOUND)
-    target_link_libraries(kphotoalbum PRIVATE KF5::Purpose KF5::PurposeWidgets)
+if(KF6Purpose_FOUND)
+    target_link_libraries(kphotoalbum PRIVATE KF6::Purpose KF6::PurposeWidgets)
 endif()
 
-if(KF5KDcraw_FOUND)
-    target_link_libraries(kphotoalbum PRIVATE KF5::KDcraw)
+if(KDcrawQt6_FOUND)
+    target_link_libraries(kphotoalbum PRIVATE KDcrawQt6)
 endif()
 
 if(Marble_FOUND)
     target_link_libraries(kphotoalbum PRIVATE Marble)
-endif()
-
-if(QtAV_FOUND)
-  include_directories(${QTAV_CORE_INCLUDE_DIR})
-  target_sources(kphotoalbum PRIVATE
-      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVDisplay.cpp"
-      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVDisplay.h"
-      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVVideoToolBar.cpp"
-      "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/QtAVVideoToolBar.h"
-      )
-  target_link_libraries(kphotoalbum PRIVATE ${QTAV_LIBRARIES})
 endif()
 
 if(LIBVLC_FOUND)
@@ -805,21 +774,16 @@ if(LIBVLC_FOUND)
   target_link_libraries(kphotoalbum PRIVATE ${LIBVLC_LIBRARY})
 endif()
 
-if(Phonon4Qt5_FOUND)
+if(Phonon4Qt6_FOUND)
   target_sources(kphotoalbum PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/PhononDisplay.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Viewer/PhononDisplay.h"
   )
-  target_link_libraries(kphotoalbum PRIVATE Phonon::phonon4qt5)
+  target_link_libraries(kphotoalbum PRIVATE Phonon::phonon4qt6)
 endif()
 install(TARGETS kphotoalbum ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_subdirectory(kpa-thumbnailtool)
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/config-kpa-videobackends.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config-kpa-videobackends.h
-)
 
 ########### install files ###############
 
@@ -829,7 +793,7 @@ install(FILES default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 ki18n_install(po)
 
-if(KF5DocTools_FOUND)
+if(KF6DocTools_FOUND)
     kdoctools_install(po)
 endif()
 

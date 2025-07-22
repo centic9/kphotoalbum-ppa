@@ -1,37 +1,36 @@
 Source: kphotoalbum
 Section: graphics
 Priority: optional
-Maintainer: Debian KDE Extras Team <pkg-kde-extras@lists.alioth.debian.org>
+Maintainer: Debian KDE Extras Team <pkg-kde-extras@alioth-lists.debian.net>
 Uploaders: Pino Toscano <pino@debian.org>,
-Build-Depends: cmake (>= 3.18.0~),
-               debhelper-compat (= 13),
-               extra-cmake-modules (>= 5.92.0~),
+Build-Depends: debhelper-compat (= 13),
+               cmake (>= 3.18.0~),
+               extra-cmake-modules (>= 6.0.0~),
                gettext,
                libexiv2-dev (>= 0.27~),
                libjpeg-dev,
-               libkf5archive-dev (>= 5.78.0~),
-               libkf5completion-dev (>= 5.78.0~),
-               libkf5config-dev (>= 5.78.0~),
-               libkf5coreaddons-dev (>= 5.78.0~),
-               libkf5doctools-dev (>= 5.78.0~),
-               libkf5i18n-dev (>= 5.78.0~),
-               libkf5iconthemes-dev (>= 5.78.0~),
-               libkf5jobwidgets-dev (>= 5.78.0~),
-               libkf5kdcraw-dev,
-               libkf5kio-dev (>= 5.78.0~),
-               libkf5purpose-dev,
-               libkf5textwidgets-dev (>= 5.78.0~),
-               libkf5widgetsaddons-dev (>= 5.78.0~),
-               libkf5xmlgui-dev (>= 5.78.0~),
-               libmarble-dev,
-               libphonon4qt5-dev,
-               libqt5sql5-sqlite <!nocheck>,
-               pkg-config,
+               libkf6archive-dev (>= 6.0.0~),
+               libkf6completion-dev (>= 6.0.0~),
+               libkf6config-dev (>= 6.0.0~),
+               libkf6coreaddons-dev (>= 6.0.0~),
+               libkf6doctools-dev,
+               libkf6i18n-dev (>= 6.0.0~),
+               libkf6iconthemes-dev (>= 6.0.0~),
+               libkf6jobwidgets-dev (>= 6.0.0~),
+               libkf6kio-dev (>= 6.0.0~),
+               libkf6purpose-dev,
+               libkf6textwidgets-dev (>= 6.0.0~),
+               libkf6widgetsaddons-dev (>= 6.0.0~),
+               libkf6xmlgui-dev (>= 6.0.0~),
+               libmarble-dev (>= 4:24.11.70~),
+               libphonon4qt6-dev,
+               libqt6sql6-sqlite <!nocheck>,
                pkg-kde-tools (>= 0.15.16),
-               qtbase5-dev (>= 5.15.0~),
+               pkgconf,
+               qt6-base-dev,
                xauth <!nocheck>,
                xvfb <!nocheck>,
-Standards-Version: 4.6.2
+Standards-Version: 4.7.0
 Rules-Requires-Root: no
 Homepage: https://kphotoalbum.org
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum
@@ -39,8 +38,8 @@ Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum.git
 
 Package: kphotoalbum
 Architecture: any
-Depends: libqt5sql5-sqlite, ${misc:Depends}, ${perl:Depends}, ${shlibs:Depends}
-Recommends: ffmpeg, khelpcenter
+Depends: libqt6sql6-sqlite, ${misc:Depends}, ${perl:Depends}, ${shlibs:Depends},
+Recommends: ffmpeg, khelpcenter,
 Description: tool for indexing, searching and viewing images by keywords for KDE
  KPhotoAlbum lets you index, search, group and view images by keywords, date,
  locations and persons. It provides a quick and elegant way to lookup groups of

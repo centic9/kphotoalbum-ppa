@@ -1,17 +1,13 @@
 // SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <jesper.pedersen@kdab.com>
-// SPDX-FileCopyrightText: 2018-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2020 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2018-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2023 Alexander Lohnau <alexander.lohnau@gmx.de>
+// SPDX-FileCopyrightText: 2020-2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "DemoUtil.h"
 
-#include "FileUtil.h"
-
 #include <MainWindow/Window.h>
-#include <kpabase/Logging.h>
-
 #include <KIO/DeleteJob>
 #include <KJob>
 #include <KJobWidgets>
@@ -22,6 +18,8 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QUrl>
+#include <kpabase/FileUtil.h>
+#include <kpabase/Logging.h>
 
 namespace
 {
@@ -54,9 +52,11 @@ QString Utilities::setupDemo()
     }
 
     // index.xml
-    const QString demoDB = QStandardPaths::locate(QStandardPaths::DataLocation, QString::fromLatin1("demo/index.xml"));
+    const QString demoDB = QStandardPaths::locate(QStandardPaths::AppLocalDataLocation, QString::fromLatin1("demo/index.xml"));
     if (demoDB.isEmpty()) {
-        qCDebug(UtilitiesLog) << "No demo database in standard locations:" << QStandardPaths::standardLocations(QStandardPaths::DataLocation);
+        const auto locations = QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
+        KMessageBox::error(nullptr, i18n("<p>Could not locate the demo database in any of the following standard locations:</p><p>%1</p>", locations.join(QStringLiteral("\n").toHtmlEscaped().replace(QStringLiteral("\n"), QStringLiteral("<br/>")))), i18n("Error Running Demo"));
+        qCDebug(UtilitiesLog) << "No demo database in standard locations:" << locations;
         exit(-1);
     }
     const QString configFile = demoDir + QString::fromLatin1("/index.xml");
@@ -67,7 +67,7 @@ QString Utilities::setupDemo()
 
     // Images
     const QStringList kpaDemoDirs = QStandardPaths::locateAll(
-        QStandardPaths::DataLocation,
+        QStandardPaths::AppLocalDataLocation,
         QString::fromLatin1("demo"),
         QStandardPaths::LocateDirectory);
     QStringList images;
@@ -91,7 +91,7 @@ QString Utilities::setupDemo()
     }
 
     const QStringList kpaDemoCatDirs = QStandardPaths::locateAll(
-        QStandardPaths::DataLocation,
+        QStandardPaths::AppLocalDataLocation,
         QString::fromLatin1("demo/CategoryImages"),
         QStandardPaths::LocateDirectory);
     QStringList catImages;

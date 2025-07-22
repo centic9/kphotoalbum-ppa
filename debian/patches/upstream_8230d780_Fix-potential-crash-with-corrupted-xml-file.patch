@@ -1,0 +1,46 @@
+From 8230d780727e821d7be56760d15c66de6ea92e94 Mon Sep 17 00:00:00 2001
+From: Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+Date: Sat, 5 Apr 2025 01:23:02 +0200
+Subject: [PATCH] Fix potential crash with corrupted xml file
+
+Ensure that a tagged area actually has 4 components (x/y coordinates,
+width, height) before accessing those components.
+---
+ DB/ImageDB.cpp | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/DB/ImageDB.cpp b/DB/ImageDB.cpp
+index 0dd2a9709..d7b48f504 100644
+--- a/DB/ImageDB.cpp
++++ b/DB/ImageDB.cpp
+@@ -361,14 +361,19 @@ void ImageDB::readOptions(ImageInfoPtr info, DB::ReaderPtr reader, const QMap<QS
+ 
+                 if (reader->hasAttribute(_area_)) {
+                     QStringList areaData = reader->attribute(_area_).split(QString::fromUtf8(" "));
+-                    int x = areaData[0].toInt();
+-                    int y = areaData[1].toInt();
+-                    int w = areaData[2].toInt();
+-                    int h = areaData[3].toInt();
+-                    QRect area = QRect(QPoint(x, y), QPoint(x + w - 1, y + h - 1));
+-
+-                    if (!value.isNull()) {
+-                        info->addCategoryInfo(name, value, area);
++                    if (areaData.size() == 4) {
++                        int x = areaData[0].toInt();
++                        int y = areaData[1].toInt();
++                        int w = areaData[2].toInt();
++                        int h = areaData[3].toInt();
++                        QRect area = QRect(QPoint(x, y), QPoint(x + w - 1, y + h - 1));
++
++                        if (!value.isNull()) {
++                            info->addCategoryInfo(name, value, area);
++                        }
++                    } else {
++                        qCWarning(DBLog) << "Area data has incorrect number of components in line" << reader->lineNumber()
++                                         << "-" << areaData;
+                     }
+                 } else {
+                     if (!value.isNull()) {
+-- 
+GitLab
+

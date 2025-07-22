@@ -1,3 +1,50 @@
+kphotoalbum (6.0.1-4) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Aurélien COUDERC ]
+  * Backport upstream commits:
+    - Fix potential crash with corrupted database file. [8230d780]
+    - Fix random crash if DateBarWidget isn't properly initialized. [9aa361db]
+    (kde#504491)
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 22 Jul 2025 08:44:45 +0200
+
+kphotoalbum (6.0.1-3) unstable; urgency=medium
+
+  * Team upload
+  * d/rules: Don't run tests on 32-bit arches / s390x (Closes: #1099092)
+
+ -- Matthias Geiger <werdahias@debian.org>  Wed, 05 Mar 2025 15:53:01 +0100
+
+kphotoalbum (6.0.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Upload to unstable
+
+ -- Matthias Geiger <werdahias@debian.org>  Wed, 19 Feb 2025 15:38:49 +0100
+
+kphotoalbum (6.0.1-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.0.1).
+  * Build against Qt6, update build-deps and deps with the info from cmake.
+  * Build with hardening=+all build hardening flag.
+  * Use new mail address for the Extras Team.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 19 Jan 2025 18:02:50 +0100
+
+kphotoalbum (5.13.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Update the upstream GPG signing key.
+  * Bump Standards-Version to 4.7.0, no changes required.
+  * Switch the transitional pkg-config build dependency to pkgconf.
+
+ -- Pino Toscano <pino@debian.org>  Wed, 16 Oct 2024 06:22:53 +0200
+
 kphotoalbum (5.12.0-1) unstable; urgency=medium
 
   * New upstream release.

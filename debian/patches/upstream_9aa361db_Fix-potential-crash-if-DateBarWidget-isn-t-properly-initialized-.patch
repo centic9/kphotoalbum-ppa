@@ -1,0 +1,27 @@
+From 9aa361dbb0493974462655a045d02dffcfada31a Mon Sep 17 00:00:00 2001
+From: Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+Date: Mon, 19 May 2025 21:42:06 +0200
+Subject: [PATCH] Fix potential crash if DateBarWidget isn't properly
+ initialized.
+
+CCBUG: 504491
+---
+ DateBar/DateBarWidget.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/DateBar/DateBarWidget.cpp b/DateBar/DateBarWidget.cpp
+index 37bb5e220..315d68b1e 100644
+--- a/DateBar/DateBarWidget.cpp
++++ b/DateBar/DateBarWidget.cpp
+@@ -49,6 +49,8 @@ constexpr int SCROLL_ACCELERATION = 10;
+ 
+ DateBar::DateBarWidget::DateBarWidget(QWidget *parent)
+     : QWidget(parent)
++    , m_dates(QExplicitlySharedDataPointer<DB::ImageDateCollection>(
++          new DB::ImageDateCollection({})))
+     , m_currentHandler(&m_yearViewHandler)
+     , m_tp(YearView)
+     , m_currentMouseHandler(nullptr)
+-- 
+GitLab
+

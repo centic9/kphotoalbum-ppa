@@ -131,7 +131,28 @@ public:
     void deleteList(const DB::FileNameList &list);
     ImageInfoPtr info(const DB::FileName &fileName) const;
     MemberMap &memberMap();
-    void save(const QString &fileName, bool isAutoSave);
+
+    /**
+     * Saves the database to m_fileName.
+     */
+    void save();
+
+    /**
+     * Writes an auto-save file.  The filename is derived from m_fileName.
+     */
+    void autosave();
+
+    /**
+     * Returns the auto-save filename derived from the given XML database
+     * filename.
+     */
+    static QString autoSaveFileName(const QString &xmlFilename);
+
+    /**
+     * Returns the auto-save filename derived from  m_fileName.
+     */
+    QString autoSaveFileName() const;
+
     MD5Map *md5Map();
     void sortAndMergeBackIn(const DB::FileNameList &fileNameList);
 
@@ -184,6 +205,10 @@ public:
 
     Exif::Database *exifDB() const;
 
+    /**
+     * @brief untaggedTag
+     * @return the untaggedTag, or \c nullptr if the feature is not configured
+     */
     const DB::TagInfo *untaggedTag() const;
 
     static int fileVersion();
@@ -223,6 +248,7 @@ protected Q_SLOTS:
     void markDirty();
     /**
      * @brief setUntaggedTag sets the untaggedTag for the database and also updates the corresponding settings value.
+     * If tag is null, the untaggedTag is cleared.
      * @param tag
      * @see Settings::SettingsData::untaggedTag()
      * @see Settings::SettingsData::untaggedCategory()
