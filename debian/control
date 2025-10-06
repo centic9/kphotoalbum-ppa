@@ -4,16 +4,19 @@ Priority: optional
 Maintainer: Debian KDE Extras Team <pkg-kde-extras@alioth-lists.debian.net>
 Uploaders: Pino Toscano <pino@debian.org>,
 Build-Depends: debhelper-compat (= 13),
-               cmake (>= 3.18.0~),
+               dh-sequence-kf6,
+               cmake (>= 3.30.0~),
                extra-cmake-modules (>= 6.0.0~),
                gettext,
                libexiv2-dev (>= 0.27~),
                libjpeg-dev,
+               libkdcrawqt6-dev,
                libkf6archive-dev (>= 6.0.0~),
+               libkf6colorscheme-dev (>= 6.0.0~),
                libkf6completion-dev (>= 6.0.0~),
                libkf6config-dev (>= 6.0.0~),
                libkf6coreaddons-dev (>= 6.0.0~),
-               libkf6doctools-dev,
+               libkf6doctools-dev (>= 6.0.0~),
                libkf6i18n-dev (>= 6.0.0~),
                libkf6iconthemes-dev (>= 6.0.0~),
                libkf6jobwidgets-dev (>= 6.0.0~),
@@ -25,13 +28,11 @@ Build-Depends: debhelper-compat (= 13),
                libmarble-dev (>= 4:24.11.70~),
                libphonon4qt6-dev,
                libqt6sql6-sqlite <!nocheck>,
-               pkg-kde-tools (>= 0.15.16),
                pkgconf,
                qt6-base-dev,
                xauth <!nocheck>,
                xvfb <!nocheck>,
-Standards-Version: 4.7.0
-Rules-Requires-Root: no
+Standards-Version: 4.7.2
 Homepage: https://kphotoalbum.org
 Vcs-Browser: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum
 Vcs-Git: https://salsa.debian.org/qt-kde-team/extras/kphotoalbum.git

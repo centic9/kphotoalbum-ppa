@@ -3,17 +3,19 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 # tests fail on 32-bit / BE
-testsuite_failing_archs := armel armhf i386 s390x
-ifneq (,$(filter $(DEB_HOST_ARCH),$(testsuite_failing_archs)))
+ifeq (32,$(DEB_HOST_ARCH_BITS))
+  fail_param := || true
+endif
+ifeq (big,$(DEB_HOST_ARCH_ENDIAN))
   fail_param := || true
 endif
 
 %:
-	dh $@ --with kf5
+	dh $@
 
 execute_before_dh_auto_build:
 	# force generation of version.h, to avoid races later on
 	dh_auto_build --no-parallel -- UpdateVersion
 
 override_dh_auto_test:
-	xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test --buildsystem=kf6 $(fail_param)
+	xvfb-run -a --server-args="-screen 0 1024x768x24+32" dh_auto_test $(fail_param)

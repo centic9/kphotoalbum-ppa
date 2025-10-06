@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2018-2020 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+# SPDX-FileCopyrightText: 2018 - 2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 #
 # SPDX-License-Identifier: BSD-2-Clause
 
@@ -47,7 +47,12 @@ prepare_check_stripexif()
 call_check_stripexif()
 {
 	local check_dir="$1"
-	kphotoalbum --db "$check_dir/db/index.xml" --search
+	local automatic
+	if [ -n "$NON_INTERACTIVE" ]
+	then
+		automatic="--save-and-quit"
+	fi
+	kphotoalbum $automatic --config "$check_dir/kphotoalbumrc" --db "$check_dir/db/index.xml" --search
 }
 check_stripexif()
 {

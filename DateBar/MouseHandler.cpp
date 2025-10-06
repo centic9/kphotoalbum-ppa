@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2003-2019 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2022-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2003 - 2019 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2022 - 2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -69,6 +69,7 @@ DateBar::SelectionHandler::SelectionHandler(DateBarWidget *dateBar)
 void DateBar::SelectionHandler::mousePressEvent(int x)
 {
     const int unit = m_dateBar->unitAtPos(x);
+    m_currentUnit = unit;
     if (unit < 0)
         return;
 
@@ -79,8 +80,9 @@ void DateBar::SelectionHandler::mousePressEvent(int x)
 void DateBar::SelectionHandler::mouseMoveEvent(int x)
 {
     const int unit = m_dateBar->unitAtPos(x);
-    if (unit < 0)
+    if (unit < 0 || unit == m_currentUnit)
         return;
+    m_currentUnit = unit;
 
     Utilities::FastDateTime date = m_dateBar->dateForUnit(unit);
     if (m_start < date) {
@@ -110,14 +112,21 @@ void DateBar::FocusItemDragHandler::mousePressEvent(int x)
 
 void DateBar::FocusItemDragHandler::mouseMoveEvent(int x)
 {
-    int oldUnit = m_dateBar->m_currentUnit;
-    int newUnit = (x - m_dateBar->barAreaGeometry().left()) / m_dateBar->m_barWidth;
+    const int oldUnit = m_dateBar->m_currentUnit;
+    const int newUnit = (x - m_dateBar->barAreaGeometry().left()) / m_dateBar->m_barWidth;
+    if (oldUnit == newUnit)
+        return;
 
     // Don't scroll further down than the last image
     // We use oldUnit here, to ensure that we scroll all the way to the end
     // better scroll a bit over than not all the way.
     if ((newUnit > oldUnit && m_dateBar->dateForUnit(oldUnit) > m_dateBar->m_dates->upperLimit()) || (newUnit < oldUnit && m_dateBar->dateForUnit(oldUnit) < m_dateBar->m_dates->lowerLimit()))
         return;
+
+    // don't scroll past the selection
+    if (m_dateBar->hasSelection() && !m_dateBar->currentSelection().includes(m_dateBar->dateForUnit(newUnit)))
+        return;
+
     m_dateBar->m_currentUnit = newUnit;
 
     if (m_dateBar->m_currentUnit < 0 || m_dateBar->m_currentUnit > m_dateBar->numberOfUnits()) {
@@ -149,8 +158,11 @@ void DateBar::BarDragHandler::mousePressEvent(int x)
 
 void DateBar::BarDragHandler::mouseMoveEvent(int x)
 {
-    int oldUnit = m_dateBar->m_currentUnit;
-    int newUnit = (x + m_movementOffset - m_dateBar->barAreaGeometry().left()) / m_dateBar->m_barWidth;
+    const int oldUnit = m_dateBar->m_currentUnit;
+    const int newUnit = (x + m_movementOffset - m_dateBar->barAreaGeometry().left()) / m_dateBar->m_barWidth;
+
+    if (oldUnit == newUnit)
+        return;
 
     // Don't scroll further down than the last image
     // We use oldUnit here, to ensure that we scroll all the way to the end
@@ -170,8 +182,14 @@ void DateBar::BarDragHandler::mouseMoveEvent(int x)
         m_dateBar->m_currentUnit = m_dateBar->numberOfUnits();
         m_movementOffset = (m_dateBar->numberOfUnits() * m_dateBar->m_barWidth) - x + m_dateBar->m_barWidth / 2;
     }
-    m_dateBar->redraw();
+    m_dateBar->redraw(DateBarWidget::RedrawMode::Fast);
     m_dateBar->emitDateSelected();
+}
+
+void DateBar::BarDragHandler::mouseReleaseEvent()
+{
+    // after dragging ends, we need a full redraw
+    m_dateBar->redraw();
 }
 
 Utilities::FastDateTime DateBar::SelectionHandler::min() const
@@ -198,6 +216,7 @@ void DateBar::SelectionHandler::clearSelection()
 
 void DateBar::SelectionHandler::mouseReleaseEvent()
 {
+    m_currentUnit = -1;
     m_dateBar->emitRangeSelection(dateRange());
 }
 

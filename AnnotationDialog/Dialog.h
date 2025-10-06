@@ -45,6 +45,7 @@ class QDockWidget;
 class QMainWindow;
 class QProgressBar;
 class QPushButton;
+class QRadioButton;
 class QSplitter;
 class QStackedWidget;
 class QTimeEdit;
@@ -150,6 +151,7 @@ Q_SIGNALS:
 protected:
     QDockWidget *createDock(const QString &title, const QString &name, Qt::DockWidgetArea location, QWidget *widget);
     QWidget *createDateWidget(ShortCutManager &shortCutManager);
+    QWidget *createDescriptionWidgets();
     ListSelect *createListSel(const DB::CategoryPtr &category);
 
     void load();
@@ -207,6 +209,9 @@ private:
     QPushButton *m_clearBut;
     QPushButton *m_okBut;
     QPushButton *m_continueLaterBut;
+    // These are used when annotating multiple images with different descriptions:
+    QRadioButton *m_appendButton;
+    QRadioButton *m_replaceButton;
     DescriptionEdit *m_description;
     QTimeEdit *m_time;
     QLabel *m_timeLabel;

@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kphotoalbum package.
 #
-# SPDX-FileCopyrightText: 2024 Yaron Shahrabani <sh.yaron@gmail.com>
+# SPDX-FileCopyrightText: 2024, 2025 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kphotoalbum\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-06 00:40+0000\n"
-"PO-Revision-Date: 2025-01-05 08:28+0200\n"
+"POT-Creation-Date: 2025-09-30 00:41+0000\n"
+"PO-Revision-Date: 2025-09-24 07:59+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -48,30 +48,200 @@ msgstr "היום"
 msgid "yesterday"
 msgstr "אתמול"
 
-#: AnnotationDialog/DescriptionEdit.cpp:15 AnnotationDialog/Dialog.cpp:148
+#: AnnotationDialog/DescriptionEdit.cpp:15 AnnotationDialog/Dialog.cpp:143
 #: HTMLGenerator/HTMLDialog.cpp:144 ImportExport/MD5CheckPage.cpp:66
 #, kde-format
 msgid "Description"
 msgstr "תיאור"
 
-#: AnnotationDialog/Dialog.cpp:109
+#: AnnotationDialog/Dialog.cpp:110
 #, kde-format
 msgid ""
-"(You have differing descriptions on individual images, setting text here "
-"will override them all)"
+"(You have differing descriptions on individual images.  Enter text to append "
+"to or replace the descriptions.)"
 msgstr ""
+"(יש הבדלים בין התיאורים של תמונות נקודתיות. נא למלא טקסט להוספה לסוף "
+"התיאורים או להחלפתם.)"
 
-#: AnnotationDialog/Dialog.cpp:134
+#: AnnotationDialog/Dialog.cpp:135
 #, kde-format
 msgid "Label and Dates"
 msgstr "תוויות ותאריכים"
 
-#: AnnotationDialog/Dialog.cpp:139
+#: AnnotationDialog/Dialog.cpp:140
 #, kde-format
 msgid "Image Preview"
 msgstr "תצוגת תמונה מקדימה"
 
-#: AnnotationDialog/Dialog.cpp:143
+#: AnnotationDialog/Dialog.cpp:164 DB/ImageDB.cpp:396
+#, kde-format
+msgid "Cancel"
+msgstr "ביטול"
+
+#: AnnotationDialog/Dialog.cpp:169 AnnotationDialog/Dialog.cpp:171
+#, kde-format
+msgid "Map"
+msgstr "מפה"
+
+#: AnnotationDialog/Dialog.cpp:177
+#, kde-format
+msgctxt "@info:whatsthis"
+msgid ""
+"The map widget allows you to view the location of images if GPS coordinates "
+"are found in the Exif information."
+msgstr ""
+"וידג׳ט המפה מאפשר לך לצפות במקום הצילום של התמונות אם יש נקודות ציון של GPS "
+"בפרטי ה־Exif."
+
+#: AnnotationDialog/Dialog.cpp:225
+#, kde-format
+msgid "Revert This Item"
+msgstr "שחזור הפריט הזה"
+
+#: AnnotationDialog/Dialog.cpp:231
+#, kde-format
+msgid "Clear Form"
+msgstr "פינוי טופס"
+
+#: AnnotationDialog/Dialog.cpp:235
+#, kde-format
+msgid "Options..."
+msgstr "אפשרויות…"
+
+#: AnnotationDialog/Dialog.cpp:241
+#, kde-format
+msgid "&Done"
+msgstr "&סיום"
+
+#: AnnotationDialog/Dialog.cpp:244
+#, kde-format
+msgid "Continue &Later"
+msgstr "להמשיך &אחר כך"
+
+#: AnnotationDialog/Dialog.cpp:252 AnnotationDialog/Dialog.cpp:873
+#, kde-format
+msgctxt "@action:button"
+msgid "&Search"
+msgstr "&חיפוש"
+
+#: AnnotationDialog/Dialog.cpp:321
+#, kde-format
+msgid "Label: "
+msgstr "תווית: "
+
+#: AnnotationDialog/Dialog.cpp:325 ImportExport/MD5CheckPage.cpp:65
+#, kde-format
+msgid "Label"
+msgstr "תווית"
+
+#: AnnotationDialog/Dialog.cpp:334
+#, kde-format
+msgid "Date: "
+msgstr "תאריך: "
+
+#: AnnotationDialog/Dialog.cpp:350
+#, kde-format
+msgid "Time: "
+msgstr "זמן: "
+
+#: AnnotationDialog/Dialog.cpp:356
+#, kde-format
+msgid "Use Fuzzy Date"
+msgstr "להשתמש בתאריך משוערך"
+
+#: AnnotationDialog/Dialog.cpp:358
+#, kde-format
+msgctxt "@info"
+msgid ""
+"<para>In KPhotoAlbum, images can either have an exact date and time, or a "
+"<emphasis>fuzzy</emphasis> date which happened any time during a specified "
+"time interval. Images produced by digital cameras do normally have an exact "
+"date.</para><para>If you don't know exactly when a photo was taken (e.g. if "
+"the photo comes from an analog camera), then you should set <interface>Use "
+"Fuzzy Date</interface>.</para>"
+msgstr ""
+"<para>ב־KPhotoAlbum, לתמונות יכולים להיות התאריך והשעה המדויקות, או תאריך "
+"<emphasis>משוערך</emphasis> שאירע בכל שעה במערך טווח השעות שצוין. לתמונות "
+"שנוצרו על ידי מצלמות דיגיטליות יש בדרך כלל תאריך מדויק.</para><para>אם לא "
+"ברור לך מתי התמונה צולמה (כלומר: אם התמונה מגיעה ממצלמה ישנה), אז יש להגדיר "
+"את האפשרות <interface>להשתמש בתאריך משוערך</interface>.</para>"
+
+#: AnnotationDialog/Dialog.cpp:373
+#, kde-format
+msgid "Minimum megapixels:"
+msgstr "כמות מגה פיקסלים מזערית:"
+
+#: AnnotationDialog/Dialog.cpp:383
+#, kde-format
+msgid "Maximum megapixels:"
+msgstr "כמות מגה פיקסלים מרבית:"
+
+#: AnnotationDialog/Dialog.cpp:396
+#, kde-format
+msgid "Rating:"
+msgstr "דירוג:"
+
+#: AnnotationDialog/Dialog.cpp:404
+#, kde-format
+msgid "Rating search mode:"
+msgstr "מצב חיפוש דירוג:"
+
+#: AnnotationDialog/Dialog.cpp:408
+#, kde-format
+msgid "=="
+msgstr "=="
+
+#: AnnotationDialog/Dialog.cpp:408
+#, kde-format
+msgid ">="
+msgstr ">="
+
+#: AnnotationDialog/Dialog.cpp:408
+#, kde-format
+msgid "<="
+msgstr "<="
+
+#: AnnotationDialog/Dialog.cpp:408
+#, kde-format
+msgid "!="
+msgstr "!="
+
+#: AnnotationDialog/Dialog.cpp:416
+#, kde-format
+msgid "File Name Pattern: "
+msgstr "תבנית שמות קבצים: "
+
+#: AnnotationDialog/Dialog.cpp:419
+#, kde-format
+msgid "File Name Pattern"
+msgstr "תבנית שמות קבצים"
+
+#: AnnotationDialog/Dialog.cpp:424
+#, kde-format
+msgid "Search only for RAW files"
+msgstr "חיפוש רק אחר קובצי RAW (גולמיים)"
+
+#: AnnotationDialog/Dialog.cpp:441
+#, kde-format
+msgid "Append"
+msgstr "הוספה לסוף"
+
+#: AnnotationDialog/Dialog.cpp:442
+#, kde-format
+msgid "Append new text to each description"
+msgstr "הוספת טקסט חדש לסוף כל תיאור"
+
+#: AnnotationDialog/Dialog.cpp:443
+#, kde-format
+msgid "Replace"
+msgstr "החלפה"
+
+#: AnnotationDialog/Dialog.cpp:444
+#, kde-format
+msgid "Replace each description with the new text"
+msgstr "החלפת כל אחד מהתיאורים בטקסט החדש"
+
+#: AnnotationDialog/Dialog.cpp:453
 #, kde-format
 msgctxt "@info:whatsthis"
 msgid ""
@@ -85,235 +255,92 @@ msgstr ""
 "interface>, תיאור שמוטמע בפרטי ה־Exif של התמונה מיובא לשדה הזה אם הוא זמין.</"
 "para>"
 
-#: AnnotationDialog/Dialog.cpp:169 DB/ImageDB.cpp:400
-#, kde-format
-msgid "Cancel"
-msgstr "ביטול"
-
-#: AnnotationDialog/Dialog.cpp:174 AnnotationDialog/Dialog.cpp:176
-#, kde-format
-msgid "Map"
-msgstr "מפה"
-
-#: AnnotationDialog/Dialog.cpp:182
-#, kde-format
-msgctxt "@info:whatsthis"
-msgid ""
-"The map widget allows you to view the location of images if GPS coordinates "
-"are found in the Exif information."
-msgstr ""
-"וידג׳ט המפה מאפשר לך לצפות במקום הצילום של התמונות אם יש נקודות ציון של GPS "
-"בפרטי ה־Exif."
-
-#: AnnotationDialog/Dialog.cpp:230
-#, kde-format
-msgid "Revert This Item"
-msgstr "שחזור הפריט הזה"
-
-#: AnnotationDialog/Dialog.cpp:236
-#, kde-format
-msgid "Clear Form"
-msgstr "פינוי טופס"
-
-#: AnnotationDialog/Dialog.cpp:240
-#, kde-format
-msgid "Options..."
-msgstr "אפשרויות…"
-
-#: AnnotationDialog/Dialog.cpp:246
-#, kde-format
-msgid "&Done"
-msgstr "&סיום"
-
-#: AnnotationDialog/Dialog.cpp:249
-#, kde-format
-msgid "Continue &Later"
-msgstr "להמשיך &אחר כך"
-
-#: AnnotationDialog/Dialog.cpp:257 AnnotationDialog/Dialog.cpp:833
-#, kde-format
-msgctxt "@action:button"
-msgid "&Search"
-msgstr "&חיפוש"
-
-#: AnnotationDialog/Dialog.cpp:326
-#, kde-format
-msgid "Label: "
-msgstr "תווית: "
-
-#: AnnotationDialog/Dialog.cpp:330 ImportExport/MD5CheckPage.cpp:65
-#, kde-format
-msgid "Label"
-msgstr "תווית"
-
-#: AnnotationDialog/Dialog.cpp:339
-#, kde-format
-msgid "Date: "
-msgstr "תאריך: "
-
-#: AnnotationDialog/Dialog.cpp:355
-#, kde-format
-msgid "Time: "
-msgstr "זמן: "
-
-#: AnnotationDialog/Dialog.cpp:361
-#, kde-format
-msgid "Use Fuzzy Date"
-msgstr "להשתמש בתאריך משוערך"
-
-#: AnnotationDialog/Dialog.cpp:363
-#, kde-format
-msgctxt "@info"
-msgid ""
-"<para>In KPhotoAlbum, images can either have an exact date and time, or a "
-"<emphasis>fuzzy</emphasis> date which happened any time during a specified "
-"time interval. Images produced by digital cameras do normally have an exact "
-"date.</para><para>If you don't know exactly when a photo was taken (e.g. if "
-"the photo comes from an analog camera), then you should set <interface>Use "
-"Fuzzy Date</interface>.</para>"
-msgstr ""
-
-#: AnnotationDialog/Dialog.cpp:378
-#, kde-format
-msgid "Minimum megapixels:"
-msgstr "כמות מגה פיקסלים מזערית:"
-
-#: AnnotationDialog/Dialog.cpp:388
-#, kde-format
-msgid "Maximum megapixels:"
-msgstr "כמות מגה פיקסלים מרבית:"
-
-#: AnnotationDialog/Dialog.cpp:401
-#, kde-format
-msgid "Rating:"
-msgstr "דירוג:"
-
-#: AnnotationDialog/Dialog.cpp:409
-#, kde-format
-msgid "Rating search mode:"
-msgstr "מצב חיפוש דירוג:"
-
-#: AnnotationDialog/Dialog.cpp:413
-#, kde-format
-msgid "=="
-msgstr "=="
-
-#: AnnotationDialog/Dialog.cpp:413
-#, kde-format
-msgid ">="
-msgstr ">="
-
-#: AnnotationDialog/Dialog.cpp:413
-#, kde-format
-msgid "<="
-msgstr "<="
-
-#: AnnotationDialog/Dialog.cpp:413
-#, kde-format
-msgid "!="
-msgstr "!="
-
-#: AnnotationDialog/Dialog.cpp:421
-#, kde-format
-msgid "File Name Pattern: "
-msgstr "תבנית שמות קבצים: "
-
-#: AnnotationDialog/Dialog.cpp:424
-#, kde-format
-msgid "File Name Pattern"
-msgstr "תבנית שמות קבצים"
-
-#: AnnotationDialog/Dialog.cpp:429
-#, kde-format
-msgid "Search only for RAW files"
-msgstr "חיפוש רק אחר קובצי RAW (גולמיים)"
-
-#: AnnotationDialog/Dialog.cpp:612
+#: AnnotationDialog/Dialog.cpp:636
 #, kde-format
 msgctxt "@title:window image %1 of %2 images"
 msgid "Annotations (%1/%2)"
 msgstr "פירושים (%1/%2)"
 
-#: AnnotationDialog/Dialog.cpp:838
+#: AnnotationDialog/Dialog.cpp:878
 #, kde-format
 msgctxt "@title:window title of the 'find images' window"
 msgid "Search"
 msgstr "חיפוש"
 
-#: AnnotationDialog/Dialog.cpp:841
+#: AnnotationDialog/Dialog.cpp:881
 #, kde-format
 msgid "Done"
 msgstr "בוצע"
 
-#: AnnotationDialog/Dialog.cpp:848
+#: AnnotationDialog/Dialog.cpp:888
 #, kde-format
 msgctxt "@title:window"
 msgid "Annotations"
 msgstr "פירושים"
 
-#: AnnotationDialog/Dialog.cpp:880
+#: AnnotationDialog/Dialog.cpp:920
 #, kde-format
 msgid "Configure Window Layout..."
 msgstr "הגדרת פריסת חלונות…"
 
-#: AnnotationDialog/Dialog.cpp:881
+#: AnnotationDialog/Dialog.cpp:921
 #, kde-format
 msgid "Save Current Window Setup"
 msgstr "שמירת תצורת החלון הנוכחית"
 
-#: AnnotationDialog/Dialog.cpp:882
+#: AnnotationDialog/Dialog.cpp:922
 #, kde-format
 msgid "Reset layout"
 msgstr "איפוס פריסה"
 
-#: AnnotationDialog/Dialog.cpp:889 AnnotationDialog/Dialog.cpp:1268
+#: AnnotationDialog/Dialog.cpp:929 AnnotationDialog/Dialog.cpp:1308
 #: AnnotationDialog/ListSelect.cpp:110
 #, kde-format
 msgid "Sort Alphabetically (Tree)"
 msgstr "מיון בסדר אלפבתי (עץ)"
 
-#: AnnotationDialog/Dialog.cpp:893 AnnotationDialog/Dialog.cpp:1272
+#: AnnotationDialog/Dialog.cpp:933 AnnotationDialog/Dialog.cpp:1312
 #: AnnotationDialog/ListSelect.cpp:116
 #, kde-format
 msgid "Sort Alphabetically (Flat)"
 msgstr "מיון בסדר אלפבתי (שטוח)"
 
-#: AnnotationDialog/Dialog.cpp:897
+#: AnnotationDialog/Dialog.cpp:937
 #, kde-format
 msgid "Sort by Date"
 msgstr "מיון לפי תאריך"
 
-#: AnnotationDialog/Dialog.cpp:913
+#: AnnotationDialog/Dialog.cpp:953
 #, kde-format
 msgid "Match Tags from the First Character"
 msgstr "התאמת תגיות החל מהתו הראשון"
 
-#: AnnotationDialog/Dialog.cpp:914
+#: AnnotationDialog/Dialog.cpp:954
 #, kde-format
 msgid "Match Tags from Word Boundaries"
 msgstr "התאמת תגיות מגבולות של מילים"
 
-#: AnnotationDialog/Dialog.cpp:915
+#: AnnotationDialog/Dialog.cpp:955
 #, kde-format
 msgid "Match Tags Anywhere"
 msgstr "התאמת תגיות בכל מקום"
 
-#: AnnotationDialog/Dialog.cpp:932
+#: AnnotationDialog/Dialog.cpp:972
 #, kde-format
 msgid "Show Only Selected Ctrl+S"
 msgstr "הצגת הנבחרים בלבד Ctrl+S"
 
-#: AnnotationDialog/Dialog.cpp:970 Map/MapView.cpp:360
+#: AnnotationDialog/Dialog.cpp:1010 Map/MapView.cpp:360
 #, kde-format
 msgid "Settings saved!"
 msgstr "ההגדרות נשמרו!"
 
-#: AnnotationDialog/Dialog.cpp:970
+#: AnnotationDialog/Dialog.cpp:1010
 #, kde-format
 msgid "Save current window setup"
 msgstr "שמירת תצורת החלון הנוכחית"
 
-#: AnnotationDialog/Dialog.cpp:1035
+#: AnnotationDialog/Dialog.cpp:1075
 #, kde-format
 msgid ""
 "<p>Some changes are made to annotations. Do you really want to discard all "
@@ -322,13 +349,13 @@ msgstr ""
 "<p>בוצעו כמה שינויים בהסברים. להשליך את כל השינויים האחרונים בכל אחד מהקבצים "
 "שהושפעו מכך?</p>"
 
-#: AnnotationDialog/Dialog.cpp:1036
+#: AnnotationDialog/Dialog.cpp:1076
 #, kde-format
 msgctxt "@title"
 msgid "Discard changes?"
 msgstr "להתעלם מהשינויים?"
 
-#: AnnotationDialog/Dialog.cpp:1135
+#: AnnotationDialog/Dialog.cpp:1175
 #, kde-format
 msgid ""
 "<p>You have just opened the advanced search dialog; to get the most out of "
@@ -338,8 +365,13 @@ msgid ""
 "you can find extra tips on its usage by reading about <a href=\"help:/"
 "kphotoalbum/chp-typingIn.html\">typing in</a>.</p>"
 msgstr ""
+"<p>פתחת את חלונית החיפוש המתקדם, כדי להפיק את המירב ממנה, מומלץ לקרואשקראת "
+"את הסעיף במדריך שתחת <a href=\"help:/kphotoalbum/sect-general-image-searches."
+"html\">חיפוש מתקדם</a>.</p><p>החלונית הזאת משמשת גם כדי להקליד מידע על "
+"תמונות, אפשר למצוא גם עצות נוספות על אופן השימוש בה על ידי קריאה על <a href="
+"\"help:/kphotoalbum/chp-typingIn.html\">הקלדת קלט</a>.</p>"
 
-#: AnnotationDialog/Dialog.cpp:1143
+#: AnnotationDialog/Dialog.cpp:1183
 #, kde-format
 msgid ""
 "<p>You have just opened one of the most important windows in KPhotoAlbum; it "
@@ -351,52 +383,52 @@ msgstr ""
 "שמוטבו לשימוש מהיר.</p><p>מומלץ להקדיש 5 דקות לקרוא את <a href=\"help:/"
 "kphotoalbum/chp-typingIn.html\">תיעוד החלונית הזאת</a></p>"
 
-#: AnnotationDialog/Dialog.cpp:1275
+#: AnnotationDialog/Dialog.cpp:1315
 #, kde-format
 msgid "Sort Most Recently Used"
 msgstr "סידור לפי השמישים ביותר"
 
-#: AnnotationDialog/Dialog.cpp:1278
+#: AnnotationDialog/Dialog.cpp:1318
 #, kde-format
 msgid "Toggle Sorting"
 msgstr "החלפת מצב סידור"
 
-#: AnnotationDialog/Dialog.cpp:1283
+#: AnnotationDialog/Dialog.cpp:1323
 #, kde-format
 msgid "Toggle Showing Selected Items Only"
 msgstr "החלפת הצגת הפריטים הנבחרים בלבד"
 
-#: AnnotationDialog/Dialog.cpp:1287
+#: AnnotationDialog/Dialog.cpp:1327
 #, kde-format
 msgid "Annotate Next"
 msgstr "הוספת פירוש לבאה"
 
-#: AnnotationDialog/Dialog.cpp:1291
+#: AnnotationDialog/Dialog.cpp:1331
 #, kde-format
 msgid "Annotate Previous"
 msgstr "הוספת פירוש לקודמת"
 
-#: AnnotationDialog/Dialog.cpp:1295
+#: AnnotationDialog/Dialog.cpp:1335
 #, kde-format
 msgid "OK dialog"
 msgstr "חלונית אישור"
 
-#: AnnotationDialog/Dialog.cpp:1299
+#: AnnotationDialog/Dialog.cpp:1339
 #, kde-format
 msgid "Copy tags from previous image"
 msgstr "העתקת תגיות מתמונה קודמת"
 
-#: AnnotationDialog/Dialog.cpp:1303 MainWindow/Window.cpp:836
+#: AnnotationDialog/Dialog.cpp:1343 MainWindow/Window.cpp:844
 #, kde-format
 msgid "Rotate counterclockwise"
 msgstr "סיבוב נגד כיוון השעון"
 
-#: AnnotationDialog/Dialog.cpp:1306 MainWindow/Window.cpp:840
+#: AnnotationDialog/Dialog.cpp:1346 MainWindow/Window.cpp:848
 #, kde-format
 msgid "Rotate clockwise"
 msgstr "סיבוב עם כיוון השעון"
 
-#: AnnotationDialog/Dialog.cpp:1309
+#: AnnotationDialog/Dialog.cpp:1349
 #, kde-format
 msgid "Toggle fullscreen preview"
 msgstr "החלפת מצב תצוגה מקדימה במסך מלא"
@@ -409,6 +441,10 @@ msgid ""
 "change this in the settings dialog. If this tag shouldn't be in the "
 "recognition database anymore, it can be deleted in the settings.</p>"
 msgstr ""
+"<p><b>לא ניתן לשייך את התגית „%2”</b></p><p>הקטגוריה „%1” אליה שייכת התגית "
+"„%2” אינה אזורית.</p><p>כדי להשתמש בתגית הזאת, יש לשנות את זה בהגדרות. אם "
+"התגית הזאת לא אמורה להיות עוד במסד נתוני הזיהוי, אפשר למחוק אותה דרך ההגדרות."
+"</p>"
 
 #: AnnotationDialog/ImagePreview.cpp:528
 #, kde-format
@@ -418,6 +454,10 @@ msgid ""
 "this category and mark it as positionable. If this tag shouldn't be in the "
 "recognition database anymore, it can be deleted in the settings dialog.</p>"
 msgstr ""
+"<p><b>לא ניתן לשייך את התגית „%2”</b></p><p>הקטגוריה „%1” אליה שייכת התגית "
+"„%2” לא קיימת.</p><p>כדי להשתמש בתגית הזאת, יש להוסיף את הקטגוריה הזאת ולסמן "
+"אותה כאזורית. אם התגית הזאת לא אמורה להיות במסד נתוני הזיהוי עוד, אפשר למחוק "
+"אותה דרך חלונית ההגדרות.</p>"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:51
 #, kde-format
@@ -436,6 +476,8 @@ msgid ""
 "<para>Set the same tags on this image than on the previous one. The image "
 "date, label, rating, and description are left unchanged.</para>"
 msgstr ""
+"<para>להגדיר בתמונה הזאת את אותן התגיות כמו בתמונה הקודמת. התאריך, התווית, "
+"הדירוג והתיאור של התמונה יישארו כמו שהיו.</para>"
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:110
 #, kde-format
@@ -456,12 +498,15 @@ msgid ""
 "category in <interface>Settings|Configure KPhotoAlbum...|Categories</"
 "interface>, you can associate specific image areas with tags."
 msgstr ""
+"הפעלת <emphasis>תגיות אזוריות</emphasis> לקטגוריה אחת לפחות תחת "
+"<interface>הגדרות|הגדרת KPhotoAlbum…|קטגוריות</interface>, תאפשר לך לשייך "
+"אזורים מסוימים בתמונה לתגיות."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:325
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Areas on an image can only be shown in single-image annotation mode."
-msgstr ""
+msgstr "ניתן להציג אזורים בתמונה רק במצב הסברים על תמונה בודדה."
 
 #: AnnotationDialog/ImagePreviewWidget.cpp:355
 #, kde-format
@@ -527,6 +572,9 @@ msgid ""
 "Untagged Images</interface>). It will not show up here as long as it is "
 "selected for this purpose."
 msgstr ""
+"התגית שבחרת היא התגית שמוגדרת אוטומטית לתמונות חדשות, בלתי מתויגות שנמצאו "
+"(להשוואה: <interface>הגדרות|הגדרת KPhotoAlbum…|קטגוריות|תמונות לא מתויגות</"
+"interface>). היא לא תופיע כאן כל עוד היא נבחרה למטרה הזאת."
 
 #: AnnotationDialog/ListSelect.cpp:359
 #, kde-format
@@ -624,6 +672,8 @@ msgid ""
 "<p>Do you really want to rename \"%1\" to \"%2\"?<br/>Doing so will rename "
 "\"%3\" on any image containing it.</p>"
 msgstr ""
+"<p>לשנות את השם של „%1” לשם „%2”?<br/>ביצוע הפעולה הזאת ישנה את השם של „%3” "
+"בכל תמונה שמכילה אותו.</p>"
 
 #: AnnotationDialog/ListSelect.cpp:473
 #, kde-format
@@ -655,7 +705,7 @@ msgstr "הוספת תגית"
 #: AnnotationDialog/ListSelect.cpp:522
 #, kde-format
 msgid "Name for the tag to be added to this tag group:"
-msgstr ""
+msgstr "שם התגית להוספה לקבוצת התגיות הזאת:"
 
 #: AnnotationDialog/ListSelect.cpp:776
 #, kde-format
@@ -697,6 +747,8 @@ msgid ""
 "<p>%1 has already been tagged in another area on this image.</p><p>If you "
 "continue, the previous tag will be removed...</p>"
 msgstr ""
+"<p>%1 כבר תויגה באזור אחר בתמונה הזאת.</p><p>המשך בתהליך יסיר את התגית "
+"הקודמת…</p>"
 
 #: AnnotationDialog/ResizableFrame.cpp:360
 #, kde-format
@@ -742,12 +794,12 @@ msgstr "קריאת אורך הווידאו"
 #: BackgroundJobs/SearchForVideosWithoutLengthInfo.cpp:46
 #, kde-format
 msgid "Search for videos without length information"
-msgstr ""
+msgstr "חיפוש אחר סרטונים בלי פרטי אורך"
 
 #: BackgroundJobs/SearchForVideosWithoutVideoThumbnailsJob.cpp:57
 #, kde-format
 msgid "Searching for videos without video thumbnails"
-msgstr ""
+msgstr "חיפוש אחר סרטונים בלי סרטונים ממוזערים"
 
 #: BackgroundTaskManager/JobInfo.cpp:55
 #, kde-format
@@ -917,7 +969,7 @@ msgctxt "Breadcrumb denoting that we 'browsed' to a search result."
 msgid "search"
 msgstr "חיפוש"
 
-#: Browser/OverviewPage.cpp:334 MainWindow/Window.cpp:1770
+#: Browser/OverviewPage.cpp:334 MainWindow/Window.cpp:1771
 #, kde-format
 msgid ""
 "<p>You have not yet configured which tag to use for indicating untagged "
@@ -926,8 +978,13 @@ msgid ""
 "b></li><li>Now choose the <b>Categories</b> icon</li><li>Now configure "
 "section <b>Untagged Images</b></li></ul></p>"
 msgstr ""
+"<p>עדיין לא הגדרת באיזו תגית להשתמש לציון תמונות שאינן מתויגות.</p><p>נא "
+"לבצע את הפעולות הבאות לשם כך:<ul><li>בסרגל התפריטיםלבחור ב<b>הגדרות</b></"
+"li><li>משם לבחור ב<b>הגדרת KPhotoAlbum</b></li><li>עכשיו לבחור בסמל "
+"<b>קטגוריות</b></li><li>ולהגדיר את הסעיף <b>תמונות בלתי מתויגות</b></li></"
+"ul></p>"
 
-#: Browser/OverviewPage.cpp:340 MainWindow/Window.cpp:1777
+#: Browser/OverviewPage.cpp:340 MainWindow/Window.cpp:1778
 #, kde-format
 msgid "Feature has not been configured"
 msgstr "היכולת לא הוגדרה עדיין"
@@ -972,69 +1029,100 @@ msgid_plural ""
 "it really your intention to make \"%3\" a tag group and add %2 as members?</"
 "p>"
 msgstr[0] ""
+"<p>גררת פריט אחד לפריט אחר. הפעולה הזאת תהפוך את פריט היעד לקבוצת תגיות "
+"ותגדיר את הפריט שנגרר כחבר של הקבוצה הזאת. אפשר להשתמש בקבוצות תגיות כדי "
+"לציין עובדות כגון ‚פתח תקווה בישראל’. בדוגמה הזאת התבצעה גרירה של פתח תקווה "
+"לתוך ישראל. לאחר שהגדרת קבוצת תגיות, אפשר, למשל, לראות את כל התמונות מישראל "
+"על ידי בחירת הפריט הזה בסייר.</p><p>האם אכן התכוונת להפוך את „%3” לקבוצת "
+"תגיות ולהוסיף את „%2” כחבר בה?</p>"
 msgstr[1] ""
+"<p>גררת מספר פריטים לפריט אחר. הפעולה הזאת תהפוך את פריט היעד לקבוצת תגיות "
+"ותגדיר את הפריט שנגרר כחבר של הקבוצה הזאת. אפשר להשתמש בקבוצות תגיות כדי "
+"לציין עובדות כגון ‚פתח תקווה וגדרה בישראל’. בדוגמה הזאת התבצעה גרירה של פתח "
+"תקווה וגדרה לתוך ישראל. לאחר שהגדרת קבוצת תגיות, אפשר, למשל, לראות את כל "
+"התמונות מישראל על ידי בחירת הפריט הזה בסייר.</p><p>האם אכן התכוונת להפוך את "
+"„%3” לקבוצת תגיות ולהוסיף את %2 כחברים בה?</p>"
 msgstr[2] ""
+"<p>גררת מספר פריטים לפריט אחר. הפעולה הזאת תהפוך את פריט היעד לקבוצת תגיות "
+"ותגדיר את הפריט שנגרר כחבר של הקבוצה הזאת. אפשר להשתמש בקבוצות תגיות כדי "
+"לציין עובדות כגון ‚פתח תקווה וגדרה בישראל’. בדוגמה הזאת התבצעה גרירה של פתח "
+"תקווה וגדרה לתוך ישראל. לאחר שהגדרת קבוצת תגיות, אפשר, למשל, לראות את כל "
+"התמונות מישראל על ידי בחירת הפריט הזה בסייר.</p><p>האם אכן התכוונת להפוך את "
+"„%3” לקבוצת תגיות ולהוסיף את %2 כחברים בה?</p>"
 msgstr[3] ""
+"<p>גררת מספר פריטים לפריט אחר. הפעולה הזאת תהפוך את פריט היעד לקבוצת תגיות "
+"ותגדיר את הפריט שנגרר כחבר של הקבוצה הזאת. אפשר להשתמש בקבוצות תגיות כדי "
+"לציין עובדות כגון ‚פתח תקווה וגדרה בישראל’. בדוגמה הזאת התבצעה גרירה של פתח "
+"תקווה וגדרה לתוך ישראל. לאחר שהגדרת קבוצת תגיות, אפשר, למשל, לראות את כל "
+"התמונות מישראל על ידי בחירת הפריט הזה בסייר.</p><p>האם אכן התכוונת להפוך את "
+"„%3” לקבוצת תגיות ולהוסיף את %2 כחברים בה?</p>"
 
 #: CategoryListView/CheckDropItem.cpp:157
 #, kde-format
 msgid "Move Items"
 msgstr "העברת פריטים"
 
-#: DateBar/DateBarWidget.cpp:62
+#: DateBar/DateBarWidget.cpp:65
 #, kde-format
 msgctxt "Accessible name for the date bar widget"
 msgid "Datebar"
 msgstr "סרגל תאריך"
 
-#: DateBar/DateBarWidget.cpp:71
+#: DateBar/DateBarWidget.cpp:74
 #, kde-format
 msgid "Scroll right"
 msgstr "גלילה ימינה"
 
-#: DateBar/DateBarWidget.cpp:80
+#: DateBar/DateBarWidget.cpp:83
 #, kde-format
 msgid "Scroll left"
 msgstr "גלילה שמאלה"
 
-#: DateBar/DateBarWidget.cpp:89
+#: DateBar/DateBarWidget.cpp:92
 #, kde-format
 msgid "Zoom in"
 msgstr "התקרבות"
 
-#: DateBar/DateBarWidget.cpp:100
+#: DateBar/DateBarWidget.cpp:103
 #, kde-format
 msgid "Zoom out"
 msgstr "התרחקות"
 
-#: DateBar/DateBarWidget.cpp:112
+#: DateBar/DateBarWidget.cpp:115
 #, kde-format
 msgctxt "The button clears the selection of a date range in the date bar."
 msgid "Clear date selection"
 msgstr "פינוי בחירת תאריכים"
 
-#: DateBar/DateBarWidget.cpp:125
+#: DateBar/DateBarWidget.cpp:128
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<title>The date bar</title><para><list><item>Scroll using the arrow buttons, "
-"the scrollwheel, or the middle mouse button.</item><item>Zoom using the +/- "
+"the scrollwheel, or the middle mouse button.</item><item>Use the home and "
+"end buttons to scroll to the start or end.</item><item>Zoom using the +/- "
 "buttons or Ctrl + scrollwheel.</item><item>Restrict the view to a date range "
 "selection: Click/drag below the timeline.</item><item>Jump to a date by "
 "clicking on the histogram bar.</item></list></para>"
 msgstr ""
+"<title>סרגל התאריכים</title><para><list><item>אפשר לגלול בעזרת מקשי החיצים, "
+"גלגלת העכבר, או הכפתור האמצעי בעכבר.</item><item>אפשר להשתמש בכפתורי הבית "
+"והסיום כדי לגלול להתחלה או לסוף.</item><item>להתקרב באמצעות המקשים +/- או "
+"Ctrl + גלגלת העכבר.</item><item>להגביל את התצוגה לטווח תאריכים נבחר: "
+"Click/גרירה מתחת לציר הזמן.</item><item>אפשר לקפוץ לתאריך על ידי לחיצה על "
+"סרגל ההיסטוגרמה.</item></list></para>"
 
-#: DateBar/DateBarWidget.cpp:691
+#: DateBar/DateBarWidget.cpp:743
 #, kde-format
 msgid "Show Ranges"
 msgstr "הצגת טווחים"
 
-#: DateBar/DateBarWidget.cpp:697
+#: DateBar/DateBarWidget.cpp:749
 #, kde-format
 msgid "Show Resolution Indicator"
 msgstr "הצגת מחוון רזולוציה"
 
-#: DateBar/DateBarWidget.cpp:822
+#: DateBar/DateBarWidget.cpp:874
 #, kde-format
 msgctxt "@info:status images that fall in the given date range"
 msgid "1 exact"
@@ -1044,7 +1132,7 @@ msgstr[1] "שניים מדויקים"
 msgstr[2] "%1 מדויקים"
 msgstr[3] "%1 מדויקים"
 
-#: DateBar/DateBarWidget.cpp:823
+#: DateBar/DateBarWidget.cpp:875
 #, kde-format
 msgctxt ""
 "@info:status additional images captured in a date range that overlaps with "
@@ -1056,7 +1144,7 @@ msgstr[1] " + שני טווחים"
 msgstr[2] " + %1 טווחים"
 msgstr[3] " + %1 טווחים"
 
-#: DateBar/DateBarWidget.cpp:824
+#: DateBar/DateBarWidget.cpp:876
 #, kde-format
 msgctxt "@info:status total image count"
 msgid " = 1 total"
@@ -1066,17 +1154,17 @@ msgstr[1] " = %1 סך הכול"
 msgstr[2] " = %1 סך הכול"
 msgstr[3] " = %1 סך הכול"
 
-#: DateBar/DateBarWidget.cpp:826
+#: DateBar/DateBarWidget.cpp:878
 #, kde-format
 msgctxt "@info:status image count"
 msgid "%1 image/video"
 msgid_plural "%1 images/videos"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "תמונה/סרטון"
+msgstr[1] "2 תמונות/סרטונים"
+msgstr[2] "%1 תמונות/סרטונים"
+msgstr[3] "%1 תמונות/סרטונים"
 
-#: DateBar/DateBarWidget.cpp:828
+#: DateBar/DateBarWidget.cpp:880
 #, kde-format
 msgctxt ""
 "@info:status Time range vs. image count (e.g. 'Jun 2012 | 4 images/videos')."
@@ -1123,22 +1211,22 @@ msgstr "דקה"
 msgid "10 Seconds"
 msgstr "10 שניות"
 
-#: DB/Category.cpp:309
+#: DB/Category.cpp:326
 #, kde-format
 msgid "Unable to create folder '%1'."
 msgstr "לא ניתן ליצור את התיקייה ‚%1’."
 
-#: DB/Category.cpp:309
+#: DB/Category.cpp:326
 #, kde-format
 msgid "Unable to Create Folder"
 msgstr "לא ניתן ליצור תיקייה"
 
-#: DB/Category.cpp:318
+#: DB/Category.cpp:335
 #, kde-format
 msgid "Error when saving image '%1'."
 msgstr "שגיאה בשמירת התמונה ‚%1’."
 
-#: DB/Category.cpp:318
+#: DB/Category.cpp:335
 #, kde-format
 msgid "Error Saving Image"
 msgstr "שגיאה בשמירת התמונה"
@@ -1215,45 +1303,47 @@ msgctxt "Abbreviated month name"
 msgid "dec"
 msgstr "דצמ"
 
-#: DB/ImageDB.cpp:64
+#: DB/ImageDB.cpp:65
 #, kde-format
 msgid ""
 "Autosave file '%1' exists (size %3 KB) and is newer than '%2'. Should the "
 "autosave file be used?"
 msgstr ""
+"קובץ השמירה האוטומטית ‚%1’ קיים (גודלו %3 ק״ב) והוא יותר חדש מ־‚%2’. האם "
+"להשתמש בקובץ השמירה האוטומטית?"
 
-#: DB/ImageDB.cpp:67
+#: DB/ImageDB.cpp:68
 #, kde-format
 msgid "Found Autosave File"
 msgstr "נמצא קובץ שמירה אוטומטית"
 
-#: DB/ImageDB.cpp:399
+#: DB/ImageDB.cpp:395
 #, kde-format
 msgid "Loading information from images"
 msgstr "נטען מידע מתמונות"
 
-#: DB/ImageDB.cpp:562 DB/ImageDB.cpp:868 DB/XML/FileReader.cpp:136
+#: DB/ImageDB.cpp:558 DB/ImageDB.cpp:864 DB/XML/FileReader.cpp:139
 #: Settings/CategoryPage.cpp:258 ThumbnailView/ThumbnailModel.cpp:355
 #, kde-format
 msgid "Media Type"
 msgstr "סוג מדיה"
 
-#: DB/ImageDB.cpp:563 DB/ImageDB.cpp:869 DB/XML/FileReader.cpp:138
+#: DB/ImageDB.cpp:559 DB/ImageDB.cpp:865 DB/XML/FileReader.cpp:141
 #, kde-format
 msgid "Image"
 msgstr "תמונה"
 
-#: DB/ImageDB.cpp:563 DB/ImageDB.cpp:870 DB/XML/FileReader.cpp:139
+#: DB/ImageDB.cpp:559 DB/ImageDB.cpp:866 DB/XML/FileReader.cpp:142
 #, kde-format
 msgid "Video"
 msgstr "וידאו"
 
-#: DB/ImageDB.cpp:974
+#: DB/ImageDB.cpp:1024
 #, kde-format
 msgid "KPhotoAlbum - manual repair needed (%1)"
 msgstr "KPhotoAlbum - יש לתקן ידנית (%1)"
 
-#: DB/ImageDB.cpp:975
+#: DB/ImageDB.cpp:1025
 #, kde-format
 msgctxt "Separator in a list of tags"
 msgid ", "
@@ -1266,15 +1356,17 @@ msgid ""
 "of images, this may take some time.<br/>However, there is only a delay when "
 "new images are found.</p>"
 msgstr ""
+"<p><b>טעינת מידע מקבצים חדשים</b></p><p>כתלות במספר התמונות, הפעולה הזאת "
+"עלולה לארוך זמן מה.<br/>עם זאת, התהליך יתעכב רק כשנמצאות תמונות חדשות.</p>"
 
 #: DB/NewImageFinder.cpp:702
 #, kde-format
 msgid "<p><b>Calculating checksum for %1 file</b></p>"
 msgid_plural "<p><b>Calculating checksums for %1 files</b></p>"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "<p><b>מתבצע חישוב סיכום ביקורת של קובץ</b></p>"
+msgstr[1] "<p><b>מתבצע חישוב סיכום ביקורת של שני קבצים</b></p>"
+msgstr[2] "<p><b>מתבצע חישוב סיכום ביקורת של %1 קבצים</b></p>"
+msgstr[3] "<p><b>מתבצע חישוב סיכום ביקורת של %1 קבצים</b></p>"
 
 #: DB/NewImageFinder.cpp:703
 #, kde-format
@@ -1282,6 +1374,8 @@ msgid ""
 "<p>By storing a checksum for each image KPhotoAlbum is capable of finding "
 "images even when you have moved them on the disk.</p>"
 msgstr ""
+"<p>אחסון סיכום ביקורת לכל אחת מהתמונות מאפשר ל־KPhotoAlbum למצוא תמונות "
+"אפילו לאחר שהועברו למקום אחר בכונן.</p>"
 
 #: DB/NewImageFinder.cpp:747
 #, kde-format
@@ -1312,33 +1406,36 @@ msgctxt ""
 msgid "No other %1"
 msgstr "אין %1 נוספים"
 
-#: DB/XML/FileReader.cpp:57
+#: DB/XML/FileReader.cpp:60
 #, kde-format
 msgid ""
 "<p>The XML database file is from a newer version of KPhotoAlbum!</"
 "p><p>Chances are you will be able to read this file, but when writing it "
 "back, information saved in the newer version will be lost</p>"
 msgstr ""
+"<p>קובץ מסד הנתונים ב־XML הוא מגרסה חדשה יותר של KPhotoAlbum!</p><p>כנראה "
+"שיתאפשר לך לקרוא את הקובץ הזה, אבל הכתיבה אליו חזרה, המידע שנשמר בגרסה החדשה "
+"יותר ילך לאיבוד</p>"
 
-#: DB/XML/FileReader.cpp:60
+#: DB/XML/FileReader.cpp:63
 #, kde-format
 msgid "XML database file version mismatch"
 msgstr "גרסת קובץ מסד נתונים ב־XML אינה תואמת"
 
 #. i18n("Folder")), and then start KPA with the C locale, which would produce a
 #. doubled "Folder" category.
-#: DB/XML/FileReader.cpp:88 Settings/CategoryPage.cpp:256
+#: DB/XML/FileReader.cpp:91 Settings/CategoryPage.cpp:256
 #: ThumbnailView/CellGeometry.cpp:93 ThumbnailView/ThumbnailModel.cpp:355
 #, kde-format
 msgid "Folder"
 msgstr "תיקייה"
 
-#: DB/XML/FileReader.cpp:110 DB/XML/FileReader.cpp:122
+#: DB/XML/FileReader.cpp:113 DB/XML/FileReader.cpp:125
 #, kde-format
 msgid "Tokens"
 msgstr "אסימונים"
 
-#: DB/XML/FileReader.cpp:190
+#: DB/XML/FileReader.cpp:201
 #, kde-format
 msgid ""
 "<p>Line %1, column %2: duplicate category '%3'</p><p>Choose continue to "
@@ -1348,12 +1445,12 @@ msgstr ""
 "<p>שורה %1, עמודה %2: קטגוריה כפולה ‚%3’</p><p>נא לבחור להמשיך כדי להתעלם "
 "מקטגוריות כפולות ולנסות לתקן אוטומטית, או לבחור בביטול כדי לצאת.</p>"
 
-#: DB/XML/FileReader.cpp:196 DB/XML/FileReader.cpp:301
+#: DB/XML/FileReader.cpp:207 DB/XML/FileReader.cpp:312
 #, kde-format
 msgid "Error in database file"
 msgstr "שגיאה בקובץ מסד הנתונים"
 
-#: DB/XML/FileReader.cpp:256
+#: DB/XML/FileReader.cpp:267
 #, kde-format
 msgctxt ""
 "Leave \"Folder\" and \"Media Type\" untranslated below, those will show up "
@@ -1366,20 +1463,27 @@ msgid ""
 "p><p>In some cases, you may get two additional empty categories, \"Folder\" "
 "and \"Media Type\". You can delete those.</p>"
 msgstr ""
+"<p><b>הגרסה הזאת של KPhotoAlbum לא מתרגמת יותר קטגוריות „רגילות”.</b></"
+"p><p>כלומר – בשימוש בשפה שאינה אנגלית - חלק מהקטגוריות שלך תופענה מעתה "
+"באנגלית.</p><p>אפשר לשנות את שמות הקטגוריות שלך ידנית בכל עת ואז לשמור את "
+"מסד הנתונים שלך.</p><p>בחלק מהמקרים עשויות להתקבל שתי קטגוריות ריקות נוספות, "
+"„Folder” (תיקייה) ו־„Media Type” (סוג אחסון), אפשר למחוק אותן.</p>"
 
-#: DB/XML/FileReader.cpp:264
+#: DB/XML/FileReader.cpp:275
 #, kde-format
 msgid "Changed standard category names"
 msgstr "שמות הקטגוריות התקניות השתנו"
 
-#: DB/XML/FileReader.cpp:296
+#: DB/XML/FileReader.cpp:307
 #, kde-format
 msgid ""
 "<p>Line %1, column %2: duplicate entry for file '%3' with different MD5 sum."
 "</p><p>Manual repair required!</p>"
 msgstr ""
+"<p>שורה %1, עמודה %2: רשומה כפולה לקובץ ‚%3’ עם סיכום ביקורת MD5 שונה.</"
+"p><p>נדרש תיקון ידני!</p>"
 
-#: DB/XML/FileReader.cpp:435
+#: DB/XML/FileReader.cpp:446
 #, kde-format
 msgid ""
 "<p>Your images/videos are not sorted, which means that navigating using the "
@@ -1392,13 +1496,21 @@ msgid ""
 "their dates set, you can execute <b>Maintenance->Sort All by Date & Time</b> "
 "to sort them in the database. </p>"
 msgstr ""
+"<p>התמונות/הסרטונים שלך אינם מסודרים, מה שאומר שהניווט באמצעות סרגל התאריכים "
+"יעבוד אבל לא טוב כל כך.</p><p>בתפריט <b>תחזוקה</b>, אפשר למצוא את <b>הצגת "
+"תמונות עם תאריכים חלקיים</b> שניתן להשתמש בזה כדי למצוא תמונות שחסרים להן "
+"פרטי תאריך.</p><p>אז ניתן לבחור את התמונות שיש לך מעבר לספק שהתאריך הנכון "
+"שלהן נמצא או בנתוני ה־Exif שלהן או בקובץ, ולהפעיל את <b>תחזוקה->לקרוא נתוני "
+"Exif</b> כדי לקרוא את הנתונים מחדש.</p><p>לבסוף, לאחר שלכל התמונות מוגדר "
+"תאריך, אפשר להפעיל את <b>תחזוקה->סידור הכול תאריך ושעה</b> כדי לסדר אותן "
+"במסד הנתונים. </p>"
 
-#: DB/XML/FileReader.cpp:444
+#: DB/XML/FileReader.cpp:455
 #, kde-format
 msgid "Images/Videos Are Not Sorted"
 msgstr "התמונות/הסרטונים לא מסודרים"
 
-#: DB/XML/FileReader.cpp:456
+#: DB/XML/FileReader.cpp:467
 #, kde-format
 msgid ""
 "<p>Not all the images in the database have information about image sizes; "
@@ -1408,13 +1520,19 @@ msgid ""
 "doing so will result in extra space around images in the thumbnail view - "
 "that is all - so there is no urgency in doing it.</p>"
 msgstr ""
+"<p>לא לכל התמונות במסד הנתונים יש פרטים על גודלי התמונות, הפרטים האלו נחוצים "
+"כדי לקבל את התוצאות המיטביות בתצוגת התמונות הממוזערות. כדי לתקן זאת יש לגשת "
+"אל התפריט <b>תחזוקה</b> ואז קודם לבחור ב<b>הסרת כל התמונות הממוזערות</b>, "
+"ולאחר מכן לבחור ב<tt>בניית תמונות ממוזערות</tt>.</p><p>אי ביצוע הפעולה הזאת "
+"יוביל לרווח מסביב לתמונות בתצוגת התמונות הממוזערות - זה הכול - לכן זאת לא "
+"פעולה הרת גורל במיוחד.</p>"
 
-#: DB/XML/FileReader.cpp:461
+#: DB/XML/FileReader.cpp:472
 #, kde-format
 msgid "Not All Images Have Size Information"
 msgstr "לא לכל התמונות יש פרטי גודל"
 
-#: DB/XML/FileReader.cpp:475
+#: DB/XML/FileReader.cpp:486
 #, kde-format
 msgctxt "repair merged tags"
 msgid ""
@@ -1422,39 +1540,43 @@ msgid ""
 "now contain tags that were merged during the repair.</p><p>The following "
 "tags require manual inspection:<ul>"
 msgstr ""
+"<p>נמצאו ותוקנו מספר תקלות אחידות במסד הנתונים שלך. חלק מהקטגוריות מכילות "
+"מעתה תגיות שמוזגו במהלך התיקון.</p><p>התגיות הבאות דורשות בחינה ידנית:<ul>"
 
-#: DB/XML/FileReader.cpp:485
+#: DB/XML/FileReader.cpp:496
 #, kde-format
 msgctxt "repair merged tags"
 msgid "<li>%1:<br/>"
 msgstr "<li>%1:<br/>"
 
-#: DB/XML/FileReader.cpp:487
+#: DB/XML/FileReader.cpp:498
 #, kde-format
 msgctxt "repair merged tags"
 msgid "%1<br/>"
 msgstr "%1<br/>"
 
-#: DB/XML/FileReader.cpp:490
+#: DB/XML/FileReader.cpp:501
 #, kde-format
 msgctxt "repair merged tags"
 msgid "</li>"
 msgstr "</li>"
 
-#: DB/XML/FileReader.cpp:495
+#: DB/XML/FileReader.cpp:506
 #, kde-format
 msgctxt "repair merged tags"
 msgid ""
 "</ul></p><p>All affected images have also been marked with a tag "
 "<em>KPhotoAlbum - manual repair needed</em>.</p>"
 msgstr ""
+"</ul></p><p>כל התמונות שהושפעו גם סומנות בתגית <em>KPhotoAlbum - נדרש תיקון "
+"ידני</em>.</p>"
 
-#: DB/XML/FileReader.cpp:499
+#: DB/XML/FileReader.cpp:510
 #, kde-format
 msgid "Database repair required"
 msgstr "צריך לתקן את מסד הנתונים"
 
-#: DB/XML/FileReader.cpp:522
+#: DB/XML/FileReader.cpp:533
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum was unable to load a default setup, which indicates an "
@@ -1467,91 +1589,106 @@ msgid ""
 "you already have KDEDIRS set, simply append the string as if you where "
 "setting the <b>PATH</b> environment variable</p>"
 msgstr ""
+"<p>KPhotoAlbum לא הצליח לטעון את הגדרות ברירת המחדל, מה שמעיד על שגיאת "
+"התקנה</p><p>אם התקנת את KPhotoAlbum בעצמך, אז חובה לזכור להגדיר את משתנה "
+"הסביבה <b>KDEDIRS</b>, כך שיצביע על תיקיית ההתקנה העליונה ביותר.</p><p>אם, "
+"למשל, הרצת את cmake עם האפשרות <b>‎-DCMAKE_INSTALL_PREFIX=/usr/local/kde</b>, "
+"אז יש להשתמש בהגדרות משתני הסביבה הבאות (הדוגמה הזאת היא ל־Bash ולמערכות "
+"מעטפת תואמות):</p><p><b>export KDEDIRS=/usr/local/kde</b></p><p>אם כבר הגדרת "
+"את KDEDIRS, יש פשוט להוסיף את המחרוזת ממש כמו האופן בו מגדירים את משתנה "
+"הסביבה <b>PATH</b></p>"
 
-#: DB/XML/FileReader.cpp:530
+#: DB/XML/FileReader.cpp:541
 #, kde-format
 msgid "No default setup file found"
 msgstr "לא נמצא קובץ הגדרות כברירת מחדל"
 
-#: DB/XML/FileReader.cpp:536 Settings/BirthdayPage.cpp:135
+#: DB/XML/FileReader.cpp:547 Settings/BirthdayPage.cpp:135
 #, kde-format
 msgid "People"
 msgstr "אנשים"
 
-#: DB/XML/FileReader.cpp:537
+#: DB/XML/FileReader.cpp:548
 #, kde-format
 msgid "Places"
 msgstr "מקומות"
 
 #. i18n("Events"))
-#: DB/XML/FileReader.cpp:538 lib/kpabase/SettingsData.cpp:433
+#: DB/XML/FileReader.cpp:549 lib/kpabase/SettingsData.cpp:433
 #, kde-format
 msgid "Events"
 msgstr "אירועים"
 
 #. i18n("untagged"))
-#: DB/XML/FileReader.cpp:539 lib/kpabase/SettingsData.cpp:443
+#: DB/XML/FileReader.cpp:550 lib/kpabase/SettingsData.cpp:443
 #, kde-format
 msgid "untagged"
 msgstr "ללא תיוג"
 
-#: DB/XML/FileReader.cpp:550 Utilities/DemoUtil.cpp:34
+#: DB/XML/FileReader.cpp:561 Utilities/DemoUtil.cpp:34
 #: Utilities/DemoUtil.cpp:49 Utilities/DemoUtil.cpp:58
 #: Utilities/DemoUtil.cpp:88
 #, kde-format
 msgid "Error Running Demo"
 msgstr "שגיאה בהרצת ההדגמה"
 
-#: DB/XML/FileReader.cpp:550
+#: DB/XML/FileReader.cpp:561
 #, kde-format
 msgid "Unable to open '%1' for reading"
 msgstr "לא ניתן לפתוח את ‚%1’ לקריאה"
 
-#: DB/XML/FileReader.cpp:563
+#: DB/XML/FileReader.cpp:574
 #, kde-format
 msgid "line %1 column %2 in file %3: %4"
 msgstr "שורה %1 עמודה %2 בקובץ %3:‏ %4"
 
-#: DB/XML/FileReader.cpp:565
+#: DB/XML/FileReader.cpp:576
 #, kde-format
 msgid "Failed to recover the backup: %1"
 msgstr "שחזור הגיבוי נכשל: %1"
 
-#: DB/XML/FileReader.cpp:576
+#: DB/XML/FileReader.cpp:587
 #, kde-format
 msgid "Error in file %1: No elements found"
 msgstr "שגיאה בקובץ %1: לא נמצאו רכיבים"
 
-#: DB/XML/FileReader.cpp:582
+#: DB/XML/FileReader.cpp:593
 #, kde-format
 msgid "Error in file %1: expected 'KPhotoAlbum' as top element but found '%2'"
 msgstr ""
+"שגיאה בקובץ %1: הרכיב העליון אמור להיות ‚KPhotoAlbum’ אך במקום זאת נמצא ‚%2’"
 
-#: DB/XML/FileWriter.cpp:78
+#: DB/XML/FileWriter.cpp:79
 #, kde-format
 msgid ""
 "<p>Could not save the image database to XML.</p>File %1 could not be opened "
 "because of the following error: %2"
 msgstr ""
+"<p>לא ניתן לשמור את מסד נתוני התמונות ל־XML.</p>לא ניתן לפתוח את הקובץ %1 "
+"עקב השגיאה הבאה: %2"
 
-#: DB/XML/FileWriter.cpp:81 DB/XML/FileWriter.cpp:117 DB/XML/FileWriter.cpp:126
+#: DB/XML/FileWriter.cpp:82 DB/XML/FileWriter.cpp:118 DB/XML/FileWriter.cpp:127
 #, kde-format
 msgid "Error while saving..."
 msgstr "שגיאה בשמירה…"
 
-#: DB/XML/FileWriter.cpp:114
+#: DB/XML/FileWriter.cpp:115
 #, kde-format
 msgid ""
 "<p>Failed to remove old version of image database.</p><p>Please try again or "
 "replace the file %1 with file %2 manually!</p>"
 msgstr ""
+"<p>הסרת גרסה ישנה של מסד נתוני התמונות נכשלה.</p><p>נא לנסות שוב או להחליף "
+"את הקובץ %1 בקובץ %2 ידנית!</p>"
 
-#: DB/XML/FileWriter.cpp:123
+#: DB/XML/FileWriter.cpp:124
 #, kde-format
 msgid ""
 "<p>Failed to move temporary XML file to permanent location.</p><p>Please try "
 "again or rename file %1 to %2 manually!</p>"
 msgstr ""
+"<p>העברת קובץ XML למקום זמני נכשלה.</p><p>נא לנסות שוב או לשנות את שם הקובץ "
+"%1 לשם %2 ידנית!</p>"
 
 #: DB/XML/NumberedBackup.cpp:43
 #, kde-format
@@ -1576,7 +1713,7 @@ msgstr "שגיאה בקריאת הרכיב הבא"
 #: DB/XML/XmlReader.cpp:46
 #, kde-format
 msgid "Expected to read a start or stop element, but read %1"
-msgstr ""
+msgstr "אמור היה להיקרא רכיב התחלה/start או עצירה/stop, אבל נקרא %1"
 
 #: DB/XML/XmlReader.cpp:51
 #, kde-format
@@ -1586,7 +1723,7 @@ msgstr "אמור היה להיקרא %1, אבל נקרא %2"
 #: DB/XML/XmlReader.cpp:62
 #, kde-format
 msgid "Expected to read an end element but read %1"
-msgstr ""
+msgstr "אמור היה להיקרא רכיב סגירה אבל נקרא %1"
 
 #: DB/XML/XmlReader.cpp:80
 #, kde-format
@@ -1598,12 +1735,12 @@ msgstr "אמור היה להיקרא רכיב ההתחלה ‚%1’"
 msgid ""
 "<p>An error was encountered on line %1, column %2:<nl/><message>%3</"
 "message></p>"
-msgstr ""
+msgstr "<p>אירעה שגיאה בשורה %1, עמודה %2:<nl/><message>%3</message></p>"
 
 #: DB/XML/XmlReader.cpp:90
 #, kde-format
 msgid "<p>Additional error information:<nl/><message>%1</message></p>"
-msgstr ""
+msgstr "<p>פרטים נוספים על השגיאה:<nl/><message>%1</message></p>"
 
 #: DB/XML/XmlReader.cpp:91
 #, kde-kuit-format
@@ -1767,6 +1904,8 @@ msgid ""
 "<p>Be aware that setting the data from Exif may <b>overwrite</b> data you "
 "have previously entered manually using the image configuration dialog.</p>"
 msgstr ""
+"<p>נא לשים לב שהגדרת הנתונים מ־Exif עלול <b>לשכתב</b> נתונים שמילאת בעבר "
+"בעזרת חלונית הגדרות התמונה.</p>"
 
 #: Exif/ReReadDialog.cpp:127
 #, kde-format
@@ -1888,6 +2027,8 @@ msgid ""
 "Not all images in the database have lens information. <note>Recreate the "
 "Exif search database to ensure lens data for all images.</note>"
 msgstr ""
+"לא לכל התמונות במסד הנתונים יש פרטי עדשה. <note>יש ליצור מחדש את מסד נתוני "
+"חיפוש Exif כדי לוודא שיש נתוני עדשה לכל התמונות.</note>"
 
 #: HTMLGenerator/Generator.cpp:54
 #, kde-format
@@ -2004,6 +2145,8 @@ msgid ""
 "<p>This selection will generate video files suitable for displaying on web. "
 "avconv and ffmpeg2theora are required for video file generation.</p>"
 msgstr ""
+"<p>הבחירה הזאת תייצר קובצי וידאו שמתאימים להצגה דרך האינטרנט. avconv ו־"
+"ffmpeg2theora נחוצות ליצירת קובצי וידאו.</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:132
 #, kde-format
@@ -2082,6 +2225,8 @@ msgid ""
 "URL.</p><p>This only affects the generated <filename>.kim</filename> file.</"
 "p>"
 msgstr ""
+"<p>העברת הגלריה למקום מרוחק, יש להגדיר את זה לכתובת היעד.</p><p>משפיע רק על "
+"קובץ <filename>‎.kim</filename> שנוצר.</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:343
 #, kde-format
@@ -2105,6 +2250,8 @@ msgid ""
 "images. Each generated collection will be contained in this folder in "
 "separate subfolders.</p>"
 msgstr ""
+"<p>לא ציינת תיקייה בסיס. זאת התיקייה העליונה לתמונות שלך. כל אוסף שנוצר "
+"ייווצר בתיקייה הזאת בתת־תיקיות נפרדות.</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:403
 #, kde-format
@@ -2118,6 +2265,8 @@ msgid ""
 "actual images. The folder will be a subfolder of the base folder specified "
 "above.</p>"
 msgstr ""
+"<p>לא ציינת תיקיית פלט. זאת התיקייה שמכילה את התמונות בפועל. התיקייה תהיה תת־"
+"תיקייה של תיקיית הבסיס שצוינה לעיל.</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:412
 #, kde-format
@@ -2130,6 +2279,8 @@ msgid ""
 "<p>Error while reading information about %1. This is most likely because the "
 "folder does not exist.</p><p>The error message was: %2</p>"
 msgstr ""
+"<p>שגיאה בקריאת המידע על %1. סביר להניח שזה כיוון שהתיקייה לא קיימת.</"
+"p><p>הודעת השגיאה הייתה: %2</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:429
 #, kde-format
@@ -2142,6 +2293,8 @@ msgid ""
 "<p>Output folder %1 already exists. Usually, this means you should specify a "
 "new folder.</p><p>Should %2 be deleted first?</p>"
 msgstr ""
+"<p>תיקיית הפלט %1 כבר קיימת. בדרך כלל, משמעות הדבר היא שעליך לציין תיקייה "
+"חדשה.</p><p>למחוק את %2 קודם לכן?</p>"
 
 #: HTMLGenerator/HTMLDialog.cpp:443
 #, kde-format
@@ -2158,12 +2311,12 @@ msgstr "%1"
 #: HTMLGenerator/HTMLDialog.cpp:543
 #, kde-format
 msgid "Could not find any themes - this is very likely an installation error"
-msgstr ""
+msgstr "לא ניתן למצוא ערכות עיצוב כלשהן - סביר להניח שמדובר בתקלת התקנה"
 
 #: HTMLGenerator/HTMLDialog.cpp:550
 #, kde-format
 msgid "More than one theme is set as default, using theme %1"
-msgstr ""
+msgstr "הוגדרה יותר מערכת עיצוב אחת כברירת מחדל, נעשה שימוש בערכת העיצוב %1"
 
 #: HTMLGenerator/HTMLDialog.cpp:557
 #, kde-format
@@ -2226,7 +2379,7 @@ msgstr "שגיאה לא ידועה"
 #: ImageManager/ExtractOneVideoFrame.cpp:113
 #, kde-format
 msgid "<p>Error when extracting video thumbnails.<br/>Error was: %1</p>"
-msgstr ""
+msgstr "<p>שגיאה בחילוץ תמונות ממוזערות של סרטונים.<br/>השגיאה הייתה: %1</p>"
 
 #: ImageManager/ExtractOneVideoFrame.cpp:137
 #, kde-format
@@ -2238,6 +2391,11 @@ msgid ""
 "(You might need to wait till the video extraction led in your status bar has "
 "stopped blinking, to see all affected videos.)"
 msgstr ""
+"לא ניתן לחלץ סרטון ממוזער מחלק מהקבצים. או שהקובץ פגום באופן כלשהו, או "
+"שהסרטון קצר במיוחד. לנוחותך, לסרטונים האלו הוצמד האסימון ‚%1’.\n"
+"\n"
+"(כנראה שעליך לחכות עד להפסקת הבהוב נורית חילוץ הסרטונים בשורת המצב שלך כדי "
+"לצפות בכל הסרטונים שזה השפיע עליהם.)"
 
 #: ImageManager/ThumbnailBuilder.cpp:103
 #, kde-format
@@ -2324,6 +2482,10 @@ msgid ""
 "stored in jpg, png or gif; but do check this if your images are stored in "
 "tiff.</p>"
 msgstr ""
+"<p>אם התמונות שלך מאוחסנות בסוג קובץ ללא דחיסה אז כדאי לסמן את זה,אחרת, "
+"יתבזבז המון זמן במהלך פעולות ייבוא וייצוא.</p><p>במילים אחרות, לא לסמן את זה "
+"אם התמונות שלך מאוחסנות ב־jpg,‏ png או gif, אבל כדאי לסמן את זה אם התמונות "
+"שלך מאוחסנות כ־tiff.</p>"
 
 #: ImportExport/Export.cpp:153
 #, kde-format
@@ -2338,6 +2500,9 @@ msgid ""
 "will of course also make the quality worse if someone wants to see the "
 "exported images with larger dimensions.</p>"
 msgstr ""
+"<p>עם האפשרות הזאת אפשר להגביל את הממדים המרביים (רוחב וגובה) של התמונות "
+"שלך. הגדרת הערך הזה תוביל להקטנת הקובץ המיוצא, אבל תפחית מהאיכות, באופן "
+"טבעי, במקרה של הצגת התמונות בגדול.</p>"
 
 #: ImportExport/Export.cpp:163
 #, kde-format
@@ -2354,6 +2519,14 @@ msgid ""
 "place them next to each other, so the user can access the images s/he wants."
 "</p>"
 msgstr ""
+"<p>בעת ייצוא תמונות חשוב לזכור שהייבוא שלהן מחדש ידרוש את הדברים הבאים:<br/"
+">1) מידע על התמונה (תוכן התמונה, תאריך וכו׳) <br/>2) התמונות עצמן.</p><p>את "
+"התמונות עצמן ניתן לצרף ליד קובץ ה־‎.kim, או להעתיק אותן לקובץ ה־‎.kim עצמו. "
+"העתקת התמונות לתוך קובץ ה־‎.kimעובדת היטב כשצריך את כל התמונות או את רובן, "
+"למשל בעת שליחת קבוצה של תמונות בדוא״ל. עם זאת, כשמעלים תמונה לאינטרנט, אנשים "
+"רבים יראו אותן אבל סביר להניח שרק מעטים מהם יורידו רק חלק מהן. במקרה שכזה "
+"עדיף להפריד את התמונות מקובץ ה־‎.kim, על ידי הפרדתם זה לצד זה, כדי שלמשתמשים "
+"תהיה גישה לתמונות הרצויות.</p>"
 
 #: ImportExport/Export.cpp:242
 #, kde-format
@@ -2398,6 +2571,14 @@ msgid ""
 "that it is a KPhotoAlbum file when clicking on the link, otherwise the web "
 "server will just tell konqueror that it is a plain text file.</p>"
 msgstr ""
+"<p>משתמשים אחרים של KPhotoAlbum יכולים מעתה לטעון את קובץ הייבוא למסד "
+"הנתונים על ידי בחירה ב<b>ייבוא</b> בתפריט קובץ.</p><p>אם הם מוצאים אותו "
+"והשרת מוגדר כראוי, כל שעליהם לעשות זה ללחוץ עליו ב־Konqueror. כדי להפעיל את "
+"האפשרות הזאת, יש להגדיר את השרת שלך ב־KPhotoAlbum. אפשר לעשות זאת על ידי "
+"הוספת השורה הבאה ל־<b>/etc/httpd/mime.types</b> או כל קובץ דומה:"
+"<pre>application/vnd.kde.kphotoalbum-import kim</pre>ההגדרה הזאת תגרום לשרת "
+"שלך להנחות את Konqueror שזה קובץ של KPhotoAlbum עם לחיצה על הקישור, אחרת "
+"השרת ינחה את Konqueror שזה קובץ טקסט רגיל.</p>"
 
 #: ImportExport/Export.cpp:412
 #, kde-format
@@ -2420,6 +2601,7 @@ msgid ""
 "<p>XML file did not specify the source of the images, this is a strong "
 "indication that the file is corrupted</p>"
 msgstr ""
+"<p>קובץ ה־XML לא ציין את מקור התמונות, זאת עדות מהותית לכך שהקובץ פגום</p>"
 
 #: ImportExport/ImportDialog.cpp:121
 #, kde-format
@@ -2444,6 +2626,21 @@ msgid ""
 "not found in your database, or which tokens was only a partial match.</li></"
 "ol>"
 msgstr ""
+"<h1><font size=\"+2\">ברוך בואך לייבוא אל KPhotoAlbum</font></h1>האשף הזה "
+"יוביל אותך צעד אחר צעד בפעולת הייבוא. השלבים הם: <ol><li>ראשית יש לבחור אילו "
+"תמונות לייבא מקובץ הייצוא. אפשר לעשות זאת על ידי סימון התיבה שליד התמונה.</"
+"li><li>לאחר מכן יש להנחות את KPhotoAlbum באיזו תיקייה לשים את התמונות. "
+"התיקייה הזאת חייבת להיות תחת תיקיית הבסיס בה משתמש KPhotoAlbum לתמונות. "
+"התוכנה תדאג למניעת סתירה בשמות</li><li>השלב הבא הוא לציין אילו קטגוריות "
+"לייבא (אנשים, מקומות, …) וגם להנחותאת KPhotoAlbum איך לתאם בין הקטגוריות "
+"מהקבצים לקטגוריות שלך. נניח למשל שבחרת לטעון קובץ, שהקטגוריה שלו נקראת "
+"<b>Blomst</b> (פרח בדנית), אז כנראה שעדיף לך לתאם אותו לקטגוריה שלך, שכנראה "
+"נקראת <b>Blume</b> (פרח בגרמנית) - כמובן בהנחה ששפת האם שלך היא גרמנית.</"
+"li><li>השלבים האחרונים, הם התאמת האסימונים הפרטניים מהקטגוריות. יכול להיות "
+"שאני נוהג לכנות את עצמי <b>צחיק</b> במסד נתוני התמונות שלך, בעוד הכינוי "
+"המועדף עליך עבור הוא השם המלא <b>יצחק בן אהרון</b>. בשלב הזה חוסרי התאמה "
+"יודגשו באדום, כדי לאפשר לך לראות אילו אסימונים לא נמצאו במסד הנתונים שלך או "
+"אילו אסימונים תואמים באופן חלקי.</li></ol>"
 
 #: ImportExport/ImportDialog.cpp:140
 #, kde-format
@@ -2503,7 +2700,7 @@ msgid "Create folder?"
 msgstr "ליצור תיקייה?"
 
 #: ImportExport/ImportDialog.cpp:305 MainWindow/WelcomeDialog.cpp:161
-#: MainWindow/Window.cpp:1195
+#: MainWindow/Window.cpp:1213
 #, kde-format
 msgctxt "@action:button"
 msgid "Create"
@@ -2583,7 +2780,7 @@ msgstr "שגיאה בקריאת תוכן תיקיית הקובץ %1, כנראה 
 #, kde-format
 msgid ""
 "Error reading index.xml file from %1; it is likely that the file is broken."
-msgstr ""
+msgstr "שגיאה בקריאת קובץ index.xml file מתוך %1, כנראה שהקובץ הזה פגום."
 
 #: ImportExport/KimFileReader.cpp:68
 #, kde-format
@@ -2591,25 +2788,26 @@ msgid ""
 "Thumbnail item in export file was not a folder, this indicates that the file "
 "is broken."
 msgstr ""
+"פריט תמונה ממוזערת בקובץ הייצוא לא היה בתיקייה, מצב כזה מציין שהקובץ פגום."
 
 #: ImportExport/KimFileReader.cpp:79
 #, kde-format
 msgid "No thumbnail existed in export file for %1"
-msgstr ""
+msgstr "לא היו תמונות ממוזערות קיימות בקובץ הייצוא עבור %1"
 
 #: ImportExport/KimFileReader.cpp:94
 #, kde-format
 msgid ""
 "Export file did not contain a Images subfolder, this indicates that the file "
 "is broken"
-msgstr ""
+msgstr "קובץ הייצוא לא הכיל תת־תיקיית תמונות, מצב כזה מציין שהקובץ פגום"
 
 #: ImportExport/KimFileReader.cpp:99
 #, kde-format
 msgid ""
 "Images item in export file was not a folder, this indicates that the file is "
 "broken"
-msgstr ""
+msgstr "פריט תמונות בקובץ הייצוא לא היה בתיקייה, מצב כזה מציין שהקובץ פגום"
 
 #: ImportExport/KimFileReader.cpp:107
 #, kde-format
@@ -2625,9 +2823,17 @@ msgid_plural ""
 "%1 images from the import file, have the same MD5 sum as images in the "
 "Database, how should that be resolved?"
 msgstr[0] ""
+"לאחת התמונות מקובץ הייבוא יש את אותו סיכום ביקורת MD5 כמו לתמונה ממסד "
+"הנתונים, איך לפתור את זה?"
 msgstr[1] ""
+"לשתיים מהתמונות מקובץ הייבוא יש את אותו סיכום ביקורת MD5 כמו לתמונות ממסד "
+"הנתונים, איך לפתור את זה?"
 msgstr[2] ""
+"ל־%1 מהתמונות מקובץ הייבוא יש את אותו סיכום ביקורת MD5 כמו לתמונות ממסד "
+"הנתונים, איך לפתור את זה?"
 msgstr[3] ""
+"ל־%1 מהתמונות מקובץ הייבוא יש את אותו סיכום ביקורת MD5 כמו לתמונות ממסד "
+"הנתונים, איך לפתור את זה?"
 
 #: ImportExport/MD5CheckPage.cpp:55
 #, kde-format
@@ -2661,7 +2867,7 @@ msgstr "תאריך ושעה"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Conflicting commandline options: %1 and %2!\n"
-msgstr ""
+msgstr "אפשרויות שורת פקודה סותרות: %1 לעומת %2!\n"
 
 #: kpa-thumbnailtool/main.cpp:44
 #, kde-format
@@ -2765,12 +2971,14 @@ msgstr "הצגת מידע על מטמון התמונות הממוזערות."
 msgctxt "@info:shell"
 msgid "Convert thumbnailindex to format suitable for KPhotoAlbum >= 4.3."
 msgstr ""
+"להמיר את thumbnailindex (מפתח תמונות ממוזערות) לתסדיר שמתאים ל־KPhotoAlbum "
+">= 4.3."
 
 #: kpa-thumbnailtool/main.cpp:75
 #, kde-format
 msgctxt "@info:shell"
 msgid "Check thumbnail cache for consistency of thumbnail dimensions."
-msgstr ""
+msgstr "לבדוק האם ממדי התמונות הממוזערות עקביים במטמון התמונות הממוזערות."
 
 #: kpa-thumbnailtool/main.cpp:77
 #, kde-format
@@ -2779,12 +2987,14 @@ msgid ""
 "Fix inconsistent thumbnails by removing them from the cache (requires --"
 "check-thumbnail-dimensions)."
 msgstr ""
+"אפשר לתקן תמונות ממוזערות על ידי הסרתן מהמטמון (דורש ‎--check-thumbnail-"
+"dimensions)."
 
 #: kpa-thumbnailtool/main.cpp:79
 #, kde-format
 msgctxt "@info:shell"
 msgid "Remove unreferenced thumbnails from the thumbnail data files."
-msgstr ""
+msgstr "הסרת תמונות ממוזערות שאין אליהן הפניות מקובצי נתוני תמונות ממוזערות."
 
 #: kpa-thumbnailtool/main.cpp:81
 #, kde-format
@@ -2820,7 +3030,7 @@ msgstr "גרסת קובץ מפתח תמונות ממוזערות: %1\n"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Maximum supported thumbnailindex file version: %1\n"
-msgstr ""
+msgstr "הגרסה המרבית של קובץ מפתח תמונות ממוזערות: %1\n"
 
 #: kpa-thumbnailtool/main.cpp:119
 #, kde-format
@@ -2835,6 +3045,7 @@ msgid ""
 "Note: Thumbnail storage dimensions are defined in the configuration file "
 "prior to v5.\n"
 msgstr ""
+"לתשומת ליבך: ממדי אחסון תמונות ממוזערות מוגדרים בקובץ הגדרות שלפני גרסה 5.\n"
 
 #: kpa-thumbnailtool/main.cpp:123
 #, kde-format
@@ -2852,17 +3063,17 @@ msgstr "לא נמצאו פערי רציפות.\n"
 #, kde-format
 msgctxt "@info:shell This line is printed before a list of file names."
 msgid "The following thumbnails appear to have incorrect sizes:\n"
-msgstr ""
+msgstr "נראה שלתמונות הממוזערות הבאות יש גדלים שגויים:\n"
 
 #: kpa-thumbnailtool/main.cpp:142
 #, kde-format
 msgctxt "@info:shell"
 msgid "Removed 1 inconsistent thumbnail from the database.\n"
 msgid_plural "Removed %1 inconsistent thumbnails from the database.\n"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הוסרה תמונה ממוזערת חריגה ממסד הנתונים.\n"
+msgstr[1] "הוסרו שתי תמונות ממוזערות חריגות ממסד הנתונים.\n"
+msgstr[2] "הוסרו %1 תמונות ממוזערות חריגות ממסד הנתונים.\n"
+msgstr[3] "הוסרו %1 תמונות ממוזערות חריגות ממסד הנתונים.\n"
 
 #: kpa-thumbnailtool/ThumbnailCacheConverter.cpp:20
 #, kde-format
@@ -2895,7 +3106,7 @@ msgstr "לא ניתן לגבות את הקובץ`thumbnailindex`!\n"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Could not copy temporary thumbnail index file to final location!\n"
-msgstr ""
+msgstr "לא ניתן להעתיק את קובץ מפתח התמונות הממוזערות הזמניות למקום הסופי!\n"
 
 #: kpa-thumbnailtool/ThumbnailCacheConverter.cpp:41
 #, kde-format
@@ -2907,34 +3118,34 @@ msgstr "הודעת השגיאה הייתה: %1\n"
 #, kde-format
 msgctxt "@info:shell"
 msgid "Thumbnail index is not a version 5 file!\n"
-msgstr ""
+msgstr "מפתח התמונות הממוזערות אינו קובץ בגרסה 5!\n"
 
 #. i18n: ectx: Menu (view)
-#: kphotoalbumui.rc:33
+#: kphotoalbumui.rc:38
 #, kde-format
 msgid "&View"
 msgstr "ת&צוגה"
 
 #. i18n: ectx: Menu (privacy)
-#: kphotoalbumui.rc:48
+#: kphotoalbumui.rc:53
 #, kde-format
 msgid "Privacy"
 msgstr "פרטיות"
 
 #. i18n: ectx: Menu (maintenance)
-#: kphotoalbumui.rc:63
+#: kphotoalbumui.rc:68
 #, kde-format
 msgid "&Maintenance"
 msgstr "ת&חזוקה"
 
 #. i18n: ectx: Menu (plugins)
-#: kphotoalbumui.rc:85
+#: kphotoalbumui.rc:90
 #, kde-format
 msgid "Plugins"
 msgstr "תוספים"
 
 #. i18n: ectx: ToolBar (mainToolBar)
-#: kphotoalbumui.rc:99
+#: kphotoalbumui.rc:102
 #, kde-format
 msgid "Main Toolbar"
 msgstr "סרגל כלים ראשי"
@@ -2949,6 +3160,11 @@ msgid ""
 "is scanned in. So the question is, should KPhotoAlbum trust the time stamp "
 "on your images?"
 msgstr ""
+"כשקוראים את פרטי הזמן של התמונות, נעשה שימוש בפרטי ה־Exif שלהם. פרטי Exif "
+"עלולים לא להיתמך על ידי התקנת ה־KPhotoAlbum שלך, או שאין פרטים תקפים בקובץ. "
+"כגיבוי, KPhotoAlbum עלול להשתמש בחותמת הזמן של התמונה- יתכן שזה לא תמיד "
+"מדויק למשל במקרה של תמונה סרוקה. לכן השאלה היא, האם על KPhotoAlbum להאמין "
+"לחותמות הזמן של התמונות שלך?"
 
 #: lib/kpabase/SettingsData.cpp:254
 #, kde-format
@@ -2964,6 +3180,10 @@ msgid ""
 "command that was attempted to be executed was:<br/>%1</p><p>The error "
 "message obtained was:<br/>%2</p>"
 msgstr ""
+"<p>אירעה שגיאה בניסיון לגשת למסד נתוני חיפוש ה־Exif. כנראה שהשגיאה נובעת "
+"מקובץ מסד נתונים פגום.</p><p>כדי לתקן את הבעיה הזאת יש להריץ תחזוקה->יצירת "
+"מסד נתוני חיפוש Exif מחדש.</p><hr/><p>לניפוי תקלות: הפקודה שניסינו להריץ "
+"הייתה:<br/>%1</p><p>הודעת השגיאה שהתקבלה היא:<br/>%2</p>"
 
 #: lib/kpaexif/Database.cpp:188
 #, kde-format
@@ -2977,6 +3197,9 @@ msgid ""
 "this problem run Maintenance->Recreate Exif Search database.</p><hr/><p>The "
 "error message obtained was:<br/>%1</p>"
 msgstr ""
+"<p>אירעה שגיאה בפתיחת מסד נתוני חיפוש Exif.</p> <p>כדי לתקן את הבעיה הזאת יש "
+"להריץ תחזוקה->יצירת מסד נתוני חיפוש Exif מחדש.</p><hr/><p>הודעת השגיאה "
+"שהתקבלה הייתה:<br/>%1</p>"
 
 #: lib/kpaexif/Database.cpp:259
 #, kde-format
@@ -2984,6 +3207,8 @@ msgid ""
 "<p>The Exif search database is corrupted and has no data.</p> <p>To fix this "
 "problem run Maintenance->Recreate Exif Search database.</p>"
 msgstr ""
+"<p>מסד נתוני חיפוש ה־Exif פגום ואין בו נתונים.</p> <p>כדי לתקן את הבעיה "
+"הזאת, יש להריץ את תחזוקה->יצירת מסד נתוני חיפוש Exif מחדש.</p>"
 
 #: main.cpp:84
 #, kde-format
@@ -2998,126 +3223,133 @@ msgstr "אלבום תמונות מבית KDE"
 #: main.cpp:88
 #, kde-format
 msgid "Copyright (C) 2003-2024 The KPhotoAlbum Development Team"
-msgstr "כל הזכויות שמורות (C) 2003‏-2024 לצוות פיתוח KPhotoAlbum"
+msgstr "כל הזכויות שמורות (C) 2003‏-2024 לצוות הפיתוח של KPhotoAlbum"
 
-#: main.cpp:110
+#: main.cpp:111
 #, kde-format
 msgid "Marco Caldarelli"
 msgstr "מרקו קלדרלי"
 
-#: main.cpp:110
+#: main.cpp:112
 #, kde-format
 msgid "Patch for making it possible to reread Exif info using a nice dialog."
 msgstr "טלאי שמאפשר לקרוא פרטי Exit מחדש בעזרת חלונית פשוטה."
 
-#: main.cpp:111
+#: main.cpp:115
 #, kde-format
 msgid "Jean-Michel FAYARD"
 msgstr "ז׳אן מישל פאיארד"
 
-#: main.cpp:111
+#: main.cpp:116
 #, kde-format
 msgid ""
-"(.) Patch with folder info made available through the browser. (.) Patch for "
-"adding a check box for \"and/or\" searches in the search page."
+"Patch with folder info made available through the browser.\n"
+"Patch for adding a check box for \"and/or\" searches in the search page."
 msgstr ""
+"טלאי כדי שפרטי התיקייה יהיו זמינים דרך הדפדפן.\n"
+"טלאי להוספת תיבת סימון לחיפוש „ו/או” בעמוד החיפוש."
 
-#: main.cpp:112
+#: main.cpp:120
 #, kde-format
 msgid "Matthias Füssel"
 msgstr "מתיאס פוסל"
 
-#: main.cpp:112
+#: main.cpp:121
 #, kde-format
 msgid "Geo Position page in browser and various bug fixes"
 msgstr "עמוד מקום גאוגרפי בדפדפן ומגוון תיקוני תקלות"
 
-#: main.cpp:113
+#: main.cpp:124
 #, kde-format
 msgid "Wes Hardaker"
 msgstr "וס הרדאקר"
 
-#: main.cpp:113
+#: main.cpp:125
 #, kde-format
 msgid "Some very useful features to improve workflow"
 msgstr "יכולות שימושיות לשיפור תהליכי העבודה"
 
-#: main.cpp:114
+#: main.cpp:128
 #, kde-format
 msgid "Reimar Imhof"
 msgstr "ריימאר אימהוף"
 
-#: main.cpp:114
+#: main.cpp:129
 #, kde-format
 msgid "Patch to sort items in option listboxes"
 msgstr "טלאי לסידור פריטים בתיבות רשימות של אפשרויות"
 
-#: main.cpp:115
+#: main.cpp:132
 #, kde-format
 msgid "Christoph Moseler"
 msgstr "קריסטוף מוזלר"
 
-#: main.cpp:115
+#: main.cpp:133
 #, kde-format
-msgid "Numerous patches for lots of bugs plus patches for a few new features"
-msgstr "מגוון טלאים למגוון תקלות וגם טלאים לכמה יכולות חדשות"
+msgid ""
+"Numerous patches for lots of bugs,\n"
+"patches for a few new features"
+msgstr ""
+"מגוון טלאים למגוון תקלות,\n"
+"וגם טלאים לכמה יכולות חדשות"
 
-#: main.cpp:116
+#: main.cpp:137
 #, kde-format
 msgid "Teemu Rytilahti"
-msgstr ""
+msgstr "טימו רייטילאהטי"
 
-#: main.cpp:117
+#: main.cpp:138
 #, kde-format
 msgid "Theme support for HTML generation"
 msgstr "תמיכה בערכת עיצוב ליצירת HTML"
 
-#: main.cpp:118
+#: main.cpp:141
 #, kde-format
 msgid "Thomas Schwarzgruber"
 msgstr "תומס שווארצגרובר"
 
-#: main.cpp:118
+#: main.cpp:142
 #, kde-format
 msgid ""
-"Patch to sort images in the thumbnail view, plus reading time info out of "
-"Exif images for existing images"
+"Patch to sort images in the thumbnail view,\n"
+"reading time info out of Exif images for existing images"
 msgstr ""
-"טלאי לסידור התמונות בתצוגת תמונות ממוזערות, לצד קריאת פרטי הזמנים מתמונות עם "
-"Exif לתמונות קיימות"
+"טלאי לסידור התמונות בתצוגת תמונות ממוזערות,\n"
+"לצד קריאת פרטי הזמנים מתמונות עם Exif לתמונות קיימות"
 
-#: main.cpp:119
+#: main.cpp:146
 #, kde-format
 msgid "Clytie Siddall"
 msgstr "קליטי סידאל"
 
-#: main.cpp:119
+#: main.cpp:147
 #, kde-format
 msgid "Tremendous help with the English text in the application."
 msgstr "עזרה נרחבת בטקסט באנגלית ביישום."
 
-#: main.cpp:120
+#: main.cpp:150
 #, kde-format
 msgid "Will Stephenson"
 msgstr "ויל סטיבנסון"
 
-#: main.cpp:120
+#: main.cpp:151
 #, kde-format
 msgid "Developing an Icon for KPhotoAlbum"
 msgstr "פיתוח סמל ל־KPhotoAlbum"
 
-#: main.cpp:121
+#: main.cpp:154
 #, kde-format
 msgid "Marcel Wiesweg"
 msgstr "מרסל ויסווג"
 
-#: main.cpp:121
+#: main.cpp:155
 #, kde-format
 msgid ""
-"Patch which speed up loading of thumbnails plus preview in image property "
-"dialog."
+"Patch which speeds up loading of thumbnails,\n"
+"preview in image property dialog."
 msgstr ""
-"טלאי שמאיץ טעינת תמונות ממוזערות לצד תצוגה מקדימה של חלונית מאפייני תמונה."
+"טלאי שמאיץ טעינת תמונות ממוזערות,\n"
+"לצד תצוגה מקדימה של חלונית מאפייני תמונה."
 
 #: MainWindow/AutoStackImages.cpp:46
 #, kde-format
@@ -3144,7 +3376,7 @@ msgstr "מקור לראש"
 #, kde-format
 msgctxt "Label for a QSpinbox that selects a number of seconds."
 msgid "Stack images created within the following time-frame:"
-msgstr ""
+msgstr "ערימת תמונות שנוצרו בטווח הזמן הבא:"
 
 #: MainWindow/AutoStackImages.cpp:87
 #, kde-format
@@ -3160,18 +3392,18 @@ msgstr "אפשרויות ערימה אוטומטית"
 #: MainWindow/AutoStackImages.cpp:94
 #, kde-format
 msgid "Include matching image to appropriate stack (if one exists)"
-msgstr "לכלול תמונה תואמת בערימה מתאימה (אם יש)"
+msgstr "לכלול תמונה תואמת בערמה מתאימה (אם יש)"
 
 #: MainWindow/AutoStackImages.cpp:98
 #, kde-format
 msgid ""
 "Unstack images from their current stack and create new one for the matches"
-msgstr ""
+msgstr "הפרדת תמונות מהערמה הנוכחית שלן וליצור ערמה חדשה להתאמות"
 
 #: MainWindow/AutoStackImages.cpp:102
 #, kde-format
 msgid "Skip images that are already in a stack"
-msgstr "דילוג על תמונות שהן כבר בערימה"
+msgstr "דילוג על תמונות שהן כבר בערמה"
 
 #: MainWindow/CategoryImagePopup.cpp:49
 #, kde-format
@@ -3226,10 +3458,13 @@ msgid ""
 msgid_plural ""
 "Selected %1 items will be removed from the database.<br/>What do you want to "
 "do with the files on disk?"
-msgstr[0] ""
+msgstr[0] "הפריט הנבחר יוסר ממסד הנתונים.<br/>מה לעשות עם הקובץ בכונן?"
 msgstr[1] ""
+"שני הפריטים הנבחרים יוסרו ממסד הנתונים.<br/>מה לעשות עם הקבצים בכונן?"
 msgstr[2] ""
+"%1 הפריטים הנבחרים יוסרו ממסד הנתונים.<br/>מה לעשות עם הקבצים בכונן?"
 msgstr[3] ""
+"%1 הפריטים הנבחרים יוסרו ממסד הנתונים.<br/>מה לעשות עם הקבצים בכונן?"
 
 #: MainWindow/DeleteDialog.cpp:71
 #, kde-format
@@ -3282,6 +3517,9 @@ msgid ""
 "<br/>The tag and description from the deleted images will be transferred to "
 "the kept image</p>"
 msgstr ""
+"<p>להלן רשימת כל התמונות הכפולות במסד הנתונים שלך.<br/>נא לבחור אילו מהן "
+"למזג ואילו מהכפילויות לשמור.<br/>התגית והתיאור מהתמונות שנמחקו יתווספו "
+"לתמונה שנשארה</p>"
 
 #: MainWindow/DuplicateMerger/DuplicateMerger.cpp:53
 #, kde-format
@@ -3341,125 +3579,152 @@ msgstr "פתיחה באמצעות…"
 #: MainWindow/ExternalPopup.cpp:102
 #, kde-format
 msgid "Your Command Line"
-msgstr "שורת הפקודה שלך"
+msgstr "שורת הפקודות שלך"
 
 #: MainWindow/ExternalPopup.cpp:165
 #, kde-format
 msgid "Invoke External Program"
 msgstr "הרצת תוכנית חיצונית"
 
-#: MainWindow/FeatureDialog.cpp:40
+#: MainWindow/FeatureDialog.cpp:55
 #, kde-format
 msgctxt "@title:window"
 msgid "Feature Status"
 msgstr "מצב יכולת"
 
-#: MainWindow/FeatureDialog.cpp:44
+#: MainWindow/FeatureDialog.cpp:59
 #, kde-format
-msgid ""
-"<h1>Overview</h1><p>Below you may see the list of compile- and runtime "
-"features KPhotoAlbum has, and their status:</p>%1"
-msgstr ""
-
-#: MainWindow/FeatureDialog.cpp:48
-#, kde-format
-msgid ""
-"<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
-"yourself, then please review the sections below to learn what to install to "
-"get the feature in question. If on the other hand you installed KPhotoAlbum "
-"from a binary package, please tell whoever made the package about this "
-"defect, eventually including the information from the section below.</"
-"p><p>In case you are missing a feature and you did not compile KPhotoAlbum "
-"yourself, please do consider doing so. It really is not that hard. If you "
-"need help compiling KPhotoAlbum, feel free to ask on the <a href=\"https://"
-"mail.kde.org/cgi-bin/mailman/listinfo/kphotoalbum\">KPhotoAlbum mailing "
-"list</a></p><p>The steps to compile KPhotoAlbum can be seen on <a href="
-"\"https://community.kde.org/KPhotoAlbum/build_instructions\">the KPhotoAlbum "
-"home page</a>. If you have never compiled a KDE application, then please "
-"ensure that you have the developer packages installed, in most distributions "
-"they go under names like kdelibs<i>-devel</i></p>"
-msgstr ""
-
-#: MainWindow/FeatureDialog.cpp:62
-#, kde-format
-msgid ""
-"<h1><a name=\"purpose\">Plugin support</a></h1><p>KPhotoAlbum supports the "
-"<em>Purpose</em> plugin system.</p>"
-msgstr ""
+msgid "<h1>Overview</h1><p>Optional features in KPhotoAlbum:</p>%1"
+msgstr "<h1>סקירה</h1><p>יכולות רשות ב־KPhotoAlbum:</p>%1"
 
 #: MainWindow/FeatureDialog.cpp:65
 #, kde-format
 msgid ""
-"<h1><a name=\"database\">SQLite database support</a></h1><p>KPhotoAlbum "
-"allows you to search using a certain number of Exif tags. For this "
-"KPhotoAlbum needs an SQLite database. In addition the Qt package for SQLite "
-"(e.g. qt-sql-sqlite) must be installed.</p>"
+"<h1>Build time features</h1><p>Build time features are optional features "
+"that need to be enabled when building KPhotoAlbum.</p><p>If you built "
+"KPhotoAlbum yourself, please check the <a href=\"https://community.kde.org/"
+"KPhotoAlbum/build_instructions\">build instructions</a> if you missed "
+"something. If you need help compiling KPhotoAlbum, feel free to ask on the "
+"<a href=\"https://mail.kde.org/cgi-bin/mailman/listinfo/kphotoalbum"
+"\">KPhotoAlbum mailing list</a> for help.</p><p>If you installed KPhotoAlbum "
+"from the package manager or an app store, you can file a bug report with the "
+"supplier of the package.</>"
 msgstr ""
+"<h1>יכולות זמן בנייה</h1><p>יכולות זמן בנייה הן יכולות רשות שיש להפעיל בעת "
+"בניית KPhotoAlbum.</p><p>אם בנית את KPhotoAlbum בעצמך, נא לגשת אל <a href="
+"\"https://community.kde.org/KPhotoAlbum/build_instructions\">הנחיות הבנייה</"
+"a> למקרה שפספסת משהו. לקבלת עזרה בהידור KPhotoAlbum, אפשר לבקש מאיתנו עזרה "
+"דרך <a href=\"https://mail.kde.org/cgi-bin/mailman/listinfo/kphotoalbum"
+"\">רשימת הדיוור של KPhotoAlbum</a>.</p><p>אם התקנת את KPhotoAlbum ממנהל "
+"החבילות או מחנות יישומים, אפשר להגיש דוח תקלה כנגד ספק החבילה.</>"
 
-#: MainWindow/FeatureDialog.cpp:70
+#: MainWindow/FeatureDialog.cpp:79
 #, kde-format
 msgid ""
-"<h1><a name=\"geomap\">Map view for geotagged images</a></h1><p>If "
+"<h2><a name=\"purpose\">Purpose plugin support</a></h2><p>KPhotoAlbum "
+"supports the <em>Purpose</em> plugin system which is part of KDE Frameworks."
+"</p>"
+msgstr ""
+"<h2><a name=\"purpose\">תמיכה בתוספי Purpose</a></h2><p>KPhotoAlbum תומך "
+"במערכת התוספים <em>Purpose</em> שהיא חלק מהתשתיות של KDE.</p>"
+
+#: MainWindow/FeatureDialog.cpp:83
+#, kde-format
+msgid ""
+"<h2><a name=\"geomap\">Map view for geotagged images</a></h2><p>If "
 "KPhotoAlbum has been built with support for Marble, KPhotoAlbum can show "
 "images with GPS information on a map.</p>"
 msgstr ""
+"<h2><a name=\"geomap\">תצוגת מפה לתמונות עם תיוג גאוגרפי</a></h2><p>אם "
+"KPhotoAlbum נבנה עם תמיכה ב־Marble,‏ KPhotoAlbum יוכל להציג תמונות עם פרטי "
+"GPS (נווטן) במפה.</p>"
 
-#: MainWindow/FeatureDialog.cpp:75
+#: MainWindow/FeatureDialog.cpp:88
 #, kde-format
 msgid ""
-"<h1><a name=\"video\">Video support</a></h1><p>KPhotoAlbum relies on phonon "
-"or VLC for displaying videos</p>"
+"<h1>Run time features</h1><p>Run time features are optional features that "
+"depend on another package or program being available during runtime. I.e. "
+"you can enable these features by installing the right package.</p>"
 msgstr ""
+"<h1>יכולות זמן ריצה</h1><p>יכולות זמן ריצה הן יכולות רשות שתלויות בחבילות או "
+"תוכניות אחרותשזמינות בזמן הריצה. כלומרשאפשר להפעיל את היכולות האלה על ידי "
+"התקנת החבילה הנכונה.</p>"
 
-#: MainWindow/FeatureDialog.cpp:78
+#: MainWindow/FeatureDialog.cpp:94
 #, kde-format
 msgid ""
-"<h1><a name=\"videoPreview\">Video thumbnail support</a></h1><p>KPhotoAlbum "
-"can use <tt>ffmpeg</tt> to extract thumbnails from videos. These thumbnails "
-"are used to preview videos in the thumbnail viewer.</p>"
+"<h2><a name=\"database\">SQLite database support</a></h2><p>KPhotoAlbum "
+"allows you to search using a certain number of Exif tags.</p><p>This feature "
+"is only available if the Qt SQLite driver is installed. On Debian-based "
+"distributions this package is usually called libqt6sql6-sqlite.</p>"
 msgstr ""
+"<h2><a name=\"database\">תמיכה במסד נתונים מסוג SQLite</a></"
+"h2><p>KPhotoAlbum מאפשר לך לחפש בעזרת מספר מסוים של תגיות Exif. היכולת הזאת "
+"זמינה רק אם מנהל התקן SQLite של Qt מותקן. במערכות מבוססות דביאן החבילה הזאת "
+"בדרך כלל נקראת libqt6sql6-sqlite.</p>"
 
-#: MainWindow/FeatureDialog.cpp:82
+#: MainWindow/FeatureDialog.cpp:102
 #, kde-format
 msgid ""
-"<h1><a name=\"videoInfo\">Video metadata support</a></h1><p>KPhotoAlbum can "
-"use <tt>ffprobe</tt> to extract length information from videos.</"
-"p><p>Correct length information is necessary for correct rendering of video "
-"thumbnails.</p>"
+"<h2><a name=\"video\">Video support</a></h2><p>KPhotoAlbum relies on phonon "
+"or VLC for displaying videos</p><h2><a name=\"videoPreview\">Video thumbnail "
+"support</a></h2><p>KPhotoAlbum can use <tt>ffmpeg</tt> to extract thumbnails "
+"from videos. These thumbnails are used to preview videos in the thumbnail "
+"viewer.</p><p>This feature is only available if FFmpeg is installed.</"
+"p><h2><a name=\"videoInfo\">Video metadata support</a></h2><p>KPhotoAlbum "
+"can use <tt>ffprobe</tt> to extract length information from videos. Correct "
+"length information is necessary for correct rendering of video thumbnails.</"
+"p><p>This feature is only available if ffprobe is installed. Usually, "
+"ffprobe is also part of the FFmpeg package.</p>"
 msgstr ""
+"<h2><a name=\"video\">תמיכה בווידאו</a></h2><p>KPhotoAlbum מסתמך על phonon "
+"או על VLC להצגת סרטונים</p><h2><a name=\"videoPreview\">תמיכה בתמונות וידאו "
+"מוקטנות</a></h2><p>KPhotoAlbum יכול להשתמש ב־<tt>ffmpeg</tt> כדילחלץ תמונות "
+"מוקטנות מסרטונים. התמונות המוקטנות האלה משמשות לתצוגה מקדימהשל הסרטונים "
+"במציג התמונות המוקטנות.</p><p>היכולת הזאת זמינה רק אם FFmpeg מותקן.</"
+"p><h2><a name=\"videoInfo\">תמיכה בנתוני על של סרטונים</a></"
+"h2><p>KPhotoAlbum יכול להשתמש ב־<tt>ffprobe</tt> כדי לחלץ נתוני אורך "
+"מסרטונים. פרטי האורך הנכונים נחוצים כדי לעבד את התמונות המוקטנות של הסרטונים "
+"כראוי.</p><p>היכולת הזאת זמינה רק אם ffprobe מותקן. בדרך כלל, ffprobe הוא "
+"חלק מחבילת FFmpeg בנוסף.</p>"
 
-#: MainWindow/FeatureDialog.cpp:172
+#: MainWindow/FeatureDialog.cpp:135
 #, kde-format
-msgid "Plug-ins available"
-msgstr "תוספים זמינים"
+msgctxt "This should match the heading in the text above"
+msgid "Purpose plugin support"
+msgstr "תמיכה בתוספי Purpose"
 
-#: MainWindow/FeatureDialog.cpp:173
+#: MainWindow/FeatureDialog.cpp:138
 #, kde-format
-msgid "SQLite database support (used for Exif searches)"
-msgstr "תמיכה במסד נתונים מסוג SQLite (משמש לחיפושי Exif)"
-
-#: MainWindow/FeatureDialog.cpp:174
-#, kde-format
+msgctxt "This should match the heading in the text above"
 msgid "Map view for geotagged images."
-msgstr "תצוגת מפה לתמונות בתיוג גאוגרפי."
+msgstr "תצוגת מפה לתמונות עם תיוג גאוגרפי."
 
-#: MainWindow/FeatureDialog.cpp:175
+#: MainWindow/FeatureDialog.cpp:141
 #, kde-format
+msgctxt "This should match the heading in the text above"
+msgid "SQLite database support"
+msgstr "תמיכה במסד נתונים מסוג SQLite"
+
+#: MainWindow/FeatureDialog.cpp:144
+#, kde-format
+msgctxt "This should match the heading in the text above"
 msgid "Video thumbnail support"
 msgstr "תמיכה בתמונות ממוזערות של סרטונים"
 
-#: MainWindow/FeatureDialog.cpp:176
+#: MainWindow/FeatureDialog.cpp:147
 #, kde-format
+msgctxt "This should match the heading in the text above"
 msgid "Video metadata support"
 msgstr "תמיכה בנתוני על של וידאו"
 
-#: MainWindow/FeatureDialog.cpp:180
+#: MainWindow/FeatureDialog.cpp:154
 #, kde-format
 msgctxt "Feature available"
 msgid "Yes"
 msgstr "כן"
 
-#: MainWindow/FeatureDialog.cpp:181
+#: MainWindow/FeatureDialog.cpp:155
 #, kde-format
 msgctxt "Feature not available"
 msgid "No"
@@ -3513,7 +3778,7 @@ msgstr "חיפוש אחר תמונות וסרטונים עם תאריך תקף �
 #: MainWindow/InvalidDateFinder.cpp:45
 #, kde-format
 msgid "Search for images and videos missing date and time"
-msgstr ""
+msgstr "חיפוש אחר תמונות וסרטונים עם תאריכים או שמות חסרים"
 
 #: MainWindow/InvalidDateFinder.cpp:46
 #, kde-format
@@ -3521,6 +3786,7 @@ msgid ""
 "Search for images and videos with only partial dates (like 1971 vs. "
 "11/7-1971)"
 msgstr ""
+"חיפוש אחר תמונות וסרטונים עם תאריכים חלקיים בלבד (למשל 1971 לעומת 11/7-1971)"
 
 #: MainWindow/InvalidDateFinder.cpp:70
 #, kde-format
@@ -3531,7 +3797,7 @@ msgstr "פרטי תמונה"
 #: MainWindow/InvalidDateFinder.cpp:74
 #, kde-format
 msgid "<h1>Here you may see the date changes for the displayed items.</h1>"
-msgstr ""
+msgstr "<h1>כאן אפשר לראות את שינויי התאריכים לפריטים המוצגים.</h1>"
 
 #: MainWindow/InvalidDateFinder.cpp:88
 #, kde-format
@@ -3539,54 +3805,71 @@ msgctxt "@title:window"
 msgid "Reading File Properties"
 msgstr "מאפייני הקובץ נקראים"
 
-#: MainWindow/Options.cpp:25
+#: MainWindow/Options.cpp:26
 #, kde-format
 msgid ""
 "Use <databaseFile> instead of the default. Deprecated - use '--db "
 "<databaseFile>' instead."
 msgstr ""
+"להשתמש ב־<databaseFile> במקום בברירת המחדל. הוצא מכלל שימוש - להשתמש ב־‚‎--db "
+"<databaseFile>‎’ במקום."
 
-#: MainWindow/Options.cpp:26 MainWindow/Options.cpp:31
+#: MainWindow/Options.cpp:27 MainWindow/Options.cpp:37
 #, kde-format
 msgid "databaseFile"
 msgstr "קובץ מסד נתונים"
 
-#: MainWindow/Options.cpp:30
+#: MainWindow/Options.cpp:31
 #, kde-format
-msgid "Use <databaseFile> instead of the default."
-msgstr ""
+msgid "Application rc file."
+msgstr "קובץ rc של יישום."
 
-#: MainWindow/Options.cpp:33
+#: MainWindow/Options.cpp:32
 #, kde-format
-msgid "Starts KPhotoAlbum with a prebuilt set of demo images."
-msgstr ""
+msgid "kphotoalbumrc"
+msgstr "kphotoalbumrc"
 
 #: MainWindow/Options.cpp:36
+#, kde-format
+msgid "Use <databaseFile> instead of the default."
+msgstr "להשתמש ב־<databaseFile> במקום בברירת המחדל."
+
+#: MainWindow/Options.cpp:39
+#, kde-format
+msgid "Starts KPhotoAlbum with a prebuilt set of demo images."
+msgstr "הפעלת KPhotoAlbum עם סדרת תמונות להדגמה שהורכבה מראש."
+
+#: MainWindow/Options.cpp:42
 #, kde-format
 msgid "Import file."
 msgstr "ייבוא קובץ."
 
-#: MainWindow/Options.cpp:37
+#: MainWindow/Options.cpp:43
 #, kde-format
 msgid "file.kim"
 msgstr "קובץ.kim"
 
-#: MainWindow/Options.cpp:44
+#: MainWindow/Options.cpp:50
 #, kde-format
 msgid "Listen for network connections."
 msgstr "האזנה לחיבורי רשת."
 
-#: MainWindow/Options.cpp:48
+#: MainWindow/Options.cpp:54
 #, kde-format
 msgid "Listen for network connections on address <interface_address>."
-msgstr ""
+msgstr "האזנה לחיבורי רשת בכתובת <interface_address>."
 
-#: MainWindow/Options.cpp:49
+#: MainWindow/Options.cpp:55
 #, kde-format
 msgid "interface_address"
 msgstr "כתובת_ממשק"
 
-#: MainWindow/Options.cpp:52
+#: MainWindow/Options.cpp:58
+#, kde-format
+msgid "Save the database and immediately quit after showing the main window."
+msgstr "לשמור את מסד הנתונים ולצאת מיד לאחר הצגת החלון הראשי."
+
+#: MainWindow/Options.cpp:59
 #, kde-format
 msgid "Search for new images on startup."
 msgstr "חיפוש אחר תמונות חדשות עם ההפעלה."
@@ -3597,6 +3880,7 @@ msgid ""
 "<p>Enter your command to run below:</p><p><i>%all will be replaced with a "
 "file list</i></p>"
 msgstr ""
+"<p>נא למלא את הפקודה שלך להרצה להלן:</p><p><i>‎%all יוחלף ברשימת קבצים</i></p>"
 
 #: MainWindow/RunDialog.cpp:41
 #, no-c-format, kde-format
@@ -3607,6 +3891,10 @@ msgid ""
 "files you selected would be copied to the /tmp folder</p><p>You can also use "
 "%each to have a command be run once per file.</p>"
 msgstr ""
+"<p>נא למלא פקודה להרצה כלפי קובצי התמונות שלך. KPhotoAlbum יריץ את הפקודה "
+"שלך ויחליף את אסימוני ‚‎%all’ ברשימת הקבצים שלך. למשל, אם הקלדת:</"
+"p><ul><li>cp %all /tmp</li></ul><p>אז הקבצים שבחרת יועתקו לתיקיית ‎/tmp</"
+"p><p>אפשר גם להשתמש ב־‎%each כדי שהפקודה תרוץ על כל קובץ בנפרד.</p>"
 
 #: MainWindow/RunDialog.cpp:75
 #, no-c-format, kde-format
@@ -3650,6 +3938,15 @@ msgid ""
 "<br/>I am not really sure if it is worth fixing that bug (as it is pretty "
 "hard to fix),<br/>so maybe the dialog will simply go away again"
 msgstr ""
+"<h1>תיאור</h1><table><tr><td>מס׳ פריטים</td><td>זה מספר הפרטים השונים "
+"בקטגוריה</td></tr><tr><td>כמות תגיות כוללת</td><td>זה מספר התגיות שנוצרו,<br/"
+">כלומר, ספירה פשוטה על פני כל התמונות</td></tr><tr><td>תגיות לתמונה</"
+"td><td>מציין כמה תגיות יש בכל תמונה בממוצע</td></tr></table><br/><br/>לא "
+"כדאי להיקשר לחלונית הזאת יותר מדי, היא סובלת מבעיה שבגללה היא סופרת קטגוריות "
+"וגם תת־קטגוריות,<br/>כך שאם תמונה צולמה בראש העין, מחוז המרכז, ישראל, אז 3 "
+"תגיות נספרות לתמונההזאת,<br/>למרות שאמורה להיות רק אחת.<br/>לא בטוח אם כדאי "
+"לתקן את התקלה הזאת (כיוון שדי מסובך לתקן אותה),<br/>אז יכול להיות שהחלונית "
+"הזאת פשוט תיעלם."
 
 #: MainWindow/StatisticsDialog.cpp:52
 #, kde-format
@@ -3687,7 +3984,7 @@ msgstr "חיווי התגיות השלים את ההסברים"
 msgid ""
 "If you use a specific tag to indicate that an image has been tagged, then "
 "specify it here."
-msgstr ""
+msgstr "אם יש איזו תגית מסוימת לציין שתמונה תויגה, יש לציין אותה כאן."
 
 #: MainWindow/StatisticsDialog.cpp:114 Settings/BirthdayPage.cpp:48
 #: Settings/UntaggedGroupBox.cpp:31
@@ -3731,7 +4028,7 @@ msgstr "הסרת אסימונים"
 #: MainWindow/TokenEditor.cpp:42
 #, kde-format
 msgid "Select tokens to remove from all images and videos:"
-msgstr ""
+msgstr "בחירת אסימונים להסרה מכל התמונות והסרטונים:"
 
 #: MainWindow/TokenEditor.cpp:61
 #, kde-format
@@ -3750,6 +4047,14 @@ msgid ""
 "</p><p>If you feel safer first trying out KPhotoAlbum with prebuilt set of "
 "images, press the Load Demo button.</p>"
 msgstr ""
+"<h1>ברוך בואך ל־KPhotoAlbum</h1><p>KPhotoAlbum הוא כלי חזק וחופשי לניהול "
+"ארכיון, תיוג וניהול התמונות והסרטונים שלך. הוא לא יערוך או ישנה את קבציך "
+"היקרים, הוא רק מתעד אותם במפתח ומאפשר לך למצוא ולנהל את הקבצים והסרטונים שלך "
+"בקלות.</p><p>אפשר להתחיל על ידי הנחיית KPhotoAlbum איפה למצוא את התמונות שלך "
+"על ידי לחיצה על יצירת מסד נתונים משלי. יש לבחור בכפתור הזה גם אם יש לך מסד "
+"נתונים קיים של KPhotoAlbum שברצונך לחזור להשתמש בו.</p><p>אם שימוש בסביבה "
+"מבוקרת של KPhotoAlbum עם סדרה של תמונות שהורכבה מראש מתאימה לך יותר, אפשר "
+"ללחוץ על כפתור טעינת הדגמה.</p>"
 
 #: MainWindow/WelcomeDialog.cpp:61
 #, kde-format
@@ -3779,6 +4084,14 @@ msgid ""
 "folder somewhere, point KPhotoAlbum to that folder to start using it again.</"
 "p>"
 msgstr ""
+"<h1>יצירת מסד נתונים של KPhotoAlbum</h1><p>יש להנחות היכן התמונות והסרטונים  "
+"כדי ש־KPhotoAlbum ימצא אותם. כולם צריכים להיות תחת אותה התיקייה, למשל תחת ‎/"
+"home/user/Images. בתיקייה הזאת יכולות להיות מגוון תיקיות בהתאם לצורך, "
+"KPhotoAlbum ימצא אותן עבורך.</p><p>אל חשש, KPhotoAlbum לא ישנה או יערוך אף "
+"אחת מהתמונות שלך, כך שניתן פשוט להפנות את KPhotoAlbum לתיקייה שבה כל התמונות "
+"שלך נמצאות.</p><p>אם יש לך מסד נתונים קיים של KPhotoAlbum לצד תיקיית תמונות "
+"היכנשהו, אפשר להפנות את KPhotoAlbum לתיקייה הזאת כדי להתחיל להשתמש בהם שוב.</"
+"p>"
 
 #: MainWindow/WelcomeDialog.cpp:116
 #, kde-format
@@ -3808,6 +4121,9 @@ msgid ""
 "p><p>For details on how to solve this problem, please choose <b>Help</b>|"
 "<b>KPhotoAlbum Feature Status</b> from the menus.</p>"
 msgstr ""
+"<p>נראה ש־KPhotoAlbum לא נבנה עם תמיכה בשלל היכולות שלו. זאת רשימה שמתארת מה "
+"כנראה חסר:<ul>%1</ul></p><p>לפרטים בנוגע לפתרון הבעיה הזאת, נא לבחור "
+"ב<b>עזרה</b>|<b>מצב יכולות KPhotoAlbum</b> דרך התפריטים.</p>"
 
 #: MainWindow/WelcomeDialog.cpp:192 MainWindow/WelcomeDialog.cpp:195
 #, kde-format
@@ -3819,12 +4135,12 @@ msgstr "בדיקת יכולות"
 msgid "Congratulations: all dynamic features have been enabled."
 msgstr "הגדרות: כל היכולות הדינמיות הופעלו."
 
-#: MainWindow/Window.cpp:277
+#: MainWindow/Window.cpp:276
 #, kde-format
 msgid "Searching for New Files"
 msgstr "מתבצע חיפוש אחר קבצים חדשים"
 
-#: MainWindow/Window.cpp:315
+#: MainWindow/Window.cpp:319
 #, kde-format
 msgid ""
 "<p><b>Delete Your Temporary Demo Database</b></p><p>I hope you enjoyed the "
@@ -3834,351 +4150,357 @@ msgid ""
 "might want to keep it around with the changes you made through this session."
 "</p>"
 msgstr ""
+"<p><b>מחיקת מסד נתוני ההדגמה הזמני שלך</b></p><p>מקווים שנהנית מההדגמה של "
+"KPhotoAlbum. מסד נתוני ההדגמה נוצר בתיקייה <tt>‎/tmp</tt>, למחוק אותו? השארתו "
+"תבזבז נפח בכונן, מצד שני, כדי לחזור להדגמה אולי כדאי להשאיר את השינויים "
+"שערכת בהפעלה הזאת.</p>"
 
-#: MainWindow/Window.cpp:320
+#: MainWindow/Window.cpp:324
 #, kde-format
 msgctxt "@title"
 msgid "Delete Demo Database"
 msgstr "למחוק מסד נתוני דגמה"
 
-#: MainWindow/Window.cpp:336
+#: MainWindow/Window.cpp:340
 #, kde-format
 msgid "Do you want to save the changes?"
 msgstr "לשמור את השינויים?"
 
-#: MainWindow/Window.cpp:337
+#: MainWindow/Window.cpp:341
 #, kde-format
 msgctxt "@title"
 msgid "Save Changes?"
 msgstr "לשמור את השינויים?"
 
-#: MainWindow/Window.cpp:395
+#: MainWindow/Window.cpp:399
 #, kde-format
 msgid ""
 "Some of the selected images already belong to a stack. Do you want to remove "
 "them from their stacks and create a completely new one?"
 msgstr ""
+"חלק מהתמונות הנבחרות כבר שייכות לערמות. להסיר אותן מהערמות שלהן וליצור ערמה "
+"חדשה?"
 
-#: MainWindow/Window.cpp:398
+#: MainWindow/Window.cpp:402
 #, kde-format
 msgctxt "@title"
 msgid "Stacking problem"
 msgstr "בעיית ערימה"
 
-#: MainWindow/Window.cpp:408
+#: MainWindow/Window.cpp:412
 #, kde-format
 msgid "Unknown error, stack creation failed."
-msgstr "שגיאה לא ידועה, יצירת הערימה בוטלה."
+msgstr "שגיאה לא ידועה, יצירת הערמה בוטלה."
 
-#: MainWindow/Window.cpp:409
+#: MainWindow/Window.cpp:413
 #, kde-format
 msgid "Stacking Error"
 msgstr "שגיאת ערימה"
 
-#: MainWindow/Window.cpp:488 MainWindow/Window.cpp:614
-#: MainWindow/Window.cpp:1310 MainWindow/Window.cpp:1407
+#: MainWindow/Window.cpp:492 MainWindow/Window.cpp:618
+#: MainWindow/Window.cpp:1324 MainWindow/Window.cpp:1421
 #, kde-format
 msgid "No item is selected."
 msgstr "לא נבחרו פריטים."
 
-#: MainWindow/Window.cpp:488 MainWindow/Window.cpp:614
-#: MainWindow/Window.cpp:1310 MainWindow/Window.cpp:1408
+#: MainWindow/Window.cpp:492 MainWindow/Window.cpp:618
+#: MainWindow/Window.cpp:1324 MainWindow/Window.cpp:1422
 #, kde-format
 msgid "No Selection"
 msgstr "אין בחירה"
 
-#: MainWindow/Window.cpp:534
+#: MainWindow/Window.cpp:538
 #, kde-format
 msgid "Saving..."
 msgstr "מתבצעת שמירה…"
 
-#: MainWindow/Window.cpp:539
+#: MainWindow/Window.cpp:543
 #, kde-format
 msgid "Saving... Done"
 msgstr "מתבצעת שמירה… הסתיימה"
 
-#: MainWindow/Window.cpp:687
+#: MainWindow/Window.cpp:691
 #, kde-format
 msgid "There are no images to be shown."
 msgstr "אין תמונות להצגה."
 
-#: MainWindow/Window.cpp:757 MainWindow/Window.cpp:886
+#: MainWindow/Window.cpp:761 MainWindow/Window.cpp:902
 #, kde-format
 msgid "Limit View to Selection"
 msgstr "הגבלת הצפייה לבחירה"
 
-#: MainWindow/Window.cpp:758
+#: MainWindow/Window.cpp:762
 #, kde-format
 msgid "No images are selected!"
 msgstr "לא נבחרו תמונות!"
 
-#: MainWindow/Window.cpp:771
+#: MainWindow/Window.cpp:775
 #, kde-format
 msgid "Generate HTML..."
 msgstr "יצירת HTML…"
 
-#: MainWindow/Window.cpp:775
+#: MainWindow/Window.cpp:779
 #, kde-format
 msgid "Import..."
 msgstr "ייבוא…"
 
-#: MainWindow/Window.cpp:778
+#: MainWindow/Window.cpp:782
 #, kde-format
 msgid "Export/Copy Images..."
 msgstr "ייצוא/העתקת תמונות…"
 
-#: MainWindow/Window.cpp:805
+#: MainWindow/Window.cpp:811
 #, kde-format
 msgctxt "Delete selected images"
 msgid "Delete Selected"
 msgstr "מחיקת הבחירה"
 
-#: MainWindow/Window.cpp:811
+#: MainWindow/Window.cpp:819
 #, kde-format
 msgid "Remove Tokens..."
 msgstr "הסרת אסימונים…"
 
-#: MainWindow/Window.cpp:814
+#: MainWindow/Window.cpp:822
 #, kde-format
 msgid "Open List of Files..."
 msgstr "פתיחת רשימת הקבצים…"
 
-#: MainWindow/Window.cpp:817
+#: MainWindow/Window.cpp:825
 #, kde-format
 msgid "Annotate Individual Items"
 msgstr "הוספת הסבר על פריטים מסוימים"
 
-#: MainWindow/Window.cpp:821
+#: MainWindow/Window.cpp:829
 #, kde-format
 msgid "Annotate Multiple Items at a Time"
 msgstr "הוספת הסברים על מספר פריטים יחד"
 
-#: MainWindow/Window.cpp:825
+#: MainWindow/Window.cpp:833
 #, kde-format
 msgid "Merge Images into a Stack"
-msgstr "מיזוג תמונות לערימה"
+msgstr "מיזוג תמונות לערמה"
 
-#: MainWindow/Window.cpp:829
+#: MainWindow/Window.cpp:837
 #, kde-format
 msgid "Remove Images from Stack"
-msgstr "הסרת תמונות מערימה"
+msgstr "הסרת תמונות מערמה"
 
-#: MainWindow/Window.cpp:832
+#: MainWindow/Window.cpp:840
 #, kde-format
 msgid "Set as First Image in Stack"
-msgstr "הגדרה כתמונה הראשונה בערימה"
+msgstr "הגדרה כתמונה הראשונה בערמה"
 
-#: MainWindow/Window.cpp:845
+#: MainWindow/Window.cpp:853
 #, kde-format
 msgid "View"
 msgstr "הצגה"
 
-#: MainWindow/Window.cpp:848
+#: MainWindow/Window.cpp:858
 #, kde-format
 msgid "View (In New Window)"
 msgstr "הצגה (בחלון חדש)"
 
-#: MainWindow/Window.cpp:851
+#: MainWindow/Window.cpp:863
 #, kde-format
 msgid "Run Slide Show"
 msgstr "הרצת מצגת"
 
-#: MainWindow/Window.cpp:856
+#: MainWindow/Window.cpp:870
 #, kde-format
 msgid "Run Randomized Slide Show"
 msgstr "הרצת מצגת אקראית"
 
-#: MainWindow/Window.cpp:862
+#: MainWindow/Window.cpp:878
 #, kde-format
 msgid "Collapse all stacks"
-msgstr "צמצום כל הערימות"
+msgstr "צמצום כל הערמות"
 
-#: MainWindow/Window.cpp:868
+#: MainWindow/Window.cpp:884
 #, kde-format
 msgid "Expand all stacks"
-msgstr "הרחבת כל הערימות"
+msgstr "הרחבת כל הערמות"
 
-#: MainWindow/Window.cpp:873
+#: MainWindow/Window.cpp:889
 #, kde-format
 msgid "Show &Oldest First"
 msgstr "הצגת הי&שנים ביותר בהתחלה"
 
-#: MainWindow/Window.cpp:878
+#: MainWindow/Window.cpp:894
 #, kde-format
 msgid "Show &Newest First"
 msgstr "הצגת ה&חדשים ביותר בהתחלה"
 
-#: MainWindow/Window.cpp:883
+#: MainWindow/Window.cpp:899
 #, kde-format
 msgid "Sort Selected by Date && Time"
 msgstr "מיון הנבחרים לפי תאריך ושעה"
 
-#: MainWindow/Window.cpp:889
+#: MainWindow/Window.cpp:907
 #, kde-format
 msgid "Jump to Context"
 msgstr "קפיצה לתוכן"
 
-#: MainWindow/Window.cpp:895
+#: MainWindow/Window.cpp:915
 #, kde-format
 msgid "Lock Images"
 msgstr "נעילת תמונות"
 
-#: MainWindow/Window.cpp:899
+#: MainWindow/Window.cpp:919
 #, kde-format
 msgid "Unlock"
 msgstr "שחרור נעילה"
 
-#: MainWindow/Window.cpp:902
+#: MainWindow/Window.cpp:922
 #, kde-format
 msgid "Lock Away All Other Items"
 msgstr "לנעול את כל הפריטים האחרים"
 
-#: MainWindow/Window.cpp:905
+#: MainWindow/Window.cpp:925
 #, kde-format
 msgid "Lock Away Current Set of Items"
 msgstr "לנעול את סדרת הפריטים הנוכחיים"
 
-#: MainWindow/Window.cpp:908
+#: MainWindow/Window.cpp:928
 #, kde-format
 msgid "Configure Current View"
 msgstr "הגדרת התצוגה הנוכחית"
 
-#: MainWindow/Window.cpp:916
+#: MainWindow/Window.cpp:936
 #, kde-format
 msgid "Tree"
 msgstr "עץ"
 
-#: MainWindow/Window.cpp:921
+#: MainWindow/Window.cpp:941
 #, kde-format
 msgid "Tree with User Icons"
 msgstr "עץ עם סמלי משתמשים"
 
-#: MainWindow/Window.cpp:926
+#: MainWindow/Window.cpp:946
 #, kde-format
 msgid "Icons"
 msgstr "סמלים"
 
-#: MainWindow/Window.cpp:933
+#: MainWindow/Window.cpp:953
 #, kde-format
 msgid "Use natural sort order"
 msgstr "להשתמש בסדר טבעי"
 
-#: MainWindow/Window.cpp:943
+#: MainWindow/Window.cpp:963
 #, kde-format
 msgid "Show Tooltips in Thumbnails Window"
 msgstr "הצגת חלוניות עצה בחלון תמונות ממוזערות"
 
-#: MainWindow/Window.cpp:948
+#: MainWindow/Window.cpp:968
 #, kde-format
 msgid "Show Labels in Thumbnails Window"
 msgstr "הצגת תוויות בחלון תמונות ממוזערתו"
 
-#: MainWindow/Window.cpp:958
+#: MainWindow/Window.cpp:978
 #, kde-format
 msgid "Show Categories in Thumbnails Window"
 msgstr "הצגת קטגוריות בחלון תמונות ממוזערות"
 
-#: MainWindow/Window.cpp:975
+#: MainWindow/Window.cpp:995
 #, kde-format
 msgid "Choose Color Scheme"
 msgstr "בחירת ערכת צבעים"
 
-#: MainWindow/Window.cpp:982
+#: MainWindow/Window.cpp:1002
 #, kde-format
 msgid "Display Images and Videos Not on Disk"
 msgstr "הצגת תמונות וסרטונים שאינם בכונן"
 
-#: MainWindow/Window.cpp:985
+#: MainWindow/Window.cpp:1005
 #, kde-format
 msgid "Display Images and Videos with Incomplete Dates..."
 msgstr "הצגת תמונות וסרטונים עם תאריכים חלקיים…"
 
-#: MainWindow/Window.cpp:988
+#: MainWindow/Window.cpp:1008
 #, kde-format
 msgid "Merge duplicates"
 msgstr "מיזוג כפילויות"
 
-#: MainWindow/Window.cpp:990 MainWindow/Window.cpp:1044
+#: MainWindow/Window.cpp:1010 MainWindow/Window.cpp:1065
 #, kde-format
 msgid "Refresh Selected Thumbnails and Checksums"
-msgstr "רענון התמונות הממוזערות וסיכומי הביקורת הנבחרים"
+msgstr "ריענון התמונות הממוזערות וסיכומי הביקורת הנבחרים"
 
-#: MainWindow/Window.cpp:994
+#: MainWindow/Window.cpp:1014
 #, kde-format
 msgid "Rescan for Images and Videos"
 msgstr "סריקת תמונות וסרטונים מחדש"
 
-#: MainWindow/Window.cpp:997
+#: MainWindow/Window.cpp:1017
 #, kde-format
 msgid "Recreate Exif Search Database"
 msgstr "יצירת מסד נתוני חיפוש Exif מחדש"
 
-#: MainWindow/Window.cpp:1000
+#: MainWindow/Window.cpp:1020
 #, kde-format
 msgid "Read Exif Info from Files..."
 msgstr "קריאת נתוני Exif מקבצים…"
 
-#: MainWindow/Window.cpp:1003
+#: MainWindow/Window.cpp:1023
 #, kde-format
 msgid "Sort All by Date && Time"
 msgstr "סידור של כולם לפי תאריך ושעה"
 
-#: MainWindow/Window.cpp:1007
+#: MainWindow/Window.cpp:1027
 #, kde-format
 msgid "Automatically Stack Selected Images..."
 msgstr "לערום את התמונות הנבחרות אוטומטית…"
 
-#: MainWindow/Window.cpp:1010
+#: MainWindow/Window.cpp:1030
 #, kde-format
 msgid "Build Thumbnails"
 msgstr "בניית תמונות ממוזערות"
 
-#: MainWindow/Window.cpp:1013
+#: MainWindow/Window.cpp:1033
 #, kde-format
 msgid "Statistics..."
 msgstr "סטטיסטיקה…"
 
-#: MainWindow/Window.cpp:1017
+#: MainWindow/Window.cpp:1037
 #, kde-format
 msgid "Mark As Untagged"
 msgstr "סימון כבלתי מתויגת"
 
-#: MainWindow/Window.cpp:1027
+#: MainWindow/Window.cpp:1047
 #, kde-format
 msgid "Enable All Messages"
 msgstr "הפעלת כל ההודעות"
 
-#: MainWindow/Window.cpp:1031
+#: MainWindow/Window.cpp:1051
 #, kde-format
 msgid "Run KPhotoAlbum Demo"
 msgstr "הרצת הדגמה של KPhotoAlbum"
 
-#: MainWindow/Window.cpp:1034
+#: MainWindow/Window.cpp:1055
 #, kde-format
 msgid "KPhotoAlbum Feature Status"
 msgstr "מצב יכולות של KPhotoAlbum"
 
-#: MainWindow/Window.cpp:1037
+#: MainWindow/Window.cpp:1058
 #, kde-format
 msgid "Show Demo Videos"
 msgstr "הצגת סרטוני הדגמה"
 
-#: MainWindow/Window.cpp:1041 Viewer/ViewerWidget.cpp:197
+#: MainWindow/Window.cpp:1062 Viewer/ViewerWidget.cpp:197
 #, kde-format
 msgid "Show Exif Info and file metadata"
 msgstr "הצגת פרטי Exif ונתוני על של קובץ"
 
-#: MainWindow/Window.cpp:1047
+#: MainWindow/Window.cpp:1068
 #, kde-format
 msgid "Use next video thumbnail"
 msgstr "להשתמש בתמונה הממוזערת של הסרטון הבא"
 
-#: MainWindow/Window.cpp:1051
+#: MainWindow/Window.cpp:1072
 #, kde-format
 msgid "Use previous video thumbnail"
 msgstr "להשתמש בתמונה הממוזערת של הסרטון הקודם"
 
-#: MainWindow/Window.cpp:1055 MainWindow/Window.cpp:1288
+#: MainWindow/Window.cpp:1076 MainWindow/Window.cpp:1302
 #, kde-format
 msgid "Copy image to ..."
 msgid_plural "Copy images to ..."
@@ -4187,7 +4509,7 @@ msgstr[1] "העתקת תמונות אל…"
 msgstr[2] "העתקת תמונות אל…"
 msgstr[3] "העתקת תמונות אל…"
 
-#: MainWindow/Window.cpp:1059 MainWindow/Window.cpp:1292
+#: MainWindow/Window.cpp:1080 MainWindow/Window.cpp:1306
 #, kde-format
 msgid "Link image to ..."
 msgid_plural "Link images to ..."
@@ -4196,28 +4518,28 @@ msgstr[1] "קישור תמונות אל…"
 msgstr[2] "קישור תמונות אל…"
 msgstr[3] "קישור תמונות אל…"
 
-#: MainWindow/Window.cpp:1083
+#: MainWindow/Window.cpp:1104
 #, kde-format
 msgid "Auto saving...."
 msgstr "שמירה אוטומטית…"
 
-#: MainWindow/Window.cpp:1086
+#: MainWindow/Window.cpp:1107
 #, kde-format
 msgid "Auto saving.... Done"
 msgstr "שמירה אוטומטית… בוצעה"
 
-#: MainWindow/Window.cpp:1188
+#: MainWindow/Window.cpp:1207
 #, kde-format
 msgid "<p>Do you want to create this database file?<br />%1</p>"
-msgstr ""
+msgstr "<p>ליצור את קובץ מסד הנתונים הזה?<br />%1</p>"
 
-#: MainWindow/Window.cpp:1191
+#: MainWindow/Window.cpp:1210
 #, kde-format
 msgctxt "@title"
 msgid "Create database"
 msgstr "יצירת מסד נתונים"
 
-#: MainWindow/Window.cpp:1233
+#: MainWindow/Window.cpp:1247
 #, kde-format
 msgid ""
 "<p>You have configured a tag for untagged images, but either the tag itself "
@@ -4225,47 +4547,50 @@ msgid ""
 "untagged tag setting under <interface>Settings|Configure KPhotoAlbum...|"
 "Categories</interface></p>"
 msgstr ""
+"<p>הגדרת תגית לתמונות לא מתויגות אבל או שהתגית עצמה או שהקטגוריה שלה לא "
+"קיימות במסד הנתונים.</p><p>נא לאמת את הגדרות התגית ללא מתויגות תחת "
+"<interface>הגדרות|הגדרת KPhotoAlbum…|קטגוריות</interface></p>"
 
-#: MainWindow/Window.cpp:1359 Settings/SettingsDialog.cpp:46
+#: MainWindow/Window.cpp:1373 Settings/SettingsDialog.cpp:46
 #, kde-format
 msgid "General"
 msgstr "כללי"
 
-#: MainWindow/Window.cpp:1360 Settings/SettingsDialog.cpp:52
+#: MainWindow/Window.cpp:1374 Settings/SettingsDialog.cpp:52
 #, kde-format
 msgid "Viewer"
 msgstr "מציג"
 
-#: MainWindow/Window.cpp:1361
+#: MainWindow/Window.cpp:1375
 #, kde-format
 msgctxt "I.e. the timeline histogram widget"
 msgid "Date Bar"
 msgstr "סרגל תאריך"
 
-#: MainWindow/Window.cpp:1364
+#: MainWindow/Window.cpp:1378
 #, kde-format
 msgid "Annotation Dialog"
 msgstr "חלונית פירוש"
 
-#: MainWindow/Window.cpp:1365 Settings/SettingsDialog.cpp:48
+#: MainWindow/Window.cpp:1379 Settings/SettingsDialog.cpp:48
 #, kde-format
 msgid "Thumbnail View"
 msgstr "תצוגת תמונות ממוזערות"
 
-#: MainWindow/Window.cpp:1516
+#: MainWindow/Window.cpp:1522
 #, kde-format
 msgid ""
 "<p>Really enable all message boxes where you previously checked the do-not-"
 "show-again check box?</p>"
-msgstr ""
+msgstr "<p>להפעיל את כל תיבות ההודעה שסימנת בהן בעבר שלא להציג אותן?</p>"
 
-#: MainWindow/Window.cpp:1518
+#: MainWindow/Window.cpp:1524
 #, kde-format
 msgctxt "@title"
 msgid "Reset hidden dialogs"
 msgstr "איפוס חלוניות מוסתרות"
 
-#: MainWindow/Window.cpp:1537
+#: MainWindow/Window.cpp:1538
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum hit an internal error (missing plug-in menu in MainWindow::"
@@ -4275,74 +4600,83 @@ msgid ""
 "continue execution, but it is not entirely unlikely that it will crash later "
 "on due to the missing make install.</p>"
 msgstr ""
+"<p>KPhotoAlbum נתקל בשגיאה פנימית (תפריט תוסף חסר ב־MainWindow::Window::"
+"setupPluginMenu). המצב הזה מציין ששכחת להריץ make install. אם הידרת את "
+"KPhotoAlbum בעצמך, אז נא להריץ make install. אם לא, נא לדווח על זה כתקלה.</"
+"p><p>KPhotoAlbum ימשיך לפעול, אבל יש סיכוי סביר שהוא יקרוס בהמשך עקב ה־make "
+"install החסר.</p>"
 
-#: MainWindow/Window.cpp:1537
+#: MainWindow/Window.cpp:1538
 #, kde-format
 msgid "Internal Error"
 msgstr "שגיאה פנימית"
 
-#: MainWindow/Window.cpp:1548
+#: MainWindow/Window.cpp:1549
 #, kde-format
 msgid "Successfully shared image(s). Copying location to clipboard..."
-msgstr ""
+msgstr "התמונות שותפו בהצלחה. המקום מועתק ללוח הגזירים…"
 
-#: MainWindow/Window.cpp:1551
+#: MainWindow/Window.cpp:1552
 #, kde-format
 msgid "Successfully shared image(s)."
 msgstr "התמונות שותפו בהצלחה."
 
-#: MainWindow/Window.cpp:1556
+#: MainWindow/Window.cpp:1557
 #, kde-format
 msgid "Image sharing failed with message: %1"
 msgstr "שיתוף תמונה נכשל עם ההודעה: %1"
 
-#: MainWindow/Window.cpp:1607
+#: MainWindow/Window.cpp:1608
 #, kde-format
 msgid "Open List of Files"
 msgstr "פתיחת רשימת קבצים"
 
-#: MainWindow/Window.cpp:1608
+#: MainWindow/Window.cpp:1609
 #, kde-format
 msgid ""
 "You can open a set of files in KPhotoAlbum's database by listing the files "
 "here."
 msgstr ""
+"אפשר לפתוח קבוצה של תמונות במסד הנתונים של KPhotoAlbum על ידי הצגת הקבצים "
+"כאן."
 
-#: MainWindow/Window.cpp:1622
+#: MainWindow/Window.cpp:1623
 #, kde-format
 msgid "No images matching your input were found."
 msgstr "לא נמצאו תמונות שעונות על הקלט שלך."
 
-#: MainWindow/Window.cpp:1622
+#: MainWindow/Window.cpp:1623
 #, kde-format
 msgid "No Matches"
 msgstr "אין תוצאות"
 
-#: MainWindow/Window.cpp:1794
+#: MainWindow/Window.cpp:1795
 #, kde-format
 msgid "Rereading Exif information from all images"
-msgstr ""
+msgstr "פרטי ה־Exif נקראים מחדש מכל התמונות"
 
-#: MainWindow/Window.cpp:1821
+#: MainWindow/Window.cpp:1822
 #, no-c-format, kde-format
 msgctxt "@info:status"
 msgid "Thumbnail width: %1px (storage size: %2px)"
-msgstr ""
+msgstr "גודל תמונות ממוזערות: %1 פיקסלים (גודל אחסון: %2 פיקסלים)"
 
-#: MainWindow/Window.cpp:1874
+#: MainWindow/Window.cpp:1875
 #, kde-format
 msgid ""
 "<p>Unable to find ffmpeg on the system.</p><p>Without it, KPhotoAlbum will "
 "not be able to display video thumbnails and video lengths. Please install "
 "the ffmpeg package</p>"
 msgstr ""
+"<p>לא ניתן למצוא ffmpeg במערכת.</p><p>בלעדיו, KPhotoAlbum לא יוכל להציג "
+"תמוניות ממוזערות של סרטונים ואת אורכי הסרטונים. נא להתקין את חבילת ffmpeg</p>"
 
-#: MainWindow/Window.cpp:1877
+#: MainWindow/Window.cpp:1878
 #, kde-format
 msgid "Video thumbnails are not available"
 msgstr "תמונות ממוזערות של וידאו אינן זמינות"
 
-#: Map/GeoCluster.cpp:137
+#: Map/GeoCluster.cpp:133
 #, kde-format
 msgctxt "The number of images in an area of the map"
 msgid "%1"
@@ -4430,6 +4764,11 @@ msgid ""
 "android device's address.\n"
 "The android client can be downloaded from google play."
 msgstr ""
+"הסמל הזה מציין האם KPhotoAlbum מחובר להתקן Android.\n"
+"לחיצה על הסמל תחליף את מצב ההאזנה ללקוחות ברשת המקומית.\n"
+"אם הרשת המקומית לא מרשה שידורים כלליים (broadcast) בין לקוח ה־Android לבין "
+"KPhotoAlbum, יש ללחוץ על הסמל עם המקש הימני ולציין את כתובת התקן ה־Android.\n"
+"אפשר להוריד את הלקוח ל־Android מ־Google Play."
 
 #: RemoteControl/ConnectionIndicator.cpp:90
 #, kde-format
@@ -4462,6 +4801,9 @@ msgid ""
 "Desktop protocol version: %1\n"
 "Remote Control protocol version: %2"
 msgstr ""
+"סתירת גרסאות בין הלקוח המרוחק לבין KPhotoAlbum בשולחן העבודה.\n"
+"גרסת פרוטוקול שולחן העבודה: %1\n"
+"גרסת פרוטוקול הצד המרוחק: %2"
 
 #: Settings/BirthdayPage.cpp:59
 #, kde-format
@@ -4480,6 +4822,8 @@ msgid ""
 "Set the date of birth for items (say people) here, and then see their age "
 "when viewing the images."
 msgstr ""
+"כאן ניתן להגדיר תאריך לידה של פריטים (למשל בני אדם), ואז לראות את הגיל שלהם "
+"בעת הצפייה בתמונות."
 
 #: Settings/BirthdayPage.cpp:157
 #, kde-format
@@ -4504,7 +4848,7 @@ msgstr "נא למלא תאריך…"
 #: Settings/BirthdayPage.cpp:297
 #, kde-format
 msgid "<i>Select an item on the left to edit the birthday</i>"
-msgstr ""
+msgstr "<i>נא לבחור פריט מימין כדי לערוך את יום ההולדת</i>"
 
 #: Settings/CategoryPage.cpp:49
 #, kde-format
@@ -4524,7 +4868,7 @@ msgstr "שינוי שם"
 #: Settings/CategoryPage.cpp:111
 #, kde-format
 msgid "Positionable tags:"
-msgstr "תגיות שניתן להציב:"
+msgstr "תגיות אזוריות:"
 
 #: Settings/CategoryPage.cpp:113
 #, kde-format
@@ -4572,6 +4916,8 @@ msgid ""
 "saved,<br/>the names of categories can't be changed and new ones can't be "
 "added.</font>"
 msgstr ""
+"<font color='red'>במסד הנתונים יש שינויים שלא נשמרו. כל עוד הם לא יישמרו,<br/"
+">אי אפשר לשנות את שמות הקטגוריות ולא ניתן להוסיף חדשות.</font>"
 
 #: Settings/CategoryPage.cpp:166
 #, kde-format
@@ -4595,6 +4941,8 @@ msgid ""
 "special category name which is reserved and can't be used for a normal "
 "category.</p>"
 msgstr ""
+"<p>אי אפשר לשנות את שם הקטגוריה „%1” לשם „%2”:</p><p>„%2” הוא שם קטגוריה "
+"שמור מיוחד שלא ניתן להשתמש בו כשם לקטגוריה רגילה.</p>"
 
 #: Settings/CategoryPage.cpp:267 Settings/CategoryPage.cpp:278
 #, kde-format
@@ -4607,6 +4955,8 @@ msgid ""
 "<p>Can't change the name of category \"%1\" to \"%2\":</p><p>A category with "
 "this name already exists.</p>"
 msgstr ""
+"<p>אי אפשר לשנות את שם הקטגוריה מהשם „%1” לשם „%2”:</p><p>כבר קיימת קטגוריה "
+"בשם הזה.</p>"
 
 #: Settings/CategoryPage.cpp:292
 #, kde-format
@@ -4615,6 +4965,8 @@ msgid ""
 "pending rename action on the category \"%2\". Please save this change first."
 "</p>"
 msgstr ""
+"<p>אי אפשר לשנות את שם הקטגוריה „%1” לשם „%2”:</p><p>יש פעולת שינוי שינוי שם "
+"ממתינה עבור הקטגוריה „%2”. נא לשמור את השינוי הזה תחילה.</p>"
 
 #: Settings/CategoryPage.cpp:296
 #, kde-format
@@ -4627,6 +4979,8 @@ msgid ""
 "<p>Do you really want to make \"%1\" non-positionable?</p><p>All areas "
 "linked against this category will be discarded!</p>"
 msgstr ""
+"<p>להפוך את „%1” לבלתי משויכות לאזור?</p><p>כל האזורים שמקושרים כנגד "
+"הקטגוריה הזאת יושלכו!</p>"
 
 #: Settings/CategoryPage.cpp:335
 #, kde-format
@@ -4696,6 +5050,13 @@ msgid ""
 "images, and in that case it is useful to ask KPhotoAlbum to zip the backup "
 "files to preserve disk space.</p>"
 msgstr ""
+"<p>KPhotoAlbum יכול לגבות את קובץ ה־XML של מסד הנתונים על ידי שמירת עותקים "
+"(למשל, לקובץ מסד נתונים בשם index.xml, שמות קובצי הגיבוי יהיוindex."
+"xml~0001~,‏ index.xml~0002~ וכן הלאה) וניתן להשתמש בתיבת הטווח כדי לציין את "
+"מספר קובצי הגיבוי לשמירה. KPhotoAlbum ימחק את קובץ הגיבוי הישן ביותר כשמספר "
+"קובצי הגיבוי מגיע לכמות המרבית.</p><p>קובץ ה־XML של מסד הנתונים יכול לגדול "
+"משמעותית אם יש לך כמות גדולה של תמונות ובמקרה שכזה, כדאי לבקש מ־KPhotoAlbum "
+"לדחוס את קובצי הגיבוי ב־zip כדי לחסוך נפח בכונן.</p>"
 
 #: Settings/DatabaseBackendPage.cpp:68
 #, kde-format
@@ -4705,6 +5066,10 @@ msgid ""
 "time to approximately half, by checking this check box. The disadvantage is "
 "that the XML database file is less readable by human eyes.</p>"
 msgstr ""
+"<p>KPhotoAlbum משתמש בקובץ XML יחיד בתור <i>מסד הנתונים</i> שלו. כשיש הרבה "
+"תמונות עלול לקחת הרבה זמן לקרוא את הקובץ הזה. אפשר לחתוך את הזמן הזה בערך "
+"בחצי, על ידי סימון התיבה הזאת. החיסרון בזה הוא שקובץ מסד הנתונים ב־XML יהיה "
+"פחות קריא לבני אדם.</p>"
 
 #: Settings/ExifPage.cpp:37
 #, kde-format
@@ -4759,6 +5124,9 @@ msgid ""
 "KPhotoAlbum to ignore these two folder names in any folder when searching "
 "for new images.</p>"
 msgstr ""
+"<p>הגדרת רשימת שמות תיקיות עם פסיקים ביניהן להתעלמות.</p><p>למשל, ציון של "
+"„<tt>.thumbs,‏‎.thumbnails</tt>” כאן יגרום ל־KPhotoAlbum להתעלם משמות שתי "
+"התיקיות האלו בכל תיקייה שהיא בעת חיפוש אחר תמונות חדשות.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:61
 #, kde-format
@@ -4768,6 +5136,9 @@ msgid ""
 "manually tell KPhotoAlbum to search for new images using <b>Maintenance-"
 ">Rescan for new images</b></p>"
 msgstr ""
+"<p>KPhotoAlbum יכול לחפש תמונות וסרטונים חדשים עם הפעלתו, הפעולה הזאת עלולה "
+"לארוך זמן מה, לכן, כדאי במקום לבקש מ־KPhotoAlbum לחיפוש פריטים חדשים ידנית "
+"דרך <b>תחזוקה->סריקה אחר תמונות חדשות מחדש</b></p>"
 
 #: Settings/FileVersionDetectionPage.cpp:66
 #, kde-format
@@ -4778,6 +5149,10 @@ msgid ""
 "their extension. This will take significantly longer than finding files by "
 "extension!</p>"
 msgstr ""
+"<p>KPhotoAlbum בדרך כלל יחפש תמונות וסרטונים חדשים לפי הסיומת שלהם.אם "
+"האפשרות הזאת מוגדרת, ל<em>כל</em> הקבצים שאינם במסד הנתונים או ברשימת החסימה "
+"ייבדק סוג התוכן (MIME), ללא תלות בסיומת שלהם. הפעולה הזאת תארוך משמעותית זמן "
+"רב יותר מאשר איתור קבצים לפי סיומת!</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:72
 #, kde-format
@@ -4787,6 +5162,10 @@ msgid ""
 "This is useful if for some reason you have e.g. both the original files and "
 "symbolic links to these files within your image folder.</p>"
 msgstr ""
+"<p>KPhotoAlbum מנסה לקרוא את כל קובצי התמונות בין אם קבצים בפועל או קישורים "
+"סמליים. כדי להתעלם מקישורים סמליים, יש לסמן את האפשרות הזאת. שימושי ממגוון "
+"סיבות, כמו למשל שיש לך את הקבצים המקוריים וגם קישורים סמליים לקבצים האלה "
+"בתוך תיקיית התמונות שלך.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:77
 #, kde-format
@@ -4797,6 +5176,11 @@ msgid ""
 "undesirable. If this option is checked, KPhotoAlbum will not read RAW files "
 "for which matching image files also exist.</p>"
 msgstr ""
+"<p>KPhotoAlbum יכול לקרוא סוגים מסוימים של תמונות גולמיות/RAW. חלק מהמצלמות "
+"יכולות לאחסן תמונה גולמית וגם תמונת JPG או TIFF תואמת. המצב הזה גורם לאחסון "
+"של תמונות כפולות ב־KPhotoAlbum, שזאת כפי הנראה לא רצוי. אם האפשרות הזאת "
+"מסומנת, KPhotoAlbum לא יקרא קבצים גולמיים שעבורם קיימים קובצי תמונות תואמים."
+"</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:83
 #, kde-format
@@ -4805,6 +5189,9 @@ msgid ""
 "searching for new photos. Thumbnail directories of different tools should be "
 "configured here. E.g. <tt>xml,ThumbNails,.thumbs,.thumbnails</tt>.</p>"
 msgstr ""
+"<p>תיקיות שמוגדרות כאן (מופרדות בפסיק <tt>,</tt>) נפסחות בעת חיפוש אחר "
+"תמונות חדשות. כאן יש להגדיר תמונות ממוזערות לתיקיות של כלים שונים. למשל: "
+"<tt>xml,‏ThumbNails,‏‎.thumbs,‏‎.thumbnails</tt>.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:91
 #, kde-format
@@ -4846,6 +5233,11 @@ msgid ""
 "associated metadata (category information, ratings, etc) will be copied or "
 "moved from the original file to the new one.</p>"
 msgstr ""
+"<p>כש־KPhotoAlbum מחפש אחר קבצים חדשים ומוצא קבצים שתואמים ל<i>ביטוי הרגולרי "
+"לחיפוש קבצים שהשתנו</i> הוא מניח שיש גרסה מקורית של התמונה. תבנית הביטוי "
+"הרגולרי תוחלף ב<i>טקסט חלופת הקובץ המקורי</i> ואם הקובץ הזה קיים, כל נתוני "
+"העל המשויכים לו (פרטי קטגוריה, דירוגים וכו׳) יועתקו או יועברו מהקובץ המקורי "
+"לקובץ החדש.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:123
 #, kde-format
@@ -4858,6 +5250,12 @@ msgid ""
 "<li>You can group parts of the expression using parenthesis.</li> </"
 "ul>Example: <tt>-modified\\.(jpg|tiff)</tt> </p>"
 msgstr ""
+"<p>ביטוי רגולרי ב־perl שאמור לתפוס קובץ שהשתנה. <ul><li>נקודה זה תו יחיד "
+"(<tt>\\.</tt> תופס נקודה)</li>   <li>אפשר להשתמש במכמתים <tt>*</tt>,<tt>+</"
+"tt>,<tt>?</tt>, או שאפשר לתפוס כמה     מופעים ספורים של ביטוי עם סוגריים "
+"מסולסלים (למשל: <tt>e{0,1}</tt> תופס 0 מופע אחד של התו „e”).</li>   <li>אפשר "
+"לקבץ חלקים מהביטוי בסוגריים.</li> </ul>למשל: <tt>-modified\\.(jpg|tiff)</tt> "
+"</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:133
 #, kde-format
@@ -4867,6 +5265,9 @@ msgid ""
 "string is used to replace the match in the new file's name until an original "
 "file is found or we run out of options.</p>"
 msgstr ""
+"<p>מחרוזת שמשמשת להחליף את התוצאה מ<i>הביטוי הרגולרי לגרסאות קבצים</i>. יכול "
+"להיות רשימה עם נקודה־פסיק (<tt>;</tt>) בין הפריטים. כל מחרוזת משמשת להחליף "
+"את התוצאה בשם הקובץ החדש עד שנמצא קובץ מקורי או שייגמרו האפשרויות.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:139
 #, kde-format
@@ -4874,6 +5275,8 @@ msgid ""
 "<p>The tagging is moved from the original file to the new file. This way "
 "only the latest version of an image is tagged.</p>"
 msgstr ""
+"<p>התיוג מועבר מהקובץ המקורי לקובץ החדש. כך רק הגרסה העדכנית ביותר של התמונה "
+"מתויגת.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:143
 #, kde-format
@@ -4882,6 +5285,9 @@ msgid ""
 "and placed to the top of the stack. This way the new image is shown when the "
 "stack is in collapsed state - the default state in KPhotoAlbum.</p>"
 msgstr ""
+"<p>אם האפשרות הזאת מוגדרת, גרסאות חדשות של התמונה נערמות אוטומטית ומוצבות "
+"בראש הערמה. כך התמונה החדשה מופיעה כשהערמה במצב אסוף - מצב ברירת המחדל ב־"
+"KPhotoAlbum.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:151
 #, kde-format
@@ -4911,11 +5317,16 @@ msgid ""
 "png)\"</i> and replacement text <i>\"-mod.\\1\"</i> would copy test.jpg to "
 "test-mod.jpg and open the new file in selected application.</p>"
 msgstr ""
+"<p>KPhotoAlbum יכול ליצור עותק מתמונה בטרם פתיחתה ביישום חיצוני. ההגדרה הזאת "
+"קובעת איך ייקרא הקובץ החדש.</p><p>הביטוי הרגולרי מגדיר את החלק בשם הקובץ "
+"המקורי שיוחלף ב<i>טקסט ההחלפה</i>. למשל: הביטוי הרגולרי <i>‎\"\\.(jpg|png)\"</"
+"i> וטקסט ההחלפה <i>‎\"-mod.\\1\"</i> יעתיק את test.jpg ל־test-mod.jpg ויפתח "
+"את הקובץ החדש ביישום הנבחר.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:178
 #, kde-format
 msgid "EXPERIMENTAL: Tune new image loading for best performance."
-msgstr ""
+msgstr "ניסיוני: כוונון טעינת תמונות חדשות לביצועים מיטביים."
 
 #: Settings/FileVersionDetectionPage.cpp:184
 #, kde-format
@@ -4960,6 +5371,10 @@ msgid ""
 "media, choose the slowest media type used.</p><p>Use Manual Settings to "
 "configure details of how the loading is performed.</p>"
 msgstr ""
+"<p>כיוון טעינת התמונה למיטוב הביצועים על סמך סוג אחסון בו נמצא מסד נתוני "
+"התמונות. אם מסד נתוני התמונות שלך פרוס על פני מגוון סוגי אחסון, יש לבחור את "
+"הסוג האיטי ביותר.</p><p>הגדרות ידניות תאפשרנה לך להגדיר פרטים על אופן ביצוע "
+"הטעינה.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:205
 #, kde-format
@@ -4974,11 +5389,15 @@ msgid ""
 "slow, this degrades performance as the checksum calculation has to wait "
 "longer for the images to be preloaded.</p>"
 msgstr ""
+"<p>חישוב סיכומי ביקורת MD5 בזמן קדם הטעינה של התמונות.  זה עובד היטב אם "
+"האחסון עובד ממש מהיר, כמו למשל בכונני NVMe.  אם האחסון איטי, הוא יפגע "
+"בביצועים כיוון שחישוב סיכום הביקורת ייאלץ להמתין זמן רב יותר לקדם הטעינה של "
+"התמונה.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:216
 #, kde-format
 msgid "Number of threads to use for preloading (scouting) images"
-msgstr ""
+msgstr "מספר התהליכונים לטעינה טרומית (השקפה) של תמונות"
 
 #: Settings/FileVersionDetectionPage.cpp:224
 #, kde-format
@@ -4988,11 +5407,15 @@ msgid ""
 "for faster storage, but not more than the number of cores in your CPU. "
 "Default is 1, which works well for mechanical hard disks.</p>"
 msgstr ""
+"<p>מספר התהליכונים לשימוש לטעינה טרומית של התמונות כדי שתוחזקנה בזיכרון "
+"כשסיכום הביקורת שלהן מחושב.  בדרך כלל כדאי להגדיר את זה למספר גדול יותר ככל "
+"שהאחסון מהיר יותר, אבל לא יותר ממספר ליבות המעבד שלך. ברירת המחדל היא 1, "
+"שמתאימה היטב לכוננים מכניים.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:230
 #, kde-format
 msgid "Number of threads to use for thumbnailPreloading (scouting) images"
-msgstr ""
+msgstr "מספר התהליכונים לביצוע thumbnailPreloading (השקפה) על תמונות"
 
 #: Settings/FileVersionDetectionPage.cpp:238
 #, kde-format
@@ -5001,6 +5424,9 @@ msgid ""
 "thumbnails.  Normally this should be set to 1; the exception might be if you "
 "have very fast storage.</p>"
 msgstr ""
+"<p>מספר התהליכונים לשימוש לקדם טעינה של תמונות בטרם בניית התמונות "
+"הממוזערות.  בדרך כלל זה אמור להיות מוגדר ל־1, היוצא מהכלל הוא מקרה שבו יש לך "
+"אחסון מהיר מאוד.</p>"
 
 #: Settings/FileVersionDetectionPage.cpp:244
 #, kde-format
@@ -5016,6 +5442,10 @@ msgid ""
 "may see benefit from setting this to a larger value.</p><p>KPhotoAlbum must "
 "be restarted for changes to take effect.</p>"
 msgstr ""
+"<p>מספר התהליכונים לשימוש לבניית תמונות ממוזערות.  הגדרה ל־0 תבחר אוטומטית "
+"מספר אחד פחות מכמות הליבות, לפחות אחת אך לא יותר משלוש.  אם יש לך אחסון מהיר "
+"ומעבד עם הרבה ליבות, הביצועים ישתפרו ככל שהערך הזה יהיה גדול יותר.</p><p>יש "
+"להפעיל את KPhotoAlbum מחדש כדי שהשינויים האלו ייכנסו לתוקף.</p>"
 
 #: Settings/GeneralPage.cpp:29
 #, kde-format
@@ -5063,7 +5493,7 @@ msgstr "הפשטת תיאורי ברירת מחדל שנוצרו על ידי ה�
 #: Settings/GeneralPage.cpp:69
 #, kde-format
 msgid "Use the embedded thumbnail in RAW file or halfsized RAW"
-msgstr ""
+msgstr "להשתמש בתמונה ממוזערת משובצת בקובץ גולמי/RAW או RAW חצוי גודל"
 
 #: Settings/GeneralPage.cpp:73
 #, kde-format
@@ -5112,6 +5542,13 @@ msgid ""
 "b>, otherwise reply <b>ask</b>. This will allow you to decide whether the "
 "images are from the scanner or the camera, from session to session.</p>"
 msgstr ""
+"<p>KPhotoAlbum ינסה לקרוא את תאריך התמונה מפרטי ה־Exif שבתמונה. אם התהליך "
+"הזה ייכשל יתבצע ניסיון למשוך את התאריך מחותמת הזמן של הקובץ.</p><p>עם זאת, "
+"הפרטים האלו עלולים להיות שגויים אם התמונה נסרקה (המועד הרצוי הוא מועד צילום "
+"התמונה, לא מועד הסריקה).</p><p>אם התמונות שלך נוספות בסריקה, בניגוד לשימוש "
+"במצלמה דיגיטלית מדי פעם, כדאי לענות <b>לא</b>. אם לא יוצא לך לסרוק תמונות אף "
+"פעם, כדאי לענות <b>כן</b>, אחרת עדיף לענות <b>לשאול</b>. כך יתאפשר לך להחליט "
+"האם התמונות הן מהסורק או מהמצלמה בכל הפעלה מחדש.</p>"
 
 #: Settings/GeneralPage.cpp:148
 #, kde-format
@@ -5121,6 +5558,10 @@ msgid ""
 "uncheck this check box.</p><p>Note: Your digital camera may not write this "
 "information into the images at all.</p>"
 msgstr ""
+"<p>תמונות JPEG עשויות להכיל מידע על זווית הצילום ביחס לאופק. אם יש לך סיבה "
+"לא להשתמש במיגע הזה כדי לקבל הטייה לתמונות שלך כברירת מחדל, יש לבטל את "
+"הסימון הזה.</p><p>לתשומת ליבך: יכול להיות שהמצלמה הדיגיטלית שלך בכלל לא "
+"יכולה לכתוב את הפרטים האלה לתמונות.</p>"
 
 #: Settings/GeneralPage.cpp:154
 #, kde-format
@@ -5128,6 +5569,8 @@ msgid ""
 "<p>JPEG images may contain a description. Check this checkbox to specify if "
 "you want to use this as a default description for your images.</p>"
 msgstr ""
+"<p>תמונות JPEG עשויות להכיל תיאור. יש לסמן את התיבה הזאת כדי להשתמש בו "
+"כתיאור כברירת המחדל של התמונות שלך.</p>"
 
 #: Settings/GeneralPage.cpp:159
 #, kde-format
@@ -5144,6 +5587,11 @@ msgid ""
 "automatically on start up. Alternatively, you can click the connection icon "
 "in the status bar to start listening."
 msgstr ""
+"<p>KPhotoAlbum יכול להציג את התמונות שלך מהתקני Android. KPhotoAlbum יבצע "
+"צימוד מול היישומון מ־Android. המצב הזה, עם זאת, דורש ש־KPhotoAlbum בשולחן "
+"העבודה שלך מאזין להודעות בהפצה מוגבלת (multicast). סימון התיבה הזאת יגרום ל־"
+"KPhotoAlbum לעשות את זה אוטומטית עם עליית היישום. לחלופין, ניתן ללחוץ על סמל "
+"החיבור בסרגל המשימות כדי להתחיל להאזין."
 
 #: Settings/GeneralPage.cpp:170
 #, kde-format
@@ -5153,6 +5601,9 @@ msgid ""
 "want to ignore in the input field, one per line. Be sure to add the exact "
 "comment, including all whitespace.</p>"
 msgstr ""
+"<p>חלק מהתמונות מאחסנות הערות כלליות בכל תמונה ותמונה. אפשר להתעלם מההערות "
+"האלה אוטומטית.</p><p>נא למלא את ההערות להתעלמות בשדה הקלט, כל הערה בשורה "
+"נפרדת. נא לוודא שציינת את ההערה בצורה מדויקת, כולל כל הרווחים.</p>"
 
 #: Settings/SettingsDialog.cpp:47
 #, kde-format
@@ -5290,6 +5741,9 @@ msgid ""
 "will be moved to the super category of \"%1\" (\"%2\").<nl/> All other "
 "memberships of the sub-categories will stay intact.</para>"
 msgstr ""
+"<para>באמת למחוק את הקבוצה „%1”?</para><para>תת־קטגוריות של הקבוצה הזאת "
+"יועברו לקטגוריית העל של „%1” („%2”).<nl/> כל שאר החברויות תחת תת־הקטגוריות "
+"האלו תישאר כמו שהן.</para>"
 
 #: Settings/TagGroupsPage.cpp:516
 #, kde-kuit-format
@@ -5448,6 +5902,9 @@ msgid ""
 "thumbnails. This window includes a small preview image. This option "
 "configures the image size.</p>"
 msgstr ""
+"<p>בחירה ב<b>הגדרות -&gt; הצגת חלוניות עצה</b> בתצוגת התמונות הממוזערות, "
+"תציג חלוניות צצות קטנות עם מידע על התמונות הממוזערות. החלון הזה כולל תמונת "
+"תצוגה מקדימה קטנה. האפשרות מגדירה את גודל התמונה.</p>"
 
 #: Settings/ThumbnailsPage.cpp:104
 #, kde-format
@@ -5455,6 +5912,8 @@ msgid ""
 "<p>Thumbnail image size. Changing the thumbnail size here triggers a rebuild "
 "of the thumbnail database.</p>"
 msgstr ""
+"<p>גודל התמונות הממוזערות. שינוי גודל התמונות הממוזערות כאן יזניק בנייה מחדש "
+"של מסד נתוני התמונות הממוזערות.</p>"
 
 #: Settings/ThumbnailsPage.cpp:108
 #, kde-format
@@ -5468,17 +5927,24 @@ msgid ""
 "immediately build thumbnails for them and you won't have a delay later while "
 "browsing.</p>"
 msgstr ""
+"<p>אם זה מוגדר, תמונות ממוזערות תיבננה לפי דרישה. תוך עיון במסד נתוני "
+"התמונות שלך, רק התמונות הממוזערות הנחוצות נבנות. משמעות הדבר היא שלאחר שינוי "
+"גודל התמונה הממוזערת, KPhotoAlbum יוכל להמשיך להגיב אפילו אם יש לך תמונות "
+"רבות.</p><p>אם זה לא מוגדר, KPhotoAlbum תמיד יבנה את התמונות הממוזערות כמה "
+"שיותר מוקדם. משמעות הדבר היא שברגע שתמונות חדשות נמצאות, KPhotoAlbum יבנה "
+"מיידית את התמונות הממוזערות עבורן ולא יהיה אף עיכוב לאחר מכן בזמן העיון.</p>"
 
 #: Settings/ThumbnailsPage.cpp:117
 #, kde-format
 msgid ""
 "<p>Choose what aspect ratio the cells holding thumbnails should have.</p>"
 msgstr ""
+"<p>נא לבחור את יחס גובה־רוחב של התאים שמחזיקים את התמונות הממוזערות.</p>"
 
 #: Settings/ThumbnailsPage.cpp:120
 #, kde-format
 msgid "<p>How thick the cell padding should be.</p>"
-msgstr ""
+msgstr "<p>עובי מסגרת התמונות הממוזערות.</p>"
 
 #: Settings/ThumbnailsPage.cpp:123
 #, kde-format
@@ -5494,6 +5960,8 @@ msgid ""
 "<p>Checking this option will show the base name for the file under "
 "thumbnails in the thumbnail view.</p>"
 msgstr ""
+"<p>סימון האפשרות הזאת יציג את שם הבסיס של הקובץ תחת התמונות הממוזערות בתצוגת "
+"התמונות הממוזערות.</p>"
 
 #: Settings/ThumbnailsPage.cpp:131
 #, kde-format
@@ -5501,6 +5969,8 @@ msgid ""
 "<p>Checking this option will show the Categories for the file under "
 "thumbnails in the thumbnail view</p>"
 msgstr ""
+"<p>סימון האפשרות הזאת יציג את הקטגוריות של הקובץ תחת התמונות הממוזערות "
+"בתצוגת התמונות הממוזערות</p>"
 
 #: Settings/ThumbnailsPage.cpp:135
 #, kde-format
@@ -5509,6 +5979,9 @@ msgid ""
 "the thumbnails will be shown automatically. The alternative is to continue "
 "showing the browser until you press <i>Show Images</i></p>"
 msgstr ""
+"<p>בזמן עיון, כשהספירה יורדת מתחת לערך שצוין כאן, התמונות הממוזערות תופענה "
+"אוטומטית. החלופה היא להמשיך להציג את הדפדפן עד ללחיצה על <i>הצגת תמונות</i></"
+"p>"
 
 #: Settings/UntaggedGroupBox.cpp:24
 #, kde-format
@@ -5556,19 +6029,30 @@ msgstr "<h1>נא לבחור נגן וידאו</h1>"
 #, kde-format
 msgid ""
 "<html><p>Unfortunately, there is no video player which just works out of the "
-"box for everyone.</p><p>KPhotoAlbum therefore comes with three different "
-"back-ends, choose the one that works the best for you</p><p><b>VLC</b> seems "
-"to be the best supported video player back-end, meaning it can play most "
-"video formats. It has one drawback though, it requires X11. If you use "
-"Wayland, then you will find that the videos shows up in a window of their "
-"own, and in this case VLC is likely not a very good fit for you. If on the "
-"other hand you do use X11 then VLC is likely your best choice.</"
-"p><p>Traditionally KPhotoAlbum has been using <b>Phonon</b> as the video "
-"player back-end. We've unfortunately seen it crash on many different video "
-"formats - possibly because our system wasn't correctly configured.</"
-"p><p><b><font color=red>You can at any time change the backend from Settings "
-"-> Viewer</font></b></p></html>"
+"box for everyone.</p><p>KPhotoAlbum therefore comes with two different back-"
+"ends, choose the one that works the best for you</p><p><b>VLC</b> seems to "
+"be the best supported video player back-end, meaning it can play most video "
+"formats. It has one drawback though, it requires X11. If you use Wayland, "
+"then you will find that the videos shows up in a window of their own, and in "
+"this case VLC is likely not a very good fit for you. If on the other hand "
+"you do use X11 then VLC is likely your best choice.</p><p>Traditionally "
+"KPhotoAlbum has been using <b>Phonon</b> as the video player back-end. We've "
+"unfortunately seen it crash on many different video formats - possibly "
+"because our system wasn't correctly configured.</p><p><b><font color=red>You "
+"can at any time change the backend from Settings -> Viewer</font></b></p></"
+"html>"
 msgstr ""
+"<html><p>לרוע המזל, אין נגן וידאו שפשוט עובד מיד לאחר ההתקנה לכולם.</"
+"p><p>לכן, ב־KPhotoAlbum יש שני מנגנונים שונים, אפשר לבחור את זה שעובד אצלך "
+"הכי טוב</p><p><b>VLC</b> נראה כמו מנגנון נגן הווידאו עם התמיכה הטובה ביותר, "
+"כלומר שהוא יכול לנגן את מגוון סוגי הסרטונים הרחב ביותר. יש בו חסרון אחד די "
+"משמעותי, הוא משתמש ב־X11. אם מופעל אצלך Wayland, אז מייד ניתן להבחין "
+"שהסרטונים מופיעים בחלון משל עצמם, ובמקרה שכזה VLC הוא כנראה לא הבחירה הכי "
+"טובה בשבילך. אם מצד שני מופעל אצלך X11 אז VLC זאת הבחירה הטובה ביותר.</"
+"p><p>באופן מסורתי KPhotoAlbum משתמש ב־<b>Phonon</b> בתור מנגנון נגן הווידאו. "
+"לרוע המזל נתקלנו בקריסות במגוון סוגים של סרטונים - כנראה כיוון שהגדרות "
+"המערכת שלנו לא היו נכונות.</p><p><b><font color=red>אפשר לשנות את המנגנון "
+"בכל עת דרך הגדרות -> מציג</font></b></p></html>"
 
 #: Settings/VideoPlayerSelectorDialog.cpp:49
 #: Settings/VideoPlayerSelectorDialog.cpp:58
@@ -5585,6 +6069,10 @@ msgid ""
 "ends. If you on the other hand got KPhotoAlbum from your system, then please "
 "talk to the maintainer of the package.</html>"
 msgstr ""
+"<html><h1>חסר מנגנון</h1>המנגנונים חסרים עקב הגדרות המערכת שחלו בזמן ההידור "
+"של KPhotoAlbum. אם הידרת את KPhotoAlbum בעצמך, יש לחפש בחבילות המפתחים אחר "
+"מנגנונים. אם קיבלת את KPhotoAlbum מהמערכת שלך, נא לדבר עם מתחזקי החבילה.</"
+"html>"
 
 #: Settings/VideoPlayerSelectorDialog.cpp:142
 #, kde-format
@@ -5623,7 +6111,7 @@ msgstr "מופעלת מצגת מתצוגת תמונות ממוזערות"
 #: Settings/ViewerPage.cpp:45
 #, kde-format
 msgid "Viewing Images and Videos From Thumbnail View"
-msgstr ""
+msgstr "הצגת תמונות וסרטונים מתצוגת תמונות ממוזערות"
 
 #: Settings/ViewerPage.cpp:52
 #, kde-format
@@ -5676,6 +6164,11 @@ msgid ""
 "pixel if it would fit the window, otherwise it will be shrunk to fit the "
 "viewer.</p>"
 msgstr ""
+"<p>הגדרת הגודל התקני לתמונות להופעה במציג.</p> <p><b>גודל מציג מלא</b> מציין "
+"שהתמונה תימתח או תתכווץ כך שתמלא את חלון המציג.</p> <p><b>גודל התמונה הרגיל</"
+"b> מציין שהתמונה תוצג במלוא ייצוג הפיקסלים שלה.</p> <p><b>גודל התמונה הרגיל "
+"אם ניתן</b> מציין שהתמונה תוצג במלוא ייצוג הפיקסלים שלה אם גודל החלון מתאים "
+"מתאים לכך, אם לא אז היא תכווץ כדי שתופיע בחלון במלואה.</p>"
 
 #: Settings/ViewerPage.cpp:87
 #, kde-format
@@ -5699,11 +6192,13 @@ msgid ""
 "the image. If this option is not set, KPhotoAlbum will use a faster but less "
 "smooth scaling method.</p>"
 msgstr ""
+"<p>בעת הצגת תמונות, KPhotoAlbum בדרך כלל מבצע שינוי קנה מידה חלק של התמונה. "
+"אם האפשרות הזאת לא מוגדרת, KPhotoAlbum ישתמש בשיטת שינוי קנה פחות חלקה.</p>"
 
 #: Settings/ViewerPage.cpp:99
 #, kde-format
 msgid "Video Backend:"
-msgstr "מננון וידאו:"
+msgstr "מנגנון וידאו:"
 
 #: Settings/ViewerSizeConfig.cpp:19
 #, kde-format
@@ -5718,25 +6213,25 @@ msgctxt ""
 msgid "video"
 msgstr "סרטון"
 
-#: ThumbnailView/FilterWidget.cpp:16
+#: ThumbnailView/FilterWidget.cpp:17
 #, kde-format
 msgctxt "Name/title of the filter toolbar widget"
 msgid "Filter Toolbar"
 msgstr "סרגל כלי סינון"
 
-#: ThumbnailView/FilterWidget.cpp:22
+#: ThumbnailView/FilterWidget.cpp:23
 #, kde-format
 msgctxt ""
 "The action enables/disables filtering of images in the thumbnail view."
 msgid "Toggle filter"
 msgstr "החלפת מצב סינון"
 
-#: ThumbnailView/FilterWidget.cpp:24
+#: ThumbnailView/FilterWidget.cpp:25
 #, kde-kuit-format
 msgid "Press <shortcut>Escape</shortcut> to clear filter."
 msgstr "לחיצה <shortcut>Escape</shortcut> תפנה את הסינון."
 
-#: ThumbnailView/FilterWidget.cpp:31
+#: ThumbnailView/FilterWidget.cpp:32
 #, kde-format
 msgid "Filter view by rating: %1 star"
 msgid_plural "Filter view by rating: %1 stars"
@@ -5745,18 +6240,20 @@ msgstr[1] "סינון תצוגה לפי דירוג: שני כוכבים"
 msgstr[2] "סינון תצוגה לפי דירוג: %1 כוכבים"
 msgstr[3] "סינון תצוגה לפי דירוג: %1 כוכבים"
 
-#: ThumbnailView/FilterWidget.cpp:61
+#: ThumbnailView/FilterWidget.cpp:62
 #, kde-format
 msgctxt "The label gives a textual description of the active filter"
 msgid "Filter: %1"
 msgstr "סינון: %1"
 
-#: ThumbnailView/FilterWidget.cpp:84
+#: ThumbnailView/FilterWidget.cpp:85
 #, kde-kuit-format
 msgid ""
 "Tip: Use <shortcut>Alt+Shift+<placeholder>A-Z</placeholder></shortcut> to "
 "toggle a filter for that token."
 msgstr ""
+"עצה: כדאי להשתמש ב־<shortcut>Alt+Shift+<placeholder>A-Z</placeholder></"
+"shortcut> כדי להפעיל/לכבות מסנן לאסימון הזה."
 
 #: ThumbnailView/ThumbnailDND.cpp:93
 #, kde-format
@@ -5767,6 +6264,11 @@ msgid ""
 "have valid timestamps, you should use <b>Maintenance -&gt; Sort All By Date "
 "and Time</b> or <b>View -&gt; Sort Selected By Date and Time</b>.</p>"
 msgstr ""
+"<p><b>באמת לסדר תמונות ממוזערות מחדש?</b></p><p>גרירת התמונות ברחבי מציג "
+"התמונות הממוזערות מסדרת אותן בפועל. שימושי למצבים בהם התאריך המדויק של "
+"התמונה לא ידוע. מצד שני, אם לתמונות יש חותמות זמן תקפות, יש להשתמש "
+"ב<b>תחזוקה -&gt; סידור הכול לפי תאריך ושעה</b> או <b>תצוגה -&gt; סידור "
+"הנבחרים לפי תאריך ושעה</b>.</p>"
 
 #: ThumbnailView/ThumbnailDND.cpp:100
 #, kde-format
@@ -5795,6 +6297,7 @@ msgid ""
 "<p>Could not locate the demo database in any of the following standard "
 "locations:</p><p>%1</p>"
 msgstr ""
+"<p>לא ניתן לאתר את מסד הנתונים להדגמה באף אחד מהמקומות הרגילים:</p><p>%1</p>"
 
 #: Utilities/DescriptionUtil.cpp:54
 #, kde-format
@@ -6147,7 +6650,7 @@ msgstr "הקצאות נוכחיות"
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Set as First Image in Stack"
-msgstr "הגדרה כתמונה הראשונה בערימה"
+msgstr "הגדרה כתמונה הראשונה בערמה"
 
 #: Viewer/ViewerWidget.cpp:203
 #, kde-format
@@ -6398,255 +6901,262 @@ msgctxt "OSD for slideshow, num of seconds per image"
 msgid "%1&nbsp;s"
 msgstr "%1&nbsp;שנ׳"
 
-#: Viewer/ViewerWidget.cpp:1226
+#: Viewer/ViewerWidget.cpp:1227
 #, kde-format
 msgctxt "@title"
 msgid "Edit Image Description"
 msgstr "עריכת תיאור התמונה"
 
-#: Viewer/ViewerWidget.cpp:1226
+#: Viewer/ViewerWidget.cpp:1227
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Image Description"
 msgstr "תיאור התמונה"
 
-#: Viewer/ViewerWidget.cpp:1241
+#: Viewer/ViewerWidget.cpp:1242
 #, kde-format
 msgctxt "@title:inmenu"
 msgid "Seek"
 msgstr "חתירה"
 
-#: Viewer/ViewerWidget.cpp:1263
+#: Viewer/ViewerWidget.cpp:1264
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 minutes backward"
 msgstr "10 שניות אחורה"
 
-#: Viewer/ViewerWidget.cpp:1264
+#: Viewer/ViewerWidget.cpp:1265
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 minute backward"
 msgstr "דקה אחורה"
 
-#: Viewer/ViewerWidget.cpp:1265
+#: Viewer/ViewerWidget.cpp:1266
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 seconds backward"
 msgstr "10 שניות אחורה"
 
-#: Viewer/ViewerWidget.cpp:1266
+#: Viewer/ViewerWidget.cpp:1267
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 seconds backward"
 msgstr "שנייה אחורה"
 
-#: Viewer/ViewerWidget.cpp:1267
+#: Viewer/ViewerWidget.cpp:1268
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "100 milliseconds backward"
 msgstr "100 מילישניות אחורה"
 
-#: Viewer/ViewerWidget.cpp:1268
+#: Viewer/ViewerWidget.cpp:1269
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "100 milliseconds forward"
 msgstr "100 מילישניות קדימה"
 
-#: Viewer/ViewerWidget.cpp:1269
+#: Viewer/ViewerWidget.cpp:1270
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 seconds forward"
 msgstr "שנייה קדימה"
 
-#: Viewer/ViewerWidget.cpp:1270
+#: Viewer/ViewerWidget.cpp:1271
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 seconds forward"
 msgstr "10 שניות קדימה"
 
-#: Viewer/ViewerWidget.cpp:1271
+#: Viewer/ViewerWidget.cpp:1272
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "1 minute forward"
 msgstr "דקה קדימה"
 
-#: Viewer/ViewerWidget.cpp:1272
+#: Viewer/ViewerWidget.cpp:1273
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "10 minutes forward"
 msgstr "10 דקות קדימה"
 
-#: Viewer/ViewerWidget.cpp:1280
+#: Viewer/ViewerWidget.cpp:1281
 #, kde-format
 msgctxt "@action:inmenu Stop video playback"
 msgid "Stop"
 msgstr "עצירה"
 
-#: Viewer/ViewerWidget.cpp:1292
+#: Viewer/ViewerWidget.cpp:1293
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Use current frame in thumbnail view"
 msgstr "להשתמש בתמונית הנוכחית בתצוגת תמונות ממוזערות"
 
-#: Viewer/ViewerWidget.cpp:1299
+#: Viewer/ViewerWidget.cpp:1300
 #, kde-format
 msgctxt "@action:inmenu Restart video playback."
 msgid "Restart"
 msgstr "התחלה מחדש"
 
-#: Viewer/ViewerWidget.cpp:1315
+#: Viewer/ViewerWidget.cpp:1316
 #, kde-format
 msgctxt "@title:inmenu"
 msgid "Filters"
 msgstr "מסננים"
 
-#: Viewer/ViewerWidget.cpp:1318
+#: Viewer/ViewerWidget.cpp:1319
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Remove All Filters"
 msgstr "הסרת כל המסננים"
 
-#: Viewer/ViewerWidget.cpp:1322
+#: Viewer/ViewerWidget.cpp:1323
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Grayscale Filter"
 msgstr "החלת מסנן גווני אפור"
 
-#: Viewer/ViewerWidget.cpp:1327
+#: Viewer/ViewerWidget.cpp:1328
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Contrast Stretching Filter"
 msgstr "החלת מסנן מתיחת ניגודיות"
 
-#: Viewer/ViewerWidget.cpp:1332
+#: Viewer/ViewerWidget.cpp:1333
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Histogram Equalization Filter"
 msgstr "החלת מסנן השוואת הסטוגרמה"
 
-#: Viewer/ViewerWidget.cpp:1337
+#: Viewer/ViewerWidget.cpp:1338
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Apply Monochrome Filter"
 msgstr "החלת מסנן חד גוני"
 
-#: Viewer/ViewerWidget.cpp:1393
+#: Viewer/ViewerWidget.cpp:1394
 #, kde-format
 msgid ""
 "<p>It seems that KPhotoAlbum previously crashed during video playback. On "
 "some platforms, this is a common problem with some video players.</"
 "p><p>Press <i>Continue</i> to let KPhotoAlbum try a different backend...</p>"
 msgstr ""
+"<p>נראה ש־KPhotoAlbum קרס בעבר במהלך נגינת וידאו. בחלק מהפלטפורמות, זאת בעיה "
+"נפוצה עם נגני וידאו מסוימים.</p><p>יש ללחוץ על <i>המשך</i> כדי לגרום ל־"
+"KPhotoAlbum לנסות מנגנון אחר…</p>"
 
-#: Viewer/ViewerWidget.cpp:1397
+#: Viewer/ViewerWidget.cpp:1398
 #, kde-format
 msgid ""
 "<p>Video backend that was interrupted: <tt>%1</tt></p><p>Video backend that "
 "will be used instead: <tt>%2</tt></p>"
 msgstr ""
+"<p>מנגנון הווידאו שנפגע: <tt>%1</tt></p><p>מנגנון הווידאו שיחליף אותו: <tt>"
+"%2</tt></p>"
 
-#: Viewer/ViewerWidget.cpp:1410
+#: Viewer/ViewerWidget.cpp:1411
 #, kde-format
 msgid ""
 "<p>KPhotoAlbum has tried out all available video backends, but every one "
 "crashed at some point.</p><p>Crash detection is now turned off.</p>"
 msgstr ""
+"<p>KPhotoAlbum ניסה את כל מנגנוני הווידאו הזמינים, אבל כל אחד מהם קרס בשלב "
+"כשלהו.</p><p>זיהוי קריסות כבוי כעת.</p>"
 
-#: Viewer/ViewerWidget.cpp:1468
+#: Viewer/ViewerWidget.cpp:1469
 #, kde-format
 msgid "Annotate"
 msgstr "פירוש"
 
-#: Viewer/ViewerWidget.cpp:1487
+#: Viewer/ViewerWidget.cpp:1488
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Help"
 msgstr "עזרה"
 
-#: Viewer/ViewerWidget.cpp:1489
+#: Viewer/ViewerWidget.cpp:1490
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Annotation Dialog"
 msgstr "חלונית פירוש"
 
-#: Viewer/ViewerWidget.cpp:1490
+#: Viewer/ViewerWidget.cpp:1491
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Add tag"
 msgstr "הוספת תגית"
 
-#: Viewer/ViewerWidget.cpp:1490
+#: Viewer/ViewerWidget.cpp:1491
 #, kde-format
 msgctxt "short cut for add tag"
 msgid "CTRL+a"
 msgstr "CTRL+a"
 
-#: Viewer/ViewerWidget.cpp:1493
+#: Viewer/ViewerWidget.cpp:1494
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Copy Data from Previous Image"
 msgstr "העתקת נתונים מהתמונה הקודמת"
 
-#: Viewer/ViewerWidget.cpp:1494
+#: Viewer/ViewerWidget.cpp:1495
 #, kde-format
 msgctxt "Shortcut for copy annotations from previous image"
 msgid "CTRL+c"
 msgstr "CTRL+c"
 
-#: Viewer/ViewerWidget.cpp:1497
+#: Viewer/ViewerWidget.cpp:1498
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Edit Description"
 msgstr "עריכת תיאור"
 
-#: Viewer/ViewerWidget.cpp:1498
+#: Viewer/ViewerWidget.cpp:1499
 #, kde-format
 msgctxt "Shortcut for add description to image"
 msgid "CTRL+d"
 msgstr "CTRL+d"
 
-#: Viewer/ViewerWidget.cpp:1501
+#: Viewer/ViewerWidget.cpp:1502
 #, kde-format
 msgid "Annotation Mode"
 msgstr "מצב פירוש"
 
-#: Viewer/ViewerWidget.cpp:1503
+#: Viewer/ViewerWidget.cpp:1504
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Locked"
 msgstr "נעול"
 
-#: Viewer/ViewerWidget.cpp:1504
+#: Viewer/ViewerWidget.cpp:1505
 #, kde-format
 msgctxt "Shortcut for turning of annotations in the viewer"
 msgid "CTRL+l"
 msgstr "CTRL+l"
 
-#: Viewer/ViewerWidget.cpp:1508
+#: Viewer/ViewerWidget.cpp:1509
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Assign Tags"
 msgstr "הקצאת תגיות"
 
-#: Viewer/ViewerWidget.cpp:1509
+#: Viewer/ViewerWidget.cpp:1510
 #, kde-format
 msgctxt "Shortcut for turning annotations mode to annotating"
 msgid "F2"
 msgstr "F2"
 
-#: Viewer/ViewerWidget.cpp:1512
+#: Viewer/ViewerWidget.cpp:1513
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Assign Tokens"
 msgstr "הקצאת אסימונים"
 
-#: Viewer/ViewerWidget.cpp:1513
+#: Viewer/ViewerWidget.cpp:1514
 #, kde-format
 msgctxt "Shortcut for turning annotations mode to tokenizing"
 msgid "CTRL+t"
 msgstr "CTRL+t"
 
-#: Viewer/ViewerWidget.cpp:1676
+#: Viewer/ViewerWidget.cpp:1677
 #, kde-format
 msgid "Token %1"
 msgstr "אסימון %1"
@@ -6705,6 +7215,77 @@ msgstr "הצגת גודל תמונה"
 #, kde-format
 msgid "Show Rating"
 msgstr "הצגת דירוג"
+
+#~ msgid ""
+#~ "<h1>Overview</h1><p>Below you may see the list of compile- and runtime "
+#~ "features KPhotoAlbum has, and their status:</p>%1"
+#~ msgstr ""
+#~ "<h1>סקירה</h1><p>להלן רשימת יכולות מההידור וההרצה שיש ל־KPhotoAlbum והמצב "
+#~ "שלהן:</p>%1"
+
+#~ msgid ""
+#~ "<h1>What can I do if I miss a feature?</h1><p>If you compiled KPhotoAlbum "
+#~ "yourself, then please review the sections below to learn what to install "
+#~ "to get the feature in question. If on the other hand you installed "
+#~ "KPhotoAlbum from a binary package, please tell whoever made the package "
+#~ "about this defect, eventually including the information from the section "
+#~ "below.</p><p>In case you are missing a feature and you did not compile "
+#~ "KPhotoAlbum yourself, please do consider doing so. It really is not that "
+#~ "hard. If you need help compiling KPhotoAlbum, feel free to ask on the <a "
+#~ "href=\"https://mail.kde.org/cgi-bin/mailman/listinfo/kphotoalbum"
+#~ "\">KPhotoAlbum mailing list</a></p><p>The steps to compile KPhotoAlbum "
+#~ "can be seen on <a href=\"https://community.kde.org/KPhotoAlbum/"
+#~ "build_instructions\">the KPhotoAlbum home page</a>. If you have never "
+#~ "compiled a KDE application, then please ensure that you have the "
+#~ "developer packages installed, in most distributions they go under names "
+#~ "like kdelibs<i>-devel</i></p>"
+#~ msgstr ""
+#~ "<h1>מה לעשות אם חסרה לי יכולת כלשהי?</h1><p>אם הידרת את KPhotoAlbum "
+#~ "בעצמך, נא לעיין בסעיפים שלהלן כדי להבין מה להתקין כדי להשיג את היכולת "
+#~ "המבוקשת. אם, מאידך גיסא, התקנת את KPhotoAlbum מחבילה בינרית, נא לדווח "
+#~ "ליוצרי החבילה על הפגם הזה לצד פרטים מהמקטע שלהלן.</p><p>אם חסרה לך יכולת "
+#~ "ולא הידרת את KPhotoAlbum בעצמך, נא לשקול לעשות זאת. זה באמת לא כל כך "
+#~ "מסובך. לקבלת עזרה בהידור KPhotoAlbum, אפשר לשאול ב<a href=\"https://mail."
+#~ "kde.org/cgi-bin/mailman/listinfo/kphotoalbum\">רשימת הדיוור של "
+#~ "KPhotoAlbum</a></p><p>ניתן למצוא את השלבים להידור KPhotoAlbum ב<a href="
+#~ "\"https://community.kde.org/KPhotoAlbum/build_instructions\">אתר הבית של "
+#~ "KPhotoAlbum</a>. אם מעולם לא הידרת יישומים של KDE, מוטב לוודא שמותקנות "
+#~ "אצלך חבילות הפיתוח, ברוב ההפצות הן מופיעות בשמות כגון kdelibs<i>-devel</"
+#~ "i></p>"
+
+#~ msgid ""
+#~ "<h1><a name=\"video\">Video support</a></h1><p>KPhotoAlbum relies on "
+#~ "phonon or VLC for displaying videos</p>"
+#~ msgstr ""
+#~ "<h1><a name=\"video\">תמיכה בווידאו</a></h1><p>KPhotoAlbum מסתמך על "
+#~ "phonon או על VLC להצגת סרטונים</p>"
+
+#~ msgid ""
+#~ "<h1><a name=\"videoPreview\">Video thumbnail support</a></"
+#~ "h1><p>KPhotoAlbum can use <tt>ffmpeg</tt> to extract thumbnails from "
+#~ "videos. These thumbnails are used to preview videos in the thumbnail "
+#~ "viewer.</p>"
+#~ msgstr ""
+#~ "<h1><a name=\"videoPreview\">תמיכה בתצוגות וידאו ממוזערות</a></"
+#~ "h1><p>KPhotoAlbum יכול להשתמש ב־<tt>ffmpeg</tt> כדי לחלץ תמונות ממוזערות "
+#~ "מסרטונים. התמונות הממוזערות האלה משמשות בתצוגות מקדימות של סרטונים במציג "
+#~ "התמונות הממוזערות.</p>"
+
+#~ msgid ""
+#~ "<h1><a name=\"videoInfo\">Video metadata support</a></h1><p>KPhotoAlbum "
+#~ "can use <tt>ffprobe</tt> to extract length information from videos.</"
+#~ "p><p>Correct length information is necessary for correct rendering of "
+#~ "video thumbnails.</p>"
+#~ msgstr ""
+#~ "<h1><a name=\"videoInfo\">תמיכה בנתוני על של וידאו</a></h1><p>KPhotoAlbum "
+#~ "יכול להשתמש ב־<tt>ffprobe</tt> יכול לחלץ פרטי אורך מסרטונים.</p><p>פרטי "
+#~ "האורך הנכונים נחוצים לעיבוד נכון של תצוגות וידאו ממוזערות.</p>"
+
+#~ msgid "Plug-ins available"
+#~ msgstr "תוספים זמינים"
+
+#~ msgid "SQLite database support (used for Exif searches)"
+#~ msgstr "תמיכה במסד נתונים מסוג SQLite (משמש לחיפושי Exif)"
 
 #~ msgid "KPhotoAlbum only supports database files named 'index.xml'."
 #~ msgstr "ב־KPhotoAlbum יש תמיכה רק בקובצי מסדי נתונים בשם ‚index.xml’."
