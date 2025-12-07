@@ -1,18 +1,18 @@
 // SPDX-FileCopyrightText: 2006-2007 Tuomas Suutari <tuomas@nepnep.net>
 // SPDX-FileCopyrightText: 2006-2014 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2007-2009 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2007 Laurent Montel <montel@kde.org>
-// SPDX-FileCopyrightText: 2007-2009 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2009 Andrew Coles <andrew.i.coles@googlemail.com>
 // SPDX-FileCopyrightText: 2009 Hassan Ibraheem <hasan.ibraheem@gmail.com>
 // SPDX-FileCopyrightText: 2009 Henner Zeller <h.zeller@acm.org>
-// SPDX-FileCopyrightText: 2012-2020 Yuri Chornoivan <yurchor@ukr.net>
 // SPDX-FileCopyrightText: 2012-2013 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2012-2020 Yuri Chornoivan <yurchor@ukr.net>
+// SPDX-FileCopyrightText: 2013-2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2014-2020 Robert Krawitz <rlk@alum.mit.edu>
-// SPDX-FileCopyrightText: 2014-2020 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2014-2024 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2015 Andreas Neustifter <andreas.neustifter@gmail.com>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
-// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -34,9 +34,8 @@
 #include <QFile>
 #include <QHash>
 #include <QLocale>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStandardPaths>
-#include <QTextCodec>
 #include <QTextStream>
 
 void DB::FileReader::read(const QString &configFile)
@@ -54,16 +53,17 @@ void DB::FileReader::read(const QString &configFile)
 
     if (m_fileVersion > DB::ImageDB::fileVersion()) {
         DB::UserFeedback ret = m_db->uiDelegate().warningContinueCancel(
-            DB::LogMessage { DBLog(), QString::fromLatin1("index.xml version %1 is newer than %2!").arg(m_fileVersion).arg(DB::ImageDB::fileVersion()) },
-            i18n("<p>The database file (index.xml) is from a newer version of KPhotoAlbum!</p>"
+            DB::LogMessage { DBLog(), QString::fromLatin1("%1 version %2 is newer than %3!").arg(configFile).arg(m_fileVersion).arg(DB::ImageDB::fileVersion()) },
+            i18n("<p>The XML database file is from a newer version of KPhotoAlbum!</p>"
                  "<p>Chances are you will be able to read this file, but when writing it back, "
                  "information saved in the newer version will be lost</p>"),
-            i18n("index.xml version mismatch"), QString::fromLatin1("checkDatabaseFileVersion"));
+            i18n("XML database file version mismatch"), QString::fromLatin1("checkDatabaseFileVersion"));
         if (ret != DB::UserFeedback::Confirm)
             exit(-1);
     }
 
     setUseCompressedFileFormat(reader->attribute(compressedString).toInt());
+    qCDebug(DBLog) << "Reading" << (useCompressedFileFormat() ? "compressed" : "uncompressed") << "file format.";
 
     m_db->m_members.setLoading(true);
 
@@ -88,7 +88,7 @@ void DB::FileReader::createSpecialCategories()
     m_folderCategory = new DB::Category(i18n("Folder"), QString::fromLatin1("folder"),
                                         DB::Category::TreeView, 32, false);
     m_folderCategory->setType(DB::Category::FolderCategory);
-    // The folder category is not stored in the index.xml file,
+    // The folder category is not stored in the XML database file,
     // but older versions of KPhotoAlbum stored a stub entry, which we need to remove first:
     if (m_db->m_categoryCollection.categoryForName(m_folderCategory->name()))
         m_db->m_categoryCollection.removeCategory(m_folderCategory->name());
@@ -249,7 +249,7 @@ void DB::FileReader::loadCategories(ReaderPtr reader)
 
     if (m_fileVersion < 7) {
         m_db->uiDelegate().information(
-            DB::LogMessage { DBLog(), QString::fromLatin1("Standard category names are no longer used since index.xml "
+            DB::LogMessage { DBLog(), QString::fromLatin1("Standard category names are no longer used since XML database "
                                                           "version 7. Standard categories will be left untranslated from now on.") },
             i18nc("Leave \"Folder\" and \"Media Type\" untranslated below, those will show up with "
                   "these exact names. Thanks :-)",
@@ -349,7 +349,7 @@ void DB::FileReader::loadMemberGroups(ReaderPtr reader)
                 for (const QString &memberItem : members) {
                     DB::CategoryPtr catPtr = m_db->m_categoryCollection.categoryForName(category);
                     if (!catPtr) { // category was not declared in "Categories"
-                        qCWarning(DBLog) << "File corruption in index.xml. Inserting missing category: " << category;
+                        qCWarning(DBLog) << "File corruption in XML database file. Inserting missing category: " << category;
                         catPtr = new DB::Category(category, QString::fromUtf8("dialog-warning"), DB::Category::TreeView, 32, false);
                         m_db->m_categoryCollection.addCategory(catPtr);
                     }
@@ -406,7 +406,7 @@ void DB::FileReader::loadSettings(ReaderPtr reader)
                 m_db->m_settings.insert(unescape(reader->attribute(keyString)),
                                         unescape(reader->attribute(valueString)));
             } else {
-                qWarning() << "File corruption in index.xml. Setting either lacking a key or a "
+                qWarning() << "File corruption in XML database file. Setting either lacking a key or a "
                            << "value attribute. Ignoring this entry.";
             }
             reader->readEndElement();
@@ -515,7 +515,7 @@ DB::ReaderPtr DB::FileReader::readConfigFile(const QString &configFile)
     QFile file(configFile);
     if (!file.exists()) {
         // Load a default setup
-        QFile file(QStandardPaths::locate(QStandardPaths::DataLocation, QString::fromLatin1("default-setup")));
+        QFile file(QStandardPaths::locate(QStandardPaths::AppLocalDataLocation, QString::fromLatin1("default-setup")));
         if (!file.open(QIODevice::ReadOnly)) {
             m_db->uiDelegate().information(
                 DB::LogMessage { DBLog(), QString::fromLatin1("default-setup not found in standard paths.") },
@@ -530,7 +530,6 @@ DB::ReaderPtr DB::FileReader::readConfigFile(const QString &configFile)
                 i18n("No default setup file found"));
         } else {
             QTextStream stream(&file);
-            stream.setCodec(QTextCodec::codecForName("UTF-8"));
             QString str = stream.readAll();
 
             // Replace the default setup's category and tag names with localized ones
@@ -539,9 +538,9 @@ DB::ReaderPtr DB::FileReader::readConfigFile(const QString &configFile)
             str = str.replace(QString::fromUtf8("Events"), i18n("Events"));
             str = str.replace(QString::fromUtf8("untagged"), i18n("untagged"));
 
-            str = str.replace(QRegExp(QString::fromLatin1("imageDirectory=\"[^\"]*\"")), QString::fromLatin1(""));
-            str = str.replace(QRegExp(QString::fromLatin1("htmlBaseDir=\"[^\"]*\"")), QString::fromLatin1(""));
-            str = str.replace(QRegExp(QString::fromLatin1("htmlBaseURL=\"[^\"]*\"")), QString::fromLatin1(""));
+            str = str.replace(QRegularExpression(QStringLiteral("imageDirectory=\"[^\"]*\"")), QString());
+            str = str.replace(QRegularExpression(QStringLiteral("htmlBaseDir=\"[^\"]*\"")), QString());
+            str = str.replace(QRegularExpression(QStringLiteral("htmlBaseURL=\"[^\"]*\"")), QString());
             reader->addData(str);
         }
     } else {
@@ -560,7 +559,7 @@ DB::ReaderPtr DB::FileReader::readConfigFile(const QString &configFile)
 
         if ( !doc.setContent( &file, false, &errMsg, &errLine, &errCol )) {
             file.close();
-            // If parsing index.xml fails let's see if we could use a backup instead
+            // If parsing XML database file fails let's see if we could use a backup instead
             Utilities::checkForBackupFile( configFile, i18n( "line %1 column %2 in file %3: %4", errLine , errCol , configFile , errMsg ) );
             if ( !file.open( QIODevice::ReadOnly ) || ( !doc.setContent( &file, false, &errMsg, &errLine, &errCol ) ) ) {
                 KMessageBox::error( messageParent(), i18n( "Failed to recover the backup: %1", errMsg ) );
@@ -608,19 +607,23 @@ QString DB::FileReader::unescape(const QString &str)
 
     QString tmp(str);
     // Matches encoded characters in attribute names
-    QRegExp rx(QString::fromLatin1("(_.)([0-9A-F]{2})"));
+    QRegularExpression rx(QStringLiteral("(_.)([0-9A-F]{2})"));
     int pos = 0;
 
     // Unencoding special characters if compressed XML is selected
+    // FIXME: KF6 port: Please review if this still does the same as the QRegExp stuff did
     if (useCompressedFileFormat()) {
-        while ((pos = rx.indexIn(tmp, pos)) != -1) {
-            QString before = rx.cap(1) + rx.cap(2);
-            QString after = QString::fromLatin1(QByteArray::fromHex(rx.cap(2).toLocal8Bit()));
+        auto match = rx.match(tmp);
+        while (match.hasMatch()) {
+            QString before = match.captured(1) + match.captured(2);
+            QString after = QString::fromLatin1(QByteArray::fromHex(match.captured(2).toLocal8Bit()));
             tmp.replace(pos, before.length(), after);
             pos += after.length();
+            match = rx.match(tmp, pos);
         }
-    } else
-        tmp.replace(QString::fromLatin1("_"), QString::fromLatin1(" "));
+    } else {
+        tmp.replace(QStringLiteral("_"), QStringLiteral(" "));
+    }
 
     s_cache.insert(str, tmp);
     return tmp;

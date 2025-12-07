@@ -1,7 +1,18 @@
-/* SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
+// SPDX-FileCopyrightText: 2003 David Faure <faure@kde.org>
+// SPDX-FileCopyrightText: 2003-2012 Jesper K. Pedersen <jesper.pedersen@kdab.com>
+// SPDX-FileCopyrightText: 2005 Steffen Hansen <hansen@kde.org>
+// SPDX-FileCopyrightText: 2005-2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2006-2007 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2007 Laurent Montel <montel@kde.org>
+// SPDX-FileCopyrightText: 2007-2010 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2012 Miika Turkia <miika.turkia@gmail.com>
+// SPDX-FileCopyrightText: 2013-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2018 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2020 Nicolas Fella <nicolas.fella@gmx.de>
+// SPDX-FileCopyrightText: 2020-2024 Tobias Leupold <tl@stonemx.de>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "ImageLoaderThread.h"
 
@@ -11,15 +22,13 @@
 #include "RawImageDecoder.h"
 
 #include <Utilities/FastJpeg.h>
-#include <Utilities/ImageUtil.h>
+#include <kpabase/ImageUtil.h>
 #include <kpabase/Logging.h>
 #include <kpathumbnails/ThumbnailCache.h>
 
 #include <QApplication>
 #include <QFileInfo>
 #include <QLoggingCategory>
-
-#include <qmatrix.h>
 
 namespace ImageManager
 {

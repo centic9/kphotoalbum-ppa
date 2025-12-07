@@ -1,6 +1,6 @@
 <!--
-SPDX-FileCopyrightText: 2022-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-SPDX-FileCopyrightText: 2022-2023 Tobias Leupold <tl at stonemx dot de>
+SPDX-FileCopyrightText: 2022-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+SPDX-FileCopyrightText: 2022-2025 Tobias Leupold <tl@stonemx.de>
 
 SPDX-License-Identifier: CC-BY-SA-4.0
 
@@ -32,22 +32,48 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 The change log for older releases (before 5.9.0) can be found in CHANGELOG.old.
 
-(Unreleased)
-------------
+KPhotoAlbum 6.0.1 (2025-01-06)
+------------------------------
 
 ### Added
-
-### Changed
-
-### Dependencies
-
-### Deprecated
+ - Support database file names other than index.xml (#418647)
 
 ### Fixed
+ - Fix application icon on Wayland
+ - Fix crash when video thumbnail cache contains empty files (#497831)
+ - The "Configure KPhotoAlbum" menu entry is now shown again
+ - Category names containing non-ASCII characters saved using the "fast" database format are escaped correctly again
+ - Clicking on a tag in the Viewers's info box shows the respective tag in the browser again
+ - When the main window is closed and the viewer is opened, it is also closed now automatically. This is what one would expect, and it also fixes crashing e.g. when the user clicks on an info box link with the main window already closed. Additionally, if the annotation dialog is open, we now also try to close it. If this doesn't succeed (e.g. because there are pending changes and the user didn't agree to discard them) the close query is aborted.
 
-### Removed
 
-### Security
+KPhotoAlbum 6.0.0 (2024-12-07)
+------------------------------
+
+### Changed
+ - KPhotoAlbum has been ported to Qt6/KF6. The Qt5/KF5 compatibility has been dropped with this release.
+
+
+KPhotoAlbum 5.13.0 (2024-10-09)
+-------------------------------
+
+### Changed
+ - Reworked the "time ago"/birthday/age calculation. Timespans should now be displayed in a nicer (more natural) way. Also, the age of people born on February 29 is now calculated correctly.
+ - The '--db' command line argument now rejects any file name that is not either an existing directory or an index.xml file within an existing directory (#418647).
+
+### Fixed
+ - Fix crash when trying to unset the untagged tag via the settings dialog (#477529)
+ - Fix crash when renaming or adding a category in the settings dialog and immediately using it as untagged category (#477530)
+ - Fix crash when deleting a category via the settings dialog and then opening the settings dialog and clicking "OK" or "Apply" (#477531)
+ - Fix crash when deleting a category via the settings dialog while the browser is showing the associated category page (#477532)
+ - Fix background color in Viewer when the image is zoomed (#478944)
+ - Fix crash when deleting an image that was already marked for deletion via the viewer window.
+ - Avoid jumping to the first image if an image is deleted in the annotation dialog (#479483)
+ - Disallow creation of tags with leading/trailing whitespace, as they cannot be selected afterwards (#481181)
+ - Fix crash when multiple images are selected for annotation and one is deleted (#483266)
+ - Fix selective rebuilding of video file thumbnails (#444744)
+ - Fix crash when opening viewer after video playback previously crashed
+ - Fix endless loop if an unavailable video backend is configured (#493849)
 
 
 KPhotoAlbum 5.12.0 (2023-11-27)
@@ -61,7 +87,7 @@ KPhotoAlbum 5.12.0 (2023-11-27)
    Natural sort order takes the locale into account and sorts numeric values properly (e.g. sort "9" before "10").
  - Allow selecting a date range in the DateBar via keyboard (Use "Shift + Left|Right")
  - Allow closing the annotation dialog's fullscreen preview using the Escape key.
- 
+
 ### Changed
  - In the viewer window, using the letters A-Z to assign tokens now needs to be explicitly enabled.
    You can do this by opening the context menu and selecting "Annotate | Assign Tokens".
@@ -116,6 +142,7 @@ KPhotoAlbum 5.11.0 (2023-07-12)
  - Fix crash when the annotation dialog is opened from the viewer window and the viewer is closed before the annotation dialog (#470889)
  - Fix inconsistent UI where menu actions would not immediately be updated to reflect a change (#472109, #472113)
 
+
 KPhotoAlbum 5.10.0 (2023-03-25)
 -------------------------------
 
@@ -147,6 +174,7 @@ KPhotoAlbum 5.10.0 (2023-03-25)
  - Default shortcut for "View" images was removed.<br>
    Pressing "Enter" to open the viewer is now the preferred way.
    To restore the old behavior, reassign the shortcut via "Settings | Configure Keyboard Shortcuts...".
+
 
 KPhotoAlbum 5.9.1 (2022-09-05)
 ------------------------------

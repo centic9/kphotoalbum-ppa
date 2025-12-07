@@ -1,5 +1,6 @@
-// SPDX-FileCopyrightText: 2003 - 2022 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2022 Jesper K. Pedersen <blackie@kde.org>
 // SPDX-FileCopyrightText: 2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -21,7 +22,9 @@
 #include <QPainter>
 #include <QResizeEvent>
 #include <QTimer>
+
 #include <cmath>
+#include <utility>
 
 /**
    Area displaying the actual image in the viewer.
@@ -73,7 +76,7 @@ Viewer::ImageDisplay::ImageDisplay(QWidget *parent)
 
 void Viewer::ImageDisplay::mousePressEvent(QMouseEvent *event)
 {
-    QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
+    QMouseEvent e(event->type(), QPointF(mapPos(event->position().toPoint())), event->position(), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
     bool block = m_viewHandler->mousePressEvent(&e, event->pos(), ratio);
     if (!block)
@@ -83,7 +86,7 @@ void Viewer::ImageDisplay::mousePressEvent(QMouseEvent *event)
 
 void Viewer::ImageDisplay::mouseMoveEvent(QMouseEvent *event)
 {
-    QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
+    QMouseEvent e(event->type(), QPointF(mapPos(event->position().toPoint())), event->position(), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
     bool block = m_viewHandler->mouseMoveEvent(&e, event->pos(), ratio);
     if (!block)
@@ -94,7 +97,7 @@ void Viewer::ImageDisplay::mouseMoveEvent(QMouseEvent *event)
 void Viewer::ImageDisplay::mouseReleaseEvent(QMouseEvent *event)
 {
     m_cache.remove(m_curIndex);
-    QMouseEvent e(event->type(), mapPos(event->pos()), event->button(), event->buttons(), event->modifiers());
+    QMouseEvent e(event->type(), QPointF(mapPos(event->position().toPoint())), event->position(), event->button(), event->buttons(), event->modifiers());
     double ratio = sizeRatio(QSize(m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y()), size());
     bool block = m_viewHandler->mouseReleaseEvent(&e, event->pos(), ratio);
     if (!block) {
@@ -111,7 +114,7 @@ bool Viewer::ImageDisplay::setImageImpl(DB::ImageInfoPtr info, bool forward)
 
     // Find the index of the current image
     m_curIndex = 0;
-    for (const DB::FileName &filename : qAsConst(m_imageList)) {
+    for (const DB::FileName &filename : std::as_const(m_imageList)) {
         if (filename == info->fileName())
             break;
         ++m_curIndex;
@@ -204,14 +207,6 @@ QPoint Viewer::ImageDisplay::mapPos(QPoint p)
     return QPoint(x, y);
 }
 
-void Viewer::ImageDisplay::xformPainter(QPainter *p)
-{
-    QPoint off = offset(qAbs(m_zEnd.x() - m_zStart.x()), qAbs(m_zEnd.y() - m_zStart.y()), width(), height(), nullptr);
-    double s = (width() - 2 * off.x()) / qAbs((double)m_zEnd.x() - m_zStart.x());
-    p->scale(s, s);
-    p->translate(-m_zStart.x(), -m_zStart.y());
-}
-
 void Viewer::ImageDisplay::zoomIn()
 {
     qCDebug(ViewerLog, "zoomIn()");
@@ -268,6 +263,8 @@ void Viewer::ImageDisplay::cropAndScale()
 
     if (m_zStart != QPoint(0, 0) || m_zEnd != QPoint(m_loadedImage.width(), m_loadedImage.height())) {
         qCDebug(ViewerLog) << "cropAndScale(): using cropped image" << m_zStart << "-" << m_zEnd;
+        // we request a copy that is bigger than the loaded image
+        // copy fills the pixels outside the loaded image with transparent pixels
         m_croppedAndScaledImg = m_loadedImage.copy(m_zStart.x(), m_zStart.y(), m_zEnd.x() - m_zStart.x(), m_zEnd.y() - m_zStart.y());
     } else {
         qCDebug(ViewerLog) << "cropAndScale(): using full image.";
@@ -507,7 +504,8 @@ void Viewer::ImageDisplay::pixmapLoaded(ImageManager::ImageRequest *request, con
             m_reloadImageInProgress = false;
         }
 
-        m_loadedImage = image;
+        // for zoom operations we need a format with alpha channel (see cropAndScale())
+        m_loadedImage = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         cropAndScale();
         Q_EMIT imageReady();
     } else {
@@ -590,7 +588,7 @@ void Viewer::ImageDisplay::updatePreload()
 int Viewer::ImageDisplay::indexOf(const DB::FileName &fileName)
 {
     int i = 0;
-    for (const DB::FileName &name : qAsConst(m_imageList)) {
+    for (const DB::FileName &name : std::as_const(m_imageList)) {
         if (name == fileName)
             break;
         ++i;

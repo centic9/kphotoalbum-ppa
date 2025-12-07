@@ -1,10 +1,13 @@
-/* SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
+// SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
+//
+// SPDX-License-Identifier: GPL-2.0-or-later
 
-   SPDX-License-Identifier: GPL-2.0-or-later
-*/
 #ifndef EXIFPAGE_H
 #define EXIFPAGE_H
+
 #include <QComboBox>
+#include <QStringList>
 #include <QWidget>
 
 namespace Exif
@@ -24,6 +27,7 @@ public:
     void saveSettings(Settings::SettingsData *);
 
 private:
+    const QStringList m_availableCodecs;
     Exif::TreeView *m_exifForViewer;
     Exif::TreeView *m_exifForDialog;
     QComboBox *m_iptcCharset;

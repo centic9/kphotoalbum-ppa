@@ -1,7 +1,7 @@
-/* SPDX-FileCopyrightText: 2012-2020 The KPhotoAlbum Development Team
-
-   SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
-*/
+// SPDX-FileCopyrightText: 2012-2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
+//
+// SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
 #include "DuplicateMatch.h"
 
@@ -22,6 +22,8 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 #include <QVariant>
+
+#include <utility>
 
 namespace MainWindow
 {
@@ -52,7 +54,7 @@ DuplicateMatch::DuplicateMatch(const DB::FileNameList &files)
     QVBoxLayout *optionsLayout = new QVBoxLayout(options);
     connect(m_merge, &QCheckBox::toggled, options, &QWidget::setEnabled);
 
-    QLabel *label = new QLabel(i18n("Select target:"));
+    QLabel *label = new QLabel(i18n("Select image to keep:"));
     optionsLayout->addWidget(label);
 
     bool first = true;
@@ -106,7 +108,7 @@ void DuplicateMatch::execute(Utilities::DeleteMethod method)
         return;
 
     DB::FileName destination;
-    for (const QRadioButton *button : qAsConst(m_buttons)) {
+    for (const QRadioButton *button : std::as_const(m_buttons)) {
         if (button->isChecked()) {
             destination = button->property("data").value<DB::FileName>();
             break;
@@ -114,7 +116,7 @@ void DuplicateMatch::execute(Utilities::DeleteMethod method)
     }
 
     DB::FileNameList deleteList, dupList;
-    for (const QRadioButton *button : qAsConst(m_buttons)) {
+    for (const QRadioButton *button : std::as_const(m_buttons)) {
         if (button->isChecked())
             continue;
         DB::FileName fileName = button->property("data").value<DB::FileName>();

@@ -2,13 +2,13 @@
 // SPDX-FileCopyrightText: 2006-2014 Jesper K. Pedersen <jesper.pedersen@kdab.com>
 // SPDX-FileCopyrightText: 2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2007 Laurent Montel <montel@kde.org>
-// SPDX-FileCopyrightText: 2008-2011 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2008-2009 Henner Zeller <h.zeller@acm.org>
-// SPDX-FileCopyrightText: 2012 Yuri Chornoivan <yurchor@ukr.net>
+// SPDX-FileCopyrightText: 2008-2011 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2012-2013 Miika Turkia <miika.turkia@gmail.com>
-// SPDX-FileCopyrightText: 2014-2020 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2012-2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012 Yuri Chornoivan <yurchor@ukr.net>
+// SPDX-FileCopyrightText: 2014-2024 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2018-2020 Robert Krawitz <rlk@alum.mit.edu>
-// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -31,7 +31,10 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMutexLocker>
+#include <QRegularExpression>
 #include <QXmlStreamWriter>
+
+#include <utility>
 
 //
 //
@@ -62,9 +65,10 @@ constexpr QFileDevice::Permissions FILE_PERMISSIONS { QFile::ReadOwner | QFile::
 void DB::FileWriter::save(const QString &fileName, bool isAutoSave)
 {
     setUseCompressedFileFormat(Settings::SettingsData::instance()->useCompressedIndexXML());
+    qCDebug(DBLog) << "Saving" << (useCompressedFileFormat() ? "compressed" : "uncompressed") << "file format.";
 
     if (!isAutoSave)
-        NumberedBackup(m_db->uiDelegate()).makeNumberedBackup();
+        NumberedBackup(m_db->uiDelegate(), fileName).makeNumberedBackup();
 
     // prepare XML document for saving:
     m_db->m_categoryCollection.initIdMap();
@@ -102,7 +106,7 @@ void DB::FileWriter::save(const QString &fileName, bool isAutoSave)
     writer.writeEndDocument();
     qCDebug(TimingLog) << "DB::FileWriter::save(): Saving took" << timer.elapsed() << "ms";
 
-    // State: index.xml has previous DB version, index.xml.tmp has the current version.
+    // State: XML file has previous DB version, temp file has the current version.
 
     // original file can be safely deleted
     if ((!QFile::remove(fileName)) && QFile::exists(fileName)) {
@@ -113,17 +117,17 @@ void DB::FileWriter::save(const QString &fileName, bool isAutoSave)
             i18n("Error while saving..."));
         return;
     }
-    // State: index.xml doesn't exist, index.xml.tmp has the current version.
+    // State: XML file doesn't exist, temp file has the current version.
     if (!out.rename(fileName)) {
         m_db->uiDelegate().error(
-            DB::LogMessage { DBLog(), QStringLiteral("Renaming index.xml to '%1' failed.").arg(out.fileName()) }, i18n("<p>Failed to move temporary XML file to permanent location.</p>"
-                                                                                                                       "<p>Please try again or rename file %1 to %2 manually!</p>",
-                                                                                                                       out.fileName(), fileName),
+            DB::LogMessage { DBLog(), QStringLiteral("Renaming '%1' to '%2' failed.").arg(out.fileName().arg(fileName)) }, i18n("<p>Failed to move temporary XML file to permanent location.</p>"
+                                                                                                                                "<p>Please try again or rename file %1 to %2 manually!</p>",
+                                                                                                                                out.fileName(), fileName),
             i18n("Error while saving..."));
-        // State: index.xml.tmp has the current version.
+        // State: temp file has the current version.
         return;
     }
-    // State: index.xml has the current version.
+    // State: XML file has the current version.
 }
 
 void DB::FileWriter::saveCategories(QXmlStreamWriter &writer)
@@ -153,7 +157,7 @@ void DB::FileWriter::saveCategories(QXmlStreamWriter &writer)
 
         // As bug 423334 shows, it is easy to forget to add a group to the respective category
         // when it's created. We can not enforce correct creation of member groups in our API,
-        // but we can prevent incorrect data from entering index.xml.
+        // but we can prevent incorrect data from entering the XML file.
         const auto categoryItems = Utilities::mergeListsUniqly(category->items(), m_db->memberMap().groups(name));
         for (const QString &tagName : categoryItems) {
             ElementWriter dummy(writer, QStringLiteral("value"));
@@ -182,7 +186,7 @@ void DB::FileWriter::saveImages(QXmlStreamWriter &writer)
     {
         ElementWriter dummy(writer, QStringLiteral("images"));
 
-        for (const DB::ImageInfoPtr &infoPtr : qAsConst(list)) {
+        for (const DB::ImageInfoPtr &infoPtr : std::as_const(list)) {
             save(writer, infoPtr);
         }
     }
@@ -194,7 +198,7 @@ void DB::FileWriter::saveBlockList(QXmlStreamWriter &writer)
     QList<DB::FileName> blockList(m_db->m_blockList.begin(), m_db->m_blockList.end());
     // sort blocklist to get diffable files
     std::sort(blockList.begin(), blockList.end());
-    for (const DB::FileName &block : qAsConst(blockList)) {
+    for (const DB::FileName &block : std::as_const(blockList)) {
         ElementWriter dummy(writer, QStringLiteral("block"));
         writer.writeAttribute(QStringLiteral("file"), block.relative());
     }
@@ -246,7 +250,7 @@ void DB::FileWriter::saveMemberGroups(QXmlStreamWriter &writer)
                 const auto groupMapItValue = groupMapIt.value();
                 QStringList members(groupMapItValue.begin(), groupMapItValue.end());
                 std::sort(members.begin(), members.end());
-                for (const QString &member : qAsConst(members)) {
+                for (const QString &member : std::as_const(members)) {
                     ElementWriter dummy(writer, QStringLiteral("member"));
                     writer.writeAttribute(QStringLiteral("category"), memberMapIt.key());
                     writer.writeAttribute(QStringLiteral("group-name"), groupMapIt.key());
@@ -384,7 +388,7 @@ void DB::FileWriter::writeCategories(QXmlStreamWriter &writer, const DB::ImageIn
             writer.writeAttribute(QStringLiteral("name"), name);
         }
 
-        for (const QString &itemValue : qAsConst(items)) {
+        for (const QString &itemValue : std::as_const(items)) {
             ElementWriter dummy(writer, QStringLiteral("value"));
             writer.writeAttribute(QStringLiteral("value"), itemValue);
 
@@ -450,7 +454,7 @@ void DB::FileWriter::writeCategoriesCompressed(QXmlStreamWriter &writer, const D
             QList<QPair<QString, QRect>> areas = categoryWithAreas.value();
             std::sort(areas.begin(), areas.end(),
                       [](QPair<QString, QRect> a, QPair<QString, QRect> b) { return a.first < b.first; });
-            for (const auto &positionedTag : qAsConst(areas)) {
+            for (const auto &positionedTag : std::as_const(areas)) {
                 ElementWriter dummy(writer, QStringLiteral("value"));
                 writer.writeAttribute(QStringLiteral("value"), positionedTag.first);
                 writer.writeAttribute(QStringLiteral("area"), areaToString(positionedTag.second));
@@ -499,23 +503,30 @@ QString DB::FileWriter::escape(const QString &str)
     if (s_cache.contains(str))
         return s_cache[str];
 
-    QString tmp(str);
-    // Regex to match characters that are not allowed to start XML attribute names
-    static const QRegExp rx(QStringLiteral("([^a-zA-Z0-9:_])"));
-    int pos = 0;
+    QString escaped;
 
     // Encoding special characters if compressed XML is selected
     if (useCompressedFileFormat()) {
-        while ((pos = rx.indexIn(tmp, pos)) != -1) {
-            QString before = rx.cap(1);
-            QString after = QString::asprintf("_.%0X", rx.cap(1).data()->toLatin1());
-            tmp.replace(pos, before.length(), after);
-            pos += after.length();
+        static const QRegularExpression rx(QStringLiteral("([^a-zA-Z0-9:_])"));
+        QString tmp(str);
+        while (true) {
+            const auto match = rx.match(tmp);
+            if (match.hasMatch()) {
+                escaped += tmp.left(match.capturedStart())
+                    + QString::asprintf("_.%0X", match.captured().data()->toLatin1());
+                tmp = tmp.mid(match.capturedStart() + match.capturedLength(), -1);
+            } else {
+                escaped += tmp;
+                break;
+            }
         }
-    } else
-        tmp.replace(QStringLiteral(" "), QStringLiteral("_"));
-    s_cache.insert(str, tmp);
-    return tmp;
+    } else {
+        escaped = str;
+        escaped.replace(QStringLiteral(" "), QStringLiteral("_"));
+    }
+
+    s_cache.insert(str, escaped);
+    return escaped;
 }
 
 // vi:expandtab:tabstop=4 shiftwidth=4:

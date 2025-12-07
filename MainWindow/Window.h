@@ -1,17 +1,17 @@
+// SPDX-FileCopyrightText: 2003 - 2014 Jesper K. Pedersen <jesper.pedersen@kdab.com>
 // SPDX-FileCopyrightText: 2003 Stephan Binner <binner@kde.org>
-// SPDX-FileCopyrightText: 2003-2014 Jesper K. Pedersen <jesper.pedersen@kdab.com>
-// SPDX-FileCopyrightText: 2005-2007 Dirk Mueller <mueller@kde.org>
-// SPDX-FileCopyrightText: 2006-2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2005 - 2007 Dirk Mueller <mueller@kde.org>
+// SPDX-FileCopyrightText: 2006 - 2010 Tuomas Suutari <tuomas@nepnep.net>
+// SPDX-FileCopyrightText: 2007 - 2009 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2007 Laurent Montel <montel@kde.org>
-// SPDX-FileCopyrightText: 2007-2009 Jan Kundrát <jkt@flaska.net>
 // SPDX-FileCopyrightText: 2008 Henner Zeller <h.zeller@acm.org>
+// SPDX-FileCopyrightText: 2010 - 2012 Miika Turkia <miika.turkia@gmail.com>
 // SPDX-FileCopyrightText: 2010 Wes Hardaker <kpa@capturedonearth.com>
-// SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
 // SPDX-FileCopyrightText: 2011 Andreas Neustifter <andreas.neustifter@gmail.com>
-// SPDX-FileCopyrightText: 2012-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012 - 2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2013 Dominik Broj <broj.dominik@gmail.com>
-// SPDX-FileCopyrightText: 2014-2017 Robert Krawitz <rlk@alum.mit.edu>
-// SPDX-FileCopyrightText: 2015-2022 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2014 - 2017 Robert Krawitz <rlk@alum.mit.edu>
+// SPDX-FileCopyrightText: 2015 - 2022 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -32,12 +32,9 @@
 #include <QUrl>
 
 class QAction;
-class QCloseEvent;
 class QContextMenuEvent;
 class QFrame;
 class QLabel;
-class QMoveEvent;
-class QResizeEvent;
 class QStackedWidget;
 class QTimer;
 
@@ -76,6 +73,7 @@ class HTMLDialog;
 namespace ImageManager
 {
 class ThumbnailCache;
+class VideoThumbnailCache;
 }
 namespace Settings
 {
@@ -109,6 +107,7 @@ public:
     static Window *theMainWindow();
 
     ImageManager::ThumbnailCache *thumbnailCache() const;
+    ImageManager::VideoThumbnailCache *videoThumbnailCache() const;
 
     DB::FileNameList selected(ThumbnailView::SelectionMode mode = ThumbnailView::ExpandCollapsedStacks) const;
     DB::ImageSearchInfo currentContext();
@@ -141,7 +140,6 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void showThumbNails();
-    bool slotExit();
     void slotOptions();
     void slotConfigureAllImages();
     void slotConfigureImagesOneAtATime();
@@ -166,7 +164,6 @@ protected Q_SLOTS:
     void showBrowser();
     void slotOptionGroupChanged();
     void slotFilterChanged();
-    void showTipOfDay();
     void lockToDefaultScope();
     void setDefaultScopePositive();
     void setDefaultScopeNegative();
@@ -220,9 +217,6 @@ protected:
     void configureImages(bool oneAtATime);
     QString welcome();
     bool event(QEvent *event) override;
-    void closeEvent(QCloseEvent *e) override;
-    void resizeEvent(QResizeEvent *) override;
-    void moveEvent(QMoveEvent *) override;
     void setupMenuBar();
     void createAnnotationDialog();
     bool load();
@@ -239,11 +233,13 @@ protected:
     void executeStartupActions();
     void checkIfVideoThumbnailerIsInstalled();
     bool anyVideosSelected() const;
+    bool queryClose() override;
 
 private:
     static Window *s_instance;
 
     ImageManager::ThumbnailCache *m_thumbnailCache;
+    ImageManager::VideoThumbnailCache *m_videoThumbnailCache;
     ThumbnailView::ThumbnailFacade *m_thumbnailView;
     Settings::SettingsDialog *m_settingsDialog;
     QPointer<AnnotationDialog::Dialog> m_annotationDialog;

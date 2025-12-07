@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2003-2010 Jesper K. Pedersen <blackie@kde.org>
-// SPDX-FileCopyrightText: 2022 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2022-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -29,7 +29,7 @@ public:
     void setImage(const DB::ImageInfo &info);
     void setImage(const QString &fileName);
     int angle() const;
-    void anticipate(DB::ImageInfo &info1);
+    void anticipate(const DB::ImageInfo &info1);
     void pixmapLoaded(ImageManager::ImageRequest *request, const QImage &image) override;
     QRect areaPreviewToActual(QRect area) const;
     QRect minMaxAreaPreview() const;
@@ -37,6 +37,7 @@ public:
     QSize getActualImageSize();
     void acceptProposedTag(QPair<QString, QString> tagData, ResizableFrame *area);
     QPixmap grabAreaImage(QRect area);
+    const DB::ImageInfo &currentInfo() const;
 
 public Q_SLOTS:
     void setAreaCreationEnabled(bool state);

@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2009-2010 Hassan Ibraheem <hasan.ibraheem@gmail.com>
 // SPDX-FileCopyrightText: 2010 Tuomas Suutari <tuomas@nepnep.net>
 // SPDX-FileCopyrightText: 2010-2022 Jesper K. Pedersen <jesper.pedersen@kdab.com>
-// SPDX-FileCopyrightText: 2013-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2013-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2014-2019 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
@@ -25,10 +25,11 @@
 
 using namespace AnnotationDialog;
 
-ImagePreviewWidget::ImagePreviewWidget(KActionCollection *actions)
+ImagePreviewWidget::ImagePreviewWidget(KActionCollection *actions, const QList<DB::ImageInfo> *imageList)
     : QWidget()
     , m_singleEdit(false)
     , m_actions(actions)
+    , m_imageList(imageList)
 {
     Q_ASSERT(actions);
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -148,9 +149,8 @@ void ImagePreviewWidget::anticipate(DB::ImageInfo &info1)
     m_preview->anticipate(info1);
 }
 
-void ImagePreviewWidget::configure(QList<DB::ImageInfo> *imageList, bool singleEdit)
+void ImagePreviewWidget::configure(bool singleEdit)
 {
-    m_imageList = imageList;
     m_current = 0;
     setImage(m_imageList->at(m_current));
     m_singleEdit = singleEdit;
@@ -159,6 +159,26 @@ void ImagePreviewWidget::configure(QList<DB::ImageInfo> *imageList, bool singleE
     m_copyPreviousBut->setEnabled(m_singleEdit);
     m_rotateLeft->setEnabled(m_singleEdit);
     m_rotateRight->setEnabled(m_singleEdit);
+}
+
+void ImagePreviewWidget::updateAfterDiscard(int index, const DB::FileNameList &fileNames)
+{
+    if (index != -1) {
+        // AnnotationDialog::Dialog::slotDiscardFiles could determine the image to show
+        m_current = index;
+    } else {
+        // If multiple images are annotated at once, index is always -1.
+        // Try to find the currently showed image in this case, or fall back to another one.
+        const auto index = fileNames.indexOf(m_preview->currentInfo().fileName());
+        if (index != -1) {
+            m_current = index;
+        } else {
+            if (m_current >= m_imageList->count()) {
+                m_current = m_imageList->count() - 1;
+            }
+        }
+    }
+    setImage(m_imageList->at(m_current));
 }
 
 void ImagePreviewWidget::slotPrev()
