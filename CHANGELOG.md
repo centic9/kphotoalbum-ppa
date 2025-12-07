@@ -32,6 +32,30 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 The change log for older releases (before 5.9.0) can be found in CHANGELOG.old.
 
+KPhotoAlbum 6.1.0 (2025-10-04)
+------------------------------
+
+### Added
+ - Add command line option "--config"
+ - Add command line option "--save-and-quit"
+ - Add home and end key shortcuts to date bar
+ - Add option to append description text when changing multiple image descriptions (#470433)
+ - Show visual feedback when setting a rating in the viewer (#509964)
+
+### Changed
+ - index.xml file format version bumped to "11":
+   The new file format version improves the "compressed" file format and handles arbitrary category names correctly.
+   Positionable tags are also now stored natively in the "compressed" file format with far less overhead.
+ - Disable "View" actions when not appropriate (#505185)
+
+### Fixed
+ - Fix purpose plugin support (#501885)
+ - Fix database corruption when using category names starting with numbers (#477533)
+ - Improve responsiveness of date bar
+ - Fix spurious entries in "Search for images and videos with incomplete dates" (#505023)
+ - Fix crash when interacting with a category after deleting it (#478015)
+
+
 KPhotoAlbum 6.0.1 (2025-01-06)
 ------------------------------
 
@@ -42,7 +66,7 @@ KPhotoAlbum 6.0.1 (2025-01-06)
  - Fix application icon on Wayland
  - Fix crash when video thumbnail cache contains empty files (#497831)
  - The "Configure KPhotoAlbum" menu entry is now shown again
- - Category names containing non-ASCII characters saved using the "fast" database format are escaped correctly again
+ - Category names containing non-ASCII characters saved using the "fast" database format using older KPA versions are now read correctly again. Unfortunately, with v6.0.0, all tag associations with categories containing non-ASCII characters were discarded (and would be lost on the next saving) due to a faulty port of the escaping algorithm. Sorry for the inconvenience!
  - Clicking on a tag in the Viewers's info box shows the respective tag in the browser again
  - When the main window is closed and the viewer is opened, it is also closed now automatically. This is what one would expect, and it also fixes crashing e.g. when the user clicks on an info box link with the main window already closed. Additionally, if the annotation dialog is open, we now also try to close it. If this doesn't succeed (e.g. because there are pending changes and the user didn't agree to discard them) the close query is aborted.
 

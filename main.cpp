@@ -1,18 +1,18 @@
+// SPDX-FileCopyrightText: 2003-2014 Jesper K. Pedersen <blackie@kde.org>
 // SPDX-FileCopyrightText: 2003 Lukáš Tinkl <lukas@kde.org>
 // SPDX-FileCopyrightText: 2003 Simon Hausmann <hausmann@kde.org>
 // SPDX-FileCopyrightText: 2003 Stephan Binner <binner@kde.org>
-// SPDX-FileCopyrightText: 2003-2014 Jesper K. Pedersen <blackie@kde.org>
 // SPDX-FileCopyrightText: 2005-2007 Dirk Mueller <mueller@kde.org>
 // SPDX-FileCopyrightText: 2006-2008 Tuomas Suutari <tuomas@nepnep.net>
-// SPDX-FileCopyrightText: 2007 Chusslove Illich <caslav.ilic@gmx.net>
 // SPDX-FileCopyrightText: 2007-2011 Jan Kundrát <jkt@flaska.net>
+// SPDX-FileCopyrightText: 2007 Chusslove Illich <caslav.ilic@gmx.net>
 // SPDX-FileCopyrightText: 2009 Andrew Coles <andrew.i.coles@googlemail.com>
 // SPDX-FileCopyrightText: 2009 Christoph Feck <cfeck@kde.org>
 // SPDX-FileCopyrightText: 2010-2012 Miika Turkia <miika.turkia@gmail.com>
-// SPDX-FileCopyrightText: 2012-2024 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2012-2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2018-2024 Tobias Leupold <tl@stonemx.de>
 // SPDX-FileCopyrightText: 2018 Antoni Bella Pérez <antonibella5@yahoo.com>
 // SPDX-FileCopyrightText: 2019 Alexander Potashev <aspotashev@gmail.com>
-// SPDX-FileCopyrightText: 2018-2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -107,18 +107,54 @@ int main(int argc, char **argv)
     aboutData.addAuthor(i18n("Henner Zeller"), QString(), QStringLiteral("h.zeller@acm.org"));
 
     // sort alphabetically:
-    aboutData.addCredit(i18n("Marco Caldarelli"), i18n("Patch for making it possible to reread Exif info using a nice dialog."), QStringLiteral("caldarel@yahoo.it"));
-    aboutData.addCredit(i18n("Jean-Michel FAYARD"), i18n("(.) Patch with folder info made available through the browser. (.) Patch for adding a check box for \"and/or\" searches in the search page."), QStringLiteral("jmfayard@gmail.com"));
-    aboutData.addCredit(i18n("Matthias Füssel"), i18n("Geo Position page in browser and various bug fixes"), QStringLiteral("matthias.fuessel@gmx.net"));
-    aboutData.addCredit(i18n("Wes Hardaker"), i18n("Some very useful features to improve workflow"), QStringLiteral("kpa@capturedonearth.com"));
-    aboutData.addCredit(i18n("Reimar Imhof"), i18n("Patch to sort items in option listboxes"), QStringLiteral("Reimar.Imhof@netCologne.de"));
-    aboutData.addCredit(i18n("Christoph Moseler"), i18n("Numerous patches for lots of bugs plus patches for a few new features"), QStringLiteral("forums@moseler.net"));
-    aboutData.addCredit(i18n("Teemu Rytilahti"),
-                        i18n("Theme support for HTML generation"), QStringLiteral("teemu.rytilahti@kde-fi.org"));
-    aboutData.addCredit(i18n("Thomas Schwarzgruber"), i18n("Patch to sort images in the thumbnail view, plus reading time info out of Exif images for existing images"), QStringLiteral("possebaer@gmx.at"));
-    aboutData.addCredit(i18n("Clytie Siddall"), i18n("Tremendous help with the English text in the application."), QStringLiteral("clytie@riverland.net.au"));
-    aboutData.addCredit(i18n("Will Stephenson"), i18n("Developing an Icon for KPhotoAlbum"), QStringLiteral("will@stevello.free-online.co.uk"));
-    aboutData.addCredit(i18n("Marcel Wiesweg"), i18n("Patch which speed up loading of thumbnails plus preview in image property dialog."), QStringLiteral("marcel.wiesweg@gmx.de"));
+    aboutData.addCredit(
+        i18n("Marco Caldarelli"),
+        i18n("Patch for making it possible to reread Exif info using a nice dialog."),
+        QStringLiteral("caldarel@yahoo.it"));
+    aboutData.addCredit(
+        i18n("Jean-Michel FAYARD"),
+        i18n("Patch with folder info made available through the browser.\n"
+             "Patch for adding a check box for \"and/or\" searches in the search page."),
+        QStringLiteral("jmfayard@gmail.com"));
+    aboutData.addCredit(
+        i18n("Matthias Füssel"),
+        i18n("Geo Position page in browser and various bug fixes"),
+        QStringLiteral("matthias.fuessel@gmx.net"));
+    aboutData.addCredit(
+        i18n("Wes Hardaker"),
+        i18n("Some very useful features to improve workflow"),
+        QStringLiteral("kpa@capturedonearth.com"));
+    aboutData.addCredit(
+        i18n("Reimar Imhof"),
+        i18n("Patch to sort items in option listboxes"),
+        QStringLiteral("Reimar.Imhof@netCologne.de"));
+    aboutData.addCredit(
+        i18n("Christoph Moseler"),
+        i18n("Numerous patches for lots of bugs,\n"
+             "patches for a few new features"),
+        QStringLiteral("forums@moseler.net"));
+    aboutData.addCredit(
+        i18n("Teemu Rytilahti"),
+        i18n("Theme support for HTML generation"),
+        QStringLiteral("teemu.rytilahti@kde-fi.org"));
+    aboutData.addCredit(
+        i18n("Thomas Schwarzgruber"),
+        i18n("Patch to sort images in the thumbnail view,\n"
+             "reading time info out of Exif images for existing images"),
+        QStringLiteral("possebaer@gmx.at"));
+    aboutData.addCredit(
+        i18n("Clytie Siddall"),
+        i18n("Tremendous help with the English text in the application."),
+        QStringLiteral("clytie@riverland.net.au"));
+    aboutData.addCredit(
+        i18n("Will Stephenson"),
+        i18n("Developing an Icon for KPhotoAlbum"),
+        QStringLiteral("will@stevello.free-online.co.uk"));
+    aboutData.addCredit(
+        i18n("Marcel Wiesweg"),
+        i18n("Patch which speeds up loading of thumbnails,\n"
+             "preview in image property dialog."),
+        QStringLiteral("marcel.wiesweg@gmx.de"));
 
     // initialize the commandline parser
     QCommandLineParser *parser = MainWindow::Options::the()->parser();
@@ -129,12 +165,16 @@ int main(int argc, char **argv)
     parser->process(app);
     aboutData.processCommandLine(parser);
 
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("kphotoalbum")));
+
     const QString schemePath = KSharedConfig::openConfig()->group(QLatin1String("General")).readEntry(QStringLiteral("colorScheme"), QString());
     qCDebug(MainLog) << "Loading color scheme from " << (schemePath.isEmpty() ? QStringLiteral("system default") : schemePath);
     app.setPalette(KColorScheme::createApplicationPalette(KSharedConfig::openConfig(schemePath)));
     if (app.styleSheet().isEmpty())
         app.setStyleSheet(STYLE);
     app.setAttribute(Qt::AA_UseStyleSheetPropagationInWidgetStyles);
+
+    qDebug() << "kphotoalbumrc:" << KConfig::mainConfigName();
 
     new MainWindow::SplashScreen();
 

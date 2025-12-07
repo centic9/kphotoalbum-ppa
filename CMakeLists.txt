@@ -22,19 +22,19 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-cmake_minimum_required(VERSION 3.18.0)
-project(kphotoalbum LANGUAGES CXX VERSION 6.0.1)
+cmake_minimum_required(VERSION 3.30.0)
+project(kphotoalbum LANGUAGES CXX VERSION 6.1.0)
 
 # set minimum versions here:
 set(MINIMUM_KF6_VERSION 6.0.0)
 set(MINIMUM_QT6_VERSION_MAJOR 6)
-set(MINIMUM_QT6_VERSION_MINOR 0)
+set(MINIMUM_QT6_VERSION_MINOR 6)
 set(MINIMUM_QT6_VERSION_PATCH 0)
 set(MINIMUM_QT6_VERSION "${MINIMUM_QT6_VERSION_MAJOR}.${MINIMUM_QT6_VERSION_MINOR}.${MINIMUM_QT6_VERSION_PATCH}")
 math(EXPR MINIMUM_QT6_VERSION_HEX "${MINIMUM_QT6_VERSION_MAJOR} << 24 | ${MINIMUM_QT6_VERSION_MINOR} << 16 | ${MINIMUM_QT6_VERSION_PATCH}" OUTPUT_FORMAT HEXADECIMAL)
 set(KDE_COMPILERSETTINGS_LEVEL 6.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOUIC ON)
 
@@ -66,7 +66,7 @@ add_definitions(
 find_package(Qt6 ${MINIMUM_QT6_VERSION} REQUIRED COMPONENTS Core Sql Xml Widgets DBus Test)
 find_package(Phonon4Qt6)
 find_package(LIBVLC)
-find_package(KF6 ${MINIMUM_KF6_VERSION} REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons)
+find_package(KF6 ${MINIMUM_KF6_VERSION} REQUIRED COMPONENTS Archive Completion Config CoreAddons I18n IconThemes JobWidgets KIO TextWidgets XmlGui WidgetsAddons ColorScheme DocTools)
 
 find_package(JPEG REQUIRED)
 if(JPEG_FOUND)
@@ -199,7 +199,7 @@ set(libPlugins_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Logging.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/Plugins/Logging.h"
     )
-if(KF5Purpose_FOUND)
+if(KF6Purpose_FOUND)
     set(libPlugins_SRCS ${libPlugins_SRCS}
         "${CMAKE_CURRENT_SOURCE_DIR}/Plugins/PurposeMenu.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/Plugins/PurposeMenu.h"
@@ -471,6 +471,8 @@ set(libDB_SRCS
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/ValueCategoryMatcher.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/WildcardCategoryMatcher.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/search/WildcardCategoryMatcher.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/AttributeEscaping.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/AttributeEscaping.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/CompressFileInfo.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/CompressFileInfo.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/DB/XML/ElementWriter.cpp"
@@ -750,6 +752,7 @@ target_link_libraries(kphotoalbum
     KF6::TextWidgets
     KF6::XmlGui
     KF6::WidgetsAddons
+    KF6::ColorScheme
     ${libRemoteControl_LIBS}
     )
 
@@ -792,10 +795,7 @@ install(FILES kphotoalbumrc DESTINATION ${KDE_INSTALL_CONFDIR})
 install(FILES default-setup DESTINATION "${KDE_INSTALL_DATADIR}/kphotoalbum")
 install(FILES org.kde.kphotoalbum.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 ki18n_install(po)
-
-if(KF6DocTools_FOUND)
-    kdoctools_install(po)
-endif()
+kdoctools_install(po)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 

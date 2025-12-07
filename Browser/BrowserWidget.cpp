@@ -49,6 +49,8 @@ Browser::BrowserWidget::BrowserWidget(QWidget *parent)
 
     createWidgets();
 
+    connect(DB::ImageDB::instance()->categoryCollection(), &DB::CategoryCollection::categoryRemoved,
+            this, &BrowserWidget::home);
     connect(DB::ImageDB::instance()->categoryCollection(), &DB::CategoryCollection::categoryCollectionChanged,
             this, &BrowserWidget::reload);
     connect(this, &BrowserWidget::viewChanged, this, &BrowserWidget::resetIconViewSearch);
@@ -138,7 +140,7 @@ void Browser::BrowserWidget::emitSignals()
         Q_EMIT showingOverview();
 
     Q_EMIT isSearchable(currentAction()->isSearchable());
-    Q_EMIT isFilterable(currentAction()->viewer() == ShowImageViewer);
+    Q_EMIT showingImages(currentAction()->viewer() == ShowImageViewer);
     Q_EMIT isViewChangeable(currentAction()->isViewChangeable());
 
     bool isCategoryAction = (dynamic_cast<CategoryPage *>(currentAction()) != nullptr);

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
 // SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
-// SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
+// SPDX-FileCopyrightText: 2024-2025 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
 
@@ -64,7 +64,7 @@
 #include <kpathumbnails/ThumbnailCache.h>
 #include <kpathumbnails/VideoThumbnailCache.h>
 
-#ifdef KF5Purpose_FOUND
+#ifdef KF6Purpose_FOUND
 #include <Plugins/PurposeMenu.h>
 #endif
 #ifdef HAVE_MARBLE
@@ -74,7 +74,6 @@
 #include <RemoteControl/RemoteInterface.h>
 #endif
 
-#include <stdexcept>
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -281,6 +280,11 @@ void MainWindow::Window::delayedInit()
     }
 
     splash->done();
+    if (Options::the()->saveAndQuit()) {
+        qCInfo(MainWindowLog) << "Saving the database and quitting...";
+        slotSave();
+        close();
+    }
     show();
     updateDateBar();
     qCInfo(TimingLog) << "MainWindow: MainWindow.show():" << timer.restart() << "ms.";
@@ -311,7 +315,7 @@ bool MainWindow::Window::queryClose()
     }
 
     bool deleteDemoDB = false;
-    if (Options::the()->demoMode()) {
+    if (Options::the()->demoMode() && !Options::the()->saveAndQuit()) {
         const QString question = i18n("<p><b>Delete Your Temporary Demo Database</b></p>"
                                       "<p>I hope you enjoyed the KPhotoAlbum demo. The demo database was created in the "
                                       "folder <tt>/tmp</tt>, should it be deleted now? If you do not delete it, it will waste disk space; "
@@ -375,7 +379,7 @@ void MainWindow::Window::slotOptions()
     if (!m_settingsDialog) {
         m_settingsDialog = new Settings::SettingsDialog(this);
         // lambda expression because because reloadThumbnails has default parameters:
-        connect(m_settingsDialog, &Settings::SettingsDialog::changed, this, [=]() { this->reloadThumbnails(); });
+        connect(m_settingsDialog, &Settings::SettingsDialog::changed, this, [=, this]() { this->reloadThumbnails(); });
         connect(m_settingsDialog, &Settings::SettingsDialog::changed, this, &Window::startAutoSaveTimer);
         connect(m_settingsDialog, &Settings::SettingsDialog::changed, m_browser, &Browser::BrowserWidget::reload);
     }
@@ -797,6 +801,8 @@ void MainWindow::Window::setupMenuBar()
     m_paste = KStandardAction::paste(this, &Window::slotPasteInformation, actionCollection());
     m_paste->setEnabled(false);
     m_selectAll = KStandardAction::selectAll(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectAll, actionCollection());
+    m_selectAll->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_selectAll, &QAction::setEnabled);
     m_clearSelection = KStandardAction::deselect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::clearSelection, actionCollection());
     m_clearSelection->setEnabled(false);
     KStandardAction::find(this, &Window::slotSearch, actionCollection());
@@ -804,6 +810,8 @@ void MainWindow::Window::setupMenuBar()
     m_deleteSelected = actionCollection()->addAction(QString::fromLatin1("deleteSelected"));
     m_deleteSelected->setText(i18nc("Delete selected images", "Delete Selected"));
     m_deleteSelected->setIcon(QIcon::fromTheme(QString::fromLatin1("edit-delete")));
+    m_deleteSelected->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_deleteSelected, &QAction::setEnabled);
     actionCollection()->setDefaultShortcut(m_deleteSelected, Qt::Key_Delete);
     connect(m_deleteSelected, &QAction::triggered, this, &Window::slotDeleteSelected);
 
@@ -843,17 +851,25 @@ void MainWindow::Window::setupMenuBar()
     // The View menu
     m_view = actionCollection()->addAction(QString::fromLatin1("viewImages"), this, qOverload<>(&Window::slotView));
     m_view->setText(i18n("View"));
+    m_view->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_view, &QAction::setEnabled);
 
     m_viewInNewWindow = actionCollection()->addAction(QString::fromLatin1("viewImagesNewWindow"), this, &Window::slotViewNewWindow);
     m_viewInNewWindow->setText(i18n("View (In New Window)"));
+    m_viewInNewWindow->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_viewInNewWindow, &QAction::setEnabled);
 
     m_runSlideShow = actionCollection()->addAction(QString::fromLatin1("runSlideShow"), this, &Window::slotRunSlideShow);
     m_runSlideShow->setText(i18n("Run Slide Show"));
+    m_runSlideShow->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_runSlideShow, &QAction::setEnabled);
     m_runSlideShow->setIcon(QIcon::fromTheme(QString::fromLatin1("view-presentation")));
     actionCollection()->setDefaultShortcut(m_runSlideShow, QKeySequence(Qt::CTRL | Qt::Key_R));
 
     m_runRandomSlideShow = actionCollection()->addAction(QString::fromLatin1("runRandomizedSlideShow"), this, &Window::slotRunRandomizedSlideShow);
     m_runRandomSlideShow->setText(i18n("Run Randomized Slide Show"));
+    m_runRandomSlideShow->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_runRandomSlideShow, &QAction::setEnabled);
 
     a = actionCollection()->addAction(QString::fromLatin1("collapseAllStacks"),
                                       m_thumbnailView, &ThumbnailView::ThumbnailFacade::collapseAllStacks);
@@ -884,9 +900,13 @@ void MainWindow::Window::setupMenuBar()
 
     m_limitToMarked = actionCollection()->addAction(QString::fromLatin1("limitToMarked"), this, &Window::slotLimitToSelected);
     m_limitToMarked->setText(i18n("Limit View to Selection"));
+    m_limitToMarked->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_limitToMarked, &QAction::setEnabled);
 
     m_jumpToContext = actionCollection()->addAction(QString::fromLatin1("jumpToContext"), this, &Window::slotJumpToContext);
     m_jumpToContext->setText(i18n("Jump to Context"));
+    m_jumpToContext->setEnabled(false);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_jumpToContext, &QAction::setEnabled);
     actionCollection()->setDefaultShortcut(m_jumpToContext, QKeySequence(Qt::CTRL | Qt::Key_J));
     m_jumpToContext->setIcon(QIcon::fromTheme(QString::fromLatin1("kphotoalbum"))); // icon suggestion: go-jump (don't know the exact meaning though, so I didn't replace it right away
 
@@ -1017,8 +1037,8 @@ void MainWindow::Window::setupMenuBar()
     m_markUntagged->setText(i18n("Mark As Untagged"));
 
     // The Settings menu
-    actionCollection()->addAction(KStandardAction::Preferences, QStringLiteral("configure_kpa"),
-                                  this, &Window::slotOptions);
+    KStandardAction::preferences(this, &Window::slotOptions, actionCollection());
+
     // the default configureShortcuts impl in XMLGuiFactory that is available via setupGUI
     // does not work for us because we need to add our own (non-XMLGui) actionCollections:
     KStandardAction::keyBindings(this, &Window::configureShortcuts, actionCollection());
@@ -1029,6 +1049,7 @@ void MainWindow::Window::setupMenuBar()
     // The help menu
     a = actionCollection()->addAction(QString::fromLatin1("runDemo"), this, &Window::runDemo);
     a->setText(i18n("Run KPhotoAlbum Demo"));
+    a->setEnabled(!Options::the()->demoMode());
 
     a = actionCollection()->addAction(QString::fromLatin1("features"), this, &Window::showFeatures);
     a->setText(i18n("KPhotoAlbum Feature Status"));
@@ -1094,7 +1115,6 @@ void MainWindow::Window::showThumbNails()
     reloadThumbnails(ThumbnailView::ClearSelection);
     m_stack->setCurrentWidget(m_thumbnailView->gui());
     m_thumbnailView->gui()->setFocus();
-    updateStates(true);
 }
 
 void MainWindow::Window::showBrowser()
@@ -1104,7 +1124,6 @@ void MainWindow::Window::showBrowser()
     m_stack->setCurrentWidget(m_browser);
     m_browser->setFocus();
     updateContextMenuFromSelectionSize(0);
-    updateStates(false);
 }
 
 void MainWindow::Window::slotOptionGroupChanged()
@@ -1189,16 +1208,11 @@ bool MainWindow::Window::load()
                                           "<br />%1</p>",
                                           fi.absoluteFilePath());
             const QString title = i18nc("@title", "Create database");
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
             const auto answer = KMessageBox::questionTwoActions(this, question,
                                                                 title,
                                                                 KGuiItem(i18nc("@action:button", "Create")),
                                                                 KStandardGuiItem::cancel());
             if (answer != KMessageBox::ButtonCode::PrimaryAction) {
-#else
-            const auto answer = KMessageBox::questionYesNo(this, question);
-            if (answer != KMessageBox::Yes) {
-#endif
                 return false;
             }
         }
@@ -1467,14 +1481,6 @@ void MainWindow::Window::slotShowImagesWithChangedMD5Sum()
 #endif // DOES_STILL_NOT_WORK_IN_KPA4
 }
 
-void MainWindow::Window::updateStates(bool thumbNailView)
-{
-    m_selectAll->setEnabled(thumbNailView);
-    m_deleteSelected->setEnabled(thumbNailView);
-    m_limitToMarked->setEnabled(thumbNailView);
-    m_jumpToContext->setEnabled(thumbNailView);
-}
-
 void MainWindow::Window::slotRunSlideShow()
 {
     slotView(true, true);
@@ -1516,16 +1522,11 @@ void MainWindow::Window::slotReenableMessages()
     const QString question = i18n("<p>Really enable all message boxes where you previously "
                                   "checked the do-not-show-again check box?</p>");
     const QString title = i18nc("@title", "Reset hidden dialogs");
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
     const auto answer = KMessageBox::questionTwoActions(this, question,
                                                         title,
                                                         KStandardGuiItem::reset(),
                                                         KStandardGuiItem::cancel());
     if (answer == KMessageBox::ButtonCode::PrimaryAction) {
-#else
-    const auto answer = KMessageBox::questionYesNo(this, question);
-    if (answer == KMessageBox::Yes) {
-#endif
         KMessageBox::enableAllMessages();
     }
 }
@@ -1538,7 +1539,7 @@ void MainWindow::Window::setupPluginMenu()
         return; // This is no good, but lets try and continue.
     }
 
-#ifdef KF5Purpose_FOUND
+#ifdef KF6Purpose_FOUND
     Plugins::PurposeMenu *purposeMenu = new Plugins::PurposeMenu(menu);
     connect(m_thumbnailView, &ThumbnailView::ThumbnailFacade::selectionChanged,
             purposeMenu, &Plugins::PurposeMenu::slotSelectionChanged);
@@ -1841,7 +1842,7 @@ void MainWindow::Window::createSearchBar()
     addToolBar(m_filterWidget);
     m_filterWidget->setObjectName(QString::fromUtf8("filterBar"));
     connect(m_browser, &Browser::BrowserWidget::viewChanged, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::clearFilter);
-    connect(m_browser, &Browser::BrowserWidget::isFilterable, m_filterWidget, &ThumbnailView::FilterWidget::setEnabled);
+    connect(m_browser, &Browser::BrowserWidget::showingImages, m_filterWidget, &ThumbnailView::FilterWidget::setEnabled);
     connect(m_searchBar, &SearchBar::textChanged, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::setFreeformFilter);
     connect(m_searchBar, &SearchBar::cleared, ThumbnailView::ThumbnailFacade::instance(), &ThumbnailView::ThumbnailFacade::clearFilter);
 }
@@ -1916,7 +1917,6 @@ void MainWindow::Window::showPositionBrowser()
 {
     auto positionBrowser = positionBrowserWidget();
     m_stack->setCurrentWidget(positionBrowser);
-    updateStates(false);
 }
 
 Map::MapView *MainWindow::Window::positionBrowserWidget()
@@ -1937,17 +1937,12 @@ UserFeedback MainWindow::Window::askWarningContinueCancel(const QString &msg, co
 
 UserFeedback MainWindow::Window::askQuestionYesNo(const QString &msg, const QString &title, const QString &dialogId)
 {
-#if KWIDGETSADDONS_VERSION >= QT_VERSION_CHECK(5, 100, 0)
     const auto answer = KMessageBox::questionTwoActions(this, msg,
                                                         title,
                                                         KStandardGuiItem::ok(),
                                                         KStandardGuiItem::cancel(),
                                                         dialogId);
     const UserFeedback value = (answer == KMessageBox::ButtonCode::PrimaryAction) ? UserFeedback::Confirm : UserFeedback::Deny;
-#else
-    const auto answer = KMessageBox::questionYesNo(this, msg, title, KStandardGuiItem::yes(), KStandardGuiItem::no(), dialogId);
-    const UserFeedback value = (answer == KMessageBox::Yes) ? UserFeedback::Confirm : UserFeedback::Deny;
-#endif
     return value;
 }
 

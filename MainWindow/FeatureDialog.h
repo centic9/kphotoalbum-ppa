@@ -22,7 +22,6 @@ public:
 
     static bool hasAllFeaturesAvailable();
     static QString featureString();
-    static QStringList supportedVideoMimeTypes();
     static QString ffmpegBinary();
     static QString ffprobeBinary();
     /**
@@ -37,10 +36,9 @@ public:
     static bool hasVideoProber();
 
 protected:
-    static bool hasPurposeSupport();
-    static bool hasEXIV2Support();
+    static constexpr bool hasPurposeSupport();
     static bool hasEXIV2DBSupport();
-    static bool hasGeoMapSupport();
+    static constexpr bool hasGeoMapSupport();
 };
 }
 

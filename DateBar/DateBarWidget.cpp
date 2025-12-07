@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2003-2020 The KPhotoAlbum Development Team
-// SPDX-FileCopyrightText: 2021-2023 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
+// SPDX-FileCopyrightText: 2003 - 2020 The KPhotoAlbum Development Team
+// SPDX-FileCopyrightText: 2021 - 2025 Johannes Zarl-Zierl <johannes@zarl-zierl.at>
 // SPDX-FileCopyrightText: 2024 Tobias Leupold <tl@stonemx.de>
 //
 // SPDX-License-Identifier: GPL-2.0-or-later
@@ -10,6 +10,7 @@
 
 #include <DB/ImageDateCollection.h>
 #include <DB/ImageInfoList.h>
+#include <kpabase/Logging.h>
 #include <kpabase/SettingsData.h>
 
 #include <Utilities/FastDateTime.h>
@@ -48,6 +49,8 @@ constexpr int SCROLL_ACCELERATION = 10;
 
 DateBar::DateBarWidget::DateBarWidget(QWidget *parent)
     : QWidget(parent)
+    , m_dates(QExplicitlySharedDataPointer<DB::ImageDateCollection>(
+          new DB::ImageDateCollection({})))
     , m_currentHandler(&m_yearViewHandler)
     , m_tp(YearView)
     , m_currentMouseHandler(nullptr)
@@ -125,13 +128,14 @@ DateBar::DateBarWidget::DateBarWidget(QWidget *parent)
     setWhatsThis(xi18nc("@info", "<title>The date bar</title>"
                                  "<para><list>"
                                  "<item>Scroll using the arrow buttons, the scrollwheel, or the middle mouse button.</item>"
+                                 "<item>Use the home and end buttons to scroll to the start or end.</item>"
                                  "<item>Zoom using the +/- buttons or Ctrl + scrollwheel.</item>"
                                  "<item>Restrict the view to a date range selection: Click/drag below the timeline.</item>"
                                  "<item>Jump to a date by clicking on the histogram bar.</item>"
                                  "</list></para>"));
     setToolTip(whatsThis());
 
-    connect(Settings::SettingsData::instance(), &Settings::SettingsData::histogramScaleChanged, this, &DateBarWidget::redraw);
+    connect(Settings::SettingsData::instance(), &Settings::SettingsData::histogramScaleChanged, this, qOverload<>(&DateBarWidget::redraw));
     m_actionCollection->readSettings();
 }
 
@@ -165,11 +169,15 @@ void DateBar::DateBarWidget::paintEvent(QPaintEvent * /*event*/)
     painter.drawPixmap(0, 0, m_buffer);
 }
 
-void DateBar::DateBarWidget::redraw()
+void DateBar::DateBarWidget::redraw(RedrawMode mode)
 {
     if (m_buffer.isNull())
         return;
 
+#ifdef DATEBAR_DEBUG_TIMING
+    QElapsedTimer timer;
+    timer.start();
+#endif
     QPainter p(&m_buffer);
     p.setRenderHint(QPainter::Antialiasing);
     p.setFont(font());
@@ -179,11 +187,6 @@ void DateBar::DateBarWidget::redraw()
     p.setPen(Qt::NoPen);
     p.setBrush(palette().brush(QPalette::Window));
     p.drawRect(rect());
-
-    if (!m_dates) {
-        p.restore();
-        return;
-    }
 
     // Draw the area with histograms
     QRect barArea = barAreaGeometry();
@@ -202,10 +205,27 @@ void DateBar::DateBarWidget::redraw()
     rect.setRight(right);
     rect.setLeft(rect.left() + BUTTON_WIDTH + 2);
 
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::redraw(): background: %lldms", timer.elapsed());
+    timer.restart();
+#endif
     drawTickMarks(p, rect);
-    drawHistograms(p);
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::redraw(): tickmarks: %lldms", timer.elapsed());
+    timer.restart();
+#endif
+    if (!m_fastScrolling || mode == RedrawMode::Full) {
+        drawHistograms(p);
+#ifdef DATEBAR_DEBUG_TIMING
+        qCDebug(TimingLog, "DateBarWidget::redraw(): histograms: %lldms", timer.elapsed());
+        timer.restart();
+#endif
+    }
     drawFocusRectangle(p);
     updateArrowState();
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::redraw(): finishing: %lldms", timer.elapsed());
+#endif
     repaint();
 }
 
@@ -219,35 +239,40 @@ void DateBar::DateBarWidget::resizeEvent(QResizeEvent *event)
 
 void DateBar::DateBarWidget::drawTickMarks(QPainter &p, const QRect &textRect)
 {
-    QRect rect = tickMarkGeometry();
+    const QRect rect = tickMarkGeometry();
     p.save();
     p.setPen(QPen(palette().color(QPalette::Text), 1));
 
-    QFont f(font());
-    QFontMetrics fm(f);
-    int fontHeight = fm.height();
-    int unit = 0;
+    const QFont f(font());
+    const QFontMetrics fm(f);
+    const int fontHeight = fm.height();
     QRect clip = rect;
     clip.setHeight(rect.height() + 2 + fontHeight);
     clip.setLeft(clip.left() + 2);
     clip.setRight(clip.right() - 2);
     p.setClipRect(clip);
 
-    for (int x = rect.x(); x < rect.right(); x += m_barWidth, unit += 1) {
-        // draw selection indication
+    if (hasSelection()) {
+        const auto selection = currentSelection();
         p.save();
         p.setPen(Qt::NoPen);
         p.setBrush(palette().brush(QPalette::Highlight));
-        Utilities::FastDateTime date = dateForUnit(unit);
-        if (isUnitSelected(unit))
-            p.drawRect(QRect(x, rect.top(), m_barWidth, rect.height()));
+        for (int unit = 0, x = rect.x(); x < rect.right(); x += m_barWidth, unit += 1) {
+            // draw selection indication
+            Utilities::FastDateTime date = dateForUnit(unit);
+            if (selection.start() <= date && date < selection.end()) {
+                p.drawRect(QRect(x, rect.top(), m_barWidth, rect.height()));
+            }
+        }
         p.restore();
+    }
 
+    for (int unit = 0, x = rect.x(); x < rect.right(); x += m_barWidth, unit += 1) {
         // draw tickmarks
         int h = rect.height();
         if (m_currentHandler->isMajorUnit(unit)) {
-            QString text = m_currentHandler->text(unit);
-            int w = fm.horizontalAdvance(text);
+            const QString text = m_currentHandler->text(unit);
+            const int w = fm.horizontalAdvance(text);
             p.setFont(f);
             if (textRect.right() > x + w / 2 && textRect.left() < x - w / 2)
                 p.drawText(x - w / 2, textRect.top(), w, fontHeight, Qt::TextSingleLine, text);
@@ -327,6 +352,9 @@ void DateBar::DateBarWidget::setImageCollection(const DB::ImageInfoList &images)
 
 void DateBar::DateBarWidget::setImageDateCollection(const QExplicitlySharedDataPointer<DB::ImageDateCollection> &dates)
 {
+    if (!dates)
+        return;
+
     m_dates = dates;
     if (m_doAutomaticRangeAdjustment && m_dates && !m_dates->lowerLimit().isNull()) {
         const Utilities::FastDateTime start = m_dates->lowerLimit();
@@ -355,21 +383,34 @@ void DateBar::DateBarWidget::setImageDateCollection(const QExplicitlySharedDataP
 
 void DateBar::DateBarWidget::drawHistograms(QPainter &p)
 {
-    QRect rect = barAreaGeometry();
+#ifdef DATEBAR_DEBUG_TIMING
+    QElapsedTimer timer;
+    timer.start();
+#endif
+    // determine maximum image count within visible units
+    QVector<DB::ImageCount> counts(numberOfUnits() + 1);
+    int max = 0;
+    for (int unit = 0; unit <= numberOfUnits(); unit++) {
+        const auto range { rangeForUnit(unit) };
+        counts[unit] = m_dates->count(range);
+        int cnt = counts.at(unit).mp_exact;
+        if (m_includeFuzzyCounts)
+            cnt += counts.at(unit).mp_rangeMatch;
+        max = qMax(max, cnt);
+    }
+    if (max == 0) {
+        return;
+    }
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::drawHistograms(): determine max. image count: %lldms", timer.elapsed());
+    timer.restart();
+#endif
+
+    const QRect rect = barAreaGeometry();
     p.save();
     p.setClipping(true);
     p.setClipRect(rect);
     p.setPen(Qt::NoPen);
-
-    // determine maximum image count within visible units
-    int max = 0;
-    for (int unit = 0; unit <= numberOfUnits(); unit++) {
-        DB::ImageCount count = m_dates->count(rangeForUnit(unit));
-        int cnt = count.mp_exact;
-        if (m_includeFuzzyCounts)
-            cnt += count.mp_rangeMatch;
-        max = qMax(max, cnt);
-    }
 
     // Calculate the font size for the largest number.
     QFont f = font();
@@ -384,12 +425,16 @@ void DateBar::DateBarWidget::drawHistograms(QPainter &p)
             break;
         }
     }
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::drawHistograms(): calculate font size: %lldms", timer.elapsed());
+    timer.restart();
+#endif
 
     int unit = 0;
     const int minUnit = unitForDate(m_dates->lowerLimit()); // first non-empty unit
     const int maxUnit = (unitForDate(m_dates->upperLimit()) != -1) ? unitForDate(m_dates->upperLimit()) : numberOfUnits(); // last non-empty unit
     const bool linearScale = Settings::SettingsData::instance()->histogramUseLinearScale();
-    for (int x = rect.x(); x + m_barWidth < rect.right(); x += m_barWidth, unit += 1) {
+    for (int x = rect.x(); x < rect.right(); x += m_barWidth, unit += 1) {
         if (unit < minUnit || unit > maxUnit) {
             Qt::BrushStyle style = Qt::SolidPattern;
 
@@ -397,28 +442,31 @@ void DateBar::DateBarWidget::drawHistograms(QPainter &p)
             p.drawRect(x, 1, m_barWidth, rect.height() + 2);
             continue;
         }
-        const auto unitRange = rangeForUnit(unit);
-        const DB::ImageCount count = m_dates->count(unitRange);
-        int exactPx = 0;
-        int rangePx = 0;
-        if (max != 0) {
-            double exactScaled;
-            double rangeScaled;
-            if (linearScale) {
-                exactScaled = (double)count.mp_exact / max;
-                rangeScaled = (double)count.mp_rangeMatch / max;
-            } else {
-                exactScaled = sqrt(count.mp_exact) / sqrt(max);
-                rangeScaled = sqrt(count.mp_rangeMatch) / sqrt(max);
-            }
-            // convert to pixels:
-            exactPx = (int)((double)(rect.height() - 2) * exactScaled);
-            if (m_includeFuzzyCounts)
-                rangePx = (int)((double)(rect.height() - 2) * rangeScaled);
+        const DB::ImageCount &count = counts.at(unit);
+
+        if (count.mp_rangeMatch == 0 && count.mp_exact == 0) {
+            // no need to draw empty units
+            continue;
         }
 
+        int exactPx = 0;
+        int rangePx = 0;
+        double exactScaled;
+        double rangeScaled;
+        if (linearScale) {
+            exactScaled = (double)count.mp_exact / max;
+            rangeScaled = (double)count.mp_rangeMatch / max;
+        } else {
+            exactScaled = sqrt(count.mp_exact) / sqrt(max);
+            rangeScaled = sqrt(count.mp_rangeMatch) / sqrt(max);
+        }
+        // convert to pixels:
+        exactPx = (int)((double)(rect.height() - 2) * exactScaled);
+        if (m_includeFuzzyCounts)
+            rangePx = (int)((double)(rect.height() - 2) * rangeScaled);
+
         Qt::BrushStyle style = Qt::SolidPattern;
-        if (!isUnitSelected(unit) && hasSelection())
+        if (hasSelection() && !isUnitSelected(unit))
             style = Qt::Dense5Pattern;
 
         p.setBrush(QBrush(Qt::yellow, style));
@@ -445,6 +493,10 @@ void DateBar::DateBarWidget::drawHistograms(QPainter &p)
         }
     }
 
+#ifdef DATEBAR_DEBUG_TIMING
+    qCDebug(TimingLog, "DateBarWidget::drawHistograms(): draw %lldms", timer.elapsed());
+    timer.restart();
+#endif
     p.restore();
 }
 
@@ -871,6 +923,24 @@ void DateBar::DateBarWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_PageUp:
         offset = 10;
         break;
+    case Qt::Key_Home:
+        if (dateForUnit(0) <= m_dates->lowerLimit())
+            // if the end of the bar is visible, then set the active unit to the end.
+            m_currentUnit = unitForDate(m_dates->lowerLimit());
+        else
+            m_currentUnit = 1;
+        m_currentDate = m_dates->lowerLimit();
+        break;
+    case Qt::Key_End:
+        if (dateForUnit(numberOfUnits()) >= m_dates->upperLimit())
+            // if the end of the bar is visible, then set the active unit to the end.
+            m_currentUnit = unitForDate(m_dates->upperLimit());
+        else
+            // otherwise, move the current unit to the beginning, leaving one greyed out unit visible.
+            m_currentUnit = numberOfUnits() - 1;
+        m_currentDate = m_dates->upperLimit();
+        break;
+        /*** Attention: non-scrolling events should return, not break: ***/
     case Qt::Key_Plus:
         if (canZoomIn())
             zoom(1);
@@ -882,14 +952,21 @@ void DateBar::DateBarWidget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Escape:
         clearSelection();
         return;
+    case Qt::Key_Percent:
+        m_fastScrolling = !m_fastScrolling;
+        qDebug() << "Fast mode during scrolling:" << m_fastScrolling;
+        return;
     default:
         return;
     }
 
+    // TODO:
+    // 1. replace with scroll(offset)
     const bool selectionMode = event->modifiers() & Qt::ShiftModifier;
 
     Utilities::FastDateTime newDate = dateForUnit(offset, m_currentDate);
-    if ((offset < 0 && newDate >= m_dates->lowerLimit()) || (offset > 0 && newDate <= m_dates->upperLimit())) {
+    if ((offset < 0 && newDate >= m_dates->lowerLimit())
+        || (offset > 0 && newDate <= m_dates->upperLimit())) {
         m_currentDate = newDate;
         m_currentUnit += offset;
         if (m_currentUnit < 0)
@@ -996,6 +1073,11 @@ void DateBar::DateBarWidget::wheelEvent(QWheelEvent *e)
     if (e->modifiers() & Qt::ShiftModifier)
         scrollAmount *= SCROLL_ACCELERATION;
     scroll(scrollAmount);
+}
+
+void DateBar::DateBarWidget::redraw()
+{
+    redraw(RedrawMode::Full);
 }
 
 #include "moc_DateBarWidget.cpp"

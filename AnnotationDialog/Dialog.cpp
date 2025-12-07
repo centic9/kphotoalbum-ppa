@@ -68,6 +68,7 @@
 #include <QMenu>
 #include <QPoint>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QSpinBox>
 #include <QStackedWidget>
 #include <QStandardPaths>
@@ -106,7 +107,7 @@ using Utilities::StringSet;
 AnnotationDialog::Dialog::Dialog(QWidget *parent)
     : QDialog(parent)
     , m_ratingChanged(false)
-    , m_conflictText(i18n("(You have differing descriptions on individual images, setting text here will override them all)"))
+    , m_conflictText(i18n("(You have differing descriptions on individual images.  Enter text to append to or replace the descriptions.)"))
 {
     Utilities::ShowBusyCursor dummy;
     ShortCutManager shortCutManager;
@@ -138,15 +139,9 @@ AnnotationDialog::Dialog::Dialog(QWidget *parent)
 
     m_previewDock = createDock(i18n("Image Preview"), QString::fromLatin1("Image Preview"), Qt::TopDockWidgetArea, m_preview);
 
-    m_description = new DescriptionEdit(this);
-    m_description->setWhatsThis(i18nc("@info:whatsthis",
-                                      "<para>A descriptive text of the image.</para>"
-                                      "<para>If <emphasis>Use Exif description</emphasis> is enabled under "
-                                      "<interface>Settings|Configure KPhotoAlbum...|General</interface>, a description "
-                                      "embedded in the image Exif information is imported to this field if available.</para>"));
-
-    m_descriptionDock = createDock(i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, m_description);
-    shortCutManager.addDock(m_descriptionDock, m_description);
+    QWidget* descriptionWidgets = createDescriptionWidgets();
+    m_descriptionDock = createDock(i18n("Description"), QString::fromLatin1("description"), Qt::LeftDockWidgetArea, descriptionWidgets);
+    shortCutManager.addDock(m_descriptionDock, descriptionWidgets);
 
     connect(m_description, &DescriptionEdit::pageUpDownPressed, this, &Dialog::descriptionPageUpDownPressed);
 
@@ -431,6 +426,35 @@ QWidget *AnnotationDialog::Dialog::createDateWidget(ShortCutManager &shortCutMan
 
     lay9->addStretch(1);
     lay2->addStretch(1);
+
+    return top;
+}
+
+QWidget* AnnotationDialog::Dialog::createDescriptionWidgets()
+{
+    QWidget *top = new QWidget;
+    QVBoxLayout *vLayout = new QVBoxLayout(top);
+
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    vLayout->addLayout(hLayout);
+
+    m_appendButton = new QRadioButton(i18n("Append"));
+    m_appendButton->setToolTip(i18n("Append new text to each description"));
+    m_replaceButton = new QRadioButton(i18n("Replace"));
+    m_replaceButton->setToolTip(i18n("Replace each description with the new text"));
+    // Default to replace mode for backwards compatibility.
+    m_replaceButton->setChecked(true);
+
+    hLayout->addWidget(m_appendButton);
+    hLayout->addWidget(m_replaceButton);
+
+    m_description = new DescriptionEdit(this);
+    m_description->setWhatsThis(i18nc("@info:whatsthis",
+                                      "<para>A descriptive text of the image.</para>"
+                                      "<para>If <emphasis>Use Exif description</emphasis> is enabled under "
+                                      "<interface>Settings|Configure KPhotoAlbum...|General</interface>, a description "
+                                      "embedded in the image Exif information is imported to this field if available.</para>"));
+    vLayout->addWidget(m_description);
 
     return top;
 }
@@ -739,6 +763,10 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
     if (oneAtATime) {
         m_current = 0;
         m_preview->configure(true);
+        m_appendButton->setEnabled(false);
+        m_appendButton->setVisible(false);
+        m_replaceButton->setEnabled(false);
+        m_replaceButton->setVisible(false);
         load();
     } else {
         m_preview->configure(false);
@@ -763,10 +791,22 @@ int AnnotationDialog::Dialog::configure(DB::ImageInfoList list, bool oneAtATime)
                                                   return item.description() == firstDescription;
                                               });
 
-        if (!allTextEqual)
+        if (!allTextEqual) {
             m_description->setConflictWarning(m_conflictText);
-        else
+
+            m_appendButton->setEnabled(true);
+            m_appendButton->setVisible(true);
+            m_replaceButton->setEnabled(true);
+            m_replaceButton->setVisible(true);
+        }
+        else {
             m_description->setDescription(firstDescription);
+
+            m_appendButton->setEnabled(false);
+            m_appendButton->setVisible(false);
+            m_replaceButton->setEnabled(false);
+            m_replaceButton->setVisible(false);
+        }
     }
 
     showHelpDialog(oneAtATime ? InputSingleImageConfigMode : InputMultiImageConfigMode);
@@ -1421,7 +1461,11 @@ void AnnotationDialog::Dialog::saveAndClose()
             }
 
             if (!m_description->isEmpty()) {
-                info->setDescription(m_description->description());
+                if (m_appendButton->isChecked()) {
+                    info->setDescription(QStringLiteral("%1 %2").arg(info->description(), m_description->description()));
+                } else {
+                    info->setDescription(m_description->description());
+                }
             }
 
             if (m_ratingChanged) {
